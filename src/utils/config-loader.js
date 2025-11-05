@@ -207,7 +207,67 @@ function loadConfig() {
     console.log('✅ SSL certificates validated successfully');
   }
 
+  // Cache 설정 검증 및 기본값 설정 (Step 13)
+  config.cache = config.cache || {};
+  config.cache.enabled = config.cache.enabled !== undefined ? config.cache.enabled : true;
+  config.cache.scanThrottle = config.cache.scanThrottle || 500;
+  config.cache.maxMemorySize = config.cache.maxMemorySize || 100;
+  config.cache.maxDiskSize = config.cache.maxDiskSize || 500;
+  config.cache.preRenderOnStartup = config.cache.preRenderOnStartup !== undefined ? config.cache.preRenderOnStartup : true;
+  config.cache.mermaidSSR = config.cache.mermaidSSR !== undefined ? config.cache.mermaidSSR : false;
+  config.cache.cacheDir = config.cache.cacheDir || './.cache';
+  config.cache.compressionLevel = config.cache.compressionLevel !== undefined ? config.cache.compressionLevel : 0;
+  config.cache.cleanupAfterDays = config.cache.cleanupAfterDays !== undefined ? config.cache.cleanupAfterDays : 30;
+
+  // Cache 설정 검증
+  validateCacheConfig(config.cache);
+
   return config;
+}
+
+/**
+ * Validate cache configuration
+ * @param {Object} cache - Cache configuration object
+ * @throws {Error} If validation fails
+ */
+function validateCacheConfig(cache) {
+  if (!cache) return;
+
+  if (typeof cache.enabled !== 'boolean') {
+    throw new Error('cache.enabled must be a boolean');
+  }
+
+  if (cache.scanThrottle && (cache.scanThrottle < 100 || cache.scanThrottle > 5000)) {
+    throw new Error('cache.scanThrottle must be between 100 and 5000 ms');
+  }
+
+  if (cache.maxMemorySize && (cache.maxMemorySize < 10 || cache.maxMemorySize > 1000)) {
+    throw new Error('cache.maxMemorySize must be between 10 and 1000 MB');
+  }
+
+  if (cache.maxDiskSize && (cache.maxDiskSize < 10 || cache.maxDiskSize > 5000)) {
+    throw new Error('cache.maxDiskSize must be between 10 and 5000 MB');
+  }
+
+  if (typeof cache.preRenderOnStartup !== 'boolean') {
+    throw new Error('cache.preRenderOnStartup must be a boolean');
+  }
+
+  if (typeof cache.mermaidSSR !== 'boolean') {
+    throw new Error('cache.mermaidSSR must be a boolean');
+  }
+
+  if (typeof cache.cacheDir !== 'string' || !cache.cacheDir) {
+    throw new Error('cache.cacheDir must be a non-empty string');
+  }
+
+  if (cache.compressionLevel !== 0 && cache.compressionLevel !== 1) {
+    throw new Error('cache.compressionLevel must be 0 or 1');
+  }
+
+  if (cache.cleanupAfterDays < 0 || cache.cleanupAfterDays > 365) {
+    throw new Error('cache.cleanupAfterDays must be between 0 and 365 days');
+  }
 }
 
 /**

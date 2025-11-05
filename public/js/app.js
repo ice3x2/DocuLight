@@ -1948,7 +1948,8 @@ function initSearchFeature() {
       // Open search
       searchPanel.style.display = 'flex';
       treeMenu.style.display = 'none';
-      if (treeControls) treeControls.style.display = 'none';
+      // Keep tree controls visible (icons should stay)
+      if (treeControls) treeControls.style.display = 'flex';
       searchInput.focus();
     }
   });
@@ -2003,55 +2004,202 @@ function initSearchFeature() {
         data.results.forEach(result => {
           const itemDiv = document.createElement('div');
           itemDiv.className = 'search-result-item';
-          itemDiv.dataset.path = result.path;  // Store path directly in dataset
+          itemDiv.dataset.path = result.path;  // Store path for file loading
+          itemDiv.dataset.searchQuery = query;  // Store search query
 
-          // File path
+          // File path header
           const pathDiv = document.createElement('div');
           pathDiv.className = 'search-result-path';
           pathDiv.textContent = result.path;
           itemDiv.appendChild(pathDiv);
 
-          // First match content (with HTML highlighting)
-          if (result.matches.length > 0) {
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'search-result-content';
-            contentDiv.innerHTML = DOMPurify.sanitize(result.matches[0].content, {
-              ALLOWED_TAGS: ['mark'],
-              ALLOWED_ATTR: []
-            });
-            itemDiv.appendChild(contentDiv);
-          }
+          // Display all content matches (excluding filename/title matches)
+          const contentMatches = result.matches.filter(m => m.priority === 'content');
 
-          // Match count meta info
-          if (result.matches.length > 1) {
-            const metaDiv = document.createElement('div');
-            metaDiv.className = 'search-result-meta';
-            metaDiv.textContent = `+${result.matches.length - 1} more match${result.matches.length > 2 ? 'es' : ''}`;
-            itemDiv.appendChild(metaDiv);
+          if (contentMatches.length > 0) {
+            // Create container for all matches
+            const matchesContainer = document.createElement('div');
+            matchesContainer.className = 'search-matches-container';
+
+            // Show all content matches
+            contentMatches.forEach(match => {
+              const matchDiv = document.createElement('div');
+              matchDiv.className = 'search-match-item';
+              matchDiv.dataset.matchContent = match.content;  // Store for scroll-to
+
+              // Line number (if available)
+              if (match.line > 0) {
+                const lineSpan = document.createElement('span');
+                lineSpan.className = 'match-line-number';
+                lineSpan.textContent = `Line ${match.line}: `;
+                matchDiv.appendChild(lineSpan);
+              }
+
+              // Match content (with highlighting)
+              const contentSpan = document.createElement('span');
+              contentSpan.className = 'match-content';
+              contentSpan.innerHTML = DOMPurify.sanitize(match.content, {
+                ALLOWED_TAGS: ['mark'],
+                ALLOWED_ATTR: []
+              });
+              matchDiv.appendChild(contentSpan);
+
+              matchesContainer.appendChild(matchDiv);
+            });
+
+            itemDiv.appendChild(matchesContainer);
+
+            // Add total count info
+            const countDiv = document.createElement('div');
+            countDiv.className = 'search-result-meta';
+            countDiv.textContent = `${contentMatches.length} match${contentMatches.length > 1 ? 'es' : ''} found`;
+            itemDiv.appendChild(countDiv);
+          } else {
+            // No content matches, show filename match if exists
+            const filenameMatch = result.matches.find(m => m.priority === 'filename');
+            if (filenameMatch) {
+              const contentDiv = document.createElement('div');
+              contentDiv.className = 'search-result-content';
+              contentDiv.innerHTML = DOMPurify.sanitize(filenameMatch.content, {
+                ALLOWED_TAGS: ['mark'],
+                ALLOWED_ATTR: []
+              });
+              itemDiv.appendChild(contentDiv);
+            }
           }
 
           searchResults.appendChild(itemDiv);
         });
 
-        // Add click event listeners to results
-        searchResults.querySelectorAll('.search-result-item').forEach(item => {
-          item.addEventListener('click', async (e) => {
+        // Use event delegation for click handlers (more reliable than forEach)
+        searchResults.addEventListener('click', async (e) => {
+          // Check if clicked on a specific match item
+          const matchItem = e.target.closest('.search-match-item');
+          if (matchItem) {
             e.preventDefault();
-            const path = item.dataset.path;
+            e.stopPropagation();
+
+            const resultItem = matchItem.closest('.search-result-item');
+            if (!resultItem) return;
+
+            const path = resultItem.dataset.path;
+            const searchQuery = resultItem.dataset.searchQuery;
+
+            console.log('Search match clicked', { path, searchQuery });
 
             try {
               // Close search panel
               searchPanel.style.display = 'none';
               treeMenu.style.display = 'block';
+              const treeControls = document.getElementById('tree-controls');
+              if (treeControls) treeControls.style.display = 'flex';
               searchInput.value = '';
               searchResults.innerHTML = '';
 
+              // Normalize path (remove leading slash if present)
+              const normalizedPath = path.startsWith('/') ? path.substring(1) : path;
+
               // Load file
-              await loadFile(path);
+              await loadFile(normalizedPath);
+
+              // Scroll to first occurrence of search query
+              if (searchQuery) {
+                // Wait for content to render
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                console.log('Scrolling to search query:', searchQuery);
+
+                // Find and scroll to first occurrence
+                const contentDiv = document.getElementById('markdown-content');
+                if (contentDiv) {
+                  const walker = document.createTreeWalker(contentDiv, NodeFilter.SHOW_TEXT, null);
+                  let node;
+                  let foundNode = null;
+
+                  while (node = walker.nextNode()) {
+                    if (node.textContent.includes(searchQuery)) {
+                      foundNode = node;
+                      break;
+                    }
+                  }
+
+                  if (foundNode) {
+                    const element = foundNode.parentElement;
+                    if (element) {
+                      // Use scrollIntoView for reliable scrolling
+                      element.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                      });
+
+                      console.log('Scrolled to search query location', { query: searchQuery });
+                    }
+                  } else {
+                    console.warn('Could not find search query in rendered content', { query: searchQuery });
+                  }
+                }
+              }
+            } catch (error) {
+              console.error('Failed to load search match:', error);
+            }
+            return;
+          }
+
+          // Check if clicked on result item (not a specific match)
+          const resultItem = e.target.closest('.search-result-item');
+          if (resultItem) {
+            e.preventDefault();
+
+            const path = resultItem.dataset.path;
+            const searchQuery = resultItem.dataset.searchQuery;
+
+            console.log('Search result clicked (file only)', { path });
+
+            try {
+              // Close search panel
+              searchPanel.style.display = 'none';
+              treeMenu.style.display = 'block';
+              const treeControls = document.getElementById('tree-controls');
+              if (treeControls) treeControls.style.display = 'flex';
+              searchInput.value = '';
+              searchResults.innerHTML = '';
+
+              // Normalize path (remove leading slash if present)
+              const normalizedPath = path.startsWith('/') ? path.substring(1) : path;
+
+              // Load file (scroll to first occurrence of search query)
+              await loadFile(normalizedPath);
+
+              // Try to scroll to first occurrence of search query
+              if (searchQuery) {
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                const contentDiv = document.getElementById('markdown-content');
+                if (contentDiv) {
+                  const walker = document.createTreeWalker(contentDiv, NodeFilter.SHOW_TEXT, null);
+                  let node;
+
+                  while (node = walker.nextNode()) {
+                    if (node.textContent.includes(searchQuery)) {
+                      const element = node.parentElement;
+                      if (element) {
+                        // Use scrollIntoView for reliable scrolling
+                        element.scrollIntoView({
+                          behavior: 'smooth',
+                          block: 'center'
+                        });
+
+                        console.log('Scrolled to query location', { query: searchQuery });
+                      }
+                      break;
+                    }
+                  }
+                }
+              }
             } catch (error) {
               console.error('Failed to load search result:', error);
             }
-          });
+          }
         });
       } catch (error) {
         console.error('Search failed:', error);
