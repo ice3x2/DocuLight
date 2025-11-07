@@ -7,6 +7,7 @@ const { searchDocuments } = require('../controllers/search-controller');
 const { configureUpload, uploadFile } = require('../controllers/upload-controller');
 const { deleteEntry } = require('../controllers/delete-controller');
 const { downloadFile, downloadDirectory } = require('../controllers/download-controller');
+const { buildStaticSite } = require('../controllers/build-controller');
 
 function createApiRouter(config) {
   const router = express.Router();
@@ -27,6 +28,7 @@ function createApiRouter(config) {
   router.delete('/entry', auth, deleteEntry);
   router.get('/download/file', auth, downloadFile);
   router.get('/download/dir', auth, downloadDirectory);
+  router.post('/build-static', auth, buildStaticSite);
 
   return router;
 }
