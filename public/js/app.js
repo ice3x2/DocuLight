@@ -231,10 +231,57 @@ async function fetchWithRetry(url, options = {}, retries = ErrorHandler.maxRetri
   }
 }
 
+/**
+ * Get subtree from tree structure for a given path
+ * @param {Object} tree - Complete tree structure
+ * @param {string} path - Path to navigate to
+ * @returns {Object} Subtree at the path
+ */
+function getSubTree(tree, path) {
+  if (path === '/' || !path) return tree;
+
+  const parts = path.split('/').filter(p => p);
+  let current = tree;
+
+  for (const part of parts) {
+    const dir = current.dirs.find(d => d.name === part);
+    if (!dir) return { dirs: [], files: [] };
+    current = dir;
+  }
+
+  return current;
+}
+
 async function fetchTree(path = '/') {
   try {
-    const response = await fetchWithRetry(`/api/tree?path=${encodeURIComponent(path)}`);
-    return await response.json();
+    // 1. Use window.TREE_STRUCTURE if available (static mode)
+    if (window.TREE_STRUCTURE) {
+      return getSubTree(window.TREE_STRUCTURE, path);
+    }
+
+    // 2. Load data/tree-structure.json (first time only)
+    if (!window._treeCache) {
+      try {
+        const response = await fetch('data/tree-structure.json');
+        if (response.ok) {
+          window._treeCache = await response.json();
+          return getSubTree(window._treeCache, path);
+        }
+      } catch (e) {
+        // Ignore and continue to API fallback
+      }
+    } else {
+      // Use cached tree
+      return getSubTree(window._treeCache, path);
+    }
+
+    // 3. Fallback: API call (dynamic server mode)
+    if (window.location.protocol !== 'file:') {
+      const response = await fetchWithRetry(`/api/tree?path=${encodeURIComponent(path)}`);
+      return await response.json();
+    }
+
+    throw new Error('Tree structure not found');
   } catch (error) {
     console.error('Failed to fetch tree:', error);
     throw error;
@@ -243,12 +290,88 @@ async function fetchTree(path = '/') {
 
 async function fetchRaw(path) {
   try {
-    const response = await fetchWithRetry(`/api/raw?path=${encodeURIComponent(path)}`);
-    return await response.text();
+    // 1. Try window.DOCS_MAP first (static mode)
+    if (window.DOCS_MAP && window.DOCS_MAP[path]) {
+      return window.DOCS_MAP[path];
+    }
+
+    // 2. Fallback: API call (dynamic server mode)
+    if (window.location.protocol !== 'file:') {
+      const response = await fetchWithRetry(`/api/raw?path=${encodeURIComponent(path)}`);
+      return await response.text();
+    }
+
+    // 3. Fallback: Try to read from docs/ directory (file:// protocol)
+    try {
+      const response = await fetch(`docs/${path}`);
+      if (response.ok) {
+        return await response.text();
+      }
+    } catch (e) {
+      // Ignore and throw below
+    }
+
+    throw new Error(`Document not found: ${path}`);
   } catch (error) {
     console.error('Failed to fetch file:', error);
     throw error;
   }
+}
+
+/**
+ * Client-side search in window.DOCS_MAP
+ * @param {string} query - Search query
+ * @param {number} limit - Maximum results
+ * @returns {Object} Search results in API format
+ */
+function searchInDocsMap(query, limit = 50) {
+  const results = [];
+  const regex = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+
+  for (const [path, content] of Object.entries(window.DOCS_MAP)) {
+    const lines = content.split('\n');
+    const matches = [];
+
+    // Filename matching
+    if (path.toLowerCase().includes(query.toLowerCase())) {
+      matches.push({
+        line: 0,
+        content: `<mark>Filename match: ${path}</mark>`,
+        priority: 'filename'
+      });
+    }
+
+    // Content matching
+    for (let idx = 0; idx < lines.length; idx++) {
+      const line = lines[idx];
+      if (regex.test(line)) {
+        const highlighted = line.replace(regex, (match) => `<mark>${match}</mark>`);
+        matches.push({
+          line: idx + 1,
+          content: highlighted.substring(0, 200), // Limit length
+          priority: 'content'
+        });
+
+        if (matches.length >= 50) break; // Limit matches per file
+      }
+    }
+
+    if (matches.length > 0) {
+      results.push({
+        path: path,
+        name: path.split('/').pop(),
+        matches: matches
+      });
+    }
+
+    if (results.length >= limit) break;
+  }
+
+  return {
+    query: query,
+    total: results.length,
+    results: results
+  };
 }
 
 /**
@@ -257,10 +380,20 @@ async function fetchRaw(path) {
  */
 async function fetchSearch(query, limit = 50) {
   try {
-    const response = await fetchWithRetry(
-      `/api/search?query=${encodeURIComponent(query)}&limit=${limit}`
-    );
-    return await response.json();
+    // 1. Use window.DOCS_MAP for client-side search (static mode)
+    if (window.DOCS_MAP) {
+      return searchInDocsMap(query, limit);
+    }
+
+    // 2. Fallback: API call (dynamic server mode)
+    if (window.location.protocol !== 'file:') {
+      const response = await fetchWithRetry(
+        `/api/search?query=${encodeURIComponent(query)}&limit=${limit}`
+      );
+      return await response.json();
+    }
+
+    throw new Error('Search not available');
   } catch (error) {
     console.error('Failed to search documents:', error);
     throw error;

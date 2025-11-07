@@ -164,6 +164,43 @@ function addNavigationInfo(fileList) {
 }
 
 /**
+ * Generate index.html from EJS template
+ * @param {Object} config - Application configuration
+ * @returns {Promise<string>} Generated HTML content
+ */
+async function generateIndexHTML(config) {
+  // Read EJS template
+  const templatePath = path.join(__dirname, '../views/index.ejs');
+  let html = await fs.readFile(templatePath, 'utf-8');
+
+  // Replace EJS variables with config values or defaults
+  const replacements = {
+    '<%= title %>': config.ui?.title || 'DocLight',
+    '<%= uiIcon %>': config.ui?.icon || '/images/icon.png',
+    '<%= uiMaxWidth %>': config.ui?.maxWidth || '1200px',
+    '<%= uiTitle %>': config.ui?.title || 'DOCU LIGHT'
+  };
+
+  for (const [ejsVar, value] of Object.entries(replacements)) {
+    html = html.replace(new RegExp(ejsVar.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), value);
+  }
+
+  // Add docs-map.js script in head (before closing </head>)
+  html = html.replace(
+    '</head>',
+    '  <script src="data/docs-map.js"></script>\n</head>'
+  );
+
+  // Remove refresh button (server-only feature)
+  html = html.replace(
+    /<button id="refresh-btn"[\s\S]*?<\/button>/,
+    '<!-- Refresh button removed (server-only feature) -->'
+  );
+
+  return html;
+}
+
+/**
  * Generate complete static site as ZIP archive
  * @param {Object} config - Application configuration
  * @param {Object} logger - Logger instance
@@ -229,29 +266,10 @@ async function generateStaticSite(config, logger) {
   logger.info('Adding markdown source files...');
   archive.directory(config.docsRoot, 'docs');
 
-  // 6. Add index.html (TODO: Phase 4 - generate from template)
-  // Temporary: Use existing index.ejs as placeholder
-  logger.info('Adding index.html (placeholder)...');
-  const indexPlaceholder = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DocLight Static</title>
-  <link rel="stylesheet" href="css/style.css">
-  <script src="data/docs-map.js"></script>
-</head>
-<body>
-  <h1>DocLight Static Site</h1>
-  <p>This is a placeholder. Phase 4 will generate proper index.html.</p>
-  <script src="lib/marked.min.js"></script>
-  <script src="lib/highlight.min.js"></script>
-  <script src="lib/mermaid.min.js"></script>
-  <script src="lib/purify.min.js"></script>
-  <script src="js/app.js"></script>
-</body>
-</html>`;
-  archive.append(indexPlaceholder, { name: 'index.html' });
+  // 6. Generate and add index.html from EJS template
+  logger.info('Generating index.html...');
+  const indexHTML = await generateIndexHTML(config);
+  archive.append(indexHTML, { name: 'index.html' });
 
   // 7. Add app.js (TODO: Phase 5 - modify for static mode)
   // Temporary: Copy existing app.js
@@ -272,5 +290,6 @@ module.exports = {
   buildTreeStructure,
   flattenTreeDFS,
   addNavigationInfo,
+  generateIndexHTML,
   generateStaticSite
 };
