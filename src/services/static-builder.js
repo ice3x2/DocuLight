@@ -6,6 +6,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 const archiver = require('archiver');
+const crypto = require('crypto');
 
 /**
  * Recursively collect all markdown files from a directory
@@ -200,6 +201,129 @@ async function generateIndexHTML(config) {
   return html;
 }
 
+// Cache directory paths
+const CACHE_DIR = path.join(__dirname, '../../.cache/static-builds');
+const CACHE_INFO_FILE = path.join(CACHE_DIR, 'cache-info.json');
+
+/**
+ * Generate content hash from all file metadata (mtime + size)
+ * This hash represents the current state of all documents and resources
+ * @param {string} docsRoot - Root directory path
+ * @returns {Promise<Object>} Hash info with hash, fileCount, totalSize
+ */
+async function generateContentHash(docsRoot) {
+  const files = await getAllMarkdownFiles(docsRoot);
+
+  // Resource directories to include in hash
+  const resourceDirs = [
+    path.join(__dirname, '../../public/lib'),
+    path.join(__dirname, '../../public/css'),
+    path.join(__dirname, '../../public/js'),
+    path.join(__dirname, '../../public/images')
+  ];
+
+  const allFiles = [...files];
+
+  // Collect resource files
+  for (const dir of resourceDirs) {
+    try {
+      const entries = await fs.readdir(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        if (entry.isFile()) {
+          allFiles.push({
+            absolutePath: path.join(dir, entry.name)
+          });
+        }
+      }
+    } catch (e) {
+      // Directory doesn't exist, skip
+    }
+  }
+
+  // Collect metadata (mtime + size) for each file
+  const metadata = [];
+  for (const file of allFiles) {
+    try {
+      const stats = await fs.stat(file.absolutePath);
+      metadata.push({
+        path: file.absolutePath,
+        mtime: stats.mtimeMs,
+        size: stats.size
+      });
+    } catch (e) {
+      // File access error, skip
+    }
+  }
+
+  // Sort for consistency
+  metadata.sort((a, b) => a.path.localeCompare(b.path));
+
+  // Generate hash from metadata
+  const hashInput = metadata.map(m => `${m.path}:${m.mtime}:${m.size}`).join('|');
+  const hash = crypto.createHash('sha256').update(hashInput).digest('hex');
+
+  return {
+    hash,
+    fileCount: allFiles.length,
+    totalSize: metadata.reduce((sum, m) => sum + m.size, 0)
+  };
+}
+
+/**
+ * Check if cached build exists and is valid
+ * @param {string} contentHash - Content hash to check
+ * @returns {Promise<Object>} Cache info { exists, zipPath?, cachedAt? }
+ */
+async function getCachedBuild(contentHash) {
+  try {
+    // Read cache info
+    const cacheInfo = JSON.parse(await fs.readFile(CACHE_INFO_FILE, 'utf-8'));
+
+    if (cacheInfo.hash === contentHash) {
+      const zipPath = path.join(CACHE_DIR, `${contentHash}.zip`);
+
+      // Verify ZIP file exists
+      await fs.access(zipPath);
+
+      return {
+        exists: true,
+        zipPath: zipPath,
+        cachedAt: cacheInfo.cachedAt
+      };
+    }
+  } catch (e) {
+    // Cache doesn't exist or is invalid
+  }
+
+  return { exists: false };
+}
+
+/**
+ * Save built ZIP to cache
+ * @param {string} contentHash - Content hash
+ * @param {Buffer} zipBuffer - ZIP file buffer
+ * @returns {Promise<string>} Path to saved ZIP
+ */
+async function saveBuildToCache(contentHash, zipBuffer) {
+  // Create cache directory
+  await fs.mkdir(CACHE_DIR, { recursive: true });
+
+  const zipPath = path.join(CACHE_DIR, `${contentHash}.zip`);
+
+  // Save ZIP
+  await fs.writeFile(zipPath, zipBuffer);
+
+  // Save cache info
+  const cacheInfo = {
+    hash: contentHash,
+    cachedAt: new Date().toISOString(),
+    zipPath: zipPath
+  };
+  await fs.writeFile(CACHE_INFO_FILE, JSON.stringify(cacheInfo, null, 2));
+
+  return zipPath;
+}
+
 /**
  * Generate complete static site as ZIP archive
  * @param {Object} config - Application configuration
@@ -291,5 +415,8 @@ module.exports = {
   flattenTreeDFS,
   addNavigationInfo,
   generateIndexHTML,
+  generateContentHash,
+  getCachedBuild,
+  saveBuildToCache,
   generateStaticSite
 };

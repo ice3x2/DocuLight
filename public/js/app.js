@@ -1,5 +1,16 @@
 // DocuLight Client Application
 
+// Detect static vs dynamic mode
+const IS_STATIC = window.location.protocol === 'file:' || typeof window.DOCS_MAP !== 'undefined';
+const IS_DYNAMIC = !IS_STATIC;
+
+console.log('[DocLight] Mode:', IS_STATIC ? 'Static' : 'Dynamic');
+
+if (IS_STATIC) {
+  console.log('[DocLight] Static mode - all documents loaded in memory');
+  console.log('[DocLight] Documents:', window.DOCS_COUNT || 'unknown');
+}
+
 // Disable automatic scroll restoration by browser
 if ('scrollRestoration' in history) {
   history.scrollRestoration = 'manual';
@@ -1790,6 +1801,17 @@ async function init() {
     // Initialize IndexedDB
     await initDB();
 
+    // Static mode: Remove server-only features
+    if (IS_STATIC) {
+      // Remove refresh button (server-only)
+      document.getElementById('refresh-btn')?.remove();
+
+      // Remove download static button (already static)
+      document.getElementById('download-static-btn')?.remove();
+
+      console.log('[DocLight] Static mode initialized - server features disabled');
+    }
+
     // Load tree
     const treeData = await fetchTree('/');
     const treeMenu = document.getElementById('tree-menu');
@@ -1869,6 +1891,63 @@ async function init() {
             <p class="error-details">${error.message}</p>
           </div>
         `;
+      }
+    });
+
+    // Download Static Site button
+    document.getElementById('download-static-btn')?.addEventListener('click', async () => {
+      // Confirmation dialog
+      if (!confirm('Build static site? This will create a ZIP file with all documents.\n\nEstimated time: 30-60 seconds')) {
+        return;
+      }
+
+      const buildBtn = document.getElementById('download-static-btn');
+      const originalHTML = buildBtn.innerHTML;
+
+      try {
+        // Show loading state
+        buildBtn.classList.add('loading');
+        buildBtn.disabled = true;
+
+        // Get API key from config
+        const configResponse = await fetch('/api/config/index');
+        const configData = await configResponse.json();
+        const apiKey = configData.apiKey || '';
+
+        // Call build API
+        const response = await fetch('/api/build-static', {
+          method: 'POST',
+          headers: {
+            'X-API-Key': apiKey
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Build failed: ${response.status} ${response.statusText}`);
+        }
+
+        // Download ZIP
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `doclight-static-${Date.now()}.zip`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        // Success message
+        alert('Static site built successfully!\n\nExtract the ZIP and open index.html');
+
+      } catch (error) {
+        console.error('Build failed:', error);
+        alert(`Build failed: ${error.message}`);
+      } finally {
+        // Restore button state
+        buildBtn.classList.remove('loading');
+        buildBtn.disabled = false;
+        buildBtn.innerHTML = originalHTML;
       }
     });
 

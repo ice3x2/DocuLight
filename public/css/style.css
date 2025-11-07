@@ -139,6 +139,46 @@ body {
   position: relative;
 }
 
+/* Download Static Site Button - same style as TOC button */
+#download-static-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  margin-right: 0.5rem;  /* Space before TOC button */
+  flex-shrink: 0;
+}
+
+#download-static-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+#download-static-btn svg {
+  color: var(--text-primary);
+}
+
+#download-static-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Loading spinner for download button */
+#download-static-btn.loading svg {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 /* TOC Toggle Button - positioned at far right */
 .toc-toggle-btn {
   margin-left: auto;  /* Push to far right */
