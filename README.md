@@ -11,6 +11,7 @@ Lightweight Markdown document viewer and management system
 - 💾 **State Persistence**: IndexedDB-based tree state and last-opened file
 - 📤 **File Management**: Upload, download, delete operations via REST API
 - 🤖 **MCP Support**: Model Context Protocol for AI agent integration
+- 📦 **Static Site Export**: Build standalone offline documentation (1-click)
 
 ## Quick Start
 
@@ -227,6 +228,61 @@ curl -H "X-API-Key: your-api-key" \
 ```
 
 For complete API reference, see `/docs/api/doc/api.md`.
+
+---
+
+## Static Site Export
+
+Build a standalone static version of your documentation for offline use:
+
+### How to Build
+
+1. **Click the download button** (download icon) in the top-right header
+2. **Confirm the build** (estimated time: 30-60 seconds)
+3. **Download** `doclight-static-TIMESTAMP.zip`
+4. **Extract** the ZIP file
+5. **Open** `index.html` in your browser (or double-click)
+
+### Features in Static Mode
+
+**✅ Available:**
+- Full offline support (no server needed)
+- Tree navigation (expand/collapse folders)
+- Search functionality (client-side, works offline)
+- Table of Contents
+- Code syntax highlighting
+- Mermaid diagrams
+- Previous/Next links
+- Responsive design (mobile-friendly)
+- All markdown documents embedded
+
+**❌ Not Available:**
+- File upload/delete (read-only)
+- Live refresh (no server)
+- API endpoints (client-side only)
+
+### Technical Details
+
+- **Size**: ~2-6MB (depends on document count)
+- **Files**: ~40-100+ (HTML, JS, CSS, images, markdown sources)
+- **Dependencies**: All bundled (no CDN, works offline)
+- **Protocols**: Works with `file://` (local) and `http://` (hosted)
+- **Performance**: Instant loading with window.DOCS_MAP (all docs in memory)
+
+### Caching
+
+Static builds are cached automatically:
+- **First build**: ~500ms (generates ZIP)
+- **Subsequent builds**: ~5ms (uses cache if no files changed)
+- **Cache location**: `.cache/static-builds/`
+- **Cache invalidation**: Automatic (detects file changes via mtime+size hash)
+
+### Use Cases
+
+1. **Offline Documentation**: Share docs without requiring a server
+2. **Distribution**: Send documentation as a single ZIP file
+3. **Archiving**: Snapshot documentation at a specific point in time
+4. **Static Hosting**: Deploy to GitHub Pages, Netlify, etc.
 
 ---
 

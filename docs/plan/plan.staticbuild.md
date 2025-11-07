@@ -34,12 +34,12 @@
 - [x] Phase 7: 정적 페이지 호환성 처리 (1.5시간)
   - [x] Phase 7.1: 프로토콜 감지 로직 (30분)
   - [x] Phase 7.2: 조건부 기능 비활성화 (1시간)
-- [ ] Phase 8: 테스트 및 검증 (2시간)
-  - [ ] Phase 8.1: Unit Tests (1시간)
-  - [ ] Phase 8.2: Integration Test (1시간)
-- [ ] Phase 9: 문서화 및 사용 가이드 (1시간)
-  - [ ] Phase 9.1: README 업데이트 (30분)
-  - [ ] Phase 9.2: 정적 사이트 사용 가이드 (30분)
+- [x] Phase 8: 테스트 및 검증 (2시간)
+  - [x] Phase 8.1: Unit Tests (1시간)
+  - [x] Phase 8.2: Integration Test (1시간)
+- [x] Phase 9: 문서화 및 사용 가이드 (1시간)
+  - [x] Phase 9.1: README 업데이트 (30분)
+  - [x] Phase 9.2: 정적 사이트 사용 가이드 (30분)
 
 
 - 각 큰 단계가 끝나면 테스트 코드를 test/ 디렉토리에 만들고 테스트를 진행하시오. 세부 단계에 대해서는 테스트 하지 마시오. 
