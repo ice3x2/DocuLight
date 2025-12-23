@@ -30,4 +30,15 @@
     // Use with caution in production; default is false.
     allowPortSslAutoRestart: true
   }
+
+  // Note: cache settings are optional - defaults will be used if not specified:
+  // cache.enabled: true
+  // cache.scanThrottle: 500 (ms)
+  // cache.maxMemorySize: 100 (MB)
+  // cache.maxDiskSize: 500 (MB)
+  // cache.preRenderOnStartup: true
+  // cache.mermaidSSR: false
+  // cache.cacheDir: "./.cache"
+  // cache.compressionLevel: 0
+  // cache.cleanupAfterDays: 30
 }

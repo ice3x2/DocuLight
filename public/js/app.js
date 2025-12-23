@@ -270,19 +270,12 @@ async function fetchTree(path = '/') {
       return getSubTree(window.TREE_STRUCTURE, path);
     }
 
-    // 2. Load data/tree-structure.json (first time only)
+    // 2. Load tree from cache (pre-loaded in static mode)
     if (!window._treeCache) {
-      try {
-        const response = await fetch('data/tree-structure.json');
-        if (response.ok) {
-          window._treeCache = await response.json();
-          return getSubTree(window._treeCache, path);
-        }
-      } catch (e) {
-        // Ignore and continue to API fallback
-      }
-    } else {
-      // Use cached tree
+      window._treeCache = window.TREE_STRUCTURE || null;
+    }
+
+    if (window._treeCache) {
       return getSubTree(window._treeCache, path);
     }
 
@@ -1909,17 +1902,9 @@ async function init() {
         buildBtn.classList.add('loading');
         buildBtn.disabled = true;
 
-        // Get API key from config
-        const configResponse = await fetch('/api/config/index');
-        const configData = await configResponse.json();
-        const apiKey = configData.apiKey || '';
-
-        // Call build API
+        // Call build API (no auth required - public endpoint)
         const response = await fetch('/api/build-static', {
-          method: 'POST',
-          headers: {
-            'X-API-Key': apiKey
-          }
+          method: 'POST'
         });
 
         if (!response.ok) {
@@ -2744,9 +2729,31 @@ window.addEventListener('popstate', () => {
 });
 
 // Start application when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  init();
+// Note: Since app.js is loaded at the end of body, DOMContentLoaded may have already fired
+async function startApplication() {
+  try {
+    // Initialize the app first
+    await init();
+    // Only initialize panels after init() completes
+    initializePanels();
+  } catch (error) {
+    console.error('[DocLight] Application startup failed:', error);
+    // Show error in UI
+    ErrorHandler.show('Application failed to initialize. Please refresh the page.');
+  }
+}
 
+if (document.readyState === 'loading') {
+  // DOM is still loading, wait for DOMContentLoaded event
+  document.addEventListener('DOMContentLoaded', startApplication);
+} else {
+  // DOM is already loaded (most common case), call startup immediately
+  console.log('[DocLight] DOM already loaded, initializing immediately');
+  startApplication();
+}
+
+// Initialize panels and event handlers
+function initializePanels() {
   // Left sidebar resizer (refactored)
   initPanelResizer({
     resizerId: 'resizer',
@@ -2794,4 +2801,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
-});
+}
+
+// DOMContentLoaded listener is already registered in the initialization code above
+// to handle cases where DOM is still loading when app.js executes

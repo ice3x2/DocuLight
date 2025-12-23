@@ -186,6 +186,18 @@ function loadConfig() {
     }
   }
 
+  // Cache configuration defaults (Step 13: Phase 6)
+  config.cache = config.cache || {};
+  config.cache.enabled = config.cache.enabled !== undefined ? config.cache.enabled : true;
+  config.cache.scanThrottle = config.cache.scanThrottle || 500;           // ms
+  config.cache.maxMemorySize = config.cache.maxMemorySize || 100;         // MB
+  config.cache.maxDiskSize = config.cache.maxDiskSize || 500;             // MB
+  config.cache.preRenderOnStartup = config.cache.preRenderOnStartup !== undefined ? config.cache.preRenderOnStartup : false; // false = faster startup, lazy render on demand
+  config.cache.mermaidSSR = config.cache.mermaidSSR !== undefined ? config.cache.mermaidSSR : false;
+  config.cache.cacheDir = config.cache.cacheDir || './.cache';
+  config.cache.compressionLevel = config.cache.compressionLevel !== undefined ? config.cache.compressionLevel : 0;
+  config.cache.cleanupAfterDays = config.cache.cleanupAfterDays !== undefined ? config.cache.cleanupAfterDays : 30;
+
   // Hot-reload related defaults
   config.hotReload = config.hotReload || {};
   // Whether allow automatic restart when port/SSL change

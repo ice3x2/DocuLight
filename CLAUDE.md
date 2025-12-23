@@ -161,6 +161,7 @@ See `config.example.json5` for complete documentation and all available options.
 ### Public (No Authentication Required)
 - `GET /api/tree?path=<path>` — Directory tree structure
 - `GET /api/raw?path=<file>` — Raw Markdown file content
+- `GET /api/search?query=<keyword>` — Full-text search across documents
 - `GET /healthz` — Health check endpoint
 
 ### Protected (X-API-Key Header Required)
@@ -168,6 +169,12 @@ See `config.example.json5` for complete documentation and all available options.
 - `DELETE /api/entry?path=<path>` — Delete file or directory
 - `GET /api/download/file?path=<file>` — Download single file
 - `GET /api/download/dir?path=<dir>` — Download directory as ZIP
+- `GET /api/static/build` — Trigger static site build (returns ZIP)
+
+### MCP Endpoint
+- `POST /mcp` — Model Context Protocol server (JSON-RPC 2.0)
+  - Read operations: No authentication
+  - Write operations (create_document, delete_document): X-API-Key required
 
 ### Web Routes
 - `GET /doc/* (without .md)` — Render Markdown document (Step 9)
@@ -176,23 +183,14 @@ See `config.example.json5` for complete documentation and all available options.
 
 ## Key Dependencies
 
-- **express**: Web server framework
-- **ejs**: Server-side templating
-- **multer**: File upload handling
-- **winston**: Logging with daily file rotation
-- **winston-daily-rotate-file**: Daily log rotation
-- **ignore**: Gitignore-style pattern matching for file exclusion
-- **archiver**: ZIP creation for directory downloads
-- **async-lock**: Concurrency control for file operations
-- **json5**: JSON5 config file parsing with comments support
-- **marked**: Markdown parsing and rendering
-- **dompurify**: Client-side HTML sanitization
-- **mermaid**: Diagram rendering support
-- **puppeteer**: Headless Chrome (future PDF export capability)
-- **chokidar** (optional): File system watcher for config hot-reload (Step 8)
-- **adm-zip**: ZIP file manipulation
-- **nodemon** (dev): Auto-reload on file changes
-- **playwright** (dev): Browser automation and E2E testing
+**Server-side:**
+- express, ejs, multer, winston, json5, archiver, async-lock
+
+**Client-side:**
+- marked (Markdown), DOMPurify (XSS), Mermaid (diagrams)
+
+**Dev:**
+- nodemon (auto-reload), playwright (E2E tests)
 
 ## Development Workflow
 
@@ -339,49 +337,13 @@ The project is currently in **Step 9: UI/UX Improvements — Clean URLs and Docu
 ### Implementation Plan
 See `docs/plan/plan.step9.md` for detailed implementation plan with phases, time estimates, and success criteria.
 
-## File Organization
+## Key Directories
 
-### Directory Structure
-```
-DocLight/
-├── src/                      # Server code
-│   ├── app.js               # Express app entry point
-│   ├── controllers/         # Request handlers
-│   ├── middleware/          # Express middleware
-│   ├── routes/              # API routes
-│   ├── utils/               # Utilities (config, logger, validators, etc.)
-│   └── views/               # EJS templates
-├── public/                  # Client files (static)
-│   ├── js/                  # Client JavaScript
-│   │   └── app.js          # Main client application
-│   ├── css/                 # Stylesheets
-│   └── images/              # Static images
-├── test/                    # Test files
-│   ├── test-*.js           # Node.js tests
-│   └── *.spec.js           # Playwright tests
-├── test-source/            # Test documents (Markdown)
-├── docs/                    # Documentation
-│   ├── plan/               # Step-by-step implementation plans
-│   ├── api/                # API documentation
-│   └── guide/              # User guides
-├── logs/                    # Application logs (created at runtime)
-├── config.example.json5     # Example configuration
-└── package.json             # Dependencies
-```
-
-### Important Directories
-
-**`docs/plan/`** — Implementation plans for each step (plan.step1.md through plan.step9.md)
-- Each file contains detailed requirements, architecture, timeline, and success criteria
-- Useful for understanding what's been done and what's coming next
-
-**`test/`** — All test files
-- `test-*.js`: Node.js/Express tests
-- `*.spec.js`: Playwright browser tests
-
-**`src/utils/`** — Reusable utilities
-- Keep utilities focused and testable
-- Use for cross-cutting concerns (logging, validation, config management)
+- **`src/`** — Server code (Express app, controllers, middleware, routes, utils)
+- **`src/services/`** — Business logic (static-builder.js, cache-manager.js 등)
+- **`public/js/app.js`** — Main client application (tree, rendering, state management)
+- **`docs/plan/`** — Step-by-step implementation plans (plan.step1.md ~ plan.step9.md)
+- **`test/`** — Tests (`test-*.js`: Node, `*.spec.js`: Playwright)
 
 ## Common Development Patterns
 
@@ -411,10 +373,23 @@ DocLight/
 3. Reference via `req.app.locals.config` in routes/controllers
 4. Document defaults and validation rules in CLAUDE.md
 
+## Static Site Build Feature
+
+정적 사이트 빌드 기능은 오프라인 사용을 위한 독립 실행형 문서 사이트를 생성합니다.
+
+**핵심 파일:**
+- `src/services/static-builder.js` — 정적 사이트 생성 로직
+- `src/services/cache-manager.js` — 빌드 캐싱 (mtime+size 해시 기반)
+
+**빌드 결과물:**
+- 모든 Markdown이 `window.DOCS_MAP`에 임베딩된 단일 HTML 페이지
+- 오프라인 검색, 트리 네비게이션, Mermaid 다이어그램 지원
+- 캐시 위치: `.cache/static-builds/`
+
 ## References and Documentation
 
-- **Main README**: Check if exists for user-facing documentation
-- **Plan Files**: `docs/plan/plan.step*.md` for step-by-step context
-- **API Docs**: `docs/api/api.md` for endpoint documentation
-- **Config Example**: `config.example.json5` for all available options
-- **.github/instructions/**: `instructions.md` contains coding guidelines
+- **README.md**: 사용자 가이드, MCP 통합, 배포 설명
+- **Plan Files**: `docs/plan/plan.step*.md` (단계별 구현 계획)
+- **API Docs**: `docs/api/doc/api.md` (영문), `docs/api/doc/ko/api.md` (한글)
+- **MCP Docs**: `docs/mcp/doc/mcp.md` (영문), `docs/mcp/doc/ko/mcp.md` (한글)
+- **Config Example**: `config.example.json5` (전체 옵션 문서화)

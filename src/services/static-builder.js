@@ -174,10 +174,28 @@ async function generateIndexHTML(config) {
   const templatePath = path.join(__dirname, '../views/index.ejs');
   let html = await fs.readFile(templatePath, 'utf-8');
 
+  // Icon path: convert to relative path for static builds
+  let iconPath = config.ui?.icon || '/images/icon.png';
+
+  // Remove various prefixes and convert to relative path
+  if (iconPath.startsWith('/public/')) {
+    // /public/images/icon.png → ./images/icon.png
+    iconPath = './' + iconPath.substring(8);  // Remove /public/
+  } else if (iconPath.startsWith('./public/')) {
+    // ./public/images/icon.png → ./images/icon.png
+    iconPath = './' + iconPath.substring(9);  // Remove ./public/
+  } else if (iconPath.startsWith('/')) {
+    // /images/icon.png → ./images/icon.png
+    iconPath = '.' + iconPath;
+  } else if (!iconPath.startsWith('./')) {
+    // Relative paths without ./ prefix
+    iconPath = './' + iconPath;
+  }
+
   // Replace EJS variables with config values or defaults
   const replacements = {
     '<%= title %>': config.ui?.title || 'DocLight',
-    '<%= uiIcon %>': config.ui?.icon || '/images/icon.png',
+    '<%= uiIcon %>': iconPath,
     '<%= uiMaxWidth %>': config.ui?.maxWidth || '1200px',
     '<%= uiTitle %>': config.ui?.title || 'DOCU LIGHT'
   };
@@ -186,10 +204,19 @@ async function generateIndexHTML(config) {
     html = html.replace(new RegExp(ejsVar.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), value);
   }
 
-  // Add docs-map.js script in head (before closing </head>)
+  // Convert absolute paths to relative for static builds
+  // /css/ → ./css/, /lib/ → ./lib/, etc.
+  html = html.replace(/href="\/(?!\/)/g, 'href="./');      // Convert href="/xxx" to href="./xxx"
+  html = html.replace(/src="\/(?!\/)/g, 'src="./');        // Convert src="/xxx" to src="./xxx"
+
+  // Add data scripts in head (before closing </head>)
+  // Load in order: tree → docs (all global variables needed by app.js)
+  const dataScripts = `  <script src="data/tree-structure.js"></script>
+  <script src="data/docs-map.js"></script>`;
+
   html = html.replace(
     '</head>',
-    '  <script src="data/docs-map.js"></script>\n</head>'
+    dataScripts + '\n</head>'
   );
 
   // Remove refresh button (server-only feature)
@@ -360,18 +387,14 @@ async function generateStaticSite(config, logger) {
   const docsMapJS = await generateDocsMapJS(config.docsRoot);
   archive.append(docsMapJS, { name: 'data/docs-map.js' });
 
-  // 2. Generate and add tree structure
+  // 2. Generate and add tree structure as JavaScript variable (for file:// protocol)
   logger.info('Generating tree structure...');
   const tree = await buildTreeStructure(config.docsRoot);
-  const treeJSON = JSON.stringify(tree, null, 2);
-  archive.append(treeJSON, { name: 'data/tree-structure.json' });
+  const treeJS = `// Auto-generated: Tree structure for static build\nwindow.TREE_STRUCTURE = ${JSON.stringify(tree, null, 2)};\nconsole.log('[Static Build] Tree structure loaded');\n`;
+  archive.append(treeJS, { name: 'data/tree-structure.js' });
 
-  // 3. Generate and add navigation info
-  logger.info('Generating navigation info...');
-  const fileList = flattenTreeDFS(tree);
-  const navInfo = addNavigationInfo(fileList);
-  const navJSON = JSON.stringify(navInfo, null, 2);
-  archive.append(navJSON, { name: 'data/navigation.json' });
+  // 3. (Optional) Navigation info not currently used by app.js
+  // Available for future use (e.g., previous/next navigation)
 
   // 4. Add static resources (lib, css, images)
   logger.info('Adding static resources...');

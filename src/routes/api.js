@@ -19,6 +19,7 @@ function createApiRouter(config) {
   router.get('/raw', getRaw);
   router.get('/html', getHtml);           // Get pre-rendered HTML from cache (Step 13: Phase 6)
   router.get('/search', searchDocuments); // Search documents by keyword
+  router.post('/build-static', buildStaticSite);  // Static site export (public, no auth required)
 
   // Protected routes (authentication required)
   // Do not capture `config` at module/router creation time; auth middleware reads runtime config from req.app.locals
@@ -28,7 +29,6 @@ function createApiRouter(config) {
   router.delete('/entry', auth, deleteEntry);
   router.get('/download/file', auth, downloadFile);
   router.get('/download/dir', auth, downloadDirectory);
-  router.post('/build-static', auth, buildStaticSite);
 
   return router;
 }

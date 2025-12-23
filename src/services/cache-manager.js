@@ -1,7 +1,23 @@
+console.log('    [CACHE] ⏳ Loading AsyncLock...');
+const t_async = Date.now();
 const AsyncLock = require('async-lock');
+console.log(`    [CACHE] ✅ AsyncLock loaded in ${Date.now() - t_async}ms`);
+
+console.log('    [CACHE] ⏳ Loading FileScannerService...');
+const t_scanner = Date.now();
 const FileScannerService = require('./file-scanner-service');
+console.log(`    [CACHE] ✅ FileScannerService loaded in ${Date.now() - t_scanner}ms`);
+
+console.log('    [CACHE] ⏳ Loading MarkdownRenderer (jsdom, marked, highlight.js)...');
+const t_renderer = Date.now();
 const MarkdownRenderer = require('./markdown-renderer');
+console.log(`    [CACHE] ✅ MarkdownRenderer loaded in ${Date.now() - t_renderer}ms`);
+
+console.log('    [CACHE] ⏳ Loading CacheStorage...');
+const t_storage = Date.now();
 const CacheStorage = require('./cache-storage');
+console.log(`    [CACHE] ✅ CacheStorage loaded in ${Date.now() - t_storage}ms`);
+
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -38,15 +54,24 @@ class CacheManager {
    * - Pre-render if configured (Phase 4)
    */
   async initialize() {
+    const startTime = Date.now();
+    console.log(`[BG] 📦 Initializing cache manager...`);
     this.logger.info('Initializing cache manager...');
 
-    // Phase 4: Initialize cache storage
+    // Initialize cache storage
+    const t1 = Date.now();
+    console.log(`[BG]   ⏳ Initializing storage...`);
     await this.storage.initialize();
+    console.log(`[BG]   ✅ Storage initialized in ${Date.now() - t1}ms`);
 
     // Scan all files
+    const t2 = Date.now();
+    console.log(`[BG]   ⏳ Scanning markdown files...`);
     const files = await this.scanner.scanAllMarkdownFiles();
     this.updateFileList(files);
+    console.log(`[BG]   ✅ Scanned ${files.length} files in ${Date.now() - t2}ms`);
 
+    console.log(`[BG] ✅ Cache manager initialized in ${Date.now() - startTime}ms total`);
     this.logger.info('Cache manager initialized', {
       filesScanned: files.length,
       cacheHits: this.memoryCache.size

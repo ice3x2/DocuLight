@@ -1,21 +1,57 @@
+// ============ STARTUP: Module Loading ============
+const moduleStartTime = Date.now();
+console.log('🔄 [INIT] Loading app.js modules...\n');
+
+console.log('  ⏳ Loading Express modules...');
+const t0 = Date.now();
 const express = require('express');
 const http = require('http');
 const https = require('https');
 const path = require('path');
 const fs = require('fs');
+console.log(`  ✅ Express modules loaded in ${Date.now() - t0}ms`);
+
+console.log('  ⏳ Loading config and logger...');
+const t1 = Date.now();
 const { loadConfig } = require('./utils/config-loader');
 const { createLogger } = require('./utils/logger');
+console.log(`  ✅ Config loader loaded in ${Date.now() - t1}ms`);
+
+console.log('  ⏳ Loading SSL and security utilities...');
+const t2 = Date.now();
 const { loadSSLOptions } = require('./utils/ssl-validator');
 const { createIpWhitelist } = require('./middleware/ip-whitelist');
+console.log(`  ✅ SSL/security loaded in ${Date.now() - t2}ms`);
+
+console.log('  ⏳ Loading middleware...');
+const t3 = Date.now();
 const requestLogger = require('./middleware/request-logger');
 const errorHandler = require('./middleware/error-handler');
+console.log(`  ✅ Middleware loaded in ${Date.now() - t3}ms`);
+
+console.log('  ⏳ Loading routers...');
+const t4 = Date.now();
 const createApiRouter = require('./routes/api');
 const createMcpRouter = require('./routes/mcp');
+console.log(`  ✅ Routers loaded in ${Date.now() - t4}ms`);
+
+console.log('  ⏳ Loading controllers...');
+const t5 = Date.now();
 const { getDocumentation } = require('./controllers/doc-controller');
 const { getIndexConfig } = require('./controllers/config-controller');
+console.log(`  ✅ Controllers loaded in ${Date.now() - t5}ms`);
+
+console.log('  ⏳ Loading utilities...');
+const t6 = Date.now();
 const backupUtils = require('./utils/backup-utils');
 const { createConfigWatcher } = require('./utils/config-watcher');
-const CacheManager = require('./services/cache-manager');
+console.log(`  ✅ Utilities loaded in ${Date.now() - t6}ms`);
+
+// NOTE: CacheManager is lazy-loaded in start() function to avoid blocking startup
+// (MarkdownRenderer requires jsdom which is heavy and slow to load)
+let CacheManager = null;
+
+console.log(`\n✅ All modules loaded in ${Date.now() - moduleStartTime}ms total\n`);
 
 // Runtime state
 let config;
@@ -203,36 +239,67 @@ async function start(options = {}) {
   if (isStarting) return { success: false, error: 'Start already in progress' };
   isStarting = true;
 
+  const startTime = Date.now();
+
   try {
-    // Load config
+    // ============ STEP 1: Load Config ============
+    console.log('⏳ [1/7] Loading configuration...');
+    const t1 = Date.now();
     const cfg = loadConfig();
     config = cfg;
+    console.log(`✅ [1/7] Config loaded in ${Date.now() - t1}ms`);
 
-    // Create logger
+    // ============ STEP 2: Create Logger ============
+    console.log('⏳ [2/7] Initializing logger...');
+    const t2 = Date.now();
     logger = createLogger(cfg);
     app.locals.config = cfg;
     app.locals.logger = logger;
+    console.log(`✅ [2/7] Logger initialized in ${Date.now() - t2}ms`);
 
-    // Initialize cache manager (Step 13: Phase 6)
+    // ============ STEP 3: Initialize Cache Manager (Async in background) ============
+    console.log('⏳ [3/7] Starting cache manager initialization (background)...');
+    const t3 = Date.now();
+
     if (cfg.cache && cfg.cache.enabled) {
       try {
+        // Lazy-load CacheManager (heavy due to jsdom, marked, highlight.js dependencies)
+        if (!CacheManager) {
+          console.log('   ⏳ Lazy-loading CacheManager (jsdom, marked, highlight.js)...');
+          const t_cm = Date.now();
+          CacheManager = require('./services/cache-manager');
+          console.log(`   ✅ CacheManager loaded in ${Date.now() - t_cm}ms`);
+        }
+
         const cacheManager = new CacheManager(cfg, logger);
-        await cacheManager.initialize();
+
+        // Initialize cache asynchronously in background (don't wait)
+        // Server starts immediately while cache loads
+        (async () => {
+          try {
+            const initStart = Date.now();
+            await cacheManager.initialize();
+            const initTime = Date.now() - initStart;
+            console.log(`✅ [BG] Cache manager initialized in ${initTime}ms (${cacheManager.fileList.length} files scanned)`);
+          } catch (error) {
+            logger.error('Background cache initialization failed', { error: error.message });
+          }
+        })().catch(e => logger.error('Unexpected error in cache init', { error: e.message }));
+
         app.locals.cacheManager = cacheManager;
-        logger.info('Cache manager initialized', {
-          scanThrottle: cfg.cache.scanThrottle,
-          maxMemorySize: cfg.cache.maxMemorySize
-        });
+        console.log(`✅ [3/7] Cache manager created (initialization in background)`);
       } catch (error) {
-        logger.error('Failed to initialize cache manager', { error: error.message });
-        // Continue without cache manager - API will fall back to /api/raw
+        logger.error('Failed to create cache manager', { error: error.message });
+        console.log(`⚠️  [3/7] Cache manager skipped (will use raw rendering)`);
       }
     } else {
-      logger.info('Cache manager disabled (cache.enabled = false)');
+      console.log('⏭️  [3/7] Cache disabled in config (using raw rendering)');
     }
 
-    // Mount API routers once using the loaded config
-    // Unmount previous API router if present (so new config is applied)
+    // ============ STEP 4: Mount API Router ============
+    console.log('⏳ [4/7] Mounting API router...');
+    const t4 = Date.now();
+
     try {
       if (app.locals && app.locals.apiLayer) {
         const stack = app._router && app._router.stack;
@@ -247,16 +314,15 @@ async function start(options = {}) {
       // ignore
     }
 
-    // Mount API router (always remount to reflect latest config)
     const apiRouter = createApiRouter(cfg);
     app.use('/api', apiRouter);
+    console.log(`✅ [4/7] API router mounted in ${Date.now() - t4}ms`);
     logger.info('API router mounted', { stackLength: app._router && app._router.stack ? app._router.stack.length : 0 });
 
-    // capture the mounted layer so we can remove it on next start
+    // Capture the mounted layer for removal on next start
     try {
       const stack = app._router && app._router.stack;
       if (stack && stack.length > 0) {
-        // find layer with handle === apiRouter from the end
         for (let i = stack.length - 1; i >= 0; i--) {
           const layer = stack[i];
           if (layer && layer.handle === apiRouter) {
@@ -271,31 +337,35 @@ async function start(options = {}) {
       logger.warn('Failed to capture API layer', { error: e.message });
     }
 
-    // Ensure MCP router is mounted once
+    // ============ STEP 5: Mount MCP Router ============
+    console.log('⏳ [5/7] Mounting MCP router...');
+    const t5 = Date.now();
+
     if (!app.locals.mcpMounted) {
       app.use(createMcpRouter());
       app.locals.mcpMounted = true;
     }
+    console.log(`✅ [5/7] MCP router mounted in ${Date.now() - t5}ms`);
 
-    // Remove all existing 404 and error handlers by filtering the stack
+    // ============ STEP 6: Setup Error Handlers ============
+    console.log('⏳ [6/7] Setting up error handlers...');
+    const t6 = Date.now();
+
+    // Remove old handlers
     try {
       const stack = app._router && app._router.stack;
       if (stack) {
         const originalLength = stack.length;
-        // Remove layers that are 404 or error handlers (they have 4 parameters for error handlers)
         app._router.stack = stack.filter(layer => {
-          // Keep all layers except our custom 404/error handlers
           if (!layer.route && layer.handle) {
-            // Error handler has 4 params: (err, req, res, next)
             if (layer.handle.length === 4 && layer.handle.name !== 'query' && layer.handle.name !== 'expressInit') {
-              return false; // Remove error handlers
+              return false;
             }
-            // 404 handler returns 404 json
             if (layer.handle.toString().includes('Route not found')) {
-              return false; // Remove 404 handlers
+              return false;
             }
           }
-          return true; // Keep everything else
+          return true;
         });
         const removed = originalLength - app._router.stack.length;
         if (removed > 0) {
@@ -319,6 +389,11 @@ async function start(options = {}) {
       return handler(err, req, res, next);
     });
     logger.info('Error handler mounted');
+    console.log(`✅ [6/7] Error handlers set up in ${Date.now() - t6}ms`);
+
+    // ============ STEP 7: Start Server ============
+    console.log('⏳ [7/7] Starting HTTP/HTTPS server...');
+    const t7 = Date.now();
 
     const PORT = cfg.port || 3000;
 
@@ -333,6 +408,12 @@ async function start(options = {}) {
       server.once('error', (err) => reject(err));
       server.listen(PORT, () => resolve());
     });
+
+    console.log(`✅ [7/7] Server listening on port ${PORT} in ${Date.now() - t7}ms`);
+    console.log(`\n🚀 DocLight started successfully in ${Date.now() - startTime}ms total\n`);
+    console.log(`📍 URL: http${cfg.ssl && cfg.ssl.enabled ? 's' : ''}://localhost:${PORT}`);
+    console.log(`📁 Docs: ${cfg.docsRoot}`);
+    console.log(`💾 Cache: ${cfg.cache && cfg.cache.enabled ? 'enabled (loading in background)' : 'disabled'}\n`);
 
     logger.info('DocuLight server started', { port: PORT, docsRoot: cfg.docsRoot, ssl: !!(cfg.ssl && cfg.ssl.enabled) });
 
