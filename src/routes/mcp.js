@@ -1,4 +1,5 @@
 const express = require('express');
+const net = require('net');
 
 /**
  * MCP over HTTP (JSON-RPC 2.0)
@@ -37,6 +38,9 @@ function createJsonRpcError(id, code, message, data = null) {
 }
 
 const DEFAULT_MCP_PREFIX = 'DocuLight';
+const SUPPORTED_MCP_PROTOCOL_VERSIONS = ['2025-11-25'];
+const DEFAULT_MCP_PROTOCOL_VERSION = '2025-11-25';
+const WILDCARD_ALLOW = '*';
 
 /**
  * Convert ui.title to MCP tool name prefix.
@@ -46,6 +50,149 @@ function sanitizeForToolName(title) {
   if (!title) return DEFAULT_MCP_PREFIX;
   const sanitized = title.replace(/\s+/g, '_').replace(/[^A-Za-z0-9_]/g, '');
   return sanitized || DEFAULT_MCP_PREFIX;
+}
+
+function listAllowsWildcard(list) {
+  return Array.isArray(list) && list.includes(WILDCARD_ALLOW);
+}
+
+function hasOwn(obj, key) {
+  return Object.prototype.hasOwnProperty.call(obj, key);
+}
+
+function normalizeOrigin(origin) {
+  if (!origin || typeof origin !== 'string') return '';
+  const value = origin.trim().toLowerCase();
+  if (!value) return '';
+  try {
+    const parsed = new URL(value);
+    if (parsed.origin === 'null') return '';
+    if (value !== parsed.origin.toLowerCase()) return '';
+    return parsed.origin.toLowerCase();
+  } catch (error) {
+    return '';
+  }
+}
+
+function isValidHostPort(port) {
+  if (!/^\d+$/.test(port)) return false;
+  const portNumber = Number(port);
+  return portNumber >= 0 && portNumber <= 65535;
+}
+
+function isValidHostname(hostname) {
+  if (!hostname || typeof hostname !== 'string') return false;
+  if (net.isIP(hostname) === 4) return true;
+  if (hostname === 'localhost') return true;
+  if (hostname.length > 253) return false;
+
+  const labels = hostname.split('.');
+  return labels.every(label => (
+    label.length >= 1 &&
+    label.length <= 63 &&
+    /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(label)
+  ));
+}
+
+function normalizeHostEntry(host) {
+  if (!host || typeof host !== 'string') return null;
+  const value = host.trim().toLowerCase();
+  if (!value) return null;
+  if (/^https?:\/\//i.test(value) || /[/?#]/.test(value)) return null;
+
+  if (value.startsWith('[')) {
+    const match = value.match(/^\[([^\]]+)\](?::(\d+))?$/);
+    if (!match || net.isIP(match[1]) !== 6) return null;
+    if (match[2] !== undefined && !isValidHostPort(match[2])) return null;
+    return {
+      hostname: match[1],
+      port: match[2] || '',
+      hasPort: match[2] !== undefined,
+    };
+  }
+
+  const colonCount = (value.match(/:/g) || []).length;
+  if (colonCount > 1) {
+    const lastColon = value.lastIndexOf(':');
+    const possiblePort = value.slice(lastColon + 1);
+    const possibleIpv6Host = value.slice(0, lastColon);
+    if (/^\d+$/.test(possiblePort) && net.isIP(possibleIpv6Host) === 6) {
+      return null;
+    }
+    return net.isIP(value) === 6
+      ? { hostname: value, port: '', hasPort: false }
+      : null;
+  }
+
+  if (colonCount === 1) {
+    const colonIndex = value.lastIndexOf(':');
+    const hostname = value.slice(0, colonIndex);
+    const port = value.slice(colonIndex + 1);
+    if (!isValidHostname(hostname) || !isValidHostPort(port)) return null;
+    return { hostname, port, hasPort: true };
+  }
+
+  if (!isValidHostname(value)) return null;
+  return {
+    hostname: value,
+    port: '',
+    hasPort: false,
+  };
+}
+
+function originAllowed(origin, allowedOrigins) {
+  const normalized = normalizeOrigin(origin);
+  if (!normalized) return false;
+  if (listAllowsWildcard(allowedOrigins)) return true;
+  return allowedOrigins.map(normalizeOrigin).includes(normalized);
+}
+
+function hostAllowed(host, allowedHosts) {
+  const normalized = normalizeHostEntry(host);
+  if (!normalized) return false;
+  if (listAllowsWildcard(allowedHosts)) return true;
+
+  return allowedHosts.some(allowed => {
+    const allowedEntry = normalizeHostEntry(allowed);
+    if (!allowedEntry) return false;
+    if (allowedEntry.hostname !== normalized.hostname) return false;
+    if (allowedEntry.hasPort) return allowedEntry.port === normalized.port;
+    return true;
+  });
+}
+
+function rejectForbidden(res, code, message) {
+  return res.status(403).json({
+    error: {
+      status: 403,
+      code,
+      message
+    }
+  });
+}
+
+function validateMcpRequestSource(req, res, logger = console) {
+  const origin = req.get('Origin');
+  const hasOriginHeader = hasOwn(req.headers, 'origin');
+  const host = req.get('Host');
+  const config = req.app.locals.config || {};
+  const mcpConfig = config.mcp || {};
+  const allowedOrigins = mcpConfig.allowedOrigins || [];
+  const allowedHosts = mcpConfig.allowedHosts || [];
+
+  if (hasOriginHeader && !originAllowed(origin, allowedOrigins)) {
+    logger.warn('MCP request rejected by Origin allowlist', { origin, host });
+    rejectForbidden(res, 'FORBIDDEN_ORIGIN', 'Origin is not allowed for MCP requests');
+    return false;
+  }
+
+  if (!hostAllowed(host, allowedHosts)) {
+    logger.warn('MCP request rejected by Host allowlist', { origin, host });
+    rejectForbidden(res, 'FORBIDDEN_HOST', 'Host is not allowed for MCP requests');
+    return false;
+  }
+
+  return true;
 }
 
 /**
@@ -324,19 +471,44 @@ const handlers = require('../services/agent-tools/handlers');
 /**
  * Check if tool requires write authentication
  */
-function requiresWriteAuth(toolName) {
+function requiresWriteAuth(handlerKey) {
   const protectedTools = ['create_document', 'delete_document'];
-  return protectedTools.includes(toolName);
+  return protectedTools.includes(handlerKey);
 }
 
 /**
  * Check if tool requires read authentication (when requireReadLogin is enabled)
  */
-function requiresReadAuth(toolName, prefix) {
-  const readTools = ['list_documents', 'read_document', prefix + '_get_config',
-    prefix + '_search', 'query_document', 'summarize_document', prefix + '_smart_search',
+function requiresReadAuth(handlerKey) {
+  const readTools = ['list_documents', 'list_full_tree', 'read_document',
+    'get_config', 'search', 'query_document', 'summarize_document', 'smart_search',
     'resolve_project', 'query_code_examples'];
-  return readTools.includes(toolName);
+  return readTools.includes(handlerKey);
+}
+
+const PREFIXED_TOOL_KEYS = ['get_config', 'search', 'smart_search'];
+
+function resolveHandlerKey(toolName, prefix) {
+  if (!toolName || typeof toolName !== 'string') {
+    return null;
+  }
+
+  if (Object.prototype.hasOwnProperty.call(handlers, toolName) &&
+      typeof handlers[toolName] === 'function') {
+    return toolName;
+  }
+
+  const prefixMarker = prefix + '_';
+  if (!toolName.startsWith(prefixMarker)) {
+    return toolName;
+  }
+
+  const suffix = toolName.slice(prefixMarker.length);
+  return PREFIXED_TOOL_KEYS.includes(suffix) &&
+    Object.prototype.hasOwnProperty.call(handlers, suffix) &&
+    typeof handlers[suffix] === 'function'
+    ? suffix
+    : null;
 }
 
 /**
@@ -381,9 +553,16 @@ function validateApiKey(req, config) {
  * MCP Tool 실행
  */
 async function executeTool(config, logger, name, args, req, prefix) {
+  const handlerKey = resolveHandlerKey(name, prefix);
+  const hasHandler = handlerKey && Object.prototype.hasOwnProperty.call(handlers, handlerKey);
+  const handler = hasHandler ? handlers[handlerKey] : null;
+  if (typeof handler !== 'function') {
+    throw new Error(`Unknown tool: ${name}`);
+  }
+
   // Check authentication for read tools (when requireReadLogin is enabled)
   const stores = req.app.locals.stores;
-  if (requiresReadAuth(name, prefix) && stores && stores.authSettingsStore) {
+  if (requiresReadAuth(handlerKey) && stores && stores.authSettingsStore) {
     const settings = stores.authSettingsStore.get();
     if (settings.requireReadLogin) {
       const authResult = validateApiKey(req, config);
@@ -394,7 +573,7 @@ async function executeTool(config, logger, name, args, req, prefix) {
   }
 
   // Check authentication for write tools (always required)
-  if (requiresWriteAuth(name)) {
+  if (requiresWriteAuth(handlerKey)) {
     const authResult = validateApiKey(req, config);
     if (!authResult.valid) {
       throw new Error(`UNAUTHORIZED: ${authResult.error}`);
@@ -405,13 +584,6 @@ async function executeTool(config, logger, name, args, req, prefix) {
         throw new Error('UNAUTHORIZED: Write permission required');
       }
     }
-  }
-
-  // Resolve handler: strip dynamic prefix for prefix-based tools
-  const handlerKey = name.startsWith(prefix + '_') ? name.slice(prefix.length + 1) : name;
-  const handler = handlers[handlerKey];
-  if (!handler) {
-    throw new Error(`Unknown tool: ${name}`);
   }
 
   return handler(config, logger, args, req, prefix);
@@ -436,20 +608,163 @@ function summarizeArgs(args) {
 function createMcpRouter() {
   const router = express.Router();
 
+  router.get('/mcp', (req, res) => {
+    const logger = req.app.locals.logger || console;
+    if (!validateMcpRequestSource(req, res, logger)) {
+      return;
+    }
+
+    return res
+      .status(405)
+      .set('Allow', 'POST')
+      .json({
+        error: {
+          code: 'METHOD_NOT_ALLOWED',
+          message: 'GET /mcp is not supported because SSE streams are disabled. Use POST /mcp.'
+        }
+      });
+  });
+
+  function classifyJsonRpcMessage(body) {
+    if (Array.isArray(body)) {
+      return { type: 'invalid', id: null, reason: 'Batch requests are not supported' };
+    }
+
+    if (!body || typeof body !== 'object') {
+      return { type: 'invalid', id: null, reason: 'body must be a JSON-RPC object' };
+    }
+
+    const id = hasOwn(body, 'id') ? body.id : null;
+    if (body.jsonrpc !== '2.0') {
+      return { type: 'invalid', id, reason: 'jsonrpc must be "2.0"' };
+    }
+
+    const hasId = hasOwn(body, 'id');
+    const hasMethod = hasOwn(body, 'method');
+    const hasNonEmptyMethod = typeof body.method === 'string' && body.method.length > 0;
+    const hasResultOrError = hasOwn(body, 'result') || hasOwn(body, 'error');
+
+    if (hasId && hasNonEmptyMethod) {
+      return { type: 'request', id, method: body.method, params: body.params };
+    }
+
+    if (!hasId && hasNonEmptyMethod) {
+      return { type: 'notification', id: null, method: body.method, params: body.params };
+    }
+
+    if (hasId && !hasMethod && hasResultOrError) {
+      return { type: 'response', id, method: undefined };
+    }
+
+    return { type: 'invalid', id, reason: 'body must be a JSON-RPC request, notification, or response' };
+  }
+
+  function acceptAllowsJson(req) {
+    const accept = req.get('Accept');
+    if (!accept) return true;
+
+    return accept
+      .split(',')
+      .map(part => part.split(';')[0].trim().toLowerCase())
+      .some(mediaType => mediaType === 'application/json' || mediaType === '*/*');
+  }
+
+  function rejectNotAcceptable(res) {
+    return res.status(406).json({
+      error: {
+        status: 406,
+        code: 'NOT_ACCEPTABLE',
+        message: 'Accept header must include application/json'
+      }
+    });
+  }
+
+  function validateProtocolHeader(req, res, logger, messageInfo) {
+    const version = req.get('MCP-Protocol-Version');
+    if (version && !SUPPORTED_MCP_PROTOCOL_VERSIONS.includes(version)) {
+      res.status(400).json({
+        error: {
+          status: 400,
+          code: 'UNSUPPORTED_MCP_PROTOCOL_VERSION',
+          message: `Unsupported MCP-Protocol-Version header: ${version}`
+        }
+      });
+      return false;
+    }
+
+    const isInitializeRequest = messageInfo.type === 'request' && messageInfo.method === 'initialize';
+    if (!version && !isInitializeRequest) {
+      const logCompatibility = typeof logger.debug === 'function'
+        ? logger.debug.bind(logger)
+        : logger.info.bind(logger);
+      logCompatibility('MCP-Protocol-Version header missing; compatibility mode assumed', {
+        method: messageInfo.method
+      });
+    }
+
+    return true;
+  }
+
+  function resolveInitializeProtocolVersion(params, logger) {
+    const requested = params && params.protocolVersion;
+    if (!requested) {
+      return DEFAULT_MCP_PROTOCOL_VERSION;
+    }
+
+    if (SUPPORTED_MCP_PROTOCOL_VERSIONS.includes(requested)) {
+      return requested;
+    }
+
+    logger.warn('Unsupported initialize protocolVersion requested; falling back to default', {
+      requested,
+      protocolVersion: DEFAULT_MCP_PROTOCOL_VERSION
+    });
+    return DEFAULT_MCP_PROTOCOL_VERSION;
+  }
+
   // MCP endpoint - JSON-RPC 2.0
-  router.post('/mcp', express.json(), async (req, res) => {
+  function validateMcpSourceMiddleware(req, res, next) {
+    const { logger } = req.app.locals;
+    if (!validateMcpRequestSource(req, res, logger)) {
+      return;
+    }
+    next();
+  }
+
+  router.post('/mcp', validateMcpSourceMiddleware, express.json(), async (req, res) => {
     const { config, logger } = req.app.locals;
     const prefix = sanitizeForToolName(config.ui?.title);
-    const { jsonrpc, id, method, params } = req.body;
 
-    // JSON-RPC 2.0 validation
-    if (jsonrpc !== '2.0') {
-      return res.json(createJsonRpcError(id, -32600, 'Invalid Request', 'jsonrpc must be "2.0"'));
+    const messageInfo = classifyJsonRpcMessage(req.body);
+
+    if (messageInfo.type === 'invalid') {
+      return res.json(createJsonRpcError(messageInfo.id, -32600, 'Invalid Request', messageInfo.reason));
     }
 
-    if (!method) {
-      return res.json(createJsonRpcError(id, -32600, 'Invalid Request', 'method is required'));
+    if (!acceptAllowsJson(req)) {
+      return rejectNotAcceptable(res);
     }
+
+    if (!validateProtocolHeader(req, res, logger, messageInfo)) {
+      return;
+    }
+
+    if (messageInfo.type === 'response') {
+      logger.info('MCP: JSON-RPC response accepted', { id: messageInfo.id });
+      return res.status(202).end();
+    }
+
+    if (messageInfo.type === 'notification') {
+      if (messageInfo.method === 'notifications/initialized') {
+        logger.info('MCP: notifications/initialized received');
+        activityLogger.mcp('INITIALIZED', { ip: req.ip });
+      } else {
+        logger.info('MCP: notification accepted', { method: messageInfo.method });
+      }
+      return res.status(202).end();
+    }
+
+    const { id, method, params } = messageInfo;
 
     try {
       switch (method) {
@@ -496,7 +811,7 @@ function createMcpRouter() {
           logger.info('MCP: initialize called');
           activityLogger.mcp('INITIALIZE', { ip: req.ip });
           return res.json(createJsonRpcResponse(id, {
-            protocolVersion: '2024-11-05',
+            protocolVersion: resolveInitializeProtocolVersion(params, logger),
             capabilities: {
               tools: {}
             },
@@ -532,3 +847,7 @@ function createMcpRouter() {
 module.exports = createMcpRouter;
 module.exports.buildTools = buildTools;
 module.exports.sanitizeForToolName = sanitizeForToolName;
+module.exports.SUPPORTED_MCP_PROTOCOL_VERSIONS = SUPPORTED_MCP_PROTOCOL_VERSIONS;
+module.exports.DEFAULT_MCP_PROTOCOL_VERSION = DEFAULT_MCP_PROTOCOL_VERSION;
+module.exports.resolveHandlerKey = resolveHandlerKey;
+module.exports.validateMcpRequestSource = validateMcpRequestSource;

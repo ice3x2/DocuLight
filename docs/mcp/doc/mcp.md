@@ -2,15 +2,20 @@
 
 ## Overview
 
-DocuLight supports Model Context Protocol (MCP) over HTTP, enabling AI agents to perform document management tasks. MCP is based on JSON-RPC 2.0 protocol and implemented natively without SDK dependencies.
+DocuLight supports Model Context Protocol (MCP) Streamable HTTP initial interoperability, enabling AI agents to perform document management tasks. MCP is based on JSON-RPC 2.0 protocol and implemented natively without SDK dependencies.
 
 ### Basic Information
 
 - **Protocol**: JSON-RPC 2.0
-- **Endpoint**: `POST /mcp`
+- **Endpoint**: `/mcp`
+- **Transport**: Streamable HTTP initial interoperability (SSE streams disabled)
+- **Method**: JSON-RPC requests use `POST`; `GET /mcp` returns `405 Method Not Allowed` with `Allow: POST`
 - **Content-Type**: `application/json`
-- **MCP Version**: 2024-11-05
-- **Authentication**: Not required (public endpoint)
+- **Response Content-Type**: normal JSON-RPC `POST` responses use `application/json`
+- **Accept**: `application/json, text/event-stream`
+- **MCP Version**: 2025-11-25
+- **MCP-Protocol-Version header**: optional for `initialize`; `2025-11-25` is recommended for later requests. Missing headers are accepted in compatibility mode, but unsupported explicit versions return `400 Bad Request`.
+- **Authentication**: read tools are public unless read-login is enabled; write tools require the `X-API-Key` user key
 
 ---
 
@@ -68,7 +73,15 @@ Initialize MCP server and retrieve server information and capabilities.
 {
   "jsonrpc": "2.0",
   "id": 1,
-  "method": "initialize"
+  "method": "initialize",
+  "params": {
+    "protocolVersion": "2025-11-25",
+    "capabilities": {},
+    "clientInfo": {
+      "name": "example-client",
+      "version": "1.0.0"
+    }
+  }
 }
 ```
 
@@ -78,7 +91,7 @@ Initialize MCP server and retrieve server information and capabilities.
   "jsonrpc": "2.0",
   "id": 1,
   "result": {
-    "protocolVersion": "2024-11-05",
+    "protocolVersion": "2025-11-25",
     "capabilities": {
       "tools": {}
     },
@@ -97,6 +110,22 @@ Initialize MCP server and retrieve server information and capabilities.
 - `serverInfo`: Server information
   - `name`: Server name
   - `version`: Server version
+
+---
+
+### Initialized Notification and SSE
+
+- `notifications/initialized` is accepted with HTTP `202 Accepted` and an empty body.
+- JSON-RPC notification/response POST messages are also accepted with HTTP `202 Accepted` and an empty body.
+- SSE streams are not supported; `GET /mcp` returns `405 Method Not Allowed` with `Allow: POST`.
+
+**Notification:**
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "notifications/initialized"
+}
+```
 
 ---
 
@@ -615,6 +644,8 @@ Search → Read → Modify → Save:
 # 1. Search for "configuration"
 curl -X POST http://localhost:3000/mcp \
   -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "MCP-Protocol-Version: 2025-11-25" \
   -d '{
     "jsonrpc": "2.0",
     "id": 1,
@@ -628,6 +659,8 @@ curl -X POST http://localhost:3000/mcp \
 # 2. Read first result file
 curl -X POST http://localhost:3000/mcp \
   -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "MCP-Protocol-Version: 2025-11-25" \
   -d '{
     "jsonrpc": "2.0",
     "id": 2,
@@ -641,6 +674,9 @@ curl -X POST http://localhost:3000/mcp \
 # 3. Create updated document
 curl -X POST http://localhost:3000/mcp \
   -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "MCP-Protocol-Version: 2025-11-25" \
+  -H "X-API-Key: your-api-key" \
   -d '{
     "jsonrpc": "2.0",
     "id": 3,
@@ -672,6 +708,8 @@ Add to Claude Code MCP configuration:
         "-X", "POST",
         "http://localhost:3000/mcp",
         "-H", "Content-Type: application/json",
+        "-H", "Accept: application/json, text/event-stream",
+        "-H", "MCP-Protocol-Version: 2025-11-25",
         "-d", "@-"
       ]
     }
@@ -686,20 +724,50 @@ All AI agents can use DocuLight MCP through standard HTTP requests:
 ```python
 import requests
 
-def call_mcp_tool(tool_name, arguments):
+MCP_URL = "http://localhost:3000/mcp"
+
+def mcp_request(method, params=None, request_id=1):
     response = requests.post(
-        "http://localhost:3000/mcp",
+        MCP_URL,
+        headers={
+            "Accept": "application/json, text/event-stream",
+            "MCP-Protocol-Version": "2025-11-25"
+        },
         json={
             "jsonrpc": "2.0",
-            "id": 1,
-            "method": "tools/call",
-            "params": {
-                "name": tool_name,
-                "arguments": arguments
-            }
+            "id": request_id,
+            "method": method,
+            "params": params or {}
         }
     )
     return response.json()
+
+def send_initialized():
+    requests.post(
+        MCP_URL,
+        headers={
+            "Accept": "application/json, text/event-stream",
+            "MCP-Protocol-Version": "2025-11-25"
+        },
+        json={
+            "jsonrpc": "2.0",
+            "method": "notifications/initialized"
+        }
+    )
+
+def call_mcp_tool(tool_name, arguments):
+    return mcp_request("tools/call", {
+        "name": tool_name,
+        "arguments": arguments
+    })
+
+# Initialize, then send initialized notification
+mcp_request("initialize", {
+    "protocolVersion": "2025-11-25",
+    "capabilities": {},
+    "clientInfo": {"name": "python-example", "version": "1.0.0"}
+})
+send_initialized()
 
 # Example: List documents
 result = call_mcp_tool("list_documents", {"path": "/guide"})
@@ -710,11 +778,31 @@ print(result["result"]["content"][0]["text"])
 
 ## Security Considerations
 
+### Browser Origin and Host Guard
+
+Requests to `POST /mcp` are checked against the MCP Host allowlist. Browser-origin requests with an `Origin` header are also checked against the MCP Origin allowlist. This reduces DNS rebinding exposure when read tools are public. Requests without an `Origin` header, such as normal CLI/server MCP clients, are accepted only in the sense that missing `Origin` is not rejected; `Host` is still always checked.
+
+Example:
+
+```json5
+mcp: {
+  allowedOrigins: ["https://docs.example.com"],
+  allowedHosts: ["docs.example.com"]
+}
+```
+
+Origin values must be canonical origins such as `https://docs.example.com`; do not include path, query, hash, or userinfo.
+Host entries may be hostnames/IPs or exact `host:port` values. Entries without a port allow any port for that hostname; entries with a port require an exact port match.
+
+The server binds to `127.0.0.1` by default. For public deployments, keep DocuLight bound locally and terminate public traffic at a reverse proxy when possible. Preserve the original `Host` header when using a reverse proxy; DocuLight does not trust `X-Forwarded-Host` for MCP allowlist checks.
+
+`["*"]` is supported only as an explicit insecure opt-out for the corresponding check. It disables that allowlist check for well-formed values and should not be used when read tools are public.
+
 ### Authentication
 
 MCP tools are divided into public (read-only) and protected (write) operations:
 
-**Public Tools** (No authentication required):
+**Read Tools** (public unless read login is enabled):
 - `list_documents` - List directory contents
 - `list_full_tree` - Recursive tree listing
 - `read_document` - Read document content
@@ -734,6 +822,8 @@ X-API-Key: your-api-key-here
 ```bash
 curl -X POST http://localhost:3000/mcp \
   -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "MCP-Protocol-Version: 2025-11-25" \
   -H "X-API-Key: your-api-key" \
   -d '{
     "jsonrpc": "2.0",

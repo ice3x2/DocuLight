@@ -35,6 +35,7 @@ npm start
 ```
 
 Server runs on port 3000 by default. Access at `http://localhost:3000`.
+The server binds to `127.0.0.1` by default. Set `host: "0.0.0.0"` in `config.json5`, or set the `HOST` environment variable, only when direct remote access is required.
 
 ---
 
@@ -115,7 +116,8 @@ Error handling:
 
 ## MCP Integration
 
-DocuLight provides an HTTP-based MCP (Model Context Protocol) server at `POST /mcp`.
+DocuLight provides MCP (Model Context Protocol) Streamable HTTP initial interoperability at `POST /mcp`.
+SSE streams are not enabled: normal JSON-RPC POST requests return `application/json`, and `GET /mcp` returns `405 Method Not Allowed` with `Allow: POST`.
 
 ### Claude Code
 
@@ -139,21 +141,53 @@ docuLight: http://localhost:3000/mcp (HTTP) - ✓ Connected
 All AI agents can use DocuLight MCP through standard HTTP requests:
 
 ```bash
-# List available tools
+# Initialize the MCP session
 curl -X POST http://localhost:3000/mcp \
   -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
   -d '{
     "jsonrpc": "2.0",
     "id": 1,
+    "method": "initialize",
+    "params": {
+      "protocolVersion": "2025-11-25",
+      "capabilities": {},
+      "clientInfo": {
+        "name": "curl",
+        "version": "1.0.0"
+      }
+    }
+  }'
+
+# Send initialized notification
+curl -X POST http://localhost:3000/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "MCP-Protocol-Version: 2025-11-25" \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "notifications/initialized"
+  }'
+
+# List available tools
+curl -X POST http://localhost:3000/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "MCP-Protocol-Version: 2025-11-25" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 2,
     "method": "tools/list"
   }'
 
 # Read a document
 curl -X POST http://localhost:3000/mcp \
   -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "MCP-Protocol-Version: 2025-11-25" \
   -d '{
     "jsonrpc": "2.0",
-    "id": 2,
+    "id": 3,
     "method": "tools/call",
     "params": {
       "name": "read_document",
@@ -165,11 +199,34 @@ curl -X POST http://localhost:3000/mcp \
 ### MCP Server Details
 
 - **Endpoint**: `http://localhost:3000/mcp`
-- **Transport**: HTTP
-- **Method**: POST
+- **Transport**: Streamable HTTP initial interoperability (no SSE streams)
+- **Method**: POST for JSON-RPC; GET returns 405 with `Allow: POST`
 - **Content-Type**: application/json
-- **Authentication**: X-API-Key header required for write operations (create_document, delete_document)
+- **Accept**: `application/json, text/event-stream`
+- **Protocol Version**: `2025-11-25`
+- **Authentication**: read tools are public unless read login is enabled; write tools require the `X-API-Key` user key
+- **Browser Origin Guard**: browser-origin requests are checked against MCP Origin/Host allowlists to reduce DNS rebinding exposure
 - **Protocol**: JSON-RPC 2.0
+
+### MCP Origin and Host Allowlist
+
+DocuLight rejects requests to `POST /mcp` when the `Host` header is not allowed. If an `Origin` header is present, it must also be allowed. Requests without an `Origin` header, such as normal CLI/server MCP clients, are accepted only in the sense that missing `Origin` is not rejected; `Host` is still always checked.
+
+Configure browser access explicitly when exposing MCP through a domain:
+
+```json5
+mcp: {
+  allowedOrigins: ["https://docs.example.com"],
+  allowedHosts: ["docs.example.com"]
+}
+```
+
+Origin values must be canonical origins such as `https://docs.example.com`; do not include path, query, hash, or userinfo.
+Host entries may be hostnames/IPs or exact `host:port` values. Entries without a port allow any port for that hostname; entries with a port require an exact port match.
+
+The server binds to `127.0.0.1` by default. For public deployments, keep DocuLight bound locally and terminate public traffic at a reverse proxy when possible. Preserve the original `Host` header when using a reverse proxy; DocuLight does not trust `X-Forwarded-Host` for MCP allowlist checks.
+
+`["*"]` is supported only as an explicit insecure opt-out for the corresponding check. It disables that allowlist check for well-formed values and should not be used when read tools are public.
 
 ### MCP Tool Authentication
 
