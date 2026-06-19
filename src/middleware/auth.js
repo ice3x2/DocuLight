@@ -90,3 +90,4 @@ function extractBearer(req) {
 module.exports = authMiddleware;
 module.exports.requireApiPermission = requireApiPermission;
 module.exports.hasPermission = hasPermission;
+module.exports.extractBearer = extractBearer;

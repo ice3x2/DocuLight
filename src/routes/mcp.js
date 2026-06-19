@@ -515,7 +515,9 @@ function resolveHandlerKey(toolName, prefix) {
  * Validate API key (user-key) via SHA-256 hash lookup
  */
 function validateApiKey(req, config) {
-  const providedKey = req.header('X-API-Key');
+  // auth.js(일반 API 경로)와 동일하게 X-API-Key 와 Authorization: Bearer 를 모두 허용
+  const { extractBearer } = require('../middleware/auth');
+  const providedKey = req.header('X-API-Key') || extractBearer(req);
 
   if (!providedKey) {
     return { valid: false, error: 'X-API-Key header is required for this operation' };
@@ -851,3 +853,4 @@ module.exports.SUPPORTED_MCP_PROTOCOL_VERSIONS = SUPPORTED_MCP_PROTOCOL_VERSIONS
 module.exports.DEFAULT_MCP_PROTOCOL_VERSION = DEFAULT_MCP_PROTOCOL_VERSION;
 module.exports.resolveHandlerKey = resolveHandlerKey;
 module.exports.validateMcpRequestSource = validateMcpRequestSource;
+module.exports.validateApiKey = validateApiKey;

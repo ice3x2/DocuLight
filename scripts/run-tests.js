@@ -28,6 +28,7 @@ const SUITES = [
   'test/mcp/streamable-http.test.js',
   'test/mcp/mcp-security-docs.test.js',
   'test/mcp/handler-parity.test.js',
+  'test/mcp/bearer-auth.test.js',
   'test/chatbot/llm-fallback.test.js',
   'test/chatbot/standard-fallback-bounds.test.js',
   'test/chatbot/injection-guard.test.js',
