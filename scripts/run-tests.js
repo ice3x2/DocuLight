@@ -11,6 +11,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 
 const SUITES = [
+  'test/md-link-resolver.test.js',
   'test/chatbot/agentic-graph.test.js',
   'test/chatbot/agentic-graph-pairing.test.js',
   'test/chatbot/agentic-classify-routing.test.js',

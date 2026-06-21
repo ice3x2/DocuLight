@@ -483,6 +483,9 @@ async function renderMarkdown(content) {
 
   // Add click handlers for internal links (SPA navigation)
   addInternalLinkHandlers(contentDiv);
+
+  // Add click handlers for standard markdown .md links (SPA navigation)
+  addMarkdownFileLinkHandlers(contentDiv);
 }
 
 /**
@@ -598,6 +601,56 @@ function addInternalLinkHandlers(contentDiv) {
         // Not a file, try as folder
         await showFolderList(decodedPath);
       }
+    });
+  });
+}
+
+/**
+ * Add click handlers for standard markdown links to .md files (SPA navigation)
+ *
+ * Standard links like [text](setup.md) / [text](../guide/setup.md) /
+ * [text](/guide/setup.md) are rendered verbatim, so clicking them would let
+ * the browser navigate to a .md URL — which the server serves as a download
+ * (see /doc/*.md route), not the viewer. This resolves such links relative to
+ * the current document, rewrites the href to a clean /doc/ URL (so middle-click
+ * / open-in-new-tab also reach the viewer), and routes left-clicks through
+ * loadFile for SPA navigation. Wiki links and /doc/ links are handled elsewhere.
+ */
+function addMarkdownFileLinkHandlers(contentDiv) {
+  const resolver = window.MdLinkResolver;
+  if (!resolver) return;
+
+  const bp = DocLightUtils.getBasePath();
+  const docPrefix = bp + '/doc/';
+
+  // Current document path (real path incl. .md) from breadcrumb.
+  // Only run in genuine document context — skip the welcome placeholder and
+  // folder-list views (where relative resolution would be ambiguous).
+  const breadcrumb = document.getElementById('breadcrumb');
+  const currentPath = breadcrumb ? breadcrumb.textContent.trim() : '';
+  if (!currentPath || currentPath === 'Select a document' || currentPath.endsWith('/')) {
+    return;
+  }
+
+  contentDiv.querySelectorAll('a[href]').forEach(link => {
+    const href = link.getAttribute('href');
+
+    // /doc/ links are handled by addInternalLinkHandlers — skip to avoid double binding
+    if (href.startsWith('/doc/') || (bp && href.startsWith(docPrefix))) return;
+
+    const resolved = resolver.resolveMarkdownLink(currentPath, href);
+    if (!resolved) return;
+
+    // Rewrite href → clean /doc/ URL (middle-click / new tab reach the viewer)
+    link.setAttribute('href', DocLightUtils.prefixPath(resolver.buildViewerHref(resolved.filePath, resolved.hash)));
+
+    link.addEventListener('click', async (e) => {
+      // Let the browser handle modified clicks (open in new tab/window)
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
+        return;
+      }
+      e.preventDefault();
+      await loadFile(resolved.filePath, resolved.hash);
     });
   });
 }
@@ -1470,6 +1523,9 @@ async function loadFile(path, hash = '', updateUrl = true, skipScroll = false) {
 
       // Add click handlers for internal links (SPA navigation)
       addInternalLinkHandlers(contentDiv);
+
+      // Add click handlers for standard markdown .md links (SPA navigation)
+      addMarkdownFileLinkHandlers(contentDiv);
     }
 
     // Add document title (filename without .md)
