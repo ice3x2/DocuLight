@@ -1,0 +1,57 @@
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #0d1117;
+  color: #e6edf3;
+  font-family: -apple-system, 'Segoe UI', 'Malgun Gothic', sans-serif;
+}
+
+.demo-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.demo-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid #30363d;
+  background: #161b22;
+  font-size: 0.85rem;
+}
+
+.demo-hint {
+  color: #8b949e;
+}
+
+.demo-hint code {
+  font-family: ui-monospace, monospace;
+  background: #21262d;
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+
+.demo-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+}
+
+/* 에디터는 부모를 채운다 — 높이가 잡힌 컨테이너가 필요하다. */
+.demo-editor {
+  flex: 1;
+  min-height: 0;
+}

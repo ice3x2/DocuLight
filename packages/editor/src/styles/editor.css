@@ -1,0 +1,31 @@
+/* Mermaid 블록 위젯.
+ *
+ * 색은 vendor 테마의 CSS 변수를 그대로 물려받는다 — 우리 값을 새로 정의하면
+ * 테마 전환 시 이 블록만 어긋난다. (docs/research/editor/02 §10) */
+
+.dl-mermaid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.6em 0;
+  padding: 1em;
+  border: 1px solid var(--atomic-editor-border, #30363d);
+  border-radius: var(--atomic-editor-radius, 6px);
+  background: var(--atomic-editor-bg-panel, #161b22);
+  overflow-x: auto;
+}
+
+.dl-mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.dl-mermaid-error {
+  display: block;
+  justify-content: unset;
+  white-space: pre-wrap;
+  font-family: var(--atomic-editor-font-mono, ui-monospace, monospace);
+  font-size: 0.85em;
+  color: var(--atomic-editor-hl-invalid, #ff7b72);
+  border-color: var(--atomic-editor-hl-invalid, #ff7b72);
+}
