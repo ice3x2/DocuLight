@@ -1,0 +1,24 @@
+{
+  "name": "kiwi-srs-from-code",
+  "agent": "claude",
+  "installedAt": "2026-08-11T17:10:32.346Z",
+  "installMode": "generated-runtime-mirror",
+  "sourceAgent": "claude",
+  "sourceRoot": "skills/claude",
+  "sourcePath": "skills/claude/kiwi-srs-from-code",
+  "installedPath": "C:/Work/git/DocuLight2.0/.claude/skills/kiwi-srs-from-code",
+  "sourceRevision": "unknown",
+  "sourceChecksum": "sha256:51330a2ecc8407c6190e21d59efb6d7d3cde1d863ee99a8388ac3a2d289efedd",
+  "installedChecksum": "sha256:51330a2ecc8407c6190e21d59efb6d7d3cde1d863ee99a8388ac3a2d289efedd",
+  "sourceFileCount": 1,
+  "installedFileCount": 1,
+  "sharedResourceRoot": "C:/Work/git/DocuLight2.0/.claude/skills/_shared/kiwi",
+  "sharedResourceValidation": "source-references-validated",
+  "sharedResourceReferences": [
+    "_shared/kiwi/auto-option.md",
+    "_shared/kiwi/loop-option.md",
+    "_shared/kiwi/pipeline-event.md"
+  ],
+  "refreshCommand": "node bin/speckiwi --root . skills install claude kiwi-srs-from-code --dest C:/Work/git/DocuLight2.0/.claude/skills --json",
+  "noManualEdit": true
+}

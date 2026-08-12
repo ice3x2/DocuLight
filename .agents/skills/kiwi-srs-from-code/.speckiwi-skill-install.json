@@ -1,0 +1,24 @@
+{
+  "name": "kiwi-srs-from-code",
+  "agent": "codex",
+  "installedAt": "2026-08-11T17:10:40.239Z",
+  "installMode": "generated-runtime-mirror",
+  "sourceAgent": "codex",
+  "sourceRoot": "skills/codex",
+  "sourcePath": "skills/codex/kiwi-srs-from-code",
+  "installedPath": "C:/Work/git/DocuLight2.0/.agents/skills/kiwi-srs-from-code",
+  "sourceRevision": "unknown",
+  "sourceChecksum": "sha256:ef14d1e8fe4b5ebf47048d15317ac479aa70f496e3bef79e80ab7f645bc57392",
+  "installedChecksum": "sha256:ef14d1e8fe4b5ebf47048d15317ac479aa70f496e3bef79e80ab7f645bc57392",
+  "sourceFileCount": 3,
+  "installedFileCount": 3,
+  "sharedResourceRoot": "C:/Work/git/DocuLight2.0/.agents/skills/_shared/kiwi",
+  "sharedResourceValidation": "source-references-validated",
+  "sharedResourceReferences": [
+    "_shared/kiwi/auto-option.md",
+    "_shared/kiwi/loop-option.md",
+    "_shared/kiwi/pipeline-event.md"
+  ],
+  "refreshCommand": "node bin/speckiwi --root . skills install codex kiwi-srs-from-code --dest C:/Work/git/DocuLight2.0/.agents/skills --json",
+  "noManualEdit": true
+}

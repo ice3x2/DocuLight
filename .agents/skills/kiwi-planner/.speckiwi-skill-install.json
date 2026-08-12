@@ -1,0 +1,25 @@
+{
+  "name": "kiwi-planner",
+  "agent": "codex",
+  "installedAt": "2026-08-11T17:10:38.138Z",
+  "installMode": "generated-runtime-mirror",
+  "sourceAgent": "codex",
+  "sourceRoot": "skills/codex",
+  "sourcePath": "skills/codex/kiwi-planner",
+  "installedPath": "C:/Work/git/DocuLight2.0/.agents/skills/kiwi-planner",
+  "sourceRevision": "unknown",
+  "sourceChecksum": "sha256:915074469c28813f8829cc1671e3eaec2a7a00481eca4104a96f0098619df72d",
+  "installedChecksum": "sha256:915074469c28813f8829cc1671e3eaec2a7a00481eca4104a96f0098619df72d",
+  "sourceFileCount": 4,
+  "installedFileCount": 4,
+  "sharedResourceRoot": "C:/Work/git/DocuLight2.0/.agents/skills/_shared/kiwi",
+  "sharedResourceValidation": "source-references-validated",
+  "sharedResourceReferences": [
+    "_shared/kiwi/auto-option.md",
+    "_shared/kiwi/loop-option.md",
+    "_shared/kiwi/pipeline-event.md",
+    "_shared/kiwi/workmode-policy.md"
+  ],
+  "refreshCommand": "node bin/speckiwi --root . skills install codex kiwi-planner --dest C:/Work/git/DocuLight2.0/.agents/skills --json",
+  "noManualEdit": true
+}

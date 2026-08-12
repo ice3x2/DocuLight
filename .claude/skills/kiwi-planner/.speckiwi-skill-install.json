@@ -1,0 +1,25 @@
+{
+  "name": "kiwi-planner",
+  "agent": "claude",
+  "installedAt": "2026-08-11T17:10:30.772Z",
+  "installMode": "generated-runtime-mirror",
+  "sourceAgent": "claude",
+  "sourceRoot": "skills/claude",
+  "sourcePath": "skills/claude/kiwi-planner",
+  "installedPath": "C:/Work/git/DocuLight2.0/.claude/skills/kiwi-planner",
+  "sourceRevision": "unknown",
+  "sourceChecksum": "sha256:65ad38d9c230c43742d4e6e9206e22d6a786535e864823c9e670f913b74a73ee",
+  "installedChecksum": "sha256:65ad38d9c230c43742d4e6e9206e22d6a786535e864823c9e670f913b74a73ee",
+  "sourceFileCount": 2,
+  "installedFileCount": 2,
+  "sharedResourceRoot": "C:/Work/git/DocuLight2.0/.claude/skills/_shared/kiwi",
+  "sharedResourceValidation": "source-references-validated",
+  "sharedResourceReferences": [
+    "_shared/kiwi/auto-option.md",
+    "_shared/kiwi/loop-option.md",
+    "_shared/kiwi/pipeline-event.md",
+    "_shared/kiwi/workmode-policy.md"
+  ],
+  "refreshCommand": "node bin/speckiwi --root . skills install claude kiwi-planner --dest C:/Work/git/DocuLight2.0/.claude/skills --json",
+  "noManualEdit": true
+}

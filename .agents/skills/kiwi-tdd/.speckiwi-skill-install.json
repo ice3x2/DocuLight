@@ -1,0 +1,23 @@
+{
+  "name": "kiwi-tdd",
+  "agent": "codex",
+  "installedAt": "2026-08-11T17:10:41.721Z",
+  "installMode": "generated-runtime-mirror",
+  "sourceAgent": "codex",
+  "sourceRoot": "skills/codex",
+  "sourcePath": "skills/codex/kiwi-tdd",
+  "installedPath": "C:/Work/git/DocuLight2.0/.agents/skills/kiwi-tdd",
+  "sourceRevision": "unknown",
+  "sourceChecksum": "sha256:84f1200278484ae6f597520488059249c2a1237594e54ebc37600505a1592a42",
+  "installedChecksum": "sha256:84f1200278484ae6f597520488059249c2a1237594e54ebc37600505a1592a42",
+  "sourceFileCount": 1,
+  "installedFileCount": 1,
+  "sharedResourceRoot": "C:/Work/git/DocuLight2.0/.agents/skills/_shared/kiwi",
+  "sharedResourceValidation": "source-references-validated",
+  "sharedResourceReferences": [
+    "_shared/kiwi/auto-option.md",
+    "_shared/kiwi/loop-option.md"
+  ],
+  "refreshCommand": "node bin/speckiwi --root . skills install codex kiwi-tdd --dest C:/Work/git/DocuLight2.0/.agents/skills --json",
+  "noManualEdit": true
+}
