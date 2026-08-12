@@ -63,6 +63,29 @@ mermaidBlocks({ renderer: async (code, id) => '<svg …></svg>' })
 
 기본 구현은 `mermaid` 를 동적 import 한다. 테스트는 가짜 renderer 를 넣어 브라우저 없이 돈다.
 
+## 모양 바꾸기
+
+전부 CSS 변수다. JS API 가 아니다.
+
+| 변수 | 기본값 | 뜻 |
+|---|---|---|
+| `--atomic-editor-measure` | `70ch` | **본문 폭.** 프레임이 아니라 텍스트 컬럼만 좁힌다 — 검색 패널·사이드바는 넓게 남는다. `none` 이면 가득 |
+| `--atomic-editor-body-size` | `1.0625rem` | 본문 글자 크기 |
+| `--atomic-editor-body-leading` | `1.7` | 줄 간격 |
+| `--atomic-editor-font` / `-font-mono` | 시스템 | 글꼴 |
+
+```tsx
+<div style={{ '--atomic-editor-measure': '100ch' } as CSSProperties}>
+  <AtomicCodeMirrorEditor … />
+</div>
+```
+
+색은 39개 변수로 나뉘어 있다 (`--atomic-editor-fg` · `-bg` · `-accent` · `-hl-*` 등).
+**테마는 다크가 기본이고 라이트가 opt-in** 이다 — `<html data-theme="light">`.
+DocuLight 의 기본은 라이트이므로 `index.html` 에서 지정한다.
+
+데모 상단 바에서 폭과 보기 전용을 바로 시험할 수 있다.
+
 ## 문서
 
 - 조사·설계 근거 — [`docs/research/editor/`](../../docs/research/editor/00.index.md)

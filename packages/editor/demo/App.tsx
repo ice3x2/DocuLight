@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type CSSProperties } from 'react';
 
 import { AtomicCodeMirrorEditor, mermaidBlocks } from '../src/index';
 
@@ -102,8 +102,18 @@ classDiagram
 [[위키링크]] 와 [일반 링크](https://example.com) 도 동작합니다.
 `;
 
+// 본문 폭은 `--atomic-editor-measure` 하나로 정해진다 (기본 70ch).
+// 프레임이 아니라 텍스트 컬럼만 좁히는 변수라, 검색 패널 등은 넓게 남는다.
+const WIDTHS = [
+  { label: '좁게 55ch', value: '55ch' },
+  { label: '기본 70ch', value: '70ch' },
+  { label: '넓게 100ch', value: '100ch' },
+  { label: '가득', value: 'none' },
+];
+
 export default function App() {
   const [readOnly, setReadOnly] = useState(false);
+  const [measure, setMeasure] = useState('70ch');
 
   // 참조가 바뀌면 에디터가 remount 된다 — 반드시 안정적으로 유지한다.
   const extensions = useMemo(() => [mermaidBlocks()], []);
@@ -115,6 +125,17 @@ export default function App() {
         <span className="demo-hint">
           vendor 무수정 · <code>extensions</code> 주입만으로 Mermaid 추가
         </span>
+        <label className="demo-width">
+          문서 폭
+          <select value={measure} onChange={(event) => setMeasure(event.target.value)}>
+            {WIDTHS.map((width) => (
+              <option key={width.value} value={width.value}>
+                {width.label}
+              </option>
+            ))}
+          </select>
+        </label>
+
         <label className="demo-toggle">
           <input
             type="checkbox"
@@ -125,7 +146,10 @@ export default function App() {
         </label>
       </header>
 
-      <main className="demo-editor">
+      <main
+        className="demo-editor"
+        style={{ '--atomic-editor-measure': measure } as CSSProperties}
+      >
         <AtomicCodeMirrorEditor
           documentId="demo"
           markdownSource={SAMPLE}

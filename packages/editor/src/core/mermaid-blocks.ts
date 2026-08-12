@@ -8,9 +8,9 @@
 
 import { ensureSyntaxTree, syntaxTree } from '@codemirror/language';
 import {
+  EditorState,
   Facet,
   StateField,
-  type EditorState,
   type Extension,
   type Range,
 } from '@codemirror/state';
@@ -177,9 +177,39 @@ export const mermaidBlockField = StateField.define<DecorationSet>({
   provide: (field) => EditorView.decorations.from(field),
 });
 
+/** 블록 바로 바깥의 위치. 문서가 블록뿐이면 나갈 곳이 없어 null 이다. */
+function positionOutside(state: EditorState, block: MermaidBlock): number | null {
+  if (block.from > 0) return block.from - 1;
+  if (block.to < state.doc.length) return block.to + 1;
+  return null;
+}
+
+/**
+ * 읽기 전용을 빠져나올 때 선택을 mermaid 블록 밖으로 밀어낸다.
+ *
+ * 읽기 전용에서 다이어그램을 클릭하면 화면은 그대로지만 선택은 블록 안에
+ * 남는다. 그 상태로 편집 모드로 돌아가면 사용자가 편집을 의도한 적 없는
+ * 블록이 갑자기 원문으로 열린다. 전이 시점에 선택을 밖으로 옮겨 막는다.
+ */
+const escapeBlockOnReadOnlyExit = EditorState.transactionFilter.of((tr) => {
+  // 모드 전환은 compartment 재구성으로 온다. 필터 안에서 `tr.state` 를 읽으면
+  // 상태 계산이 필터를 다시 부르므로, 재구성 여부와 이전 상태만 본다.
+  // 그래서 판정은 "읽기 전용이었고 재구성이 일어났다"까지다 — 재구성 뒤에도
+  // 여전히 읽기 전용이면 선택을 옮겨도 화면은 달라지지 않으므로 무해하다.
+  if (!tr.startState.readOnly || !tr.reconfigured || tr.docChanged) return tr;
+
+  const head = tr.newSelection.main.head;
+  const block = findMermaidBlocks(tr.startState).find((b) => head >= b.from && head <= b.to);
+  if (!block) return tr;
+
+  const anchor = positionOutside(tr.startState, block);
+  return anchor === null ? tr : [tr, { selection: { anchor } }];
+});
+
 export function mermaidBlocks(config: MermaidBlocksConfig = {}): Extension {
   return [
     mermaidBlockField,
+    escapeBlockOnReadOnlyExit,
     config.renderer ? mermaidRendererFacet.of(config.renderer) : [],
   ];
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { EditorState } from '@codemirror/state';
+import { Compartment, EditorState } from '@codemirror/state';
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 
 import {
@@ -137,6 +137,54 @@ describe('SDS-AC-9 · 읽기 전용에서는 커서 위치와 무관하게 위�
 
   it('읽기 전용이 아니면 종전대로 원문이 드러난다', () => {
     expect(widgetCount(stateOf(doc, doc.indexOf('graph TD;') + 2))).toBe(0);
+  });
+});
+
+describe('SDS-AC-11 · 읽기 전용을 해제할 때 선택을 블록 밖으로 옮긴다', () => {
+  const doc = `앞 문단\n\n${FLOW}\n\n뒤 문단`;
+  const blockFrom = doc.indexOf('```mermaid');
+  const blockTo = blockFrom + FLOW.length;
+
+  function leaveReadOnly(cursor: number) {
+    const readOnly = new Compartment();
+    const state = EditorState.create({
+      doc,
+      selection: { anchor: cursor },
+      extensions: [
+        markdown({ base: markdownLanguage }),
+        readOnly.of(EditorState.readOnly.of(true)),
+        mermaidBlocks(),
+      ],
+    });
+    return state.update({ effects: readOnly.reconfigure(EditorState.readOnly.of(false)) });
+  }
+
+  it('블록 안에 있던 선택이 블록 밖으로 나간다', () => {
+    const tr = leaveReadOnly(doc.indexOf('graph TD;') + 2);
+    const head = tr.state.selection.main.head;
+
+    expect(head < blockFrom || head > blockTo).toBe(true);
+  });
+
+  it('선택을 옮긴 결과 다이어그램이 렌더 상태로 남는다', () => {
+    expect(widgetCount(leaveReadOnly(doc.indexOf('graph TD;') + 2).state)).toBe(1);
+  });
+
+  it('블록 밖에 있던 선택은 건드리지 않는다', () => {
+    const outside = 2;
+    expect(leaveReadOnly(outside).state.selection.main.head).toBe(outside);
+  });
+
+  it('편집 모드끼리의 전이에서는 선택을 옮기지 않는다', () => {
+    const inside = doc.indexOf('graph TD;') + 2;
+    const state = EditorState.create({
+      doc,
+      selection: { anchor: inside },
+      extensions: [markdown({ base: markdownLanguage }), mermaidBlocks()],
+    });
+    const tr = state.update({ selection: { anchor: inside } });
+
+    expect(tr.state.selection.main.head).toBe(inside);
   });
 });
 

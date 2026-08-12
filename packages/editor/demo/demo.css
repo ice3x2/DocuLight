@@ -42,8 +42,23 @@ body {
   border-radius: 3px;
 }
 
-.demo-toggle {
+.demo-width {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.demo-width select {
+  font: inherit;
+  padding: 0.15rem 0.3rem;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  background: #ffffff;
+  color: inherit;
+}
+
+.demo-toggle {
   display: flex;
   align-items: center;
   gap: 0.35rem;

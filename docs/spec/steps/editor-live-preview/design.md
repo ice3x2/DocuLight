@@ -56,6 +56,7 @@
 - SDS-AC-8: WHEN mermaid 렌더가 실패하면 THE SYSTEM SHALL 에디터 DOM 바깥에 어떤 요소도 남기지 않는다.
 - SDS-AC-9: WHEN 에디터가 읽기 전용이면 THE SYSTEM SHALL 선택 영역의 위치와 무관하게 mermaid 블록을 위젯으로 유지한다.
 - SDS-AC-10: WHEN 읽기 전용 상태에서 다이어그램을 클릭하면 THE SYSTEM SHALL 캐럿을 블록 안에 떨구지 않는다.
+- SDS-AC-11: WHEN 읽기 전용에서 편집 모드로 전환하는 시점에 선택이 mermaid 블록 안에 있으면 THE SYSTEM SHALL 선택을 그 블록 밖으로 옮겨 다이어그램이 렌더 상태를 유지하게 한다.
 
 ## 6. Test Plan
 
@@ -70,7 +71,8 @@
 | SDS-AC-7 | test/mermaid-blocks.test.ts | 블록 2개 중 커서가 든 쪽만 원문, 나머지는 위젯 |
 | SDS-AC-8 | test/browser-check.mjs | 렌더 실패 후 에디터 밖 DOM 잔여물 0건 (실제 브라우저 필요) |
 | SDS-AC-9 | test/mermaid-blocks.test.ts | `EditorState.readOnly` 상태에서 커서를 블록 안에 두어도 위젯 유지 |
-| SDS-AC-10 | test/browser-check.mjs | 보기 전용 토글 후 다이어그램 클릭 → 위젯 수 불변 |
+| SDS-AC-10 | test/browser-check.mjs | 보기 전용 토글 후 다이어그램 클릭 → 원문 열린 블록 0개 유지 |
+| SDS-AC-11 | test/mermaid-blocks.test.ts | 블록 안 선택 상태에서 readOnly 를 해제하면 선택이 블록 밖으로 이동 |
 
 ## 7. Open Questions
 
