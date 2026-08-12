@@ -7,7 +7,7 @@
 
 import { chromium } from 'playwright';
 
-const URL = process.env.EDITOR_URL ?? 'http://localhost:5273/';
+const URL = process.env.EDITOR_URL ?? 'http://localhost:3399/';
 const HEADED = process.argv.includes('--headed');
 const SHOT = 'test/browser-check.png';
 

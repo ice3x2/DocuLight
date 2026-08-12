@@ -71,3 +71,7 @@ Merge-time duplicate Requirement ID repair workflow:
 The Completed Work Log — inline in `docs/spec/00.index.md` §7 and its split history file `docs/spec/91.completed-work-log.md` — is a read-only summary for agents. Requirement Block status, Acceptance Criteria, Verification Evidence, and Change Notes remain the source of truth for completion.
 
 <!-- /SpecKiwi SRS workflow -->
+
+## Development conventions
+
+- Default dev-server port is **3399** (`packages/editor` and any later frontend package). Do not use another port without saying why.

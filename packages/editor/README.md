@@ -9,7 +9,7 @@ DocuLight 2.0 마크다운 **라이브 프리뷰** 에디터.
 
 ```bash
 npm install
-npm run dev          # http://localhost:5273
+npm run dev          # http://localhost:3399
 ```
 
 > Windows 에서 `NODE_ENV=production` 이 잡혀 있으면 devDependencies 가 설치되지 않는다.
