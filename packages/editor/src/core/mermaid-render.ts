@@ -39,14 +39,75 @@ export function setCachedSize(code: string, size: RenderedSize): void {
   sizeCache.set(code, size);
 }
 
+/**
+ * 다이어그램 테마를 문서 테마에 맞춘다.
+ *
+ * 에디터 CSS 는 다크를 기본으로 두고 라이트를 `data-theme="light"` 로 opt-in
+ * 받는다. 다이어그램도 같은 규약을 따라야 배경만 밝고 그림은 어두운 상태가
+ * 생기지 않는다.
+ *
+ * 한계: mermaid 초기화는 1회뿐이라 실행 중 테마를 바꿔도 이미 적재된 뒤에는
+ * 반영되지 않는다. 런타임 테마 전환을 붙일 때 함께 해결해야 한다.
+ */
+function isLightDocument(): boolean {
+  return document.documentElement.dataset.theme === 'light';
+}
+
+/**
+ * DocuLight 다이어그램 팔레트.
+ *
+ * mermaid 기본 테마는 한 가지 연보라로 모든 노드를 칠해서, 흐름도의 단계가
+ * 여럿일 때 서로 구분되지 않는다. 1·2·3차 색을 실제로 다른 계열로 벌려
+ * 노드 종류가 눈으로 구분되게 한다.
+ */
+function paletteFor(light: boolean): Record<string, string> {
+  return light
+    ? {
+        primaryColor: '#dbeafe',
+        primaryTextColor: '#0f2e4d',
+        primaryBorderColor: '#3b82f6',
+        secondaryColor: '#fef3c7',
+        secondaryTextColor: '#4a3208',
+        secondaryBorderColor: '#f59e0b',
+        tertiaryColor: '#dcfce7',
+        tertiaryTextColor: '#0f3d24',
+        tertiaryBorderColor: '#22c55e',
+        lineColor: '#64748b',
+        textColor: '#1f2937',
+        noteBkgColor: '#fae8ff',
+        noteBorderColor: '#c026d3',
+        noteTextColor: '#4a044e',
+      }
+    : {
+        primaryColor: '#1e3a5f',
+        primaryTextColor: '#dbeafe',
+        primaryBorderColor: '#60a5fa',
+        secondaryColor: '#4a3208',
+        secondaryTextColor: '#fef3c7',
+        secondaryBorderColor: '#fbbf24',
+        tertiaryColor: '#14532d',
+        tertiaryTextColor: '#dcfce7',
+        tertiaryBorderColor: '#4ade80',
+        lineColor: '#94a3b8',
+        textColor: '#e5e7eb',
+        noteBkgColor: '#4a044e',
+        noteBorderColor: '#e879f9',
+        noteTextColor: '#fae8ff',
+      };
+}
+
 /** 동적 import 기본 구현. mermaid 는 최초 렌더 시점에만 적재된다. */
 export const defaultMermaidRenderer: MermaidRenderer = async (code, id) => {
   const { default: mermaid } = await import('mermaid');
   if (!moduleLoaded) {
+    const light = isLightDocument();
     mermaid.initialize({
       startOnLoad: false,
       securityLevel: 'strict',
-      theme: 'dark',
+      // `base` 는 themeVariables 를 그대로 받는 유일한 테마다. 다른 테마는
+      // 자기 색을 먼저 깔아서 일부만 덮인다.
+      theme: 'base',
+      themeVariables: paletteFor(light),
       // 파싱에 실패하면 mermaid 는 "Syntax error in text" 그래픽을 문서에
       // 직접 붙인다. 우리는 오류를 위젯 안에서 표시하므로 그 경로를 끈다.
       // 끄지 않으면 에디터 바깥에 폭탄 아이콘이 떠서 남는다.

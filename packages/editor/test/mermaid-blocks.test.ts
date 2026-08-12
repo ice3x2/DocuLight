@@ -97,6 +97,49 @@ describe('SDS-AC-7 · 여러 블록을 독립적으로 판정한다', () => {
   });
 });
 
+describe('SDS-AC-9 · 읽기 전용에서는 커서 위치와 무관하게 위젯을 유지한다', () => {
+  const doc = `${FLOW}\n\n뒤 문단`;
+
+  function readOnlyStateAt(cursor: number): EditorState {
+    return EditorState.create({
+      doc,
+      selection: { anchor: cursor },
+      extensions: [
+        markdown({ base: markdownLanguage }),
+        // 읽기 전용의 SSOT 는 CM6 자신의 facet 이다. vendor 의
+        // `readOnlyExtension` 도 이것을 세운다.
+        EditorState.readOnly.of(true),
+        mermaidBlocks(),
+      ],
+    });
+  }
+
+  it('커서가 블록 안이어도 다이어그램이 유지된다', () => {
+    expect(widgetCount(readOnlyStateAt(doc.indexOf('graph TD;') + 2))).toBe(1);
+  });
+
+  it('커서가 펜스 라인 위여도 다이어그램이 유지된다', () => {
+    expect(widgetCount(readOnlyStateAt(3))).toBe(1);
+  });
+
+  it('블록 전체를 선택해도 다이어그램이 유지된다', () => {
+    const state = EditorState.create({
+      doc,
+      selection: { anchor: 0, head: doc.length },
+      extensions: [
+        markdown({ base: markdownLanguage }),
+        EditorState.readOnly.of(true),
+        mermaidBlocks(),
+      ],
+    });
+    expect(widgetCount(state)).toBe(1);
+  });
+
+  it('읽기 전용이 아니면 종전대로 원문이 드러난다', () => {
+    expect(widgetCount(stateOf(doc, doc.indexOf('graph TD;') + 2))).toBe(0);
+  });
+});
+
 describe('선택 영역이 블록에 걸치면 원문을 노출한다', () => {
   it('블록을 가로지르는 선택에서 위젯을 발행하지 않는다', () => {
     const doc = `앞\n\n${FLOW}\n\n뒤`;

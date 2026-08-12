@@ -54,6 +54,8 @@
 - SDS-AC-6: WHEN 문서에 mermaid 블록이 하나도 없으면 THE SYSTEM SHALL `mermaid` 모듈을 import 하지 않는다.
 - SDS-AC-7: WHEN 한 문서에 mermaid 블록이 여럿 있으면 THE SYSTEM SHALL 각 블록을 서로 독립적으로 판정·렌더한다.
 - SDS-AC-8: WHEN mermaid 렌더가 실패하면 THE SYSTEM SHALL 에디터 DOM 바깥에 어떤 요소도 남기지 않는다.
+- SDS-AC-9: WHEN 에디터가 읽기 전용이면 THE SYSTEM SHALL 선택 영역의 위치와 무관하게 mermaid 블록을 위젯으로 유지한다.
+- SDS-AC-10: WHEN 읽기 전용 상태에서 다이어그램을 클릭하면 THE SYSTEM SHALL 캐럿을 블록 안에 떨구지 않는다.
 
 ## 6. Test Plan
 
@@ -67,6 +69,8 @@
 | SDS-AC-6 | test/mermaid-render.test.ts | 블록 0건 문서에서 동적 import 미발생 |
 | SDS-AC-7 | test/mermaid-blocks.test.ts | 블록 2개 중 커서가 든 쪽만 원문, 나머지는 위젯 |
 | SDS-AC-8 | test/browser-check.mjs | 렌더 실패 후 에디터 밖 DOM 잔여물 0건 (실제 브라우저 필요) |
+| SDS-AC-9 | test/mermaid-blocks.test.ts | `EditorState.readOnly` 상태에서 커서를 블록 안에 두어도 위젯 유지 |
+| SDS-AC-10 | test/browser-check.mjs | 보기 전용 토글 후 다이어그램 클릭 → 위젯 수 불변 |
 
 ## 7. Open Questions
 

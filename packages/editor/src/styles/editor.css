@@ -9,9 +9,9 @@
   align-items: center;
   margin: 0.6em 0;
   padding: 1em;
-  border: 1px solid var(--atomic-editor-border, #30363d);
+  border: 1px solid var(--atomic-editor-border, #d0d7de);
   border-radius: var(--atomic-editor-radius, 6px);
-  background: var(--atomic-editor-bg-panel, #161b22);
+  background: var(--atomic-editor-bg-panel, #f6f8fa);
   overflow-x: auto;
 }
 
@@ -26,6 +26,6 @@
   white-space: pre-wrap;
   font-family: var(--atomic-editor-font-mono, ui-monospace, monospace);
   font-size: 0.85em;
-  color: var(--atomic-editor-hl-invalid, #ff7b72);
-  border-color: var(--atomic-editor-hl-invalid, #ff7b72);
+  color: var(--atomic-editor-hl-invalid, #82071e);
+  border-color: var(--atomic-editor-hl-invalid, #82071e);
 }

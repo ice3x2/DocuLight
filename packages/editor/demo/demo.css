@@ -1,5 +1,5 @@
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html,
@@ -10,8 +10,8 @@ body,
 }
 
 body {
-  background: #0d1117;
-  color: #e6edf3;
+  background: #ffffff;
+  color: #24292f;
   font-family: -apple-system, 'Segoe UI', 'Malgun Gothic', sans-serif;
 }
 
@@ -26,18 +26,18 @@ body {
   align-items: center;
   gap: 1rem;
   padding: 0.6rem 1rem;
-  border-bottom: 1px solid #30363d;
-  background: #161b22;
+  border-bottom: 1px solid #d0d7de;
+  background: #f6f8fa;
   font-size: 0.85rem;
 }
 
 .demo-hint {
-  color: #8b949e;
+  color: #57606a;
 }
 
 .demo-hint code {
   font-family: ui-monospace, monospace;
-  background: #21262d;
+  background: #eaeef2;
   padding: 0.1em 0.35em;
   border-radius: 3px;
 }

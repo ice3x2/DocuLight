@@ -88,12 +88,15 @@ function selectionTouches(state: EditorState, from: number, to: number): boolean
 let widgetSeq = 0;
 
 class MermaidWidget extends WidgetType {
-  constructor(readonly code: string) {
+  constructor(
+    readonly code: string,
+    readonly readOnly: boolean,
+  ) {
     super();
   }
 
   eq(other: MermaidWidget): boolean {
-    return other.code === this.code;
+    return other.code === this.code && other.readOnly === this.readOnly;
   }
 
   toDOM(view: EditorView): HTMLElement {
@@ -126,20 +129,32 @@ class MermaidWidget extends WidgetType {
     if (rect.height > 0) setCachedSize(this.code, { w: rect.width, h: rect.height });
   }
 
-  /** 다이어그램 내부 클릭이 캐럿을 떨구지 않게 한다. */
-  ignoreEvent(): boolean {
-    return false;
+  /**
+   * 읽기 전용에서는 CM6 의 마우스 처리를 막아 캐럿이 블록 안으로 들어가지
+   * 않게 한다. 편집 모드에서는 클릭으로 원문이 열리는 것이 라이브 프리뷰의
+   * 정상 동작이므로 CM6 에 넘긴다.
+   *
+   * (반환값 `true` 가 "에디터는 이 이벤트에서 손을 뗀다"는 뜻이다.)
+   */
+  ignoreEvent(event: Event): boolean {
+    if (!this.readOnly) return false;
+    return event.type === 'mousedown' || event.type === 'click';
   }
 }
 
 function buildDecorations(state: EditorState): DecorationSet {
   const ranges: Range<Decoration>[] = [];
 
+  // 읽기 전용에서는 원문을 드러내지 않는다 — 드러낼 이유가 편집인데
+  // 편집이 불가능하기 때문이다. 선택은 여전히 가능하므로(복사 등) 선택
+  // 위치로 판정하면 클릭만으로 원문이 튀어나온다.
+  const revealable = !state.readOnly;
+
   for (const block of findMermaidBlocks(state)) {
-    if (selectionTouches(state, block.from, block.to)) continue;
+    if (revealable && selectionTouches(state, block.from, block.to)) continue;
     ranges.push(
       Decoration.replace({
-        widget: new MermaidWidget(block.code),
+        widget: new MermaidWidget(block.code, state.readOnly),
         block: true,
       }).range(block.from, block.to),
     );
@@ -151,7 +166,12 @@ function buildDecorations(state: EditorState): DecorationSet {
 export const mermaidBlockField = StateField.define<DecorationSet>({
   create: (state) => buildDecorations(state),
   update(decorations, tr) {
-    if (!tr.docChanged && tr.selection === undefined) return decorations.map(tr.changes);
+    // 읽기 전용 토글은 compartment 재구성이라 문서도 선택도 바꾸지 않는다.
+    // 직접 감지하지 않으면 모드를 바꿔도 화면이 그대로 남는다.
+    const readOnlyChanged = tr.startState.readOnly !== tr.state.readOnly;
+    if (!tr.docChanged && tr.selection === undefined && !readOnlyChanged) {
+      return decorations.map(tr.changes);
+    }
     return buildDecorations(tr.state);
   },
   provide: (field) => EditorView.decorations.from(field),

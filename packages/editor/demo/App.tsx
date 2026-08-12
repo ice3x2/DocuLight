@@ -16,6 +16,20 @@ graph TD
     D --> F[계층 B · 래퍼 교체]
     D --> G[계층 C · 코어 패치]
     E --> H[Mermaid · KaTeX · 첨부 · 저장]
+
+    classDef start fill:#e0e7ff,stroke:#6366f1,stroke-width:2px,color:#1e1b4b
+    classDef decide fill:#fef3c7,stroke:#f59e0b,stroke-width:2px,color:#451a03
+    classDef drop fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#450a0a
+    classDef pick fill:#dcfce7,stroke:#22c55e,stroke-width:2px,color:#052e16
+    classDef work fill:#cffafe,stroke:#06b6d4,stroke-width:2px,color:#083344
+    classDef done fill:#fae8ff,stroke:#c026d3,stroke-width:2px,color:#4a044e
+
+    class A start
+    class B decide
+    class C drop
+    class D pick
+    class E,F,G work
+    class H done
 \`\`\`
 
 ## 다른 언어 펜스는 대상이 아닙니다
@@ -35,6 +49,34 @@ sequenceDiagram
     CM->>W: toDOM()
     W-->>CM: SVG 삽입
     Note over CM,W: 크기를 캐시해 재마운트 시 높이 변화를 없앤다
+\`\`\`
+
+## 색이 여럿인 다이어그램
+
+\`\`\`mermaid
+pie showData
+    title 남은 작업 비중
+    "Mermaid (완료)" : 15
+    "수식 KaTeX" : 15
+    "소스 모드" : 10
+    "첨부 업로드" : 20
+    "자동 저장·충돌" : 20
+    "병합 뷰" : 20
+\`\`\`
+
+\`\`\`mermaid
+classDiagram
+    class MermaidWidget {
+        +string code
+        +boolean readOnly
+        +toDOM(view) HTMLElement
+        +ignoreEvent(event) boolean
+    }
+    class MermaidRenderer {
+        <<interface>>
+        +render(code, id) Promise
+    }
+    MermaidWidget ..> MermaidRenderer : 주입받는다
 \`\`\`
 
 ## 렌더 실패도 예외를 던지지 않습니다
