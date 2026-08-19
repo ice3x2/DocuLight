@@ -1,0 +1,274 @@
+{
+  "generated_at": "2026-08-19",
+  "workspace_root": "C:/Work/git/DocuLight2.0",
+  "speckiwi_state": {
+    "targets": [],
+    "active_target": "",
+    "work_mode": { "mode": "tdd", "activeTask": "editor-live-preview", "note": "speckiwi mode 로 확인. tdd 모드에서도 body-scope 작업은 CLAUDE.md 의 sdd 규칙을 따른다(CLAUDE.md 'Work-mode and the TDD First (tdd) workflow' 5·6항)." },
+    "scopes": [
+      { "name": "Product Architecture", "prefix": "ARCH", "doc": "docs/spec/02.product-architecture.srs.md" }
+    ],
+    "requirement_count": 0,
+    "evidence": [
+      "speckiwi targets --json -> {\"activeTarget\":\"\",\"targets\":[]}",
+      "speckiwi list --json -> records: [], page.total: 0",
+      "speckiwi validate --json -> errors 0, warnings 1 (SRS-W072)",
+      "docs/spec/02.product-architecture.srs.md 는 '## 4. Requirements' 헤딩만 있고 요구 블록 0개, §5~§7 섹션도 없다"
+    ]
+  },
+  "authoring_rules": {
+    "rules_doc": "docs/rule/SRS-MD-Rules-v2.5.0.md",
+    "req_id_format": "{PREFIX}-{SCOPE}-{NNN} (§11.1). 예: FR-AUTH-001, SEC-AUTH-001, IR-PAY-001, PERF-SEARCH-001",
+    "req_id_regex": "^(FR|NFR|IR|DR|SEC|PERF|REL|OBS|OPS|MIG|CON)-[A-Z0-9][A-Z0-9-]{1,24}-[0-9]{3,4}$",
+    "req_id_regex_citation": "§11.2 ID Regular Expression",
+    "req_heading_format": "### {RequirementID} — {Title}  (§10.1; ID 와 Title 사이는 반드시 em dash '—'. 하이픈 '-' · en dash '–' · 콜론 ':' 금지 — §10.3.2~3)",
+    "req_heading_regex": "^###\\s+(~~)?((?:FR|NFR|IR|DR|SEC|PERF|REL|OBS|OPS|MIG|CON)-[A-Z0-9][A-Z0-9-]{1,24}-[0-9]{3,4})\\s+—\\s+(.+?)(~~)?\\s*(?:\\[(DISCARDED|DRAFT)(?:[^\\]]*)\\])?\\s*$",
+    "req_heading_regex_citation": "§10.2. '타입 접두사는 §11.2 의 닫힌 집합이지, 열린 대문자 나열이 아니다' — 집합 밖 접두사로 쓰면 요구가 아니라 산문으로 파싱되어 그 요구는 보이지 않게 된다",
+    "scope_segment_constraint": "[A-Z0-9][A-Z0-9-]{1,24} — 대문자·숫자·하이픈, 최소 2자 최대 25자. 1자 prefix 는 정규식에 걸리지 않는다",
+    "type_prefixes": [
+      { "type": "functional", "prefix": "FR", "meaning": "Functional requirement / 사용자가 보거나 시스템이 수행하는 기능 동작" },
+      { "type": "non_functional", "prefix": "NFR", "meaning": "General non-functional requirement / 특정 품질 속성에 속하지 않는 일반 비기능" },
+      { "type": "interface", "prefix": "IR", "meaning": "External API, internal API, UI boundary, integration interface" },
+      { "type": "data", "prefix": "DR", "meaning": "Data model, storage, retrieval, consistency, retention" },
+      { "type": "security", "prefix": "SEC", "meaning": "Authentication, authorization, encryption, security policy" },
+      { "type": "performance", "prefix": "PERF", "meaning": "latency, throughput, resource usage" },
+      { "type": "reliability", "prefix": "REL", "meaning": "Failure recovery, fault tolerance, retry, availability" },
+      { "type": "observability", "prefix": "OBS", "meaning": "logging, metrics, tracing, alerting" },
+      { "type": "operational", "prefix": "OPS", "meaning": "Deployment, operations, configuration, runbook" },
+      { "type": "migration", "prefix": "MIG", "meaning": "Data or system migration" },
+      { "type": "constraint", "prefix": "CON", "meaning": "Technical, legal, organizational, and environmental constraints" }
+    ],
+    "type_prefix_citation": "§11.3 Prefix and Type Mapping / §13 Type Rules. Type 값은 lowercase snake_case 이며 ID 접두사와 반드시 일치해야 한다(§11.4.6, §13.2)",
+    "scope_doc_naming": "docs/spec/{NN}.{scope-slug}.srs.md (§5.2). {scope-slug} 는 lowercase kebab-case(§5.2.6), 파일명이 scope 의 의미를 드러내야 하며(§5.2.7) 파일 하나가 주 scope 하나를 나타낸다(§5.2.8)",
+    "numbering_rule": "§5.2 Rules 1~5: (1) {NN} 은 최소 두 자리 zero-padded — 10 미만은 선행 0. 100개를 넘으면 세 자리로 이어간다. (2) 새 scope 문서의 번호는 '프로젝트의 scope 문서들 중 이미 존재하는 최대 번호 +1'. 프로젝트의 첫 scope 문서는 01. (3) 사용 중인 번호는 절대 재사용하지 않고 기존 문서는 절대 renumber 하지 않는다 — 제거된 문서가 남긴 구멍은 구멍으로 남는다(그 순서 위치가 이미 다른 곳에서 인용되었을 수 있으므로). (4) 두 scope 문서가 같은 선행 번호를 공유해서는 안 된다 → SRS-W070. (5) 이미 10 단위로 번호를 매긴 프로젝트(10·20·30)는 유효하며 renumber 금지, 다음 문서는 최대값 +1 이지 다음 10 단위가 아니다",
+    "numbering_rule_empirical": "speckiwi scaffold-scope <Name>:<PREFIX> --dry-run 은 이 저장소에서 07.{slug}.srs.md 를 할당했다(01~06 · 90 · 91 이 점유). 규칙 문면(§5.2.2)의 '최대 scope 문서 번호 +1' = 03 과 다르며, 도구는 scope 문서가 아닌 번호 붙은 일반 문서까지 회피한다. 실측값 07 을 따르면 SRS-W072 추가 발생을 피할 수 있다",
+    "claude_md_divergence": "CLAUDE.md 'Scope SRS document naming' 2항은 'The first scope document of a project is 01, the next 02. Do not number by tens.' 로 10 단위 번호를 금지하지만, 규칙서 §5.2 Rule 5 는 '이미 10 단위로 매긴 프로젝트는 유효하며 renumber 금지' 라고 허용한다. 이 저장소는 10 단위가 아니라 실질 충돌은 없으나 두 문면을 모두 보고한다. 또 CLAUDE.md 는 '다른 scope 문서가 가진 번호를 재사용하지 말라' 로 scope 문서에 한정하는 반면 규칙서 §5.2.3 은 'A number in use' 로 더 넓게 쓴다",
+    "scope_doc_sections": [
+      "# {Scope Name} SRS  (H1 제목)",
+      "| Field | Value | 메타데이터 표 — Document Type=scope_srs, Scope, Scope Name, Version, Last Updated",
+      "## 1. Scope Overview",
+      "## 2. Scope Boundaries  (하위에 ### In Scope / ### Out of Scope)",
+      "## 3. Assumptions and Constraints",
+      "## 4. Requirements",
+      "## 5. Cross-scope Dependencies",
+      "## 6. Open Questions",
+      "## 7. Change Notes"
+    ],
+    "scope_doc_sections_citation": "§8.1 Required Structure. §8.5 — 모든 요구 블록은 '## 4. Requirements' 아래에 둔다. 다른 절에 놓인 요구 헤딩은 파싱되지 않고 SRS-W071 로 보고된다(list/show/mutate 대상이 되지 않는다)",
+    "scope_doc_sections_note": "현행 docs/spec/02.product-architecture.srs.md 와 scaffold-scope 산출물은 §5~§7(Cross-scope Dependencies · Open Questions · Change Notes)이 없는 축약형이다. §8.1 골격을 채우려면 수기 보강이 필요하다",
+    "block_metadata": [
+      { "field": "Type", "required": true, "allowed_values": ["functional", "non_functional", "interface", "data", "security", "performance", "reliability", "observability", "operational", "migration", "constraint"], "citation": "§12.2 필수 · §13 Type Rules. lowercase snake_case, ID 접두사와 일치" },
+      { "field": "Target", "required": true, "allowed_values": ["자유 문자열 — 버전/릴리스/마일스톤/페이즈/목표. 예: MVP, v0.1, v0.2, alpha-1, 2026-Q2, phase-1"], "citation": "§12.2 필수 · §16. 모든 Target 값은 00.index.md Target Map 에 등록해야 하고, 미등록 Target 은 validation warning. 기본적으로 요구 하나에 Target 하나" },
+      { "field": "Status", "required": true, "allowed_values": ["planned", "in_progress", "blocked", "implemented", "verified", "discarded"], "citation": "§14.1" },
+      { "field": "Priority", "required": false, "allowed_values": ["critical", "high", "medium", "low", "optional"], "citation": "§15.1" },
+      { "field": "Risk", "required": false, "allowed_values": ["low", "medium", "high", "critical"], "citation": "§15.2. high/critical 이면 Research / Analysis 또는 Trace Links 에 근거 문서 링크 권장" },
+      { "field": "Stability", "required": false, "allowed_values": ["draft", "evolving", "stable", "frozen", "deprecated", "volatile(legacy — 신규 작성 금지)"], "citation": "§15.3. verified 요구는 Stability=draft 이면 안 된다(SRS-E033). 활성/릴리스 target 안의 비-discarded draft 는 stability warning(SRS-W023). 에이전트는 비-discarded draft·deprecated 요구의 구현을 사용자 명시 override 없이 시작하면 안 된다" },
+      { "field": "Tags", "required": false, "allowed_values": ["쉼표 구분 자유 값. lowercase kebab-case 권장, 5개 이하 권장, 중복 금지"], "citation": "§12.3 · §17" },
+      { "field": "Scope", "required": false, "allowed_values": ["scope 코드 — 파일의 주 scope 와 다를 때만 명시"], "citation": "§12.3" },
+      { "field": "Owner", "required": false, "allowed_values": ["소유자/팀/역할 자유 문자열"], "citation": "§12.3" },
+      { "field": "Verification Method", "required": false, "allowed_values": ["검증 방법 자유 문자열"], "citation": "§12.3" },
+      { "field": "GitHub Issue", "required": false, "allowed_values": ["추적 이슈 URL"], "citation": "§12.3" },
+      { "field": "Related Docs", "required": false, "allowed_values": ["Markdown 링크 목록"], "citation": "§12.3 · §12.4.6" },
+      { "field": "Source", "required": false, "allowed_values": ["요구의 출처 자유 문자열"], "citation": "§12.3" },
+      { "field": "Supersedes", "required": false, "allowed_values": ["대체하는 요구의 ID"], "citation": "§12.3 · §23.4.5" },
+      { "field": "Superseded By", "required": false, "allowed_values": ["이 요구를 대체하는 요구의 ID"], "citation": "§12.3 · §23.4.5" },
+      { "field": "Last Reviewed", "required": false, "allowed_values": ["YYYY-MM-DD"], "citation": "§12.3" }
+    ],
+    "block_metadata_value_rules": "§12.4: 필드명은 정확한 영문 키 · 값은 한 줄 · 셀 안 줄바꿈 금지 · 값이 없으면 '-' · Tags 는 쉼표 구분 · Related Docs 는 Markdown 링크 목록 · 메타 표에 길고 복잡한 문장 금지(본문 섹션으로)",
+    "block_sections": [
+      { "heading": "#### Requirement", "required": "yes", "purpose": "요구 진술" },
+      { "heading": "#### Rationale", "required": "recommended", "purpose": "왜 필요한가" },
+      { "heading": "#### Acceptance Criteria", "required": "yes", "purpose": "검증 가능한 수용 기준" },
+      { "heading": "#### Verification Evidence", "required": "implemented·verified 에 필수", "purpose": "구현·검증 증거" },
+      { "heading": "#### Trace Links", "required": "recommended", "purpose": "이슈·PR·코드·문서·타 요구와의 관계" },
+      { "heading": "#### Research / Analysis", "required": "optional", "purpose": "조사·비교·분석·실험 근거" },
+      { "heading": "#### Implementation Notes", "required": "optional", "purpose": "구현자 참고사항" },
+      { "heading": "#### Change Notes", "required": "optional", "purpose": "요구 변경 이력 요약" }
+    ],
+    "block_sections_citation": "§18.1 Fixed Section List · §18.2 — 섹션 헤딩은 반드시 '####', 이름 변경 금지, 같은 블록에 같은 섹션 두 번 금지, 필수 섹션이 비면 validation error/warning. 블록 안에서 '###' 헤딩 사용 금지(§9.1 — '###' 는 다음 요구 블록의 시작으로 읽힌다)",
+    "requirement_statement_pattern": "§19.1 — 'The system shall, in {condition/context}, {perform/provide/guarantee} {behavior/result/constraint}.' 또는 'The system shall {behavior/result/constraint} when {condition/context}.' §19.4 는 appropriately·sufficiently·quickly·securely·user-friendly·in most cases·if possible·if needed·later·for now 를 회피 대상으로 열거하되, 이 목록은 검증기가 아니라 리뷰어가 적용하며 어떤 diagnostic 도 매치를 보고하지 않는다고 명시한다",
+    "ac_format": "§21.1 — 반드시 task list 로 작성한다. '- [ ] AC-{N}: {조건·입력·기대 결과}'. §21.2: AC-{N} 형식 권장, 블록 안에서 1부터 증가, 중간 항목 삭제 시 renumber 허용, AC ID 는 Verification Evidence 의 Covers 열에서 참조 가능. §21.3: 최소 1개 · AC 하나는 기대 결과 하나만 · 가능하면 조건·입력·기대결과 포함 · 비기능 요구는 측정 가능한 기준 포함 · verified 상태에서는 모든 AC 가 '- [x]' · verified 조건을 맞추려 AC 를 삭제하는 것은 금지(기준이 바뀌었으면 Change Notes 에 사유 기록)",
+    "ac_is_not_ears": "SRS 의 AC 는 EARS 가 아니다. EARS 는 SDS 층 규칙이다 — docs/rule/SDS-MD-Rules-v2.5.0.md §(Acceptance Contracts): 'EARS statements with SDS-AC-n ids. Format: SDS-AC-n: WHEN <condition> THE SYSTEM SHALL <observable behavior>.' SRS-MD-Rules 본문에는 EARS 라는 단어가 없고(§2089 의 CLAUDE.md 사본에서 tdd 워크플로 설명으로만 등장), SRS AC 는 체크박스 task list + 'AC-{N}:' 이다. §19.1 의 shall 패턴은 요구 '진술' 규칙이지 AC 규칙이 아니다",
+    "evidence_rules": "§22.1 표 형식: | Evidence ID | Type | Reference | Covers | Notes |. §22.2 Type 허용값: Test · PR · Issue · Code · Review · Analysis · Demo · Monitoring · Manual. §22.3: Evidence ID 는 VE-{N} 권장, 블록 안 1부터 증가, Covers 는 AC-1 / AC-2 / all / '-' 중 하나, verified 에서는 Covers=all 또는 모든 AC 가 증거로 덮이는 것을 권장. §22.4: 로컬 파일은 인라인 코드 경로, GitHub Issue/PR 은 URL, 문서는 Markdown 링크, 존재하지 않는 파일 경로 금지, 거짓 URL 금지, 증거가 아직 없으면 verified 로 바꾸지 말 것",
+    "verified_gate": "§14.4 — verified 로 바꾸려면 Acceptance Criteria 섹션 존재 · AC 최소 1개 · 모든 AC 가 '- [x]' · Verification Evidence 섹션 존재 · 증거 행 최소 1개 · 증거 행의 Reference 가 비어있지 않을 것 · 가능하면 각 AC 가 Covers 에서 직접 또는 all 로 덮일 것. §14.2 — update_status 는 이 shape 을 쓰기 시점에 거부한다(MUTATION_DENIED). 손으로 편집한 문서는 사후에 SRS-E010(AC 미체크 또는 증거 없음) · SRS-E033(Stability=draft 인 verified) 로 보고된다. implemented 로의 전이에는 쓰기 시점 게이트가 전혀 없다(§14.3)",
+    "trace_rules": "§23.1 표 형식: | Type | Reference | Relation | Notes |. §23.2 Type 허용값: Issue · PR · Commit · Code · Test · Doc · ADR · Requirement · External. §23.3 Relation 허용값: tracks · implements · verifies · depends_on · blocks · conflicts_with · refines · generalizes · supersedes · superseded_by · informed_by · related_to · checked_compatible. §23.4: Requirement 참조는 실재하는 Requirement ID 여야 하고, 자기 자신을 참조하지 않으며, depends_on 순환은 warning 이상, conflicts_with 는 Open Questions 나 Change Notes 에 해소 계획 기록, supersedes/superseded_by 사용 시 메타데이터 Supersedes/Superseded By 도 갱신 권장. §23.5: checked_compatible 는 semanticSha 기반 호환성 캐시 행으로 전용 mutation 으로만 생성/갱신/철회하고 표를 직접 편집하지 않는다",
+    "id_operation_rules": "§11.4: (1) Requirement ID 는 저장소 전역에서 유일 (2) discard 된 ID 재사용 금지 (3) 같은 요구의 문면이 바뀌어도 ID 유지 (4) 요구를 둘로 쪼개면 새 ID 생성 (5) 병합 시 대표 ID 하나를 남기고 나머지는 discarded 또는 Superseded By (6) ID 접두사와 메타 Type 일치 (7) ID 의 scope 구간은 00.index.md Scope Map 에 등록된 prefix 와 일치(미등록이면 SRS-E015)",
+    "discard_marker": "§30.1 — '### ~~REQ-ID — Title~~ [DISCARDED → see REQ-Y]' (다건이면 '[DISCARDED → see REQ-Y +2]'). §30.2 draft 마커는 '### REQ-ID — Title [DRAFT — pending decision, see REQ-Y]'. §10.3.8 — 이 마커와 취소선은 status/stability mutation 이 쓰고 지우며, 소비자가 손으로 붙이거나 떼면 안 된다",
+    "split_merge_rules": "§2.3 Single Requirement Principle · §29.1 반드시 쪼개야 하는 경우 · §36.1 Oversized Requirement(예: 'FR-AUTH-001 — Implement the authentication system' 을 3개로 분해). §13.4 — 기능 동작과 품질 기준이 함께 나오면 요구를 쪼갠다"
+  },
+  "ledger_sections": [
+    { "heading": "## 2. 확정 결정 (전체)", "clause_count": 336, "note": "§2.1~§2.18 합계. base R{n} 144개 + 하위 R{n}-x 192개. 취소선(폐기/종결) 행 4개 포함", "proposed_scope": null, "proposed_prefix": null, "prefix_collides_with_type": false },
+    { "heading": "### 2.1 UI · 에디터", "clause_count": 159, "base_count": 52, "sub_count": 107, "proposed_scope": "Shell", "proposed_prefix": "SHELL", "prefix_collides_with_type": false, "split_required": true, "split_proposal": [
+      { "scope": "Shell", "prefix": "SHELL", "covers": "3분할 레이아웃 · 좌측 사이드바 3탭 · 트리 컨텍스트 메뉴 · 우측 사이드바 · 문서 탭 스트립 · 문서 헤더 · 빈 상태 (R1·R3·R88·R89·R98·R107·R108·R106 계열)" },
+      { "scope": "Editor", "prefix": "EDITOR", "covers": "보기/편집 토글 · 라이브 프리뷰 ↔ 소스 하위 토글 · 마크다운 렌더링 동등성 (R2·R90·R91·R16 계열)" },
+      { "scope": "Routing", "prefix": "ROUTE", "covers": "문서 딥링크 · 노드 ID URL · 404 통일 (R99·R99-a·R94)" },
+      { "scope": "Confirmation", "prefix": "CONFIRM", "covers": "확인 등급 체계 L1·L2·L3 와 그 배정 (R113~R136). 05.screen-design-permission.md §5 가 정본 소유자" },
+      { "scope": "Audit", "prefix": "AUDIT", "covers": "감사 로그 기록 대상·스키마·다건/2-노드 행 규칙 (R84·R137~R142). 타입은 대체로 observability(OBS-)" }
+    ], "note": "159행은 한 scope 으로 담기에 과대하고, 실제로 UI·에디터 외에 확인 등급 정책과 감사 로그 정책이 섞여 있다. §8.1 'One file represents one primary scope'(§5.2.8) 위반 위험" },
+    { "heading": "### 2.2 저장", "clause_count": 11, "base_count": 6, "sub_count": 5, "proposed_scope": "Persistence", "proposed_prefix": "STORE", "prefix_collides_with_type": false },
+    { "heading": "### 2.3 사용자 · 그룹", "clause_count": 4, "base_count": 3, "sub_count": 1, "proposed_scope": "Identity", "proposed_prefix": "IDENTITY", "prefix_collides_with_type": false },
+    { "heading": "### 2.4 접근 제어 (ACL)", "clause_count": 56, "base_count": 23, "sub_count": 33, "proposed_scope": "Permission", "proposed_prefix": "PERM", "prefix_collides_with_type": false, "split_candidate": "R80(권한 필터 표면 전량)·R43 계열(부속 5종)·R70 계열(넓히기)은 하위 scope 분리 후보. 다만 05.screen-design-permission.md 가 단일 소유자로 정리해 두어 우선은 단일 scope 권장" },
+    { "heading": "### 2.5 워크스페이스", "clause_count": 19, "base_count": 9, "sub_count": 10, "proposed_scope": "Workspace", "proposed_prefix": "WS", "prefix_collides_with_type": false, "note": "WS 는 2자로 §11.2 의 [A-Z0-9][A-Z0-9-]{1,24} 최소 길이를 만족한다" },
+    { "heading": "### 2.6 범위 (Phase 구분)", "clause_count": 6, "base_count": 5, "sub_count": 1, "proposed_scope": "(scope 아님 — Target Map 재료)", "proposed_prefix": null, "prefix_collides_with_type": false, "note": "R31·R92 등은 요구가 아니라 'Phase 1 / Phase 2' 라는 Target 정의다. §16 에 따라 00.index.md Target Map 행으로 옮기고, 각 요구 블록의 Target 메타로 표현하는 것이 맞다. 데스크탑 전용(R31) 같은 것만 CON- 요구로 남는다" },
+    { "heading": "### 2.7 동시성", "clause_count": 5, "base_count": 2, "sub_count": 3, "proposed_scope": "Concurrency", "proposed_prefix": "CONC", "prefix_collides_with_type": false, "note": "CON 은 constraint 타입 접두사이므로 CON 을 쓰면 충돌한다. CONC 로 3자 이상 확보할 것" },
+    { "heading": "### 2.8 배포 · 규모", "clause_count": 1, "base_count": 1, "sub_count": 0, "proposed_scope": "Deployment", "proposed_prefix": "DEPLOY", "prefix_collides_with_type": false, "note": "1건뿐이므로 독립 scope 대신 Codebase/Stack 과 묶어 Platform 계열 1개로 합치는 편이 낫다" },
+    { "heading": "### 2.9 AI · MCP", "clause_count": 3, "base_count": 2, "sub_count": 1, "proposed_scope": "MCP", "proposed_prefix": "MCP", "prefix_collides_with_type": false },
+    { "heading": "### 2.10 코드베이스 전략", "clause_count": 1, "base_count": 1, "sub_count": 0, "proposed_scope": "Codebase", "proposed_prefix": "CODEBASE", "prefix_collides_with_type": false, "note": "타입은 constraint → CON-CODEBASE-001 형태" },
+    { "heading": "### 2.11 프론트엔드 스택", "clause_count": 5, "base_count": 1, "sub_count": 4, "proposed_scope": "Frontend Stack", "proposed_prefix": "STACK", "prefix_collides_with_type": false, "note": "타입은 constraint → CON-STACK-00N" },
+    { "heading": "### 2.12 파일 업로드 · 첨부", "clause_count": 20, "base_count": 11, "sub_count": 9, "proposed_scope": "Attachment", "proposed_prefix": "ATTACH", "prefix_collides_with_type": false },
+    { "heading": "### 2.13 삭제 · 아카이브", "clause_count": 8, "base_count": 6, "sub_count": 2, "proposed_scope": "Trash", "proposed_prefix": "TRASH", "prefix_collides_with_type": false },
+    { "heading": "### 2.14 초기 상태", "clause_count": 7, "base_count": 5, "sub_count": 2, "proposed_scope": "Bootstrap", "proposed_prefix": "BOOTSTRAP", "prefix_collides_with_type": false, "note": "설치 마법사(R72 계열)·슈퍼유저 0명 강제 설치 화면. 타입은 대체로 operational(OPS-)" },
+    { "heading": "### 2.15 인증", "clause_count": 14, "base_count": 7, "sub_count": 7, "proposed_scope": "Auth", "proposed_prefix": "AUTH", "prefix_collides_with_type": false, "note": "타입은 대체로 security(SEC-AUTH-00N). scope prefix 를 SEC 로 잡으면 타입 접두사와 겹치므로 AUTH 를 쓴다" },
+    { "heading": "### 2.16 버전 관리", "clause_count": 4, "base_count": 3, "sub_count": 1, "proposed_scope": "Versioning", "proposed_prefix": "VERSION", "prefix_collides_with_type": false },
+    { "heading": "### 2.17 파일 레이아웃 규칙", "clause_count": 10, "base_count": 5, "sub_count": 5, "proposed_scope": "Vault Layout", "proposed_prefix": "VAULT", "prefix_collides_with_type": false, "note": "타입은 대체로 data(DR-VAULT-00N)" },
+    { "heading": "### 2.18 문서화 프로세스", "clause_count": 3, "base_count": 2, "sub_count": 1, "proposed_scope": "(SRS 대상 아님)", "proposed_prefix": null, "prefix_collides_with_type": false, "note": "R32(SpecKiwi SRS 로 전개) 등 제품 요구가 아니라 문서화 프로세스 메타 결정. 요구 블록으로 승격하지 말고 00.index.md §10 Reference Documents 나 원장 그대로 남길 것" },
+    { "heading": "## 3. 미결 항목 (§3.1 감사 매핑 · §3.2 실질 공백)", "clause_count": 35, "clause_id_scheme": "G{n}", "proposed_scope": "(Open Questions)", "proposed_prefix": null, "prefix_collides_with_type": false, "note": "G1~G35 중 13건이 취소선 종결. 잔여 15건은 결정이 없으므로 요구 블록이 아니라 00.index.md '## 9. Open Questions' 표(| ID | Question | Impact | Status |)와 각 scope 문서 '## 6. Open Questions' 로 간다(§7.1 · §8.1)" },
+    { "heading": "## 4. Phase 1 수용 기준", "clause_count": 13, "clause_id_scheme": "번호 1~13 + 검증 방법 열", "proposed_scope": "(요구별 AC 로 분해)", "proposed_prefix": null, "prefix_collides_with_type": false, "note": "SpecKiwi 에는 제품 수준 AC 컨테이너가 없다. 13개를 각 요구의 '#### Acceptance Criteria' 항목으로 분해하고 '검증 방법'(Playwright E2E · 통합 테스트 · 수동)은 각 블록의 'Verification Method' 메타로 옮긴다" },
+    { "heading": "## 5. 변경 이력", "clause_count": 0, "proposed_scope": "(Change Notes)", "proposed_prefix": null, "prefix_collides_with_type": false, "note": "00.index.md '## 11. Change Notes' 및 각 scope 문서 '## 7. Change Notes' 로" }
+  ],
+  "prefix_collision_finding": {
+    "any_proposed_prefix_collides": false,
+    "forbidden_set": ["FR", "NFR", "IR", "DR", "SEC", "PERF", "REL", "OBS", "OPS", "MIG", "CON"],
+    "near_misses_to_avoid": [
+      { "tempting_prefix": "SEC", "for": "§2.15 인증 / 보안", "use_instead": "AUTH" },
+      { "tempting_prefix": "OBS", "for": "§2.1 감사 로그", "use_instead": "AUDIT" },
+      { "tempting_prefix": "CON", "for": "§2.7 동시성 / 제약", "use_instead": "CONC" },
+      { "tempting_prefix": "OPS", "for": "§2.8 배포·운영", "use_instead": "DEPLOY" },
+      { "tempting_prefix": "DR", "for": "데이터/디렉토리", "use_instead": "VAULT — 2자 DR 은 타입 접두사와 동일" }
+    ],
+    "rule_status": "규칙서에 'scope prefix 가 타입 접두사와 같으면 안 된다' 는 명문 조항이 없다. §11.4.7 과 SRS-E015 는 'scope 구간이 Scope Map 에 등록된 prefix 와 일치할 것' 만 요구한다. 실측으로도 `speckiwi scaffold-scope Security:SEC --dry-run` 이 거부 없이 07.security.srs.md 를 제안했다. 따라서 이것은 도구가 강제하는 금지가 아니라 가독성·리뷰 규약이다 — SEC-SEC-001 같은 ID 는 정규식상 유효하지만 사람이 읽을 때 타입과 scope 를 구별할 수 없게 만든다"
+  },
+  "ledger_conventions_not_expressible": [
+    {
+      "convention": "R{n}-a · R{n}-b … 하위 조항 (총 192개, 최대 R{n}-j 까지 10단계)",
+      "representation_strategy": "SpecKiwi 에 하위 ID 개념이 없다. 각 하위 조항을 독립 Requirement ID 로 승격하고(§11.4.4 — 쪼개면 새 ID), 부모 요구를 향해 '#### Trace Links' 에 | Requirement | {부모ID} | refines | 행을 건다(§23.3 refines = 'It makes another requirement more concrete'). 원장 ID 는 'Source' 메타 또는 Tags 로 보존해 역추적 가능하게 한다"
+    },
+    {
+      "convention": "`비고`(근거) 열 — 판단 사유·패널 표결(4:0, 3:1)·감사 항목 해소 매핑이 한 셀에 들어있다",
+      "representation_strategy": "사유는 '#### Rationale', 패널·실측·감사 근거는 '#### Research / Analysis' 로 나눈다. 외부 문서를 가리키면 '#### Trace Links' 에 | Doc | [링크] | informed_by | 행. 메타 표에는 못 넣는다 — §12.4.7 '메타데이터 표 안에 길고 복잡한 문장을 쓰지 않는다'"
+    },
+    {
+      "convention": "취소선 종결 표기 `~~R106-b~~` · `~~G11~~` (원장에서는 '종결/폐기' 를 손으로 표기)",
+      "representation_strategy": "요구는 §30.1 DISCARDED 마커 — `### ~~REQ-ID — Title~~ [DISCARDED → see REQ-Y]` + Status=discarded. 단 §10.3.8 에 따라 이 마커는 status mutation 이 쓰고 지우는 것이며 손으로 붙이면 안 된다. G{n} 종결은 요구가 아니므로 Open Questions 표의 Status 열로 표현한다"
+    },
+    {
+      "convention": "`G{n}-원` 행 — '(등재 당시 서술 — 보존)' 라는 이력 보존 행",
+      "representation_strategy": "SpecKiwi 에 대응이 없다. Open Questions 표는 4열(ID·Question·Impact·Status)뿐이다. 원문 보존은 원장(00.decision-log.md)에 그대로 두거나 docs/analysis/ 로 옮기고, Open Questions 행에서 링크로 가리킨다"
+    },
+    {
+      "convention": "계열 참조 — 'R43 계열', 'R125 계열', 'R44~R51', 'R72-c~j' 같은 범위·집합 역참조",
+      "representation_strategy": "Trace Links 의 Requirement 참조는 실재하는 단일 ID 여야 한다(§23.4.1). 범위·계열 표기는 전개해서 개별 행으로 쓴다. 전개가 불가능한(열린 계열) 인용은 요구 문면에 남기지 말고 Rationale 로 내린다"
+    },
+    {
+      "convention": "한 행 안의 ①②③ 다중 규범 (예: R91 이 세 가지 경계 상태를, R137 이 세 가지 기록 기준을 한 행에 담는다)",
+      "representation_strategy": "§2.3 Single Requirement Principle · §29.1 · §36.1 에 정면으로 걸린다. ①②③ 각각을 별도 Requirement ID 로 쪼개고 refines 로 묶는다. 이 분해가 원장 336행 → SpecKiwi 요구 수를 크게 늘리는 주 요인이다"
+    },
+    {
+      "convention": "셀 안 인라인 개정 표기 — '**개정 (2026-08-18)** — …' 를 결정 셀에 덧쓰기",
+      "representation_strategy": "'#### Change Notes' 의 | Date | Change | Reason | 표로 옮기고, 요구 문면은 현행 규범만 남긴다(§26)"
+    },
+    {
+      "convention": "Phase 1 / Phase 2 지정이 조항 문장 안에 섞여 있다 ('Phase 2 로 미룬다', 'Phase 1 에 둔다')",
+      "representation_strategy": "§16 Target 으로 승격. 00.index.md Target Map 에 `Phase 1`(active) · `Phase 2`(planned) 를 등록하고 각 블록의 Target 메타로 표현한다. 문면에서 Phase 표현을 지우지는 않되 Target 이 정본이 된다"
+    },
+    {
+      "convention": "〔판단 — 원장 근거 없음〕 · 〔확인 필요〕 마커 (설계자 판단임을 표시)",
+      "representation_strategy": "요구로 승격하지 않는다. Open Questions 행 + Stability=draft 로 둔다. §15.3 에 따라 에이전트는 비-discarded draft 요구의 구현을 사용자 override 없이 시작하면 안 되므로, 이 마커의 의미가 보존된다"
+    },
+    {
+      "convention": "Status · Stability · Priority · Owner · Risk 가 원장에 전무하다",
+      "representation_strategy": "Type/Target/Status 는 §12.2 필수이므로 전 요구에 대해 새로 판정해야 한다. 원장 자체가 '요건 확정' 상태이므로 기본값은 Status=planned · Stability=stable 이 자연스럽지만, 〔판단〕 마커가 붙은 조항과 G{n} 에 걸린 조항은 Stability=draft 로 내려야 한다. 이 판정은 원장에서 자동 유도되지 않는다"
+    },
+    {
+      "convention": "§3.1 감사 해소 매핑 표 (C1→R69 · H1→R88 형태의 감사 항목 ↔ 조항 역매핑)",
+      "representation_strategy": "'#### Trace Links' 에 | Doc | [01.audit-findings.md#C1](../spec/01.audit-findings.md) | informed_by | 행으로 건다. 감사 항목 자체는 요구가 아니다"
+    },
+    {
+      "convention": "원장 머리표의 '건수 주의 — 이 수치를 인용하지 마라' 같은 문서 수준 경고",
+      "representation_strategy": "scope 문서 '## 3. Assumptions and Constraints' 또는 00.index.md '## 10. Reference Documents' 의 주석으로. 요구 블록에는 자리가 없다"
+    }
+  ],
+  "design_docs": [
+    {
+      "path": "docs/spec/03.screen-design-shell.md",
+      "size_kb": 249.4,
+      "lines": 2000,
+      "declared_ownership": "전체 레이아웃 · 좌측 사이드바 · 중앙 본문 주변 UI · 우측 사이드바 · 문서 헤더 · 빈 상태. 대상은 Phase 1 · 데스크탑 전용(R31). 다루지 않는 것: 설정 모달 내부 · 공유(ACL) 모달 내부 · 권한 시뮬레이션 · 상속 끊김 감사 목록 · 휴지통 화면. 확인 등급 체계와 접근자 지표의 정의 소유자는 05 이고 03 은 인용한다",
+      "state": "초안 — §11 미결 질문 해소 후 착수 가능. 갱신 2026-08-19(19차), 원장 R1~R148 기준",
+      "sections": ["0. 범위 경계", "1. 전체 레이아웃", "2. 좌측 사이드바", "3. 중앙 본문", "4. 우측 사이드바 (R89 · R80)", "5. 빈 상태 화면 (R83-a)", "6. 상태 목록", "7. 주요 인터랙션 흐름", "8. 컴포넌트 인벤토리", "9. 키보드 단축키", "10. 엣지 케이스", "11. 미결 질문 · 판단 기록", "12. 요구사항 추적", "13. 갱신 이력"],
+      "note": "1차~11차 개정 이력 원문은 docs/spec/91.03-history.md(82KB, 동결)로 분리되어 있다"
+    },
+    {
+      "path": "docs/spec/04.screen-design-settings.md",
+      "size_kb": 247.9,
+      "lines": 1576,
+      "declared_ownership": "R24-a 설정 모달 카테고리 전량 · 설치 마법사(R72·R83) · 인증 화면(로그인 · 가입 신청 폼 R7-①②). 인증 화면 소유는 2026-08-19 심의 3:2 · 호환 4:1 로 이 문서에 배정(03 §0 이 배제하고 05 §0.1 6화면에도 없다)",
+      "state": "갱신 12차(2026-08-19), 원장 R143·R144·R145 신설 · R24-a 개정 반영",
+      "sections": ["목차", "1. 모달 전체 구조", "2. 카테고리별 상세 설계", "3. 대용량 목록 처리 전략", "4. 설치 마법사 (R72 · R72-a · R72-b · R83)", "5. 위험한 조작의 확인 흐름", "6. 상태 목록", "7. 컴포넌트 인벤토리", "8. 엣지 케이스", "9. 미결 질문"],
+      "note": "확인 등급(L1·L2·L3)의 정의는 05 가 소유하고 이 문서는 참조한다(문서 규칙 5, R115)"
+    },
+    {
+      "path": "docs/spec/05.screen-design-permission.md",
+      "size_kb": 269.6,
+      "lines": 1837,
+      "declared_ownership": "공유 모달(문서 · 디렉토리 · 워크스페이스) · 권한 시뮬레이션 · 상속 끊김 노드 감사 목록 · 주체 일괄 회수 · 이동 프리뷰 · 권한 거부/경고. 이 문서가 소유하는 공통 계약(정본 위치 목록은 §0.1-a, R124): 확인 등급 체계(§5.1) · 스테일 재조회(§5.2) · 권한 표현 언어(§1) · 접근자 지표와 '적용 하위' 지표(§1.6) · 주체 일괄 회수(§2.4) · 딥링크 404 문구(§2.6.5). 담당 밖: 메인 작업 화면·트리·탭·에디터 / 설정 모달의 다른 카테고리",
+      "state": "초안 — 검토 요청. 갱신 10차(2026-08-16). 상위 SSOT 는 R1~R145 이며 R143~R145(인증)는 이 문서에 조항 반영 없음",
+      "sections": ["0. 범위와 전제", "1. 권한 표현 언어", "2. 화면별 상세 설계", "3. 요청자 레벨별 화면 차이", "4. 주요 인터랙션 흐름", "5. 되돌릴 수 없는 조작의 확인 패턴", "6. 상태 목록", "7. 컴포넌트 인벤토리", "8. 엣지 케이스", "9. 미결 질문", "10. 참조한 요구사항"]
+    },
+    {
+      "path": "docs/spec/06.folder-permission-panel.md",
+      "size_kb": 30.5,
+      "lines": 329,
+      "declared_ownership": "디렉토리(폴더)에 `보기`·`편집` 권한을 부여하는 방법 — 4인 독립 설계 패널의 심의 기록(정보구조 · 보안UX · 엔터프라이즈 운영 · 정합성)",
+      "state": "종결 — 게이트 1·2 확정, 원장에 R125~R132 로 반영. 남긴 공백 4건은 후속 패널이 R133~R136 으로 종결(둘 다 2026-08-14). 읽은 원장 판은 R1~R124",
+      "sections": ["0-a. 결정 결과 (2026-08-14)", "0. 한 줄 요약", "1. 쟁점별 집계", "2. 결정이 필요한 쟁점 — B · C", "3. 결정 게이트", "4. 원장 개정 없이 설계서 수정만으로 닫히는 것", "5. 패널이 찾은 기존 설계서 오류 — 25건"],
+      "note": "설계서가 아니라 심의·감사 기록이다. 줄 번호·인용 문언이 전부 '개정 전' 시점 값이며 이후 개정에 맞춰 갱신하지 않는다고 스스로 선언한다. SRS 승격 재료가 아니라 Research / Analysis · Trace Links(informed_by) 대상이다"
+    }
+  ],
+  "numbering_collision": {
+    "diagnostic": "SRS-W072 — '02.feature-request-live-preview.md shares the leading number 2 with the scope document 02.product-architecture.srs.md' (filePath: docs/spec/02.feature-request-live-preview.md)",
+    "scope_docs": ["docs/spec/02.product-architecture.srs.md"],
+    "plain_docs": [
+      "docs/spec/00.index.md (SRS Index — §5.1 이 지정한 이름, scope 문서 아님)",
+      "docs/spec/00.decision-log.md (수기 원장 · R{n}/G{n} 체계)",
+      "docs/spec/01.audit-findings.md (정합성 감사 보고서)",
+      "docs/spec/02.feature-request-live-preview.md (라이브 프리뷰 기능 요청서 — SRS-W072 를 유발하는 쪽)",
+      "docs/spec/03.screen-design-shell.md",
+      "docs/spec/04.screen-design-settings.md",
+      "docs/spec/05.screen-design-permission.md",
+      "docs/spec/06.folder-permission-panel.md",
+      "docs/spec/90.appendix.md (§4 구조가 지정한 부록)",
+      "docs/spec/91.03-history.md (03 의 1~11차 이력 동결본)",
+      "docs/spec/secs.json (마크다운 아님)"
+    ],
+    "scope_doc_identification_rule": "scope 문서는 §5.2 의 `{NN}.{scope-slug}.srs.md` 패턴에 맞고 00.index.md §2 SRS Documents / §4 Scope Map 에 등록된 문서다. 위 목록 중 `.srs.md` 로 끝나는 것은 02.product-architecture.srs.md 하나뿐이므로, 나머지는 전부 번호만 붙은 일반 프로젝트 문서다",
+    "fix_options": [
+      {
+        "option": "A. 새 scope 문서를 07 부터 할당하고 W072 는 그대로 둔다",
+        "detail": "경고 1건은 유지되지만 새 문서가 경고를 늘리지 않는다. `speckiwi scaffold-scope <Name>:<PREFIX> --dry-run` 이 실제로 07 을 제안하는 것을 확인했다. 03~06 에 새 scope 문서를 만들면 W072 가 4건 더 생긴다",
+        "risk": "낮음. 단 `speckiwi validate --fail-on-warning` 게이트를 쓰면 계속 실패한다"
+      },
+      {
+        "option": "B. 빈 stub 인 02.product-architecture.srs.md 를 제거하고 07 부터 새로 세운다",
+        "detail": "이 문서는 요구 블록 0개짜리 stub 이고 00.index.md 의 §2·§4 두 행이 유일한 참조다. 제거하면 번호 2 에 scope 문서가 없어져 W072 가 사라진다. §5.2.3 은 '제거된 문서가 남긴 구멍은 구멍으로 남는다' 고 명시해 삭제 자체는 허용한다. index 두 행도 함께 지운다(§7.2.4 — '문서를 삭제하거나 이름을 바꾸면 index 도 함께 갱신한다')",
+        "risk": "중간. 삭제는 mutation 이며 사용자 승인이 필요하다. ARCH prefix 를 나중에 쓰려면 새 번호로 재등록해야 한다"
+      },
+      {
+        "option": "C. 02.feature-request-live-preview.md 를 07 이후로 개명한다",
+        "detail": "W072 를 유발하는 쪽이 이 파일이므로 직접적이다. 그러나 03.screen-design-shell.md 머리표가 '인접 문서' 로 이 경로를 인용하고, speckiwi work-mode 의 activeTask 가 `editor-live-preview` 다. 저장소 전반의 인용을 함께 고쳐야 한다",
+        "risk": "높음. §5.2.3 의 renumber 금지가 scope 문서에 대한 규정이라 일반 문서에는 문면상 걸리지 않지만, 인용 파손 비용이 크다"
+      },
+      {
+        "option": "D. 02.product-architecture.srs.md 를 renumber 한다",
+        "detail": "명시적으로 금지된다 — §5.2.3 'an existing document is never renumbered'. 채택하지 않는다",
+        "risk": "규칙 위반"
+      }
+    ],
+    "recommended": "A + B 조합 — 새 scope 문서는 07 부터 할당하고(A), 빈 ARCH stub 처분(B)은 사용자 승인 후 별도로 결정한다",
+    "governing_rule": "직접 규정하는 조항이 없다. §5.2 Rules 4 는 '두 scope 문서가 같은 선행 번호를 공유해서는 안 된다' 며 SRS-W070 만 지목하고, SRS-W072('Numbered document shares a leading number with a scope document')는 규칙서 본문 어디에도 서술이 없고 §32.1 진단 코드 표(1708행)에만 등재되어 있다. 따라서 W072 의 근거는 §32.1 진단 레지스트리이며, 처방은 §5.2.2(번호 할당) · §5.2.3(재사용·renumber 금지) · §7.2.4(문서 삭제·개명 시 index 동시 갱신)에서 유추해야 한다. renumber 금지(§5.2.3)는 scope 문서에 대한 규정이므로 일반 문서 개명을 문면상 금지하지는 않는다",
+    "governing_rule_caveat": "규칙서와 CLAUDE.md 는 이 지점에서 문면이 다르다. 규칙서 §5.2.3 은 'A number in use is never reused' 로 대상을 한정하지 않고, CLAUDE.md 는 'Never reuse a number another scope document holds' 로 scope 문서에 한정한다. 어느 쪽을 택하느냐에 따라 옵션 C 의 허용 여부가 갈리므로 임의로 고르지 않고 둘 다 보고한다"
+  },
+  "candidate_matches": [],
+  "relevant_scopes": [],
+  "no_match_reason": "SpecKiwi SRS 는 비어 있어 매칭 후보가 없다"
+}

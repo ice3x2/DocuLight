@@ -1,7 +1,6 @@
 # Step State
 
-Mode: tdd
+Mode: sdd
 
-Active Task: editor-live-preview
 | Step | Status | DependsOn | TouchesScope | TouchesReq | Created | Updated |
 | --- | --- | --- | --- | --- | --- | --- |

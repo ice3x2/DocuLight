@@ -1,0 +1,434 @@
+{
+  "_meta": {
+    "generated": "2026-08-19",
+    "repo_root": "C:\\Work\\git\\DocuLight2.0",
+    "method": "read-only inspection (Read/Grep/Glob) + git log/status + `npx vitest list` (collection only, no test execution)",
+    "scope_note": "코드만 조사했다. docs/spec/*.md 는 읽지 않았다.",
+    "source_roots": ["packages/editor"],
+    "non_product_dirs_excluded": [
+      ".agents/skills/**  — 에이전트 스킬 정의 (제품 코드 아님)",
+      ".claude/skills/**  — 동일",
+      "docs/.kiwi/hooks/*.mjs — speckiwi 워크플로 훅 (제품 코드 아님)",
+      "kiwi/ — 미추적 파이프라인 상태 디렉터리"
+    ],
+    "total_product_source_files": 34,
+    "total_product_source_lines": 8052,
+    "line_budget": {
+      "vendor_dir_total": 6915,
+      "vendor_non_test_source": 5792,
+      "own_product_code": 413,
+      "own_product_code_detail": "core/mermaid-blocks.ts 215 + core/mermaid-render.ts 139 + index.ts 28 + styles/editor.css 31",
+      "own_tests": 265,
+      "browser_check_script": 178,
+      "demo": 250,
+      "config": 31,
+      "comment": "이 리포에서 DocuLight 팀이 직접 작성한 제품 런타임 코드는 413줄이다. 나머지 5792줄은 무수정 vendor 사본이고 6915줄(86%)이 vendor 디렉터리에 속한다."
+    }
+  },
+
+  "packages": [
+    {
+      "name": "@doculight/editor",
+      "path": "packages/editor",
+      "version": "0.1.0",
+      "private": true,
+      "type": "module",
+      "description": "DocuLight 2.0 마크다운 라이브 프리뷰 에디터 — 프레임워크 중립 CodeMirror 6 확장 + 얇은 React 래퍼",
+      "main": "./src/index.ts",
+      "exports": { ".": "./src/index.ts", "./styles.css": "./src/styles/editor.css" },
+      "build_tooling": "Vite 8 + @vitejs/plugin-react, TypeScript 7 (noEmit, typecheck 전용), Vitest 4 + happy-dom",
+      "entry_points": {
+        "library": "packages/editor/src/index.ts",
+        "demo_html": "packages/editor/index.html",
+        "demo_bootstrap": "packages/editor/demo/main.tsx"
+      },
+      "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "test:browser": "node test/browser-check.mjs",
+        "test:browser:headed": "node test/browser-check.mjs --headed"
+      },
+      "deps": [
+        "@codemirror/autocomplete@^6.20.0", "@codemirror/commands@^6.10.0",
+        "@codemirror/lang-cpp@^6.0.3", "@codemirror/lang-css@^6.3.1",
+        "@codemirror/lang-go@^6.0.1", "@codemirror/lang-html@^6.4.11",
+        "@codemirror/lang-java@^6.0.2", "@codemirror/lang-javascript@^6.2.5",
+        "@codemirror/lang-json@^6.0.2", "@codemirror/lang-markdown@^6.5.0",
+        "@codemirror/lang-php@^6.0.2", "@codemirror/lang-python@^6.2.1",
+        "@codemirror/lang-rust@^6.0.2", "@codemirror/lang-sql@^6.10.0",
+        "@codemirror/lang-xml@^6.1.0", "@codemirror/lang-yaml@^6.1.3",
+        "@codemirror/language@^6.12.3", "@codemirror/legacy-modes@^6.5.2",
+        "@codemirror/search@^6.5.11", "@codemirror/state@^6.5.2",
+        "@codemirror/view@^6.38.8", "@lezer/common@^1.2.3",
+        "@lezer/highlight@^1.2.3", "@lezer/markdown@^1.6.3",
+        "mermaid@^11.4.1", "react@^19.2.7", "react-dom@^19.2.7"
+      ],
+      "devDeps": [
+        "@types/react@^19.2.17", "@types/react-dom@^19.2.3",
+        "@vitejs/plugin-react@^6.0.3", "happy-dom@^20.10.6",
+        "playwright@^1.62.1", "typescript@^7.0.2", "vite@^8.1.4", "vitest@^4.1.10"
+      ],
+      "notes": [
+        "리포지토리 루트에 package.json / pnpm-workspace.yaml / turbo.json / lerna.json 이 없다. 'monorepo' 형태의 packages/ 디렉터리만 있고 워크스페이스 도구는 구성되지 않았다. npm install 은 packages/editor 안에서 직접 실행한다 (package-lock.json 이 그 디렉터리에 있다).",
+        "packages/ 하위 패키지는 editor 하나뿐이다.",
+        "vite.config.ts 에 build.lib 설정이 없다. 따라서 `npm run build` 는 라이브러리가 아니라 index.html 기준의 데모 SPA 를 번들한다."
+      ]
+    }
+  ],
+
+  "relevant_files": [
+    {
+      "path": "packages/editor/src/index.ts",
+      "line_range": "1-28",
+      "signature": "re-export { findMermaidBlocks, mermaidBlockField, mermaidBlocks, mermaidRendererFacet, MermaidBlock, MermaidBlocksConfig, defaultMermaidRenderer, getCachedSize, isMermaidModuleLoaded, renderMermaid, MermaidRenderer, MermaidResult, RenderedSize, AtomicCodeMirrorEditor }",
+      "relevance": "패키지의 유일한 공개 진입점. vendor 에서는 AtomicCodeMirrorEditor 컴포넌트 하나만 재수출하고 vendor 의 나머지 확장 팩토리(inlinePreview/tables/wikiLinks/imageBlocks 등)와 타입은 재수출하지 않는다."
+    },
+    {
+      "path": "packages/editor/src/core/mermaid-blocks.ts",
+      "line_range": "32-215",
+      "signature": "interface MermaidBlock { from: number; to: number; code: string } (32-39); interface MermaidBlocksConfig { renderer?: MermaidRenderer } (41-44); const mermaidRendererFacet: Facet<MermaidRenderer, MermaidRenderer> (46-48); function findMermaidBlocks(state: EditorState): MermaidBlock[] (59-82); class MermaidWidget extends WidgetType (90-143, non-exported); const mermaidBlockField: StateField<DecorationSet> (166-178); const escapeBlockOnReadOnlyExit = EditorState.transactionFilter.of(...) (194-207, non-exported); function mermaidBlocks(config?: MermaidBlocksConfig): Extension (209-215)",
+      "relevance": "이 리포에서 유일하게 자체 작성된 제품 기능 코드. ```mermaid 펜스를 블록 위젯으로 치환하는 CM6 확장. 커서가 블록에 닿으면 원문 노출, 읽기 전용에서는 항상 위젯 유지, 읽기 전용 해제 시 선택을 블록 밖으로 이동."
+    },
+    {
+      "path": "packages/editor/src/core/mermaid-render.ts",
+      "line_range": "11-139",
+      "signature": "type MermaidRenderer = (code: string, id: string) => Promise<string> | string (11); type MermaidResult = { svg: string } | { error: string } (13); interface RenderedSize { w: number; h: number } (15-18); function isMermaidModuleLoaded(): boolean (30-32); function getCachedSize(code: string): RenderedSize | undefined (34-36); function setCachedSize(code: string, size: RenderedSize): void (38-40); const defaultMermaidRenderer: MermaidRenderer (100-127); async function renderMermaid(code: string, id: string, renderer?: MermaidRenderer): Promise<MermaidResult> (129-139)",
+      "relevance": "mermaid 렌더 경계. 동적 import 로 mermaid 를 지연 적재하고, 예외를 값(MermaidResult)으로 변환하며, 렌더 크기를 Map 에 캐시한다. 테마 팔레트(라이트/다크)를 themeVariables 로 주입한다."
+    },
+    {
+      "path": "packages/editor/src/styles/editor.css",
+      "line_range": "1-31",
+      "signature": ".dl-mermaid, .dl-mermaid svg, .dl-mermaid-error",
+      "relevance": "자체 작성 CSS 전부(31줄). mermaid 위젯 컨테이너와 오류 표시. 색은 vendor 의 --atomic-editor-* 변수를 물려받는다."
+    },
+    {
+      "path": "packages/editor/src/vendor/atomic-editor/AtomicCodeMirrorEditor.tsx",
+      "line_range": "69-815",
+      "signature": "interface AtomicCodeMirrorEditorHandle { focus(); undo(); redo(); openSearch(query?); closeSearch(); revealText(query); isSearchOpen(): boolean; getMarkdown(): string; getContentDOM(): HTMLElement | null; setReadOnly(readOnly: boolean) } (69-94); interface AtomicCodeMirrorEditorProps { documentId?, markdownSource, initialSearchText?, initialRevealText?, blurEditorOnMount?, readOnly?, onMarkdownChange?, onLinkClick?, editorHandleRef?, codeLanguages?, extensions? } (96-236); function AtomicCodeMirrorEditor(props): JSX (248-815)",
+      "relevance": "vendor 원본. React 얇은 래퍼. 마운트 시 EditorView 를 생성하고 built-in 확장 세트(history/search/markdown(GFM)/inlinePreview/tables/imageBlocks/keymap/theme)를 조립한다. readOnly 는 Compartment 로 재구성(remount 없음), extensions/codeLanguages 는 마운트 시점에 고정된다."
+    },
+    {
+      "path": "packages/editor/src/vendor/atomic-editor/index.ts",
+      "line_range": "1-35",
+      "signature": "re-export { AtomicCodeMirrorEditor, AtomicCodeMirrorEditorHandle, AtomicCodeMirrorEditorProps, inlinePreview, InlinePreviewConfig, highlightMarkdown, imageBlocks, tables, TablesConfig, wikiLinks, WikiLink* types, atomicEditorTheme, atomicMarkdownSyntax, autoCloseCodeFence, extendEmphasisPair, startAsteriskList, readOnlyExtension, readOnlyFacet }",
+      "relevance": "vendor 배럴. src/index.ts 는 이 중 AtomicCodeMirrorEditor 만 위로 올린다."
+    },
+    {
+      "path": "packages/editor/src/vendor/atomic-editor/inline-preview.ts",
+      "line_range": "40-1135",
+      "signature": "interface InlinePreviewConfig (40-…); function inlinePreview(config?: InlinePreviewConfig): Extension (1120-1135)",
+      "relevance": "vendor 최대 모듈 중 하나(1135줄). Obsidian 식 인라인 라이브 프리뷰 — 커서가 없는 줄의 마크다운 구문 토큰을 Decoration.replace 로 숨기고 렌더 형태로 보인다. 체크박스 토글, 링크 클릭 처리 포함."
+    },
+    {
+      "path": "packages/editor/src/vendor/atomic-editor/table-widget.ts",
+      "line_range": "70-1356",
+      "signature": "function splitRowCells(line: string): string[] (70-127); function serializeTable(model: TableModel): string (128-189); function parseCellInline(raw: string): CellToken[] (190-224); interface TablesConfig (1321-1340); const tableLinkClickFacet: Facet (1341-1347); function tables(config?: TablesConfig): Extension (1348-1356)",
+      "relevance": "vendor 최대 모듈(1356줄). GFM 표를 편집 가능한 DOM 위젯으로 치환한다. 셀 인라인 마크다운 파서와 표 직렬화기를 자체 보유."
+    },
+    {
+      "path": "packages/editor/src/vendor/atomic-editor/wiki-links.ts",
+      "line_range": "6-597",
+      "signature": "type WikiLinkStatus = 'resolved' | 'loading' | 'missing' | 'unresolved' (6); interface WikiLinkSuggestion { target; label; detail?; boost? } (8-13); interface WikiLinkResolvedTarget (15-20); interface WikiLinksConfig (21-…); function wikiLinks(config?: WikiLinksConfig): Extension (160-597)",
+      "relevance": "[[위키링크]] 데코레이션 + 자동완성 + 해석 상태 표시. **AtomicCodeMirrorEditor 의 기본 확장 세트에 포함되어 있지 않고, src/index.ts 로 재수출되지도 않으며, demo 에서도 주입되지 않는다** — 즉 현재 앱에서 동작하지 않는 죽은 확장이다 (vendor 테스트에서만 사용)."
+    },
+    {
+      "path": "packages/editor/src/vendor/atomic-editor/image-blocks.ts",
+      "line_range": "235-237",
+      "signature": "function imageBlocks(): Extension (235-237)",
+      "relevance": "이미지 마크다운을 블록 위젯으로 렌더. AtomicCodeMirrorEditor 기본 세트에 포함. 업로드/첨부 기능은 없다 — 이미 URL 로 존재하는 이미지의 표시만 한다."
+    },
+    {
+      "path": "packages/editor/src/vendor/atomic-editor/highlight.ts",
+      "line_range": "33-99",
+      "signature": "function matchHighlight(cx: InlineContext, next: number, pos: number): number (33-80); const highlightMarkdown: MarkdownConfig (81-99)",
+      "relevance": "==하이라이트== 문법을 lezer 마크다운 파서에 추가하는 MarkdownConfig."
+    },
+    {
+      "path": "packages/editor/src/vendor/atomic-editor/read-only.ts",
+      "line_range": "18-49",
+      "signature": "const readOnlyFacet: Facet<boolean, boolean> (18-20); function readOnlyExtension(ro: boolean): Extension (42-49)",
+      "relevance": "읽기 전용(reading) 모드. EditorView.editable + EditorState.readOnly + readOnlyFacet + cm-atomic-readonly 클래스를 묶는다. Compartment 안에서 런타임 토글용."
+    },
+    {
+      "path": "packages/editor/src/vendor/atomic-editor/tree-progress.ts",
+      "line_range": "21-134",
+      "signature": "const treeGrowthEffect: StateEffectType<null> (21); const treeProgressPlugin: ViewPlugin (68-134)",
+      "relevance": "lezer 증분 파서가 전진했음을 알리는 효과. inline-preview / tables / image-blocks 가 각자 이 플러그인을 포함하고 효과를 받아 데코레이션을 재구축한다."
+    },
+    {
+      "path": "packages/editor/src/vendor/atomic-editor/code-languages.ts",
+      "line_range": "21-139",
+      "signature": "const ATOMIC_CODE_LANGUAGES: LanguageDescription[] (21-139)",
+      "relevance": "펜스 코드 블록용 큐레이션된 언어 목록(동적 import). **어디에서도 import 되지 않는다** — AtomicCodeMirrorEditor 의 codeLanguages 는 기본값 []이고 demo 도 전달하지 않으므로, 현재 코드 펜스는 문법 강조 없이 monospace 로만 렌더된다. package.json 의 @codemirror/lang-* 16개 의존성이 실질적으로 미사용 상태다."
+    },
+    {
+      "path": "packages/editor/src/vendor/atomic-editor/edit-helpers.ts",
+      "line_range": "11-158",
+      "signature": "const startAsteriskList: Extension (11-14); function startAsteriskListInput(view, from, to, text): boolean (15-67); const extendEmphasisPair: Extension (68-105); const autoCloseCodeFence: Extension (106-109); function autoCloseCodeFenceInput(view, from, to, text): boolean (110-158)",
+      "relevance": "입력 핸들러 3종 — `* ` 목록 시작 시 자동 닫힘 해제, 강조쌍 확장, 코드 펜스 자동 닫기."
+    },
+    {
+      "path": "packages/editor/src/vendor/atomic-editor/atomic-theme.ts",
+      "line_range": "12-208",
+      "signature": "const atomicEditorTheme: Extension (12-133); const atomicMarkdownHighlight: HighlightStyle (134-207); const atomicMarkdownSyntax: Extension (208)",
+      "relevance": "--atomic-editor-* CSS 커스텀 프로퍼티 기반 테마 + 마크다운/코드 구문 하이라이트 스타일. 다크가 기본, 라이트는 data-theme=\"light\" 로 opt-in."
+    },
+    {
+      "path": "packages/editor/src/vendor/atomic-editor/styles/inline-preview.css",
+      "line_range": "1-830",
+      "signature": "(CSS)",
+      "relevance": "vendor 라이브 프리뷰 스타일시트 전부. demo/main.tsx 가 직접 import 한다."
+    },
+    {
+      "path": "packages/editor/src/vendor/UPSTREAM.md",
+      "line_range": "1-59",
+      "signature": "(문서)",
+      "relevance": "vendor 출처 고지 — kenforthewin/atomic-editor v0.6.2, MIT, 커밋 b6ed65f, 2026-08-12 도입. '적용한 패치' 표는 비어 있다(계층 C 개조 0건). 즉 src/vendor/ 는 upstream 무수정 사본이다."
+    },
+    {
+      "path": "packages/editor/demo/App.tsx",
+      "line_range": "114-162",
+      "signature": "export default function App(): JSX",
+      "relevance": "데모 SPA 한 화면. 하드코딩된 SAMPLE 마크다운 문자열(5-103) 하나를 열고, 문서 폭 select 와 '보기 전용' 체크박스만 제공한다. 문서 목록·저장·불러오기 UI 없음."
+    },
+    {
+      "path": "packages/editor/demo/main.tsx",
+      "line_range": "1-16",
+      "signature": "createRoot(document.getElementById('root')!).render(<StrictMode><App /></StrictMode>)",
+      "relevance": "데모 부트스트랩. StrictMode 를 의도적으로 켜 둔다(이중 마운트에서 CM 인스턴스 중복 생성 여부가 수용기준 9)."
+    },
+    {
+      "path": "packages/editor/demo/demo.css",
+      "line_range": "1-72",
+      "signature": "(CSS)",
+      "relevance": ".demo-shell / .demo-bar / .demo-editor / .demo-toggle 데모 셸 레이아웃."
+    },
+    {
+      "path": "packages/editor/index.html",
+      "line_range": "1-14",
+      "signature": "<html lang=\"ko\" data-theme=\"light\"> … <script type=\"module\" src=\"/demo/main.tsx\">",
+      "relevance": "Vite 진입 HTML. DocuLight 기본 테마를 라이트로 고정."
+    },
+    {
+      "path": "packages/editor/vite.config.ts",
+      "line_range": "1-17",
+      "signature": "defineConfig({ plugins: [react()], server: { port: 3399, open: false }, test: { environment: 'happy-dom', globals: true, include: ['test/**/*.test.{ts,tsx}'] } })",
+      "relevance": "dev 서버 포트 3399 의 근거. **test.include 가 'test/**' 뿐이라 src/vendor/atomic-editor/__tests__/ 의 7개 테스트 파일이 수집 대상에서 제외된다.**"
+    },
+    {
+      "path": "packages/editor/tsconfig.json",
+      "line_range": "1-23",
+      "signature": "target ES2022, module ESNext, moduleResolution bundler, jsx react-jsx, strict, noUnusedLocals/Parameters, verbatimModuleSyntax, noEmit; include [src, demo, test, vite.config.ts]",
+      "relevance": "타입 검사 전용 구성. noEmit 이므로 tsc 는 산출물을 만들지 않는다."
+    },
+    {
+      "path": "packages/editor/test/mermaid-blocks.test.ts",
+      "line_range": "1-201",
+      "signature": "describe × 8, it × 19",
+      "relevance": "수집되는 테스트. SDS-AC-1/2/3/7/9/11 을 이름으로 명시. 블록 추출, 커서 안팎 판정, 비-mermaid 펜스 무시, 다중 블록 독립 판정, 읽기 전용 유지, 읽기 전용 해제 시 선택 이동."
+    },
+    {
+      "path": "packages/editor/test/mermaid-render.test.ts",
+      "line_range": "1-64",
+      "signature": "describe × 3, it × 8",
+      "relevance": "수집되는 테스트. SDS-AC-4(예외를 값으로), SDS-AC-5(크기 캐시), SDS-AC-6(mermaid 지연 적재)."
+    },
+    {
+      "path": "packages/editor/test/browser-check.mjs",
+      "line_range": "1-178",
+      "signature": "top-level await 스크립트; check(name, pass, detail) × 12; process.exit(실패 수 === 0 ? 0 : 1)",
+      "relevance": "Playwright/Chromium 실브라우저 검증 12건. **vitest 가 아니라 `node test/browser-check.mjs` 로 직접 실행하며, `npm run dev`(localhost:3399)가 떠 있어야 한다.** SVG 렌더, js 펜스 제외, 렌더 실패 격리, 커서 왕복, StrictMode 인스턴스 1개, 보기 전용 클릭, 에디터 밖 DOM 누출, 라이트 테마, 팔레트 다색, 콘솔 오류 0."
+    },
+    {
+      "path": "packages/editor/src/vendor/atomic-editor/__tests__/",
+      "line_range": "-",
+      "signature": "edit-helpers.test.ts(10), editor.test.tsx(9), markdown-contracts.test.tsx(1), multiline-decoration.test.tsx(0 it), read-only.test.tsx(10), table-widget.test.ts(18), wiki-links.test.tsx(8), setup.ts, fixtures/markdown-contracts.ts",
+      "relevance": "vendor 원본 테스트 7개 파일(56 케이스). **vite.config.ts 의 include 패턴에 걸리지 않아 `npm test` 로 전혀 실행되지 않는다.** setup.ts(IS_REACT_ACT_ENVIRONMENT) 도 setupFiles 미설정이라 어떤 러너에도 연결되어 있지 않다."
+    },
+    {
+      "path": "packages/editor/README.md",
+      "line_range": "1-90",
+      "signature": "(문서)",
+      "relevance": "패키지 사용법. '아직 없는 것' 절에 수식(KaTeX)·소스 모드·첨부 붙여넣기·자동 저장·병합 뷰를 스스로 미구현으로 명시. 다만 테스트 건수 표기(npm test 19건 / test:browser 8건)는 실측(27건 / 12건)과 어긋나 낡았다."
+    },
+    {
+      "path": "packages/editor/src/vendor/atomic-editor/LICENSE",
+      "line_range": "-",
+      "signature": "MIT, Copyright (c) 2026 Kenny Bergquist",
+      "relevance": "vendor 라이선스 원문. UPSTREAM.md 가 삭제·이동 금지를 명시."
+    }
+  ],
+
+  "runtime_surfaces": {
+    "present": [
+      "CodeMirror 6 마크다운 에디터 — 라이브 프리뷰(inline-preview), GFM(표·취소선·태스크리스트·자동링크), ==하이라이트== 확장",
+      "React 래퍼 컴포넌트 1개 (AtomicCodeMirrorEditor) + 명령형 핸들(focus/undo/redo/openSearch/revealText/getMarkdown/setReadOnly)",
+      "Mermaid 블록 라이브 프리뷰 (자체 작성; core/mermaid-blocks + core/mermaid-render)",
+      "편집 가능한 표 위젯 (table-widget)",
+      "이미지 블록 렌더 위젯 (image-blocks) — 표시만, 업로드 없음",
+      "읽기 전용(reading) 모드 — Compartment 기반 런타임 토글",
+      "문서 내 찾기 패널 (@codemirror/search)",
+      "실행 취소/다시 실행 히스토리 (@codemirror/commands)",
+      "입력 보조 (자동 괄호/강조쌍/코드펜스 자동닫기/목록 시작)",
+      "CSS 커스텀 프로퍼티 기반 테마 (--atomic-editor-* 39개, 다크 기본 / data-theme=\"light\" opt-in)",
+      "Vite 개발 서버 + 단일 화면 데모 SPA (하드코딩 샘플 문서 1개)"
+    ],
+    "absent": [
+      "HTTP 서버 — 코드 전무 (express/fastify/http.createServer 등 어떤 서버 부트스트랩도 없음)",
+      "API 라우트 / REST / GraphQL 엔드포인트 — 전무",
+      "네트워크 호출 — src/demo/test 전체에 fetch( · XMLHttpRequest · WebSocket 이 0건",
+      "영속화 — localStorage · sessionStorage · indexedDB · 파일 I/O · DB 클라이언트(prisma/drizzle/sqlite/mongoose) 0건. 문서는 markdownSource prop 으로 메모리에만 존재",
+      "인증/인가 — 로그인, 세션, JWT, 쿠키, Authorization 헤더, 권한 검사 코드 0건",
+      "전역 상태 스토어 — zustand/redux/jotai/recoil 의존성 없음, React createContext/useContext 사용 0건. 상태는 CodeMirror EditorState 와 demo 의 useState 2개뿐",
+      "라우터 — react-router 등 없음. 화면은 데모 1개",
+      "빌드 산출물로서의 라이브러리 패키징 — vite.config.ts 에 build.lib 없음, tsconfig 는 noEmit. `npm run build` 는 데모 SPA 를 번들할 뿐 배포 가능한 패키지를 만들지 않음"
+    ]
+  },
+
+  "tests": {
+    "framework": "Vitest 4.1.10 (environment: happy-dom, globals: true) + Playwright 1.62.1 (별도 스크립트)",
+    "file_count": 9,
+    "file_count_detail": {
+      "collected_by_npm_test": 2,
+      "present_but_not_collected": 7,
+      "collected_files": [
+        "packages/editor/test/mermaid-blocks.test.ts (19 케이스)",
+        "packages/editor/test/mermaid-render.test.ts (8 케이스)"
+      ],
+      "not_collected_files": [
+        "packages/editor/src/vendor/atomic-editor/__tests__/edit-helpers.test.ts (10)",
+        "packages/editor/src/vendor/atomic-editor/__tests__/editor.test.tsx (9)",
+        "packages/editor/src/vendor/atomic-editor/__tests__/markdown-contracts.test.tsx (1)",
+        "packages/editor/src/vendor/atomic-editor/__tests__/multiline-decoration.test.tsx (0 it)",
+        "packages/editor/src/vendor/atomic-editor/__tests__/read-only.test.tsx (10)",
+        "packages/editor/src/vendor/atomic-editor/__tests__/table-widget.test.ts (18)",
+        "packages/editor/src/vendor/atomic-editor/__tests__/wiki-links.test.tsx (8)"
+      ],
+      "not_collected_reason": "vite.config.ts 의 test.include = ['test/**/*.test.{ts,tsx}'] 가 vitest 기본 include 를 대체하므로 src/ 하위 __tests__ 는 매칭되지 않는다. `npx vitest list` 실측으로 확인(수집 27건, 모두 test/ 하위)."
+    },
+    "case_count_collected": 27,
+    "run_command": "cd packages/editor && npm test   (= vitest run; 27 케이스 수집)",
+    "run_command_browser": "cd packages/editor && npm run dev   (별도 터미널) 이후   npm run test:browser   (= node test/browser-check.mjs; Chromium, 12 검사, localhost:3399 필요)",
+    "run_command_typecheck": "cd packages/editor && npm run typecheck   (= tsc --noEmit)",
+    "covers": [
+      "mermaid 펜스 블록 추출 (findMermaidBlocks)",
+      "커서가 블록 밖/안일 때 위젯 발행 여부 (SDS-AC-1, SDS-AC-2)",
+      "비-mermaid 펜스 및 언어 태그 없는 펜스 무시 (SDS-AC-3)",
+      "다중 mermaid 블록의 독립 판정 (SDS-AC-7)",
+      "읽기 전용에서 커서 위치와 무관한 위젯 유지 (SDS-AC-9)",
+      "읽기 전용 해제 시 선택을 블록 밖으로 이동 (SDS-AC-11)",
+      "선택 영역이 블록에 걸칠 때 원문 노출",
+      "렌더 실패를 예외가 아닌 값으로 반환 (SDS-AC-4)",
+      "렌더 크기 캐시 (SDS-AC-5)",
+      "mermaid 모듈 지연 적재 (SDS-AC-6)",
+      "[브라우저 전용] 실제 SVG 렌더 · 에디터 밖 DOM 누출 없음 (SDS-AC-8) · StrictMode 에서 CM 인스턴스 1개 · 라이트 테마 · 팔레트 다색 · 콘솔 오류 0"
+    ],
+    "not_covered": [
+      "표 위젯 · 인라인 프리뷰 · 읽기 전용 · 위키링크 · 편집 보조의 vendor 테스트는 존재하지만 실행되지 않으므로 회귀 안전망이 없다",
+      "AtomicCodeMirrorEditor 의 명령형 핸들(revealText/openSearch/getMarkdown/setReadOnly) 을 검증하는 실행 테스트 없음",
+      "CI 설정 파일이 리포에 없다 (.github/workflows 부재) — 자동 실행 주체 없음"
+    ]
+  },
+
+  "dev_server": {
+    "command": "cd packages/editor && npm run dev   (= vite)",
+    "default_port": 3399,
+    "config_source": "packages/editor/vite.config.ts:8-11 (server.port = 3399, open = false)",
+    "url": "http://localhost:3399/",
+    "notes": [
+      "CLAUDE.md 의 '기본 dev 서버 포트 3399' 규약과 일치한다.",
+      "백엔드 없이 단독 실행된다 — 프록시 설정도 API 대상도 없다.",
+      "browser-check.mjs 는 EDITOR_URL 환경변수로 대상 URL 을 덮어쓸 수 있다 (기본 http://localhost:3399/)."
+    ]
+  },
+
+  "git_recent": [
+    "bb045fd docs(spec): Phase 2 에 PDF 뷰어·할 일 목록·댓글을 세우고 R92 를 연다",
+    "cd24db2 chore(spec): secs.json 을 추적 대상에 넣고 낡음을 표시한다",
+    "1522703 docs(next): 지시서를 심의 종결 상태로 다시 쓰고 마커 계수를 재실측한다",
+    "dba80e2 docs(spec): 인증 화면 심의로 R143~R145 를 세우고 소유를 04 로 정한다",
+    "2374943 docs(next): 설계 완성 지시서를 추가하고 인수인계의 낡은 자리를 정리한다",
+    "cb04e8e docs(spec): 인용 스윕으로 R124-a 위반 여섯 자리를 닫는다",
+    "c9f99dc docs(spec): 옵시디언 실측으로 G11·G12 를 닫고 R106 을 전복한다",
+    "240d7b2 docs(spec): 설계 문서 전량을 추적 대상에 넣고 원장을 R142 까지 갱신한다",
+    "7a6eb06 feat(editor): 읽기 전용 해제 시 선택을 mermaid 블록 밖으로 옮긴다",
+    "fc16f66 fix(editor): 보기 전용에서 mermaid 클릭 시 원문이 드러나던 문제",
+    "656794e chore: dev 서버 기본 포트를 3399 로 통일",
+    "a027222 docs(editor): 패키지 README 와 브라우저 검증 스크립트 추가",
+    "da1cefe chore: 브라우저 검증 스크린샷을 추적 대상에서 제외",
+    "55a88b8 feat(editor): Mermaid 라이브 프리뷰 블록 렌더",
+    "fc4ded1 vendor: atomic-editor v0.6.2 원본 도입",
+    "a08e7fb chore: 기존 설계 문서와 SpecKiwi 워크플로 기준선 커밋"
+  ],
+  "git_trajectory": {
+    "total_commits": 16,
+    "code_commits": 5,
+    "code_commit_ids": ["fc4ded1", "55a88b8", "7a6eb06", "fc16f66", "656794e"],
+    "doc_or_chore_commits": 11,
+    "summary": "리포 전체 이력이 16커밋이다. 코드에 손댄 커밋은 5건뿐이고 그중 fc4ded1 은 vendor 원본 도입(우리 코드 아님)이다. 실제 자작 기능 커밋은 55a88b8(Mermaid 최초 구현) · fc16f66 · 7a6eb06(그 후속 버그픽스 2건) · 656794e(포트 통일) 4건. 최근 8커밋은 전부 docs/spec 문서 작업이며, 마지막 코드 변경(7a6eb06) 이후 코드는 정지 상태다. 궤적은 '에디터 mermaid 스텝 1개 완료 → 이후 전량 문서/명세 작업'이다.",
+    "status_short_summary": "working tree 변경분은 전부 .agents/.claude 스킬 정의와 AGENTS.md/CLAUDE.md 이며, 미추적은 docs/analysis/ 와 kiwi/ 다. packages/ 하위 제품 코드의 수정·미추적 파일은 0건이다."
+  },
+
+  "related_modules": [
+    {
+      "name": "atomic-editor (vendored)",
+      "path": "packages/editor/src/vendor/atomic-editor",
+      "note": "kenforthewin/atomic-editor v0.6.2 (커밋 b6ed65f, 2026-07-11), MIT, 2026-08-12 도입. npm 대응 @atomic-editor/editor@0.6.2. UPSTREAM.md 의 '적용한 패치' 표가 비어 있어 무수정 사본이다. 제품 코드 8100줄 중 약 5900줄(≈73%)이 이 vendor 다."
+    },
+    {
+      "name": "speckiwi MCP",
+      "path": ".mcp.json",
+      "note": "`npx -y speckiwi mcp` 로 기동되는 요구사항 관리 MCP 서버. 제품 런타임과 무관한 개발 도구."
+    },
+    {
+      "name": "kiwi 워크플로 훅",
+      "path": "docs/.kiwi/hooks/pre-commit.mjs, docs/.kiwi/hooks/trace.mjs",
+      "note": "추적되는 유일한 docs 하위 .mjs 2개. SRS 워크플로 훅이며 제품 코드가 아니다."
+    },
+    {
+      "name": "에이전트 스킬 정의",
+      "path": ".agents/skills/**, .claude/skills/**",
+      "note": "kiwi-* 스킬 SKILL.md 와 validator.mjs. 제품 코드가 아니다."
+    }
+  ],
+
+  "missing_evidence": [
+    "**사용자/계정** — 사용자 엔티티, 프로필, 가입/로그인/로그아웃 화면, 세션 관리 코드가 전무하다. 'user'라는 도메인 개념이 코드에 단 한 번도 등장하지 않는다.",
+    "**인증(Authentication)** — 로그인 폼, 비밀번호 처리, 토큰 발급/검증, 쿠키·세션, SSO/OAuth, Authorization 헤더 사용처가 0건이다. 커밋 dba80e2 가 '인증 화면 심의로 R143~R145 를 세운다'고 하지만 대응 코드는 없다.",
+    "**인가/권한(Authorization)** — 폴더 권한, 역할, ACL, 권한 검사 함수가 전무하다.",
+    "**그룹** — 그룹 엔티티나 그룹-사용자 매핑 코드가 전무하다.",
+    "**액세스 토큰** — 발급·저장·폐기·검증 코드가 전무하다 (코드에서 grep 되는 'token'은 전부 CodeMirror 구문 토큰에 관한 주석이다).",
+    "**문서 영속화** — 문서 저장·불러오기가 전무하다. 문서는 AtomicCodeMirrorEditor 의 markdownSource prop 으로 마운트 시 1회 주입되는 메모리 문자열이며, onMarkdownChange 콜백은 정의만 있고 demo 에서 구독조차 하지 않는다. 새로고침하면 편집 내용이 사라진다.",
+    "**자동 저장 / 초안 / 버전 이력** — 전무하다. README 스스로 '아직 없는 것'으로 명시한다.",
+    "**동시 편집 충돌 처리 · 병합 뷰** — 전무하다. README 가 미구현으로 명시한다.",
+    "**폴더 / 문서 트리 / 네비게이션** — 폴더 엔티티, 트리 UI, 이동·이름변경 코드가 전무하다. 화면은 데모 1개이며 문서 목록 UI 자체가 없다.",
+    "**공유(Sharing)** — 공유 링크 생성, 공개 범위 설정, 초대 코드가 전무하다.",
+    "**휴지통(Trash)** — 삭제·복원·영구삭제 코드가 전무하다.",
+    "**감사 로그(Audit log)** — 이벤트 기록·조회 코드가 전무하다.",
+    "**설정(Settings) 화면** — 사용자/워크스페이스 설정 UI 나 설정 영속화가 전무하다. demo 의 select 와 체크박스는 데모 로컬 useState 두 개일 뿐이다.",
+    "**검색(문서 간 전역 검색)** — 없다. 존재하는 것은 CodeMirror 의 '열려 있는 문서 안에서 찾기' 패널뿐이며, 색인·질의·검색 API 코드는 전무하다.",
+    "**댓글** — 댓글 엔티티·UI·스레드 코드가 전무하다 (커밋 bb045fd 가 명세에 세웠으나 코드 없음).",
+    "**할 일 목록(Todo)** — 별도 기능으로서의 할 일 목록이 전무하다. 존재하는 것은 마크다운 `- [ ]` 체크박스 렌더/토글뿐이다.",
+    "**PDF 뷰어** — 전무하다 (커밋 bb045fd 가 명세에 세웠으나 코드 없음).",
+    "**첨부파일 업로드 / 붙여넣기** — 전무하다. image-blocks 는 이미 URL 이 있는 이미지를 표시만 하고, 업로드 경로·스토리지·드롭 핸들러가 없다. README 가 미구현으로 명시한다.",
+    "**수식(KaTeX/LaTeX)** — 전무하다. README 가 미구현으로 명시하며 katex 의존성도 없다.",
+    "**소스 모드(원문 전체 보기 토글)** — 전무하다. README 가 미구현으로 명시한다.",
+    "**위키링크 실동작** — wiki-links.ts(597줄)가 vendor 에 존재하지만 AtomicCodeMirrorEditor 기본 확장 세트에 없고 src/index.ts 로 재수출되지도 않으며 demo 도 주입하지 않는다. 따라서 [[링크]] 해석·자동완성·백링크는 현재 앱에서 동작하지 않는다. (demo/App.tsx:102 의 '[[위키링크]] 도 동작합니다' 문구는 코드와 어긋난다.)",
+    "**코드 펜스 문법 강조** — ATOMIC_CODE_LANGUAGES(139줄)가 어디에서도 import 되지 않고 codeLanguages prop 기본값이 [] 이므로, package.json 의 @codemirror/lang-* 16개 의존성이 실질적으로 미사용이며 코드 블록은 강조 없이 렌더된다.",
+    "**서버 / 백엔드 일체** — HTTP 서버, 라우팅, 미들웨어, DB, ORM, 마이그레이션, 스키마 정의가 전무하다. 리포에 백엔드 패키지 자체가 없다.",
+    "**API 클라이언트** — fetch/axios/WebSocket 호출이 0건이다. 프런트엔드가 통신할 대상이 정의되어 있지 않다.",
+    "**애플리케이션 셸 UI** — 헤더/사이드바/툴바/모달/알림 같은 제품 UI 컴포넌트가 전무하다. React 컴포넌트는 AtomicCodeMirrorEditor(vendor)와 demo/App 둘뿐이다.",
+    "**라우팅** — react-router 등 클라이언트 라우터가 없다. URL 로 문서를 여는 경로가 없다.",
+    "**국제화(i18n)** — 번역 프레임워크나 리소스 파일이 없다. 문자열은 한국어로 하드코딩되어 있다.",
+    "**접근성 검증 · E2E 사용자 시나리오** — browser-check.mjs 는 mermaid 렌더 검증 전용 12건이며, 제품 사용자 흐름 E2E 나 a11y 검사는 없다.",
+    "**CI 파이프라인** — .github/workflows 등 CI 설정이 리포에 없다. 테스트를 자동 실행하는 주체가 없다.",
+    "**배포/패키징** — Dockerfile, 배포 스크립트, 라이브러리 빌드 설정(build.lib)이 없다."
+  ],
+
+  "external_paths_detected": [],
+  "external_paths_note": "없다. packages/editor 밖을 가리키는 소스 import 는 0건이다. 절대 경로(C:\\ 등), file:// URL, 패키지 루트를 벗어나는 상대 경로(../../ 이상) import 가 코드에 존재하지 않는다. tsconfig.json 의 include 는 ['src','demo','test','vite.config.ts'] 로 전부 패키지 내부이며, paths 매핑·project references·workspace 프로토콜 의존성도 없다. package.json 의 모든 의존성은 npm 레지스트리 패키지다. 리포 루트에 워크스페이스 설정이 없으므로 형제 패키지 링크도 존재하지 않는다. (README 와 UPSTREAM.md 가 ../../docs/... 를 참조하지만 이는 마크다운 링크이지 빌드 의존이 아니다.)"
+}

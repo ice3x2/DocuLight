@@ -1,0 +1,75 @@
+{
+  "run_id": "2026-08-19.doculight2.phase1-srs-intake",
+  "target": "phase-1",
+  "classification": "new-scope",
+  "mode": "live",
+  "skill": "kiwi-srs --auto",
+
+  "rationale": "원장 00.decision-log.md 머리표가 '다음 단계 = R32 에 따라 SpecKiwi SRS 구조로 전개' 라고 스스로 적고, R32 가 '본 결정 기록은 SRS 로 전개하기 전의 원장 역할' 이라 규정한다. SpecKiwi SRS 는 비어 있었으므로(요구 0건·Target Map 0행) 분류는 new-scope 다.",
+
+  "known_conflict_with_work_order": {
+    "fact": "docs/next/01.design-completion.md 머리표는 'R32(SpecKiwi 전개)는 설계 완성 이후의 별도 과제다' 라 적고, 00.handoff.md §7.3 은 'R32 전개의 선행 순서: 공백 결정 → 번호 정리 → SRS 전개' 를 요구한다.",
+    "resolution": "사용자가 이 세션에서 /kiwi-srs 를 명시 지정했으므로 사용자 지시가 문서보다 우선한다. 다만 선행 조건을 실측해 위험을 정량화했다 — gap_coupling.json 참조.",
+    "measured_risk": "열린 공백이 실제로 막는 것은 조항 본체가 아니라 곁가지다. 조항이 스스로 '막혔다' 고 적은 자리는 살아 있는 것 7행(325 중 2.2%)뿐이고, 일곱 모두 '본체 확정 · 한 축 미결' 형태다. 전개를 원천 봉쇄하는 조항은 0행이다.",
+    "numbering_precondition": "해소됨. scaffold-scope 가 기존 00~06·90·91 을 회피해 07 부터 배정하는 것을 dry-run 과 실행으로 확인했다. 잔존 경고 SRS-W072 는 02.feature-request-live-preview.md 쪽이며 그 문서는 '별도 세션 진행 중' 표기라 손대지 않았다."
+  },
+
+  "measurement_corrections": {
+    "_note": "심의위원 1번과 3번이 독립적으로 같은 누락을 지적했고, 원문 L303~307 에서 검증했다.",
+    "cause": "메인 세션의 계수 정규식이 R\\d+(-[a-z])? 였다. R43-1~R43-5 는 숫자 접미사이고 ID 셀이 볼드(| **R43-1** |)라 표준 조항 표 스캔에서 빠졌다.",
+    "clause_rows": { "before": 336, "after": 341 },
+    "phase1_rows": { "before": 320, "after": 325, "top_level": 135, "sub_clause": 190 },
+    "section_2_4": { "before": 55, "after": 60 },
+    "why_it_mattered": "R43-1 은 원장에서 두 번째로 많이 인용되는 ID(14회)이고 §4 수용 기준 4번이 'R43(부속 5종)이 검증된다' 로 직접 지목한다. R43 은 부모가 내용을 갖지 않는 순수 컨테이너라 '최상위만 요구사항으로 삼는다'(A-2) 를 단독으로 반증하는 사례다.",
+    "phase1_blocking_gaps": { "before": 13, "after": 12, "removed": "G30", "reason": "G30 은 스스로 'Phase 2 분할 창의 pane 최소 폭' 이고 영향 칸이 'Phase 2 사안이라 급하지 않다' 로 끝난다. R92 가 'Phase 2 항목에 딸린 공백은 Phase 1 착수를 막지 않는다' 는 규칙을 세운다. 부수로 G30 을 인용하는 유일한 조항 R108-a 는 취소선이다." }
+  },
+
+  "committee": {
+    "members": 3,
+    "method": "독립 심의 3인 — 서로의 의견을 보지 못한다. 각자 원장을 직접 재측정하도록 지시했다.",
+    "artifacts": ["scratchpad/panel-1.md", "scratchpad/panel-2.md", "scratchpad/panel-3.md"],
+    "decisions": [
+      { "issue": "A 입도", "verdict": "부모 조항 = 요구사항 1건, 하위는 Acceptance Criteria. 단 SRS-MD §29.1 분리 트리거(행위자·시스템 경계·검증 방법이 다르다 등)가 걸리는 하위는 독립 요구사항으로 올린다. 비규범 하위(잔여위험·등재사유 정정·예시 — 약 10행, 하위의 5%)는 rationale/implementationNotes 로 간다.", "vote": "3/3 — 1:1(A-1)과 전량 흡수(A-2) 는 만장 부결", "note": "예상 산출은 위원마다 146 / 241 / 275 로 갈렸다. 전역 목표치를 정하지 않고 scope 마다 규칙을 적용한다." },
+      { "issue": "B scope", "verdict": "10 scope — EDITOR · SHELL · AUTH · ACL · CONFIRM · AUDIT · WORKSPACE · STORAGE · ATTACH · ARCH(기존 스텁 재사용)", "vote": "10 이 2/3(1·3번). 구성은 항목별 호환 계수로 확정", "compatibility": { "§2.1 을 쪼갠다": "3/3", "ARCH 스텁 재사용": "3/3", "CONFIRM 독립": "3/3", "AUDIT 독립": "3/3", "EDITOR·ACL·STORAGE·첨부 독립": "3/3", "WORKSPACE 독립": "2/3", "SHELL 과 설정 병합": "2/3", "계정·사용자를 AUTH 에 병합": "2/3" } },
+      { "issue": "C target", "verdict": "phase-1(type=phase, active) + phase-2(type=phase). Phase 2 전용 scope 는 만들지 않고 target 으로만 가른다.", "vote": "3/3 만장" },
+      { "issue": "D Status/Stability", "verdict": "Status=planned 기본, 열린 공백에 걸리면 blocked. Stability=stable 기본, 공백·시한부 문면은 evolving, Phase 2 는 draft. frozen 과 implemented 는 이번에 쓰지 않는다.", "vote": "stable 2/3 · blocked 2/3 · Phase2=draft 3/3 · frozen 미사용 3/3 · implemented 미사용 3/3", "key_reasoning": "전량 draft 는 두 번 죽는다 — CLAUDE.md 가 draft 구현 착수를 막고, SRS-MD §15.3 이 '활성 target 안의 비-discarded draft 는 stability 경고를 낸다' 라 경고 채널이 그 자리에서 죽는다. 그리고 Status 가 이미 구현 여부를 담으므로 Stability 에 또 적으면 R124(한 사실은 한 곳에)를 SRS 계층에서 되풀이하는 것이다. 3번 위원이 §5 변경 이력 122행을 파싱해 '요건 확정' 선언 이후 개정된 조항이 5개뿐임을 실증했다 — stable 은 사실 진술이다." },
+      { "issue": "E trace", "verdict": "R{n} 은 trace 의 Doc 행 한 곳에만 둔다 — | Doc | docs/spec/00.decision-log.md#R{n} | informed_by |. 열린 공백은 | Doc | ...#G{n} | related_to |. relatedDocs 에는 화면 설계 문서(03~06)만. tags 에 R{n} 을 넣지 않는다. Code trace 는 이번에 달지 않는다.", "vote": "3/3", "why_no_code_trace": "구현이 사실상 0 이라 모든 Code trace 가 addition_site 가 되고, 그러면 kiwi-srs §0.G3 이 status 를 상한으로 묶는다. 없는 코드를 가리키는 것은 추적이 아니다." },
+      { "issue": "F 실행", "verdict": "한 번에 등재하지 않는다. scope 단위로 나누고 작성 서브에이전트를 순차 실행한다.", "vote": "3/3", "concurrency": "SpecKiwi 는 SRS mutation 잠금을 쓰고 00.index.md 를 공유 갱신하므로 동시 작성은 안전하지 않다." },
+      { "issue": "G 열린 공백", "verdict": "00.index.md §9 Open Questions 에 G{n} 원번호 그대로 등재한다. 요구사항 AC 에 placeholder 를 넣지 않는다.", "vote": "2/3", "hard_fact": "{{OQ-N}} placeholder 문법은 이 저장소의 SRS-MD-Rules-v2.5.0.md 어디에도 없다. 요구 블록에 Open Questions 섹션도 없다(§18.1). kiwi-srs §0.15 가 지시하는 형식이 여기서는 존재하지 않는 기능이다." }
+    ]
+  },
+
+  "brief_errors_found_by_committee": [
+    { "severity": "중대", "finding": "R43-1~R43-5 누락 — 조항 행 336→341, Phase 1 320→325, §2.4 55→60", "found_by": ["1번", "3번"], "verified": true },
+    { "severity": "중대", "finding": "Phase 1 을 막는 공백은 13 이 아니라 12 — G30 은 Phase 2 축이다", "found_by": ["1번"], "verified": true },
+    { "severity": "중대", "finding": "{{OQ-N}} placeholder 와 요구 블록 Open Questions 섹션은 이 규칙서에 존재하지 않는다. 없는 선택지가 후보에 있으면 저울질이 왜곡된다", "found_by": ["2번", "3번"], "verified": true },
+    { "severity": "중대", "finding": "02.product-architecture.srs.md 스텁은 §4 에서 끝나고 §5 Cross-scope Dependencies·§6 Open Questions·§7 Change Notes 가 없다. ARCH 재사용의 전제다", "found_by": ["2번"], "verified": true },
+    { "severity": "경미", "finding": "비고 셀 최대는 2557자가 아니라 1170자(R141). 2557 은 R92 행 전체 길이였다", "found_by": ["1번"], "verified": false },
+    { "severity": "경미", "finding": "§2.1 확인 등급 체계는 약 45행이 아니라 59행(R113~R136)", "found_by": ["1번", "2번"], "verified": false },
+    { "severity": "경미", "finding": "SRS-W072 가 남아 있는 한 speckiwi validate --fail-on-warning 은 이 작업의 종료 조건이 될 수 없다", "found_by": ["2번"], "verified": true },
+    { "severity": "경미", "finding": "규칙서 §33.2.3 과 §18.1 이 서로 모순이다 — 전자는 요구 블록에 Open Question 을 추가하라 하고 후자는 그 섹션을 목록에서 뺀다. 규칙서의 결함", "found_by": ["2번"], "verified": false }
+  ],
+
+  "scopes_created": [
+    { "name": "Editor",               "prefix": "EDITOR",    "doc": "docs/spec/07.editor.srs.md" },
+    { "name": "App Shell",            "prefix": "SHELL",     "doc": "docs/spec/08.app-shell.srs.md" },
+    { "name": "Auth",                 "prefix": "AUTH",      "doc": "docs/spec/09.auth.srs.md" },
+    { "name": "Access Control",       "prefix": "ACL",       "doc": "docs/spec/10.access-control.srs.md" },
+    { "name": "Confirmation Grades",  "prefix": "CONFIRM",   "doc": "docs/spec/11.confirmation-grades.srs.md" },
+    { "name": "Audit Log",            "prefix": "AUDIT",     "doc": "docs/spec/12.audit-log.srs.md" },
+    { "name": "Workspace",            "prefix": "WORKSPACE", "doc": "docs/spec/13.workspace.srs.md" },
+    { "name": "Storage",              "prefix": "STORAGE",   "doc": "docs/spec/14.storage.srs.md" },
+    { "name": "Attachments",          "prefix": "ATTACH",    "doc": "docs/spec/15.attachments.srs.md" },
+    { "name": "Product Architecture", "prefix": "ARCH",      "doc": "docs/spec/02.product-architecture.srs.md", "note": "기존 스텁 재사용 — 신설하지 않았다" }
+  ],
+
+  "prefix_collision_check": {
+    "type_prefixes": ["FR", "NFR", "IR", "DR", "SEC", "PERF", "REL", "OBS", "OPS", "MIG", "CON"],
+    "collision": false,
+    "near_miss_note": "CONFIRM 은 CON 으로 시작하지만 ID 정규식이 타입 세그먼트를 먼저 앵커하므로 FR-CONFIRM-001 은 모호하지 않다. 축약형 GRADE·GUARD 도 검토했으나 원장의 용어가 '확인 등급 체계'(R115) 라 CONFIRM 이 이름-곧-설명 기준에서 이긴다."
+  },
+
+  "external_module_impact": null,
+  "scope_boundary_impact": null,
+  "confidence": "high"
+}

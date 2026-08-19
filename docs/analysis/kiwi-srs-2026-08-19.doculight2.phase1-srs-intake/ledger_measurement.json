@@ -1,0 +1,81 @@
+{
+  "_note": "메인 세션이 결정적 스크립트로 직접 측정한 값. 원장 머리표 선언과 대조하기 위한 독립 계수다.",
+  "source": "docs/spec/00.decision-log.md",
+  "measured_at": "2026-08-19",
+  "method": "정규식 행 매칭 — 조항행 = /^\\|\\s*(~~)?\\s*(R\\d+(-[a-z])?)\\s*(~~)?\\s*\\|/, 구획 = /^### (2\\.\\d+ .*)$/",
+
+  "number_axis": {
+    "distinct_base_numbers": 144,
+    "max_clause": "R148",
+    "unused_numbers": ["R5", "R34", "R82", "R104"],
+    "struck": {
+      "discarded": ["R27", "R44-a"],
+      "closed": ["R106-b", "R108-a"]
+    },
+    "matches_front_matter": true
+  },
+
+  "row_axis": {
+    "total_clause_rows": 336,
+    "top_level_rows": 144,
+    "sub_clause_rows": 192,
+    "live_rows_after_struck": 332,
+    "phase2_rows": 12,
+    "phase1_rows": 320,
+    "phase1_top_level": 135,
+    "phase1_sub_clause": 185
+  },
+
+  "phase2_ids": ["R17", "R31", "R54", "R55", "R55-a", "R103", "R146", "R147", "R148", "R148-a", "R148-b", "R148-c"],
+  "phase2_id_caveats": {
+    "R55-b": "R55 의 하위지만 Phase 1 이다 — fail-closed 서빙은 보안 규칙이고 아카이브 축이 아니다 (R92 ③ 단서)",
+    "R103-a": "R103 의 하위지만 문면이 Phase 1·2 양쪽에 걸린다 (R92 ③ 단서)",
+    "R48": "R92 ① 이 짚지만 Phase 2 항목이 아니다 — 비고 첫 문장이 'Phase 1 규정이다'"
+  },
+
+  "gap_axis": {
+    "total_gap_rows": 28,
+    "open": ["G8", "G10", "G14", "G15", "G16", "G23", "G27", "G28", "G29", "G30", "G31", "G32", "G33", "G34", "G35"],
+    "open_count": 15,
+    "closed_count": 13,
+    "phase2_only": ["G34", "G35"],
+    "phase1_blocking_count": 13,
+    "matches_front_matter": true
+  },
+
+  "row_body_length_chars": {
+    "min": 31, "p25": 115, "median": 161, "p75": 235, "p90": 483, "max": 2557
+  },
+
+  "phase1_rows_per_section": [
+    { "section": "2.1 UI · 에디터", "total": 156, "top": 51, "sub": 105 },
+    { "section": "2.2 저장", "total": 11, "top": 6, "sub": 5 },
+    { "section": "2.3 사용자 · 그룹", "total": 4, "top": 3, "sub": 1 },
+    { "section": "2.4 접근 제어 (ACL)", "total": 55, "top": 22, "sub": 33 },
+    { "section": "2.5 워크스페이스", "total": 19, "top": 9, "sub": 10 },
+    { "section": "2.6 범위 (Phase 구분)", "total": 4, "top": 3, "sub": 1 },
+    { "section": "2.7 동시성", "total": 5, "top": 2, "sub": 3 },
+    { "section": "2.8 배포 · 규모", "total": 1, "top": 1, "sub": 0 },
+    { "section": "2.9 AI · MCP", "total": 3, "top": 2, "sub": 1 },
+    { "section": "2.10 코드베이스 전략", "total": 1, "top": 1, "sub": 0 },
+    { "section": "2.11 프론트엔드 스택", "total": 5, "top": 1, "sub": 4 },
+    { "section": "2.12 파일 업로드 · 첨부", "total": 13, "top": 8, "sub": 5 },
+    { "section": "2.13 삭제 · 아카이브", "total": 5, "top": 4, "sub": 1 },
+    { "section": "2.14 초기 상태", "total": 7, "top": 5, "sub": 2 },
+    { "section": "2.15 인증", "total": 14, "top": 7, "sub": 7 },
+    { "section": "2.16 버전 관리", "total": 4, "top": 3, "sub": 1 },
+    { "section": "2.17 파일 레이아웃 규칙", "total": 10, "top": 5, "sub": 5 },
+    { "section": "2.18 문서화 프로세스", "total": 3, "top": 2, "sub": 1 }
+  ],
+
+  "governing_clauses_for_this_run": {
+    "R32": "docs/spec 을 SpecKiwi SRS 구조로 정식화한다. 모든 설계·결정 문서는 docs/spec 아래에 둔다. 본 결정 기록은 SRS 로 전개하기 전의 원장 역할",
+    "front_matter_next_step": "R32 에 따라 SpecKiwi SRS 구조로 전개",
+    "R92": "Phase 라벨 원칙 — 명시가 없으면 전부 Phase 1. 판정은 ①②③ 세 경로를 함께 쓴다",
+    "R124": "한 사실은 한 자리에",
+    "R124-a": "요구사항을 개정할 때 그것을 인용하는 모든 자리를 함께 훑는다"
+  },
+
+  "phase1_acceptance_criteria_count": 13,
+  "phase1_acceptance_criteria_note": "§4 가 '아래 13개가 모두 통과하면 Phase 1 을 종료한다' 고 선언한다. 1번·7번만 수동, 나머지 11개는 자동 검증 가능. 인증 축(로그인 R57·R60·R60-b / 로그아웃 R145 / 비밀번호 변경 R144)에 수용 기준이 없다는 〔판정 필요〕 블록이 열려 있다."
+}
