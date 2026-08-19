@@ -1,0 +1,302 @@
+{
+  "iter": 2,
+  "scope_checked": "1차 수정 결과 + 신규 저작분 — 커밋 7cf0144(요구사항 3건 수정) · 8a3e701(분리 3건·복제 제거 2건·정정 2건) · 334ce3f(scope 문서 11개 §1~§3 신규 저작) · 1c6b2ba(00.index.md §9 Open Questions 15행)",
+  "mechanical": [
+    {
+      "check": "요구사항 블록 총수 대 00.index.md §5 Status Summary 합계",
+      "target": 258,
+      "violations": 0,
+      "note": "실측 258건(planned 246 · blocked 12). §5 합계 258 일치. §6 Type Summary 합계도 31+95+79+2+19+5+13+2+12=258 일치하고 타입별 실측치와 전건 일치한다."
+    },
+    {
+      "check": "Requirement ID 형식과 중복",
+      "target": 258,
+      "violations": 0,
+      "note": "PREFIX-SCOPE-NNN 형식 이탈 0 · 중복 ID 0."
+    },
+    {
+      "check": "ID 접두사 ↔ Type 필드 일치",
+      "target": 258,
+      "violations": 0,
+      "note": "constraint/CON · functional/FR · security/SEC · operational/OPS · data/DR · reliability/REL · interface/IR · migration/MIG · observability/OBS 전건 일치."
+    },
+    {
+      "check": "ID 의 scope 세그먼트 ↔ 문서 헤더 Scope 필드 일치",
+      "target": 258,
+      "violations": 0,
+      "note": "신설 3건(OBS-AUDIT-011 · FR-WORKSPACE-009)과 OBS-AUDIT-002 포함 전건 일치."
+    },
+    {
+      "check": "AC 행 형식 '- [ ] AC-{N}: '",
+      "target": 1146,
+      "violations": 0,
+      "note": "AC 총 1146행. 형식 이탈 0."
+    },
+    {
+      "check": "블록별 AC 번호가 1부터 연속",
+      "target": 258,
+      "violations": 0,
+      "note": "분리·재배치가 있었던 OBS-AUDIT-002(2) · OBS-AUDIT-011(1) · SEC-WORKSPACE-004(8) · FR-WORKSPACE-009(2) · FR-SHELL-006(4) · FR-ATTACH-011(1) · OBS-AUDIT-004(5) · OBS-AUDIT-005(10) · FR-CONFIRM-006(10) · FR-STORAGE-001(7) 전건 연속."
+    },
+    {
+      "check": "AC 0건 블록",
+      "target": 258,
+      "violations": 0,
+      "note": "AC 를 한 건도 갖지 않는 블록 없음."
+    },
+    {
+      "check": "Trace Links 표 열 수(4열) 준수",
+      "target": 258,
+      "violations": 0,
+      "note": "Type|Reference|Relation|Notes 4열 이탈 행 0."
+    },
+    {
+      "check": "Trace Links 의 Requirement 참조가 실재 ID 인가",
+      "target": 244,
+      "violations": 0,
+      "note": "Requirement 참조 244행 전건이 실재 블록을 가리킨다. 신설로 늘어난 참조(OBS-AUDIT-002↔OBS-AUDIT-011 · SEC-WORKSPACE-004↔FR-WORKSPACE-009 · FR-PRINCIPAL-011↔FR-CONFIRM-006)는 셋 다 양방향이다. FR-SHELL-006→SEC-ACL-006 과 FR-ATTACH-011→CON-PRINCIPAL-006·SEC-PRINCIPAL-003 은 depends_on 단방향이며 참조하는 쪽이 정본을 명시하므로 CON-ARCH-008 AC-2 를 만족한다."
+    },
+    {
+      "check": "표 열 수가 깨진 행 (§1~§3 Edit 저작으로 표가 깨졌는지)",
+      "target": 11,
+      "violations": 0,
+      "note": "11개 scope 문서 전체를 연속 표 블록 단위로 열 수 대조. 깨진 행 0."
+    },
+    {
+      "check": "§2 In Scope 가 그 문서의 모든 요구사항 ID 를 커버하는가",
+      "target": 258,
+      "violations": 0,
+      "note": "범위 표기(`SEC-AUTH-005`~`SEC-AUTH-009` 등)를 전개해 대조. 미커버 0."
+    },
+    {
+      "check": "스캐폴딩 문구 잔존 ('Describe the scope.' · '- None' · '- SRS requirements')",
+      "target": 11,
+      "violations": 0,
+      "note": "11개 파일 전량에서 3패턴 모두 0건. 커밋 메시지의 '스캐폴딩 잔존 0' 주장이 사실이다."
+    },
+    {
+      "check": "§2 Out of Scope 항목 수 = 124 주장 검산",
+      "target": 124,
+      "violations": 0,
+      "note": "실측 124(ARCH 7·EDITOR 9·SHELL 12·AUTH 11·ACL 15·CONFIRM 12·AUDIT 12·WORKSPACE 11·STORAGE 14·ATTACH 12·PRINCIPAL 9). In Scope 는 103."
+    },
+    {
+      "check": "모호 어휘 전수 grep (Requirement·Acceptance Criteria 절 한정, 20패턴)",
+      "target": 1146,
+      "violations": 0,
+      "note": "'적절한·빠른·충분한·일관된·사용자 친화적·직관적·유연한·효율적·최적화·가능한 한·필요에 따라·신속·원활·간편·명확한' 등 20패턴 grep. 유일 히트는 SEC-STORAGE-001 의 '충분한 엔트로피'이며 원장 R76-b 문면('UUIDv4 등 충분한 엔트로피의 랜덤 값')을 그대로 옮긴 것이고 UUIDv4 라는 구체값이 붙어 있어 위반이 아니다."
+    },
+    {
+      "check": "취소선 조항(~~R27~~·~~R44-a~~·~~R106-b~~·~~R108-a~~)을 논거로 인용",
+      "target": 258,
+      "violations": 0,
+      "note": "SRS 전체에서 히트 1건(08.app-shell.srs.md:1188)이며 문면이 '그 한정은 종결된 R108-a 의 옵시디언 실측 서술에만 있어 새 논증의 근거로 인용할 수 없다'로 정확히 반대 취지다. 1차에서 지적된 11.confirmation-grades.srs.md 의 R106-b 인용은 8a3e701 에서 제거되었음을 diff 로 확인했다."
+    },
+    {
+      "check": "validate_spec --fail-on-warning",
+      "target": 258,
+      "violations": 0,
+      "note": "errors 0 · warnings 2. 둘 다 알려진 것(SRS-W072 02 번호 중복 · SRS-W023 FR-SHELL-011 draft)."
+    },
+    {
+      "check": "AC 가 시스템 명제가 아닌 절차·테스트 지시인 후보 grep",
+      "target": 1146,
+      "violations": 2,
+      "note": "SEC-ACL-016 AC-5 와 SEC-CONFIRM-001 AC-3. 상세는 finding F-L01. SEC-WORKSPACE-004 의 옛 AC-11·AC-12 는 8a3e701 에서 Implementation Notes 로 이관되어 해소되었다."
+    },
+    {
+      "check": "scope 를 가로지르는 AC 문면 중복 (difflib 유사도 > 0.72)",
+      "target": 1146,
+      "violations": 2,
+      "note": "8쌍 검출. 그중 규범 복제로 판정한 것은 FR-SHELL-004 AC-3 ↔ SEC-WORKSPACE-004 AC-1(F-M06)과 FR-SHELL-009 AC-3·AC-4 ↔ SEC-WORKSPACE-004 AC-4·AC-5(F-L05). 나머지 6쌍은 서로 다른 축(첨부 경로 대 첨부 링크 문자열, 기본값 `편집` 대 `없음` 등)이라 복제가 아니다."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F-H01",
+      "severity": "HIGH",
+      "axis": "A. 분리 온전성 / E4. 인덱스 집계 정합",
+      "req_id": "OBS-AUDIT-002 · OBS-AUDIT-011",
+      "file": "docs/spec/00.index.md",
+      "line": 109,
+      "description": "OBS-AUDIT-002 에서 보존 기간 축을 OBS-AUDIT-011 로 분리하면서 00.index.md §9 Open Questions 의 G27 행 Impact 열을 갱신하지 않았다. 그 열은 여전히 `OBS-AUDIT-002` 를 가리키는데, 그 요구는 분리 뒤 Status=planned 로 풀렸고 G27 에 막혀 blocked 인 것은 OBS-AUDIT-011 이다. §9 서문이 스스로 「`Status=blocked` 인 요구사항이 그 공백의 작업 목록이다 (`speckiwi list --status blocked`)」라고 규정하므로 이 포인터는 자기 규정을 위반한다 — G27 을 닫으러 온 사람이 이미 착수 가능한 블록으로 안내되고, 실제로 막힌 블록은 §9 어디에서도 도달되지 않는다. 같은 커밋(8a3e701)이 §5·§6 집계는 244→246 · FR 94→95 · OBS 11→12 로 갱신했으므로 §9 만 빠진 것이다. 이는 분리 작업이 만든 새 결함이며, CON-ARCH-008 AC-3(개정 시 인용처 전량 갱신)·AC-4(옛 문언 잔존 금지)에 정면으로 걸린다.",
+      "evidence_quote": "00.index.md:109 — \"| G27 | 감사 로그 보존 기간(`R84-a`)에 기본값이 없고 ... | OBS-AUDIT-002 | open |\"  /  12.audit-log.srs.md:122 — \"| Status | planned |\" (OBS-AUDIT-002)  /  12.audit-log.srs.md:1804 — \"| Status | blocked |\" (OBS-AUDIT-011)",
+      "suggested_action": "§9 G27 행 Impact 열을 `OBS-AUDIT-011` 로 바꾼다. 원장 `00.decision-log.md` §3.2 의 G27 행이 요구사항 ID 를 참조하고 있다면 그쪽도 함께 훑는다."
+    },
+    {
+      "id": "F-M01",
+      "severity": "MEDIUM",
+      "axis": "C.2 In/Out Scope 모순 · C.3 상호 미룸 · C.1 소유권 포인터 오류",
+      "req_id": "FR-SHELL-007 · SEC-SHELL-001",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "line": 34,
+      "description": "신규 저작된 08.app-shell §2 Out of Scope 가 「휴지통 목록은 `STORAGE` scope 가 소유한다」고 적는다. 그러나 ① 같은 문서 §2 In Scope(26행)가 「휴지통의 화면 표면 — 카테고리 표시 조건, 전 워크스페이스 통합 목록의 행 단위 판정 (`FR-SHELL-007`·`SEC-SHELL-001`)」을 SHELL 소유로 선언하고 ② FR-SHELL-007 은 제목부터 「휴지통 카테고리의 표시 조건과 전 워크스페이스 통합 목록」이며 AC-3~AC-6 이 통합 목록과 행 단위 판정을 직접 규정하고 ③ 14.storage §2(36행)와 11.confirmation-grades §2(42행)가 둘 다 그 화면을 `SHELL` 소유로 적는다. 즉 한 문서 안에서 In Scope 와 Out of Scope 가 서로 모순하고, STORAGE 문서와는 서로 상대방 소유라고 미루는 형태가 된다.",
+      "evidence_quote": "08.app-shell.srs.md:34 — \"각 설정 카테고리의 **내부** 화면 — ... 휴지통 목록은 `STORAGE`, ... scope 가 소유한다.\"  ↔  08.app-shell.srs.md:26 — \"휴지통의 화면 표면 — 카테고리 표시 조건, 전 워크스페이스 통합 목록의 행 단위 판정, 영구 삭제 버튼의 미표시 (`FR-SHELL-007`·`SEC-SHELL-001`)\"  ↔  14.storage.srs.md:36 — \"여러 워크스페이스를 한 목록으로 보여주는 휴지통 화면과 행 단위 판정 — `SHELL` scope 가 소유한다.\"",
+      "suggested_action": "34행의 첫 항목을 실제 위임 대상으로 좁힌다 — SHELL 이 소유하지 않는 것은 휴지통 *목록 화면*이 아니라 열람 범위 규칙·영구 삭제 필요 권한·보존 기간 경과 시 자동 영구 삭제이며, 그것은 이미 같은 §2 의 37행이 별도 항목으로 적고 있다. 34행에서 '휴지통 목록' 항목을 빼거나 '휴지통 데이터 범위 규칙'으로 고쳐 쓴다."
+    },
+    {
+      "id": "F-M02",
+      "severity": "MEDIUM",
+      "axis": "C.1 소유권 포인터 오류 · C.4 무주공산",
+      "req_id": "IR-SHELL-002",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "line": 34,
+      "description": "같은 34행이 「`IR-SHELL-002` Implementation Notes 가 넷을 열거한다」며 인용하는데, 실제 그 노트의 넷은 「휴지통 목록 · 권한 감사 3종 · 감사 로그 · **인스턴스 설정 다섯 값**」이다. §2 는 넷째를 「**사용자·그룹 관리**는 `PRINCIPAL`」로 바꿔 적었다. 사용자·그룹 관리가 PRINCIPAL 소유라는 서술 자체는 참이지만(16.principal §2 In Scope 22행 · §2 Out of Scope 38행과 정합), 원문에 없는 항목을 원문 인용으로 제시한 것이고 그 대가로 실제 넷째인 인스턴스 설정 다섯 값(가입 모드·업로드 크기 제한·보관 버전 개수·휴지통 보존 일수·감사 로그 보존 기간)의 내부 화면 소유가 §2 어디에도 남지 않는다. 이 항목은 IR-SHELL-002 AC-7 이 카테고리 구성으로는 규정하지만 그 노트 ④ 는 내부 화면을 다른 scope 소유라고 말하므로, §2 에서 사라지면 판정 근거가 없는 자리가 된다.",
+      "evidence_quote": "08.app-shell.srs.md:34 — \"`IR-SHELL-002` Implementation Notes 가 넷을 열거한다: 휴지통 목록은 `STORAGE`, 권한 감사 3종은 `ACL`, 감사 로그는 `AUDIT`, 사용자·그룹 관리는 `PRINCIPAL` scope 가 소유한다.\"  ↔  08.app-shell.srs.md:276 (IR-SHELL-002 Implementation Notes ④) — \"각 카테고리의 *내부* 화면은 다른 scope 가 소유한다(휴지통 목록 · 권한 감사 3종 · 감사 로그 · 인스턴스 설정 다섯 값).\"",
+      "suggested_action": "인용을 원문과 맞추거나(넷째를 '인스턴스 설정 다섯 값'으로 복원하고 소유 scope 를 명시), 넷이라는 수 주장을 버리고 다섯 항목(사용자·그룹 관리 포함)으로 다시 쓴다. 인스턴스 설정 다섯 값의 내부 화면 소유가 SHELL 인지 각 값의 scope 인지도 함께 판정해야 한다 — 12.audit §2(37행) · 09.auth §2(41행) · 14.storage §2(35행)는 셋 다 그 설정 화면을 `SHELL` 소유로 적고 있어 IR-SHELL-002 노트 ④ 와 어긋난다."
+    },
+    {
+      "id": "F-M03",
+      "severity": "MEDIUM",
+      "axis": "C.1 소유권 포인터 오류 · C.2 문서 간 모순",
+      "req_id": "SEC-SHELL-002",
+      "file": "docs/spec/13.workspace.srs.md",
+      "line": 37,
+      "description": "13.workspace §2 Out of Scope 가 「이름 충돌 시 붙는 자동 접미사의 **형식**과 안내 문구 — `SHELL` scope 가 정본으로 소유한다」고 적는다. 그러나 정본으로 지목된 SEC-SHELL-002 는 Implementation Notes 에서 「접미사의 형식은 원장이 정하지 않았으므로 이 축은 구현 판단」이라고 명시하고, 그 요구의 AC 4건 어디에도 형식 규정이 없다. 더구나 같은 날 저작된 10.access-control §2 Out of Scope(46행)는 같은 주제를 「자동 접미사의 구체 형식과 번호 증가 방식 — 원장이 정하지 않았고 **어느 scope 도 소유하지 않는다**」로 적는다. 두 §2 가 같은 것에 대해 정반대의 소유 판정을 내리고 있으며, 실제 요구사항 문면은 10 쪽이 맞다. 14.storage §2(37행)와 15.attachments §2(29행)는 '접미사 규칙'(항상 자동 접미사 + 동일 안내 + 확인 단계 없음)이라고만 적어 정확하다 — 13 만 '형식'을 넣었다.",
+      "evidence_quote": "13.workspace.srs.md:37 — \"이름 충돌 시 붙는 자동 접미사의 형식과 안내 문구 — `SHELL` scope 가 정본으로 소유한다.\"  ↔  08.app-shell.srs.md:782 (SEC-SHELL-002 Implementation Notes) — \"접미사의 형식은 원장이 정하지 않았으므로 이 축은 구현 판단이지만, 형식이 충돌 대상의 가시 여부에 따라 달라져서는 안 된다.\"  ↔  10.access-control.srs.md:46 — \"자동 접미사의 구체 형식과 번호 증가 방식 ... 원장이 정하지 않았고 어느 scope 도 소유하지 않는다.\"",
+      "suggested_action": "13.workspace §2 37행에서 '형식'을 빼고 14.storage·15.attachments 와 같은 표현('자동 접미사 규칙과 안내 문구')으로 맞춘다."
+    },
+    {
+      "id": "F-M04",
+      "severity": "MEDIUM",
+      "axis": "A.1 분리 시 규범 잔재 · D.1 CON-ARCH-008 복제",
+      "req_id": "OBS-AUDIT-002",
+      "file": "docs/spec/12.audit-log.srs.md",
+      "line": 137,
+      "description": "OBS-AUDIT-002 에서 보존 기간 축을 갈라 냈는데 Rationale 마지막 문장이 그대로 남아 보존 기간·R115-e·L3 배정을 말한다. 같은 문장이 OBS-AUDIT-011 Rationale 첫 문장으로도 들어가 두 블록이 문면이 동일한 문장을 각각 갖는다. CON-ARCH-008 AC-4(개정 뒤에 옛 문언이 남은 인용처가 존재하지 않는다)에 걸린다. Requirement·AC·Trace·Implementation Notes 는 모두 정리되었으나 Rationale 만 정리에서 빠졌다.",
+      "evidence_quote": "12.audit-log.srs.md:137 (OBS-AUDIT-002 Rationale) — \"... 보존 기간을 설정으로 여는 것은 R115-e 가 보존 기간 축소에 확인 등급 L3 를 배정하면서 이미 전제한 것이다.\"  ↔  12.audit-log.srs.md:1819 (OBS-AUDIT-011 Rationale) — \"보존 기간을 설정으로 여는 것은 R115-e 가 보존 기간 축소에 확인 등급 L3 를 배정하면서 이미 전제한 것이다.\"",
+      "suggested_action": "OBS-AUDIT-002 Rationale 에서 그 문장을 삭제한다. 그 근거는 OBS-AUDIT-011 이 이미 갖고 있다."
+    },
+    {
+      "id": "F-M05",
+      "severity": "MEDIUM",
+      "axis": "A.3 분리 뒤 Status·Stability 재판정",
+      "req_id": "OBS-AUDIT-002",
+      "file": "docs/spec/12.audit-log.srs.md",
+      "line": 126,
+      "description": "분리로 Status 는 blocked→planned 로 재판정했으나 Stability 는 `evolving` 그대로다. 그 블록이 evolving 이었던 이유는 G27 이 열려 있다는 것이었는데, 블록 자신의 Implementation Notes 가 이제 「불변성 축은 G27 에 걸리지 않는다 — 보존 기간의 미결 세 축과 그로 인한 blocked 는 OBS-AUDIT-011 이 가져갔다」고 적어 그 근거를 스스로 소거했다. 남은 열린 축이 블록 어디에도 서술되어 있지 않다. 같은 커밋에서 갈라져 나온 자매 FR-WORKSPACE-009 는 「실패 모드가 한쪽뿐」이라는 사유와 함께 `stable` 로 재판정했으므로, 두 분리의 처리가 어긋나 있다. 실무 영향은 stability 경고 채널의 정확도이며 착수를 막지는 않는다(evolving 은 게이트 대상이 아니다).",
+      "evidence_quote": "12.audit-log.srs.md:126 — \"| Stability | evolving |\"  /  12.audit-log.srs.md:162 — \"불변성 축은 G27 에 걸리지 않는다 — 보존 기간의 미결 세 축과 그로 인한 blocked 는 OBS-AUDIT-011 이 가져갔다.\"  /  13.workspace.srs.md:1080 — \"| Stability | stable |\" (자매 분리 FR-WORKSPACE-009)",
+      "suggested_action": "OBS-AUDIT-002 를 `stable` 로 재판정하거나, evolving 을 유지한다면 어떤 축이 여전히 열려 있는지를 Implementation Notes 에 명시한다."
+    },
+    {
+      "id": "F-M06",
+      "severity": "MEDIUM",
+      "axis": "D.1 같은 규범이 두 scope 에 복제 (CON-ARCH-008 위반)",
+      "req_id": "FR-SHELL-004 · SEC-WORKSPACE-004",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "line": 426,
+      "description": "FR-SHELL-004 AC-3 이 백링크 권한 필터 규범을 자기 수용 기준으로 들고 있는데, SEC-WORKSPACE-004 AC-1 이 같은 명제를 갖고 그 블록은 Rationale 에서 「**이 조항이 표면 목록의 정본이다**」라고 스스로 선언한다. 1차 수정이 정확히 같은 유형을 FR-SHELL-006(404 규범)에서 제거하고 depends_on 으로 바꿨는데 이 자리는 그대로 남았다 — 8a3e701 은 FR-SHELL-004 에 SEC-WORKSPACE-005(아웃고잉 예외) trace 만 추가하고 AC-3 은 손대지 않았다. 원장 R89 근거 칸은 「표시 내용은 R80 필터 적용」이라는 *포인터*일 뿐 규범을 다시 쓰지 않으므로, 이 복제는 원장이 아니라 요구사항 저작이 만든 것이다. 개정 시 한쪽만 고쳐지면 두 값이 조용히 갈린다.",
+      "evidence_quote": "08.app-shell.srs.md:426 — \"- [ ] AC-3: 백링크 탭은 요청자가 볼 수 없는 문서에서 온 역참조를 표시하지 않는다.\"  ↔  13.workspace.srs.md:420 — \"- [ ] AC-1: 백링크 패널은 요청자가 유효 권한을 갖지 않는 문서에서 유래한 역참조를 표시하지 않는다.\"  /  13.workspace.srs.md:416 — \"**이 조항이 표면 목록의 정본이다**\"",
+      "suggested_action": "FR-SHELL-004 AC-3 을 지우고 SEC-WORKSPACE-004 로 `depends_on` 을 건다(FR-SHELL-006→SEC-ACL-006 과 같은 처리). 필터 적용이 이 탭에 걸린다는 계약만 Requirement 문면에 남긴다."
+    },
+    {
+      "id": "F-M07",
+      "severity": "MEDIUM",
+      "axis": "C. §3 사실 오류 — 개수를 세는 주장이 틀렸다",
+      "req_id": "-",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "line": 52,
+      "description": "신규 저작된 08.app-shell §3 이 「미결 **넷**이 이 scope 에 걸려 있다」고 수를 단언하며 G8·G10·G14·G14-a 를 든다. 그러나 00.index.md §9 는 G31(본문 `#태그` 의 렌더·클릭 수단)의 Impact 를 「FR-EDITOR-007 · **SHELL** (R106 계열)」로 적고, 08 문서 안의 FR-SHELL-009 Implementation Notes ② 도 그 공백을 자기 자리의 증상으로 서술한다. 수를 세는 주장이므로 누락이 곧 오류다.",
+      "evidence_quote": "08.app-shell.srs.md:52 — \"미결 넷이 이 scope 에 걸려 있다 — `G8`(...) · `G10`(...) · `G14`·`G14-a`(...)\"  ↔  00.index.md:113 — \"| G31 | 본문의 `#태그` 가 ... | FR-EDITOR-007 · SHELL (R106 계열) | open |\"  ↔  08.app-shell.srs.md:962 — \"② 본문의 `#태그` 가 어떻게 렌더되고 클릭 가능한지가 어느 조항에도 없다(`G31`)\"",
+      "suggested_action": "`G31` 을 추가하고 수를 다섯으로 고친다."
+    },
+    {
+      "id": "F-M08",
+      "severity": "MEDIUM",
+      "axis": "C. §3 사실 오류 — 개수를 세는 주장이 틀렸다",
+      "req_id": "-",
+      "file": "docs/spec/10.access-control.srs.md",
+      "line": 55,
+      "description": "신규 저작된 10.access-control §3 이 「미결 **둘**이 이 scope 에 걸려 있다」고 수를 단언하며 G15·G27 을 든다. 00.index.md §9 는 G16(`편집` 사용자에게 부여 결과를 관측할 수단 전무)의 Impact 를 「**ACL** (R70-a · R118) · CONFIRM (R135)」로 적으므로 ACL 에도 걸린다. 같은 날 저작된 11.confirmation-grades §3 은 G16 을 정확히 담고 있어 두 문서의 처리가 갈렸다.",
+      "evidence_quote": "10.access-control.srs.md:55 — \"미결 둘이 이 scope 에 걸려 있다 — `G15`(넓히기를 모아 보는 화면의 부재) · `G27`(...)\"  ↔  00.index.md:107 — \"| G16 | `편집` 사용자에게 부여 결과를 관측할 수단이 전무하다 ... | ACL (R70-a · R118) · CONFIRM (R135) | open |\"",
+      "suggested_action": "`G16` 을 추가하고 수를 셋으로 고친다."
+    },
+    {
+      "id": "F-L01",
+      "severity": "LOW",
+      "axis": "D.4 AC 가 시스템 명제가 아님 — 1차 수정의 미완",
+      "req_id": "SEC-ACL-016 · SEC-CONFIRM-001",
+      "file": "docs/spec/10.access-control.srs.md",
+      "line": 1842,
+      "description": "1차 수정은 SEC-WORKSPACE-004 의 테스트 작성 지시형 AC 둘(옛 AC-11·AC-12)을 Implementation Notes 로 옮겨 해소했는데, 같은 유형이 두 자리 더 남아 있다. SEC-ACL-016 AC-5 와 SEC-CONFIRM-001 AC-3 은 시스템의 관측 가능한 상태가 아니라 사람이 따라야 할 절차를 적는다 — 전자는 검증 시점에 참·거짓을 판정할 대상이 없고, 후자는 '검사된 기록'이라는 산출물의 형식·소재를 어느 요구도 정하지 않는다. 1차에서 이 둘이 기각된 흔적은 두 블록 Implementation Notes 에 없다(둘 다 `[2026-08-19]` 주기 없음).",
+      "evidence_quote": "10.access-control.srs.md:1842 — \"- [ ] AC-5: 새 확인 흐름이나 새 오류 화면을 만들 때 이 규칙으로 먼저 검사한다.\"  /  11.confirmation-grades.srs.md:368 — \"- [ ] AC-3: 새로 설계하는 확인 흐름은 이 규칙으로 먼저 검사된 기록을 남긴다.\"",
+      "suggested_action": "SEC-WORKSPACE-004 와 같은 처리를 적용한다 — 두 AC 를 각 블록 Implementation Notes 로 옮기고 AC 번호를 재정렬한다."
+    },
+    {
+      "id": "F-L02",
+      "severity": "LOW",
+      "axis": "E. 신설 블록의 필드 형식 이탈",
+      "req_id": "OBS-AUDIT-011",
+      "file": "docs/spec/12.audit-log.srs.md",
+      "line": 1811,
+      "description": "신설된 OBS-AUDIT-011 의 Related Docs 가 원시 경로 문자열이다. 나머지 257 블록은 전부 마크다운 링크(144건) 또는 `-`(113건)이며 원시 경로는 이 한 건뿐이다. 자매 블록 OBS-AUDIT-002 는 같은 문서를 `[설정 화면 설계](./04.screen-design-settings.md)` 로 적는다.",
+      "evidence_quote": "12.audit-log.srs.md:1811 — \"| Related Docs | docs/spec/04.screen-design-settings.md |\"  ↔  12.audit-log.srs.md:129 — \"| Related Docs | [설정 화면 설계](./04.screen-design-settings.md) |\"",
+      "suggested_action": "`[설정 화면 설계](./04.screen-design-settings.md)` 로 맞춘다."
+    },
+    {
+      "id": "F-L03",
+      "severity": "LOW",
+      "axis": "B. 제거 뒤 잔재 · D.1 값 중복",
+      "req_id": "FR-ATTACH-011",
+      "file": "docs/spec/15.attachments.srs.md",
+      "line": 1068,
+      "description": "FR-ATTACH-011 에서 2자·20건 값을 Requirement 와 AC 에서 걷어 내고 SEC-PRINCIPAL-003 을 정본으로 지목했는데 Rationale 은 그 값을 그대로 적고 있다. 같은 블록 Implementation Notes 가 「2자·20건은 ... 이 요구가 정한 값이 아니고 그 정본은 `SEC-PRINCIPAL-003` 이다」라고 명시하므로 오독 위험은 낮으나, 개정 시 훑어야 할 자리가 하나 더 남았다.",
+      "evidence_quote": "15.attachments.srs.md:1068 — \"멘션 자동완성은 사용자 열거 표면이므로 R112 계열이 그대로 적용된다 — 최소 질의 2자·결과 상한 20건(R112-b) · 적용 범위는 주체를 고르는 모든 화면(R112-c) · 단일 공용 컴포넌트(R112-e).\"",
+      "suggested_action": "Rationale 의 구체값을 정본 참조로 바꾼다 — \"R112 계열의 주체 검색 규칙(`SEC-PRINCIPAL-003`·`CON-PRINCIPAL-006`)이 그대로 적용된다\"."
+    },
+    {
+      "id": "F-L04",
+      "severity": "LOW",
+      "axis": "E. 편집 잔재",
+      "req_id": "OBS-AUDIT-004 · FR-STORAGE-009",
+      "file": "docs/spec/12.audit-log.srs.md",
+      "line": 284,
+      "description": "8a3e701 의 Implementation Notes 재작성이 빈 줄 묶음을 남겼다 — 12.audit-log.srs.md:284-286(3줄)과 14.storage.srs.md:1469-1472(4줄). 두 자리 모두 Implementation Notes 와 Change Notes 사이다. 렌더링·파싱에는 영향이 없다.",
+      "evidence_quote": "12.audit-log.srs.md:284-286 blank x3 (OBS-AUDIT-004 Implementation Notes 끝) / 14.storage.srs.md:1469-1472 blank x4 (FR-STORAGE-009 Implementation Notes 끝)",
+      "suggested_action": "빈 줄을 1줄로 줄인다."
+    },
+    {
+      "id": "F-L05",
+      "severity": "LOW",
+      "axis": "D.1 같은 규범이 두 scope 에 · C.2 §2 서술과 블록의 불일치",
+      "req_id": "FR-SHELL-009 · SEC-WORKSPACE-004",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "line": 936,
+      "description": "신규 저작된 08.app-shell §2 Out of Scope(42행)가 「태그 집계의 원천에 걸리는 표시 필터 — `WORKSPACE` scope 가 소유한다. `FR-SHELL-009` 는 그 필터를 적용한다는 **계약과 집계 단위만** 갖는다」고 선언하는데, FR-SHELL-009 AC-3·AC-4 는 계약이 아니라 필터의 결과 명제를 SEC-WORKSPACE-004 AC-4·AC-5 와 같은 내용으로 적는다. F-M06 보다 등급을 낮춘 이유는 원장 R106 문면이 그 결과 명제를 직접 담고 있어(\"요청자가 볼 수 있는 문서에 한 번도 나타나지 않는 태그는 목록에 없다\") 복제의 출처가 저작만은 아니기 때문이다.",
+      "evidence_quote": "08.app-shell.srs.md:936 — \"- [ ] AC-3: 요청자가 볼 수 있는 문서에 한 번도 나타나지 않는 태그는 목록에 나타나지 않는다.\"  ↔  13.workspace.srs.md:423 — \"- [ ] AC-4: 태그 목록에서, 요청자가 볼 수 있는 문서에 한 번도 나타나지 않는 태그는 표시되지 않는다.\"  ↔  08.app-shell.srs.md:42 — \"`FR-SHELL-009` 는 그 필터를 적용한다는 계약과 집계 단위(출현 문서 수)만 갖는다.\"",
+      "suggested_action": "정본을 한쪽으로 정한 뒤 §2 42행의 서술과 블록 AC 를 일치시킨다. 두 자리 모두 원장(R80 / R106)에 근거가 있으므로 삭제가 아니라 어느 쪽이 정본인지를 Trace 로 드러내는 처리가 맞다."
+    },
+    {
+      "id": "F-L06",
+      "severity": "LOW",
+      "axis": "C. §3 누락 (수 주장 없음)",
+      "req_id": "-",
+      "file": "docs/spec/09.auth.srs.md",
+      "line": 51,
+      "description": "신규 저작된 §3 넷이 00.index.md §9 가 자기 scope 로 등재한 미결을 빠뜨렸다 — 09.auth(51행)는 `G32`(잠긴 계정의 복구 경로 부재, §9 Impact=AUTH), 12.audit-log(54행)는 `G28`·`G29`, 14.storage(52행)는 `G14`·`G28`, 16.principal(50행)은 `G23`. 이 넷은 수를 세는 주장을 하지 않아 F-M07·F-M08 보다 등급이 낮으나, §3 이 「이 scope 에 걸린 미결」을 적는 자리로 쓰이고 있으므로 읽는 사람이 전량으로 오독하기 쉽다.",
+      "evidence_quote": "09.auth.srs.md:51 — \"`G33` 의 두 갈래가 이 scope 에 열려 있다 — ①(...) · ②(...)\" (G32 없음)  ↔  00.index.md:114 — \"| G32 | 잠긴 계정의 복구 경로가 없다 ... | AUTH | open |\"  /  14.storage.srs.md:52 — \"미결 `G27` 이 이 scope 에 걸려 있다\" ↔ 00.index.md:105 — \"| G14 | ... | SHELL · STORAGE | open |\" · 00.index.md:110 — \"| G28 | ... | DR-STORAGE-005 · AUDIT (R137-a) | open |\"",
+      "suggested_action": "각 §3 의 미결 목록을 00.index.md §9 Impact 열 기준으로 맞춘다. 전량이 아님을 뜻하려면 그 사실을 문면에 적는다."
+    }
+  ],
+  "regression_check": {
+    "reintroduced": [],
+    "clean_axes": [
+      "B. 제거가 규정을 없앴는가 — 없앤 것이 없다. FR-SHELL-006 이 지운 404 규범은 SEC-ACL-006 AC-1~AC-6 이 덮으며 특히 AC-6 이 딥링크 표면을 문면으로 지목한다(1c6b2ba 부터 존재했고 이번에 신설된 것이 아님을 git log -S 로 확인). FR-SHELL-006 이 함께 남긴 '딥링크 404 표면에 권한 요청 버튼을 두지 않는다'도 SEC-ACL-016 AC-2 가 규범으로 갖는다.",
+      "B. FR-ATTACH-011 이 지운 PrincipalPicker 규범은 CON-PRINCIPAL-006 AC-1('...를 포함해 주체를 고르는 모든 화면')·AC-4('새 화면이 주체 선택을 필요로 할 때 ... 이 컴포넌트를 배치하는 것만으로 규칙을 물려받는다')가 멘션 자동완성을 포함해 덮고, 2자·20건은 SEC-PRINCIPAL-003 Requirement 문면과 AC-1~AC-4 가 갖는다(AC-4 가 화면별 덮어쓰기 경로까지 막는다).",
+      "A.1 원장 규범 누수 — R84-a 두 축(수정·삭제 불가 / 보존 기간은 설정에서 지정)이 OBS-AUDIT-002·OBS-AUDIT-011 로 빠짐없이 나뉘었다. R80-b(수동 타이핑 위키링크 비차단 + R42 깨진 링크 렌더)가 FR-WORKSPACE-009 Requirement·AC-1·AC-2 에 온전히 옮겨졌다. R119-a 두 축 중 등급값은 FR-CONFIRM-006(Requirement 문면 + AC-4)이, 슈퍼유저 그룹 무효 안내는 FR-PRINCIPAL-011(AC-2·AC-3)이 갖는다. R71-b·R84·R137 기준 ③ 이 OBS-ACL-001 에서 한정 없이 복원되었고 순수 읽기 제외는 AC-5 로 남았다.",
+      "A.2 양방향 trace — 신설 3쌍 전건이 양방향이다(OBS-AUDIT-002↔OBS-AUDIT-011 · SEC-WORKSPACE-004↔FR-WORKSPACE-009 · FR-PRINCIPAL-011↔FR-CONFIRM-006). FR-CONFIRM-023↔FR-PRINCIPAL-003 도 양방향.",
+      "A.4 AC 번호 연속 — 옮겨 붙이면서 깨진 자리 0(전 258 블록 기계 검사).",
+      "D.2 취소선 조항 인용 — 새로 생긴 것 없음. 1차에서 지적된 R106-b 인용은 제거되었고, 남은 유일한 히트(08:1188 의 R108-a)는 '근거로 인용할 수 없다'는 반대 취지 서술이다.",
+      "D.5 모호 어휘 — Requirement·Acceptance Criteria 절 전수 grep 에서 새로 생긴 것 0.",
+      "E. 기계 검사 전 항목 — ID·AC·Trace·표 열 수·인덱스 집계(258) 위반 0. validate_spec errors 0.",
+      "C. §2 스캐폴딩 — 3패턴 전량 제거 확인. Out of Scope 124 항목 주장 검산 일치. §2 In Scope 가 258 요구 전건을 커버한다.",
+      "8a3e701 이 기각한 3건 재검토 — 재기각한다. ① SEC-SHELL-003 AC-3 이 문구를 문자열로 못박고 FR-SHELL-009 AC-6 이 못박지 않는 처리 차이는 원장 R105-a(문면 직접 규정)와 R106-c('예:' 표기)의 차이를 정확히 따른 것이다. ② SEC-AUTH-018 의 열거 번호는 원장 G33 의 번호 보존이다. ③ 1차의 '예시 문구 일관성' 지적은 허위 양성이 맞다."
+    ]
+  },
+  "summary": {
+    "CRITICAL": 0,
+    "HIGH": 1,
+    "MEDIUM": 8,
+    "LOW": 6
+  }
+}

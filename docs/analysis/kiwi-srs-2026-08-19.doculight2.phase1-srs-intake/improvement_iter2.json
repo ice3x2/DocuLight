@@ -1,0 +1,120 @@
+{
+  "iter": 2,
+  "fixed": [
+    {
+      "finding": "H1 (F-H01)",
+      "what": "§9 G27 행 Impact 가 분리 뒤 planned 로 풀린 OBS-AUDIT-002 를 가리켜, 실제로 G27 에 막힌 OBS-AUDIT-011 이 §9 어디에서도 도달되지 않았다.",
+      "how": "Impact 열을 OBS-AUDIT-011 로 교체. 이어서 R124-a 스윕을 실행했다 — list_requirements(status=blocked) 12건 전량을 §9 Impact 열과 대조했고, phase-1 blocked 8건(DR-STORAGE-005→G28 · FR-AUTH-003→G10 · FR-EDITOR-007→G31 · IR-SHELL-002→G8·G10 · OBS-AUDIT-011→G27 · SEC-AUTH-018·SEC-AUTH-019→G33) 중 stale 은 G27 행 하나뿐임을 확인했다. 나머지 14행의 Impact 는 1·2차 변경 뒤에도 정확하다. Stability 집계가 00.index.md 에 없어 M5 의 stability 변경은 새 stale 인용처를 만들지 않는다.",
+      "files": ["docs/spec/00.index.md"]
+    },
+    {
+      "finding": "M1 (F-M01)",
+      "what": "08.app-shell §2 Out of Scope 가 「휴지통 목록은 STORAGE 가 소유」라고 적어 같은 문서 In Scope(26행)와 정면 모순했다.",
+      "how": "실측 확인: 14.storage §2:36 이 스스로 「여러 워크스페이스를 한 목록으로 보여주는 휴지통 화면과 행 단위 판정 — SHELL scope 가 소유한다」고 적어 위임을 되돌린다. 34행에서 휴지통 목록 항목을 걷고, 실제 위임 대상(열람 범위 규칙·영구 삭제 필요 권한·자동 영구 삭제)이 이미 37행에 별도 항목으로 있음을 명시했다. 규정은 사라지지 않았다.",
+      "files": ["docs/spec/08.app-shell.srs.md"]
+    },
+    {
+      "finding": "M2 (F-M02)",
+      "what": "같은 34행이 IR-SHELL-002 Implementation Notes ④ 를 인용하며 넷째를 「사용자·그룹 관리」로 바꿔 적었다. 원문의 넷째는 「인스턴스 설정 다섯 값」이고, 그 대가로 인스턴스 설정 내부 화면의 소유가 §2 어디에도 남지 않았다.",
+      "how": "인용을 원문과 맞추되 개수 주장을 버렸다. 노트 ④ 의 실제 열거를 적고, 그중 휴지통 목록과 인스턴스 설정 다섯 값은 이 scope 가 갖는다는 사실을 형제 문서 실측으로 근거지었다 — 09.auth:41 · 12.audit-log:37 · 14.storage:35 가 셋 다 인스턴스 설정 화면을 SHELL 소유로 적는다. 노트 ④ 자체가 이 셋과 어긋나므로 그 열거의 개정 판정은 IR-SHELL-002 가 소유한다고 명시했다(요구사항 블록 mutation 이 필요하며 이번 지시 범위 밖이다).",
+      "files": ["docs/spec/08.app-shell.srs.md"]
+    },
+    {
+      "finding": "M3 (F-M03)",
+      "what": "13.workspace §2:37 이 「자동 접미사의 형식과 안내 문구 — SHELL 이 정본으로 소유」라고 적었으나 정본으로 지목된 SEC-SHELL-002 는 형식을 갖지 않는다.",
+      "how": "SEC-SHELL-002 Implementation Notes(08.app-shell.srs.md:783)를 직접 읽어 「접미사의 형식은 원장이 정하지 않았으므로 이 축은 구현 판단」임을 확인했다. 10.access-control §2:46 도 「어느 scope 도 소유하지 않는다」로 같게 적는다. 37행을 14.storage §2:37 과 같은 표현(자동 접미사 규칙 — 항상 자동 접미사 + 동일 안내, 확인 단계 없음)으로 맞추고, 구체 형식·번호 증가 방식은 미소유임을 명시했다.",
+      "files": ["docs/spec/13.workspace.srs.md"]
+    },
+    {
+      "finding": "M4 (F-M04)",
+      "what": "OBS-AUDIT-002 Rationale 마지막 문장이 보존 기간·R115-e·L3 배정을 그대로 말해, 같은 문장을 OBS-AUDIT-011 Rationale 도 갖는 복제 상태였다.",
+      "how": "append_section_note(section=Rationale, mode=replace)로 그 문장을 정본 포인터로 교체했다 — 「보존 기간을 설정으로 여는 근거는 이 요구가 갖지 않는다. 그 축은 OBS-AUDIT-011 이 소유한다」. R115-e 근거는 OBS-AUDIT-011 이 온전히 보유하므로 규정이 사라지지 않았다.",
+      "files": ["docs/spec/12.audit-log.srs.md"]
+    },
+    {
+      "finding": "M5 (F-M05)",
+      "what": "Status 는 blocked→planned 로 재판정했으나 Stability 가 evolving 그대로였다.",
+      "how": "stable 이 맞다고 판정하고 update_stability 로 변경했다. 근거: 그 블록의 evolving 사유는 G27 이었고 자기 Implementation Notes 가 「불변성 축은 G27 에 걸리지 않는다」로 그 근거를 소거했다. 남은 규범은 R84-a 가 문면으로 확정한 금지이고 블록 어디에도 열린 축 서술이 없다. 자매 분리 FR-WORKSPACE-009 도 같은 사유로 stable 이다.",
+      "files": ["docs/spec/12.audit-log.srs.md"]
+    },
+    {
+      "finding": "M6 (F-M06)",
+      "what": "FR-SHELL-004 AC-3 이 백링크 권한 필터 규범을 자기 수용 기준으로 복제했다.",
+      "how": "정본이 실제로 덮는지 먼저 확인했다 — SEC-WORKSPACE-004 Requirement 가 백링크를 여섯 표면 열거의 첫째로 담고, AC-1 이 같은 명제를 문면으로 갖고, Rationale 이 「이 조항이 표면 목록의 정본이다」를 자임한다. 덮는 것을 확인한 뒤 AC-3 을 걷고 Requirement | SEC-WORKSPACE-004 | depends_on 을 걸었다. 이 요구는 Requirement 문면의 「표시 내용에는 요청자의 유효 권한 필터를 적용한다」는 계약을 그대로 유지하므로 계약이 사라지지 않았다. 제거 사유는 Implementation Notes 에 [2026-08-19] 로 남겼다.",
+      "files": ["docs/spec/08.app-shell.srs.md"]
+    },
+    {
+      "finding": "M7 (F-M07)",
+      "what": "08.app-shell §3:52 가 「미결 넷이 이 scope 에 걸려 있다」고 수를 단언했으나 §9 가 G31 도 SHELL 로 등재한다.",
+      "how": "수 주장을 제거하고 G31 을 추가했다(§9:113 Impact = FR-EDITOR-007 · SHELL, 그리고 이 문서 FR-SHELL-009 Implementation Notes ② 가 자기 자리의 증상으로 서술한다). 「등재의 정본은 00.index.md §9 Impact 열이며 그 열이 바뀌면 이 목록도 함께 훑는다」를 덧붙여 다음 개정 때 같은 결함이 재발하지 않게 했다.",
+      "files": ["docs/spec/08.app-shell.srs.md"]
+    },
+    {
+      "finding": "M8 (F-M08)",
+      "what": "10.access-control §3:55 가 「미결 둘」이라고 수를 단언했으나 §9 가 G16 을 ACL 로 등재한다.",
+      "how": "수 주장을 제거하고 G16 을 §9:107 문면대로 추가했다. 같은 정본 포인터 문장을 덧붙였다.",
+      "files": ["docs/spec/10.access-control.srs.md"]
+    },
+    {
+      "finding": "L1 (F-L01)",
+      "what": "테스트·절차 지시형 AC 두 자리 — SEC-ACL-016 AC-5 · SEC-CONFIRM-001 AC-3.",
+      "how": "1차의 SEC-WORKSPACE-004 처리와 같게 삭제가 아닌 자리 이동을 했다. 두 AC 를 각 블록 Implementation Notes 로 [2026-08-19] 접두로 옮기고 의무 자체가 유지됨을 명시했다(각각 AC-1~AC-4 / AC-1·AC-2 로 먼저 검사, 판정은 리뷰). AC 번호는 도구가 1부터 재정렬했다. 부수 수리: SEC-CONFIRM-001 Implementation Notes 가 사라질 AC-3 을 참조하던 문장을 함께 걷었다 — 그대로 두면 없는 AC 를 가리키는 새 결함이 된다.",
+      "files": ["docs/spec/10.access-control.srs.md", "docs/spec/11.confirmation-grades.srs.md"]
+    },
+    {
+      "finding": "L2 (F-L02)",
+      "what": "OBS-AUDIT-011 Related Docs 만 원시 경로 문자열이었다(나머지 257 블록은 마크다운 링크 또는 -).",
+      "how": "edit_requirement_fields 로 자매 블록 OBS-AUDIT-002 와 같은 [설정 화면 설계](./04.screen-design-settings.md) 형식에 맞췄다.",
+      "files": ["docs/spec/12.audit-log.srs.md"]
+    },
+    {
+      "finding": "L3 (F-L03)",
+      "what": "FR-ATTACH-011 Rationale 이 2자·20건을 그대로 적어, 같은 블록 Implementation Notes 의 「이 요구가 정한 값이 아니다」와 자기모순이었다.",
+      "how": "Rationale 을 정본 참조로 교체했다 — 최소 질의 길이와 결과 상한(R112-b)은 SEC-PRINCIPAL-003, 적용 범위(R112-c)와 단일 공용 컴포넌트(R112-e)는 CON-PRINCIPAL-006. 두 정본은 이미 depends_on 으로 걸려 있다. R112-e 의 논증과 기각된 대안은 그대로 보존했다.",
+      "files": ["docs/spec/15.attachments.srs.md"]
+    },
+    {
+      "finding": "L5 (F-L06) — §3 이 자기 scope 의 미결을 빠뜨림",
+      "what": "09.auth(G32 누락) · 12.audit-log(G28·G29 누락) · 14.storage(G14·G28 누락) · 16.principal(G23 누락).",
+      "how": "00.index.md §9 Impact 열을 기준으로 넷 모두 보정했다. 누락분을 §9 문면대로 추가하고, 수를 적지 않았으며, 각 §3 에 「등재의 정본은 §9 Impact 열이다」 포인터를 달았다. 전 scope 문서 §3 을 §9 15행 전량과 대조한 결과 07.editor(G30·G31) · 11.confirmation-grades(G16·G27) · 13.workspace(G16) · 15.attachments(G34·G35) 는 누락이 없다.",
+      "files": ["docs/spec/09.auth.srs.md", "docs/spec/12.audit-log.srs.md", "docs/spec/14.storage.srs.md", "docs/spec/16.principal.srs.md"]
+    },
+    {
+      "finding": "L6 (F-L05) — 소유 선언과 실제 요구사항의 어긋남",
+      "what": "08.app-shell §2:42 가 「FR-SHELL-009 는 그 필터를 적용한다는 계약과 집계 단위만 갖는다」고 적으나 AC-3·AC-4 는 필터의 결과 명제를 적는다.",
+      "how": "eval 의 권고대로 삭제가 아니라 정본을 Trace 로 드러냈다. FR-SHELL-009 에 Requirement | SEC-WORKSPACE-004 | depends_on 을 걸고 Implementation Notes ⑤ 로 분담을 명시했으며, §2:42 의 거짓 서술을 실제 분담에 맞춰 고쳤다 — 필터 규범의 정본은 SEC-WORKSPACE-004, 집계 단위(출현 문서 수)는 FR-SHELL-009 소유(정본이 그 단위의 소유를 명시적으로 부인한다), AC-3·AC-4 는 Phase 1 수용 기준 3 의 E2E 표적 고정.",
+      "files": ["docs/spec/08.app-shell.srs.md"]
+    }
+  ],
+  "rejected": [
+    {
+      "finding": "M7·M8 의 suggested_action — 「수를 다섯으로 고친다」 / 「수를 셋으로 고친다」",
+      "why": "지적된 사실(G31·G16 누락)은 옳으나 처방의 방향을 기각한다. 이 프로젝트의 확정 교훈은 닫는 열거·개수 주장이 예외 없이 나중에 거짓이 된다는 것이고, 수를 다섯·셋으로 고치면 다음 미결이 등재될 때 같은 결함이 그대로 재발한다. 수를 지우고 열거만 남긴 뒤 등재 정본(§9 Impact 열)을 가리켰다.",
+      "evidence": "00.index.md:119 자신이 §9 에 대해 12건이라는 수를 적고 있으며, 이번 라운드에 요구사항 3건이 신설되고 §9 Impact 가 1건 바뀌었다 — 본문에 박힌 수가 개정을 따라오지 못하는 형태가 바로 이 지적의 원인이다."
+    },
+    {
+      "finding": "F-L05 의 한 갈래 — FR-SHELL-009 AC-3·AC-4 를 정본 쪽으로 흡수(삭제)",
+      "why": "삭제하면 규정이 사라진다. ① AC-4 는 집계 단위(출현 문서 수, R106)를 담는데 정본 SEC-WORKSPACE-004 는 Implementation Notes 에서 「개수의 단위가 출현 횟수가 아니라 출현 문서 수인 것도 그 조항(R106)이 정한다 … 이 scope 가 소유하지 않는다」고 소유를 명시적으로 부인한다. ② FR-SHELL-009 Implementation Notes ④ 가 Phase 1 수용 기준 3 의 E2E 가 「이 요구의 AC-3·AC-4 를 직접 겨냥한다」고 적으므로 삭제는 검증 표적을 없앤다. ③ eval 자신도 원장 R106 문면이 그 결과 명제를 직접 담아 복제의 출처가 저작만이 아니라고 적고 suggested_action 을 「삭제가 아니라 Trace 로 드러내는 처리」로 냈다.",
+      "evidence": "13.workspace.srs.md SEC-WORKSPACE-004 Implementation Notes 1번 불릿 · 08.app-shell.srs.md FR-SHELL-009 Implementation Notes ④ · eval_iter2.json findings[F-L05].suggested_action"
+    },
+    {
+      "finding": "F-M02 의 부수 요구 — 「인스턴스 설정 다섯 값의 내부 화면 소유가 SHELL 인지 각 값의 scope 인지 판정해야 한다」",
+      "why": "판정을 내리지 않고 어긋남만 드러냈다. 판정의 실체는 IR-SHELL-002 Implementation Notes ④ 를 고치는 것인데 그것은 요구사항 블록 mutation 이고 이번 지시 범위 밖이며, 원장이 그 소유를 정한 문면이 없어 지금 정하면 값을 지어내는 것이 된다. §2 에는 형제 문서 셋의 실측 사실(SHELL 소유)과 노트 ④ 와의 불일치, 그리고 판정 소유자(IR-SHELL-002)를 적어 다음 패스가 근거를 갖고 닫을 수 있게 했다.",
+      "evidence": "09.auth.srs.md:41 · 12.audit-log.srs.md:37 · 14.storage.srs.md:35 셋 다 SHELL 소유 ↔ 08.app-shell.srs.md IR-SHELL-002 Implementation Notes ④ 는 다른 scope 소유"
+    }
+  ],
+  "not_fixable": [
+    {
+      "finding": "L4 (F-L04) — 빈 줄 묶음 (12.audit-log.srs.md OBS-AUDIT-004 · 14.storage.srs.md FR-STORAGE-009)",
+      "why": "지시대로 append_section_note(mode=replace)를 시도했으나 도구가 해소하지 못한다. dryRun 실측 결과 replace 는 섹션의 **불릿 행만 1:1 로 덮어쓰고** 그 뒤의 빈 줄에는 손대지 않는다(OBS-AUDIT-004: 불릿 282~284 를 대상으로 잡고 빈 줄 285~287 은 operations 에 나타나지 않는다). 게다가 text 가 불릿 개수보다 적으면 남는 불릿을 빈 문자열로 바꿔 오히려 빈 줄이 늘고, text 500자 제한 때문에 3불릿(첫 불릿만 약 400자)을 한 번에 다시 쓸 수도 없다. append 모드도 빈 줄 묶음 중간(285행)에 삽입할 뿐이다. 요구사항 블록 내부이므로 Edit 은 지시상 금지다. 렌더·파싱 영향이 없으므로 남긴다."
+    }
+  ],
+  "validate_spec": { "errors": 0, "warnings": 2 },
+  "notes_for_reviewer": [
+    "도구 실측 정정 — 지시서는 「기존 요구사항에 Change Notes 행을 추가하는 mutation 은 없다」고 했으나 update_stability 는 Change Notes 행을 자동 삽입한다(OBS-AUDIT-002 에 「2026-08-19 | Stability -> stable | …」 1행 추가됨). update_status 도 같을 가능성이 높다.",
+    "도구 실측 — append_section_note 의 section 키는 `Implementation Notes` 가 아니라 `implementation_notes` 다(전자는 USAGE: unknown section). 그리고 mode=replace 는 `- ` 불릿 마커를 벗겨내므로 불릿 섹션을 replace 할 때는 text 에 `- ` 를 직접 포함해야 한다 — 포함하지 않으면 불릿이 문단으로 깨진다.",
+    "미해소 모순 (이번 범위 밖, mutation 필요) — IR-SHELL-002 Implementation Notes ④ 가 휴지통 목록과 인스턴스 설정 다섯 값의 내부 화면을 다른 scope 소유로 열거하는데, 14.storage §2:36 · 09.auth §2:41 · 12.audit-log §2:37 · 14.storage §2:35 가 넷 다 그 둘을 SHELL 소유로 적는다. 08.app-shell §2 에 그 사실을 적어 두었으니 다음 패스가 IR-SHELL-002 를 mutation 으로 닫으면 된다.",
+    "선행 결함 (건드리지 않음) — §9 의 G34·G35 행은 Impact 열에 요구사항 ID 대신 「(Phase 2 축)」을 적는다. 그 결과 blocked 인 Phase 2 ATTACH 요구 6건(FR-ATTACH-008·009·010·011 · SEC-ATTACH-004)이 §9 에서 ID 로 도달되지 않아, §9 서문의 「Status=blocked 인 요구사항이 그 공백의 작업 목록이다」가 그 여섯에 대해서는 성립하지 않는다. 1·2차 변경이 만든 것이 아니라 선행 상태이며 R92 로 Phase 1 착수를 막지 않는다.",
+    "14.storage §3 와 11.confirmation-grades §3 는 G27 을 자기 scope 미결로 드는데 §9 의 G27 Impact 는 (H1 수정 뒤) OBS-AUDIT-011 뿐이다. 둘 다 실질 근거가 있어(각각 보존 기간 역전 방지 · R115-e 확인 등급) 과잉 등재이지 오류가 아니므로 그대로 두었다."
+  ]
+}
