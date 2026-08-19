@@ -1,0 +1,114 @@
+{
+  "scope": "CONFIRM",
+  "document": "docs/spec/11.confirmation-grades.srs.md",
+  "requirements": [
+    { "id": "FR-CONFIRM-001", "title": "확인 등급 체계를 L1·L2·L3 세 단계로 통일한다", "from_clauses": ["R115", "R115-c"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 5 },
+    { "id": "FR-CONFIRM-002", "title": "확인 등급 배정 기준 — 가역성과 효과의 즉시성", "from_clauses": ["R115-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 5 },
+    { "id": "FR-CONFIRM-003", "title": "요구사항의 직접 등급 지정이 배정 기준보다 우선한다", "from_clauses": ["R115-d"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 3 },
+    { "id": "FR-CONFIRM-004", "title": "확인 다이얼로그의 수치는 열 때 재조회하고 다르면 실행을 잠근다", "from_clauses": ["R116", "R116-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 5 },
+    { "id": "FR-CONFIRM-005", "title": "조작 입력 폼은 확인 관문이 아니다", "from_clauses": ["R122-c"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 4 },
+    { "id": "SEC-CONFIRM-001", "title": "확인 흐름을 보이지 않는 대상의 존재 판정에 쓰지 않는다", "from_clauses": ["R113"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "ac_count": 3 },
+    { "id": "IR-CONFIRM-001", "title": "접근자 인원 수에 시점을 표기하지 않는다", "from_clauses": ["R114"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "interface", "ac_count": 2 },
+    { "id": "FR-CONFIRM-006", "title": "확인 등급 배정표 — 휴지통·계정·그룹·토큰·권한 항목", "from_clauses": ["R115-b", "R115-j"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 9 },
+    { "id": "FR-CONFIRM-007", "title": "보존 기간 축소의 등급은 실제 영향 건수로 정한다", "from_clauses": ["R115-e"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 4 },
+    { "id": "FR-CONFIRM-008", "title": "지연 효과 조작은 효과가 나중에 발생함을 문구로 알린다", "from_clauses": ["R115-f"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 3 },
+    { "id": "FR-CONFIRM-009", "title": "오프보딩 그룹 멤버십 제거는 L2 이고 그룹 이름을 모두 나열한다", "from_clauses": ["R115-g", "R115-h"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 3 },
+    { "id": "FR-CONFIRM-010", "title": "새 버전 올리기의 등급은 대상 파일 형식으로 갈린다", "from_clauses": ["R115-i"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 2 },
+    { "id": "SEC-CONFIRM-002", "title": "넓히기는 가역성 축에서 비가역으로 취급한다", "from_clauses": ["R122"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "ac_count": 2 },
+    { "id": "FR-CONFIRM-011", "title": "넓히기의 등급은 주체 명시성과 대상 노드 범위로 정한다", "from_clauses": ["R122-a", "R125", "R125-a", "R125-b", "R125-c"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 6 },
+    { "id": "FR-CONFIRM-012", "title": "컨테이너 부여 확인에 적용 하위 노드 수를 표시한다", "from_clauses": ["R126", "R126-a", "R126-c", "R126-d", "R126-e"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 7 },
+    { "id": "SEC-CONFIRM-003", "title": "부여 확인에 분모와 미도달 건수를 표시하지 않는다", "from_clauses": ["R126-b"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "ac_count": 3 },
+    { "id": "FR-CONFIRM-013", "title": "컨테이너 부여의 상속 고지를 단일 템플릿으로 공통화한다", "from_clauses": ["R127"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 3 },
+    { "id": "SEC-CONFIRM-004", "title": "상속 끊김 고지는 끊긴 노드 유무와 무관하게 항상 표시한다", "from_clauses": ["R127-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "ac_count": 3 },
+    { "id": "SEC-CONFIRM-005", "title": "도달하지 못하는 하위가 있어도 부여를 거부하거나 열거하지 않는다", "from_clauses": ["R127-b"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "ac_count": 3 },
+    { "id": "FR-CONFIRM-014", "title": "넓히기 L1 의 토스트는 실행취소가 아니라 회수로 표기한다", "from_clauses": ["R129"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 3 },
+    { "id": "FR-CONFIRM-015", "title": "상속 끊기의 확인 등급은 대상 노드 유형으로 갈린다", "from_clauses": ["R122-b", "R131"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 5 },
+    { "id": "FR-CONFIRM-016", "title": "이동의 확인 등급은 접근 가능 수치의 변화로 정한다", "from_clauses": ["R123", "R123-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 3 },
+    { "id": "FR-CONFIRM-017", "title": "복사의 확인 등급은 대상 유형과 무관하게 언제나 L2 다", "from_clauses": ["R133", "R133-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 4 },
+    { "id": "FR-CONFIRM-018", "title": "컨테이너 노드의 권한 항목 회수는 L2 다", "from_clauses": ["R130"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 3 },
+    { "id": "SEC-CONFIRM-006", "title": "컨테이너 회수의 첨부 영향은 개수 대신 고정 문구로 알린다", "from_clauses": ["R134", "R134-a", "R134-b"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "ac_count": 3 },
+    { "id": "SEC-CONFIRM-007", "title": "부모 권한 가져오기는 관리 레벨 전용이며 등급은 L2 다", "from_clauses": ["R135", "R135-a"], "target": "phase-1", "status": "planned", "stability": "evolving", "type": "security", "ac_count": 4 },
+    { "id": "DR-CONFIRM-001", "title": "가져온 권한 항목의 부여자는 실행자로 기록한다", "from_clauses": ["R135-b"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "data", "ac_count": 3 },
+    { "id": "FR-CONFIRM-019", "title": "워크스페이스 생성과 설치 시점의 부여도 확인 1개를 받는다", "from_clauses": ["R136", "R136-a", "R136-b", "R136-c", "R136-d"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 6 },
+    { "id": "CON-CONFIRM-001", "title": "휴지통 일괄 영구 삭제는 Phase 1 에 도입하지 않는다", "from_clauses": ["R142"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "constraint", "ac_count": 2 },
+    { "id": "FR-CONFIRM-020", "title": "주체 다건 일괄 회수를 허용한다", "from_clauses": ["R142-a", "R142-e", "R142-f"], "target": "phase-1", "status": "planned", "stability": "evolving", "type": "functional", "ac_count": 4 },
+    { "id": "FR-CONFIRM-021", "title": "일괄 조작의 확인은 묶음 1회로 받는다", "from_clauses": ["R142-b"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 2 },
+    { "id": "FR-CONFIRM-022", "title": "일괄 회수 L3 의 토큰은 영향 건수이고 0건은 실행을 막는다", "from_clauses": ["R142-c"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 6 },
+    { "id": "FR-CONFIRM-023", "title": "오프보딩 앞 세 단계는 다건화하지 않는다", "from_clauses": ["R142-d"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "ac_count": 3 }
+  ],
+
+  "clause_coverage": {
+    "assigned": ["R113","R114","R115","R115-a","R115-b","R115-c","R115-d","R115-e","R115-f","R115-g","R115-h","R115-i","R115-j","R116","R116-a","R122","R122-a","R122-b","R122-c","R123","R123-a","R125","R125-a","R125-b","R125-c","R126","R126-a","R126-b","R126-c","R126-d","R126-e","R127","R127-a","R127-b","R129","R130","R131","R133","R133-a","R134","R134-a","R134-b","R135","R135-a","R135-b","R136","R136-a","R136-b","R136-c","R136-d","R142","R142-a","R142-b","R142-c","R142-d","R142-e","R142-f"],
+    "covered": ["R113","R114","R115","R115-a","R115-b","R115-c","R115-d","R115-e","R115-f","R115-g","R115-h","R115-i","R115-j","R116","R116-a","R122","R122-a","R122-b","R122-c","R123","R123-a","R125","R125-a","R125-b","R125-c","R126","R126-a","R126-b","R126-c","R126-d","R126-e","R127","R127-a","R127-b","R129","R130","R131","R133","R133-a","R134","R134-a","R134-b","R135","R135-a","R135-b","R136","R136-a","R136-b","R136-c","R136-d","R142","R142-a","R142-b","R142-c","R142-d","R142-e","R142-f"],
+    "uncovered": [],
+    "uncovered_reason": {}
+  },
+
+  "split_decisions": [
+    { "clause": "R115", "split_into": 8, "into": ["FR-CONFIRM-001","FR-CONFIRM-002","FR-CONFIRM-003","FR-CONFIRM-006","FR-CONFIRM-007","FR-CONFIRM-008","FR-CONFIRM-009","FR-CONFIRM-010"], "trigger": "§29.1-⑤ AC 목록이 너무 길어진다 — 하위 a~j 열 개를 한 블록의 AC 로 펴면 30개를 넘고 등급 체계·배정 기준·배정표·우선 규칙이 한 요구에 섞인다" },
+    { "clause": "R115-i", "split_into": 1, "into": ["FR-CONFIRM-010"], "trigger": "§29.1-①② 행위자와 시스템 경계가 다르다 — 배정표(R115-b)는 관리 화면·관리자 축인데 새 버전 올리기는 편집 표면·편집 권한자 축이다" },
+    { "clause": "R115-g", "split_into": 1, "into": ["FR-CONFIRM-009"], "trigger": "§29.1-① 행위자·화면이 다르다 — 같은 조작이 오프보딩 카드와 그룹 상세에서 등급이 갈리므로 배정표에 한 줄로 넣을 수 없다. R115-h(그룹 이름 나열)와 함께 묶었다" },
+    { "clause": "R126", "split_into": 2, "into": ["FR-CONFIRM-012","SEC-CONFIRM-003"], "trigger": "§29.1-③ 검증 방법이 다르다 — 표시 의무는 존재 단언, 분모 금지(R126-b)는 부재 단언이며 규범 성질도 functional 대 security 로 갈린다" },
+    { "clause": "R127", "split_into": 3, "into": ["FR-CONFIRM-013","SEC-CONFIRM-004","SEC-CONFIRM-005"], "trigger": "§29.1-③ 검증 방법이 다르다 — R127 은 템플릿 존재, R127-a 는 끊긴 노드 유무 두 조건 대조, R127-b 는 실행 정책(거부 금지)이다. 뒤 둘은 완전 숨김 축이라 type 도 security 로 갈린다" },
+    { "clause": "R135", "split_into": 2, "into": ["SEC-CONFIRM-007","DR-CONFIRM-001"], "trigger": "§29.1-③ 검증 방법이 다르다 — 필요 레벨·등급은 UI 게이트 단언이고 R135-b 의 부여자 처분은 저장된 권한 항목의 상태 단언이다" },
+    { "clause": "R142", "split_into": 5, "into": ["CON-CONFIRM-001","FR-CONFIRM-020","FR-CONFIRM-021","FR-CONFIRM-022","FR-CONFIRM-023"], "trigger": "§29.1-⑦ 한 행 안에서 방향이 반대다 — R142 는 미도입 선언(constraint), R142-a 는 허용, R142-b·c 는 확인 절차 규정, R142-d 는 다건화 금지다. 한 요구로 묶으면 AC 가 서로 모순으로 읽힌다" },
+    { "clause": "R122", "split_into": 3, "into": ["SEC-CONFIRM-002","FR-CONFIRM-005","FR-CONFIRM-011(병합)","FR-CONFIRM-015(병합)"], "trigger": "§29.1-② 시스템 경계가 다르다 — R122 는 등급 판정 축의 성질 규정, R122-c 는 확인 관문의 위치 규정, R122-a·R122-b 는 각각 다른 부모 조항과 병합했다" }
+  ],
+
+  "merge_decisions": [
+    { "merged": ["R122-a", "R125", "R125-b", "R125-c"], "into": "FR-CONFIRM-011", "basis": "§29.2-④ 분리를 유지하면 중복 구현·충돌을 낳는다 — 원장 스스로 'R122-a 의 대상 집합이 주체 집합인지 노드 집합인지 특정되지 않아 05 는 주체 축, 04 는 노드 축으로 같은 조항을 적용했다' 는 사고를 기록한다. 넓히기 등급의 진입점을 하나로 둔다" },
+    { "merged": ["R122-b", "R131"], "into": "FR-CONFIRM-015", "basis": "§29.2-④ — '상속 끊기의 등급은?' 이라는 한 질문에 두 조항이 답을 나눠 갖는다. R122-b 가 일반 L2 를 정하고 R131 이 디렉토리를 L3 으로 올리므로 합집합을 한 요구로 적었다" },
+    { "merged": ["R136-d"], "into": "FR-CONFIRM-019 AC-6", "basis": "§29.2-③ 한쪽이 다른 쪽의 단순 반복이다 — 조항 문면이 '같은 규칙을 설치 마법사에도 적용한다' 이므로 쪼개면 같은 규칙이 두 곳에 적히고 한쪽만 고쳐질 위험이 생긴다. §29.1-① 행위자 차이(인증 전 경로)가 걸리는 것은 인정하고 아래 notes_for_reviewer 에 남긴다" }
+  ],
+
+  "absorbed_as_ac": [
+    { "parent": "R115", "children": ["R115-c"] },
+    { "parent": "R115-b", "children": ["R115-j"] },
+    { "parent": "R115-g", "children": ["R115-h"] },
+    { "parent": "R116", "children": ["R116-a"] },
+    { "parent": "R123", "children": ["R123-a"] },
+    { "parent": "R125", "children": ["R125-b", "R125-c"] },
+    { "parent": "R126", "children": ["R126-a", "R126-c", "R126-d"] },
+    { "parent": "R133", "children": ["R133-a"] },
+    { "parent": "R136", "children": ["R136-a", "R136-d"] }
+  ],
+
+  "non_normative_demoted": [
+    { "clause": "R125-a", "req_id": "FR-CONFIRM-011", "field": "rationale", "why": "이 조항이 닫는 실제 구멍의 서술 — 규범이 아니라 노드 축 도입의 근거다" },
+    { "clause": "R126-a", "req_id": "FR-CONFIRM-012", "field": "research + AC-4", "why": "안전성 논증은 research 로 내리되, 그 논증의 규범적 귀결('요청자가 볼 수 없는 노드를 포함하지 않는다')은 결정 가능한 명제라 AC-4 로 살렸다" },
+    { "clause": "R126-e", "req_id": "FR-CONFIRM-012", "field": "implementationNotes", "why": "인지된 비용 — 하향 카운트의 성질과 단일 쿼리 가능성" },
+    { "clause": "R134-a", "req_id": "SEC-CONFIRM-006", "field": "research + changeNotes", "why": "등재 사유 정정 — G18 초판 전제가 거짓이었다는 기록" },
+    { "clause": "R134-b", "req_id": "SEC-CONFIRM-006", "field": "implementationNotes", "why": "수용한 대가와 사후 진단 경로" },
+    { "clause": "R135-a", "req_id": "SEC-CONFIRM-007", "field": "research", "why": "패널 3:0 — 권한 상승 경로가 아니라는 확인. 거짓 논거를 기각한 기록" },
+    { "clause": "R136-b", "req_id": "FR-CONFIRM-019", "field": "rationale", "why": "적용 하위 = 0 이 오히려 지연 효과 축의 독립 근거라는 논증" },
+    { "clause": "R136-c", "req_id": "FR-CONFIRM-019", "field": "rationale", "why": "기존 장치는 확인을 대체하지 못한다 — 부주의와 오판은 층이 다르다는 논증과 소수 의견 기각 사유" },
+    { "clause": "R142-e", "req_id": "FR-CONFIRM-020", "field": "research", "why": "G9 등재 사유의 인과 서술 정정 — 결론 유지, 근거 교체" },
+    { "clause": "R142-f", "req_id": "FR-CONFIRM-020", "field": "implementationNotes", "why": "감사 입도(G26 ③)와 G9 가 독립이라는 판정과 반증 조건" }
+  ],
+
+  "blocked_by_gaps": [
+    { "req_id": "SEC-CONFIRM-007", "gap": "G16", "stability": "evolving", "status": "planned", "why": "필요 레벨(관리)과 등급(L2)은 확정이고, 막힌 것은 편집 사용자의 사후 관측 수단이라는 별개 축이다. gap_coupling.json 의 reverse 매핑에서 R135 가 스스로 G16 에 막혔다고 적은 유일한 조항이다" },
+    { "req_id": "FR-CONFIRM-020", "gap": "G27", "stability": "evolving", "status": "planned", "why": "G27 이 '이 공백이 열려 있는 동안 R141·R142-a 의 근거는 조건부다' 라고 명시한다 — 재부여 복구 논거가 부여 행의 생존에 종속된다" }
+  ],
+
+  "gap_traces_without_stability_change": [
+    { "req_id": "FR-CONFIRM-007", "gap": "G27", "why": "G27 이 '정할 자리는 이미 있다' 며 R115-e 를 인용한다. 축소 조작의 확인 절차 자체는 기본값과 무관하게 성립하므로 stable 을 유지했다" },
+    { "req_id": "FR-CONFIRM-011", "gap": "G15", "why": "G15 가 R125·R126 을 인용하며 '전파의 파급이 서브트리 단위가 되어 이 공백이 커진다' 고 적는다 — 조항을 막는 것이 아니라 조항이 공백을 키우는 방향이다" },
+    { "req_id": "FR-CONFIRM-012", "gap": "G16", "why": "G16 이 '적용 하위 N개 가 부분적 완화이나 사후 검증은 아니다' 로 이 조항을 인용한다" },
+    { "req_id": "SEC-CONFIRM-006", "gap": "G27", "why": "G27 이 R134-b 의 '재부여로 복구된다' 를 인용한다. 첨부 개수 미표시라는 규범 자체는 조건부가 아니므로 stable 을 유지했다" }
+  ],
+
+  "validate_spec": { "errors": 0, "warnings": 2, "warning_codes": ["SRS-W072", "SRS-W023"], "note": "둘 다 기존 문제다 — SRS-W072 는 02 번호 중복, SRS-W023 은 다른 scope 의 FR-SHELL-011 draft 경고" },
+
+  "notes_for_reviewer": [
+    "R114 의 type 을 security 가 아니라 interface 로 두었다. 팀 리드는 R113·R114 를 완전 숨김 축의 파생으로 보고 security 검토를 요청했으나, R114 의 근거 칸은 'R110 으로 ACL 에 시간 축이 없으므로 날짜 접미는 만료·시점 판정이 존재한다는 오해를 만든다' 로 정보 은닉이 아니라 시맨틱 오해 방지다. 조항 문면이 브리프보다 우선한다는 §10 규칙에 따라 interface 로 두고 그 사유를 implementationNotes 에 명시했다. R113 은 security 다.",
+    "FR-CONFIRM-015(상속 끊기)의 '디렉토리가 아닌 노드는 L2' 는 원장에 명시된 문장이 아니라 R122-b(대상 한정 없이 L2)와 R131(디렉토리는 L3)의 합집합을 읽은 것이다. 원장은 문서 노드를 명시적으로 지목하지 않으므로 그 사실을 implementationNotes 에 그대로 적었다.",
+    "FR-CONFIRM-006(배정표) AC-7 은 '문서 노드의 권한 항목 회수는 L1' 로 좁혀 썼다. R115-b 문면은 한정 없이 'ACL 항목 회수 L1' 인데 R130 이 컨테이너 대상을 L2 로 올리므로, 배정표를 문면 그대로 옮기면 두 요구가 정면으로 충돌한다. 양쪽 implementationNotes 에 덮어쓰기 관계를 명시했다.",
+    "R136-d(설치 마법사)는 §29.1-① 행위자가 다르다(인증 전 경로)는 분리 트리거가 실제로 걸리지만 AC 로 흡수했다. 조항 문면이 '같은 규칙을 적용한다' 이므로 쪼개면 규칙이 두 곳에 적히고 §10.2(같은 책임을 두 곳이 나눠 갖지 않는다)를 위반한다고 판단했다. 리뷰어가 반대하면 분리 가능한 자리다.",
+    "changeNotes 를 쓴 4건(FR-CONFIRM-003·011·015, SEC-CONFIRM-006)은 도구가 기본 'Created' 행을 사용자 지정 행으로 대체한다. 원장의 개정 이력을 남기는 쪽을 택했으므로 그 4건에는 생성 기록이 남지 않는다.",
+    "R115-d(직접 지정 우선)를 닫힌 열거로 만들지 않았다. AC 는 '문면을 고치지 않아도 새 지정이 유효하다' · '열거 개수를 근거로 다른 지정을 거부하지 않는다' 두 항으로 열린 목록성 자체를 규범화했고, 알려진 사례 셋(R109·R125-b·R107-a)은 implementationNotes 에 비규범 예시로만 적었다.",
+    "priority 는 33건 전부 medium 이다. 원장 §4 수용 기준 13개가 이 scope 의 어떤 조항도 지목하지 않고 §3.1 감사 CRITICAL 매핑에도 없다. 브리프 §8.1-1 에 따라 각 요구의 implementationNotes 에 '우선순위는 원장이 배정한 바 없다 — 표의 medium 은 도구 기본값이다' 를 남겼다.",
+    "등급이 적용되는 조작 자체의 정의(부여·회수·이동·복사·상속 끊기)는 ACL scope 소유로 두고 참조만 했다. FR-CONFIRM-011·018 의 implementationNotes 에 그 경계를 명시했다.",
+    "Code trace 는 한 건도 달지 않았다. 브리프 §6 지침대로다."
+  ]
+}

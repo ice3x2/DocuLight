@@ -1,0 +1,90 @@
+{
+  "scope": "STORAGE",
+  "document": "docs/spec/14.storage.srs.md",
+  "requirements": [
+    { "id": "DR-STORAGE-001", "title": "문서 본문의 SSOT 는 서버 로컬 파일시스템이다", "from_clauses": ["R4"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "data", "priority": "medium", "risk": "medium", "verificationMethod": "test", "ac_count": 3 },
+    { "id": "DR-STORAGE-002", "title": "사용자·그룹·ACL 메타데이터는 SQLite 단일 저장소에 둔다", "from_clauses": ["R20"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "data", "priority": "medium", "risk": "medium", "verificationMethod": "test", "ac_count": 3 },
+    { "id": "DR-STORAGE-003", "title": "모든 노드에 경로 독립적인 안정 ID 를 부여한다", "from_clauses": ["R76", "R76-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "data", "priority": "medium", "risk": "medium", "verificationMethod": "test", "ac_count": 5 },
+    { "id": "SEC-STORAGE-001", "title": "노드 ID 는 추측 불가한 랜덤 값이어야 한다", "from_clauses": ["R76-b"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "priority": "medium", "risk": "medium", "verificationMethod": "test", "ac_count": 3 },
+    { "id": "REL-STORAGE-001", "title": "기동 시와 주기적으로 파일시스템과 DB 를 전체 재조정한다", "from_clauses": ["R77", "R77-b"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "reliability", "priority": "high", "risk": "high", "verificationMethod": "통합 테스트", "ac_count": 5 },
+    { "id": "REL-STORAGE-002", "title": "서버에서 직접 옮긴 파일의 노드 상관 판정은 fail-closed 다", "from_clauses": ["R20-a", "R77-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "reliability", "priority": "medium", "risk": "high", "verificationMethod": "test", "ac_count": 6 },
+    { "id": "DR-STORAGE-004", "title": "휴지통 항목마다 사이드카 메타 파일을 함께 기록한다", "from_clauses": ["R78"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "data", "priority": "medium", "risk": "high", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "DR-STORAGE-005", "title": "버전 항목마다 사이드카 메타 파일을 함께 기록한다", "from_clauses": ["R78"], "target": "phase-1", "status": "blocked", "stability": "evolving", "type": "data", "priority": "medium", "risk": "high", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "FR-STORAGE-001", "title": "저장은 버튼 없는 자동 저장이다", "from_clauses": ["R75", "R75-b"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "priority": "medium", "risk": "high", "verificationMethod": "test", "ac_count": 6 },
+    { "id": "FR-STORAGE-002", "title": "저장 충돌의 판정 근거는 읽은 시점의 내용 해시다", "from_clauses": ["R75-c"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "priority": "medium", "risk": "medium", "verificationMethod": "test", "ac_count": 5 },
+    { "id": "FR-STORAGE-003", "title": "버전 스냅샷은 편집 세션당 1회 생성한다", "from_clauses": ["R61", "R63", "R75-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "priority": "high", "risk": "medium", "verificationMethod": "Playwright E2E", "ac_count": 5 },
+    { "id": "FR-STORAGE-004", "title": "보관 버전 개수를 초과하면 오래된 버전부터 폐기한다", "from_clauses": ["R62"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "priority": "high", "risk": "medium", "verificationMethod": "Playwright E2E", "ac_count": 5 },
+    { "id": "IR-STORAGE-001", "title": "버전 비교·복원 UI 는 충돌 병합과 같은 컴포넌트를 재사용한다", "from_clauses": ["R63-a"], "target": "phase-1", "status": "planned", "stability": "evolving", "type": "interface", "priority": "high", "risk": "medium", "verificationMethod": "Playwright E2E", "ac_count": 4 },
+    { "id": "FR-STORAGE-005", "title": "삭제는 휴지통 이동이며 노드 ID 로 물리 격리한다", "from_clauses": ["R52", "R85"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "priority": "high", "risk": "medium", "verificationMethod": "Playwright E2E", "ac_count": 5 },
+    { "id": "SEC-STORAGE-002", "title": "휴지통 열람 범위는 본인 삭제분이고 관리자는 전체다", "from_clauses": ["R85"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "priority": "high", "risk": "medium", "verificationMethod": "Playwright E2E", "ac_count": 4 },
+    { "id": "FR-STORAGE-006", "title": "휴지통 복구는 원본 편집 권한을 요구하고 부모 체인 소실 시 닫힌다", "from_clauses": ["R53", "R85"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "priority": "high", "risk": "medium", "verificationMethod": "Playwright E2E", "ac_count": 6 },
+    { "id": "SEC-STORAGE-003", "title": "휴지통 영구 삭제는 워크스페이스 관리 권한을 요구한다", "from_clauses": ["R53", "R85"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "priority": "high", "risk": "medium", "verificationMethod": "Playwright E2E", "ac_count": 5 },
+    { "id": "FR-STORAGE-007", "title": "휴지통 보존 기간은 기본 30일이고 경과분은 자동 영구 삭제한다", "from_clauses": ["R86"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "priority": "high", "risk": "medium", "verificationMethod": "Playwright E2E", "ac_count": 5 },
+    { "id": "DR-STORAGE-006", "title": "휴지통은 워크스페이스마다 두고 아카이브는 루트 한 곳에 둔다", "from_clauses": ["R67", "R68"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "data", "priority": "medium", "risk": "medium", "verificationMethod": "review", "ac_count": 5 },
+    { "id": "SEC-STORAGE-004", "title": "점으로 시작하는 항목은 숨기고 직접 접근을 거부한다", "from_clauses": ["R64", "R64-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "priority": "medium", "risk": "medium", "verificationMethod": "test", "ac_count": 6 },
+    { "id": "SEC-STORAGE-005", "title": "점으로 시작하는 이름의 생성·업로드·개명을 거부한다", "from_clauses": ["R64-b"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "priority": "medium", "risk": "medium", "verificationMethod": "test", "ac_count": 5 },
+    { "id": "SEC-STORAGE-006", "title": "DB 레코드가 없는 파일시스템 경로 요청은 거부한다", "from_clauses": ["R55-b"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "priority": "medium", "risk": "medium", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "FR-STORAGE-008", "title": "문서를 이동해도 첨부는 움직이지 않고 본문도 재작성하지 않는다", "from_clauses": ["R65"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "priority": "medium", "risk": "high", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "FR-STORAGE-009", "title": "문서 간 링크는 이름 기반 위키링크로 해석하고 상대경로를 삽입하지 않는다", "from_clauses": ["R65-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "priority": "medium", "risk": "medium", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "SEC-STORAGE-007", "title": "벡터 인덱스는 동기 갱신하고 없는 노드의 엔트리를 제외한다", "from_clauses": ["R79"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "priority": "medium", "risk": "high", "verificationMethod": "test", "ac_count": 5 },
+    { "id": "OPS-STORAGE-001", "title": "백업은 docsRoot 와 DB 를 같은 시점으로 묶는다", "from_clauses": ["R87"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "operational", "priority": "medium", "risk": "medium", "verificationMethod": "review", "ac_count": 4 }
+  ],
+  "clause_coverage": {
+    "assigned": ["R4", "R20", "R20-a", "R52", "R53", "R55-b", "R61", "R62", "R63", "R63-a", "R64", "R64-a", "R64-b", "R65", "R65-a", "R67", "R68", "R75", "R75-a", "R75-b", "R75-c", "R76", "R76-a", "R76-b", "R77", "R77-a", "R77-b", "R78", "R79", "R85", "R86", "R87"],
+    "covered": ["R4", "R20", "R20-a", "R52", "R53", "R55-b", "R61", "R62", "R63", "R63-a", "R64", "R64-a", "R64-b", "R65", "R65-a", "R67", "R68", "R75", "R75-a", "R75-b", "R75-c", "R76", "R76-a", "R76-b", "R77", "R77-a", "R77-b", "R78", "R79", "R85", "R86", "R87"],
+    "uncovered": [],
+    "uncovered_reason": {}
+  },
+  "split_decisions": [
+    { "clause": "R85", "split_into": 4, "trigger": "§29.1-①③⑤ — 행위자(일반 사용자/워크스페이스 관리자)와 검증 방법이 갈리고 한 블록에 담으면 AC 가 20개에 이른다. 물리 격리(FR-STORAGE-005) · 열람 범위(SEC-STORAGE-002) · 복구(FR-STORAGE-006) · 영구 삭제(SEC-STORAGE-003)" },
+    { "clause": "R53", "split_into": 2, "trigger": "§29.1-① — 문면이 복구와 영구 삭제 두 조작의 권한을 한 행에 담는데 두 조작의 필요 레벨이 다르다(R74 표: 복구는 대상 편집 계열, 영구 삭제는 워크스페이스 관리). FR-STORAGE-006 · SEC-STORAGE-003" },
+    { "clause": "R78", "split_into": 2, "trigger": "§29.1-⑦ — 휴지통 사이드카는 네 칸이 확정됐고 버전 사이드카는 행위자 칸이 G28 미결이라 한쪽만 blocked 다. DR-STORAGE-004(planned) · DR-STORAGE-005(blocked)" },
+    { "clause": "R76-b", "split_into": 1, "trigger": "§29.1-③ — 부모 R76 은 data 축(식별자 구조)이고 R76-b 는 열거 오라클을 막는 security 규칙이라 검증 축이 다르다. SEC-STORAGE-001 로 승격" },
+    { "clause": "R64-b", "split_into": 1, "trigger": "§29.1-② — R64·R64-a 는 읽기 표면(트리 표시·읽기 API)이고 R64-b 는 쓰기 표면(생성·업로드·개명)이라 시스템 경계가 다르다. SEC-STORAGE-005 로 승격" },
+    { "clause": "R63-a", "split_into": 1, "trigger": "§29.1-③ — 버전 생성(FR-STORAGE-003)과 달리 화면 계약이라 interface 이고 §4 수용 기준 12 의 「복원이 동작한다」가 이 블록을 겨눈다. IR-STORAGE-001 로 승격" },
+    { "clause": "R62", "split_into": 1, "trigger": "§29.1-③ — 스냅샷 생성과 보관 상한은 §4 수용 기준 12 가 서로 다른 단언으로 열거한 별개 동작이다. FR-STORAGE-004 로 승격" },
+    { "clause": "R65-a", "split_into": 1, "trigger": "§29.1-② — R65 는 첨부 저장 경계, R65-a 는 에디터 링크 삽입·해석 경계다. FR-STORAGE-009 로 승격" }
+  ],
+  "merge_decisions": [
+    { "merged": ["R20-a", "R77-a"], "into": "REL-STORAGE-002", "why": "§29.2-① — 둘 다 chokidar 가 관측한 서버 직접 변경 하나의 동작을 규정한다. R20-a 비고가 스스로 「판정 규칙과 한계는 R76·R77 로 구체화됨」이라고 위임하므로 규범과 그 판정 규칙을 한 블록에 둔다. 브리프가 경고한 R76-a(UI/API 경로) 와의 혼입은 AC-6 으로 명시 배제했다." },
+    { "merged": ["R64", "R64-a"], "into": "SEC-STORAGE-004", "why": "§29.2-④ — 표시 숨김과 API 거부를 갈라 두면 감사 M16 이 지적한 바로 그 구멍(숨김이 표시에만 걸림)이 요구 구조에 재현된다." },
+    { "merged": ["R61", "R63", "R75-a"], "into": "FR-STORAGE-003", "why": "§29.2-② — 스냅샷 생성이라는 한 동작의 저장 위치(R61)·대상 한정(R63)·생성 단위(R75-a)여서 검증 시나리오가 동일하다." },
+    { "merged": ["R67", "R68"], "into": "DR-STORAGE-006", "why": "§29.2-② — 예약 디렉토리의 배치 규약 하나로 함께 검토된다." },
+    { "merged": ["R76", "R76-a"], "into": "DR-STORAGE-003", "why": "§29.2-② — R76-a 는 노드 ID 안정성이 UI/API 이동에서 유지된다는 같은 명제의 검증 조건이다." }
+  ],
+  "absorbed_as_ac": [
+    { "parent": "R75", "children": ["R75-b"], "note": "충돌 시 자동 저장 중단·재개는 자동 저장 동작의 상태 전이라 AC-4·AC-5 로 흡수" },
+    { "parent": "R76", "children": ["R76-a"] },
+    { "parent": "R85", "children": [], "note": "R85 자체가 다섯 규범을 담은 행이라 흡수가 아니라 분할했다" }
+  ],
+  "non_normative_demoted": [
+    { "clause": "R77-b", "field": "implementationNotes", "target_req": "REL-STORAGE-001", "why": "문면이 「잔여 위험」이며 규범이 아니다 — 정지 중 이동된 문서가 신규 노드가 되어 일시적으로 넓은 권한으로 보일 수 있다는 인지된 위험과 그 완화책(R139-f 배지)을 구현 노트로 내렸다" },
+    { "clause": "R20", "field": "rationale", "target_req": "DR-STORAGE-002", "why": "R20 근거 3항(읽기 빈도·동시 쓰기·원자성)은 JSON 기각 사유이므로 rationale 로" },
+    { "clause": "R65", "field": "changeNotes", "target_req": "FR-STORAGE-008", "why": "2026-08-11 감사 C2·C3 해소에서 「링크를 절대경로로 갱신한다」가 「갱신할 것이 없다」로 정정된 이력" },
+    { "clause": "R76-b", "field": "changeNotes", "target_req": "SEC-STORAGE-001", "why": "2026-08-12 최초 부여 시 R76-a 를 중복 사용한 오류를 정정하며 신규 ID 를 부여한 이력" }
+  ],
+  "blocked_by_gaps": [
+    { "req_id": "DR-STORAGE-005", "gap": "G28", "status": "blocked", "stability": "evolving", "why": "버전 사이드카에 행위자 칸이 없어 스키마를 확정할 수 없다. 최소 조치는 작성자 추가이며 R75-a 로 세션 단위라 볼륨과 무관하다" },
+    { "req_id": "IR-STORAGE-001", "gap": "G28", "status": "planned", "stability": "evolving", "why": "복원 UI 자체는 착수 가능하고 「누가」 열만 미결이므로 blocked 가 아니라 evolving 으로 뒀다" },
+    { "req_id": "FR-STORAGE-007", "gap": "G27", "status": "planned", "stability": "stable", "why": "R86 자신의 값(30일 · 0=무제한)은 확정이고 미결은 R84-a(AUDIT scope) 쪽 기본값과의 대소 관계다. trace 는 달되 status·stability 는 내리지 않았다" }
+  ],
+  "acceptance_criteria_mapping": {
+    "원장 §4 기준 11 (휴지통 왕복)": ["FR-STORAGE-005", "SEC-STORAGE-002", "FR-STORAGE-006", "SEC-STORAGE-003", "FR-STORAGE-007"],
+    "원장 §4 기준 12 (버전)": ["FR-STORAGE-003", "FR-STORAGE-004", "IR-STORAGE-001"],
+    "원장 §4 기준 13 (재조정·설치)": ["REL-STORAGE-001"]
+  },
+  "validate_spec": { "errors": 0, "warnings": 2, "warning_codes": ["SRS-W072", "SRS-W023"], "note": "둘 다 기존 문제다 — SRS-W072 는 02 번호 중복(브리프가 무시하라고 명시), SRS-W023 은 다른 scope 의 draft 요구 FR-SHELL-011" },
+  "notes_for_reviewer": [
+    "priority=medium 17건 · risk=medium 대부분은 원장의 판단이 아니라 도구 기본값이다. add_requirement 가 두 필드를 enum 으로 강제하고 생략하면 medium 을 채운다. §4 수용 기준 13개가 지목한 R85·R86·R75-a·R62·R63-a·R77 을 담은 9건만 priority=high 이고, §3.1 감사 매핑이 CRITICAL 로 등급 매긴 R65·R75·R77·R77-a·R78·R79 를 담은 7건만 risk=high 다. 이 사실을 20개 블록에 반복 기재하는 대신 여기 한 번 적는다 (원장 R124).",
+    "R85 를 4건으로 쪼갠 것이 이 scope 에서 가장 큰 판단이다. 한 블록으로 두면 AC 가 20개에 이르고 행위자가 일반 사용자와 워크스페이스 관리자로 갈려 §29.1-①③⑤ 가 동시에 걸린다. 대신 네 블록 전부에 R85 Doc trace 를 달아 조항이 어디로 갔는지 역추적 가능하게 했다.",
+    "R78 을 휴지통/버전 두 건으로 쪼갠 근거는 §29.1-⑦(한쪽은 확정, 한쪽은 막힘)이다. 한 건으로 두면 확정된 휴지통 사이드카까지 G28 때문에 blocked 가 된다. 대가로 「DB 인덱스는 사이드카의 캐시다」가 두 블록에 나타난다 — 각 사이드카에 스코프된 서술이라 값이 갈릴 자리는 아니다.",
+    "IR-STORAGE-001(R63-a)의 status 를 blocked 로 내리지 않은 것은 판단이다. 브리프 §4 는 「열린 공백에 걸리면 blocked」이지만 scope 지시는 R78·R63-a 에 대해 stability: evolving 만 요구했고, G28 이 지목한 결손 필드는 R78 쪽 스키마다. 복원 UI 는 그 칸 없이도 착수 가능하고 §4 수용 기준 12 가 「복원이 동작한다」를 Phase 1 관문에 두므로, blocked 로 내리면 관문 항목이 착수 금지가 되는 모순이 생긴다.",
+    "FR-STORAGE-007(R86)에 G27 trace 를 달되 status=planned · stability=stable 로 뒀다. 미결은 R86 의 값이 아니라 R84-a(AUDIT scope)의 부재이며, R86 문면의 30일과 0=무제한은 실재 값이다. 역전 위험은 implementationNotes 에 남겼다.",
+    "SEC-STORAGE-004 AC-6(경로 중간 세그먼트가 점으로 시작해도 거부)은 R64-a 문면 「`.` 로 시작하는 경로」의 세그먼트 단위 해석이다. 원장이 이 축을 명시하지 않았으므로 해석임을 밝힌다 — 좁게 읽으면 첫 세그먼트만 걸리는데 그러면 docs/.trash/x 가 뚫린다.",
+    "SEC-STORAGE-006(R55-b)의 Phase 1 판정 근거를 rationale 에 그대로 실었고 R92 에 related_to Doc trace 를 달았다. R92 ③ 단서가 R55-b 를 반례로 직접 지목하므로 다음 세션이 「R55 하위니까 Phase 2」로 되돌리는 것을 막는다.",
+    "R75-a 는 G34(Phase 2 `.task` 축)가 지목하지만 trace 를 달지 않았다 — 브리프 지시대로이며, R92 도 G34 가 Phase 1 착수를 막지 않는다고 명시한다.",
+    "R20-a 와 R76-a 를 뒤섞지 않았다. chokidar 상관 판정(REL-STORAGE-002)에는 AC-6 으로 「UI/API 이동·개명에서는 이 경로가 실행되지 않는다」를 명시 단언으로 넣었고, 반대편 DR-STORAGE-003 AC-3·AC-4 는 트랜잭션 경로만 시험한다.",
+    "값이 없는 축은 AC 로 쓰지 않고 implementationNotes 에 미정으로 남겼다 — 재조정 주기 · chokidar 시간 창 · 해시 알고리즘 · 자동 저장 디바운스 정확값(원장은 ~2초 근사치만) · 편집 세션 종료 조건 · 버전 보관 기본 개수 · 백업 도구/주기 · 위키링크 동명 해석 우선순위.",
+    "다른 scope 소유 규칙은 등재하지 않고 소유자만 지목했다 — R74/R74-a(필요 권한, ACL) · R100·R100-a·R100-b·R24-b(휴지통·버전 화면, SHELL) · R50-c·R66(첨부, ATTACH) · R84·R137·R139·R141(감사·대기열, AUDIT) · R18 병합 UI(EDITOR) · R94 404 통일 · R96 설정 저장소 · R102 자동 접미사 · R115 확인 등급."
+  ]
+}

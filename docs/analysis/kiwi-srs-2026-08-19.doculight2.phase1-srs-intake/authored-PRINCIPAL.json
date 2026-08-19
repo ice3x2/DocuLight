@@ -1,0 +1,76 @@
+{
+  "scope": "PRINCIPAL",
+  "document": "docs/spec/16.principal.srs.md",
+  "requirements": [
+    { "id": "CON-PRINCIPAL-001", "title": "권한 계층은 슈퍼유저와 일반 유저 2단계뿐이다", "from_clauses": ["R26"], "type": "constraint", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "DR-PRINCIPAL-001", "title": "슈퍼유저 여부는 슈퍼유저 그룹 소속 하나로만 판정한다", "from_clauses": ["R81"], "type": "data", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "DR-PRINCIPAL-002", "title": "그룹은 사용자만을 멤버로 가지며 중첩되지 않는다", "from_clauses": ["R6-a"], "type": "data", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "FR-PRINCIPAL-001", "title": "사용자 관리와 사용자 그룹 관리를 제공한다", "from_clauses": ["R6"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "evolving", "ac_count": 3 },
+    { "id": "SEC-PRINCIPAL-001", "title": "슈퍼유저 그룹 멤버는 전 워크스페이스 관리 권한과 워크스페이스 수명주기 권한을 가진다", "from_clauses": ["R29"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "CON-PRINCIPAL-002", "title": "시스템 그룹(슈퍼유저·default)은 삭제·개명할 수 없다", "from_clauses": ["R30", "R30-a"], "type": "constraint", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "CON-PRINCIPAL-003", "title": "계정은 삭제하지 않고 suspended 로만 관리한다", "from_clauses": ["R101"], "type": "constraint", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "FR-PRINCIPAL-002", "title": "그룹 삭제는 그 그룹 앞으로 부여된 ACL 항목 제거를 같은 트랜잭션에 포함한다", "from_clauses": ["R101-a"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "FR-PRINCIPAL-003", "title": "오프보딩을 네 단계의 안내된 흐름으로 제공한다", "from_clauses": ["R101-b", "R101-c", "R101-e"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "evolving", "ac_count": 7 },
+    { "id": "CON-PRINCIPAL-004", "title": "오프보딩 카드는 단일 컴포넌트이며 진행 상태를 저장하지 않는다", "from_clauses": ["R101-d"], "type": "constraint", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "FR-PRINCIPAL-004", "title": "일괄 회수 화면의 적용 범위 문구는 요청자 레벨에 따라 달라진다", "from_clauses": ["R101-f"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "FR-PRINCIPAL-005", "title": "워크스페이스의 마지막 관리 권한자 제거는 차단하지 않고 경고한다", "from_clauses": ["R109"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "FR-PRINCIPAL-006", "title": "관리 권한자가 없는 워크스페이스에 관리자 없음 배지를 상시 노출한다", "from_clauses": ["R109-a"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "evolving", "ac_count": 4 },
+    { "id": "CON-PRINCIPAL-005", "title": "ACL 항목에 만료일을 두지 않는다", "from_clauses": ["R110", "R110-a"], "type": "constraint", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "FR-PRINCIPAL-007", "title": "새 워크스페이스 생성 폼에서 default 그룹 초기 권한을 고르며 기본값은 없음이다", "from_clauses": ["R111", "R111-a", "R111-b", "R111-c"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 5 },
+    { "id": "SEC-PRINCIPAL-002", "title": "주체 검색 결과의 계정 노출 범위와 상태 배지", "from_clauses": ["R112", "R112-a"], "type": "security", "target": "phase-1", "status": "planned", "stability": "evolving", "ac_count": 5 },
+    { "id": "FR-PRINCIPAL-008", "title": "비활성 계정에 권한을 부여할 때 확인 1단계를 거친다", "from_clauses": ["R112-a"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "SEC-PRINCIPAL-003", "title": "주체 검색은 최소 질의 길이 2자와 결과 상한 20건을 둔다", "from_clauses": ["R112-b"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "CON-PRINCIPAL-006", "title": "주체를 고르는 모든 화면은 단일 공용 컴포넌트 PrincipalPicker 로 구현한다", "from_clauses": ["R112-c", "R112-e"], "type": "constraint", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "FR-PRINCIPAL-009", "title": "슈퍼유저 전용 사용자 관리 화면은 계정 4상태를 그대로 표시한다", "from_clauses": ["R112-d"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "CON-PRINCIPAL-007", "title": "관리자를 단독으로 쓰지 않고 항상 범위를 명시한다", "from_clauses": ["R117"], "type": "constraint", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "FR-PRINCIPAL-010", "title": "시스템 그룹도 주체 단위 일괄 회수의 대상이다", "from_clauses": ["R119"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "FR-PRINCIPAL-011", "title": "시스템 그룹 일괄 회수의 확인 등급과 슈퍼유저 그룹 무효 안내", "from_clauses": ["R119-a"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 }
+  ],
+  "clause_coverage": {
+    "assigned": ["R6", "R6-a", "R26", "R29", "R30", "R30-a", "R81", "R101", "R101-a", "R101-b", "R101-c", "R101-d", "R101-e", "R101-f", "R109", "R109-a", "R110", "R110-a", "R111", "R111-a", "R111-b", "R111-c", "R112", "R112-a", "R112-b", "R112-c", "R112-d", "R112-e", "R117", "R119", "R119-a"],
+    "covered": ["R6", "R6-a", "R26", "R29", "R30", "R30-a", "R81", "R101", "R101-a", "R101-b", "R101-c", "R101-d", "R101-e", "R101-f", "R109", "R109-a", "R110", "R110-a", "R111", "R111-a", "R111-b", "R111-c", "R112", "R112-a", "R112-b", "R112-c", "R112-d", "R112-e", "R117", "R119", "R119-a"],
+    "uncovered": [],
+    "uncovered_reason": {}
+  },
+  "split_decisions": [
+    { "clause": "R6 / R6-a", "split_into": 2, "trigger": "§29.1-②③ 시스템 경계와 검증 방법이 다르다 — R6 은 슈퍼유저 전용 관리 화면의 존재이고 R6-a 는 멤버십 데이터 모델 불변식이다. type 도 functional 과 data 로 갈려 SRS-MD §13-2(Type 은 ID 접두사와 일치) 때문에 한 블록에 담을 수 없다" },
+    { "clause": "R101 계열", "split_into": 5, "trigger": "§29.1-② 시스템 경계가 다르다 — 기본 입도 규칙(부모 1건 + 하위는 AC)을 적용할 수 없는 자리다. R101(계정 수명주기) · R101-a(그룹 삭제) · R101-b/c/e(오프보딩 흐름) · R101-d(컴포넌트 구조) · R101-f(일괄 회수 화면 문구)는 대상과 화면이 각각 다르다" },
+    { "clause": "R101-b", "split_into": 1, "trigger": "§29.1-② 검토했으나 분리하지 않음 — 4단계가 서로 다른 시스템 경계를 건드리는 것은 사실이나, 이 조항의 규범은 '넷을 하나의 안내된 흐름으로 묶는다'는 오케스트레이션이고 각 단계의 개별 거동은 다른 조항(계정 상태 게이트 R60 · PAT 무효 R58-d · 그룹 관리 R6 · 일괄 회수 R43-1)이 소유한다. 단계별로 쪼개면 AUTH·ACCESS-CONTROL scope 의 요구가 PRINCIPAL 에 중복 등재된다" },
+    { "clause": "R101-d", "split_into": 1, "trigger": "§29.1-③ 검증 방법이 다르다 — 단일 컴포넌트·두 진입점·진행 상태 미저장은 코드 검토로 판정하고(verificationMethod: review), 흐름 동작은 시험으로 판정한다" },
+    { "clause": "R112 계열", "split_into": 5, "trigger": "§29.1-⑤ AC 목록이 너무 길어진다(하나로 묶으면 AC 8개 이상) + §29.1-② R112-d 는 다른 화면(슈퍼유저 전용 사용자 관리)이고 R112-c·R112-e 는 컴포넌트 구조 제약이다" },
+    { "clause": "R112-a", "split_into": 2, "trigger": "SRS-MD §2.3 Single Requirement Principle — 한 행에 두 규범이 들어 있다. ① 부여 시점의 확인 1단계(FR-PRINCIPAL-008) ② 검색 결과 배지 문구의 중립어(SEC-PRINCIPAL-002). 시점도 화면도 다르다" },
+    { "clause": "R119-a", "split_into": 1, "trigger": "§29.1 미해당 — 확인 등급과 무효 안내 두 규범이지만 같은 화면·같은 행위자·같은 검증 방법이라 한 요구로 유지했다" }
+  ],
+  "absorbed_as_ac": [
+    { "parent": "R30", "children": ["R30-a"] },
+    { "parent": "R101-b", "children": ["R101-c", "R101-e"] },
+    { "parent": "R111", "children": ["R111-b", "R111-c"] },
+    { "parent": "R112", "children": ["R112-a(배지 문구 갈래)"] }
+  ],
+  "non_normative_demoted": [
+    { "clause": "R110-a", "field": "rationale", "why": "규범이 아니라 만료일 배제 결정의 '더 중요한 이유' 서술이다. 설명 없는 소실 · 감사 로그 무기록 · 알림 체계 부재라는 논증 전체를 CON-PRINCIPAL-005 의 rationale 에 그대로 담았다" },
+    { "clause": "R111-a", "field": "rationale", "why": "기각된 대안(설치 마법사 R83 의 기본값 `편집` 답습)과 그 사유다. 부트스트랩 예외와 통상 목적의 차이를 rationale 에 담았다" },
+    { "clause": "R101(비고)", "field": "implementationNotes", "why": "이 결정이 R58-d 의 `삭제` 를 사문으로 만든다는 사실은 파급 경고이지 요구가 아니다. 2026-08-16 의 G26-② 오귀속 정정(행위자가 반드시 계정은 아니다)도 같은 자리에 남겼다" },
+    { "clause": "R30(비고)", "field": "implementationNotes", "why": "'마지막 멤버 제거도 불가'의 정본이 R73 으로 이동한 사실과 '일괄 회수 포함' 문구가 실효 잔재로 삭제된 사실은 오독 방지 메모다" }
+  ],
+  "blocked_by_gaps": [
+    { "req_id": "FR-PRINCIPAL-001", "gap": "G10", "status": "planned", "stability": "evolving", "note": "사용자 관리·그룹 관리 화면의 열 구성이 사용자 스키마 미결에 의존한다" },
+    { "req_id": "FR-PRINCIPAL-003", "gap": "G10", "status": "planned", "stability": "evolving", "note": "오프보딩 카드의 대상 계정 식별 열이 사용자 스키마 미결에 의존한다" },
+    { "req_id": "SEC-PRINCIPAL-002", "gap": "G10", "status": "planned", "stability": "evolving", "note": "주체 검색 결과 행의 보조 열(동명이인 구별)이 사용자 스키마 미결에 의존한다" },
+    { "req_id": "FR-PRINCIPAL-006", "gap": "G23", "status": "planned", "stability": "evolving", "note": "배지 노출 자체는 확정이고 후속 조치 동선만 미결이다" },
+    { "req_id": "CON-PRINCIPAL-003", "gap": "G33", "status": "planned", "stability": "stable", "note": "이 요구가 G33 을 여는 쪽이지 막히는 쪽이 아니다 — `삭제` 를 없애 PAT 무효 사유가 하나로 줄어든 것이 그 공백의 전제다. trace 만 걸고 stability 는 stable 로 두었다" }
+  ],
+  "validate_spec": { "errors": 0, "warnings": 2, "byCode": { "SRS-W072": 1, "SRS-W023": 1 }, "note": "SRS-W072 는 브리프가 지정한 기존 경고다. SRS-W023(FR-SHELL-011 draft)은 SHELL scope 저작물이며 PRINCIPAL 등재와 무관하다. PRINCIPAL 문서에서 발생한 진단은 0건" },
+  "notes_for_reviewer": [
+    "status: 공백에 걸린 5건 전부를 `blocked` 이 아니라 `planned` + `evolving` 으로 두었다. 일반 브리프 §4 는 '열린 공백에 걸리면 blocked' 라 적지만, `G10` 은 원장 스스로 진행을 허용한다 — R24-a 가 '이 축이 닫히기 전까지 표시 이름 자리를 비워 둔다' 로 자리만 비우고 나아가는 처분을 명문화했다. `G23` 은 PRINCIPAL scope 브리프가 '배지 노출 자체는 확정이므로 AC 로 쓰라' 고 지시했다. 선례인 FR-EDITOR-007 의 `G31` 은 반대로 원장이 '판정 전에 착수하면 잘못된 목록이 확정으로 읽힌다' 며 착수를 막은 경우다. 이 구별이 틀렸다고 보면 FR-PRINCIPAL-001·003 과 SEC-PRINCIPAL-002 를 blocked 로 뒤집으면 된다",
+    "priority·risk: 배정 조항 31개 중 원장 §4 Phase 1 수용 기준 13개가 지목하는 것이 하나도 없고, §3.1 감사 매핑에서 CRITICAL 인 것도 없다(R81 은 H6, R6-a 는 L3, R30-a 는 L4). 그래서 두 필드를 전부 생략했고 도구 기본값 `medium` 이 들어갔다 — 다른 scope 문서들도 같은 상태다",
+    "R119 와 §4 수용 기준 4: 기준 4 는 'R43(부속 5종)' 을 지목하고 R119 는 그 R43-1 의 적용 범위를 정하는 조항이다. 엄밀히는 §4 가 R119 를 지목하지 않아 priority=high 와 'Playwright E2E' 를 붙이지 않았다. 기준 4 의 E2E 가 R43-1 을 시험할 때 시스템 그룹 케이스까지 덮어야 한다고 보면 이 판단을 뒤집어야 한다",
+    "R101-b 를 4단계로 쪼개지 않은 것이 이 scope 에서 가장 크게 갈릴 수 있는 판단이다. §29.1-② 는 확실히 걸리지만, 쪼개면 PAT 무효화와 ACL 일괄 회수가 AUTH·ACCESS-CONTROL scope 와 중복 등재되어 SRS-MD §29.2-④(중복 구현·충돌 유발)에 걸린다고 보았다. 대신 각 단계의 소유 조항을 rationale·implementationNotes 에 명시해 추적이 끊기지 않게 했다",
+    "R112-a 를 두 요구로 갈랐으므로 이 조항의 `Doc` trace 행이 SEC-PRINCIPAL-002 와 FR-PRINCIPAL-008 두 곳에 각각 하나씩 있다. 배지 갈래와 확인 갈래로 notes 를 구별해 두었다",
+    "확인 등급(L1~L3)의 정의는 CONFIRM scope 소유라 재정의하지 않았다. FR-PRINCIPAL-011 의 AC-1 에서 'L3 확인' 을 원장 R119-a 문면 그대로 쓰되 등급의 성립 조건은 쓰지 않았고, FR-PRINCIPAL-002(그룹 삭제)·FR-PRINCIPAL-008(비활성 부여)에서는 등급을 AC 로 쓰지 않고 implementationNotes 에서 소유처를 가리키기만 했다. 특히 FR-PRINCIPAL-008 에는 2026-08-16 인용 검증이 지적한 오귀속(R112-a 는 L2 배정의 출처가 아니다)을 명시해 두었다",
+    "R6-a 와 R81 의 type: 브리프가 data/constraint 검토를 요청했고 둘 다 `data` 로 갔다. R6-a 는 멤버십 저장 구조의 불변식이고, R81 은 '사용자 레코드에 플래그 필드를 두지 않는다' 는 스키마 규정이 규범의 실질이다. R81 을 '슈퍼유저 판정 규칙' 으로 읽으면 security 도 성립한다",
+    "취소선 조항 R27 은 등재하지 않았고 CON-PRINCIPAL-001(R26) 의 rationale 에서도 인용하지 않았다 — 초안에서 '임의 디렉토리마다 관리 경계' 라는 R27 폐기 사유를 근거로 쓰려다 브리프 §10 에 따라 제거했다",
+    "FR-PRINCIPAL-004(R101-f) 의 implementationNotes 에 '이 문구 분기는 R113(확인을 존재 판정에 쓰지 않는다)과 충돌하지 않는다' 는 분석을 넣었다. R113 은 내 배정 조항이 아니므로 이것은 원장 문면에서 도출한 판단이며, 구현자가 두 규칙 사이에서 멈추지 않게 하려는 것이다. 과하다고 보면 삭제해도 규범은 바뀌지 않는다",
+    "브리프와 조항 문면이 어긋난 자리는 발견하지 못했다"
+  ]
+}

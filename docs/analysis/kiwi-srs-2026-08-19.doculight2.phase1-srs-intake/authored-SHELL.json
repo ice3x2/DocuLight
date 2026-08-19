@@ -1,0 +1,83 @@
+{
+  "scope": "SHELL",
+  "document": "docs/spec/08.app-shell.srs.md",
+  "requirements": [
+    { "id": "FR-SHELL-001", "title": "좌측 사이드바 뷰 전환 탭 세 가지", "from_clauses": ["R3", "R3-a"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "IR-SHELL-001", "title": "설정 화면은 별도 페이지가 아니라 모달 팝업이다", "from_clauses": ["R23"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "CON-SHELL-001", "title": "관리 기능의 진입점은 설정 모달 하나다", "from_clauses": ["R24"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "IR-SHELL-002", "title": "설정 모달 카테고리 전량 목록과 카테고리별 표시 권한", "from_clauses": ["R24-a"], "target": "phase-1", "status": "blocked", "stability": "evolving", "ac_count": 8 },
+    { "id": "FR-SHELL-002", "title": "문서 단위 기능은 설정 모달이 아니라 문서 헤더 메뉴에 둔다", "from_clauses": ["R24-b"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "FR-SHELL-003", "title": "트리 컨텍스트 메뉴와 트리 상단 새 노트 버튼", "from_clauses": ["R88", "R88-a", "R88-b"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 6 },
+    { "id": "FR-SHELL-004", "title": "우측 사이드바 신설과 세 탭", "from_clauses": ["R89"], "target": "phase-1", "status": "planned", "stability": "evolving", "ac_count": 3 },
+    { "id": "DR-SHELL-001", "title": "런타임 변경 가능한 설정의 단일 저장소는 DB 다", "from_clauses": ["R96"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "FR-SHELL-005", "title": "상단 문서 탭", "from_clauses": ["R98"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "FR-SHELL-006", "title": "노드 ID 기반 문서 딥링크", "from_clauses": ["R99", "R99-a"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 5 },
+    { "id": "FR-SHELL-007", "title": "휴지통 카테고리의 표시 조건과 전 워크스페이스 통합 목록", "from_clauses": ["R100", "R100-a"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 6 },
+    { "id": "SEC-SHELL-001", "title": "휴지통 영구 삭제 버튼은 권한이 없으면 표시하지 않는다", "from_clauses": ["R100-b"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 3 },
+    { "id": "SEC-SHELL-002", "title": "이름 충돌 처리는 가시 여부와 무관하게 하나로 통일한다", "from_clauses": ["R102"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "FR-SHELL-008", "title": "덮어쓰기의 유일한 경로는 파일 노드 전용 새 버전 올리기다", "from_clauses": ["R102-a", "R102-b"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 5 },
+    { "id": "SEC-SHELL-003", "title": "디렉토리 복사는 요청자에게 보이는 노드만 복사한다", "from_clauses": ["R105", "R105-a", "R105-b"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "FR-SHELL-009", "title": "태그 탭은 전 워크스페이스 태그를 출현 문서 수로 집계한다", "from_clauses": ["R106", "R106-c"], "target": "phase-1", "status": "planned", "stability": "evolving", "ac_count": 6, "priority": "high", "verification_method": "Playwright E2E" },
+    { "id": "FR-SHELL-010", "title": "태그 클릭은 좌측 검색 탭을 활성하고 질의를 채운다", "from_clauses": ["R106-a"], "target": "phase-1", "status": "planned", "stability": "evolving", "ac_count": 3 },
+    { "id": "FR-SHELL-011", "title": "태그 목록의 정렬은 빈도순 기본에 이름순 선택이다", "from_clauses": ["R106-d"], "target": "phase-1", "status": "planned", "stability": "draft", "ac_count": 2 },
+    { "id": "FR-SHELL-012", "title": "트리 클릭은 활성 탭을 교체하고 Ctrl+클릭은 새 탭이다", "from_clauses": ["R107", "R107-a"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "IR-SHELL-003", "title": "문서 탭 스트립과 문서 헤더는 2단으로 분리한다", "from_clauses": ["R108"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 }
+  ],
+  "clause_coverage": {
+    "assigned": ["R3", "R3-a", "R23", "R24", "R24-a", "R24-b", "R88", "R88-a", "R88-b", "R89", "R96", "R98", "R99", "R99-a", "R100", "R100-a", "R100-b", "R102", "R102-a", "R102-b", "R105", "R105-a", "R105-b", "R106", "R106-a", "R106-c", "R106-d", "R107", "R107-a", "R108"],
+    "covered": ["R3", "R3-a", "R23", "R24", "R24-a", "R24-b", "R88", "R88-a", "R88-b", "R89", "R96", "R98", "R99", "R99-a", "R100", "R100-a", "R100-b", "R102", "R102-a", "R102-b", "R105", "R105-a", "R105-b", "R106", "R106-a", "R106-c", "R106-d", "R107", "R107-a", "R108"],
+    "uncovered": [],
+    "uncovered_reason": {}
+  },
+  "split_decisions": [
+    { "clause": "R100 계열", "split_into": 2, "trigger": "§29.1-① 행위자·성격이 다르다 — R100·R100-a 는 표면 구성(functional)이고 R100-b 는 권한 기반 미표시(security) 라 한 블록에 담을 수 없다", "result": ["FR-SHELL-007", "SEC-SHELL-001"] },
+    { "clause": "R102 계열", "split_into": 2, "trigger": "§2.3 Single Requirement Principle — R102 는 이름 충돌 처리 규칙(오라클 제거, security)이고 R102-a·R102-b 는 덮어쓰기 경로와 그 진입점(functional) 이라 규범이 둘이다", "result": ["SEC-SHELL-002", "FR-SHELL-008"] },
+    { "clause": "R106 계열", "split_into": 3, "trigger": "§29.1-③ 검증 방법이 다르다(집계는 Playwright E2E, 클릭 동선은 test) + §29.1-⑦ 성숙도가 다르다(R106-d 는 문면에 〔판단 — 원장 근거 없음〕 마커가 붙어 draft)", "result": ["FR-SHELL-009", "FR-SHELL-010", "FR-SHELL-011"] },
+    { "clause": "R23 · R24", "split_into": 2, "trigger": "§2.3 Single Requirement Principle — R23 은 모달 구조(interface), R24 는 단일 진입점 제약(constraint) 으로 규범이 둘이다", "result": ["IR-SHELL-001", "CON-SHELL-001"] }
+  ],
+  "absorbed_as_ac": [
+    { "parent": "R3", "children": ["R3-a"] },
+    { "parent": "R88", "children": ["R88-a", "R88-b"] },
+    { "parent": "R99", "children": ["R99-a"] },
+    { "parent": "R100", "children": ["R100-a"] },
+    { "parent": "R102-a", "children": ["R102-b"] },
+    { "parent": "R105", "children": ["R105-a", "R105-b"] },
+    { "parent": "R106", "children": ["R106-c"] },
+    { "parent": "R107", "children": ["R107-a"] }
+  ],
+  "non_normative_demoted": [
+    { "clause": "R3", "field": "implementationNotes", "why": "비고의 \"완전히 동일에서 표현을 정정\"과 트리 내용이 R47·R41 로 옵시디언과 다르다는 서술은 함정 경고이지 규범이 아니다" },
+    { "clause": "R23", "field": "implementationNotes", "why": "R143 예외(인증 전 화면은 전체 화면)와 R31 모바일 Phase 2 이관은 이 요구의 적용 범위 한정이며 그 규범은 AUTH scope 소유다" },
+    { "clause": "R24", "field": "implementationNotes", "why": "R143·R143-a 의 인증 경계 분할은 적용 범위 한정이며 AUTH scope 소유다" },
+    { "clause": "R24-a", "field": "implementationNotes", "why": "G8·G10 미결로 비어 있는 항목(에디터·외모 개별 항목 / 계정 카테고리의 표시 이름 자리)은 AC 로 쓸 수 없다" },
+    { "clause": "R24-b", "field": "implementationNotes", "why": "현재 목록(공유·버전 기록·댓글 허용 여부)은 생성적 규칙의 상태이지 규범이 아니므로 \"2개로 한정\"을 AC 로 쓰지 않았다" },
+    { "clause": "R89", "field": "implementationNotes", "why": "R80-c 아웃고잉 예외와 Phase 2 아웃라인·프로퍼티 탭은 각각 다른 scope 소유이거나 범위 밖이다" },
+    { "clause": "R98", "field": "implementationNotes", "why": "Phase 2 분할 창에서 탭이 창별로 귀속되도록 설계하라는 것은 Phase 1 검증 대상이 아닌 설계 주의사항이다" },
+    { "clause": "R99", "field": "implementationNotes", "why": "R94 404 통일 · R76-b 추측 불가 ID · R103-a 요청 버튼 금지는 전부 다른 scope 소유의 규범이다" },
+    { "clause": "R106-d", "field": "implementationNotes", "why": "〔판단 — 원장 근거 없음〕 마커 자체를 요구 본문이 아니라 성숙도(draft)와 착수 전 판정 지시로 옮겼다" },
+    { "clause": "R108", "field": "implementationNotes", "why": "2단이 메인 영역 한정이라는 사실과 G30(분할 pane 최소 폭)은 Phase 1 검증 대상 밖의 적용 범위·미결이다" }
+  ],
+  "blocked_by_gaps": [
+    { "req_id": "IR-SHELL-002", "gap": "G8" },
+    { "req_id": "IR-SHELL-002", "gap": "G10" }
+  ],
+  "gap_traced_not_blocked": [
+    { "req_id": "FR-SHELL-004", "gap": "G14-a", "stability": "evolving", "why": "우측 사이드바의 갱신 축이 둘로 갈렸으나 탭 존부·필터 적용은 갱신 시점 규정 없이도 구현·검증 가능하다" },
+    { "req_id": "FR-SHELL-009", "gap": "G31", "stability": "evolving", "why": "본문 #태그 렌더·클릭 규정이 없으나 태그 탭의 집계 규범 자체는 그 판정과 독립으로 성립한다" },
+    { "req_id": "FR-SHELL-009", "gap": "G14-a", "stability": "evolving", "why": "전역 색인인 태그 탭의 갱신 계기가 같은 사이드바 다른 두 탭과 다르다" },
+    { "req_id": "FR-SHELL-010", "gap": "G31", "stability": "evolving", "why": "태그 클릭 진입점이 우측 패널 하나로 줄어드는 것이 그 공백의 증상이나 이 동선 자체는 검증 가능하다" }
+  ],
+  "validate_spec": { "errors": 0, "warnings": 2, "byCode": { "SRS-W072": 1, "SRS-W023": 1 } },
+  "notes_for_reviewer": [
+    "FR-SHELL-009(태그 집계)에만 priority=high · verificationMethod=Playwright E2E 를 부여했다. §4 수용 기준 3 이 조항 ID 로 R106 을 직접 쓰지는 않지만, 표면 목록을 R80 에 위임하고 R80 열거가 \"태그 목록과 그 집계(R106)\"를 명시하며, 기준 문면의 \"집계형 표면은 목록 미노출과 수치 미가산을 각각 단언한다\"가 이 요구의 AC-3·AC-4 를 정확히 겨냥한다. R80 열거 중 집계형 표면은 이것 하나다. 판단이 갈릴 수 있는 자리라 근거를 implementationNotes ④ 에도 남겼다.",
+    "FR-SHELL-004(우측 사이드바)에는 priority 를 부여하지 않았다. §4 기준 3 이 \"백링크 패널\"을 언급하지만 그 기준이 단언하는 것은 필터 정확성(R80 소유)이지 우측 사이드바의 존부·3탭 구성이 아니다. 반대 해석도 가능한 자리다.",
+    "열린 공백에 걸린 요구 중 IR-SHELL-002 만 blocked 로 두고 나머지 넷(G31·G14-a)은 planned + evolving + trace 로 처리했다. 기준은 \"그 공백이 닫히기 전에 이 요구를 완결할 수 없는가\"다 — R24-a 는 조항 스스로 \"표시 이름 자리를 비워 둔다\"고 적어 미완결이 확정이지만, 태그 집계와 우측 사이드바는 공백과 무관하게 구현·검증이 성립한다.",
+    "SRS-W023(FR-SHELL-011 은 구현 계약으로 준비되지 않았다) 경고 1건이 새로 생겼다. 이는 결함이 아니라 브리프 지시(R106-d 를 draft 로 내려라)의 직접 귀결이다. 기존 SRS-W072 와 합쳐 warnings 2, errors 0.",
+    "R102-a 비고의 \"md 는 버전 생성, 바이너리는 복구 불가 경고\"와 R102-b 비고의 \"필요 권한은 대상 파일 편집\"을 AC 로 올렸다. 비고 칸에 있지만 근거 서술이 아니라 규범이기 때문이다(FR-SHELL-008 AC-3·4·5).",
+    "priority·risk 를 생략해도 도구가 metadata 에 medium 을 기본값으로 채운다. 브리프의 \"나머지는 생략한다\"를 도구 수준에서 관철할 수 없었고, 다른 scope 문서도 같은 상태다. FR-SHELL-009 의 high 만 명시적으로 부여한 값이다.",
+    "R88-a 비고는 복사·새 버전 올리기가 \"초판 열거에서 누락되어 있었다\"고만 적고 개정 날짜를 주지 않는다. 날짜 없는 changeNotes 를 만들 수 없어 이 이력은 rationale 에 서술로 남겼다.",
+    "IR-SHELL-003(2단 분리)의 implementationNotes 에 \"2단은 메인 영역 한정이고 사이드바는 1단\"을 남겼다. 이 사실의 출처는 종결된 ~~R108-a~~ 이지만 새 논증의 근거가 아니라 적용 범위 한정이며, 빠뜨리면 사이드바를 2단으로 만드는 오구현이 나온다. 인용 금지 범위를 좁게 읽은 판단이므로 검토가 필요하면 지적하라.",
+    "R94(404 통일) · R85(휴지통 데이터 범위) · R74(영구 삭제 권한) · R143(인증 전 화면 예외) 는 전부 다른 scope 소유이므로 등재하지 않고 rationale·implementationNotes 에서만 참조했다. Code trace 는 하나도 달지 않았다.",
+    "~~R106-b~~ · ~~R108-a~~ 는 등재하지 않았고 새 논증의 근거로도 인용하지 않았다. R106 의 실측 사실(위치=우측 · 범위=전역 · 초기 정렬 frequency)은 R106 · R106-d 본문 자체가 담고 있는 내용이라 research 에 옮겼다."
+  ]
+}

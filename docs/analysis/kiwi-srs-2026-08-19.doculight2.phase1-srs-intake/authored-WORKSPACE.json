@@ -1,0 +1,68 @@
+{
+  "scope": "WORKSPACE",
+  "document": "docs/spec/13.workspace.srs.md",
+  "requirements": [
+    { "id": "FR-WORKSPACE-001", "title": "노드 계층에 워크스페이스를 둔다", "from_clauses": ["R35"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "CON-WORKSPACE-001", "title": "노드 계층을 4단계 밖으로 늘리지 않는다", "from_clauses": ["R38"], "type": "constraint", "target": "phase-1", "status": "planned", "stability": "stable", "verificationMethod": "review", "ac_count": 4 },
+    { "id": "SEC-WORKSPACE-001", "title": "워크스페이스는 상속 체인의 루트다", "from_clauses": ["R35-a"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "verificationMethod": "test", "ac_count": 5 },
+    { "id": "SEC-WORKSPACE-002", "title": "관리 레벨은 워크스페이스에만 부여한다", "from_clauses": ["R36"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "verificationMethod": "test", "ac_count": 5 },
+    { "id": "SEC-WORKSPACE-003", "title": "워크스페이스 관리자는 그 워크스페이스 전체의 ACL 을 관장한다", "from_clauses": ["R37"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "FR-WORKSPACE-002", "title": "링크·검색 인덱스는 워크스페이스 경계를 넘는다", "from_clauses": ["R39"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "high", "verificationMethod": "Playwright E2E", "ac_count": 6 },
+    { "id": "SEC-WORKSPACE-004", "title": "링크·검색 결과 표면은 표시 직전 요청자 권한으로 필터링한다", "from_clauses": ["R80", "R80-a", "R80-b"], "type": "security", "target": "phase-1", "status": "planned", "stability": "evolving", "priority": "high", "verificationMethod": "Playwright E2E", "ac_count": 12 },
+    { "id": "SEC-WORKSPACE-005", "title": "아웃고잉 링크 패널은 권한 필터의 예외다", "from_clauses": ["R80-c"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "verificationMethod": "Playwright E2E", "ac_count": 7 },
+    { "id": "SEC-WORKSPACE-006", "title": "권한 없는 문서를 가리키는 위키링크는 깨진 링크로 표시한다", "from_clauses": ["R42"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "verificationMethod": "test", "ac_count": 5 },
+    { "id": "FR-WORKSPACE-003", "title": "좌측 트리에 접근 가능한 워크스페이스를 나란히 표시한다", "from_clauses": ["R41"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "evolving", "verificationMethod": "test", "ac_count": 5 },
+    { "id": "DR-WORKSPACE-001", "title": "워크스페이스 물리 저장 레이아웃", "from_clauses": ["R40", "R40-a", "R40-c"], "type": "data", "target": "phase-1", "status": "planned", "stability": "stable", "verificationMethod": "test", "ac_count": 7 },
+    { "id": "DR-WORKSPACE-002", "title": "워크스페이스 사이드카 파일과 식별 권위", "from_clauses": ["R40-b", "R40-d"], "type": "data", "target": "phase-1", "status": "planned", "stability": "stable", "verificationMethod": "test", "ac_count": 7 },
+    { "id": "FR-WORKSPACE-004", "title": "노드 이름 검증 규칙", "from_clauses": ["R40-e"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "evolving", "verificationMethod": "test", "ac_count": 8 },
+    { "id": "FR-WORKSPACE-005", "title": "대소문자만 다른 동명은 이름 충돌로 처리한다", "from_clauses": ["R40-f"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "verificationMethod": "test", "ac_count": 6 },
+    { "id": "FR-WORKSPACE-006", "title": "최초 기동 시 기본 워크스페이스를 생성한다", "from_clauses": ["R56"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "verificationMethod": "test", "ac_count": 6 },
+    { "id": "FR-WORKSPACE-007", "title": "워크스페이스 제거 수단은 휴지통이 아니라 아카이브다", "from_clauses": ["R54"], "type": "functional", "target": "phase-2", "status": "planned", "stability": "draft", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "FR-WORKSPACE-008", "title": "워크스페이스 아카이브와 복원", "from_clauses": ["R55", "R55-a"], "type": "functional", "target": "phase-2", "status": "planned", "stability": "draft", "risk": "high", "verificationMethod": "test", "ac_count": 8 }
+  ],
+  "clause_coverage": {
+    "assigned": ["R35", "R35-a", "R36", "R37", "R38", "R39", "R40", "R40-a", "R40-b", "R40-c", "R40-d", "R40-e", "R40-f", "R41", "R42", "R56", "R80", "R80-a", "R80-b", "R80-c", "R54", "R55", "R55-a"],
+    "covered": ["R35", "R35-a", "R36", "R37", "R38", "R39", "R40", "R40-a", "R40-b", "R40-c", "R40-d", "R40-e", "R40-f", "R41", "R42", "R56", "R80", "R80-a", "R80-b", "R80-c", "R54", "R55", "R55-a"],
+    "uncovered": [],
+    "uncovered_reason": {}
+  },
+  "split_decisions": [
+    { "clause": "R35-a", "split_into": 1, "trigger": "§29.1-② 시스템 경계가 다르다 — 부모 R35 는 노드 계층 모델이고 R35-a 는 ACL 상속 체인·권한 화면·생성 절차다. AC 로 흡수하면 계층 요구사항 안에 권한 규범이 섞인다" },
+    { "clause": "R80-c", "split_into": 1, "trigger": "§29.1-⑤ AC 목록이 너무 길어진다 + 규칙 방향이 부모와 정반대다. R80 에 흡수하면 AC 가 19개가 되고, `필터한다`와 `필터하지 않는다`가 한 블록에 섞여 구현자가 어느 쪽이 기본인지 읽을 수 없다" },
+    { "clause": "R40 계열", "split_into": 4, "trigger": "§29.1-② 시스템 경계가 다르다 — 물리 레이아웃(R40·R40-a·R40-c) / 사이드카와 식별 권위·복구(R40-b·R40-d) / 입력 검증(R40-e) / 이름 충돌 처분(R40-f) 넷은 서로 다른 경계에 산다. 브리프 §3 의 `한 행에 다중 규범이면 쪼갠다` 도 함께 적용" }
+  ],
+  "absorbed_as_ac": [
+    { "parent": "R80", "children": ["R80-a", "R80-b"], "why": "둘 다 R80 필터의 범위를 규정하는 단서다 — R80-a 는 필터 결과의 표기 금지(개수 힌트), R80-b 는 필터가 걸리지 않는 자리(수동 입력). 같은 표면·같은 검증 방법이라 §29.1 의 어떤 분리 트리거에도 걸리지 않는다" },
+    { "parent": "R40", "children": ["R40-a", "R40-c"], "why": "셋이 하나의 저장 레이아웃 결정이다 — 해시는 워크스페이스 한 계층에만, 그 아래는 실명" },
+    { "parent": "R40-b", "children": ["R40-d"], "why": "사이드카의 존재(R40-b)와 그 권위(R40-d)는 한 책임이다. 나누면 `파일을 만든다`와 `그 파일을 어느 방향으로 신뢰한다`가 두 곳에 흩어져 한쪽만 고쳐질 수 있다" },
+    { "parent": "R55", "children": ["R55-a"], "why": "아카이브와 복원은 같은 행위자(슈퍼유저)·같은 상태 축(`archived` 플래그 + 디렉토리 위치)의 왕복이다" }
+  ],
+  "non_normative_demoted": [
+    { "clause": "R40-a", "field": "implementationNotes", "why": "`이름 검증 규칙이 별도로 필요하다(감사 M21)` 는 규범이 아니라 R40-e 를 낳은 사유다 — DR-WORKSPACE-001 의 구현 노트로 내렸다" },
+    { "clause": "R54", "field": "implementationNotes", "why": "R92 가 기록한 `Phase 1 에는 워크스페이스를 없애는 수단이 없다 — 인지된 제약으로 수용` 은 요구가 아니라 수용된 잔여 제약이다. FR-WORKSPACE-007·008 양쪽 구현 노트에 남겼다" },
+    { "clause": "R40-e", "field": "implementationNotes", "why": "금지 문자 집합·최대 이름 길이·경로 총길이 상한의 구체값이 원장에 없고 예약어 목록도 `등` 으로 열려 있다. 브리프 §5 대로 AC 로 쓰지 않고 미결로 남겼다" },
+    { "clause": "R80", "field": "implementationNotes", "why": "`집계 원천에 필터를 걸면 인스턴스 단위 캐시를 공유할 수 없다`(03 §4.3)는 인지된 비용이다" }
+  ],
+  "blocked_by_gaps": [],
+  "gap_traced_not_blocked": [
+    { "req_id": "SEC-WORKSPACE-004", "gap": "G14-a", "disposition": "status=planned · stability=evolving", "why": "핵심 규범(표시 직전 필터)은 완결이며 매 렌더에서 성립한다. 열린 것은 렌더가 언제 일어나는가이고 그 축은 이 조항이 소유하지 않는다 — 그래서 blocked 가 아니라 evolving 이다" },
+    { "req_id": "FR-WORKSPACE-003", "gap": "G14-a · G14-b", "disposition": "status=planned · stability=evolving", "why": "`나란히 표시한다`는 지금 구현·검증 가능하다. 갱신 시점과 권한 변경 도달 경로가 열려 있어 개정 여지가 크므로 evolving" },
+    { "req_id": "FR-WORKSPACE-004", "gap": "(공백 번호 없음 — 조항 문면 자체가 잠정)", "disposition": "status=planned · stability=evolving", "why": "R40-e 가 값 셋을 정하지 않고 예약어 목록을 `등` 으로 열어 두었다. 브리프 §4 의 `문면이 스스로 잠정이면 evolving` 에 해당" }
+  ],
+  "validate_spec": { "errors": 0, "warnings": 1, "warning_codes": ["SRS-W072"] },
+  "notes_for_reviewer": [
+    "R80 을 표면 목록의 정본으로 세우고 여섯 표면을 AC 로 전개했다(AC-1~5 · AC-11~12). 원장 §4 수용 기준 3 이 `표면 목록은 R80 을 정본으로 두고 여기 열거하지 않는다` 고 못박은 사실을 rationale 에 남겼다.",
+    "R80 열거 중 `그래프뷰 노드` 는 R17 로 Phase 2 라 Phase 1 에서 무발화다. 이 사실을 지우지 않고 AC-11 로 명시했다 — 수용 기준 3 이 `E2E 는 판정 시점의 R80 열거를 읽어 표면마다 단언을 만든다` 고 요구하므로, 제외를 기록하지 않으면 표면 하나가 조용히 빠진다.",
+    "R80-a 의 개수 힌트 금지에서 AC-8(`건수 표기는 필터를 통과한 항목만 센다`)을 파생시켰다. 원장 문면은 `비공개 N건` 형태의 힌트만 명시하지만, 총 건수가 필터 전 값이면 같은 오라클이 되살아난다 — R106 의 `집계 원천에 R80 을 적용한다` 와 같은 원리다. 파생이라는 점을 밝혀 둔다.",
+    "priority·risk 를 생략했으나 speckiwi 가 생략값을 `medium` 으로 채운다. 문서 상의 `medium` 은 저작자가 배정한 값이 아니라 도구 기본값이다 — 브리프 §4 의 `나머지는 생략한다` 를 지킨 결과이며, `high` 를 명시한 것은 FR-WORKSPACE-002·SEC-WORKSPACE-004(수용 기준 3 이 R39·R80 을 지목)와 FR-WORKSPACE-008 의 risk(§3.1 감사 매핑 C12→R55)뿐이다.",
+    "R56 에 priority 를 배정하지 않았다. §4 수용 기준 1 이 `기본 워크스페이스` 를 전제하지만 R56 을 ID 로 지목하지는 않는다 — 판단이 갈릴 수 있는 자리라 지어내지 않고 rationale 에 전제 관계만 적었다.",
+    "R35 와 R38 을 합치지 않고 둘로 두었다. 두 조항의 둘째 문장은 같은 4단계 구조를 말하지만 R38 의 고유 내용은 `볼트 계층을 두지 않는다` 는 기각 결정이고, 브리프 §3 의 기본 규칙(부모 조항 하나 = 요구사항 하나)을 따랐다. R38 은 refines 로 R35 에 묶었다.",
+    "R36·R37 도 같은 이유로 분리 유지했다 — 전자는 `관리` 를 부여할 수 있는 자리, 후자는 그 보유자의 권능이다.",
+    "R55-b 는 배정에 없어 등재하지 않았다. 다만 FR-WORKSPACE-008 을 Phase 2 로 미룬 것이 fail-closed 서빙까지 미루는 것으로 읽히면 감사 H13 이 되살아나므로, 그 조항이 Phase 1 이며 STORAGE scope 소유라는 사실을 구현 노트에 명시했다.",
+    "R42 의 AC 에 `권한 요청 버튼을 두지 않는다` 를 넣지 않았다. R103-a 가 이 자리를 직접 지목하지만 ACL scope 소유이므로 구현 노트의 지목으로만 남겼다.",
+    "R40-d 를 `type: data` 로 두라는 브리프 제안을 따랐고, R40-b 와 한 요구사항으로 묶었다(DR-WORKSPACE-002). 사이드카의 존재와 그 권위를 나누면 §10.2 의 `같은 책임을 두 곳이 나눠 갖지 않는다` 를 어긴다.",
+    "블록 제목에서 백틱을 뺐다 — speckiwi 가 SRS-E020(heading contains forbidden Markdown)으로 거부한다. 본문·AC 안의 백틱은 그대로다.",
+    "changeNotes 는 speckiwi 가 `date|change|reason` 3-셀 문자열만 받는다. SEC-WORKSPACE-004(2026-08-18 수용 기준 3 개정)와 FR-WORKSPACE-008(2026-08-12 `DB 에서 분리` 오기 정정, 감사 C12 파생) 두 건에 기록했다.",
+    "R39 에 G34 트레이스를 달지 않았다. `.task` 색인 대상 미정은 Phase 2 사안이고 R92 가 `Phase 2 항목에 딸린 공백은 Phase 1 착수를 막지 않는다` 고 정했으므로, 공백으로 트레이스하는 대신 구현 노트에 남기고 stability 는 stable 로 두었다."
+  ]
+}

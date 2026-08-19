@@ -1,0 +1,111 @@
+{
+  "scope": "ACL",
+  "document": "docs/spec/10.access-control.srs.md",
+  "requirements": [
+    { "id": "SEC-ACL-001", "title": "ACL 대상은 문서와 디렉토리 둘 다이다", "from_clauses": ["R9"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 3 },
+    { "id": "DR-ACL-001", "title": "노드마다 지정할 수 있는 부여는 네 종류다", "from_clauses": ["R10"], "type": "data", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 4 },
+    { "id": "SEC-ACL-002", "title": "편집 권한은 보기 권한을 포함한다", "from_clauses": ["R11"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 4 },
+    { "id": "IR-ACL-003", "title": "권한 지정은 사용자와 그룹을 각각 검색해 추가하는 방식이다", "from_clauses": ["R12"], "type": "interface", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 5 },
+    { "id": "SEC-ACL-003", "title": "권한은 상속과 가산으로만 넓히고 좁히기는 상속 끊기뿐이다", "from_clauses": ["R14", "R14-a"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "high", "risk": "medium", "ac_count": 7 },
+    { "id": "CON-ACL-001", "title": "유효 권한을 비정규화하지 않고 요청마다 계산한다", "from_clauses": ["R14-b"], "type": "constraint", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 5 },
+    { "id": "CON-ACL-002", "title": "거부 규칙을 두지 않고 허용 목록의 합집합만으로 판정한다", "from_clauses": ["R14-c"], "type": "constraint", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 4 },
+    { "id": "CON-ACL-003", "title": "부여에 적용 범위 선택지를 두지 않는다", "from_clauses": ["R128", "R128-a", "R128-b"], "type": "constraint", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 4 },
+    { "id": "SEC-ACL-004", "title": "권한이 없는 문서와 디렉토리는 트리에서 완전히 숨긴다", "from_clauses": ["R25"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "high", "risk": "high", "ac_count": 5 },
+    { "id": "SEC-ACL-005", "title": "접근 가능한 자손을 가진 조상 디렉토리는 이름만 표시한다", "from_clauses": ["R69", "R69-a", "R69-b", "R69-d"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "high", "ac_count": 5 },
+    { "id": "CON-ACL-004", "title": "pass-through 여부를 저장하지 않고 매 요청 계산한다", "from_clauses": ["R69-c"], "type": "constraint", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 4 },
+    { "id": "SEC-ACL-006", "title": "권한 없는 노드의 응답을 존재하지 않는 노드와 구별 불가능하게 한다", "from_clauses": ["R94"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "high", "ac_count": 6 },
+    { "id": "SEC-ACL-007", "title": "보이지 않는 동명 노드와의 충돌은 자동 리네임으로 처리한다", "from_clauses": ["R95"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 5 },
+    { "id": "SEC-ACL-008", "title": "슈퍼유저와 워크스페이스 관리 레벨은 ACL 판정을 우회한다", "from_clauses": ["R71", "R71-a", "R71-c", "R71-d"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "high", "ac_count": 5 },
+    { "id": "OBS-ACL-001", "title": "관리 권한에 의한 열람을 감사 로그에 남긴다", "from_clauses": ["R71-b"], "type": "observability", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 4 },
+    { "id": "SEC-ACL-009", "title": "넓히기와 좁히기의 필요 레벨을 다르게 둔다", "from_clauses": ["R70", "R70-a", "R70-b", "R70-c", "R70-d"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "high", "ac_count": 6 },
+    { "id": "SEC-ACL-010", "title": "편집자가 부여한 편집 권한은 다시 부여될 수 있다", "from_clauses": ["R70-e"], "type": "security", "target": "phase-1", "status": "planned", "stability": "evolving", "priority": "medium", "risk": "medium", "ac_count": 4 },
+    { "id": "SEC-ACL-011", "title": "노드 생성자에게 자동으로 편집 권한을 부여한다", "from_clauses": ["R28", "R132"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 5 },
+    { "id": "SEC-ACL-012", "title": "파일 조작별 필요 권한을 조작 단위로 확정한다", "from_clauses": ["R74"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "high", "ac_count": 7 },
+    { "id": "SEC-ACL-013", "title": "숨은 하위가 있는 디렉토리의 이동과 삭제는 관리 레벨을 요구한다", "from_clauses": ["R74-a"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 5 },
+    { "id": "SEC-ACL-014", "title": "워크스페이스 경계를 넘는 이동은 차단하고 복사만 허용한다", "from_clauses": ["R97", "R97-b"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 5 },
+    { "id": "FR-ACL-001", "title": "복사본의 ACL 과 첨부와 링크 처리 규칙", "from_clauses": ["R97-a", "R97-c"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 7 },
+    { "id": "IR-ACL-001", "title": "접근자 지표를 접근 가능과 ACL 접근자 둘로 분리한다", "from_clauses": ["R121", "R121-a", "R121-b"], "type": "interface", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 7 },
+    { "id": "SEC-ACL-015", "title": "접근자 명단은 관리 전용이고 수치는 편집까지 허용한다", "from_clauses": ["R118"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 6 },
+    { "id": "FR-ACL-002", "title": "복사 프리뷰의 접근자 수치는 목적지 기준으로 판정한다", "from_clauses": ["R120"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 5 },
+    { "id": "FR-ACL-003", "title": "주체 단위 ACL 일괄 회수를 제공한다", "from_clauses": ["R43", "R43-1"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "high", "risk": "medium", "ac_count": 5 },
+    { "id": "FR-ACL-004", "title": "특정 사용자 관점의 유효 권한 시뮬레이션 화면을 제공한다", "from_clauses": ["R43", "R43-2"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "high", "risk": "medium", "ac_count": 6 },
+    { "id": "FR-ACL-005", "title": "상속 끊김 노드 감사 목록과 상속으로 되돌리기를 제공한다", "from_clauses": ["R43", "R43-3"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "high", "risk": "medium", "ac_count": 7 },
+    { "id": "IR-ACL-002", "title": "공유 모달에 상속 항목을 출처 경로와 함께 읽기 전용으로 표시한다", "from_clauses": ["R43", "R43-4"], "type": "interface", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "high", "risk": "medium", "ac_count": 5 },
+    { "id": "FR-ACL-006", "title": "이동 전에 접근 가능 인원의 변화를 프리뷰로 보여준다", "from_clauses": ["R43", "R43-5"], "type": "functional", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "high", "risk": "medium", "ac_count": 6 },
+    { "id": "SEC-ACL-016", "title": "존재가 구별되지 않는 표면에는 권한 요청 버튼을 두지 않는다", "from_clauses": ["R103-a"], "type": "security", "target": "phase-1", "status": "planned", "stability": "stable", "priority": "medium", "risk": "medium", "ac_count": 5 },
+    { "id": "CON-ACL-005", "title": "권한 요청 워크플로는 Phase 2 로 미룬다", "from_clauses": ["R103"], "type": "constraint", "target": "phase-2", "status": "planned", "stability": "draft", "priority": "medium", "risk": "medium", "ac_count": 4 }
+  ],
+
+  "clause_coverage": {
+    "assigned": ["R9", "R10", "R11", "R12", "R14", "R14-a", "R14-b", "R14-c", "R25", "R28", "R43", "R43-1", "R43-2", "R43-3", "R43-4", "R43-5", "R69", "R69-a", "R69-b", "R69-c", "R69-d", "R70", "R70-a", "R70-b", "R70-c", "R70-d", "R70-e", "R71", "R71-a", "R71-b", "R71-c", "R71-d", "R74", "R74-a", "R94", "R95", "R97", "R97-a", "R97-b", "R97-c", "R103", "R103-a", "R118", "R120", "R121", "R121-a", "R121-b", "R128", "R128-a", "R128-b", "R132"],
+    "covered": ["R9", "R10", "R11", "R12", "R14", "R14-a", "R14-b", "R14-c", "R25", "R28", "R43", "R43-1", "R43-2", "R43-3", "R43-4", "R43-5", "R69", "R69-a", "R69-b", "R69-c", "R69-d", "R70", "R70-a", "R70-b", "R70-c", "R70-d", "R70-e", "R71", "R71-a", "R71-b", "R71-c", "R71-d", "R74", "R74-a", "R94", "R95", "R97", "R97-a", "R97-b", "R97-c", "R103", "R103-a", "R118", "R120", "R121", "R121-a", "R121-b", "R128", "R128-a", "R128-b", "R132"],
+    "uncovered": [],
+    "uncovered_reason": {},
+    "note": "R43 은 요구사항으로 세우지 않았다(순수 컨테이너). 대신 다섯 자식 요구 전부에 `#R43` Doc trace 를 걸어 그 조항이 어디로 갔는지 추적할 수 있게 했다. 폐기 조항 ~~R27~~ 은 배정 목록에 없고 등재하지도 인용하지도 않았다."
+  },
+
+  "split_decisions": [
+    { "clause": "R43", "split_into": 5, "trigger": "브리프 §3 예외(부모가 순수 컨테이너) — 문면이 \"부속 기능 5종을 모두 요건으로 확정한다 (아래)\" 뿐이고 실질이 R43-1~R43-5 에 있다. 다섯은 각각 다른 화면·다른 행위자다(일괄 회수 / 관리 전용 시뮬레이션 / 상속 끊김 감사 목록 / 공유 모달 상속 항목 / 이동 프리뷰)" },
+    { "clause": "R14 계열", "split_into": 3, "trigger": "§29.1-④ 기능 동작과 성능·구현 기준이 섞였다 — R14 본체(상속+가산, R14-a 를 AC 로 흡수)는 E2E 로 시험되는 기능 계약이고, R14-b(비정규화 금지·요청당 2쿼리·O(N))는 구현 방식과 비용 구조 제약이며, R14-c(거부 규칙 부재)는 판정 모델의 불변식이다. R14-c 에는 §29.1-② 도 걸린다 — 계정 정지를 주체 레벨 게이트로 밀어내는 경계 규정을 포함한다" },
+    { "clause": "R69 계열", "split_into": 2, "trigger": "§29.1-④ — R69-c(pass-through 여부를 저장하지 않는다)는 R14-b 와 같은 축의 구현 제약이라 같은 기준으로 분리했다. R14-b 를 분리하고 R69-c 를 AC 로 남기면 같은 원칙이 두 입도로 표현된다" },
+    { "clause": "R70 계열", "split_into": 2, "trigger": "§29.1-⑦ 일부는 확정이고 일부는 열린 공백에 걸린다 — R70-a~d 는 필요 레벨 표 하나로 묶이지만 R70-e(편집자 전파 허용)는 G15·G16 이 둘 다 지목하는 자리라 stability 가 갈린다(evolving). 한 요구에 두 stability 를 둘 수 없다" },
+    { "clause": "R71 계열", "split_into": 2, "trigger": "§29.1-③ 검증 방법이 다르다 — R71-b(관리 열람의 감사 기록)는 감사 로그 조회로 판정하고 type 도 observability 다. 나머지(R71·R71-a·R71-c·R71-d)는 권한 판정 시험이다" },
+    { "clause": "R74 계열", "split_into": 2, "trigger": "§29.1-③ — R74-a 의 조건은 하위 노드의 가시성이라 시험 시나리오가 표 전체와 다르고(숨은 노드를 심어야 한다), 규범의 성격도 fail-closed 가드다" },
+    { "clause": "R97 계열", "split_into": 2, "trigger": "§29.1-②③ — 게이트(경계 이동 차단·복사 허용·필요 권한 R97-b)는 거부 판정으로 검증하고, 복사 결과 규칙(R97-a·R97-c: 새 노드 ID·목적지 상속·첨부 복제·링크 재작성 범위)은 결과물 검사로 검증한다. 후자를 게이트에 흡수하면 AC 12개짜리 혼합 요구가 된다(§29.1-⑤)" },
+    { "clause": "R103 / R103-a", "split_into": 2, "trigger": "§29.1-⑥ 다른 target 에 들어가야 한다 — R103 은 phase-2(stability draft)이고 R103-a 는 \"Phase 2 에서도 요청 버튼을 두지 않는다\"를 Phase 1 에서 확정해 두는 제약이라 phase-1 이다" },
+    { "clause": "R121 계열", "split_into": 1, "trigger": "§29.1 미해당 — R121-a(용도)와 R121-b(고립 노드 문구)는 두 지표 정의와 같은 계약의 일부이고 같은 화면군·같은 검증 방법이라 AC 로 흡수했다(AC 7개)" },
+    { "clause": "R128 계열", "split_into": 1, "trigger": "§29.1 미해당 — R128-a 는 타 제품 비교(비규범)라 rationale 로, R128-b 는 대안 세 경로 안내라 AC-4 + rationale 로 흡수했다" }
+  ],
+
+  "absorbed_as_ac": [
+    { "parent": "R14", "children": ["R14-a"] },
+    { "parent": "R69", "children": ["R69-a", "R69-b"] },
+    { "parent": "R70", "children": ["R70-a", "R70-b", "R70-c", "R70-d"] },
+    { "parent": "R71", "children": ["R71-a"] },
+    { "parent": "R97", "children": ["R97-b"] },
+    { "parent": "R121", "children": ["R121-a", "R121-b"] },
+    { "parent": "R128", "children": ["R128-b(수요 흡수 세 경로 · 금지어 규칙)"] },
+    { "parent": "R28", "children": ["R132(문언을 노드 생성자로 넓힌 개정 — AC-2 와 changeNotes 로)"] }
+  ],
+
+  "non_normative_demoted": [
+    { "clause": "R69-d", "field": "implementationNotes", "why": "pass-through 가 디렉토리 이름을 노출한다는 것은 인지된 잔여 노출이고, 별도 워크스페이스 분리는 제품 밖의 운영 처방이다. 시험 가능한 명제가 아니라 구현자가 알아야 할 한계다" },
+    { "clause": "R71-c", "field": "rationale + depends_on", "why": "\"R71 이 있어야 R43-2·R43-3 이 동작 근거를 갖는다\"는 규범이 아니라 의존 관계의 서술이다. 상방 게이트 요구의 rationale 에 담고, 브리프 지시대로 FR-ACL-004·FR-ACL-005 에 SEC-ACL-008 depends_on 을 걸어 관계 자체를 그래프로 남겼다" },
+    { "clause": "R71-d", "field": "implementationNotes", "why": "R69-d 와 같은 형태의 운영 처방이다. 제품이 워크스페이스 안에서 관리자로부터 문서를 숨길 수단을 제공하지 않는다는 사실을 함께 적었다" },
+    { "clause": "R128-a", "field": "rationale", "why": "Windows ACL · SharePoint · 구글 드라이브 대비는 타 제품 비교이고 기각된 대안의 사유다. 세 제품을 이미 비교해 하나를 골랐으므로 다시 열 사안이 아니라는 판정까지 담았다" },
+    { "clause": "R14-b(비용 근거)", "field": "rationale", "why": "수백만 행·캐시 무효화 소멸·A/B/C/D 동일 비용은 결정의 근거이지 시험할 명제가 아니다. 원장이 명시한 값(요청당 2쿼리 · O(N) · 지연 로딩 전제)만 AC 로 올렸다" },
+    { "clause": "R74-a(거부의 오라클 성질)", "field": "implementationNotes", "why": "이 거부가 1비트를 알린다는 것은 원장이 파괴성을 이유로 수용한 인지된 노출이다. 같은 논리를 부여에 적용하지 않았다는 판정(R127-b)도 함께 적어 구현자가 부여에서 같은 가드를 만들지 않게 했다" },
+    { "clause": "R25(화면 갱신 시점)", "field": "implementationNotes", "why": "권한 변경이 화면에 도달하는 경로가 G14·G14-b 로 미결이라 완전 숨김의 취지가 갱신 지연만큼 늦게 적용된다. 원장이 값을 정하지 않은 축이므로 AC 로 쓰지 않고 미결로 남겼다(브리프 §5)" },
+    { "clause": "R94(응답 시간 임계)", "field": "implementationNotes", "why": "원장은 \"응답 시간도 동일하게 한다\"만 말하고 허용 편차를 정하지 않았다. 임계값을 지어내지 않고 AC-4 를 구조(단일 코드 경로)로만 결정 가능하게 썼다" }
+  ],
+
+  "blocked_by_gaps": [
+    { "req_id": "SEC-ACL-010", "gap": "G15", "status": "planned", "stability": "evolving", "note": "전파 허용 자체는 확정이고, 비어 있는 것은 그 통제를 실행할 화면(넓히기를 모아 보는 목록)이다. Phase 2 이관 가능" },
+    { "req_id": "SEC-ACL-010", "gap": "G16", "status": "planned", "stability": "evolving", "note": "편집 사용자에게 사후 관측 화면이 하나도 없다. 이 조항이 통제 수단으로 지목한 감사 로그가 시계열 뷰어뿐이다" },
+    { "req_id": "SEC-ACL-015", "gap": "G16", "status": "planned", "stability": "stable", "note": "이 요구가 G16 을 만드는 쪽이지 막히는 쪽이 아니다 — 명단을 관리 전용으로 두는 결정 자체는 확정이다. trace 만 걸고 stability 는 stable" },
+    { "req_id": "SEC-ACL-004", "gap": "G14-b", "status": "planned", "stability": "stable", "note": "완전 숨김의 규범은 확정이고 미결인 것은 그 결과가 화면에 도달하는 시점이다. gap_coupling.json 의 reverse 판정에도 R25 가 자기 차단을 선언한 적이 없다" },
+    { "req_id": "OBS-ACL-001", "gap": "G27", "status": "planned", "stability": "stable", "note": "기록 대상과 기록 여부는 확정이고, 그 기록의 조회 가능 기간(감사 보존 기간 기본값)이 미결이다. 보존은 감사 로그 scope 소유" },
+    { "req_id": "CON-ACL-005", "gap": "G23", "status": "planned", "stability": "draft", "note": "이 유예가 G23 을 만든다 — 관리자 없음 배지가 가리키는 슈퍼유저 큐가 Phase 1 에 존재하지 않는다. Phase 2 라 stability draft" }
+  ],
+
+  "validate_spec": {
+    "errors": 0,
+    "warnings": 2,
+    "byCode": { "SRS-W072": 1, "SRS-W023": 1 },
+    "note": "SRS-W072 는 브리프가 지정한 기존 경고다. SRS-W023 은 FR-SHELL-011(SHELL scope)에 대한 것이며 ACL 등재와 무관하다. CON-ACL-005 도 draft 이지만 phase-2 라 활성 target 진단에 걸리지 않는다. 10.access-control.srs.md 에서 발생한 진단은 0건"
+  },
+
+  "notes_for_reviewer": [
+    "risk 축이 브리프 §4 표와 어긋난 자리가 둘 있다. 브리프는 \"원장 §3.1 감사 매핑이 CRITICAL 로 등급 매긴 조항만 high\" 라고 하는데, R25 는 Q3 에서 나와 감사 매핑에 아예 없고 R94 는 M5(MEDIUM) 다. 그럼에도 scope 지시가 둘을 이 제품의 보안 축으로 지목해 risk=high 를 명시했으므로 그대로 따랐다(SEC-ACL-004·SEC-ACL-006). §3.1 을 엄격히 적용하면 둘 다 medium 으로 내려간다. CRITICAL 매핑으로 high 를 받은 것은 R69(C1) · R71(C4) · R74(C7) · R70(C14) 넷이다",
+    "priority=high 는 §4 수용 기준 4 가 직접 지목한 R14 · R25 · R43(부속 5종)에만 붙였다 — SEC-ACL-003 · SEC-ACL-004 · FR-ACL-003~006 · IR-ACL-002 일곱 건이고 이들의 verificationMethod 는 Playwright E2E 다. 갈릴 수 있는 자리 셋: ① R14 에서 갈라진 CON-ACL-001·CON-ACL-002 는 medium 으로 두었다(기준 4 의 문면이 \"R14(상속+가산)\" 이라 본체를 지목한다고 읽었다) ② R69 는 R25 의 예외인데 기준 4 가 R25 만 지목해 medium 으로 두었다 ③ 기준 9 는 R59(다른 scope)와 R58 을 지목하고 R43-1 을 지목하지 않아, 회수 즉시성 축은 FR-ACL-003 의 AC-5 로만 반영했다. 나머지 medium 은 전부 도구 기본값이며 그 사실을 각 요구의 implementationNotes 에 남겼다",
+    "R28 과 R132 를 한 요구로 합쳤다(SEC-ACL-011). R132 는 독립 규범이 아니라 R28 문언의 적용 범위를 넓히는 개정이라 따로 세우면 \"R28 은 디렉토리에도 적용된다\" 하나뿐인 요구가 된다. 대신 changeNotes 에 2026-08-14 개정 사실과 사유를 남기고 Doc trace 를 둘 다 걸었다. 쪼개기를 원하면 R132 를 refines 관계의 별도 요구로 떼면 된다",
+    "R43 부모를 요구사항으로 세우지 않았으므로 다섯 자식 각각에 `#R43` 과 `#R43-N` 두 개의 Doc trace 를 걸었다. R43 이 다섯 곳으로 갔다는 사실을 추적 가능하게 하려는 것이고, 중복으로 보이면 자식 trace 만 남겨도 매핑은 유지된다",
+    "R70-e 의 status 를 blocked 가 아니라 planned + evolving 으로 두었다. 브리프 §4 는 \"열린 공백에 걸리면 blocked\" 라 하지만, gap_coupling.json 의 reverse 측정이 G15·G16 에 대해 자기 차단을 선언한 조항은 R135 하나뿐이고(그것도 배정 밖) R70-e 는 아니다. 전파 허용이라는 규범 자체는 실행 가능하고 비어 있는 것은 관측 화면이다. scope 지시도 stability 만 지정했다",
+    "SEC-ACL-013(R74-a)의 AC-4(거부 안내가 숨은 노드의 개수·이름·경로를 드러내지 않는다)는 R74-a 문면에 없고 R25 에서 도출했다. 거부의 발생 자체는 이미 1비트를 알리므로 그것까지 막지는 못하며, 그 사실을 implementationNotes 에 인지된 노출로 명시했다. 이 AC 가 원장 근거를 넘는다고 보면 삭제해도 R74-a 의 규범은 온전하다",
+    "DR-ACL-001 의 AC-4(노드 ACL 에 관리 레벨 항목을 두지 않는다)도 R10 문면이 아니라 R36(관리는 워크스페이스 단위)에서 나온다. R10 의 네 종류 열거가 닫혀 있다는 사실과 결합해야 의미가 서므로 넣었고 출처를 implementationNotes 에 적었다. R36 은 배정 밖 조항이다",
+    "확인 등급(L1/L2/L3)은 CONFIRM scope 소유라 어디서도 재정의하지 않았다. 등급이 걸리는 자리(부여·회수·복사·이동·상속 끊기·일괄 회수)마다 implementationNotes 에서 소유처만 가리켰고 AC 로 쓰지 않았다. 마찬가지로 주체 검색 규칙(최소 2자·상한 20건·PrincipalPicker)은 PRINCIPAL scope, 감사 로그 스키마·보존은 AUDIT scope, 첨부 저장 구조는 ATTACH scope 로 넘겼다",
+    "SEC-ACL-006(R94)의 타이밍 축은 AC-4 로 넣되 정량 임계는 쓰지 않았다 — 원장에 ms 값이 없어 지어내면 §5 위반이다. 대신 \"권한 판정 결과에 따라 조기 반환하거나 추가 조회를 수행하는 분기가 없다\"는 구조 명제로 결정 가능하게 만들었다. 통계적 타이밍 시험이 필요하다고 보면 그 임계는 새 결정이므로 원장에 먼저 올려야 한다",
+    "조항 문면과 브리프가 어긋난 자리는 위 첫 항목(risk 축) 외에 발견하지 못했다",
+    "저작 중 도구 관련 사고 셋. ① acceptanceCriteria 문자열에 \"AC-1:\" 접두사를 넣으면 도구가 다시 붙여 이중 접두사가 된다(SEC-ACL-001 에서 발생, replace_acceptance_criteria 로 교정). ② 유니코드 이스케이프로 한글을 넘기다 \"끊\"(U+B04A)을 \"끕\"(U+B055)으로 잘못 쓴 곳이 둘 있었고 각각 replace_acceptance_criteria 와 edit_requirement_table_rows 로 교정했다. ③ edit_requirement_table_rows 의 values 키는 소문자여야 한다(Notes 가 아니라 notes)"
+  ]
+}

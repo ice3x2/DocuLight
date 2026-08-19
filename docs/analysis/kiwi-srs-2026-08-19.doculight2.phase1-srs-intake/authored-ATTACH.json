@@ -1,0 +1,86 @@
+{
+  "scope": "ATTACH",
+  "document": "docs/spec/15.attachments.srs.md",
+  "requirements": [
+    { "id": "FR-ATTACH-001", "title": "트리 드래그앤드롭 파일 업로드", "from_clauses": ["R44"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "priority": "high", "verificationMethod": "Playwright E2E", "ac_count": 3 },
+    { "id": "SEC-ATTACH-001", "title": "업로드 대상 디렉토리는 편집 권한을 가진 디렉토리로 한정", "from_clauses": ["R45"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "verificationMethod": "test", "ac_count": 2 },
+    { "id": "CON-ATTACH-001", "title": "업로드 파일 형식 무제한", "from_clauses": ["R46"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "constraint", "verificationMethod": "test", "ac_count": 2 },
+    { "id": "FR-ATTACH-002", "title": "비-md 파일도 트리 목록에 표시", "from_clauses": ["R47"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "verificationMethod": "test", "ac_count": 2 },
+    { "id": "FR-ATTACH-003", "title": "비-md 파일 열기 — 이미지는 미리보기, 그 외는 다운로드 링크만", "from_clauses": ["R48"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "verificationMethod": "test", "ac_count": 3 },
+    { "id": "FR-ATTACH-004", "title": "문서 편집기 붙여넣기·드래그 첨부 업로드", "from_clauses": ["R49", "R49-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "priority": "high", "verificationMethod": "Playwright E2E", "ac_count": 4 },
+    { "id": "DR-ATTACH-001", "title": "첨부 저장 레이아웃 — 워크스페이스 루트 .res 디렉토리와 해시 파일명", "from_clauses": ["R50"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "data", "priority": "high", "risk": "high", "verificationMethod": "Playwright E2E", "ac_count": 5 },
+    { "id": "DR-ATTACH-002", "title": "첨부 소유 문서 메타데이터 — attachment 테이블", "from_clauses": ["R50-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "data", "verificationMethod": "test", "ac_count": 3 },
+    { "id": "DR-ATTACH-003", "title": "본문 첨부 링크는 워크스페이스 기준 절대경로로 기록", "from_clauses": ["R50-b"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "data", "verificationMethod": "test", "ac_count": 3 },
+    { "id": "FR-ATTACH-005", "title": "소유 문서 영구 삭제 시 첨부 동반 삭제", "from_clauses": ["R50-c"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "verificationMethod": "test", "ac_count": 3 },
+    { "id": "REL-ATTACH-001", "title": ".res/index.json 재구성 사이드카", "from_clauses": ["R50-d"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "reliability", "verificationMethod": "test", "ac_count": 2 },
+    { "id": "FR-ATTACH-006", "title": "업로드 파일 크기 제한을 설정에서 지정", "from_clauses": ["R51"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "priority": "high", "verificationMethod": "Playwright E2E", "ac_count": 4 },
+    { "id": "SEC-ATTACH-002", "title": "첨부 접근 권한은 소유 문서의 보기 권한으로 판정", "from_clauses": ["R66", "R66-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "priority": "high", "risk": "high", "verificationMethod": "Playwright E2E", "ac_count": 6 },
+    { "id": "SEC-ATTACH-003", "title": "첨부 다운로드는 매 요청 권한을 검사", "from_clauses": ["R66-b"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "priority": "high", "verificationMethod": "Playwright E2E", "ac_count": 3 },
+
+    { "id": "FR-ATTACH-007", "title": "PDF 를 뷰어로 연다 — Phase 2", "from_clauses": ["R146"], "target": "phase-2", "status": "planned", "stability": "draft", "type": "functional", "verificationMethod": "test", "ac_count": 3 },
+    { "id": "FR-ATTACH-008", "title": "할 일 목록을 .task 확장자로 지원 — Phase 2", "from_clauses": ["R147"], "target": "phase-2", "status": "blocked", "stability": "draft", "type": "functional", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "FR-ATTACH-009", "title": "문서에 댓글을 둔다 — Phase 2", "from_clauses": ["R148"], "target": "phase-2", "status": "blocked", "stability": "draft", "type": "functional", "verificationMethod": "test", "ac_count": 3 },
+    { "id": "FR-ATTACH-010", "title": "문서 단위 댓글 허용 여부 설정 — Phase 2", "from_clauses": ["R148-a"], "target": "phase-2", "status": "blocked", "stability": "draft", "type": "functional", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "FR-ATTACH-011", "title": "댓글에서 @ 로 사용자를 멘션 — Phase 2", "from_clauses": ["R148-b"], "target": "phase-2", "status": "blocked", "stability": "draft", "type": "functional", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "SEC-ATTACH-004", "title": "보기 유효 권한부터 댓글을 작성 — Phase 2", "from_clauses": ["R148-c"], "target": "phase-2", "status": "blocked", "stability": "draft", "type": "security", "verificationMethod": "test", "ac_count": 3 }
+  ],
+
+  "clause_coverage": {
+    "assigned": ["R44", "R45", "R46", "R47", "R48", "R49", "R49-a", "R50", "R50-a", "R50-b", "R50-c", "R50-d", "R51", "R66", "R66-a", "R66-b", "R146", "R147", "R148", "R148-a", "R148-b", "R148-c"],
+    "covered": ["R44", "R45", "R46", "R47", "R48", "R49", "R49-a", "R50", "R50-a", "R50-b", "R50-c", "R50-d", "R51", "R66", "R66-a", "R66-b", "R146", "R147", "R148", "R148-a", "R148-b", "R148-c"],
+    "uncovered": [],
+    "uncovered_reason": {},
+    "excluded_struck_through": ["R44-a"]
+  },
+
+  "split_decisions": [
+    { "clause": "R50", "split_into": 5, "trigger": "§29.1-② 시스템 경계가 다르다 · ③ 검증 방법이 다르다 · ⑤ AC 목록이 너무 길어진다", "detail": "R50=파일시스템(.res) · R50-a=DB(attachment 테이블) · R50-b=마크다운 본문 텍스트 · R50-c=삭제 파이프라인 · R50-d=복구 사이드카. 하나로 묶으면 AC 가 8개를 넘고 저장소가 넷 섞인다. 하위 넷은 refines 로 DR-ATTACH-001 에 묶었다." },
+    { "clause": "R66-b", "split_into": 1, "trigger": "§29.1-② 시스템 경계가 다르다 (+ SRS-MD §2.3 Single Requirement Principle)", "detail": "R66 은 「무엇으로 판정하는가」(판정 근거), R66-b 는 「언제 판정하는가」(매 요청 집행 + security-by-obscurity 기각)로 규범 축이 다르다. refines 로 SEC-ATTACH-002 에 묶었다." },
+    { "clause": "R148-a", "split_into": 1, "trigger": "§29.1-② 시스템 경계가 다르다 (설정 표면)", "detail": "막힌 공백 항목이 G35-⑤ 로 부모(G35-③)와 다르다. 흡수하면 어느 축이 왜 막혔는지가 한 덩어리로 뭉개진다." },
+    { "clause": "R148-b", "split_into": 1, "trigger": "§29.1-② 시스템 경계가 다르다 (PrincipalPicker 공용 컴포넌트)", "detail": "R112-b·c·e 의 확정값(2자·20건·단일 컴포넌트)을 그대로 지고 있고 막힌 공백 항목이 G35-①② 다." },
+    { "clause": "R148-c", "split_into": 1, "trigger": "§29.1-② 시스템 경계가 다르다 (권한 판정) + type=security", "detail": "원장 스스로 「R22-a 와 다른 축이다」라고 못박는다. 막힌 공백 항목이 G35-④ 다." }
+  ],
+
+  "absorbed_as_ac": [
+    { "parent": "R49", "children": ["R49-a"], "into": "FR-ATTACH-004 AC-3·AC-4", "why": "원장 비고가 「R49-a 가 없으면 R49 가 성립하지 않는다」로 같은 동작의 성립 조건임을 명시한다 (§29.2-①·③)" },
+    { "parent": "R66", "children": ["R66-a"], "into": "SEC-ATTACH-002 AC-5·AC-6", "why": "같은 판정 규칙을 참조 문서 시나리오에 적용한 명확화다. 행위자·검증 방법이 같다" }
+  ],
+
+  "non_normative_demoted": [
+    { "clause": "R48", "field": "implementationNotes + changeNotes", "why": "비고의 Phase 2 역참조(R146·R147)는 이 조항의 규범이 아니라 범위 표식이다. 금지 자체는 Phase 1 에서 유효하므로 PDF 를 AC-3 에 남겼다" },
+    { "clause": "R50", "field": "implementationNotes", "why": "해시 산출 대상·알고리즘, 중복 제거 여부는 원장이 정하지 않은 축이라 AC 로 쓸 수 없다" },
+    { "clause": "R50-c", "field": "implementationNotes", "why": "R141-c 의 「첨부는 무기록」은 감사 축의 사실이지 이 요구의 수용 기준이 아니다. .res/index.json 정합성은 원장에 없는 파생이라 주의로만 남겼다" },
+    { "clause": "R50-d", "field": "implementationNotes", "why": "사이드카가 경로를 적어 문서 이동 시 낡는다는 사실과 삭제 시 항목 제거는 원장이 정하지 않은 축이다" },
+    { "clause": "R51", "field": "implementationNotes", "why": "설계서 04 의 `50 MB` 는 와이어프레임 예시값이지 원장 결정이 아니다" },
+    { "clause": "R66-b", "field": "implementationNotes", "why": "R137-h 가 이 경로를 무기록 잔여 위험으로 명시 수용한 사실은 인지된 비용이지 수용 기준이 아니다" },
+    { "clause": "R147", "field": "implementationNotes", "why": "G34 의 다섯 파생 축(버전·병합·감사 입도·모드 토글·색인)은 미결이라 AC 로 채우지 않았다" },
+    { "clause": "R148 계열", "field": "implementationNotes", "why": "G35 의 다섯 항목을 각 요구가 자기 몫만 미결로 기재했다" }
+  ],
+
+  "blocked_by_gaps": [
+    { "req_id": "FR-ATTACH-008", "gap": "G34", "detail": "저장 형식이 JSON 이라 본문 전제 조항 다섯 축이 성립하지 않는다 (열린 열거)" },
+    { "req_id": "FR-ATTACH-009", "gap": "G35", "detail": "③ 댓글이 감사 기록 대상인가" },
+    { "req_id": "FR-ATTACH-010", "gap": "G35", "detail": "⑤ 댓글 허용 설정을 어느 유효 권한부터 바꿀 수 있는가" },
+    { "req_id": "FR-ATTACH-011", "gap": "G35", "detail": "① 멘션이 알림을 낳는가 · ② 권한 밖 사용자를 멘션할 수 있는가" },
+    { "req_id": "SEC-ATTACH-004", "gap": "G35", "detail": "④ PAT 읽기 전용 스코프로 댓글을 달 수 있는가" }
+  ],
+
+  "validate_spec": {
+    "errors": 0,
+    "warnings": 1,
+    "scope_note": "ATTACH scope 오류 0건. 저장소 전체로는 error 2 · warning 1 이 남아 있으나 둘 다 ATTACH 밖이다 — SRS-E020 이 docs/spec/13.workspace.srs.md 의 SEC-WORKSPACE-002(199행)·DR-WORKSPACE-002(682행) 제목에 백틱이 들어가 발생한다(WORKSPACE 저작자 몫). SRS-W072 는 기존 경고."
+  },
+
+  "notes_for_reviewer": [
+    "priority·risk 를 생략할 수 없다. add_requirement 가 두 필드를 enum 으로 강제하고 미지정 시 medium 을 쓴다 (priority='-' 는 USAGE: unknown priority 로 거부됨). 따라서 원장 §4 가 지목하지 않은 요구의 Priority=medium 과 감사 CRITICAL 이 아닌 요구의 Risk=medium 은 저작자가 배정한 값이 아니라 도구 기본값이다. 원장 근거로 명시 배정한 것은 priority=high 5건(FR-ATTACH-001·004·006 = 수용 기준 8, SEC-ATTACH-002·003 = 수용 기준 10)과 risk=high 2건(DR-ATTACH-001·SEC-ATTACH-002 = 감사 CRITICAL C2·C3)뿐이다.",
+    "제목에 백틱을 쓰면 SRS-E020(Requirement heading contains forbidden Markdown content)이 난다. 처음 6건이 걸려 제목에서 백틱을 제거했다(.res/ · attachment · .res/index.json · .task · @ · 보기). 부작용으로 draft 3건(FR-ATTACH-008·011·SEC-ATTACH-004)의 제목에서 도구가 자동으로 붙이던 '[DRAFT — pending decision]' 표식이 사라졌다 — Stability=draft 메타는 그대로다. 다른 draft 2건(FR-ATTACH-007·009·010)은 표식을 유지하고 있어 표기가 불균일하다.",
+    "changeNotes 의 입력 형식은 'date|change|reason' 3셀이며 파이프·개행이 셀 안에 들어가면 거부된다. 문서에는 한 셀에 통째로 렌더되어 다른 블록의 'Created / add-requirement' 행과 열 정렬이 미세하게 다르다.",
+    "R46(형식 무제한)에는 원장에 없는 서빙 보안 위험이 있다 — 임의 바이너리를 허용하면 SVG·HTML 첨부가 브라우저에서 실행될 수 있다. R55-b 가 '.archive fail-closed 서빙'을 정했으나 첨부 서빙에는 대응 조항이 없다. 원장 근거가 없어 AC 로도 implementationNotes 로도 쓰지 않았고 여기 남긴다 — 공백으로 등재할지 판정이 필요하다.",
+    "R50 의 해시 산출 대상·알고리즘에 공백 번호가 배정되어 있지 않다. G1(R44~R51)은 이미 닫힌 요건 공백이라 여기에 넣을 수 없다. 구현 착수 전에 정해야 하는 축이므로 새 G 번호 후보로 보고한다.",
+    "R148 계열은 ATTACH scope 에 배정받아 등재했으나 주제상 첨부가 아니다(문서 댓글). scope 재배치가 필요하면 지시하라 — 등재는 배정대로 했다.",
+    "R148-b 가 의존하는 R112-b·R112-c·R112-e 는 PRINCIPAL scope 소유이고 동시 저작 중이라 REQ-ID 를 알 수 없었다. Requirement depends_on 대신 원장 조항을 가리키는 Doc related_to 3건으로 걸어 두었다 — PRINCIPAL 등재가 끝나면 Requirement trace 로 승격할 수 있다.",
+    "R45(디렉토리 업로드 권한)와 R49-a(문서 첨부 업로드 권한)를 병합하지 않았다. 같은 개념('편집 권한 보유가 업로드 자격')처럼 보이지만 판정 대상이 디렉토리 / 소유 문서로 갈리고, 원장이 R49-a 를 둔 이유가 정확히 '디렉토리 권한 없이도 성립해야 한다'이므로 병합하면 그 결정이 사라진다. 두 요구의 implementationNotes 에 상호 경고를 넣었다.",
+    "R48 AC-3(PDF 는 Phase 1 에서 다운로드 링크만)의 근거는 R48 문면이 아니라 R146 비고의 'Phase 1 은 … PDF 는 다운로드 링크뿐이며 그 상태는 Phase 1 내내 유지된다'이다. 조항 두 개를 걸쳐 읽어야 나오는 단언이라 밝혀 둔다.",
+    "R148(부모)을 status=blocked 로 두었다. 축의 존재 자체는 확정이지만 G35-③(감사 기록 대상 여부)이 이 조항 전체에 걸리고, 브리프의 'R148 계열은 G35 에 걸린다'와 메타데이터 규칙 '열린 공백에 걸리면 blocked'를 함께 적용한 결과다. R146 만 공백이 없어 planned 다."
+  ]
+}

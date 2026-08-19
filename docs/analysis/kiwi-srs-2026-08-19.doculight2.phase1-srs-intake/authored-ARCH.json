@@ -1,0 +1,280 @@
+{
+  "scope": "ARCH",
+  "document": "docs/spec/02.product-architecture.srs.md",
+  "requirements": [
+    {
+      "id": "SEC-ARCH-001",
+      "title": "MCP 호출에 사용자 인증을 필수화한다",
+      "from_clauses": ["R22"],
+      "target": "phase-1",
+      "status": "planned",
+      "stability": "stable",
+      "priority": "high",
+      "verificationMethod": "통합 테스트",
+      "ac_count": 3
+    },
+    {
+      "id": "SEC-ARCH-002",
+      "title": "MCP 읽기 도구와 벡터검색 결과를 호출자의 ACL 로 필터링한다",
+      "from_clauses": ["R22", "R22-a"],
+      "target": "phase-1",
+      "status": "planned",
+      "stability": "stable",
+      "priority": "high",
+      "verificationMethod": "통합 테스트",
+      "ac_count": 4
+    },
+    {
+      "id": "SEC-ARCH-003",
+      "title": "MCP 쓰기 도구는 대상 노드의 편집 유효 권한이 없으면 거부한다",
+      "from_clauses": ["R22-a"],
+      "target": "phase-1",
+      "status": "planned",
+      "stability": "stable",
+      "priority": "high",
+      "verificationMethod": "통합 테스트",
+      "ac_count": 3
+    },
+    {
+      "id": "FR-ARCH-001",
+      "title": "1.0 의 AI 기능과 MCP 서버를 이관한다",
+      "from_clauses": ["R13"],
+      "target": "phase-1",
+      "status": "planned",
+      "stability": "stable",
+      "priority": null,
+      "verificationMethod": "test",
+      "ac_count": 3
+    },
+    {
+      "id": "CON-ARCH-001",
+      "title": "사내 단일 인스턴스 수백~수천 명 규모를 전제한다",
+      "from_clauses": ["R19"],
+      "target": "phase-1",
+      "status": "planned",
+      "stability": "stable",
+      "priority": null,
+      "verificationMethod": "review",
+      "ac_count": 3
+    },
+    {
+      "id": "CON-ARCH-002",
+      "title": "새 리포에 1.0 백엔드를 이식하고 프론트엔드는 신규 작성한다",
+      "from_clauses": ["R21"],
+      "target": "phase-1",
+      "status": "planned",
+      "stability": "stable",
+      "priority": null,
+      "verificationMethod": "review",
+      "ac_count": 6
+    },
+    {
+      "id": "CON-ARCH-003",
+      "title": "프론트엔드는 Vite 와 React 와 TypeScript 기반 SPA 로 만든다",
+      "from_clauses": ["R33"],
+      "target": "phase-1",
+      "status": "planned",
+      "stability": "stable",
+      "priority": null,
+      "verificationMethod": "review",
+      "ac_count": 4
+    },
+    {
+      "id": "OPS-ARCH-001",
+      "title": "빌드 산출물을 기존 Express 가 서빙하고 Node 프로세스를 1개로 유지한다",
+      "from_clauses": ["R33-a"],
+      "target": "phase-1",
+      "status": "planned",
+      "stability": "stable",
+      "priority": null,
+      "verificationMethod": "review",
+      "ac_count": 4
+    },
+    {
+      "id": "CON-ARCH-004",
+      "title": "UI 부품을 역할별 지정 패키지로 채택한다",
+      "from_clauses": ["R33-b"],
+      "target": "phase-1",
+      "status": "planned",
+      "stability": "evolving",
+      "priority": null,
+      "verificationMethod": "review",
+      "ac_count": 6
+    },
+    {
+      "id": "CON-ARCH-005",
+      "title": "에디터와 머지와 마크다운 파이프라인은 프레임워크 중립 패키지를 쓴다",
+      "from_clauses": ["R33-c"],
+      "target": "phase-1",
+      "status": "planned",
+      "stability": "stable",
+      "priority": null,
+      "verificationMethod": "review",
+      "ac_count": 7
+    },
+    {
+      "id": "CON-ARCH-006",
+      "title": "문서 본문의 정본은 CodeMirror 이고 React state 로 올리지 않는다",
+      "from_clauses": ["R33-d"],
+      "target": "phase-1",
+      "status": "planned",
+      "stability": "stable",
+      "priority": null,
+      "verificationMethod": "review",
+      "ac_count": 3
+    },
+    {
+      "id": "CON-ARCH-007",
+      "title": "docs/spec 을 SpecKiwi SRS 구조로 정식화한다",
+      "from_clauses": ["R32"],
+      "target": "phase-1",
+      "status": "planned",
+      "stability": "stable",
+      "priority": null,
+      "verificationMethod": "review",
+      "ac_count": 3
+    },
+    {
+      "id": "CON-ARCH-008",
+      "title": "한 사실은 한 곳에만 적고 개정 시 인용처 전량을 함께 갱신한다",
+      "from_clauses": ["R124", "R124-a"],
+      "target": "phase-1",
+      "status": "planned",
+      "stability": "stable",
+      "priority": null,
+      "verificationMethod": "review",
+      "ac_count": 4
+    },
+    {
+      "id": "CON-ARCH-009",
+      "title": "Phase 라벨은 명시가 없으면 Phase 1 로 판정한다",
+      "from_clauses": ["R92"],
+      "target": "phase-1",
+      "status": "planned",
+      "stability": "evolving",
+      "priority": null,
+      "verificationMethod": "review",
+      "ac_count": 4
+    }
+  ],
+  "clause_coverage": {
+    "assigned": ["R13", "R19", "R21", "R22", "R22-a", "R32", "R33", "R33-a", "R33-b", "R33-c", "R33-d", "R92", "R124", "R124-a"],
+    "covered": ["R13", "R19", "R21", "R22", "R22-a", "R32", "R33", "R33-a", "R33-b", "R33-c", "R33-d", "R92", "R124", "R124-a"],
+    "uncovered": [],
+    "uncovered_reason": {}
+  },
+  "split_decisions": [
+    {
+      "clause": "R22",
+      "split_into": 2,
+      "into": ["SEC-ARCH-001", "SEC-ARCH-002"],
+      "trigger": "브리프 §3 「한 행에 다중 규범이 들어 있으면 쪼갠다」 + §29.1-② 시스템 경계가 다르다 — 한 행에 ①인증 필수화 ②ACL 결과 필터링 두 규범이 들어 있다. 인증(누구인가)과 인가·필터(무엇을 볼 수 있는가)는 경계가 다르고, 한쪽만 만족하고 다른 쪽을 어기는 빌드가 성립한다"
+    },
+    {
+      "clause": "R22-a",
+      "split_into": 2,
+      "into": ["SEC-ARCH-002", "SEC-ARCH-003"],
+      "trigger": "§29.1-② 시스템 경계가 다르다 — 조항 문면 자체가 두 축을 가른다: 「\"필터링\"은 읽기 개념이라 쓰기 검사 근거가 되지 못했다」. 읽기는 결과 집합을 거르고 쓰기는 실행을 사전 차단하므로 하나의 블록으로 묶으면 감사 M9 가 되살아난다. 읽기 갈래는 R22 후단과 같은 요구라 SEC-ARCH-002 에 합쳤다"
+    },
+    {
+      "clause": "R33-a",
+      "split_into": 1,
+      "into": ["OPS-ARCH-001"],
+      "trigger": "§29.1-② 시스템 경계가 다르다 — R33 은 프론트엔드 빌드 시점의 스택 선택이고 R33-a 는 서버 배포 토폴로지(정적 서빙·프로세스 수)다. type 도 constraint 와 operational 로 갈린다. R33 을 refines 로 묶어 부모 관계는 보존했다"
+    },
+    {
+      "clause": "R33-b",
+      "split_into": 1,
+      "into": ["CON-ARCH-004"],
+      "trigger": "§29.1-⑦ 유사(부분마다 성숙도가 다르다) — R33-b 만 stability evolving 이고 R33 은 stable 이다. SRS-MD 는 블록당 Stability 칸이 하나뿐이라 AC 로 흡수하면 evolving 을 표현할 자리가 사라진다. 확장이 예고된 근거는 docs/next/01.design-completion.md:253"
+    },
+    {
+      "clause": "R33-c",
+      "split_into": 1,
+      "into": ["CON-ARCH-005"],
+      "trigger": "§29.1-② 시스템 경계가 다르다 — 조항 비고가 스스로 「스택 선택과 무관한 영역」이라 선언한다. 원장이 두 축을 갈라 둔 것을 AC 로 합치면 그 선언이 사라진다"
+    },
+    {
+      "clause": "R33-d",
+      "split_into": 1,
+      "into": ["CON-ARCH-006"],
+      "trigger": "§29.1-③ 검증 방법이 다르다 — R33 은 빌드 구성 검사로 판정되고 R33-d 는 상태 관리 구조 검토로 판정된다. 또한 원장 §4 수용 기준 7(한글 IME)의 구조적 전제라 독립 손잡이가 필요하다"
+    }
+  ],
+  "absorbed_as_ac": [
+    {
+      "parent": "R124",
+      "children": ["R124-a"],
+      "why": "§29.1 분리 트리거가 하나도 걸리지 않는다 — 행위자(문서 저작자)·시스템 경계(docs/spec)·검증 방법(review)·target 이 모두 같다. R124 는 상태 불변식이고 R124-a 는 그 불변식을 유지하는 조작이라 한 블록의 AC-1~AC-2 와 AC-3~AC-4 로 나란히 선다"
+    }
+  ],
+  "non_normative_demoted": [
+    {
+      "clause": "R92",
+      "field": "implementationNotes",
+      "what": "판정 경로 ①②③ · 반례 단서(R55-b · R103-a) · ①의 위양성 목록(R89 · R23 · R33-b · R98 · R24-b · 취소선) · R48 은 Phase 1 규정이라는 단서",
+      "why": "판정 절차이지 검증 가능한 기대 결과가 아니다 — AC 로 쓰면 「이 절차를 밟았는가」라는 판정 불능 명제가 된다"
+    },
+    {
+      "clause": "R92",
+      "field": "implementationNotes",
+      "what": "「Phase 1 에는 워크스페이스를 없애는 수단이 없다」",
+      "why": "인지된 제약(잔여 위험)이지 요건이 아니다"
+    },
+    {
+      "clause": "R33",
+      "field": "implementationNotes",
+      "what": "인지하고 가는 손실 — 런타임 성능·번들 크기에서 Svelte 5 에 진다",
+      "why": "인지된 비용 서술. 다만 그 완화책인 동적 import 분리는 규범이므로 AC-4 로 올렸다"
+    },
+    {
+      "clause": "R33",
+      "field": "rationale",
+      "what": "후보 탈락 사유(Next.js · Svelte 5) — 각 후보를 옹호하도록 배정된 담당자 본인이 인정한 내용",
+      "why": "기각된 대안은 사유와 함께 남겨야 다음 세션이 조용히 뒤집지 않는다"
+    },
+    {
+      "clause": "R33-b",
+      "field": "implementationNotes",
+      "what": "「Phase 2 분할 창은 react-resizable-panels」",
+      "why": "규범이지만 Phase 1 검증 대상이 아니고, 셸 설계(03 §1.3)가 이 패키지의 Phase 1 사용을 판단해 조항 문면과 어긋난 상태이며 설계 완성 심의가 그 갈래를 열어 두었다(docs/next/01.design-completion.md:253). 판정 전에 AC 로 세우면 어느 쪽이든 오라클이 된다"
+    },
+    {
+      "clause": "R21",
+      "field": "research",
+      "what": "1.0 자산별 처분표 5행 전량 + nodemailer 가 G32 심의에 인용된다는 사실",
+      "why": "실측된 사실 목록이며, 지시대로 G32 가 인용하는 자리를 명시적으로 보존했다"
+    },
+    {
+      "clause": "R32",
+      "field": "implementationNotes",
+      "what": "「원장 조항을 요구사항 블록으로 전개하는 이 작업 자체가 이 조항의 이행이다」",
+      "why": "지시대로 기재. 이행 사실 서술이지 검증 기준이 아니다"
+    }
+  ],
+  "blocked_by_gaps": [],
+  "gap_traces": [
+    { "req_id": "CON-ARCH-002", "gap": "G32", "relation": "related_to", "note": "막지 않는다 — G32 심의가 이 조항의 근거 표를 인용할 뿐이다" },
+    { "req_id": "CON-ARCH-009", "gap": "G34", "relation": "related_to", "note": "막지 않는다 — 조항이 스스로 Phase 1 착수를 막지 않는다고 판정한다" },
+    { "req_id": "CON-ARCH-009", "gap": "G35", "relation": "related_to", "note": "막지 않는다 — 위와 같은 판정" }
+  ],
+  "validate_spec": {
+    "arch_scope_errors": 0,
+    "workspace_errors": 3,
+    "workspace_warnings": 1,
+    "note": "docs/spec/02.product-architecture.srs.md 에는 오류가 0 이다. 워크스페이스 전체 오류 3건은 전부 다른 저작자가 동시 작성 중인 문서의 SRS-E020(요구사항 제목에 금지된 마크다운) 이다 — docs/spec/13.workspace.srs.md:199 (SEC-WORKSPACE-002) · docs/spec/15.attachments.srs.md:353 (DR-ATTACH-001) · docs/spec/15.attachments.srs.md:409 (DR-ATTACH-002). 경고 1건은 기존 SRS-W072 이다.",
+    "arch_requirement_count": 14
+  },
+  "lock_failures": [],
+  "notes_for_reviewer": [
+    "**priority·risk 의 medium 은 내 배정이 아니다.** 브리프 §4 는 지목되지 않은 조항의 priority·risk 를 생략하라고 했고 나는 생략했으나, `add_requirement` 가 생략된 두 필드를 `medium` 으로 채워 넣는다. 명시적으로 배정한 것은 SEC-ARCH-001~003 의 `priority: high` 뿐이고, 나머지 11건의 `Priority | medium` 과 14건 전부의 `Risk | medium` 은 도구 기본값이다. 기존 EDITOR scope 도 같은 상태이므로 도구 차원의 문제이며, 원장이 우선순위를 배정한 적이 없다는 사실과 파일 내용이 어긋나 있다.",
+    "**SEC-ARCH-001(인증)에 high 를 준 것은 확장 판단이다.** 원장 §4 수용 기준 5 가 명시로 지목하는 것은 R22-a 이고, 인증은 그 기준의 전제(\"PAT 로 인증한 두 사용자\")로만 등장한다. R22 클러스터 셋을 같은 관문이 함께 재는 것으로 보아 셋 다 high 로 두었다. 과잉이라 판단되면 SEC-ARCH-001 만 낮추면 된다.",
+    "**SEC-ARCH-002 의 AC-4(걸러진 사실을 건수·순번·자리표시로 노출하지 않는다)는 R22·R22-a 문면에 없다.** 완전 숨김 규칙(R25, 접근 제어 scope 소유)을 MCP 표면에 적용한 것이다. 새 값을 지어낸 것은 아니지만 내 조항이 소유한 규칙도 아니므로, 접근 제어 scope 와 중복이라 판단되면 삭제해도 좋다. Implementation Notes 에 소유 scope 를 명시해 두었다.",
+    "**R33-d 에 priority 를 배정하지 않았다.** 원장 §4 수용 기준 7(한글 IME)이 이 조항의 실패 모드를 정확히 재지만, 그 기준은 13개 중 유일하게 어떤 조항 ID 도 지목하지 않는다. 「지목하는 조항만 high」 규칙을 문자 그대로 적용했다. 수용 기준 7 에 조항 지목을 추가하는 개정이 있으면 이 요구사항이 high 로 올라가야 한다.",
+    "**R33-a 를 constraint 가 아니라 operational 로 분류했다** (ID 가 OPS-ARCH-001). 브리프 §4 의 「배포·운영은 operational」을 따랐다. R33 계열을 ID 접두사로 한눈에 묶고 싶다면 constraint 가 나을 수 있다.",
+    "**CON-ARCH-009(R92)의 AC-3 은 완결 목록이 아니다.** 조항이 스스로 「닫힌 열거가 아니다 — 이 행이 전량이라고 가정하지 마라」고 선언하므로, AC-3 은 2026-08-19 시점의 판정 결과를 고정한 것이지 판정 규칙이 아니다. 그래서 stability 를 evolving 으로 두고 판정 경로 ①②③을 Implementation Notes 에 함께 실었다 — 원장이 「생성적 규칙 없이 열면 판정 근거가 0 이 되어 닫힌 열거보다 나쁘다」고 경고한 바로 그 함정을 피하기 위해서다.",
+    "**CON-ARCH-008 의 Implementation Notes 에 원장이 짚은 실제 공백을 남겼다** — R124-a 는 *개정* 만 겨누고 *신설* 을 겨누지 않으며, 「조항을 신설할 때 그것이 들어가야 할 기존 열거를 훑을 규칙」은 지금도 없다. 이것은 원장이 R92 정정에서 명시적으로 판정한 사실이며 새 공백 번호가 붙어 있지 않다 — 공백으로 등재할지 검토 대상이다.",
+    "**조항 문면과 브리프가 어긋난 자리는 없었다.** 취소선 조항은 내 배정에 포함되지 않았다.",
+    "AC 배열에는 `AC-N:` 접두사를 넣지 않았다 — `add_requirement` 가 자동으로 붙인다(첫 시도에서 `AC-1: AC-1:` 이 나와 확인했고, 그 시도는 dryRun 이었다)."
+  ]
+}

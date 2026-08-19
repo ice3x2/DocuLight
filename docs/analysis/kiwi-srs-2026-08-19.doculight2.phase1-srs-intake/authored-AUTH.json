@@ -1,0 +1,125 @@
+{
+  "scope": "AUTH",
+  "document": "docs/spec/09.auth.srs.md",
+  "requirements": [
+    { "id": "SEC-AUTH-001", "title": "1.0 로그인 기반 이식 — bcrypt · HttpOnly 세션 쿠키 · 소스 IP 단위 rate limit", "from_clauses": ["R57", "R72-i"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "verificationMethod": "test", "ac_count": 5 },
+    { "id": "SEC-AUTH-002", "title": "세션·토큰에 권한 스냅샷을 담지 않고 매 요청 principal 을 조회한다", "from_clauses": ["R59"], "target": "phase-1", "status": "planned", "stability": "evolving", "type": "security", "priority": "high", "verificationMethod": "통합 테스트", "ac_count": 5 },
+    { "id": "SEC-AUTH-003", "title": "계정 상태 게이트 — active 외 상태는 로그인·토큰 인증 단계에서 차단한다", "from_clauses": ["R60"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "FR-AUTH-001", "title": "상태별 로그인 안내 문구", "from_clauses": ["R60-b"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "FR-AUTH-002", "title": "거절 계정을 pending 으로 되돌려 재심사한다", "from_clauses": ["R60-b"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "SEC-AUTH-004", "title": "가입 사용자의 default 그룹 자동 소속은 active 전환 시점에 이뤄진다", "from_clauses": ["R8", "R60-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "IR-AUTH-001", "title": "인증 전 화면은 모달이 아니라 전체 화면이다", "from_clauses": ["R143"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "interface", "verificationMethod": "test", "ac_count": 5 },
+    { "id": "FR-AUTH-003", "title": "슈퍼유저 직접 등록은 사용자 관리 화면 안의 조작이다", "from_clauses": ["R143-a"], "target": "phase-1", "status": "blocked", "stability": "evolving", "type": "functional", "verificationMethod": "test", "ac_count": 5 },
+    { "id": "FR-AUTH-004", "title": "가입 모드 3종과 슈퍼유저 전용 인스턴스 설정", "from_clauses": ["R7"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "verificationMethod": "test", "ac_count": 5 },
+    { "id": "SEC-AUTH-005", "title": "전역 API Key 폐기와 사용자별 개인 액세스 토큰(PAT) 도입", "from_clauses": ["R58"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "priority": "high", "verificationMethod": "통합 테스트", "ac_count": 5 },
+    { "id": "SEC-AUTH-006", "title": "PAT 는 해시로 저장하고 평문은 발급 시 1회만 노출한다", "from_clauses": ["R58-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "verificationMethod": "test", "ac_count": 6 },
+    { "id": "IR-AUTH-002", "title": "MCP 는 Authorization Bearer PAT 로 사용자를 식별한다", "from_clauses": ["R58-b"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "interface", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "SEC-AUTH-007", "title": "PAT 발급·폐기는 본인만 할 수 있다", "from_clauses": ["R58-c"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "verificationMethod": "test", "ac_count": 5 },
+    { "id": "SEC-AUTH-008", "title": "PAT 스코프는 상한만 낮추며 실제 권한은 스코프와 실시간 유효 권한의 교집합이다", "from_clauses": ["R58-c"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "SEC-AUTH-009", "title": "계정이 active 가 아니게 되면 그 계정의 모든 PAT 가 즉시 무효가 된다", "from_clauses": ["R58-d"], "target": "phase-1", "status": "planned", "stability": "evolving", "type": "security", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "SEC-AUTH-010", "title": "슈퍼유저 0명이면 설치 화면을 강제하고 그 화면에서 최초 슈퍼유저를 만든다", "from_clauses": ["R72"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "priority": "high", "risk": "high", "verificationMethod": "통합 테스트", "ac_count": 5 },
+    { "id": "SEC-AUTH-011", "title": "설치 완료 전에는 허용목록 4경로 외의 모든 경로를 차단한다", "from_clauses": ["R72-a", "R72-h"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "verificationMethod": "test", "ac_count": 6 },
+    { "id": "SEC-AUTH-012", "title": "설치 마법사는 콘솔에 출력된 설치 토큰을 요구하고 토큰은 설치 완료 시 소진된다", "from_clauses": ["R72-b", "R72-f", "R72-j"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "verificationMethod": "test", "ac_count": 6 },
+    { "id": "SEC-AUTH-013", "title": "설치 토큰의 수명은 30분이며 만료 시각을 절대시각으로 함께 출력한다", "from_clauses": ["R72-c"], "target": "phase-1", "status": "planned", "stability": "evolving", "type": "security", "verificationMethod": "test", "ac_count": 3 },
+    { "id": "SEC-AUTH-014", "title": "서버 재기동이 설치 토큰을 무효화하고 새 값을 내며 그것이 유일한 복구 경로다", "from_clauses": ["R72-d", "R72-e"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "verificationMethod": "test", "ac_count": 7 },
+    { "id": "SEC-AUTH-015", "title": "설치 마법사의 모든 서버 요청은 토큰 검증으로 발급된 설치 세션을 요구한다", "from_clauses": ["R72-g"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "SEC-AUTH-016", "title": "슈퍼유저 그룹의 active 멤버 수를 0 으로 만드는 모든 조작을 거부한다", "from_clauses": ["R73"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "risk": "high", "verificationMethod": "test", "ac_count": 6 },
+    { "id": "SEC-AUTH-017", "title": "기본 워크스페이스에 대한 default 그룹 초기 권한을 설치 마법사에서 고른다", "from_clauses": ["R83"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "security", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "FR-AUTH-005", "title": "접근 가능한 노드가 0개인 사용자에게 빈 상태 안내 화면을 보여준다", "from_clauses": ["R83-a"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "functional", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "MIG-AUTH-001", "title": "1.0 에서 2.0 으로의 읽기 전용 컷오버 — 1.0 동결과 콘텐츠·인덱스 이행", "from_clauses": ["R93"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "migration", "verificationMethod": "test", "ac_count": 5 },
+    { "id": "MIG-AUTH-002", "title": "1.0 계정과 자격증명의 2.0 이행", "from_clauses": ["R93"], "target": "phase-1", "status": "planned", "stability": "stable", "type": "migration", "verificationMethod": "test", "ac_count": 5 },
+    { "id": "SEC-AUTH-018", "title": "본인이 자기 비밀번호를 변경한다", "from_clauses": ["R144"], "target": "phase-1", "status": "blocked", "stability": "evolving", "type": "security", "verificationMethod": "test", "ac_count": 4 },
+    { "id": "SEC-AUTH-019", "title": "사용자가 자기 세션을 종료한다", "from_clauses": ["R145"], "target": "phase-1", "status": "blocked", "stability": "evolving", "type": "security", "verificationMethod": "test", "ac_count": 4 }
+  ],
+  "clause_coverage": {
+    "assigned": ["R7", "R8", "R57", "R58", "R58-a", "R58-b", "R58-c", "R58-d", "R59", "R60", "R60-a", "R60-b", "R72", "R72-a", "R72-b", "R72-c", "R72-d", "R72-e", "R72-f", "R72-g", "R72-h", "R72-i", "R72-j", "R73", "R83", "R83-a", "R93", "R143", "R143-a", "R144", "R145"],
+    "covered": ["R7", "R8", "R57", "R58", "R58-a", "R58-b", "R58-c", "R58-d", "R59", "R60", "R60-a", "R60-b", "R72", "R72-a", "R72-b", "R72-c", "R72-d", "R72-e", "R72-f", "R72-g", "R72-h", "R72-i", "R72-j", "R73", "R83", "R83-a", "R93", "R143", "R143-a", "R144", "R145"],
+    "uncovered": [],
+    "uncovered_reason": {}
+  },
+  "clause_to_requirement": {
+    "R7": ["FR-AUTH-004"],
+    "R8": ["SEC-AUTH-004"],
+    "R57": ["SEC-AUTH-001"],
+    "R58": ["SEC-AUTH-005"],
+    "R58-a": ["SEC-AUTH-006"],
+    "R58-b": ["IR-AUTH-002"],
+    "R58-c": ["SEC-AUTH-007", "SEC-AUTH-008"],
+    "R58-d": ["SEC-AUTH-009"],
+    "R59": ["SEC-AUTH-002"],
+    "R60": ["SEC-AUTH-003"],
+    "R60-a": ["SEC-AUTH-004"],
+    "R60-b": ["FR-AUTH-001", "FR-AUTH-002"],
+    "R72": ["SEC-AUTH-010"],
+    "R72-a": ["SEC-AUTH-011"],
+    "R72-b": ["SEC-AUTH-012"],
+    "R72-c": ["SEC-AUTH-013"],
+    "R72-d": ["SEC-AUTH-014"],
+    "R72-e": ["SEC-AUTH-014"],
+    "R72-f": ["SEC-AUTH-012"],
+    "R72-g": ["SEC-AUTH-015"],
+    "R72-h": ["SEC-AUTH-011"],
+    "R72-i": ["SEC-AUTH-001"],
+    "R72-j": ["SEC-AUTH-012"],
+    "R73": ["SEC-AUTH-016"],
+    "R83": ["SEC-AUTH-017"],
+    "R83-a": ["FR-AUTH-005"],
+    "R93": ["MIG-AUTH-001", "MIG-AUTH-002"],
+    "R143": ["IR-AUTH-001"],
+    "R143-a": ["FR-AUTH-003"],
+    "R144": ["SEC-AUTH-018"],
+    "R145": ["SEC-AUTH-019"]
+  },
+  "split_decisions": [
+    { "clause": "R58", "split_into": 6, "trigger": "§29.1-② 시스템 경계가 다르다 (인증 코어 / 자격증명 저장 / MCP 인터페이스 / 자기 관리 / 권한 판정 / 계정 수명주기) + §29.1-③ 검증 방법이 다르다 (R58 만 §4 기준 9 의 통합 테스트) + §29.1-⑤ 한 블록에 합치면 AC 가 25개를 넘는다", "requirements": ["SEC-AUTH-005", "SEC-AUTH-006", "IR-AUTH-002", "SEC-AUTH-007", "SEC-AUTH-008", "SEC-AUTH-009"] },
+    { "clause": "R58-c", "split_into": 2, "trigger": "§29.1-③ 검증 방법이 다르다 — ①`발급·폐기는 본인만`은 타 계정 조작 시도로, ②`스코프 ∩ 실시간 유효 권한`은 스코프별 쓰기 요청으로 검증한다. 한 행에 두 규범이 들어 있어 SRS-MD §2.3 에도 걸린다", "requirements": ["SEC-AUTH-007", "SEC-AUTH-008"] },
+    { "clause": "R60-b", "split_into": 2, "trigger": "§29.1-① 행위자가 다르다 — 상태별 안내 문구는 로그인 시도자가 보는 것이고, `rejected` → `pending` 되돌리기는 슈퍼유저가 가입 승인 화면에서 하는 조작이다", "requirements": ["FR-AUTH-001", "FR-AUTH-002"] },
+    { "clause": "R72 계열", "split_into": 6, "trigger": "§29.1-⑤ AC 목록이 너무 길어진다 (11행을 한 블록에 담으면 AC 30개 이상) + §29.1-③ 검증 방법이 다르다 (R72 만 §4 기준 13 의 통합 테스트). 축은 부트스트랩 강제 / 표면 허용목록 / 토큰 진입 자격 / 토큰 수명 / 재기동·복구 / 설치 세션 여섯이다", "requirements": ["SEC-AUTH-010", "SEC-AUTH-011", "SEC-AUTH-012", "SEC-AUTH-013", "SEC-AUTH-014", "SEC-AUTH-015"] },
+    { "clause": "R93", "split_into": 2, "trigger": "한 행에 다섯 규범(①~⑤)이 들어 있어 SRS-MD §2.3 Single Requirement Principle 에 걸린다. §29.1-② 시스템 경계로 갈라 ①②⑤(1.0 동결·콘텐츠 복사·벡터 인덱스)와 ③④(계정 상태·그룹·bcrypt 해시·API Key 클라이언트 안내)로 나눴다. 다섯 개로 쪼개지 않은 이유는 한 번의 컷오버 절차라는 응집을 보존하기 위해서다", "requirements": ["MIG-AUTH-001", "MIG-AUTH-002"] }
+  ],
+  "merge_decisions": [
+    { "merged": ["R8", "R60-a"], "into": "SEC-AUTH-004", "trigger": "§29.2-4 — 따로 두면 충돌한다. R8 의 `가입하면 소속`을 그대로 두면 `pending` 사용자가 가입 시점에 default 그룹 ACL 권한을 얻는 해석이 살아남아 R60 게이트를 우회한다. R60-a 비고 자체가 `R8 의 가입하면 소속을 정밀화`라고 적는다" },
+    { "merged": ["R72-a", "R72-h"], "into": "SEC-AUTH-011", "trigger": "§29.2-4 — R72-h 가 R72-a 의 차단 열거를 허용목록으로 대체한 것이므로 둘을 따로 두면 fail-open 해석이 살아남는다" },
+    { "merged": ["R72-b", "R72-f"], "into": "SEC-AUTH-012", "trigger": "§29.2-1 — R72-f 는 R72-b 의 `1회용`이 무엇을 뜻하는지를 정의한다. 정의를 분리하면 `입력 시 소진` 오독이 남는다" },
+    { "merged": ["R72-d", "R72-e"], "into": "SEC-AUTH-014", "trigger": "§29.2-1 — R72-e 의 `복구 경로는 재기동 하나`는 R72-d 의 재기동 무효화·새 값 발급이 성립해야만 의미를 갖는다" }
+  ],
+  "absorbed_as_ac": [
+    { "parent": "R57", "children": ["R72-i"], "note": "rate limit 적용 단위(소스 IP)는 R57 의 `express-rate-limit` 를 수정하는 규범이므로 SEC-AUTH-001 의 AC-4·AC-5 로 흡수했다. 설치 마법사 쪽에 두면 rate limit 규칙의 진입점이 둘이 된다" }
+  ],
+  "non_normative_demoted": [
+    { "clause": "R72-j", "field": "implementationNotes", "target_requirement": "SEC-AUTH-012", "why": "인지된 잔여 위험 — 토큰이 콘솔에 평문으로 출력되는 것을 제품이 막지 못한다는 사실의 기록이지 요구가 아니다. 추적을 위해 Doc trace 는 유지했다" }
+  ],
+  "blocked_by_gaps": [
+    { "req_id": "FR-AUTH-003", "gap": "G10", "why": "R7-③ 슈퍼유저 직접 등록으로 만든 계정의 생성 직후 상태를 어느 조항도 정하지 않았다. 등록 폼의 입력 항목(이메일 필수 여부·표시 이름 규칙)도 같은 공백에 걸린다" },
+    { "req_id": "SEC-AUTH-018", "gap": "G33", "why": "비밀번호 변경이 PAT 를 무효화하는지 · 다른 기기 세션을 끊는지 · 현재 비밀번호 재입력을 요구하는지가 미정. 본체(본인이 변경할 수 있다)는 확정이라 AC 로 썼다" },
+    { "req_id": "SEC-AUTH-019", "gap": "G33", "why": "로그아웃이 쿠키만 지우는지 서버 측 세션을 무효화하는지가 미정. 본체(사용자가 자기 세션을 종료할 수 있다)는 확정이라 AC 로 썼다" }
+  ],
+  "evolving_by_gaps": [
+    { "req_id": "SEC-AUTH-002", "gap": "G33 · G14-b", "why": "R59 는 세션 무효화를 다루지 않고(G33 ②), 즉시성이 화면에 도달하는 경로도 규정되지 않았다(G14-b). 본체는 결정 가능해 status 는 planned 로 두었다" },
+    { "req_id": "SEC-AUTH-009", "gap": "G33", "why": "무효 사유가 `active` 아님·삭제 둘뿐인데 R101 로 `삭제`가 사문이라 살아 있는 사유가 사실상 하나이고, 자격증명 변경을 덮지 않는다" },
+    { "req_id": "FR-AUTH-003", "gap": "G10", "why": "status blocked 와 동일 사유" },
+    { "req_id": "SEC-AUTH-013", "gap": "-", "why": "공백이 아니라 문면 자체의 잠정성 — R72-c 가 `근거가 이 하나뿐임을 함께 기록한다 … 운영 관측으로 조정 가능한 값이다` 라고 스스로 적었다" },
+    { "req_id": "SEC-AUTH-018", "gap": "G33", "why": "status blocked 와 동일 사유" },
+    { "req_id": "SEC-AUTH-019", "gap": "G33", "why": "status blocked 와 동일 사유" }
+  ],
+  "validate_spec": {
+    "errors": 0,
+    "warnings": 2,
+    "byCode": { "SRS-W072": 1, "SRS-W023": 1 },
+    "note": "둘 다 AUTH scope 밖의 기존 문제다. SRS-W072 는 브리프가 무시하라고 지정한 것이고, SRS-W023 은 `08.app-shell.srs.md` 의 FR-SHELL-011(draft)이라 다른 저작자 소관이다. AUTH 문서에서 나온 진단은 0건"
+  },
+  "notes_for_reviewer": [
+    "브리프가 지정한 우선순위·검증방법을 그대로 따랐다 — §4 수용 기준 9 가 지목한 R58·R59 는 priority=high + `통합 테스트`, 기준 13 이 지목한 R72 도 같다. 그 밖 어디에도 priority 를 붙이지 않았다.",
+    "risk=high 는 §3.1 감사 CRITICAL 매핑(C5→R72 · C6→R73)이 지목한 두 건에만 붙였다. **판단이 갈렸던 자리** — R72-g(SEC-AUTH-015)는 원장이 `심의가 찾은 치명 결함`으로 기록한 것인데 §3.1 감사가 아니라 G13 교차 검증 산물이라 규칙대로 risk 를 올리지 않았다. 대신 그 사실을 implementationNotes 에 적었다. 규칙을 `실질 위험 기준`으로 바꿀 거라면 이 한 건이 대상이다.",
+    "**판단이 갈렸던 자리** — SEC-AUTH-013(R72-c 30분 수명)의 stability 를 `evolving` 으로 두었다. 열린 공백에 걸린 것은 아니고, 조항 문면이 스스로 `근거가 이 하나뿐 … 운영 관측으로 조정 가능한 값`이라고 적어 브리프의 `문면이 스스로 잠정이면 evolving` 에 해당한다고 봤다. 값 자체(30분)는 AC 로 못박았다.",
+    "**판단이 갈렸던 자리** — R93 을 다섯 항 그대로 쪼개지 않고 둘로 나눴다. 다섯으로 쪼개면 한 번의 컷오버 런북이 다섯 조각이 되고, 둘로 두면 SRS-MD §2.3 위반이 완전히 해소되지는 않는다. 시스템 경계(콘텐츠·인덱스 / 계정·자격증명)를 기준으로 갈랐다.",
+    "G33 trace 는 브리프가 지정한 넷(R58-d · R59 · R144 · R145)에만 붙였다. **다만 G33 의 부수 발견(`원장에 로그인 세션의 수명·만료 규정 자체가 없다`)은 SEC-AUTH-001(R57)에도 실질로 걸린다.** 메타데이터 일관성(trace 를 달면 stability 도 evolving 이어야 한다)을 깨지 않으려고 trace 없이 implementationNotes 로만 기록했다. 원한다면 SEC-AUTH-001 에 G33 trace + evolving 을 추가하는 것이 더 정확하다.",
+    "같은 이유로 SEC-AUTH-004(R8·R60-a)에도 G10 을 trace 로 달지 않고 implementationNotes 로만 남겼다 — R7-③ 경로의 소속 시점이 G10 에 종속되지만 조항 본체(active 전환 시점)는 확정이다.",
+    "R60(SEC-AUTH-003)·R60-b(FR-AUTH-001)·R57(SEC-AUTH-001)·R144·R145 다섯 곳의 implementationNotes 에 원장 §4 의 〔판정 필요 · 2026-08-19〕 사실을 남겼다. 새 수용 기준을 만들지 않았고, 판정이 다음 원장 개정 사항이라는 것만 적었다.",
+    "AC 로 쓰지 않고 미결로 남긴 축 — PAT 만료일의 기본값·선택 범위(원장 §4 가 R58-a 를 `수용 기준을 갖지 않는 조항`의 선례로 직접 든다) · 비밀번호 길이·복잡도(`04`-Q21) · 잠긴 계정 복구(G32) · 빈 상태 화면의 갱신 시점(G14-b) · `active` 복귀 시 PAT 부활 여부.",
+    "`Related Docs` 는 화면 소유 문서 1개씩만 달았다. 인증 전 화면·설정 모달·설치 마법사는 `04`, 빈 상태 화면(R83-a)은 `03` 이다 — `03` 이 스스로 로그인·가입 신청 폼·설치 마법사를 범위 밖으로 두고 소유를 `04` 로 명시한 2026-08-19 심의를 따랐다.",
+    "`Code` trace 는 브리프대로 하나도 달지 않았다. 요구사항 간 의존은 원장이 명시한 자리에만 `depends_on`·`refines`·`related_to` 로 걸었다.",
+    "도구 제약 — `add_requirement` 의 `changeNotes` 파라미터가 어떤 형식으로도 수용되지 않아(`Change Notes must contain date, change, and reason cells`) R143 계열의 `2026-08-19 신설` 이력은 rationale 안에 문장으로 넣었다. 또 Priority·Risk 는 값을 넘기지 않으면 도구가 `medium` 을 채우므로, 브리프의 `생략한다`는 `medium` 으로 나타난다(다른 scope 산출물과 동일).",
+    "취소선 조항(~~R27~~ · ~~R44-a~~ · ~~R106-b~~ · ~~R108-a~~)은 인용하지 않았다. 종결된 공백(G13 · G21)은 그 종결이 낳은 조항의 근거 서술로만 인용했다."
+  ]
+}

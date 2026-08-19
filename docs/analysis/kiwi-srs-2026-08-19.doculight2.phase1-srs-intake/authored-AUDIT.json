@@ -1,0 +1,102 @@
+{
+  "scope": "AUDIT",
+  "document": "docs/spec/12.audit-log.srs.md",
+  "requirements": [
+    { "id": "OBS-AUDIT-001", "title": "감사 로그 저장소와 기록 대상 열거의 지위", "from_clauses": ["R84", "R137-b"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 5 },
+    { "id": "OBS-AUDIT-002", "title": "감사 로그의 불변성과 보존 기간", "from_clauses": ["R84-a"], "target": "phase-1", "status": "blocked", "stability": "evolving", "ac_count": 3 },
+    { "id": "OBS-AUDIT-003", "title": "감사 로그의 기록 대상은 열거가 아니라 기준으로 정한다", "from_clauses": ["R137", "R137-h"], "target": "phase-1", "status": "planned", "stability": "evolving", "ac_count": 5 },
+    { "id": "OBS-AUDIT-004", "title": "다른 화면이 행위자와 시각을 영구히 재현하면 기록하지 않는다", "from_clauses": ["R137-a"], "target": "phase-1", "status": "planned", "stability": "evolving", "ac_count": 4 },
+    { "id": "OBS-AUDIT-005", "title": "기준으로 재도출된 누락 조작을 기록 대상에 추가한다", "from_clauses": ["R137-c", "R137-d", "R137-g"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 9 },
+    { "id": "OBS-AUDIT-006", "title": "인스턴스 설정 변경을 감사 로그에 기록한다", "from_clauses": ["R137-e"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "IR-AUDIT-001", "title": "감사 로그 뷰어의 조작 필터는 실제 기록 값에서 파생한다", "from_clauses": ["R137-f"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "SEC-AUDIT-001", "title": "경계를 넘는 복사의 유출 감사와 행위자 기록", "from_clauses": ["R138", "R138-f"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 7 },
+    { "id": "SEC-AUDIT-002", "title": "감사 행의 노드 참조는 노드 ID 로 저장하고 조건부로 해석한다", "from_clauses": ["R138-a"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 6 },
+    { "id": "SEC-AUDIT-003", "title": "외부 노드 고정 문구는 상대 워크스페이스에 따라 달라지지 않는다", "from_clauses": ["R138-b"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 8 },
+    { "id": "SEC-AUDIT-004", "title": "외부로 나간 건수의 집계와 필터와 배지를 만들지 않는다", "from_clauses": ["R138-c"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "SEC-AUDIT-005", "title": "복사의 조작 값은 경계 여부와 무관하게 언제나 복사 하나다", "from_clauses": ["R138-d"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "SEC-AUDIT-006", "title": "반출 목적지의 식별은 슈퍼유저 경유 조사가 유일한 경로다", "from_clauses": ["R138-e"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "REL-AUDIT-001", "title": "재조정 대기열은 감사 로그와 별개 저장소다", "from_clauses": ["R139", "R139-a"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 8, "priority": "high", "verificationMethod": "통합 테스트" },
+    { "id": "DR-AUDIT-001", "title": "사람이 아닌 주체의 행위자는 하위체계별 예약 주체 행이다", "from_clauses": ["R139-b"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 9 },
+    { "id": "REL-AUDIT-002", "title": "대기열 항목의 해소는 새 감사 행 추가로만 수행한다", "from_clauses": ["R139-c"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 6 },
+    { "id": "IR-AUDIT-002", "title": "재조정 대기열 화면의 소재와 미해소 건수 배지", "from_clauses": ["R139-d", "R139-f"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 7 },
+    { "id": "SEC-AUDIT-007", "title": "재조정 대기열 항목의 스코프는 참조 감사 행에서 파생한다", "from_clauses": ["R139-e"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 6 },
+    { "id": "CON-AUDIT-001", "title": "한정어 없는 감사 목록을 지시어로 쓰지 않는다", "from_clauses": ["R139-g"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 4 },
+    { "id": "DR-AUDIT-002", "title": "감사 행의 스키마 정본과 2-노드 조작용 두 칸", "from_clauses": ["R140"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 7 },
+    { "id": "DR-AUDIT-003", "title": "2-노드 조작은 복사뿐이며 판정 기준을 명시한다", "from_clauses": ["R140-a"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 6 },
+    { "id": "SEC-AUDIT-008", "title": "상대 노드 칸의 마스킹을 화면과 API 와 내보내기에 적용한다", "from_clauses": ["R140-b"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 5 },
+    { "id": "SEC-AUDIT-009", "title": "대상 역할을 조작 값에 넣지 않고 두 칸을 집계 축에서 뺀다", "from_clauses": ["R140-c"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 6 },
+    { "id": "OBS-AUDIT-007", "title": "복사의 감사 행 수는 내부 1행 경계 2행이다", "from_clauses": ["R140-d"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 6 },
+    { "id": "OBS-AUDIT-008", "title": "다건 조작의 감사는 실제로 바꾼 것마다 1행이다", "from_clauses": ["R141"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 6 },
+    { "id": "SEC-AUDIT-010", "title": "감사 행의 스코프는 대상의 귀속 워크스페이스에서 파생한다", "from_clauses": ["R141"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 6 },
+    { "id": "IR-AUDIT-003", "title": "감사 행 저장은 낱행이고 표시는 묶음 접기다", "from_clauses": ["R141-a"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 7 },
+    { "id": "SEC-AUDIT-011", "title": "묶음 건수는 열람자 스코프의 행만 센다", "from_clauses": ["R141-b"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 5 },
+    { "id": "OBS-AUDIT-009", "title": "동반 삭제되는 첨부는 감사 행을 만들지 않는다", "from_clauses": ["R141-c"], "target": "phase-1", "status": "planned", "stability": "stable", "ac_count": 5 },
+    { "id": "OBS-AUDIT-010", "title": "디렉토리 삭제와 복사의 서브트리는 하위 노드마다 1행이다", "from_clauses": ["R141-d"], "target": "phase-1", "status": "planned", "stability": "evolving", "ac_count": 6 }
+  ],
+  "clause_coverage": {
+    "assigned": ["R84", "R84-a", "R137", "R137-a", "R137-b", "R137-c", "R137-d", "R137-e", "R137-f", "R137-g", "R137-h", "R138", "R138-a", "R138-b", "R138-c", "R138-d", "R138-e", "R138-f", "R139", "R139-a", "R139-b", "R139-c", "R139-d", "R139-e", "R139-f", "R139-g", "R140", "R140-a", "R140-b", "R140-c", "R140-d", "R141", "R141-a", "R141-b", "R141-c", "R141-d"],
+    "covered": ["R84", "R84-a", "R137", "R137-a", "R137-b", "R137-c", "R137-d", "R137-e", "R137-f", "R137-g", "R137-h", "R138", "R138-a", "R138-b", "R138-c", "R138-d", "R138-e", "R138-f", "R139", "R139-a", "R139-b", "R139-c", "R139-d", "R139-e", "R139-f", "R139-g", "R140", "R140-a", "R140-b", "R140-c", "R140-d", "R141", "R141-a", "R141-b", "R141-c", "R141-d"],
+    "uncovered": [],
+    "uncovered_reason": {}
+  },
+  "split_decisions": [
+    { "clause": "R141", "split_into": 2, "trigger": "§2.3 Single Requirement Principle + §29.1-② 시스템 경계가 다르다 · §29.1-③ 검증 방법이 다르다", "detail": "한 행에 ①다건 입도(바꾼 것마다 1행)와 ②감사 행 스코프 파생(귀속 워크스페이스, 미귀속은 인스턴스 스코프) 두 규범이 들어 있다. 입도는 기록 계층에서 행 수를 세어 검증하고 스코프는 열람 계층에서 두 역할의 가시성으로 검증한다. → OBS-AUDIT-008(입도) · SEC-AUDIT-010(스코프)" },
+    { "clause": "R84-a", "split_into": 1, "trigger": "분리하지 않음 — 브리프 지시 준수", "detail": "§29.1-⑦(일부는 막혔다)로 불변성 축과 보존 기간 축을 가를 여지가 있었으나, 브리프가 R84-a 를 blocked·evolving·G27 로 명시 지정했으므로 한 요구사항으로 두고 불변성 축이 미결에 걸리지 않는다는 사실을 implementationNotes 에 남겼다. notes_for_reviewer 참조" },
+    { "clause": "R137", "split_into": 1, "trigger": "분리하지 않음 — §2.3 검토 결과 단일 규범", "detail": "①②③ 은 「다음 중 하나라도 참이면 기록한다」는 선언(disjunction)의 항이지 세 개의 독립 규범이 아니다. 항 하나만 떼면 규칙이 성립하지 않으므로 한 요구사항의 AC-1~AC-3 으로 두었다. 대신 하위 조항들은 아래 사유로 갈랐다" },
+    { "clause": "R137-a", "split_into": 1, "trigger": "§29.1-⑦ 걸린 공백이 다르다", "detail": "R137(포함 기준)은 G29, R137-a(제외 기준)는 G28 에 걸린다. 한 요구사항에 두면 어느 축이 왜 evolving 인지 추적되지 않는다" },
+    { "clause": "R137-c", "split_into": 1, "trigger": "§29.1-⑤ AC 목록이 너무 길어진다", "detail": "R137 의 기준 AC 4개 + 재도출된 조작 9개 = 13개. R137-d 는 이 열거에 이미 포함된 삭제·복구 짝 규칙이므로 흡수" },
+    { "clause": "R137-e", "split_into": 1, "trigger": "§29.1-② 시스템 경계가 다르다", "detail": "노드 조작이 아니라 인스턴스 설정 축이다" },
+    { "clause": "R137-f", "split_into": 1, "trigger": "§29.1-②③ 뷰어 경계 · 검증 방법이 다르다", "detail": "기록 계층이 아니라 조회·필터 계층. type=interface" },
+    { "clause": "R138", "split_into": 6, "trigger": "§29.1-⑤ AC 목록이 너무 길어진다 · §29.1-③ 검증 방법이 다르다", "detail": "R138 계열 전체를 한 요구사항에 담으면 AC 가 30개를 넘는다. 저장·해석(R138-a) / 문구 무차별성(R138-b) / 건수 금지(R138-c) / 조작명 단일화(R138-d) / 목적지 경로(R138-e) 는 각각 독립으로 위반 가능한 금지이며 검증 형태도 다르다. R138-f(행위자)는 부모가 규정하는 두 행의 내용이므로 부모에 흡수" },
+    { "clause": "R139-b", "split_into": 1, "trigger": "§29.1-② 시스템 경계가 다르다", "detail": "대기열이 아니라 audit_log 의 행위자 값과 주체 저장소 규약이다. type=data" },
+    { "clause": "R139-d", "split_into": 1, "trigger": "§29.1-②③ 화면 경계 · 검증 방법이 다르다", "detail": "R139-f(배지)는 같은 화면의 같은 통지 수단이므로 병합(§29.2-1). type=interface" },
+    { "clause": "R139-e", "split_into": 1, "trigger": "§29.1-② 시스템 경계가 다르다", "detail": "자료 구조가 아니라 열람 자격·격상 규칙. type=security" },
+    { "clause": "R139-g", "split_into": 1, "trigger": "§29.1-③ 검증 방법이 다르다", "detail": "코드·화면 동작이 아니라 라벨 규약이므로 review 로 검증. type=constraint" },
+    { "clause": "R140-a", "split_into": 1, "trigger": "§29.1-⑤ AC 목록이 너무 길어진다", "detail": "R140(칸 정의) 7개 + R140-a(판정 절차) 6개 = 13개" },
+    { "clause": "R140-b", "split_into": 1, "trigger": "§29.1-②③ 스키마가 아니라 노출 통제", "detail": "type 이 data 에서 security 로 갈린다" },
+    { "clause": "R140-c", "split_into": 1, "trigger": "§29.1-②③ 스키마가 아니라 노출 통제", "detail": "type 이 data 에서 security 로 갈린다" },
+    { "clause": "R140-d", "split_into": 1, "trigger": "§29.1-② 행 수의 정본이므로 독립", "detail": "R138·R141 둘 다 이 조항으로 행 수를 넘긴다. 흡수하면 정본이 사라진다" },
+    { "clause": "R141-a", "split_into": 1, "trigger": "§29.1-②③ 저장이 아니라 표시 계층", "detail": "type=interface" },
+    { "clause": "R141-b", "split_into": 1, "trigger": "§29.1-② 표시가 아니라 노출 통제", "detail": "type=security. R138-c 와의 경계 판정을 담는다" },
+    { "clause": "R141-c", "split_into": 1, "trigger": "§29.1-③ 검증 방법이 다르다", "detail": "행이 생기는 것이 아니라 생기지 않는 것을 단언한다" },
+    { "clause": "R141-d", "split_into": 1, "trigger": "§29.1-⑦ 걸린 공백이 다르다", "detail": "G27·G28 둘에 걸려 stability 가 evolving 으로 갈린다. 부모 R141 은 stable" }
+  ],
+  "absorbed_as_ac": [
+    { "parent": "R84", "children": ["R137-b"], "why": "R137-b 는 R84 열거의 지위를 규범에서 예시로 내리는 조항이므로 R84 요구사항의 AC-3·AC-4 로 표현된다" },
+    { "parent": "R137-c", "children": ["R137-d"], "why": "R137-d 의 규범(삭제를 휴지통 복구와 짝으로 기록)은 R137-c 의 8종 열거에 이미 들어 있고, 나머지는 그 열거의 근거다" },
+    { "parent": "R138", "children": ["R138-f"], "why": "행위자를 두 행 모두에 적는 것은 부모가 규정한 두 행의 내용이므로 AC-4~AC-7 로 편입" },
+    { "parent": "R139", "children": ["R139-a"], "why": "재조정 신규 노드가 감사 1행 + 대기열 1건이라는 것은 부모의 사실은 두 번 적히지 않는다 를 재조정 경로에 적용한 것이므로 AC-6·AC-7 로 편입" },
+    { "parent": "R139-d", "children": ["R139-f"], "why": "§29.2-1 — 같은 화면(감사 로그 카테고리)의 소재와 그 카테고리에 붙는 배지로 동작이 사실상 하나다" }
+  ],
+  "non_normative_demoted": [
+    { "clause": "R137-g", "field": "rationale", "carried_by": "OBS-AUDIT-005", "why": "G22 등재 사유의 사실 오류 정정 — 규범이 아니라 왜 이 조항이 필요했는지의 정확한 서술. 공백의 실체가 복사가 무기록 이 아니라 출처를 표현할 수 없고 타인 소유 노드 조작이 무기록 이었다는 판정을 담았다" },
+    { "clause": "R137-h", "field": "implementationNotes", "carried_by": "OBS-AUDIT-003", "why": "인지된 잔여 위험 — R48 다운로드·R66-b 첨부 다운로드·R22·R58-b MCP 읽기가 설계상 무기록이라는 사실. 규범이 아니라 구현자가 알아야 할 한계" }
+  ],
+  "blocked_by_gaps": [
+    { "req_id": "OBS-AUDIT-002", "gap": "G27", "status": "blocked", "why": "보존 기간의 기본값·휴지통 보존과의 대소 관계·값 0 의 의미가 전부 미정이라 설정 축을 구현할 수 없다" }
+  ],
+  "gap_traced_not_blocked": [
+    { "req_id": "OBS-AUDIT-003", "gap": "G29", "stability": "evolving", "why": "개명이 기준 ① 의 위치 에 걸리는지가 패널 1:1 로 열려 있다. 기준 자체는 구현 가능하므로 blocked 가 아니다" },
+    { "req_id": "OBS-AUDIT-004", "gap": "G28", "stability": "evolving", "why": "md 새 버전을 버전 이력이 재현하므로 제외 로 판정했으나 R78 버전 사이드카에 행위자 칸이 없어 그 위임이 완결되지 않는다" },
+    { "req_id": "OBS-AUDIT-006", "gap": "G27", "stability": "stable", "why": "보존 기간 축소 기록이 축소된 보존 기간의 적용을 받는지가 미규정 — 기록 자체는 확정이므로 stable" },
+    { "req_id": "REL-AUDIT-001", "gap": "G27", "stability": "stable", "why": "대기열은 해소까지 남는데 참조 감사 행은 만료로 사라질 수 있어 참조를 잃는 상태의 처분이 미규정" },
+    { "req_id": "DR-AUDIT-003", "gap": "G29", "stability": "stable", "why": "개명이 2-노드 열거에서 빠진 사유가 G29 다. 1-노드 판정 자체는 R76-a 로 확정이므로 stable" },
+    { "req_id": "OBS-AUDIT-008", "gap": "G27", "stability": "stable", "why": "낱행 저장이 만드는 볼륨을 보존 기간이 받는데 그 값이 없다" },
+    { "req_id": "OBS-AUDIT-010", "gap": "G27", "stability": "evolving", "why": "서브트리 낱행이 만드는 행 수의 상한과 잔존 기간이 규정되지 않았다" },
+    { "req_id": "OBS-AUDIT-010", "gap": "G28", "stability": "evolving", "why": "이 조항이 지키려는 삭제 역질의가 본문 행위자 부재와 맞물려 지운 사람 까지만 답한다" }
+  ],
+  "validate_spec": { "errors": 0, "warnings": 2, "warning_codes": ["SRS-W072", "SRS-W023"], "note": "둘 다 AUDIT scope 밖의 기존 경고다 — SRS-W072 는 브리프가 무시하라고 지정한 것, SRS-W023 은 다른 저작자 scope 의 FR-SHELL-011 draft 다. AUDIT scope 발 오류·경고 0건" },
+  "notes_for_reviewer": [
+    "R84-a 를 쪼개지 않은 것이 가장 크게 갈린 자리다. SRS-MD §29.1-⑦(일부는 막혔다)로 보면 '수정·삭제 불가'(확정)와 '보존 기간'(G27 미결)은 서로 다른 lifecycle 이라 갈라야 한다. 그러나 브리프가 R84-a 에 대해 status: blocked · stability: evolving · G27 trace 를 명시 지정했으므로 지시를 따라 한 요구사항으로 두었다. 대가는 실재한다 — 불변성 구현이 G27 뒤에 묶여 blocked 로 읽힌다. 그래서 implementationNotes 에 '불변성 축 자체는 미결에 걸리지 않으므로 blocked 는 보존 기간 축에서만 발생한다'를 명시했다. 쪼개는 것이 낫다고 판단되면 OBS-AUDIT-002 를 둘로 나누면 되고, AC 는 이미 두 축이 분리돼 있다(AC-1·AC-2 = 불변성 / AC-3 = 보존 기간).",
+    "R137 을 세 요구사항으로 쪼개지 않았다. 브리프가 '한 행에 다중 규범이 있으므로 §2.3 검토 필수'라고 지목했고 검토했다 — ①②③ 은 '다음 중 하나라도 참이면'이라는 선언(disjunction)의 항이지 독립 규범이 아니다. '기준 ① 하나만' 은 규칙으로 성립하지 않으며(나머지 둘이 빠지면 판정이 달라진다) 행위자·경계·검증 방법이 전부 같다. 반면 R91(모드 토글 세 경계 상태)은 각 상태가 독립으로 성립하므로 브리프의 예시가 이 자리에 그대로 적용되지 않는다. 대신 R137 계열의 하위 6개를 각각의 §29.1 트리거로 갈랐다.",
+    "R141 은 쪼갰다 — 이쪽이 진짜 다중 규범이다. '바꾼 것마다 1행'(기록 입도)과 '스코프는 대상의 귀속 워크스페이스에서 파생'(열람 자격)은 서로 독립으로 참·거짓이 갈리고, 조항 자신이 후자를 '이 규칙은 지금까지 원장에 없었다 … 이 조항이 원장으로 끌어올린다'로 별도 등재한다. R139-e 가 참조하는 것도 후자다.",
+    "risk 를 전건 medium 으로 두었다. §3.1 CRITICAL 매핑(C1~C14)이 지목한 조항에 배정 조항이 하나도 없기 때문이다(R84 는 H8 = HIGH). 다만 REL-AUDIT-001(재조정 대기열)은 C9→R77 · C10→R77-a 에서 파생한 자리이므로 실질 위험은 medium 보다 높을 수 있다 — 매핑이 R139 를 이름으로 지목하지 않아 규칙대로 medium 을 유지했다.",
+    "priority high 는 REL-AUDIT-001 하나다. 원장 §4 수용 기준 13번이 '재조정 대기열에 기재되고(R77·R139)'로 R139 를 이름으로 지목하며 검증 방법을 '통합 테스트'로 정한다. R139 의 하위 조항(R139-b~g)은 §4 가 지목하지 않으므로 medium 이고, 그 medium 은 도구 기본값이지 원장의 판단이 아니다 — 해당 요구사항들의 implementationNotes 에 그 사실을 남겼다.",
+    "R138-c 와 R141-b 가 문면상 충돌로 읽힐 수 있는 자리를 양쪽 implementationNotes 에 같은 판정으로 적었다(묶음 라벨 안의 건수는 허용, 라벨 밖의 별도 지표·배지·필터는 금지). 원장 R141-b 가 '이 조정을 적지 않으면 구현자가 두 조항 사이에서 갈린다'고 명시했기 때문이다.",
+    "원장이 정하지 않은 축 셋을 AC 가 아니라 implementationNotes 에 미결로 남겼다. ① IR-AUDIT-001 — 조작 distinct 집합을 열람자 스코프에서 파생할지 전역에서 파생할지가 없다. 전역이면 그 자체가 다른 워크스페이스의 조작을 알리므로 R138-c·R141-b 와 같은 축인데 조항 근거는 없다. ② OBS-AUDIT-006 — 보존 기간 축소를 기록해도 그 감사 행이 축소된 보존 기간의 적용을 받는지가 없다. ③ REL-AUDIT-001 — 대기열은 해소까지 남는데 참조 감사 행은 만료로 사라질 수 있어 참조를 잃는 상태의 처분이 없다. 셋 다 원장에 근거가 없어 값을 지어내지 않았다.",
+    "R138 의 고정 문구를 AC 에서 '이 워크스페이스 밖' 이라는 문자열로 못박지 않았다. 원장 R138-a 가 그 문구를 괄호 예시로 제시하고 정확한 표기를 화면 설계에 위임하는 형태이므로, AC 는 '동일 고정 문구'라는 검증 가능한 성질(서로 다른 두 외부 워크스페이스가 같은 문구)로 썼다. R138-b 의 무차별성 AC 8개가 실질 계약이다.",
+    "R140-b·R138-a 가 요구하는 마스킹을 '표시 계층이 아니라 조회 계층'으로 구현하라는 지시를 양쪽 implementationNotes 에 넣었다. 원장 R140-b 가 'API 가 원시 노드 ID 를 그대로 실어 보내면 마스킹이 무력해진다'를 명시했는데, 이것은 AC 만으로는 계층 선택을 강제하지 못하는 자리다.",
+    "Code trace 는 브리프 지시대로 0건이다. relatedDocs 는 화면을 소유한 04.screen-design-settings.md 만 달았고, 화면이 없는 순수 기록·스키마 요구사항에는 달지 않았다.",
+    "등재 중 도구가 두 가지를 강제했다. ① acceptanceCriteria 문자열에 'AC-N:' 접두사를 넣으면 도구가 한 번 더 붙여 중복된다(OBS-AUDIT-001 에서 발생, replace_acceptance_criteria 로 교정). ② changeNotes 는 '날짜|변경|사유' 3셀이고 셀 안 파이프·개행이 금지된다. 브리프 §8.1 에 ①을 추가해 두면 다음 저작자가 같은 자리를 밟지 않는다."
+  ]
+}
