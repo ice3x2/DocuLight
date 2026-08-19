@@ -20,10 +20,28 @@
 
 검증이 낸 것 중 **고치지 않은 것**이다. HIGH 3 은 전건 수정했고 커밋 `7cf0144` 에 있다.
 
-1. **[MEDIUM] scope 문서 11개 전량의 §1 Scope Overview · §2 Scope Boundaries · §3 Assumptions and Constraints 가 스캐폴딩 문구 그대로다** (`Describe the scope.` · `- None`). §2 는 경계 선언이라 비어 있으면 다음 저작자가 요구사항을 어디 둘지 판정할 근거가 없다. `eval-fidelity.md` 참조.
-2. **[MEDIUM] 소유권 포인터 2곳이 틀린 scope 를 지목한다** — `08.app-shell.srs.md:419` 와 `14.storage.srs.md:1437` 이 `ACL`·`EDITOR` 를 가리키는데 실제 소유자는 `WORKSPACE` 다(`R39`·`R80` 계열). 나머지 22곳은 정확하다.
-3. **[MEDIUM] `OBS-AUDIT-002` 는 §29.1-⑦ 로 쪼개야 한다** — 보존 기간(공백 `G27` 로 막힘)과 불변성(막히지 않음)이 한 블록에 묶여 불변성 축까지 `blocked` 로 잠겼다.
-4. 나머지 MEDIUM 4 · LOW 9 는 두 `eval-*.md` 에 있다.
+**MEDIUM 7 · LOW 9 는 2026-08-19 에 전건 처분했다**(커밋 `8a3e701`). 처분 내역은 `fix-g1.md`·`fix-g2.md`·`fix-g3.md` 에 있고 그중 **3건은 기각**이다 — 지적이 틀렸거나 고치는 것이 더 나빴다. 기각 사유는 각 요구사항 블록의 Implementation Notes 에도 남겨 다음 패스가 같은 지적을 반복하지 않게 했다.
+
+기각된 것 중 하나가 특히 중요하다. *"예시 문구를 AC 로 못박은 자리와 안 못박은 자리의 처리가 갈린다"* 는 **허위 양성**이었다 — `R105-a` 는 문면을 직접 정하고(*"…항상 동일한 문구(「권한에 따라 일부 항목이 제외될 수 있습니다」)를 표시한다"*) `R106-c` 는 **「예:」로 표기**한다. 처리가 갈린 것이 원장을 정확히 따른 결과였고, 지적대로 「일관되게」 만들었으면 `R105-a` 가 정한 문면이 SRS 에서 사라졌을 것이다.
+
+**남은 것은 없다.** 다음 라운드에서 새로 검증하면 새 지적이 나올 수 있다.
+
+## 도구 공백 — 기존 요구사항에 Change Notes 를 추가할 수 없다
+
+**2026-08-19 실측.** 개정 사유를 남기라는 것이 SRS-MD §21.3-⑥ 의 요구인데, **이미 등재된 요구사항에 Change Notes 행을 추가하는 MCP mutation 이 없다.**
+
+| 시도 | 결과 |
+|---|---|
+| `add_requirement` 의 `changeNotes` | 신규 생성 전용 |
+| `edit_requirement_fields` | 파라미터에 `changeNotes` 가 없다 |
+| `edit_requirement_table_rows` | `section` enum 이 `verification_evidence`·`trace_links` 둘뿐 |
+| `append_section_note` 에 `section: "Change Notes"` · `"change_notes"` | 둘 다 `USAGE: unknown section` 으로 거부 |
+
+`append_section_note` 가 받는 section 값은 `implementation_notes` 계열이다. 그래서 이번 개정에서 **고친 요구사항들의 개정 사유는 Change Notes 가 아니라 Implementation Notes 에 날짜와 함께 들어갔다.** 손으로 파일을 고치는 것은 금지돼 있어(황금률 — mutation 이 SHA 스냅샷으로 stale-check 한다) 우회하지 않았다.
+
+**다음에 이 자리를 만나면**: ① speckiwi 에 기능을 요청하거나 ② Implementation Notes 에 `[YYYY-MM-DD]` 접두로 남기는 지금 방식을 규약으로 굳히거나 ③ 개정을 `add_requirement` + `update_status(discarded)` 로 처리해 새 블록의 `changeNotes` 를 쓰는 세 갈래다. ③은 ID 가 바뀌므로 §11.4-③(표현을 고칠 때는 ID 유지)과 부딪힌다.
+
+---
 
 ## 이 실행에서 확인된 것 — 도구·규칙의 사실
 
