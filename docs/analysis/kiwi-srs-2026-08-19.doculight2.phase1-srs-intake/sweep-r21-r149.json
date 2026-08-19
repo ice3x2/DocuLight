@@ -1,0 +1,225 @@
+{
+  "stale_sites_found": [
+    {
+      "file": "docs/spec/02.product-architecture.srs.md",
+      "line": 11,
+      "req_id": "",
+      "what": "§1 Scope Overview — \"1.0 에서 넘어오는 AI·벡터검색·MCP 표면\"",
+      "why_stale": "R21-b 는 넘어오는 것을 소스가 아니라 도구 계약과 동작으로 못박는다. 어휘가 코드 이동을 함의했다"
+    },
+    {
+      "file": "docs/spec/02.product-architecture.srs.md",
+      "line": 20,
+      "req_id": "CON-ARCH-002",
+      "what": "§2 In Scope — \"코드베이스 전략 — 1.0 백엔드 이식, 프론트엔드 신규 작성, 1.0 동결\"",
+      "why_stale": "R21 개정이 백엔드·프론트엔드 전부 신규 작성으로 바꿨다. 이식은 초판 문면이다"
+    },
+    {
+      "file": "docs/spec/02.product-architecture.srs.md",
+      "line": 23,
+      "req_id": "FR-ARCH-001",
+      "what": "§2 In Scope — \"1.0 의 AI 기능·벡터검색·MCP 서버 이관\"",
+      "why_stale": "R21-a 가 A-RAG 을 신규 작성으로, R21-b 가 인계 대상을 도구 계약과 동작으로 정했다"
+    },
+    {
+      "file": "docs/spec/02.product-architecture.srs.md",
+      "line": 331,
+      "req_id": "CON-ARCH-002",
+      "what": "제목 \"새 리포에 1.0 백엔드를 이식하고 프론트엔드는 신규 작성한다\" · Requirement · Rationale · AC-2~AC-5 · Implementation Notes ①",
+      "why_stale": "R21-b 가 이 요구를 R21 개정의 스윕 대상 셋 중 하나로 이름을 들어 지목했다. 요구 문면 전체가 초판 이식 전제 위에 있었다"
+    },
+    {
+      "file": "docs/spec/02.product-architecture.srs.md",
+      "line": 218,
+      "req_id": "FR-ARCH-001",
+      "what": "제목 \"1.0 의 AI 기능과 MCP 서버를 이관한다\" · Requirement · Rationale · AC-1~AC-3 · Implementation Notes · trace notes 3행",
+      "why_stale": "R21-b 가 지목한 셋 중 둘째. AC-1 이 \"1.0 의 smart_search 가 2.0 에서 동작한다\" 였는데 R21-a 가 그것을 옮기지 않는다고 정했다"
+    },
+    {
+      "file": "docs/spec/02.product-architecture.srs.md",
+      "line": 102,
+      "req_id": "SEC-ARCH-002",
+      "what": "Rationale \"1.0 의 AI·MCP 기능을 문자 그대로 이관하면 안 되는 이유\"",
+      "why_stale": "R21-b 가 지목한 셋 중 셋째. 필터 규범은 불변이나 필터가 걸리는 대상이 이식물이 아니라 신규 작성물이 됐고, R21-a 가 이 요구를 근거로 인용한다"
+    },
+    {
+      "file": "docs/spec/02.product-architecture.srs.md",
+      "line": 93,
+      "req_id": "SEC-ARCH-001",
+      "what": "Implementation Notes ① \"1.0 에서 이관되는 read 계열 도구가 무인증 경로를 그대로 갖고 넘어오는 것이 실패 모드다\"",
+      "why_stale": "코드가 넘어오지 않으므로 실패 모드의 기술이 틀렸다. 위험 자체는 남는다 — 계약을 물려받으면서 인증 요건을 얹지 않으면 같은 구멍이 신규 구현에 재현된다"
+    },
+    {
+      "file": "docs/spec/07.editor.srs.md",
+      "line": 729,
+      "req_id": "FR-EDITOR-008",
+      "what": "Rationale \"병합 UI 는 @codemirror/merge 이식 자산을 재활용하며\"",
+      "why_stale": "R21 초판의 근거 표가 CodeMirror 6 을 1.0 유지 자산으로 열거한 어휘다. R21 개정 뒤 그것은 ARCH scope 가 고른 프레임워크 중립 패키지이지 1.0 이식물이 아니다"
+    },
+    {
+      "file": "docs/spec/13.workspace.srs.md",
+      "line": 27,
+      "req_id": "",
+      "what": "§2 Out of Scope — \"검색 탭이 놓이는 화면 자리 — SHELL scope 가 소유한다\"",
+      "why_stale": "R149 계열 신설로 SHELL 이 자리뿐 아니라 검색 대상·질의 문법·결과 표시까지 갖게 됐다. 위임 문장이 위임 범위를 좁게 적고 있었다"
+    },
+    {
+      "file": "docs/spec/13.workspace.srs.md",
+      "line": 416,
+      "req_id": "SEC-WORKSPACE-004",
+      "what": "표시 필터 정본의 표면 목록에 실린 `검색 결과` 가 무엇을 담는지가 비어 있었다",
+      "why_stale": "R149 가 검색 대상 넷을 정하면서 이 표면의 내용이 확정됐고, G36 ④ 가 첨부파일 이름을 지목하며 \"R80 표면 목록에 첨부가 들어가는지 확인하라\" 고 적는다"
+    },
+    {
+      "file": "docs/spec/08.app-shell.srs.md",
+      "line": 990,
+      "req_id": "FR-SHELL-010",
+      "what": "trace note \"결과 목록을 소유하는 좌측 검색 탭이 이 동선의 도착지다\" 가 FR-SHELL-001 을 가리킨다",
+      "why_stale": "결과 목록의 소유자가 FR-SHELL-013 으로 새로 섰다. 기존 행은 지우지 않고 새 trace 를 더해 도착지를 정확히 했다"
+    },
+    {
+      "file": "docs/spec/09.auth.srs.md",
+      "line": 59,
+      "req_id": "SEC-AUTH-001",
+      "what": "제목·Requirement \"1.0 로그인 기반 이식 — bcrypt · HttpOnly 세션 쿠키 · rate limit\" · SEC-AUTH-017 Rationale(line 1557) \"R57 이 1.0 로그인 기반(bcrypt)을 그대로 이식하므로 해시가 호환된다\"",
+      "why_stale": "고치지 않았다 — 아래 rejected_changes 참조. R57 이 개정되지 않았고 R21 개정도 R57 을 이름으로 지목하지 않아, 여기를 고치면 원장에 없는 판정을 SRS 가 내리는 것이 된다"
+    }
+  ],
+  "fixed": [
+    {
+      "req_id": "CON-ARCH-002",
+      "how": "제목을 「새 리포에서 백엔드와 프론트엔드를 신규 작성하고 1.0 에서는 기능을 물려받는다」로, Requirement 를 R21 개정 문면으로 교체. Rationale 재작성. AC 를 7개로 교체(별도 리포 · 백엔드 신규 · 프론트엔드 신규 · 빌드가 1.0 경로를 가리키지 않음 · 기능 인계의 형태와 범위는 FR-ARCH-001 소유 · REST 표면 대응 엔드포인트의 권한 필터 · 1.0 동결 유지). Implementation Notes 에 R21 근거 표가 개정 전 처분을 담아 인용 금지라는 노트, 개정 근거가 언어 장벽이 아니라는 정정, G32 의 nodemailer 전제 약화를 추가. Research 에 기존 두 항목이 개정 전 전사임을 명시. trace 에 R21-a·R21-b(informed_by)·R21-c(related_to) 추가"
+    },
+    {
+      "req_id": "FR-ARCH-001",
+      "how": "제목을 「1.0 의 AI·MCP 기능을 도구 계약과 동작으로 물려받아 신규 작성한다」로 교체. Requirement 를 R21-b 의 인계 형태 + R21-a 의 smart_search 비이관으로 재작성. Rationale 재작성. AC 5개로 교체(도구 계약 동형 · 화면 동작 동형 · 1.0 소스 무이동 · A-RAG 신규 · 인증/ACL 미적용 경로 부재). Implementation Notes 에 개정 사유와 A-RAG 실측 결함 둘 + arag-probe.md 경로, 그리고 R13 미개정 경고를 추가. trace 에 R21·R21-a·R21-b(informed_by)·CON-SHELL-002(related_to) 추가하고 R13 행 notes 에 미개정 사실을 병기, depends_on 3행의 `이관 조건` 을 `인계 조건` 으로 교정"
+    },
+    {
+      "req_id": "SEC-ARCH-002",
+      "how": "Rationale 의 `문자 그대로 이관` 을 `그대로 물려받으면` 으로 교체. Implementation Notes 에 (a) R21-b 가 이 요구를 스윕 대상으로 지목했고 규범은 불변이나 대상이 신규 작성물이라 「1.0 이 이미 그렇게 한다」를 충족 근거로 쓸 수 없다는 노트, (b) R21-a 가 이 요구를 근거로 인용하며 FTS5 는 그 조항의 근거이지 이 요구의 규정이 아니고 벡터 축에는 순서 문제가 남는다는 노트 추가. trace 에 R21-a(related_to)·CON-SHELL-002(related_to) 추가"
+    },
+    {
+      "req_id": "SEC-ARCH-001",
+      "how": "Implementation Notes ① 을 재작성 — 1.0 read 계열 도구가 무인증이었다는 사실은 유지하고, 실패 모드를 「코드가 넘어온다」가 아니라 「계약을 물려받으면서 인증 요건을 얹지 않으면 같은 구멍이 신규 구현에 재현된다」로 바꿨다. 도구 목록 전량 훑기 지시는 유지"
+    },
+    {
+      "req_id": "FR-EDITOR-008",
+      "how": "Rationale 의 `@codemirror/merge 이식 자산을 재활용` 을 `ARCH scope 가 고른 프레임워크 중립 패키지 @codemirror/merge 위에 세우며` 로 교체하고 비용 근거(부품을 새로 들이지 않는다)는 보존. Implementation Notes 에 그 어휘가 R21 초판 것이었고 규범의 실질은 유지된다는 노트 추가"
+    },
+    {
+      "req_id": "SEC-WORKSPACE-004",
+      "how": "Implementation Notes 에 R149 로 `검색 결과` 표면의 내용이 확정됐다는 사실과 G36 ④(첨부 이름 검색의 권한 판정)가 이 요구의 표면 목록을 지목한다는 미결을 추가. trace 에 FR-SHELL-013(related_to) 추가. 값은 정하지 않았다"
+    },
+    {
+      "req_id": "FR-SHELL-010",
+      "how": "trace 에 FR-SHELL-013(related_to) 추가 — 태그 클릭 동선의 도착지가 결과 목록을 소유하는 새 요구임을 그래프에 드러냈다. 기존 FR-SHELL-001 행은 지우지 않았다"
+    },
+    {
+      "req_id": "FR-SHELL-001",
+      "how": "trace 에 FR-SHELL-013(related_to) 추가 — 이 요구는 탭의 존재와 배치만 갖고 탭이 무엇을 하는지는 새 요구가 갖는다"
+    },
+    {
+      "req_id": "(scope 문서 §1·§2·§3 — Edit)",
+      "how": "02 §1 `넘어오는`→`물려받는`; 02 §2 In Scope 두 줄을 개정 문면으로 교체; 02 §2 Out of Scope 에 앱 화면 텍스트 검색은 SHELL 소유이고 경계는 CON-SHELL-002 라는 항목 추가. 08 §1 에 셸이 화면 밖에도 갖는 규칙으로 전역 검색을 추가하고 그 이유(자리를 소유한 scope 가 그 자리가 무엇을 하는지도 갖는다)를 적음; 08 §2 In Scope 에 전역 검색 항목 추가; 08 §2 Out of Scope 에 검색 결과 표시 필터 규범·인덱스 경계·텍스트 색인 시점(G36 ⑤)·의미 검색과 MCP 인증인가의 위임 두 줄 추가; 08 §3 미결 목록에 G36 추가. 13 §2 Out of Scope 의 검색 위임 문장을 「탭과 그 탭의 검색 대상·질의 문법·결과 표시」로 넓혀 FR-SHELL-013·FR-SHELL-014 를 지목"
+    },
+    {
+      "req_id": "(00.index.md — Edit)",
+      "how": "§9 에 G36 행 추가(Impact = FR-SHELL-013 · FR-SHELL-014). 서문의 행 축 문장을 15행/17행 → 16행/18행, blocked 12건 → 14건으로 갱신. 하단 Phase 2 전용 축 주의의 Phase 1 착수 판단 건수를 12 → 13 으로 갱신(원장 머리표가 이미 13 으로 적고 있어 일치한다). §5·§6 카운트는 add_requirement 의 indexSync 가 자동 갱신했다(planned 247 · blocked 14 · functional 97 · constraint 32)"
+    }
+  ],
+  "new_requirements": [
+    {
+      "id": "FR-SHELL-013",
+      "from_clauses": ["R149", "R149-a", "R149-d"],
+      "scope": "SHELL",
+      "status": "blocked",
+      "stability": "evolving"
+    },
+    {
+      "id": "FR-SHELL-014",
+      "from_clauses": ["R149-b", "R149-c"],
+      "scope": "SHELL",
+      "status": "blocked",
+      "stability": "evolving"
+    },
+    {
+      "id": "CON-SHELL-002",
+      "from_clauses": ["R149-e"],
+      "scope": "SHELL",
+      "status": "planned",
+      "stability": "stable"
+    }
+  ],
+  "scope_decision": {
+    "chosen": "SHELL",
+    "why": "R149 는 소재를 좌측 사이드바 검색 탭으로 정하고 결과의 소유까지 그 탭에 준다. 그 탭을 세운 R3 와 결과 소유를 정한 R106-a 는 배정표에서 둘 다 SHELL 이다. R149-e 는 스스로 '이 조항이 R3 검색 탭의 범위를 텍스트로 한정한다' 고 적어 대상이 SHELL 소유 조항임을 문면으로 지목한다. 13.workspace §2 Out of Scope 도 이미 '검색 탭이 놓이는 화면 자리는 SHELL scope 가 소유한다' 고 위임해 두었다. 인지된 긴장 — 08 §1 은 이 scope 를 '진입점의 존부와 배치와 표시 조건만' 갖는다고 선언한다. 그러나 같은 절이 딥링크·이름 충돌·런타임 설정 저장소를 '화면 밖에도 걸리는 셸 소유 규칙' 으로 이미 갖고 있어 이 형태의 선례가 있고, 검색을 다른 scope 로 보내면 결과 표면을 소유한 탭과 그 탭이 무엇을 하는지가 갈라진다. §1 을 그에 맞게 갱신했다.",
+    "rejected": [
+      {
+        "scope": "WORKSPACE",
+        "why_not": "이 scope 의 축은 경계다 — 인덱싱이 경계를 넘는다는 사실(R39)과 표시 직전 권한 필터(R80)를 갖는다. 검색 결과를 거르는 규칙은 소유하지만 무엇을 검색하는가는 소유하지 않으며, §2 Out of Scope 가 검색 탭을 명시적으로 SHELL 에 위임한다. R149 를 여기 두면 그 위임과 정면으로 부딪힌다"
+      },
+      {
+        "scope": "ARCH",
+        "why_not": "MCP·AI 표면(R13·R22)을 갖는다. R149-e 가 좌측 검색 탭을 AI 밖으로 명시적으로 밀어냈으므로, 텍스트 검색을 이 scope 에 두면 그 조항이 그은 경계가 한 scope 안에서 사라진다"
+      },
+      {
+        "scope": "STORAGE",
+        "why_not": "축이 영속이다. 벡터 인덱스의 갱신 시점(R79)은 갖지만 텍스트 색인은 어느 조항도 다루지 않고 그 시점 자체가 G36 ⑤ 로 열려 있다. 여기 두면 「무엇을 검색하는가」가 아직 소유자도 없는 영속 축을 따라가게 된다"
+      },
+      {
+        "scope": "EDITOR",
+        "why_not": "본문 편집·렌더링 경험이 축이다. 검색은 사이드바 표면이고 원장이 그 소재를 좌측 탭으로 못박았다"
+      },
+      {
+        "scope": "(신규 SEARCH scope 신설)",
+        "why_not": "결과 표면·필터 팝오버·태그 클릭 동선이 전부 좌측 사이드바 안에 있어 SHELL 과 경계를 계속 나눠 갖게 된다. scope 신설은 지시 범위 밖이며 지시가 '각 scope 문서의 §2 를 읽고 정하라' 로 기존 scope 중 선택을 요구했다"
+      }
+    ]
+  },
+  "index_g36": {
+    "impact": "FR-SHELL-013 · FR-SHELL-014",
+    "row": "| G36 | `R149` 검색 조항이 남긴 값들이 정해지지 않았다 — 필터 팝오버의 기본값 · AND 와 OR 의 우선순위와 혼용 해석 · 결과 건수 상한과 발췌 길이 · 첨부파일 이름 검색의 권한 판정 · 텍스트 색인 시점. 이 열거가 전량이라고 가정하지 마라 | FR-SHELL-013 · FR-SHELL-014 | open |"
+  },
+  "rejected_changes": [
+    {
+      "what": "SEC-AUTH-001 의 제목·Requirement 에서 「1.0 로그인 기반을 그대로 이식한다」를 「신규 작성」으로 바꾸는 것 (09.auth.srs.md:59·76)",
+      "why": "R57 문면이 여전히 '1.0 의 로그인 기반을 그대로 이식한다' 이고 개정되지 않았다. R21 개정은 '백엔드·프론트엔드 전부 신규 작성' 이라는 일반 조항이고 R57 을 이름으로 지목하지 않는다. R21-b 는 스윕 대상을 CON-ARCH-002·FR-ARCH-001·SEC-ARCH-002 셋으로 명시했고 SEC-AUTH-001 은 그 셋에 없다. 원장에 없는 판정을 SRS 가 내리지 않기 위해 보고만 한다 — 원장이 R57 을 처분해야 한다"
+    },
+    {
+      "what": "SEC-AUTH-017 Rationale(09.auth.srs.md:1557)의 「R57 이 1.0 로그인 기반(bcrypt)을 그대로 이식하므로 해시가 호환되고 사용자가 비밀번호를 다시 만들지 않아도 된다」 수정",
+      "why": "위와 같은 이유. 다만 이 문장은 결론(해시 호환)이 전제(코드 이식)에 매달려 있어 R57 처분과 함께 반드시 재판정해야 한다 — bcrypt 해시의 호환은 데이터 형식의 성질이지 코드 이식의 귀결이 아니므로, 전제만 바뀌고 결론은 살아남을 가능성이 높다"
+    },
+    {
+      "what": "원장 §2.10 의 `R21 근거` 표(00.decision-log.md:424~434) 갱신",
+      "why": "요청 범위가 SRS 이고 원장은 소유가 다르다. 그 표는 여전히 '그대로 이식 / 이식 후 확장 / 유지' 로 적혀 R21 개정 문면과 어긋난다 — CON-ARCH-002 Implementation Notes 에 인용 금지 표식을 달아 SRS 쪽에서 잘못 인용되지 않게 막았다"
+    },
+    {
+      "what": "원장 R13 행(00.decision-log.md:405) 갱신",
+      "why": "같은 이유. FR-ARCH-001 의 trace note 와 Implementation Notes 에 미개정 사실과 R21-a 가 그 문면을 좁혔다는 판정 근거를 남겼다"
+    },
+    {
+      "what": "G36 이 남긴 값들을 AC 로 쓰는 것 — 필터 팝오버의 기본값, AND/OR 우선순위, 결과 건수 상한, 발췌 길이, 강조 방식, 첨부 이름 검색의 권한 판정, 텍스트 색인 시점",
+      "why": "원장이 이 값들을 정하지 않았다고 명시적으로 선언한다. 전부 implementationNotes 의 미결 항목과 `Doc … #G36 related_to` trace 로만 남겼다"
+    },
+    {
+      "what": "12.audit-log(196·954) · 10.access-control(1124) · 14.storage(362·366·373·397) · 08.app-shell(163·876) · 07.editor(24·36) · 10.access-control(28) · 02(869) 의 `이식`·`이관`",
+      "why": "R21 과 무관한 다른 뜻이다 — 규칙의 이식(다른 조항의 처방을 옮겨 적용), ACL 의 이식(경로 변경 시 권한이 따라감), Phase 2 이관(단계 이동), 스키마 정본 이관(조항 간 소유 이동), 대량 이관(사용자 조작). 고치면 규정의 뜻이 바뀐다"
+    }
+  ],
+  "validate_spec": {
+    "errors": 0,
+    "warnings": 2
+  },
+  "notes_for_reviewer": [
+    "원장 안에 미해소 충돌이 둘 남아 있다. ① R13(405행)이 여전히 `1.0 의 AI 기능(LangChain / 벡터검색 / smart_search)과 MCP 서버를 이관한다` 이고, R21-a 의 `1.0 의 smart_search 를 옮기지 않는다` 와 정면으로 부딪힌다. R21-a 가 대상을 이름으로 지목하므로 SRS 는 R21 계열을 따랐다. ② R57(511행)이 `1.0 의 로그인 기반을 그대로 이식한다` 인데 R21 개정의 `백엔드 전부 신규 작성` 과 부딪히고, R57 은 어느 조항에도 지목되지 않았다. 이쪽은 SRS 를 건드리지 않았다.",
+    "원장 §2.10 의 `R21 근거` 표(424~434행)가 개정과 함께 갱신되지 않아 R21 행과 그 아래 표가 서로 다른 처분을 말한다. 표 아래 문장 `따라서 리포는 분리하되 백엔드만 이식한다`(434행)도 그대로다. G32 심의가 이 표를 인용하고 있어 표를 지우면 그 근거가 끊기므로, 원장에서는 인용 주의를 다는 형태의 처분이 적절해 보인다.",
+    "G32(잠긴 계정 복구 경로)의 근거가 약해졌다. 그 심의는 `R21 근거 표가 nodemailer 를 이식 자산으로 열거한다` 를 메일 자기 서비스의 인프라 부분 충족 근거로 썼는데, R21 개정으로 nodemailer 는 이식 대상이 아니라 신규 작성 시 고를 수 있는 라이브러리가 됐다. CON-ARCH-002 Implementation Notes 에 이 변화를 적어 두었고, G32 를 닫을 때 함께 판정해야 한다.",
+    "FR-SHELL-013·FR-SHELL-014 를 blocked 로 둔 근거는 기존 선례다 — IR-SHELL-002(G8·G10) · OBS-AUDIT-011(G27) · DR-STORAGE-005(G28) 이 모두 `요구 자신의 내용 안에 미정 값이 있으면 blocked + evolving` 형태다. FR-SHELL-013 은 필터 기본값과 결과 상한이, FR-SHELL-014 는 AND/OR 혼용 해석이 각자의 소유 범위 안에 있다. CON-SHELL-002 는 G36 축이 걸리지 않아 planned + stable 이다.",
+    "R21-a 가 제안한 SQLite FTS5 를 어느 AC 에도 쓰지 않았다. 그것은 원장 비고의 근거 서술이지 규정이 아니다 — SEC-ARCH-002 와 CON-SHELL-002 의 Implementation Notes 에 `근거이지 규정이 아니다` 로 명시하고, 저장 기술을 그 자리에서 규정하지 말라고 적었다.",
+    "G36 ⑤(텍스트 색인 시점)는 막힌 요구사항이 아니라 소유자가 없는 축이다. §9 Impact 열의 규약이 `막힌 요구사항 ID` 를 요구하므로 Impact 에는 FR-SHELL-013·FR-SHELL-014 만 적고, ⑤ 는 Question 열과 08 §2 Out of Scope 에 소재를 남겼다.",
+    "R149-b 의 `|` 는 원장이 표 셀 안에서 `\\|` 로 이스케이프해 적고 있다. FR-SHELL-014 의 Requirement 는 표가 아닌 본문이라 코드 스팬으로 그대로 두었고, AC-2 는 표·코드 어느 쪽에도 의존하지 않도록 `파이프 문자` 로 풀어 적었다.",
+    "MCP mutation 의 `append_section_note` 는 append 모드에서 `[2026-08-19]` 접두를 자동으로 붙인다(replace 모드는 붙이지 않는다). 오늘 날짜가 아니라 서버가 정한 값이며 원장 개정일과 일치한다.",
+    "`append_section_note` 를 replace 모드로 여러 줄 노트에 쓰면 남는 줄이 빈 줄로 치환된다. 02.product-architecture.srs.md 에서 그렇게 생긴 빈 줄 3개(SEC-ARCH-001 · FR-ARCH-001 · CON-ARCH-002 의 Implementation Notes 끝)를 확인 후 제거했다.",
+    "남은 경고 둘은 알려진 것이다 — SRS-W072(02.feature-request-live-preview.md 가 scope 문서와 선두 번호를 공유) · SRS-W023(FR-SHELL-011 이 draft)."
+  ]
+}
