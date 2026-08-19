@@ -1,0 +1,145 @@
+{
+  "iter": 3,
+  "convergence": { "critical": 0, "high": 0, "verdict": "CONVERGED" },
+  "mechanical": [
+    { "check": "요구사항 블록 총수 (00.index.md §5·§6 집계와 대조)", "target": 258, "violations": 0, "note": "실측 258블록. §5 Status = planned 246 / blocked 12 / 나머지 0 → 실측과 완전 일치. §6 Type 9종(CON 31·FR 95·SEC 79·OPS 2·DR 19·REL 5·IR 13·MIG 2·OBS 12) 합 258 → 실측과 완전 일치. Target 분포 phase-1 247 · phase-2 11 도 91.completed-work-log.md 의 기재와 일치." },
+    { "check": "Requirement ID 형식 · 전역 중복 · 접두사↔Type 매핑 · scope 세그먼트↔문서 접두사", "target": 258, "violations": 0, "note": "258건 전부 `{PREFIX}-{SCOPE}-{3자리}`. 중복 ID 0건. 접두사 9종이 모두 Type 값과 일치(CON=constraint … OBS=observability). scope 세그먼트가 소속 문서 접두사와 어긋난 블록 0건." },
+    { "check": "Acceptance Criteria 형식 `- [ ] AC-{N}: ` · 번호 1부터 연속 · 0건 블록", "target": 1143, "violations": 0, "note": "AC 행 1143개 전부 정규 형식. 번호가 1..N 연속이 아닌 블록 0건. AC 0건 블록 0건. 이번 라운드에 AC 를 걷어낸 세 블록도 재정렬 완료 — FR-SHELL-004=2 · SEC-ACL-016=4 · SEC-CONFIRM-001=2." },
+    { "check": "Trace Links 표 열 수(4열) · `Requirement` 참조가 실재 ID", "target": 246, "violations": 0, "note": "Requirement 행 246건 전부 실재 블록으로 해석됨(미해결 참조 0). Doc 행 425건. 열 수가 4가 아닌 Trace 행 0건." },
+    { "check": "AC 상호참조 해석 (블록 내부 + 블록 간 `X 의 AC-n`)", "target": 60, "violations": 0, "note": "56건 즉시 해석. 미해석 4건은 전부 의도된 과거 서술 — 10.access-control:1863 「옛 AC-5」 · 11.confirmation-grades:387 「옛 AC-3」 · 13.workspace:1126 Change Note 의 분리 전 AC-9·AC-10. 이번 라운드가 만든 죽은 참조는 0건이며, 옮겨진 노트가 가리키는 AC-1~AC-4 / AC-1·AC-2 는 모두 실재한다." },
+    { "check": "마크다운 표 열 수 무결성 (11개 scope 문서 + 00.index.md 전 표)", "target": 12, "violations": 0, "note": "헤더 열 수와 다른 데이터 행 0건. §2·§3 을 Edit 로 고친 문서(08·10·13 및 09·12·14·16)에서도 표 손상 없음 — 해당 절은 불릿 목록이라 표를 건드리지 않았다." },
+    { "check": "취소선 조항(~~R27~~·~~R44-a~~·~~R106-b~~·~~R108-a~~)의 근거 인용", "target": 4, "violations": 0, "note": "R27·R44-a·R106-b 는 SRS 인용 0건. R108-a 는 08.app-shell.srs.md:1191 에 1건 등장하나 문면이 「종결된 R108-a 의 … 서술에만 있어 새 논증의 근거로 인용할 수 없다」로 비-권위 명시 — 원장 머리표의 금지 규칙을 따르는 사용이다." },
+    { "check": "모호 어휘 전수 grep (적절히·적당히·등등·필요시·가능한 한·빠르게·신속히·충분히·대략·유연하게·직관적·효율적으로·TBD·가급적·되도록)", "target": 12, "violations": 0, "note": "원시 히트 2건(07.editor:205 · 08.app-shell:557)은 둘 다 어미 「-되도록」(…귀속되도록 / …않도록)이며 부사 「가급적」이 아니다. 실질 위반 0." },
+    { "check": "00.index.md §9 Impact 열의 요구사항 ID — 실재 · Status=blocked · 자기 블록이 그 G{n} 을 언급", "target": 8, "violations": 0, "note": "IR-SHELL-002(G8·G10) · FR-AUTH-003(G10) · OBS-AUDIT-011(G27) · DR-STORAGE-005(G28) · FR-EDITOR-007(G31) · SEC-AUTH-018·SEC-AUTH-019(G33) 8건 전부 실재하고 blocked 이며 자기 블록 본문에 해당 G{n} 을 언급한다. 이번 라운드가 고친 G27 행이 정확하다." },
+    { "check": "역방향 — Status=blocked 12건이 §9 에서 도달 가능한가", "target": 12, "violations": 5, "note": "phase-1 blocked 7건은 전부 §9 Impact 열에서 ID 로 도달된다. phase-2 blocked 5건(FR-ATTACH-008·009·010·011 · SEC-ATTACH-004)은 G34·G35 행의 Impact 가 「(Phase 2 축)」이라 ID 로 도달되지 않는다 → F3-M04. 선행 상태이며 1·2차 변경이 만든 것이 아니다." },
+    { "check": "§9 → 각 scope §3 전파 (§9 가 어느 scope 를 지목한 공백이 그 문서 §3 에 있는가)", "target": 15, "violations": 0, "note": "G8→SHELL · G10→SHELL/AUTH/PRINCIPAL · G14→SHELL/STORAGE · G15→ACL · G16→ACL/CONFIRM · G23→PRINCIPAL · G27→AUDIT · G28→STORAGE/AUDIT · G29→AUDIT · G31→EDITOR/SHELL · G32→AUTH · G33→AUTH 전건이 해당 문서 §3 에 등재돼 있다. 2차의 L5 보정(09·12·14·16)이 실제로 닫혔다. G30·G34·G35 는 §9 Impact 에 scope 지목이 없다." },
+    { "check": "각 scope §3 → §9 역방향 (§3 이 든 공백이 §9 에 있는가)", "target": 11, "violations": 1, "note": "08.app-shell §3:52 가 `G14-a` 를 들지만 §9 에 G14-a 행이 없다 → F3-M01. 나머지 10개 문서의 §3 항목은 전부 §9 에 행이 존재한다(단 소속 scope 는 §9 가 지목하지 않은 과잉 등재가 6자리 있다 → F3-L01)." },
+    { "check": "Out of Scope 소유권 위임의 순환 (A→B 이면서 B→A 인 같은 주제)", "target": 31, "violations": 0, "note": "어휘 겹침으로 31쌍을 후보로 뽑아 전건 정독. 전부 상보적 분담(A 는 판정 근거를 B 에, B 는 화면 표면을 A 에)이며 같은 주제를 서로 떠넘기는 순환 0건. 2차 M1 이 잡았던 08↔14 휴지통 순환은 해소됐다 — 08:34 에서 휴지통 목록 항목이 빠지고 실제 위임분은 08:37 이 갖는다." },
+    { "check": "같은 문서 In Scope ↔ Out of Scope 자기모순", "target": 11, "violations": 0, "note": "Out of Scope 불릿이 자기 접두사 요구사항 ID 를 인용한 44자리를 전수 정독. 전부 「그 요구는 …만 갖는다」 형태의 인접 축 분리이며, In Scope 가 주장한 것을 Out of Scope 가 되넘기는 자리 0건." },
+    { "check": "validate_spec (MCP, 읽기 전용)", "target": 1, "violations": 0, "note": "errors 0 / warnings 2 — SRS-W072(02 번호 공유) · SRS-W023(FR-SHELL-011 draft). 둘 다 지시서가 기지 경고로 지정한 것이다." }
+  ],
+  "findings": [
+    {
+      "id": "F3-M01",
+      "severity": "MEDIUM",
+      "axis": "D. §3 미결 목록 ↔ §9 양방향 정합",
+      "req_id": "-",
+      "file": "docs/spec/00.index.md",
+      "line": 101,
+      "description": "§9 가 스스로 원장 §3.2 의 사본임을 선언하는데(「종결·재개는 원장 §3.2 가 소유하고 이 표는 그 사본이다」) 원장 §3.2 의 열린 공백 17행 중 `G14-a`·`G14-b` 두 행이 §9 에 없다. §9 는 15행이다. 그 결과 2차가 「등재의 정본」으로 선언한 §9 Impact 열이 08.app-shell §3:52 의 `G14-a` 항목을 검증하지 못한다 — §3 이 정본을 가리키는데 정본에 그 행이 없다. G14-a 는 SEC-WORKSPACE-004 와 FR-SHELL-004 가 Stability=evolving 인 유일한 명시 사유이고, G14-a·G14-b 를 Trace Links 로 가리키는 요구사항 블록이 4개 문서에 걸쳐 8자리 있다(08:437·08:954·13:441·13:625·13:626·09:162·10:496). 다만 그 8자리는 전부 `docs/spec/00.decision-log.md#G14-a` 로 원장 앵커를 직접 가리키고, 원장 §3.2 에서 G14-a·G14-b 행이 G14 행 바로 아래(601~603행)에 붙어 있으므로 작업 항목이 실제로 유실되지는 않는다. 그래서 HIGH 가 아니라 MEDIUM 으로 판정한다. 반론 여지도 명시한다 — §9 서문이 「원장 §3.2 의 `G{n}` 을 그대로 쓴다」고 적어 알파벳 하위 행을 제외하는 관례로 읽을 수 있고, 그렇게 읽으면 §9:119 의 「12건」도 최상위 공백 기준으로 옳다. 선행 상태이며 1·2차 수정이 만든 것이 아니다(§9 는 최초 저작 1c6b2ba 때부터 15행이었다).",
+      "evidence_quote": "00.index.md:97 — \"종결·재개는 원장 §3.2 가 소유하고 이 표는 그 사본이다\"  ↔  00.decision-log.md:602 — \"| G14-a | 갱신 시점 규정이 필요한 곳은 트리 · 검색 결과 · 즐겨찾기 · 우측 사이드바 네 곳이다 …\" / 00.decision-log.md:603 — \"| G14-b | 특히 권한 변경 — R59 는 … 그 사실이 화면에 도달하는 경로는 규정되지 않았다\"  ↔  08.app-shell.srs.md:52 — \"이 scope 에 걸린 미결 — `G8`(…) · `G10`(…) · `G14`·`G14-a`(…) · `G31`(…). 등재의 정본은 `00.index.md` §9 의 `Impact` 열이며\"",
+      "suggested_action": "둘 중 하나를 택하고 그 선택을 §9 서문에 명시하라 — ① `G14-a`·`G14-b` 를 §9 에 행으로 추가하고 Impact 를 채운 뒤 §9:119 의 「12건」을 재계산한다 ② 하위 행은 §9 에 싣지 않는다는 관례를 서문에 못박고, 08.app-shell §3:52 의 `G14-a` 를 `G14` 안의 하위 축으로 서술해 정본 포인터가 검증 가능하게 만든다. 어느 쪽이든 판정은 원장 §3.2 가 소유하므로 원장 쪽에 처분을 남겨야 한다."
+    },
+    {
+      "id": "F3-M02",
+      "severity": "MEDIUM",
+      "axis": "F. 근거 인용의 정확성 (2차 M2 수정이 만든 것)",
+      "req_id": "IR-SHELL-002",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "line": 34,
+      "description": "2차 M2 수정이 새로 쓴 문장이 형제 문서 셋의 실측을 과장한다. 「인스턴스 설정 **화면**은 `09.auth`·`12.audit-log`·`14.storage` §2 가 셋 다 `SHELL` 소유로 적는다」고 단언하는데, 12.audit-log §2:37 과 14.storage §2:35 는 실제로 「설정 화면」을 명시하지만 09.auth §2:41 은 「인스턴스 설정 **값이 저장되는 곳**」만 SHELL 소유로 적고 화면에 대해서는 침묵한다. 결론(SHELL 이 인스턴스 설정 화면을 갖는다)은 나머지 둘로 여전히 지탱되고, 09.auth 가 그 소유를 부인하지도 않으므로 규정이 사라지거나 소유가 어긋나지는 않는다 — 근거 셋 중 하나가 그 주장을 지지하지 않는다는 인용 정확성 결함이다. improvement_iter2.json 의 evidence 도 같은 과장을 담고 있다.",
+      "evidence_quote": "08.app-shell.srs.md:34 — \"인스턴스 설정 화면은 `09.auth`·`12.audit-log`·`14.storage` §2 가 셋 다 `SHELL` 소유로 적는다\"  ↔  09.auth.srs.md:41 — \"인스턴스 설정 값이 저장되는 곳 — `SHELL` scope 가 DB 단일 저장소로 소유한다. `FR-AUTH-004` 는 가입 모드가 그 저장소에 든다는 사실만 갖는다\"  ↔  12.audit-log.srs.md:37 — \"인스턴스 설정 값의 저장소와 설정 화면 — `SHELL` scope 가 소유한다\"  ↔  14.storage.srs.md:35 — \"설정 화면에서의 소재와 설정 값의 저장소 — `SHELL` scope 가 소유한다\"",
+      "suggested_action": "인용을 실측에 맞춰 좁혀라 — 「설정 화면은 `12.audit-log`·`14.storage` §2 가, 설정 값의 저장소는 `09.auth` §2 도 함께 `SHELL` 소유로 적는다」. 판정 소유자를 IR-SHELL-002 로 남긴 부분은 그대로 두라(2차가 판정을 열어 둔 것은 타당하다)."
+    },
+    {
+      "id": "F3-M03",
+      "severity": "MEDIUM",
+      "axis": "D. 개수 단언 — 2차가 선언한 처방이 형제 문서에 적용되지 않았다",
+      "req_id": "-",
+      "file": "docs/spec/07.editor.srs.md",
+      "line": 44,
+      "description": "2차는 M7·M8 의 처방을 「수를 고친다」에서 「수를 지우고 열거만 남긴 뒤 등재 정본(§9 Impact 열)을 가리킨다」로 물리고 그 근거를 「개수 주장은 예외 없이 나중에 거짓이 된다」로 적었다. 그런데 그 처방이 08.app-shell·10.access-control 두 자리에만 적용됐다. §1~§3 전수 grep 결과 개수를 단언하는 미결 문장이 세 자리 남아 있다 — 07.editor:44 「미결 **두 건**이 이 scope 에 걸려 있다」 · 11.confirmation-grades:52 「미결 **둘**이 이 scope 에 걸려 있다」 · 15.attachments:49 「미결 **둘**이 이 scope 에 걸려 있다」. 그리고 정본 포인터 문장이 없는 §3 이 네 자리다(07:44 · 11:52 · 13:50 · 15:49). 세 수치는 현재 전부 참이라 지금 거짓 진술은 아니다. 다만 셋 다 §9 가 그 scope 에 지목하지 않은 공백을 함께 세고 있어(07 은 G30, 11 은 G27, 15 는 G34·G35 — §9 Impact 가 그 scope 를 지목하지 않는다) 그 수는 이미 방금 선언된 정본에서 도출되지 않는다.",
+      "evidence_quote": "07.editor.srs.md:44 — \"- 미결 두 건이 이 scope 에 걸려 있다 — `G30`(분할 창 pane 최소 폭) · `G31`(…)\"  ·  11.confirmation-grades.srs.md:52 — \"- 미결 둘이 이 scope 에 걸려 있다 — `G16`(…) · `G27`(…)\"  ·  15.attachments.srs.md:49 — \"- 미결 둘이 이 scope 에 걸려 있다 — `G34`(…) · `G35`(…)\"  ↔  improvement_iter2.json rejected[0].why — \"수를 지우고 열거만 남긴 뒤 등재 정본(§9 Impact 열)을 가리켰다\"",
+      "suggested_action": "07.editor:44 · 11.confirmation-grades:52 · 15.attachments:49 의 개수 단언을 걷고 08.app-shell:52 와 같은 형태(열거 + 「등재의 정본은 `00.index.md` §9 의 `Impact` 열이며, 그 열이 바뀌면 이 목록도 함께 훑는다」)로 맞춰라. 13.workspace:50 은 수를 세지 않으므로 정본 포인터만 덧붙이면 된다."
+    },
+    {
+      "id": "F3-M04",
+      "severity": "MEDIUM",
+      "axis": "C. §9 Impact 열 전수 — 역방향 도달성",
+      "req_id": "FR-ATTACH-008 · FR-ATTACH-009 · FR-ATTACH-010 · FR-ATTACH-011 · SEC-ATTACH-004",
+      "file": "docs/spec/00.index.md",
+      "line": 116,
+      "description": "§9 서문이 「`Status=blocked` 인 요구사항이 그 공백의 작업 목록이다」라고 적는데, G34·G35 행의 Impact 가 요구사항 ID 대신 「(Phase 2 축)」이라 그 두 공백에 막힌 blocked 5건(FR-ATTACH-008·009·010·011 · SEC-ATTACH-004)이 §9 에서 ID 로 도달되지 않는다. 2차 HIGH(G27→OBS-AUDIT-011 stale)와 형태가 다르다 — 저쪽은 Impact 셀이 **틀린 ID** 를 담아 사실 오류였고, 이쪽은 셀이 애초에 ID 를 담지 않는 명시적 관례이며 §9:119 각주가 G30·G34·G35 를 Phase 2 전용 축으로 따로 표시한다. 다섯 요구 모두 자기 Implementation Notes 에서 G34·G35 를 언급하므로 요구→공백 방향은 성립한다. 원장 R92 가 Phase 2 공백은 Phase 1 착수를 막지 않는다고 정하므로 착수 판정에도 영향이 없다. 선행 상태이며 1·2차 변경이 만든 것이 아니다(improvement_iter2.json notes_for_reviewer 가 같은 사실을 「선행 결함」으로 적어 두었다 — 다만 그 note 는 5건을 「6건」으로 잘못 센다).",
+      "evidence_quote": "00.index.md:99 — \"`Status=blocked` 인 요구사항이 그 공백의 작업 목록이다 (`speckiwi list --status blocked`)\"  ↔  00.index.md:116 — \"| G34 | `.task`(`R147`)가 본문을 전제한 조항들에 걸린다 … | (Phase 2 축) | open |\"  ↔  list_requirements(status=blocked) — FR-ATTACH-008·009·010·011 · SEC-ATTACH-004 (target=phase-2)",
+      "suggested_action": "Phase 2 행에도 Impact 열에 실제 blocked 요구사항 ID 를 적고 「Phase 2 축」 표시는 Status 열이나 각주로 옮겨라. 그러면 §9 서문의 「blocked 가 작업 목록이다」가 15행 전부에서 성립한다. Phase 1 착수를 막지 않으므로 착수 뒤 처리해도 된다."
+    },
+    {
+      "id": "F3-M05",
+      "severity": "MEDIUM",
+      "axis": "F. 1차 변경이 남긴 stale 인용 (R124-a 역방향 스윕 누락)",
+      "req_id": "OBS-AUDIT-011 · FR-WORKSPACE-009",
+      "file": "docs/spec/00.decision-log.md",
+      "line": 11,
+      "description": "1차(8a3e701)가 OBS-AUDIT-011 과 FR-WORKSPACE-009 를 분리 신설해 요구사항 총수가 256→258(phase-1 245→247)로 늘었는데, 그 수를 인용하는 원장 머리표 「다음 단계」 행이 갱신되지 않아 여전히 「요구사항 **256건**을 등재했다(phase-1 **245** · phase-2 11)」로 적는다. 실측은 258(phase-1 247 · phase-2 11)이고 91.completed-work-log.md 는 258 로 옳게 적어 두 문서가 갈렸다. 같은 원장 행이 스스로 「조항을 개정하면 `R124-a` 스윕이 `docs/spec/*.srs.md` 까지 닿아야 한다」고 적는데, 실패한 것은 그 역방향(SRS 변경 → 원장 인용)이다. 784행의 개정 이력 행도 256 을 적으나 그쪽은 시점 기록이라 판단 여지가 있다. 어떤 규정·요구사항도 유실되지 않고 소유도 어긋나지 않는 순수 수치 stale 이라 MEDIUM 으로 둔다.",
+      "evidence_quote": "00.decision-log.md:11 — \"`docs/spec/00.index.md` 에 target `phase-1`(활성)·`phase-2` 를 세우고 11 scope … 에 **요구사항 256건**을 등재했다(phase-1 245 · phase-2 11)\"  ↔  docs/spec/91.completed-work-log.md — \"원장 R32 이행 — … SRS 요구사항 258건으로 전개했다(phase-1 247 · phase-2 11)\"  ↔  실측 258 (phase-1 247 · phase-2 11)",
+      "suggested_action": "원장 머리표 11행의 수치를 258 / phase-1 247 로 갱신하라. 다만 이 프로젝트의 확정 교훈대로 수를 다시 박기보다 「등재 현황은 `00.index.md` §5·§6 이 정본」이라는 포인터로 바꾸는 편이 재발을 막는다. 784행 이력 행은 시점 기록이므로 손대지 않아도 된다."
+    },
+    {
+      "id": "F3-L01",
+      "severity": "LOW",
+      "axis": "D. §3 과잉 등재 — §9 가 그 scope 를 지목하지 않은 공백",
+      "req_id": "-",
+      "file": "docs/spec/11.confirmation-grades.srs.md",
+      "line": 52,
+      "description": "여섯 자리에서 §3 이 §9 Impact 열이 그 scope 에 지목하지 않은 공백을 자기 미결로 든다 — 10.access-control:55(G27) · 11.confirmation-grades:52(G27) · 14.storage:52(G27) · 13.workspace:50(G16) · 07.editor:44(G30) · 15.attachments:49(G34·G35). 전부 본문에 실질 근거가 있고(각각 상방 게이트 열람 기록의 조회 가능 기간 · R115-e 확인 등급 · 보존 기간 역전 · 편집자 전파 비대칭 · Phase 2 축), improvement_iter2.json 이 그중 둘을 「과잉 등재이지 오류가 아니므로 그대로 두었다」로 명시적으로 판단했다. 누락(§9→§3)은 0건이므로 작업이 빠지는 방향의 결함은 아니다. 다만 §3 이 §9 를 「등재의 정본」이라 부르는 이상, 정본이 지목하지 않은 항목을 드는 근거가 §9 쪽에도 남아야 방향이 닫힌다.",
+      "evidence_quote": "11.confirmation-grades.srs.md:52 — \"미결 둘이 이 scope 에 걸려 있다 — `G16`(…) · `G27`(감사 로그 보존 기간과 휴지통 보존 기간의 대소 관계)\"  ↔  00.index.md:109 — \"| G27 | … | OBS-AUDIT-011 | open |\" (Impact 에 CONFIRM 없음)",
+      "suggested_action": "§9 의 G27 Impact 를 「OBS-AUDIT-011 · CONFIRM(R115-e) · STORAGE(R86 대소) · ACL(R71-b 열람 기록)」처럼 넓히거나, §3 쪽 문면에 「§9 는 이 scope 를 지목하지 않으나 …의 이유로 실질 영향이 있다」를 덧붙여 양방향을 닫아라. 어느 쪽도 Phase 1 착수를 막지 않는다."
+    },
+    {
+      "id": "F3-L02",
+      "severity": "LOW",
+      "axis": "C. §9 Impact 열 표기 일관성",
+      "req_id": "-",
+      "file": "docs/spec/00.index.md",
+      "line": 104,
+      "description": "§9 Impact 열의 표기 단위가 행마다 다르다 — 요구사항 ID(G8·G27·G28·G31·G33), 요구사항 ID + scope 명(G10), scope 명만(G14·G32), scope 명 + 원장 조항(G15·G16·G23·G29), 괄호 서술(G30·G34·G35). 서문은 「`Impact` 열의 요구사항 ID 는 …」이라 요구사항 ID 를 전제하는데 15행 중 5행만 ID 를 담는다. 이 때문에 F3-M04 의 도달성 검사가 행마다 다른 기준으로 판정된다. 사실 오류는 없다.",
+      "evidence_quote": "00.index.md:99 — \"`Impact` 열의 요구사항 ID 는 그 공백이 실제로 값을 비워 둔 자리다\"  ↔  00.index.md:105 — \"| G14 | 화면의 최신성 … | SHELL · STORAGE | open |\" (요구사항 ID 없음)  ↔  00.index.md:112 — \"| G30 | … | (Phase 2 축 — Phase 1 착수를 막지 않는다) | open |\"",
+      "suggested_action": "Impact 열을 「요구사항 ID(있으면 전부) + 없으면 scope 명」 한 가지 규칙으로 통일하고 서문에 그 규칙을 적어라. F3-M04 와 함께 처리하면 한 번에 닫힌다."
+    }
+  ],
+  "removal_check": [
+    {
+      "what_was_removed": "FR-SHELL-004 AC-3 — 「백링크 탭은 요청자가 볼 수 없는 문서에서 온 역참조를 표시하지 않는다」 (08.app-shell.srs.md, 옛 426행)",
+      "canonical_owner": "SEC-WORKSPACE-004 (docs/spec/13.workspace.srs.md:395)",
+      "still_covered": true,
+      "evidence": "정본 AC-1(13.workspace.srs.md:420)이 같은 명제를 문면으로 갖는다 — \"백링크 패널은 요청자가 유효 권한을 갖지 않는 문서에서 유래한 역참조를 표시하지 않는다\". 정본 Requirement(412행)가 백링크를 여섯 표면 열거의 첫째로 담고, Rationale(416행)이 \"이 조항이 표면 목록의 정본이다\" 를 자임하며 원장 §4 수용 기준 3 이 표면 목록을 이 조항에 위임했음을 인용한다. 더해 FR-SHELL-004 는 Requirement 문면(08:415)의 계약 \"표시 내용에는 요청자의 유효 권한 필터를 적용한다\" 를 그대로 유지하고, 08:439 에 `Requirement | SEC-WORKSPACE-004 | depends_on` 을 새로 걸었으며, 제거 사유를 08:448 Implementation Notes 에 남겼다. 규범도 계약도 유실 없음."
+    },
+    {
+      "what_was_removed": "FR-ATTACH-011 Rationale 의 구체값 — 최소 질의 2자 · 결과 상한 20건 (15.attachments.srs.md:1068)",
+      "canonical_owner": "SEC-PRINCIPAL-003 (docs/spec/16.principal.srs.md:1018) · CON-PRINCIPAL-006 (docs/spec/16.principal.srs.md:1074)",
+      "still_covered": true,
+      "evidence": "SEC-PRINCIPAL-003 은 제목·Requirement·AC 셋 다에 값을 담는다 — 제목 \"주체 검색은 최소 질의 길이 2자와 결과 상한 20건을 둔다\", Requirement(1035행) \"최소 질의 길이 2자와 결과 건수 상한 20건을 적용한다\", AC-1 \"2자 미만이면 … 반환하지 않는다\" · AC-3 \"최대 20건까지만 반환된다\" · AC-4 \"호출 화면이 … 덮어쓸 수 있는 경로가 없다\". R112-c(적용 범위)·R112-e(단일 공용 컴포넌트)는 CON-PRINCIPAL-006 이 Requirement·AC-1~AC-4·Trace(R112-c informed_by)로 갖는다. FR-ATTACH-011 은 두 정본을 이미 `depends_on` 으로 걸고 있고(15:1089·1090), 기각된 대안과 R112-e 논증은 보존됐다."
+    },
+    {
+      "what_was_removed": "SEC-ACL-016 AC-5 — 「새 확인 흐름이나 새 오류 화면을 만들 때 이 규칙으로 먼저 검사한다」 (10.access-control.srs.md, 옛 1842행)",
+      "canonical_owner": "같은 블록 SEC-ACL-016 Implementation Notes (docs/spec/10.access-control.srs.md:1863)",
+      "still_covered": true,
+      "evidence": "옮겨진 내용이 실제로 그 노트에 있다 — \"[2026-08-19] 옛 AC-5「새 확인 흐름이나 새 오류 화면을 만들 때 이 규칙으로 먼저 검사한다」를 여기로 옮겼다 … 의무 자체는 유지된다: 권한 없음과 존재하지 않음이 구별되지 않는 표면을 새로 설계할 때 AC-1~AC-4 로 먼저 검사하고, 그 판정은 리뷰로 한다\". 원문이 인용부호로 그대로 보존됐고 대체 판정 수단(리뷰)이 명시됐다. 참조 대상 AC-1~AC-4 는 재정렬 뒤 실재한다(실측 AC 4건)."
+    },
+    {
+      "what_was_removed": "SEC-CONFIRM-001 AC-3 — 「새로 설계하는 확인 흐름은 이 규칙으로 먼저 검사된 기록을 남긴다」 (11.confirmation-grades.srs.md, 옛 340행)",
+      "canonical_owner": "같은 블록 SEC-CONFIRM-001 Implementation Notes (docs/spec/11.confirmation-grades.srs.md:387)",
+      "still_covered": true,
+      "evidence": "노트에 원문이 인용부호로 보존돼 있다 — \"[2026-08-19] 옛 AC-3「새로 설계하는 확인 흐름은 이 규칙으로 먼저 검사된 기록을 남긴다」를 여기로 옮겼다 … 의무 자체는 유지된다: 새 확인 흐름을 도입할 때 AC-1·AC-2 로 먼저 검사하며, 이 요구의 검증 방법이 `review` 인 이유가 그것이다\". 부수 수리도 확인됨 — 386행의 기존 노트에서 사라질 AC-3 을 가리키던 문장이 함께 걷혔다(옛 \"AC-3 은 새 확인 흐름을 도입할 때의 설계 검사 의무이며 …\" 삭제). 참조 대상 AC-1·AC-2 실재."
+    },
+    {
+      "what_was_removed": "OBS-AUDIT-002 Rationale 의 보존 기간 문장 — 「보존 기간을 설정으로 여는 것은 R115-e 가 보존 기간 축소에 확인 등급 L3 를 배정하면서 이미 전제한 것이다」 (12.audit-log.srs.md:138)",
+      "canonical_owner": "OBS-AUDIT-011 (docs/spec/12.audit-log.srs.md:1800)",
+      "still_covered": true,
+      "evidence": "OBS-AUDIT-011 Rationale(12:1821)이 그 문장을 **한 글자도 다르지 않게** 첫 문장으로 갖는다 — \"보존 기간을 설정으로 여는 것은 R115-e 가 보존 기간 축소에 확인 등급 L3 를 배정하면서 이미 전제한 것이다.\" 더해 그 블록이 Requirement(1817행)·AC-1(1825행)·Trace(R84-a informed_by · G27 related_to)·Implementation Notes(1846행, G27 세 축 전부)로 보존 기간 축 전체를 보유한다. OBS-AUDIT-002 쪽은 정본 포인터(\"그 축은 OBS-AUDIT-011 이 소유한다\")로 대체돼 상호 참조가 양방향으로 걸렸다(12:155 ↔ 12:1838)."
+    }
+  ],
+  "regression_check": {
+    "reintroduced": [],
+    "clean_axes": [
+      "같은 규범의 두 scope 복제 — 이번 라운드가 새로 만든 복제 0건. 유일하게 남긴 겹침(FR-SHELL-009 AC-3·AC-4 ↔ SEC-WORKSPACE-004 AC-4·AC-5)은 의도된 보존이며 근거가 실측으로 확인된다: 정본 SEC-WORKSPACE-004 Implementation Notes(13:451)가 \"개수의 단위가 `출현 횟수` 가 아니라 `출현 문서 수` 인 것도 그 조항(R106)이 정한다 … 이 scope 가 소유하지 않는다\" 로 집계 단위 소유를 명시적으로 부인하므로, 흡수했다면 그 단위 규정이 어느 쪽에도 남지 않는다. 08:42·08:956·08:965 세 자리가 그 분담을 일관되게 적고 13:35 가 반대편에서 같게 적는다.",
+      "In/Out of Scope 자기모순 — 11개 문서 전수, 0건. 2차 M1 이 잡은 08.app-shell 휴지통 모순은 해소됐고(08:34 에서 항목 제거, 실제 위임분은 08:37), In Scope 26행의 휴지통 화면 소유와 충돌하지 않는다.",
+      "소유권 포인터 오지목 — Out of Scope 위임 순환 후보 31쌍 전건 정독 결과 순환 0건. 2차 M3 이 고친 13.workspace §2:37 도 실측 확인됨 — SEC-SHELL-002 Implementation Notes(08.app-shell.srs.md:783)가 \"접미사의 형식은 원장이 정하지 않았으므로 이 축은 구현 판단\" 이라 적고 10.access-control §2:46 도 \"어느 scope 도 소유하지 않는다\" 로 같게 적어, 새 문면이 두 근거와 모두 일치한다.",
+      "정본이라 지목했는데 정본이 그 소유를 부인하는 자리 — 0건. 이번 라운드가 새로 건 두 depends_on(FR-SHELL-004→SEC-WORKSPACE-004 AC-1 · FR-SHELL-009→SEC-WORKSPACE-004 AC-4·AC-5)은 정본이 실제로 그 AC 를 갖고 있고, 정본이 부인하는 축(집계 단위)은 인용 쪽이 소유한다고 양쪽 문면이 명시한다.",
+      "AC 재정렬로 생긴 죽은 참조 — 0건. 걷어낸 AC 셋(FR-SHELL-004 AC-3 · SEC-ACL-016 AC-5 · SEC-CONFIRM-001 AC-3)을 가리키는 살아 있는 참조가 SRS 전역에 없고, 남은 4자리는 전부 「옛 AC-n」 형태의 과거 서술이다.",
+      "Stability 재판정(OBS-AUDIT-002 evolving→stable) — 결함 없음. §9 G27 Impact 는 OBS-AUDIT-011 만 지목하고, 12.audit-log §3 이 드는 이 scope 의 미결 셋(G27·G28·G29)은 각각 보존 기간·본문 저자 기록·개명 기록 축이라 불변성 규범에 걸리지 않는다. 블록 자신의 Implementation Notes(12:163)가 \"불변성 축은 G27 에 걸리지 않는다\" 로 근거를 적고, 블록 어디에도 열린 축 서술이 없다. Change Note 가 근거로 든 \"자매 분리 FR-WORKSPACE-009 도 같은 사유로 stable 로 재판정했다\" 도 실측 확인됨(13.workspace.srs.md:1080 Stability=stable).",
+      "Related Docs 마크다운 링크화(OBS-AUDIT-011) — 자매 블록 OBS-AUDIT-002 와 형식이 같아졌고(`[설정 화면 설계](./04.screen-design-settings.md)`) 258블록 전체에서 원시 경로 문자열 Related Docs 0건."
+    ]
+  },
+  "summary": { "CRITICAL": 0, "HIGH": 0, "MEDIUM": 5, "LOW": 2 }
+}
