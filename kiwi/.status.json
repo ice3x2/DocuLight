@@ -1,0 +1,164 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-08-19T07:22:07.863Z",
+  "source": "speckiwi",
+  "specFingerprint": {
+    "algorithm": "sha256",
+    "value": "3eb32d29010793b7caacb96d98739c8c06b258caf02ff88780af509afaa56ff2",
+    "files": [
+      {
+        "path": "docs/spec/00.index.md",
+        "sha256": "223ae32571ad201a14c3d17596ec05295ee45bc38a37de740a3c306837292624",
+        "size": 8393,
+        "mtimeMs": 1787122453162.5017
+      },
+      {
+        "path": "docs/spec/02.product-architecture.srs.md",
+        "sha256": "c3c7711b25f18f0cab5dd39cbbc6287118da6479bbde6464ad322582a0d3bb9d",
+        "size": 41695,
+        "mtimeMs": 1787117888123.4558
+      },
+      {
+        "path": "docs/spec/07.editor.srs.md",
+        "sha256": "d06adbd4d88418dc3a32cfbc8fd80673764cb0d90548e6bfa10e35fa5d1135ad",
+        "size": 35463,
+        "mtimeMs": 1787116787517.5103
+      },
+      {
+        "path": "docs/spec/08.app-shell.srs.md",
+        "sha256": "9cbdc3e1d87a56f99d6590fb7d7adffa2ea8282f765727d2b6ce775610ff6056",
+        "size": 64201,
+        "mtimeMs": 1787119752709.3818
+      },
+      {
+        "path": "docs/spec/09.auth.srs.md",
+        "sha256": "9b747a16572e3b5696fa5e9f3941e761def6a599d1e084b0bca7995dded3535a",
+        "size": 79976,
+        "mtimeMs": 1787120174396.0054
+      },
+      {
+        "path": "docs/spec/10.access-control.srs.md",
+        "sha256": "1a90c8decb0022d006b0a21dabae7588daebf1d4b4603603cf5853fb8e309ead",
+        "size": 92319,
+        "mtimeMs": 1787123964442.6086
+      },
+      {
+        "path": "docs/spec/11.confirmation-grades.srs.md",
+        "sha256": "e45ad665ae16a6d8cba8133cab9481ec492543eb5418f473da71c6d0dc6ebae3",
+        "size": 102161,
+        "mtimeMs": 1787124127837.9143
+      },
+      {
+        "path": "docs/spec/12.audit-log.srs.md",
+        "sha256": "706a61978fb8ddba475a7b32aba97be1e2b3a1f67f4e4db39b661cfbf9cb5bd7",
+        "size": 94551,
+        "mtimeMs": 1787122204116.3467
+      },
+      {
+        "path": "docs/spec/13.workspace.srs.md",
+        "sha256": "f5082bed404f5e8b0f2afd97c6183a2b9558bd70cfd5e2e75cd30af3fbbf62c0",
+        "size": 57155,
+        "mtimeMs": 1787118394528.8298
+      },
+      {
+        "path": "docs/spec/14.storage.srs.md",
+        "sha256": "ea8d40a1dd04a39f22b6ac977a9425a4a3f00293bc8f835c8f5ae5265ca11444",
+        "size": 73676,
+        "mtimeMs": 1787122071307.0574
+      },
+      {
+        "path": "docs/spec/15.attachments.srs.md",
+        "sha256": "83d4b96be80d511f9d30654aa84893d0067b3d9f265b2041bed387ff1e997f42",
+        "size": 47345,
+        "mtimeMs": 1787118214919.6533
+      },
+      {
+        "path": "docs/spec/16.principal.srs.md",
+        "sha256": "3422f464a6bfbf42f93d05f24a3370adab70e7992ab4ebf0917dc1d1dd14539a",
+        "size": 68820,
+        "mtimeMs": 1787124107319.7498
+      },
+      {
+        "path": "docs/spec/90.appendix.md",
+        "sha256": "8efd8885080ab5565197f4ff17e4a526c8e6b5b47ee503cb8c38992a63f3180f",
+        "size": 968,
+        "mtimeMs": 1786468228321.7703
+      }
+    ]
+  },
+  "idCounters": {
+    "security": {
+      "ARCH": 3,
+      "SHELL": 3,
+      "AUTH": 19,
+      "ACL": 16,
+      "CONFIRM": 7,
+      "AUDIT": 11,
+      "WORKSPACE": 6,
+      "STORAGE": 7,
+      "ATTACH": 4,
+      "PRINCIPAL": 3
+    },
+    "functional": {
+      "ARCH": 1,
+      "EDITOR": 8,
+      "SHELL": 12,
+      "AUTH": 5,
+      "ACL": 6,
+      "CONFIRM": 23,
+      "WORKSPACE": 8,
+      "STORAGE": 9,
+      "ATTACH": 11,
+      "PRINCIPAL": 11
+    },
+    "constraint": {
+      "ARCH": 9,
+      "EDITOR": 5,
+      "SHELL": 1,
+      "ACL": 5,
+      "CONFIRM": 1,
+      "AUDIT": 1,
+      "WORKSPACE": 1,
+      "ATTACH": 1,
+      "PRINCIPAL": 7
+    },
+    "operational": {
+      "ARCH": 1,
+      "STORAGE": 1
+    },
+    "interface": {
+      "SHELL": 3,
+      "AUTH": 2,
+      "ACL": 3,
+      "CONFIRM": 1,
+      "AUDIT": 3,
+      "STORAGE": 1
+    },
+    "data": {
+      "SHELL": 1,
+      "ACL": 1,
+      "CONFIRM": 1,
+      "AUDIT": 3,
+      "WORKSPACE": 2,
+      "STORAGE": 6,
+      "ATTACH": 3,
+      "PRINCIPAL": 2
+    },
+    "migration": {
+      "AUTH": 2
+    },
+    "observability": {
+      "ACL": 1,
+      "AUDIT": 10
+    },
+    "reliability": {
+      "AUDIT": 2,
+      "STORAGE": 2,
+      "ATTACH": 1
+    }
+  },
+  "lock": {
+    "active": false,
+    "metadata": null
+  }
+}
