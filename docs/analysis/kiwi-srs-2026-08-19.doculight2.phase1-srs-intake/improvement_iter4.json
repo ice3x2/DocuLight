@@ -1,0 +1,119 @@
+{
+  "iter": 4,
+  "fixed": [
+    {
+      "finding": "F-01 (CRITICAL) — SEC-AUTH-001 이 개정 전 R57 문면을 그대로 갖는다",
+      "what": "제목·Requirement·Rationale 을 개정된 R57 문면으로 옮기고, R21 계열과의 연결을 Trace Links 에 세웠다. 세 기술 선택(bcrypt · HttpOnly 세션 쿠키 · express-rate-limit)은 유지했고 AC-1~AC-5 는 손대지 않았다 — 개정이 바꾼 것은 「어떻게 얻는가」이지 「무엇을 쓰는가」가 아니다.",
+      "how": "edit_requirement_fields(title, statement) · append_section_note(rationale, replace) · append_section_note(implementation_notes) · add_trace_link(Doc R21 informed_by · Requirement CON-ARCH-002 related_to). CON-ARCH-002 AC-2 와의 정면 충돌이 해소됐다.",
+      "files": ["C:\\Work\\git\\DocuLight2.0\\docs\\spec\\09.auth.srs.md"]
+    },
+    {
+      "finding": "F-02 (HIGH) — SRS 에 「원장 R13 은 개정되지 않았다」는 거짓 사실 진술 둘",
+      "what": "Trace Notes 와 Implementation Note 두 자리를 개정 사실로 고쳤다. 원장 R13 개정 문면을 직접 읽어 반영했다 — \"제공하던 기능을 물려받는다. 구현은 신규 작성이다\". ⚠ 표식과 「그 행을 함께 훑어야 한다」는 미완 작업 지시를 걷어냈다.",
+      "how": "Trace note 는 edit_requirement_table_rows(trace_links, rowIndex 0). IN 노트는 Edit — 단일 bullet 을 고치는 mutation 이 없고, replace 모드는 섹션 전체를 500자로 갈아치워 다른 노트를 삭제하게 된다.",
+      "files": ["C:\\Work\\git\\DocuLight2.0\\docs\\spec\\02.product-architecture.srs.md"]
+    },
+    {
+      "finding": "F-03 (HIGH) — 원장 §2.10 취소선이 닫히지 않았다",
+      "what": "436행 끝에 닫는 `~~` 를 붙였다. 철회된 결론(「백엔드만 이식한다」)이 이제 실제로 취소선으로 렌더된다.",
+      "how": "Edit. 검사한 파일 전체에서 `~~` 홀수 줄 0건으로 재확인.",
+      "files": ["C:\\Work\\git\\DocuLight2.0\\docs\\spec\\00.decision-log.md"]
+    },
+    {
+      "finding": "F-04 (HIGH) — 설계서 03 §11 이 이미 닫힌 질문을 미결로 유지",
+      "what": "§11-9 를 `~~9~~` + 「해소 — R149-e (2026-08-19)」로 닫고, §2.3 686행의 미결 문장을 결정 문장으로 바꿨다. §12 추적표의 R13 행도 소재 설명이 `미결` 이라 표가 거짓을 가리키던 자리(§0.3-9)라 함께 고치고 R149-e 행을 신설했다. 머리표 근거 목록·갱신 행 갱신.",
+      "how": "§0.3 을 먼저 읽고 그 규칙을 따랐다 — §0.3-7 에 따라 정정 사유는 고친 자리가 아니라 §13 에 20차 행으로 적었다. §0.3-8 이 요구하는 머리표·§13 최신 행 사실 검사를 선행했고 둘 다 정합했다. §0.3-3 에 따라 「조항 축은 갔고 자리 축은 남았다」를 명시했다 — R149·R149-a~d 의 검색 대상·필터 팝오버·질의 문법·결과 표시는 §2.3 에 아직 그려지지 않았고 이 수정의 범위가 아니다(F-04 본문이 같은 말을 한다).",
+      "files": ["C:\\Work\\git\\DocuLight2.0\\docs\\spec\\03.screen-design-shell.md"]
+    },
+    {
+      "finding": "F-05 (MEDIUM) — R149-e 비고가 R13 을 옛 이름으로 부른다",
+      "what": "196행 `R13`(1.0 의 벡터검색 이관) → `R13`(1.0 의 벡터검색 기능 인계 — 구현은 신규 작성). 원장 안의 자기모순 해소.",
+      "how": "Edit.",
+      "files": ["C:\\Work\\git\\DocuLight2.0\\docs\\spec\\00.decision-log.md"]
+    },
+    {
+      "finding": "F-06 (MEDIUM) — MIG-AUTH-002 Rationale 이 부인된 추론을 근거로 쓴다",
+      "what": "결론(bcrypt 해시 호환)은 유지하고 근거만 개정된 R57 비고로 교체했다 — 「해시 호환은 코드 이식의 귀결이 아니라 데이터 형식의 성질」. AC-3 은 그대로 성립한다.",
+      "how": "append_section_note(rationale, replace).",
+      "files": ["C:\\Work\\git\\DocuLight2.0\\docs\\spec\\09.auth.srs.md"]
+    },
+    {
+      "finding": "F-07 (MEDIUM) — CON-ARCH-002 재작성이 자산 이름을 잃었다",
+      "what": "AC-5 를 MCP 서버·AI/벡터검색으로 범위 한정하고, 로깅·config·파일 감시(chokidar)·E2E 도구(Playwright)를 받는 AC-6 을 신설했다. 재작성 전 AC-2 가 이름으로 들던 자산이 전부 이름으로 돌아왔다. 원장 §2.10 표 428행 처분 칸에도 같은 구별을 적었다(F-07 이 요구한 자리).",
+      "how": "replace_acceptance_criteria(8개) + append_section_note(implementation_notes) + 원장 428행 Edit. 인용한 R96(설정)·R77(재조정·파일 감시)이 실재하는지 원장에서 먼저 확인했다.",
+      "files": ["C:\\Work\\git\\DocuLight2.0\\docs\\spec\\02.product-architecture.srs.md", "C:\\Work\\git\\DocuLight2.0\\docs\\spec\\00.decision-log.md"]
+    },
+    {
+      "finding": "F-08 (MEDIUM) — CON-SHELL-002 AC-3 이 원장보다 넓다",
+      "what": "F-08 이 제시한 두 선택지 중 ⓑ(현 문면 유지 + Implementation Notes 명시 + FR-ARCH-001 과 상호 참조)를 택했다. AC-3 은 R149-e 첫 문장의 직역이므로 좁히면 원장 규범이 SRS 에서 사라진다. 대신 「앱 내 AI 화면의 존부는 이 제약이 정하지 않는다 — 그 화면이 서면 이 AC 를 함께 판정하라」를 양쪽에 남겼다.",
+      "how": "append_section_note(implementation_notes) × 2 (CON-SHELL-002 · FR-ARCH-001). Trace Links 는 이미 양방향이라 추가하지 않았다. 좁히기(ⓐ)를 택하지 않은 사유는 rejected 항목에 적었다.",
+      "files": ["C:\\Work\\git\\DocuLight2.0\\docs\\spec\\08.app-shell.srs.md", "C:\\Work\\git\\DocuLight2.0\\docs\\spec\\02.product-architecture.srs.md"]
+    },
+    {
+      "finding": "F-09 (MEDIUM) — FR-ARCH-001 AC 에서 LangChain 이 사라졌다",
+      "what": "AC-2 를 「1.0 의 AI 기능(LangChain 기반 파이프라인 · 벡터검색 · smart_search)과 그 화면이 제공하던 동작은 2.0 에서 같은 결과를 낸다」로 고쳐 이름을 되살렸다. 되살린 것은 원장 R13 이 열거하는 「1.0 이 무엇을 갖고 있었는가」이며, 2.0 을 LangChain 으로 짓는다는 결정은 만들지 않았다.",
+      "how": "replace_acceptance_criteria + append_section_note(implementation_notes). IN 노트가 R57(「세 기술 선택은 유지한다」)과의 비대칭을 명시하고, 갈리면 판정을 원장에 올리라고 적는다. F-09 의 ⓐ(원장 R13 에 문장 추가)·ⓑ(새 공백 등재)는 원장 소관의 새 결정이라 이번 회차가 대신 정하지 않았다 — not_fixable 참조.",
+      "files": ["C:\\Work\\git\\DocuLight2.0\\docs\\spec\\02.product-architecture.srs.md"]
+    },
+    {
+      "finding": "F-10 (MEDIUM) — R149-c ↔ R112-b 결합 경고가 한 방향에만 있다",
+      "what": "SEC-PRINCIPAL-003 쪽에 FR-SHELL-014 를 가리키는 Trace Link 와 「값이 같다는 이유로 한 상수로 묶지 마라」 경고를 더해 양방향으로 만들었다. 상한 20건이 이쪽에만 붙는다는 사실도 함께 적었다.",
+      "how": "add_trace_link(Requirement FR-SHELL-014 related_to) + append_section_note(implementation_notes).",
+      "files": ["C:\\Work\\git\\DocuLight2.0\\docs\\spec\\16.principal.srs.md"]
+    },
+    {
+      "finding": "F-11 (MEDIUM) — 인계 문서가 철회된 전제를 제품 전제로 적는다",
+      "what": "18행 「기존 Express 백엔드 이식」을 「Express 백엔드 신규 작성(1.0 에서는 코드가 아니라 기능을 물려받는다 — R21)」으로 고쳤다.",
+      "how": "Edit.",
+      "files": ["C:\\Work\\git\\DocuLight2.0\\docs\\next\\00.handoff.md"]
+    },
+    {
+      "finding": "F-09 보강 · 팀리드 M-9 — R21-b 가 정한 MCP 도구 계약이 요구사항에 없다",
+      "what": "arag-probe.md §D 실측을 근거로 주 표면 POST /mcp 12개의 도구 이름을 FR-ARCH-001 Implementation Notes 에 담고, context 표면 POST /context 3개가 무인증이라는 사실을 FR-ARCH-001 과 SEC-ARCH-001 양쪽에 남겼다. 인자·출력·에러 코드 상세는 옮기지 않고 §D-1 · §D-2 를 정본으로 가리킨다.",
+      "how": "append_section_note(implementation_notes) × 3. SEC-ARCH-001 쪽 노트는 「도구 목록을 훑을 때 주 표면만 보고 끝내지 마라」로 그 조항의 AC-2 가 막아야 할 대상임을 못박는다.",
+      "files": ["C:\\Work\\git\\DocuLight2.0\\docs\\spec\\02.product-architecture.srs.md"]
+    },
+    {
+      "finding": "F-12 (LOW) — 머리표 경위 서술이 G36 을 빠뜨렸다",
+      "what": "「11 → 15」 뒤에 「같은 날 R149 계열 신설이 G36(결과 건수 상한·발췌 길이·강조 방식 등)을 열어 15 → 16」을 이었다. 총계 16 과 이야기가 이제 같은 자리에 선다.",
+      "how": "Edit.",
+      "files": ["C:\\Work\\git\\DocuLight2.0\\docs\\spec\\00.decision-log.md"]
+    },
+    {
+      "finding": "F-13 (LOW) — §5 R32 이행 행이 낡은 값을 현재형으로 단언",
+      "what": "「Phase 1 차단 공백은 13 이 아니라 12 다」를 「그 시점 … 12 였다(같은 날 뒤이어 R149 신설이 G36 을 열어 13 이 됐다 — 이 행은 이력이므로 당시 값을 남긴다)」로 시제를 못박았다. 당시 값 12 는 소급 수정하지 않았다.",
+      "how": "Edit.",
+      "files": ["C:\\Work\\git\\DocuLight2.0\\docs\\spec\\00.decision-log.md"]
+    },
+    {
+      "finding": "F-14 (LOW) — §2.10 소제목이 개정 전 주장을 현재형으로 유지",
+      "what": "「R21 근거 — \"계승 vs 재작성\" 이분법이 성립하지 않는다」를 「R21 초판 근거 — … 〔개정으로 철회 — R21 이 그 이분법을 재작성 쪽으로 닫았다〕」로 고쳤다. 434행 정정 각주가 덮지 못하던 자리다.",
+      "how": "Edit. 표 자체는 「무엇이 있었는가」의 기록으로 그대로 남겼다.",
+      "files": ["C:\\Work\\git\\DocuLight2.0\\docs\\spec\\00.decision-log.md"]
+    }
+  ],
+  "rejected": [
+    {
+      "finding": "F-08 의 선택지 ⓐ — CON-SHELL-002 AC-3 을 「좌측 검색 탭은 의미 검색 도구를 호출하지 않는다」로 좁히기",
+      "why": "AC-3 은 원장 R149-e 첫 문장 「AI 검색은 MCP 로만 제공한다」의 직역이다. 좁히면 SRS 가 원장보다 좁아지고, 원장이 세운 규범이 요구사항에서 사라진다. F-08 이 지목한 실제 문제는 「열려 있다고 선언된 질문을 사실상 닫는다」이지 「AC 가 원장에 없는 것을 말한다」가 아니므로, F-08 이 함께 제시한 선택지 ⓑ 로 처리했다. 사유를 CON-SHELL-002 Implementation Notes 그 자리에 남겨 다음 패스가 반복하지 않게 했다.",
+      "evidence": "00.decision-log.md:196 (R149-e) — \"**AI 검색은 MCP 로만 제공한다.** 좌측 검색 탭은 텍스트 검색이며 여기에 AI·벡터 검색을 섞지 않는다\" ↔ eval_iter4.json F-08 suggested_action — \"…또는 현 문면을 유지한다면 Implementation Notes 에 … 를 명시한다. 어느 쪽이든 FR-ARCH-001 IN 279행과 상호 참조를 건다.\""
+    }
+  ],
+  "not_fixable": [
+    {
+      "finding": "F-09 의 선택지 ⓐ·ⓑ — 원장 R13 에 LangChain 처분 문장을 더하거나, 새 공백 번호로 등재하기",
+      "why": "둘 다 원장이 내려야 할 새 결정이다. ⓐ 는 「LangChain 을 그대로 쓴다」 또는 「구현 선택으로 남긴다」 중 하나를 고르는 것이고 원장에 그 근거가 없다. ⓑ 는 새 G 번호 부여이며 공백 등재는 원장 소관이다. 지어내지 않고, FR-ARCH-001 AC-2 로 이름을 되살린 뒤 Implementation Notes 에 R57 과의 비대칭과 「갈리는 자리가 되면 그 판정을 원장에 올려라」를 남겼다. 판정 자체는 열려 있다."
+    }
+  ],
+  "validate_spec": { "errors": 0, "warnings": 2 },
+  "notes_for_reviewer": [
+    "요구사항 블록 안에서 Edit 을 쓴 자리가 셋이다. ① F-02 의 IN 노트 정정 ② mutation 이 자동으로 붙이는 `- [YYYY-MM-DD] ` 접두 때문에 생긴 날짜 중복 제거 ③ 내가 쓴 노트의 기수 정리. 단일 IN bullet 을 고치는 mutation 이 없고 append_section_note(replace) 는 text 가 500자 제한이라 섹션 전체를 갈아치우면 기존 노트가 삭제된다 — 값 삭제를 피하려 Edit 을 택했다. 지시대로 모든 mutation 을 먼저 끝낸 뒤에 Edit 했고, validate_spec 은 errors 0 을 유지한다.",
+    "append_section_note 는 text 앞에 `- [2026-08-19] ` 를 자동으로 붙인다(MCP 서버가 날짜를 스스로 찍는다). 지시의 `[2026-08-19]` 접두를 손으로 넣으면 중복된다 — 첫 호출에서 겪었고 정리했다. 다음 패스는 접두를 넣지 말 것.",
+    "append_section_note 의 section 인자는 snake_case 다(`implementation_notes` · `rationale`). `Implementation Notes` 는 USAGE 오류로 거부된다.",
+    "edit_requirement_table_rows 의 values 키도 소문자다(`notes`, `type`, `reference`, `relation`). `Notes` 는 거부된다.",
+    "설계서 03 은 20차 행을 §13 에 더했다. 그 행이 「조항 축은 갔고 자리 축은 남았다」(§0.3-3)를 명시한다 — R149·R149-a~R149-d 가 정한 검색 대상 넷 · 필터 팝오버 · 질의 문법 · 결과 표시가 §2.3 본문에 아직 그려지지 않았다. F-04 본문이 그것을 이 수정의 범위 밖으로 두었으므로 남은 설계 작업으로만 보고한다.",
+    "범위 밖이라 고치지 않고 보고만 하는 것 — 원장 §5 799행의 「남은 것」이 `R21` 초판 전제를 설계서 03~06 만 들고 `docs/next/` 를 범위 밖에 둔다. F-11 은 그 범위에 `docs/next/` 를 더하라고 제안하지만, §5 는 이력이고 F-13 이 「이력을 소급 수정하지 마라」를 같은 회차에 규정하므로 손대지 않았다. 새 §5 행을 세울지는 원장 소관이다.",
+    "설계서 04~06 에 `R21` 초판 전제(「이식」)나 R57 초판 문면이 남아 있는지는 이번 지시 범위 밖이라 훑지 않았다. 원장 §5 799행이 스스로 미완으로 적어 둔 축이다.",
+    "기계 재검사 — `~~` 홀수 줄 0건(검사 대상 7파일) · 내가 고친 표 행 전건 열 수 정합 · 「R13 은 개정되지 않았다」·「기존 Express 백엔드 이식」·「노출할지는 미결」 잔존 0건 · validate_spec errors 0 / warnings 2(SRS-W072 · SRS-W023, 둘 다 알려진 것)."
+  ]
+}
