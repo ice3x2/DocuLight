@@ -1,0 +1,192 @@
+{
+  "iter": 5,
+  "scope_checked": "git diff 10cfbe6..HEAD -- docs/ (9dca0c0) 전량 + docs/spec/**/*.md · docs/next/**/*.md 전수 기계 검사",
+  "convergence": {
+    "critical": 0,
+    "high": 3,
+    "verdict": "NOT_CONVERGED"
+  },
+  "mechanical": [
+    { "check": "요구사항 블록 총수", "target": 261, "violations": 0, "note": "11개 scope SRS 에서 261건 파싱. 00.index.md §5(planned 247 + blocked 14 = 261) · §6(32+97+79+2+19+5+13+2+12 = 261) 모두 실측과 일치. 타입별 9종 전건 일치." },
+    { "check": "Requirement ID 형식·중복", "target": 261, "violations": 0, "note": "전건 {PREFIX}-{SCOPE}-{3자리}. 중복 ID 0건." },
+    { "check": "접두사 ↔ Type 정합", "target": 261, "violations": 0, "note": "가정한 표가 아니라 실측 도출로 검사 — 접두사 9종(SEC/FR/CON/OPS/IR/DR/MIG/OBS/REL)이 각각 단일 Type 에만 대응. 한 접두사가 두 Type 을 갖는 자리 0건. (DR=data 이며 design 이 아니다)" },
+    { "check": "scope 세그먼트 ↔ 파일", "target": 261, "violations": 0, "note": "세그먼트 11종이 각각 정확히 한 파일에만 나타난다. 파일 경계를 넘는 세그먼트 0건." },
+    { "check": "AC 형식 `- [ ] AC-{N}: `", "target": 261, "violations": 0, "note": "형식 이탈 0건." },
+    { "check": "AC 번호 1부터 연속", "target": 261, "violations": 0, "note": "결번·역순·중복 0건. CON-ARCH-002 의 AC-5~AC-8 재번호도 연속(1~8)." },
+    { "check": "AC 0건 블록", "target": 261, "violations": 0, "note": "AC 를 하나도 갖지 않은 블록 0건." },
+    { "check": "Trace Links 열 수", "target": 261, "violations": 0, "note": "전 trace 행이 4셀(파이프 6). 4차가 추가한 SEC-AUTH-001 2행 · SEC-PRINCIPAL-003 1행 포함." },
+    { "check": "Trace `Requirement` 참조 실재성", "target": 261, "violations": 0, "note": "Requirement 관계의 참조 ID 전건이 실재 블록으로 해소. 미해소 0건 — CON-ARCH-002·FR-SHELL-014 등 4차 신규 참조 포함." },
+    { "check": "00.index.md §9 Impact 가 Status=blocked 전건을 도달 가능하게 하는가", "target": 14, "violations": 0, "note": "blocked 14건(FR-EDITOR-007·IR-SHELL-002·FR-SHELL-013·FR-SHELL-014·FR-AUTH-003·SEC-AUTH-018·SEC-AUTH-019·OBS-AUDIT-011·DR-STORAGE-005·FR-ATTACH-008~011·SEC-ATTACH-004)이 G8·G10·G27·G28·G31·G33·G34·G35·G36 의 Impact 열로 전건 도달. 서문의 `blocked 14건` 표기도 실측과 일치." },
+    { "check": "`~~` 짝 (여는 것과 닫는 것이 같은 줄)", "target": 28, "violations": 0, "note": "docs/spec + docs/next 의 .md 28개 전수. `~~` 개수가 홀수인 줄 0건 — 4차의 F-03 수정(00.decision-log.md:436 닫는 `~~` 추가)이 실제로 짝을 맞췄다. 03 §11-9 의 `~~9~~`·`~~검색 탭에…~~` 도 각각 한 줄 안에서 닫힌다." },
+    { "check": "표 열 수 정합 (인라인 코드·이스케이프 파이프 제외)", "target": 28, "violations": 0, "note": "백틱 코드 스팬 내부 `|` 와 `\\|` 이스케이프를 제거한 뒤 표 블록별 열 수 검사. 실 위반 0건. (naive grep 이 내는 22건은 전부 `원본`\\|`사본` 형태의 이스케이프 오탐이며, docs/next/00.handoff.md:162 가 그 오탐 유형을 이미 기록해 두었다)" },
+    { "check": "취소선 조항(~~R27~~·~~R44-a~~·~~R106-b~~·~~R108-a~~)을 새 논증의 근거로 인용", "target": 261, "violations": 0, "note": "SRS 전수에서 인용 1건(08.app-shell.srs.md:1196)뿐이고 그마저 「종결된 R108-a 의 서술에만 있어 새 논증의 근거로 인용할 수 없다」는 준수 선언이다. 위반 아님." },
+    { "check": "모호 어휘 전수 grep (적절히·가급적·충분히·유연하게·TBD 등)", "target": 261, "violations": 0, "note": "Requirement·AC 문면에 규범적 모호 어휘 0건. `미결`·`미정`·`나중에` 히트는 전부 G-번호를 명시적으로 가리키는 공백 참조이거나 시간 부사이며 결함이 아니다." },
+    { "check": "원장에 1.0 코드 이동을 함의하는 낱말 잔존 (이식·이관·재사용·유지)", "target": 1, "violations": 1, "note": "히트 대부분은 다른 뜻이다 — 조항 간 처방 이동(R134-a 「R126-a 는 첨부에 이식된다」), chokidar 노드 동일성(R77-a 「불확실하면 이식하지 않고」), 데이터 이관(R105-b), 정본 이관(§5 2026-08-16), 2.0 내부 부품 재사용(R63-a·R33-b `cmdk`), 데이터 보존(R55) — 전부 결함 아님. §2.10 표(428~432)와 결론 문장(436)은 전부 취소선 처리됐다. 실질 잔존 1건 = R33-a(445행) 「기존 PM2 배포 구성을 그대로 쓴다」 — H-03 참조." },
+    { "check": "speckiwi validate", "target": 1, "violations": 0, "note": "errors 0 · warnings 2 (SRS-W072 · SRS-W023/FR-SHELL-011). 둘 다 알려진 경고." }
+  ],
+  "restoration_check": [
+    {
+      "what": "CON-ARCH-002 — 재작성 전 AC-2 가 이름으로 들던 1.0 자산 여섯",
+      "restored": true,
+      "where": "docs/spec/02.product-architecture.srs.md:378-379 (AC-5 · AC-6)",
+      "evidence": "재작성 전(fbcad84:357) AC-2 = 「MCP 서버·AI/벡터검색·로깅·config·chokidar·Playwright 자산은 1.0 에서 이식된다」. 현재 AC-5 = 「… 그중 MCP 서버 · AI/벡터검색 의 인계 형태 … 는 FR-ARCH-001 이 소유한다」, AC-6 = 「로깅 · config · 파일 감시(chokidar) · E2E 도구(Playwright) 는 FR-ARCH-001 의 인계 범위 밖이며 … 2.0 이 자기 조항(R96 · R77 등) 위에서 새로 고르는 부품이다」. 여섯 자산이 전부 이름으로 존재하고 각각 처분을 받는다. 인용한 R96·R77 도 원장에 실재. 원장 §2.10 표 428행에도 같은 구별이 반영됐다."
+    },
+    {
+      "what": "FR-ARCH-001 — 재작성 전 AC-1 의 `LangChain`",
+      "restored": true,
+      "where": "docs/spec/02.product-architecture.srs.md:248 (AC-2)",
+      "evidence": "AC-2 = 「1.0 의 AI 기능(LangChain 기반 파이프라인 · 벡터검색 · `smart_search`)과 그 화면이 제공하던 동작은 2.0 에서 같은 결과를 낸다」. 원장 R13 개정 문면(00.decision-log.md:405)도 「1.0 의 AI 기능(LangChain / 벡터검색 / smart_search)과 MCP 서버가 제공하던 기능을 물려받는다. 구현은 신규 작성이다」로 LangChain 을 이름으로 든다 — 어긋나지 않는다. Implementation Note(283행)가 「AC-2 가 이름으로 드는 LangChain 은 「1.0 이 무엇을 갖고 있었는가」의 이름이며 2.0 을 LangChain 으로 짓는지는 원장이 정하지 않았다」로 구현 결정과 분리했고, R13 의 LangChain 처분 미결이 요구사항에 기록돼 있다. 다만 같은 AC 의 `smart_search`+「같은 결과」 조합에 별건 문제가 있다 — M-01 참조."
+    },
+    {
+      "what": "SEC-AUTH-001 — 개정 전 R57 이 담던 세 기술 선택(bcrypt · HttpOnly 세션 쿠키 · express-rate-limit)",
+      "restored": true,
+      "where": "docs/spec/09.auth.srs.md:59 (제목) · :76 (Requirement) · :85-89 (AC-1~AC-5)",
+      "evidence": "제목 = 「1.0 과 같은 기술 선택으로 로그인을 신규 작성한다 — bcrypt · HttpOnly 세션 쿠키 · 소스 IP 단위 rate limit」. Requirement = 「… 비밀번호는 bcrypt 로 해시해 저장하고, 로그인 성공 시 세션은 HttpOnly 쿠키로 유지하며, 로그인 시도에 `express-rate-limit` 기반 rate limit 을 건다. 1.0 의 로그인 소스를 옮겨 온 파일을 두지 않는다」. AC-1(bcrypt) · AC-2(HttpOnly) · AC-3~AC-5(rate limit · 소스 IP · 전역 카운터 금지) 다섯이 무손상. 원장 R57 개정 문면(513행) 「세 기술 선택은 그대로 유지한다」와 정합."
+    }
+  ],
+  "new_falsehood_check": [
+    {
+      "statement": "FR-ARCH-001 Trace note (02:263) — 「원장 조항 R13 — 그 행도 2026-08-19 에 함께 개정됐다(\"제공하던 기능을 물려받는다. 구현은 신규 작성이다\")」",
+      "true_now": true,
+      "evidence": "00.decision-log.md:405 축자 대조 — 「… **제공하던 기능을 물려받는다.** 구현은 신규 작성이다」. 인용이 정확하다. 4차가 걷어낸 「R13 은 개정되지 않았다」 진술은 docs/spec · docs/next 전수에서 잔존 0건."
+    },
+    {
+      "statement": "FR-ARCH-001 Implementation Note (02:282) — R13 개정 문면 전문 인용",
+      "true_now": true,
+      "evidence": "원장 405행과 축자 일치. 이어지는 「같은 회차의 R57 이 \"세 기술 선택은 그대로 유지한다\" 를 명시한 것과 비대칭이며 R13 에는 그에 대응하는 문장이 없다」도 참 — R57(513행)에 그 문장이 있고 R13(405행)에는 없다."
+    },
+    {
+      "statement": "SEC-ARCH-001 Implementation Note (02:96) — 「1.0 은 `POST /context` 를 별도 표면으로 두고 도구 3개(`list_context_documents` · `read_document` · `search_documents`)를 인증 없이 연다」",
+      "true_now": true,
+      "evidence": "arag-probe.md §D-2 실측 표제 「Context MCP 표면 — `POST /context` (3개, **무인증**)」 및 항목 13·14·15 와 도구 이름 3개가 축자 일치. 지어낸 이름 0건."
+    },
+    {
+      "statement": "FR-ARCH-001 Implementation Note (02:284) — 주 표면 `POST /mcp` 12개 도구 이름",
+      "true_now": true,
+      "evidence": "arag-probe.md §D-1 표와 12개 전건·순서까지 일치 — list_documents · list_full_tree · read_document · create_document · delete_document · {prefix}_get_config · {prefix}_search · query_document · summarize_document · {prefix}_smart_search · resolve_project · query_code_examples. 지어낸 이름 0건. `{prefix}` 표기도 §D 머리말의 sanitizeForToolName 규정과 정합."
+    },
+    {
+      "statement": "FR-ARCH-001 Implementation Note (02:286) — 「CON-SHELL-002 AC-3(\"의미 검색 도구는 MCP 표면에서만 호출할 수 있다\")」",
+      "true_now": true,
+      "evidence": "08.app-shell.srs.md:1365 축자 일치."
+    },
+    {
+      "statement": "03 §11-9 를 「해소 — R149-e (2026-08-19)」로 닫은 것 — R149-e 가 정말 그 질문을 닫는가",
+      "true_now": true,
+      "evidence": "§11-9 의 질문은 「검색 탭에 의미 검색(smart_search·벡터검색, R13)을 노출하는가」다. 원장 R149-e(00.decision-log.md:196) = 「**AI 검색은 MCP 로만 제공한다.** 좌측 검색 탭은 텍스트 검색이며 여기에 AI·벡터 검색을 섞지 않는다」 — 질문의 축(노출 여부)을 직접 부정으로 닫는다. 위임 없는 정면 종결이며 SRS 정본 CON-SHELL-002 AC-1·AC-2 가 같은 값을 판정 가능한 형태로 갖는다. 다만 같은 표의 집계 행은 안 갔다 — H-01."
+    },
+    {
+      "statement": "CON-ARCH-002 Implementation Note (02:406) — 「원장 §2.10 의 `R21 근거` 표는 개정 전 처분(그대로 이식 / 이식 후 확장 / 유지)을 그대로 담고 있어 이 조항의 문면과 어긋난다」",
+      "true_now": false,
+      "evidence": "원장 §2.10 표(428~432)의 처분 칸은 다섯 행 전부 `~~옛 처분~~ → 새 처분` 으로 갱신됐고, 434행 각주가 「**처분 칸을 갱신했으나** 표 자체는 「무엇이 있었는가」의 기록으로 남긴다」고 명시한다. 갱신된 처분은 이 조항의 문면(신규 작성)과 어긋나지 않고 일치한다. H-02 참조."
+    },
+    {
+      "statement": "원장 §5 R32 이행 행 — 「**그 시점** Phase 1 차단 공백은 13 이 아니라 **12** 였다(같은 날 뒤이어 R149 신설이 G36 을 열어 13 이 됐다 — 이 행은 이력이므로 당시 값을 남긴다)」",
+      "true_now": true,
+      "evidence": "D 축 통과 — 당시 값 12 가 소급 수정 없이 보존되고 현재 값 13 이 같은 문장 안에서 구별되며 전이 사유(G36 개방)까지 명시된다. 머리표(9행)는 총 16 · Phase 1 착수 판단 13 을, 00.index.md §9 하단 주의도 13 을 적어 세 자리가 정합한다. 실측 검산 — 원장 §3.2 열린 최상위 G 행 16개(G8·G10·G14·G15·G16·G23·G27·G28·G29·G30·G31·G32·G33·G34·G35·G36) − Phase 2 전용 3(G30·G34·G35) = 13. 인덱스 §9 의 「이 표는 16행 · 원장 §3.2 는 하위 행까지 세어 18행」도 실측(16 + G14-a · G14-b)과 일치."
+    }
+  ],
+  "findings": [
+    {
+      "id": "H-01",
+      "severity": "HIGH",
+      "axis": "C — 마커와 표의 무결성",
+      "req_id": "",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "line": 1784,
+      "description": "20차가 §11-9 를 `~~9~~` + 「해소 — R149-e」로 닫았으나 **같은 표의 집계 행을 갱신하지 않았다.** 실측 재계수 — 전체 34 · 종결 16(#7·9·10·13·14·17·21·22·23·26·27·28·29·30·31·32) · 열린 18(#1·2·3·4·5·6·8·11·12·15·16·18·19·20·24·25·33·34). 집계 행은 종결 15 · 열린 19 를 적고 **열린 목록에 #9 를 그대로 싣는다.** 표가 자기모순이다 — 9번 행은 취소선 + 해소인데 집계는 그것을 열린 것으로 센다. 머리표(11행)가 「문서 상태 — 초안 · §11 미결 질문 해소 후 착수 가능」이라 열린 수가 착수 판정의 근거이며, §13 20차 행이 갱신 범위를 「§2.3 · §11 · §12 · §13 · 머리표」로 적어 §11 이 갔다고 선언하는데 실제로는 행만 가고 집계는 안 갔다. 이 문서 §13 17차 행이 스스로 「결론은 고치고 그 결론을 전제하던 문장은 안 고친다」의 재발이라 이름 붙인 형태다.",
+      "evidence_quote": "> **집계** — 전체 **34건** 중 **종결 15건**(#7·10·13·14·17·21·22·23·26·27·28·29·30·31·**32**), **열린 것 19건**(#1·2·3·4·5·6·8·**9**·11·12·15·16·18·19·20·24·25·**33**·**34**).",
+      "suggested_action": "집계 행을 「전체 34건 중 종결 16건(#7·**9**·10·13·14·17·21·22·23·26·27·28·29·30·31·32), 열린 것 18건(#1·2·3·4·5·6·8·11·12·15·16·18·19·20·24·25·33·34)」으로 고친다. 종결 목록에 9 를 넣고 열린 목록에서 9 를 뺀다 — 값 두 개와 목록 두 개를 함께 고쳐야 하며 하나만 고치면 34 합이 깨진다."
+    },
+    {
+      "id": "H-02",
+      "severity": "HIGH",
+      "axis": "B — 고치면서 새 거짓을 만들었는가",
+      "req_id": "CON-ARCH-002",
+      "file": "docs/spec/02.product-architecture.srs.md",
+      "line": 406,
+      "description": "CON-ARCH-002 Implementation Notes ① 이 원장 §2.10 표의 **현재 상태를 거짓으로 단언**한다. 그 노트는 표가 개정 전 처분을 「그대로 담고 있어」 이 조항의 문면과 「어긋난다」고 적는데, 원장 428~432행 처분 칸은 다섯 행 전부 `~~옛 처분~~ → 새 처분` 으로 갱신됐고 갱신된 처분은 이 조항(신규 작성)과 **일치한다.** 원장 434행 각주가 「처분 칸을 갱신했으나 표 자체는 「무엇이 있었는가」의 기록으로 남긴다」고 스스로 밝힌다. **4차가 바로 그 428행을 직접 고쳐 놓고**(F-07 수정 — 「로깅·config·chokidar·Playwright 에는 R21-b 가 정의한 인계 형태가 적용되지 않는다」 추가) 그 표를 서술하는 이 노트는 훑지 않았다. 4차가 HIGH 로 처분한 F-02(「원장 R13 은 개정되지 않았다」)와 동일 유형 — 같은 회차에 고친 문서의 상태를 옛 상태로 단언하는 진술이다. 결과로 다음 개정자는 이미 정합된 표를 「어긋난다」고 읽고 다시 고치려 든다. 주의 — 같은 블록 402행의 [2026-08-19] 노트(「위 두 항목은 R21 개정 이전의 자산별 처분을 전사한 것이며 발견 경위의 기록으로만 남긴다」)는 시점 한정이 붙어 있어 참이다. 문제는 406행 하나다.",
+      "evidence_quote": "- 원장 §2.10 의 `R21 근거` 표는 개정 전 처분(그대로 이식 / 이식 후 확장 / 유지)을 그대로 담고 있어 이 조항의 문면과 어긋난다. 그 표를 이 조항의 근거로 다시 인용하지 마라 — 자산별 처분의 정본은 개정된 `R21` 과 `R21-b` 다.",
+      "suggested_action": "전제를 현재 사실로 바꾼다 — 「원장 §2.10 의 `R21 근거` 표는 처분 칸이 갱신되어 이 조항과 정합하며(그 각주가 갱신 사실을 밝힌다), 취소선 아래 옛 처분은 「무엇이 있었는가」의 기록이다. **취소선 부분을 이 조항의 근거로 인용하지 마라**」. 뒷문장(정본은 개정된 R21·R21-b)은 그대로 유효하므로 살린다."
+    },
+    {
+      "id": "H-03",
+      "severity": "HIGH",
+      "axis": "E-8 — 1.0 코드·설정 이동을 함의하는 잔존 조항 (요구사항 간 정면 충돌)",
+      "req_id": "OPS-ARCH-001 · CON-ARCH-002",
+      "file": "docs/spec/02.product-architecture.srs.md",
+      "line": 502,
+      "description": "같은 파일의 두 AC 가 **동시에 참일 수 없다.** OPS-ARCH-001 AC-4(502행) = 「**1.0 의** PM2 배포 구성을 그대로 쓴다」. CON-ARCH-002 AC-4(377행) = 「2.0 의 빌드·의존성·**설정** 어느 것도 1.0 리포지토리의 경로를 가리키지 않는다」. PM2 배포 구성은 설정이고 그것을 1.0 것 그대로 쓰면 1.0 경로를 가리킨다. 둘 다 `Status=planned` · `Stability=stable` 인 구현 계약이라 검증자가 한쪽을 통과시키면 다른 쪽이 실패한다. **뿌리는 원장 안의 미스윕이다** — R21-b(421행)가 「2.0 의 어떤 설정도 1.0 경로를 가리키지 않으며」를 세웠는데 R33-a(445행)는 「기존 PM2 배포 구성을 그대로 쓴다」로 개정 전 문면 그대로 남았다. `R124-a` 스윕이 R21 개정 때 R57·R13·§2.10 표는 갔으나 **R33-a 는 가지 않았다.** 4차가 CRITICAL 로 처분한 F-01(R57 미스윕)과 구조가 같으며, 그때 R57 이 개정되지 않았다는 이유로 sweep 이 정당하게 기각했다가 원장 개정 후 CRITICAL 로 돌아온 자리와 같은 경로다. 지금은 SRS 쪽에 **새로 쓴 AC 가 충돌을 만들어 놓은 상태**라 SRS 내부 모순으로 이미 발화했다.",
+      "evidence_quote": "docs/spec/02.product-architecture.srs.md:502 — \"- [ ] AC-4: 1.0 의 PM2 배포 구성을 그대로 쓴다.\"  ↔  :377 — \"- [ ] AC-4: 2.0 의 빌드·의존성·설정 어느 것도 1.0 리포지토리의 경로를 가리키지 않는다.\"  ↔  00.decision-log.md:421 (R21-b) — \"2.0 의 어떤 설정도 1.0 경로를 가리키지 않으며\"  ↔  :445 (R33-a) — \"동일 오리진이라 CORS·CSRF 문제가 없고 기존 PM2 배포 구성을 그대로 쓴다\"",
+      "suggested_action": "SRS 가 임의로 정하지 말고 **원장 R33-a 의 처분을 먼저 받아라** — R57 이 밟은 경로와 같다. 판정 후보는 둘이다: ⓐ R33-a 도 R57 처럼 「같은 배포 방식(PM2 · 단일 프로세스 · 동일 오리진)을 쓰되 구성은 2.0 리포에 신규 작성한다」로 개정하고 OPS-ARCH-001 AC-4 를 그 문면으로 교체 — R21-b·CON-ARCH-002 AC-4 와 즉시 정합한다. ⓑ R21-b 의 설정 금지에 배포 구성 예외를 명시. 어느 쪽이든 **원장 결정이 선행해야 하며**, 그 전까지는 두 AC 의 충돌 사실을 양쪽 Implementation Notes 에 남겨 다음 패스가 한쪽만 보고 고치지 않게 한다."
+    },
+    {
+      "id": "M-01",
+      "severity": "MEDIUM",
+      "axis": "A/B — 되살린 규범이 실측과 갈리는가",
+      "req_id": "FR-ARCH-001",
+      "file": "docs/spec/02.product-architecture.srs.md",
+      "line": 248,
+      "description": "4차가 LangChain 을 되살리며 AC-2 에 `smart_search` 를 함께 넣고 술어를 「같은 결과를 낸다」로 두었다. 그런데 원장 R21-a(420행)와 이 블록 자신의 Implementation Note(281행)가 **1.0 의 semantic 경로는 한 번도 실전 동작한 적이 없다**고 실측으로 못박는다 — HTTP MCP 경로는 항상 keyword 로 떨어지고 챗봇 경로는 TypeError 뒤 조용히 keyword 로 폴백한다. 문자 그대로 읽으면 AC-2 는 2.0 의 `smart_search` 가 **깨진 keyword 폴백 동작을 재현할 것**을 요구하게 되어, 같은 블록 AC-4(「A-RAG 는 신규 작성물」)와 R21-a 의 채택 사유(「기존보다 더 잘 만들 수 있다」)와 갈린다. 검증 시점에 판정 불능이 된다. 참고 — 재작성 전 AC-1 은 술어가 「2.0 에서 동작한다」였고 같은 문제를 다른 형태로 갖고 있었다. 되살리기 자체는 옳았고 술어 선택만 남은 자리다.",
+      "evidence_quote": "- [ ] AC-2: 1.0 의 AI 기능(LangChain 기반 파이프라인 · 벡터검색 · `smart_search`)과 그 화면이 제공하던 동작은 2.0 에서 같은 결과를 낸다.",
+      "suggested_action": "AC-2 를 「1.0 이 갖고 있던 AI 기능(LangChain 기반 파이프라인 · 벡터검색 · `smart_search`)의 **도구 계약과 화면 동작**은 2.0 에서 대응물을 갖는다 — 다만 `smart_search` 의 semantic 경로는 1.0 에서 동작한 적이 없으므로(R21-a) 재현 대상이 아니라 `AC-4` 의 신규 작성 대상이다」로 좁힌다. 자산 이름은 그대로 살리고 「같은 결과」의 적용 범위만 계약·화면 동작으로 한정하면 되살린 값을 잃지 않는다."
+    },
+    {
+      "id": "M-02",
+      "severity": "MEDIUM",
+      "axis": "E-4 — 집계 정합",
+      "req_id": "",
+      "file": "docs/spec/00.decision-log.md",
+      "line": 11,
+      "description": "원장 머리표 「다음 단계」 칸이 등재 건수를 **258건(phase-1 247 · phase-2 11)** 으로 적는데 실측은 **261건(phase-1 250 · phase-2 11)** 이다. 차이 3 은 `R149` 계열 신설이 세운 `CON-SHELL-002` · `FR-SHELL-013` · `FR-SHELL-014` 다 — 10cfbe6 이 이 셋을 등재하면서 `00.index.md` §5·§6 은 261 로 갱신했으나 원장 이 칸은 258 에 멈췄다. 인덱스 쪽은 정확하므로 SSOT 두 벌 중 원장만 낡았다. 셈 규칙의 함정 하나 — 현재 `planned` 가 247 이라 「phase-1 247」이 우연히 그럴듯해 보이지만 phase-1 은 250 이고 247 은 status 축의 수다. 2차·3차 검증은 당시 실측이 258 이라 정당하게 통과시켰고 4차는 이 칸을 보지 않았다.",
+      "evidence_quote": "… 11 scope … 에 **요구사항 258건**을 등재했다(phase-1 247 · phase-2 11 — 2026-08-19 검증 루프에서 `OBS-AUDIT-011`·`FR-WORKSPACE-009` 가 분리 신설돼 256 → 258).",
+      "suggested_action": "「요구사항 261건 … (phase-1 250 · phase-2 11 — … 256 → 258, 이어 `R149` 계열 신설이 `CON-SHELL-002`·`FR-SHELL-013`·`FR-SHELL-014` 를 세워 258 → 261)」로 갱신한다. 또는 §5 이력 행처럼 시점을 한정해 「등재 시점 258건」으로 못박고 현재 수치는 `00.index.md` §5 를 가리킨다 — 원장이 SRS 건수를 계속 따라가는 것은 R124(한 사실은 한 곳에만)와 상성이 나쁘므로 후자를 권한다."
+    },
+    {
+      "id": "M-03",
+      "severity": "MEDIUM",
+      "axis": "E-8 — 1.0 연속성을 함의하는 어휘",
+      "req_id": "OPS-ARCH-001 · CON-ARCH-003",
+      "file": "docs/spec/02.product-architecture.srs.md",
+      "line": 474,
+      "description": "H-03 과 같은 뿌리에서 나온 별개 자리다 — 「**기존** Express」라는 어휘가 네 곳(474행 제목 · 491행 Requirement · 499행 AC-1 · 466행 CON-ARCH-003 Implementation Note 「기존 Express 는 그대로 남으며」)에 남아 있다. R21 개정이 「백엔드·프론트엔드 **전부 신규 작성**」으로 닫은 뒤 「기존」의 지시 대상이 갈린다 — 읽는 사람에 따라 ⓐ 1.0 의 Express 서버가 계속 산다 ⓑ 2.0 이 자기 Express 를 두고 별도 프론트 서버를 두지 않는다, 둘 중 하나로 읽힌다. 조항의 실제 취지는 ⓑ(같은 오리진 · 단일 프로세스)인데 어휘가 ⓐ 를 함의한다. `R21-b` 가 지목한 스윕 대상 셋(CON-ARCH-002 · FR-ARCH-001 · SEC-ARCH-002)에 이 블록이 없어 스윕이 닿지 않았다.",
+      "evidence_quote": "### OPS-ARCH-001 — 빌드 산출물을 기존 Express 가 서빙하고 Node 프로세스를 1개로 유지한다  /  :466 — \"「SSR 프레임워크를 두지 않는다」 는 서버가 없다는 뜻이 아니다. 기존 Express 는 그대로 남으며 정적 파일 서빙과 API 를 담당한다.\"",
+      "suggested_action": "「기존 Express」를 「2.0 의 Express 서버」 또는 「애플리케이션 Express 서버」로 바꾼다 — 규범(같은 오리진 · 프론트 서버 미도입 · Node 프로세스 1개)은 그대로 유지되고 1.0 연속성 함의만 사라진다. H-03 의 원장 판정과 함께 처리하면 한 번에 닫힌다."
+    },
+    {
+      "id": "L-01",
+      "severity": "LOW",
+      "axis": "C — 표가 가리키는 자리의 정합",
+      "req_id": "",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "line": 1918,
+      "description": "§12 추적표의 `R79` 행이 소재를 「§11-9 (의미 검색을 노출한다면 삭제 노드 fail-closed 필터가 그대로 걸린다)」로 적는데, 20차가 §11-9 의 근거 칸을 통째로 갈아치우면서 **그 조건절이 있던 문장을 삭제했다** — 옛 근거 칸 「… 노출한다면 R79(삭제 노드 fail-closed)·R80 필터가 그대로 걸린다」가 「AI 검색은 MCP 로만 제공하고 좌측 검색 탭은 텍스트 검색이다 …」로 대체됐다. 지금 §11-9 를 열면 `R79` 가 없다. 20차가 같은 표의 `R13` 행은 「소재 설명이 `미결` 이라 표가 거짓을 가리키던 자리(§0.3-9)」라며 고쳤는데 `R79` 행은 같은 이유로 거짓이 된 것을 놓쳤다. 또한 노출하지 않기로 정해졌으므로 조건절 자체가 성립하지 않는 가정이다.",
+      "evidence_quote": "| R79 | §11-9 (의미 검색을 노출한다면 삭제 노드 fail-closed 필터가 그대로 걸린다) |",
+      "suggested_action": "§11-9 가 R79 를 더는 언급하지 않으므로 이 행에서 §11-9 소재를 뺀다. R79 가 이 문서의 다른 자리에서 다뤄지면 그 소재로 교체하고, 없으면 §12 규칙 ③·④(이 줄 밖에서 본문이 그 조항을 다루는가)로 수록 여부를 재판정한다."
+    },
+    {
+      "id": "L-02",
+      "severity": "LOW",
+      "axis": "B — 4차 수정 서술의 정확성",
+      "req_id": "",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "line": 2002,
+      "description": "§13 20차 행이 갱신 범위를 「§2.3 · §11 · §12 · §13 · 머리표」로 적고 「§11-9 종결」을 선언하는데, §11 안에서 실제로 간 것은 9번 행 하나이고 집계 행(1784)은 가지 않았다(H-01). 이력 행이 자기 범위를 실제보다 넓게 적은 자리다. 같은 행이 「조항 축만 갔고 자리 축은 남았다(§0.3-3)」를 스스로 인용하며 §2.3 본문 미작성을 정직하게 표기한 것과 대비된다 — 그 자기점검이 같은 절 안의 집계 행에는 미치지 않았다.",
+      "evidence_quote": "| **2026-08-19** | **20차** | §2.3 · §11 · §12 · §13 · 머리표 | **원장 `R149-e` 신설 반영 — §11-9 종결.** …",
+      "suggested_action": "H-01 을 고친 뒤 이 행은 그대로 참이 되므로 별도 수정이 필요 없다. H-01 을 고치지 않고 남긴다면 이 행에 집계 미갱신 사실을 명기한다."
+    }
+  ],
+  "summary": {
+    "CRITICAL": 0,
+    "HIGH": 3,
+    "MEDIUM": 3,
+    "LOW": 2
+  },
+  "notes_for_next_pass": [
+    "A 축 3건은 전부 통과다 — 4차의 되살리기는 실제로 되살아났고 이름 손실 0건이다. 새로 나온 HIGH 3건은 되살리기 자체가 아니라 그 주변(집계 행 · 표를 서술하는 노트 · 스윕이 닿지 않은 R33-a)에서 나왔다.",
+    "H-01 과 L-02 는 한 수정으로 함께 닫힌다. H-03 과 M-03 은 뿌리가 같아 원장 R33-a 판정 한 번으로 함께 닫힌다. 실질 독립 수정 자리는 H-01 · H-02 · H-03(원장 선행) 셋이다.",
+    "H-03 은 SRS 단독으로 닫지 마라 — R57 이 밟은 경로(원장 개정 → SRS 반영)를 따라야 한다. sweep-r21-r149 가 SEC-AUTH-001 을 정당하게 기각했던 것과 같은 이유다.",
+    "R13 의 LangChain 처분 미결은 요구사항에 기록돼 있음을 확인했다(02:283 Implementation Note — R57 과의 비대칭 명시 + 「갈리는 자리가 되면 그 판정을 원장에 올려라」). 결함으로 올리지 않았다.",
+    "기계 검사에서 새로 확인한 오탐 유형 둘 — ① 표 열 수 검사는 백틱 코드 스팬 내부 `|` 를 반드시 먼저 제거해야 한다(안 하면 22건 오탐). ② 접두사↔Type 검사는 표를 가정하지 말고 실측 도출해야 한다(DR 은 design 이 아니라 data 다)."
+  ]
+}
