@@ -41,6 +41,13 @@ Agents MUST NOT:
 
 When SpecKiwi MCP tools are available, agents MUST use them for requirement lookup and safe SRS updates. If MCP is unavailable, use the `speckiwi` CLI.
 
+Per-call workspace root:
+1. The MCP server resolves its root from its own process working directory, and SRS is read and written only there.
+2. The `workflow_*` family accepts an optional absolute `workspaceRoot` on every tool, and the `orchestrate_*` family accepts it on every tool except `orchestrate_replay_apply` and `orchestrate_preflight`.
+3. Every SRS-facing tool refuses `workspaceRoot` fail-closed. Refusal is the default, so a tool not named here refuses it.
+4. An accepted `workspaceRoot` MUST be an absolute path to an existing git top level that is a worktree of the startup root's repository; a path argument landing under `docs/spec` is refused even on a tool that accepts the root.
+5. Agents MUST confirm workspace identity from the `mcpWorkspace` envelope — `workspaceRoot` plus `rootSource` — before any target-scoped read or mutation. `rootSource` reads `per-call-workspace-root` exactly when a supplied `workspaceRoot` passed every gate, and `server-cwd-discovery` or `auto-init` otherwise.
+
 Current work status workflow:
 1. Read the active target with MCP `get_active_target`, or CLI `speckiwi active-target --json` if MCP is unavailable.
 2. If `activeTarget` is empty, report that no active target is set and ask which target to use before making target-scoped changes.
@@ -75,3 +82,4 @@ The Completed Work Log — inline in `docs/spec/00.index.md` §7 and its split h
 ## Development conventions
 
 - Default dev-server port is **3399** (`packages/editor` and any later frontend package). Do not use another port without saying why.
+
