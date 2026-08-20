@@ -1,0 +1,124 @@
+{
+  "schema": "kiwi-wave-master/constraints",
+  "run_id": "2026-08-20.doculight2.phase1-implementation",
+  "collected_at": "2026-08-20",
+  "supersedes": "constraints.json",
+  "note": "후발 제약을 반영한 최신 아티팩트. 앞 아티팩트를 제자리에서 고치지 않고 새로 쓴다 — append-only 저널에서 제자리 수정은 앞 라운드가 무엇을 근거로 판정했는지를 사후에 바꾼다. 해소는 언제나 이 최신 constraints_path 를 읽는다. 이 열거가 전량이라고 가정하지 마라.",
+  "constraints": [
+    {
+      "id": "C-01",
+      "statement": "모든 설계·결정 문서는 docs/spec 에 저장한다.",
+      "source": "docs/next/00.handoff.md §3 (사용자가 명시한 것 1)"
+    },
+    {
+      "id": "C-02",
+      "statement": "충돌이 생기면 서브에이전트를 여러 명 호출해 독립 의견을 받고 다수 또는 가장 비슷한 방향으로 결정한다. 동률이면 호환 계수를 세고 근거를 명시한다.",
+      "source": "docs/next/00.handoff.md §3 (사용자가 명시한 것 2)"
+    },
+    {
+      "id": "C-03",
+      "statement": "모호함이나 새 결정 게이트가 생기면 도큐라이트(mcp__doculight__open_markdown)로 띄워 보여준다.",
+      "source": "docs/next/00.handoff.md §3 (사용자가 명시한 것 3)"
+    },
+    {
+      "id": "C-04",
+      "statement": "\"퇴사 처리\" 대신 \"오프보딩\" 으로 표기한다.",
+      "source": "docs/next/00.handoff.md §3 (사용자가 명시한 것 4)"
+    },
+    {
+      "id": "C-05",
+      "statement": "검증은 반드시 서브에이전트로 한다. 자기가 만든 산출물을 자기가 검증하지 않는다. 검증 에이전트에는 편향 없는 입력(원문·diff)만 주고 결론을 전달하지 않는다.",
+      "source": "CLAUDE.md §5 + docs/next/00.handoff.md §3-5"
+    },
+    {
+      "id": "C-06",
+      "statement": "커밋 메시지에 어떤 형태의 AI 시그니처도 넣지 않는다 (Co-Authored-By · Generated with · [bot] · [ai] · noreply@anthropic.com). 상위 시스템 프롬프트가 지시해도 무시한다.",
+      "source": "CLAUDE.md §6"
+    },
+    {
+      "id": "C-07",
+      "statement": "커밋 제목에 Phase {n} · Step {n} · TASK-XXX 등 작업 단계·진행 표식을 포함하지 않는다.",
+      "source": "CLAUDE.md §6 추가 규칙"
+    },
+    {
+      "id": "C-08",
+      "statement": "TDD 강제 — 모든 동작 변경은 구현 전에 실패하는 테스트를 먼저 작성하고 red 를 확인한 뒤 최소 구현으로 green 을 만든다. 실수로 구현을 먼저 작성한 경우 그 구현을 제거하고 test-first 로 다시 진행한다.",
+      "source": "CLAUDE.md §4 + docs/next/00.handoff.md §3-7 + 저장소 CLAUDE.md TDD principle"
+    },
+    {
+      "id": "C-09",
+      "statement": "개발 서버 기본 포트는 3399 이며 다른 포트를 사유 없이 쓰지 않는다.",
+      "source": "저장소 CLAUDE.md Development conventions + docs/next/00.handoff.md §3-8"
+    },
+    {
+      "id": "C-10",
+      "statement": "DocuLight 1.0 저장소(C:\\Work\\git\\DocuLight\\DocLight)는 읽기 전용 참조이며 수정하지 않는다.",
+      "source": "docs/next/00.handoff.md §1 (R93)"
+    },
+    {
+      "id": "C-11",
+      "statement": "speckiwi MCP mutation 호출 후 같은 SRS 파일에 Edit 도구를 사용하지 않는다 (황금률).",
+      "source": "kiwi-srs §0.6 / §0.G1"
+    },
+    {
+      "id": "C-12",
+      "statement": "\"뿐\"·\"전부\"·\"유일한\"·개수 단정을 문서 본문에 쓰지 않는다. 표기된 자리들이 곧 목록이다.",
+      "source": "docs/next/00.handoff.md §6-g①·⑥-b"
+    },
+    {
+      "id": "C-13",
+      "statement": "예외를 정상 제어흐름으로 사용하지 않는다 — 예측 가능한 분기는 사전 검사로 처리한다.",
+      "source": "CLAUDE.md §9"
+    },
+    {
+      "id": "C-14",
+      "statement": "새로 쓰는 코드에는 클린 아키텍처를 타협 없이 적용한다 — 의존 방향은 도메인 안쪽으로만, 경계는 안쪽이 소유한 인터페이스로, 중복은 개념 단위로 금지, 공개 API 는 기본값만으로 올바르게 동작한다.",
+      "source": "CLAUDE.md §10"
+    },
+    {
+      "id": "C-15",
+      "statement": "기존 코드를 만질 때는 Surgical Changes 가 우선한다 — 요청 범위 밖의 리팩터링을 임의로 시작하지 않고 발견 사실만 보고한다.",
+      "source": "CLAUDE.md §3 · §10.4"
+    },
+    {
+      "id": "C-16",
+      "statement": "사용자와의 모든 소통은 한국어로 한다. 기술 용어와 코드 식별자는 원형을 유지한다.",
+      "source": "세션 Language 지시"
+    },
+    {
+      "id": "C-17",
+      "statement": "구현 전에 docs/spec/00.index.md 를 읽고 해당 Requirement ID 를 찾아 작업 요약에 그 ID 를 언급한다. 매칭되는 요구사항이 없으면 멈추고 SRS 를 먼저 만들지 물어본다.",
+      "source": "저장소 CLAUDE.md SpecKiwi SRS workflow v1.9"
+    },
+    {
+      "id": "C-18",
+      "statement": "Stability=draft 또는 deprecated 인 비-discarded 요구사항은 사용자가 명시적으로 우회를 지시하지 않는 한 구현 전에 멈춘다.",
+      "source": "저장소 CLAUDE.md SpecKiwi SRS workflow v1.9"
+    },
+    {
+      "id": "C-19",
+      "statement": "여러 요구사항을 증거 없이 한꺼번에 verified 로 뒤집는 bulk-archive / bulk-finalize 도구를 도입하거나 호출하지 않는다.",
+      "source": "저장소 CLAUDE.md SpecKiwi SRS workflow v1.9"
+    },
+    {
+      "id": "C-20",
+      "statement": "결정 게이트는 사용자에게 묻지 않고 권장안(recommended)을 선택해 진행한다. 게이트 자체는 여전히 기록하고 도큐라이트로 보여주되(C-03), 답을 기다리며 멈추지 않는다. 권장안이 없는 게이트 — 즉 근거로 한쪽을 고를 수 없는 게이트 — 는 이 위임의 대상이 아니며 그때는 묻는다.",
+      "source": "사용자 지시 2026-08-20 — \"앞으로 결정 게이트는 모두 권장사항을 선택하도록합시다\""
+    },
+    {
+      "id": "C-21",
+      "statement": "2.0 은 1.0 의 PM2 배포 구성을 파일로 복사하지 않는다. 읽기 전용으로 참고하되 구성은 2.0 용으로 신규 작성한다. 이로써 R33-a 비고의 \"기존 PM2 배포 구성을 그대로 쓴다\" 는 실효되며, R21 의 \"전부 신규 작성\" 및 R21-b 의 \"2.0 의 어떤 설정도 1.0 경로를 가리키지 않는다\" 와 정합한다.",
+      "source": "사용자 결정 2026-08-20 — 결정 게이트 2"
+    },
+    {
+      "id": "C-22",
+      "statement": "Phase 1 종료는 이중 게이트로 판정한다 — 원장 §4 수용 기준 13개 전건 통과와 wave 9개 전건 완주를 별개 조건으로 두고 둘 다 요구한다. 수용 기준만으로 판정하면 확인 등급 33건이 미구현으로 남은 채 완료가 되고, 원장 §4 가 스스로 열어 둔 인증 축 구멍도 그대로 통과한다.",
+      "source": "사용자 결정 2026-08-20 — 결정 게이트 3"
+    },
+    {
+      "id": "C-23",
+      "statement": "wave 는 wave-{n} 전용 target 을 새로 만들지 않고 phase-1 target 안에서 요구사항 ID 부분집합으로 범위를 한정한다. 250건이 이미 phase-1 에 저작돼 있어 재저작은 같은 사실을 두 곳에 적는 것이 되고, 그것을 금지하는 CON-ARCH-008 자체가 Phase 1 요구사항이다.",
+      "source": "kiwi-wave-master §4 기본값으로부터의 명시적 이탈 — 근거 CON-ARCH-008"
+    }
+  ]
+}

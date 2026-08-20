@@ -1,0 +1,2955 @@
+{
+ "schema": "kiwi-wave-master/design-baseline",
+ "run_id": "2026-08-20.doculight2.phase1-implementation",
+ "source_file": "docs/spec/00.decision-log.md",
+ "design_item_unit": "원장 §2 의 조항 행 1건 = 설계 항목 1건",
+ "clause_total": 350,
+ "clause_struck": 4,
+ "waves": [
+  {
+   "wave": "wave-1",
+   "order": 1,
+   "name": "모노레포 골격과 영속 기반",
+   "goal": "저장소에 루트 package.json 과 워크스페이스를 세우고, Express 백엔드 + Vite/React/TS SPA 를 한 Node 프로세스로 띄운다. 파일시스템(docsRoot)과 SQLite 두 저장소를 열고, 모든 노드에 경로 독립적인 랜덤 안정 ID 를 붙이며, 워크스페이스 물리 레이아웃과 사이드카·이름 검증·서빙 거부 규칙을 세운다. 최초 기동 시 기본 워크스페이스가 생긴다.",
+   "source_file": "docs/spec/00.decision-log.md",
+   "heading_path": "§2 확정 결정 — 모노레포 골격과 영속 기반",
+   "line_start": 212,
+   "line_end": 574,
+   "requirement_ids": [
+    "CON-ARCH-001",
+    "CON-ARCH-002",
+    "CON-ARCH-003",
+    "CON-ARCH-007",
+    "CON-ARCH-008",
+    "CON-ARCH-009",
+    "CON-WORKSPACE-001",
+    "DR-STORAGE-001",
+    "DR-STORAGE-002",
+    "DR-STORAGE-003",
+    "DR-WORKSPACE-001",
+    "DR-WORKSPACE-002",
+    "FR-WORKSPACE-001",
+    "FR-WORKSPACE-004",
+    "FR-WORKSPACE-005",
+    "FR-WORKSPACE-006",
+    "OPS-ARCH-001",
+    "OPS-STORAGE-001",
+    "SEC-STORAGE-001",
+    "SEC-STORAGE-004",
+    "SEC-STORAGE-005",
+    "SEC-STORAGE-006"
+   ],
+   "existing_modules": [
+    "packages/editor"
+   ],
+   "design_items": [
+    {
+     "id": "R4",
+     "heading_path": "§2.2 저장",
+     "line_start": 212,
+     "line_end": 212,
+     "statement": "모든 `.md` 문서는 서버 로컬 파일시스템에 그대로 저장한다. 파일시스템이 문서의 SSOT다"
+    },
+    {
+     "id": "R20",
+     "heading_path": "§2.2 저장",
+     "line_start": 213,
+     "line_end": 213,
+     "statement": "사용자·그룹·ACL 메타데이터는 **SQLite 단일 저장소**에 둔다"
+    },
+    {
+     "id": "R76",
+     "heading_path": "§2.2 저장",
+     "line_start": 215,
+     "line_end": 215,
+     "statement": "**모든 노드(문서·디렉토리)에 경로 독립적인 안정 ID 를 부여한다.** ACL·버전 인덱스·휴지통 인덱스·첨부 소유(R50-a)는 전부 **노드 ID 기준**이고, 경로는 파생 캐시다"
+    },
+    {
+     "id": "R76-a",
+     "heading_path": "§2.2 저장",
+     "line_start": 216,
+     "line_end": 216,
+     "statement": "**UI/API 를 통한 이동·개명은 노드 ID 를 유지한 채 트랜잭션으로 처리한다.** chokidar 는 개입하지 않는다"
+    },
+    {
+     "id": "R76-b",
+     "heading_path": "§2.2 저장",
+     "line_start": 217,
+     "line_end": 217,
+     "statement": "**노드 ID 는 추측 불가한 형식(UUIDv4 등 충분한 엔트로피의 랜덤 값)이어야 한다. 순차 정수를 쓰지 않는다**"
+    },
+    {
+     "id": "R35",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 340,
+     "line_end": 340,
+     "statement": "루트 아래에 **워크스페이스** 계층을 둔다. 구조는 **루트 → 워크스페이스 → 디렉토리 → 문서** 다"
+    },
+    {
+     "id": "R38",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 344,
+     "line_end": 344,
+     "statement": "**볼트에 해당하는 별도 계층을 두지 않는다.** 계층은 `루트 → 워크스페이스 → 디렉토리 → 문서` 로 끝난다"
+    },
+    {
+     "id": "R40",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 350,
+     "line_end": 350,
+     "statement": "워크스페이스의 물리 저장 구조는 **`docsRoot/<워크스페이스ID(해시)>/…`** 단일 루트 하위 폴더다"
+    },
+    {
+     "id": "R40-a",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 351,
+     "line_end": 351,
+     "statement": "워크스페이스 디렉토리명은 **해시 ID** 이고 표시 이름은 DB 에 둔다"
+    },
+    {
+     "id": "R40-b",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 352,
+     "line_end": 352,
+     "statement": "각 워크스페이스 디렉토리 안에 **`.workspace.json`** 을 두어 `{id, name, createdAt}` 을 기록한다"
+    },
+    {
+     "id": "R40-c",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 353,
+     "line_end": 353,
+     "statement": "**문서와 디렉토리는 실제 이름을 그대로 유지한다.** 해시는 워크스페이스 한 계층에만 적용한다"
+    },
+    {
+     "id": "R40-d",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 354,
+     "line_end": 354,
+     "statement": "워크스페이스 이름·식별의 **권위는 DB 다.** `.workspace.json` 은 재구성용 사본이며 재조정(R77) 시 DB 기준으로 재작성된다. DB 에 해당 워크스페이스가 없을 때만 파일에서 복원한다. **`id` 중복 발견 시 나중 것을 격리하고 재조정 대기열(R139)에 기재**한다"
+    },
+    {
+     "id": "R40-e",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 355,
+     "line_end": 355,
+     "statement": "**노드 이름 검증 규칙** — Windows 예약어(`CON` `PRN` `AUX` `NUL` 등)·금지 문자·최대 길이·경로 총길이를 생성·개명·업로드 시 검사해 거부한다"
+    },
+    {
+     "id": "R40-f",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 356,
+     "line_end": 356,
+     "statement": "**대소문자만 다른 동명(`Report.md` vs `report.md`)은 이름 충돌로 취급하고 R102 를 적용**한다 — 거부가 아니라 **자동 접미사**다"
+    },
+    {
+     "id": "R92",
+     "heading_path": "§2.6 범위 (Phase 구분)",
+     "line_start": 381,
+     "line_end": 381,
+     "statement": "**Phase 라벨 원칙 — 확정 요구사항은 명시가 없으면 전부 Phase 1 이다.** **2026-08-19 기준** Phase 2 는 **R17 열거**(그래프뷰·커맨드 팔레트·퀵스위처·분할 창·아웃라인·프론트매터 프로퍼티) · **R31**(모바일·태블릿) · **R54·R55·R55-a**(워크스페이스 아카이브·복원) · **R103**(권한 요청 워크플로) · **R146**(PDF 뷰어) · **R147**(`.task` 할 일 목록) · **R148 계열**(댓글)이다. **닫힌 열거가 아니다 — 이 행이 전량이라고 가정하지 마라.** **Phase 2 조항은 「큰 축」의 정의이며 화면 설계가 아니다** — 작업은 **Phase 1 이 끝난 뒤** 시작하므로, Phase 2 항목에 딸린 공백(`G34`·`G35`)은 **Phase 1 착수를 막지 않는다**. **판정은 세 경로를 함께 써야 한다** — ① 조항이 **스스로** `Phase 2` 를 선언하는지 원장 전수로 훑는다 ② **자기 문면에 `Phase` 표기가 없는데 다른 조항의 비고가 미뤄 둔 것**을 찾는다. **②③이 없으면 이 행 자신의 열거도 재도출되지 않는다** — `R55`·`R55-a` 는 `Phase` 토큰이 0건이고 **`R54` 비고를 경유해야만** 잡힌다. ③ **하위 항목은 상위 조항의 Phase 를 따른다 — 단 **하위가 스스로 다른 범위를 선언하거나(`R103-a`) 상위와 다른 축의 규칙이면(`R55-b` — 아카이브가 아니라 서빙 보안) 그것이 이긴다.** `R148-a`·`R148-b`·`R148-c` 는 `Phase` 토큰이 0건이고 이들을 미루는 비고도 없어 **①②만으로는 잡히지 않는다**(`R54`→`R55` 처럼 비고를 경유하는 형태가 아니다). **단서가 필요한 이유는 반례가 둘 있기 때문이다** — `R55-b` 는 `R55` 의 하위지만 **fail-closed 서빙이 Phase 1 보안 규칙**이고, `R103-a` 는 `R103` 의 하위지만 문면이 *\"Phase 2 에서도 요청 버튼을 두지 않는다\"* 로 **Phase 1·2 양쪽에 걸린다.** ③을 단서 없이 쓰면 이 둘을 잘못 판정한다. **①은 `R48` 도 짚지만 그것은 Phase 2 항목이 아니다** — 비고 첫 문장이 `**Phase 1 규정이다.**` 이고 뒤는 Phase 2 확장을 가리키는 역참조다. **①은 위 열거 밖도 짚는다 — 전부 위양성이다.** `R89`(`Phase 2 에 아웃라인·프로퍼티 탭 추가` — `R17` 에 이미 흡수) · `R23`·`R33-b`·`R98`·`R24-b`(다른 조항의 Phase 2 를 가리키는 파생) · `~~R106-b~~`(취소선). **①이 짚었다고 곧바로 항목이 되지 않는다 — 그 조항 자체가 미뤄졌는지 보라**"
+    },
+    {
+     "id": "R19",
+     "heading_path": "§2.8 배포 · 규모",
+     "line_start": 399,
+     "line_end": 399,
+     "statement": "**사내 단일 인스턴스, 수백~수천 명** 규모를 전제한다"
+    },
+    {
+     "id": "R21-c",
+     "heading_path": "§2.10 코드베이스 전략",
+     "line_start": 422,
+     "line_end": 422,
+     "statement": "**기각된 대안 — 검색 코어 3파일 이식**"
+    },
+    {
+     "id": "R33",
+     "heading_path": "§2.11 프론트엔드 스택",
+     "line_start": 444,
+     "line_end": 444,
+     "statement": "**Vite + React + TypeScript SPA**"
+    },
+    {
+     "id": "R33-a",
+     "heading_path": "§2.11 프론트엔드 스택",
+     "line_start": 445,
+     "line_end": 445,
+     "statement": "빌드 산출물(정적 파일)은 **기존 Express 가 그대로 서빙**한다. Node 프로세스는 1개를 유지한다"
+    },
+    {
+     "id": "R55-b",
+     "heading_path": "§2.13 삭제 · 아카이브",
+     "line_start": 495,
+     "line_end": 495,
+     "statement": "**fail-closed 서빙 규칙 — DB 에 대응 레코드가 없는 파일시스템 경로에 대한 모든 요청은 거부한다.** `.archive` 는 서빙 루트에서 제외한다"
+    },
+    {
+     "id": "R56",
+     "heading_path": "§2.14 초기 상태",
+     "line_start": 501,
+     "line_end": 501,
+     "statement": "최초 기동 시 **기본 워크스페이스 1개를 생성**한다. 이름은 `workspace`"
+    },
+    {
+     "id": "R87",
+     "heading_path": "§2.14 초기 상태",
+     "line_start": 507,
+     "line_end": 507,
+     "statement": "**백업은 `docsRoot` 와 DB 를 같은 시점으로 묶어 수행한다**를 운영 요건으로 명시한다. 시점이 어긋난 복원의 안전망은 **복원 후 자동 실행되는 R77 재조정 스캔**이다"
+    },
+    {
+     "id": "R64",
+     "heading_path": "§2.17 파일 레이아웃 규칙",
+     "line_start": 541,
+     "line_end": 541,
+     "statement": "**`.` 으로 시작하는 항목은 트리에서 숨긴다**"
+    },
+    {
+     "id": "R64-a",
+     "heading_path": "§2.17 파일 레이아웃 규칙",
+     "line_start": 542,
+     "line_end": 542,
+     "statement": "**`.` 로 시작하는 경로에 대한 직접 API 접근은 전부 거부한다.** 예외는 첨부 다운로드 전용 엔드포인트(R66 검사 통과 시)와 휴지통·버전 전용 API 뿐이다"
+    },
+    {
+     "id": "R64-b",
+     "heading_path": "§2.17 파일 레이아웃 규칙",
+     "line_start": 543,
+     "line_end": 543,
+     "statement": "**`.` 로 시작하는 이름의 생성·업로드·개명을 전면 거부한다**"
+    },
+    {
+     "id": "R32",
+     "heading_path": "§2.18 문서화 프로세스",
+     "line_start": 572,
+     "line_end": 572,
+     "statement": "`docs/spec` 을 **SpecKiwi SRS 구조로 정식화**한다. 모든 설계·결정 문서는 `docs/spec` 아래에 둔다"
+    },
+    {
+     "id": "R124",
+     "heading_path": "§2.18 문서화 프로세스",
+     "line_start": 573,
+     "line_end": 573,
+     "statement": "**한 사실은 한 곳에만 적는다.** 같은 규칙이 여러 절에 필요하면 **한 곳을 정본으로 두고 나머지는 참조**한다"
+    },
+    {
+     "id": "R124-a",
+     "heading_path": "§2.18 문서화 프로세스",
+     "line_start": 574,
+     "line_end": 574,
+     "statement": "요구사항을 개정할 때는 **그것을 인용하는 모든 자리(본문·와이어프레임·표·엣지 케이스·참조 목록)를 함께 훑는다**"
+    }
+   ],
+   "excerpt_path": "docs/analysis/kiwi-wave-master-2026-08-20.doculight2.phase1-implementation/design-baseline/wave-1.md"
+  },
+  {
+   "wave": "wave-2",
+   "order": 2,
+   "name": "주체와 ACL 판정 코어 (헤드리스 도메인)",
+   "goal": "사용자·그룹·시스템 그룹(슈퍼유저·default)의 데이터 모델과 슈퍼유저 판정을 세우고, 그 위에 ACL 판정 엔진을 만든다. 상속+가산으로만 넓히고 좁히기는 상속 끊기뿐이며 거부 규칙이 없는 단조 모델, 매 요청 계산, 완전 숨김(트리 숨김·pass-through·존재 구별 불가 응답), 상방 게이트, 조작별 필요 권한 표가 화면 없이 순수 함수로 검증된다.",
+   "source_file": "docs/spec/00.decision-log.md",
+   "heading_path": "§2 확정 결정 — 주체와 ACL 판정 코어 (헤드리스 도메인)",
+   "line_start": 42,
+   "line_end": 343,
+   "requirement_ids": [
+    "CON-ACL-001",
+    "CON-ACL-002",
+    "CON-ACL-003",
+    "CON-ACL-004",
+    "CON-PRINCIPAL-001",
+    "CON-PRINCIPAL-002",
+    "CON-PRINCIPAL-003",
+    "CON-PRINCIPAL-005",
+    "CON-PRINCIPAL-007",
+    "DR-ACL-001",
+    "DR-PRINCIPAL-001",
+    "DR-PRINCIPAL-002",
+    "SEC-ACL-001",
+    "SEC-ACL-002",
+    "SEC-ACL-003",
+    "SEC-ACL-004",
+    "SEC-ACL-005",
+    "SEC-ACL-006",
+    "SEC-ACL-007",
+    "SEC-ACL-008",
+    "SEC-ACL-009",
+    "SEC-ACL-010",
+    "SEC-ACL-011",
+    "SEC-ACL-012",
+    "SEC-ACL-013",
+    "SEC-ACL-014",
+    "SEC-ACL-016",
+    "SEC-PRINCIPAL-001",
+    "SEC-WORKSPACE-001",
+    "SEC-WORKSPACE-002",
+    "SEC-WORKSPACE-003"
+   ],
+   "existing_modules": [
+    "백엔드 도메인 패키지 (wave-1 신설)",
+    "SQLite 스키마 (wave-1 신설)"
+   ],
+   "design_items": [
+    {
+     "id": "R101",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 42,
+     "line_end": 42,
+     "statement": "**계정은 삭제하지 않는다. `suspended` 로만 관리한다**"
+    },
+    {
+     "id": "R103-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 49,
+     "line_end": 49,
+     "statement": "**권한 없음과 존재하지 않음이 구별되지 않는 모든 표면에는 Phase 2 에서도 요청 버튼을 두지 않는다** — 깨진 위키링크(R42), 딥링크 404(R94·R99) 등"
+    },
+    {
+     "id": "R110",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 64,
+     "line_end": 64,
+     "statement": "**ACL 항목에 만료일을 두지 않는다**"
+    },
+    {
+     "id": "R110-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 65,
+     "line_end": 65,
+     "statement": "더 중요한 이유 — 만료가 발동하면 R25 완전 숨김 하에서 **문서가 설명 없이 트리에서 사라지고, 감사 로그에 회수 이벤트도 남지 않는다.** 알림 체계가 없는 Phase 1 에서는 추적 불가능한 사고로 보고된다"
+    },
+    {
+     "id": "R132",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 115,
+     "line_end": 115,
+     "statement": "**R28(생성자 자동 편집권)은 디렉토리 생성자에도 적용된다.** 문언을 **\"노드 생성자\"** 로 읽는다"
+    },
+    {
+     "id": "R117",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 172,
+     "line_end": 172,
+     "statement": "**`관리자` 를 단독으로 쓰지 않는다.** 항상 `워크스페이스 관리자` 또는 `슈퍼유저` 로 명시한다"
+    },
+    {
+     "id": "R6-a",
+     "heading_path": "§2.3 사용자 · 그룹",
+     "line_start": 235,
+     "line_end": 235,
+     "statement": "**그룹은 사용자만을 멤버로 가지며 중첩되지 않는다**"
+    },
+    {
+     "id": "R9",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 243,
+     "line_end": 243,
+     "statement": "ACL 대상은 **문서와 디렉토리 둘 다**이다"
+    },
+    {
+     "id": "R10",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 244,
+     "line_end": 244,
+     "statement": "대상마다 4종을 지정한다: 편집 사용자 / 보기 사용자 / 편집 그룹 / 보기 그룹"
+    },
+    {
+     "id": "R11",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 245,
+     "line_end": 245,
+     "statement": "편집 권한은 보기 권한을 포함한다 (편집 가능 ⇒ 보기 가능)"
+    },
+    {
+     "id": "R14",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 247,
+     "line_end": 247,
+     "statement": "**상속 + 가산.** 노드마다 `상속` 플래그를 두고 기본값은 `상속 유지`다. ACL 항목은 **부여(가산)만** 하며, 권한을 좁히는 유일한 수단은 **`상속 끊기`로 명시 전환**하는 것이다"
+    },
+    {
+     "id": "R14-a",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 248,
+     "line_end": 248,
+     "statement": "`상속 끊기` 전환 시 부모 ACL 을 **자동 복사하지 않는다.** \"부모 권한 가져오기\"를 별도 버튼으로 제공한다"
+    },
+    {
+     "id": "R14-b",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 249,
+     "line_end": 249,
+     "statement": "**유효 권한 테이블(user×node) 비정규화를 하지 않는다.** 요청마다 계산한다"
+    },
+    {
+     "id": "R14-c",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 250,
+     "line_end": 250,
+     "statement": "**거부(deny) 규칙을 두지 않는다.** 허용 목록의 합집합만으로 판정한다"
+    },
+    {
+     "id": "R128",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 251,
+     "line_end": 251,
+     "statement": "**부여에 적용 범위 선택지를 두지 않는다** — \"이 폴더에만 적용(하위 제외)\" 류. **비활성으로도 노출하지 않는다**"
+    },
+    {
+     "id": "R128-a",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 252,
+     "line_end": 252,
+     "statement": "**타 제품 대비** — Windows ACL 은 **ACE 에 상속 플래그**를 달지만 이 제품은 **노드에 플래그**를 둔다(R14)라 구조적으로 표현 불가. SharePoint 방식은 **C안으로 명명해 이미 탈락**시켰다. **구글 드라이브는 채택된 D안과 같은 모델이라 이 옵션이 없다**"
+    },
+    {
+     "id": "R128-b",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 253,
+     "line_end": 253,
+     "statement": "수요는 세 경로로 흡수한다 — ① 하위 특정 노드에서 **`상속 끊기`**(R70-c, `관리`) ② 디렉토리 대신 **개별 문서에 부여**(R9) ③ 경계가 상시 필요하면 **별도 워크스페이스로 분리**(R69-d · R71-d)"
+    },
+    {
+     "id": "R25",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 254,
+     "line_end": 254,
+     "statement": "**권한이 없는 문서·디렉토리는 트리에서 완전히 숨긴다.** 존재 자체가 노출되어서는 안 된다"
+    },
+    {
+     "id": "R69",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 255,
+     "line_end": 255,
+     "statement": "**R25 의 예외 — pass-through 노드.** 사용자가 접근 가능한 자손을 가진 조상 디렉토리는 **이름만** 트리에 표시한다"
+    },
+    {
+     "id": "R69-a",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 256,
+     "line_end": 256,
+     "statement": "트리에 표시되는 것은 **① 사용자가 유효 권한을 가진 노드**와 **② 그런 노드로 가는 경로상의 조상**뿐이다. 조상의 **형제 노드는 표시하지 않는다**"
+    },
+    {
+     "id": "R69-b",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 257,
+     "line_end": 257,
+     "statement": "pass-through 노드는 **이름만 가지며 그 자체를 열람·편집·생성 대상으로 삼을 수 없다**"
+    },
+    {
+     "id": "R69-c",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 258,
+     "line_end": 258,
+     "statement": "pass-through 여부는 **저장하지 않고 매 요청 계산**한다"
+    },
+    {
+     "id": "R69-d",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 259,
+     "line_end": 259,
+     "statement": "pass-through 는 **디렉토리 이름을 노출한다.** 경로 이름 자체가 기밀인 경우는 **별도 워크스페이스로 분리**하여 대응한다"
+    },
+    {
+     "id": "R94",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 260,
+     "line_end": 260,
+     "statement": "**권한 없는 노드에 대한 모든 API·MCP 응답은 존재하지 않는 노드와 구별 불가능해야 한다** — 404 로 통일하며 오류 메시지·응답 시간도 동일하게 한다"
+    },
+    {
+     "id": "R95",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 261,
+     "line_end": 261,
+     "statement": "생성·업로드가 **요청자에게 보이지 않는 동명 노드와 충돌**하면, 존재를 드러내지 않고 덮어쓰지도 않는다 — **자동 리네임 후 일반 안내만** 표시한다. 깨진 위키링크 클릭 시의 문서 생성(옵시디언과 동일)도 같은 규칙을 따른다"
+    },
+    {
+     "id": "R26",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 262,
+     "line_end": 262,
+     "statement": "**슈퍼유저 / 일반 유저 2단계**다. 일반 유저의 권한은 전부 **대상별 스코프(ACL)로만** 관리한다. 사용자 그룹도 동일하다"
+    },
+    {
+     "id": "R81",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 263,
+     "line_end": 263,
+     "statement": "**슈퍼유저 여부는 \"슈퍼유저 그룹 소속\" 하나로만 판정한다.** 사용자 레코드에 별도 등급/플래그 필드를 두지 않는다"
+    },
+    {
+     "id": "R28",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 265,
+     "line_end": 265,
+     "statement": "**문서 생성자에게 자동으로 편집 권한**이 부여된다. 단, 해당 워크스페이스의 관리 권한자가 이를 **회수할 수 있다**"
+    },
+    {
+     "id": "R29",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 266,
+     "line_end": 266,
+     "statement": "**슈퍼유저 그룹**에 속한 사용자는 **모든 워크스페이스에 대한 관리 권한**과 **워크스페이스 생성·삭제·아카이브·복원 권한**을 가진다"
+    },
+    {
+     "id": "R30",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 267,
+     "line_end": 267,
+     "statement": "**슈퍼유저 그룹은 삭제할 수 없다**"
+    },
+    {
+     "id": "R30-a",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 268,
+     "line_end": 268,
+     "statement": "**슈퍼유저 그룹과 `default` 그룹은 시스템 그룹이다 — 삭제·개명 불가**"
+    },
+    {
+     "id": "R70",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 270,
+     "line_end": 270,
+     "statement": "**권한 부여 조작을 \"넓히기\"와 \"좁히기\"로 나누고 필요 레벨을 다르게 둔다** (아래 표)"
+    },
+    {
+     "id": "R71",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 271,
+     "line_end": 271,
+     "statement": "**상방 게이트 — 슈퍼유저와 해당 워크스페이스의 `관리` 레벨은 ACL·상속 판정을 우회한다.** 상속이 끊긴 노드에도 항상 도달한다"
+    },
+    {
+     "id": "R71-a",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 272,
+     "line_end": 272,
+     "statement": "이 우회는 **열람을 함의한다.** 워크스페이스 관리자는 그 워크스페이스의 모든 문서 본문을 볼 수 있다"
+    },
+    {
+     "id": "R71-c",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 274,
+     "line_end": 274,
+     "statement": "R71 이 있어야 **R43-2(권한 시뮬레이션)와 R43-3(상속 끊김 노드 감사 목록)이 동작 근거를 갖는다**"
+    },
+    {
+     "id": "R71-d",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 275,
+     "line_end": 275,
+     "statement": "관리자에게도 숨겨야 하는 문서는 **별도 워크스페이스로 분리**하여 대응한다"
+    },
+    {
+     "id": "R74",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 288,
+     "line_end": 288,
+     "statement": "**파일 조작별 필요 권한을 다음으로 확정한다** (아래 표)"
+    },
+    {
+     "id": "R74-a",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 289,
+     "line_end": 289,
+     "statement": "**디렉토리 이동·삭제 시, 그 하위에 요청자가 볼 수 없는(상속 끊긴) 노드가 하나라도 있으면 거부하고 `관리` 레벨을 요구한다**"
+    },
+    {
+     "id": "R97",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 290,
+     "line_end": 290,
+     "statement": "**워크스페이스 경계를 넘는 이동은 차단한다. 대신 복사를 허용한다**"
+    },
+    {
+     "id": "R97-b",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 292,
+     "line_end": 292,
+     "statement": "복사의 필요 권한은 **원본 `보기` + 대상 디렉토리 `편집`** 이다. 워크스페이스 내부 복사도 같은 규칙을 따른다"
+    },
+    {
+     "id": "R70-a",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 319,
+     "line_end": 319,
+     "statement": "**넓히기** — 노드에 `보기`·`편집` 부여"
+    },
+    {
+     "id": "R70-b",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 320,
+     "line_end": 320,
+     "statement": "`관리` 레벨 부여"
+    },
+    {
+     "id": "R70-c",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 321,
+     "line_end": 321,
+     "statement": "**좁히기** — `상속 끊기` 전환"
+    },
+    {
+     "id": "R70-d",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 322,
+     "line_end": 322,
+     "statement": "**회수**"
+    },
+    {
+     "id": "R70-e",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 323,
+     "line_end": 323,
+     "statement": "편집자가 부여한 `편집` 권한을 받은 사람은 **다시 부여할 수 있다**(전파 허용)"
+    },
+    {
+     "id": "R35-a",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 341,
+     "line_end": 341,
+     "statement": "**워크스페이스는 상속 체인의 루트다.** 상속 플래그와 \"부모 권한 가져오기\" 버튼을 노출하지 않는다. 워크스페이스 생성 절차에 **관리자 지정 단계가 포함**된다"
+    },
+    {
+     "id": "R36",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 342,
+     "line_end": 342,
+     "statement": "**관리 권한은 워크스페이스 단위로만 부여한다.** 임의 디렉토리 관리자는 두지 않는다"
+    },
+    {
+     "id": "R37",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 343,
+     "line_end": 343,
+     "statement": "**워크스페이스 관리자**는 해당 워크스페이스 전체의 ACL 을 부여·회수한다"
+    }
+   ],
+   "excerpt_path": "docs/analysis/kiwi-wave-master-2026-08-20.doculight2.phase1-implementation/design-baseline/wave-2.md"
+  },
+  {
+   "wave": "wave-3",
+   "order": 3,
+   "name": "인증·세션·PAT·설치 마법사",
+   "goal": "슈퍼유저 0명 상태에서 설치 마법사가 강제되고, 그 안에서 최초 슈퍼유저와 기본 워크스페이스의 default 초기 권한이 정해진다. 로그인·세션·계정 4상태 게이트·가입 모드 3종이 서고, 전역 API Key 대신 사용자별 PAT 가 도입된다. 이 wave 가 끝나면 '이 요청이 누구인가'가 확정되어 wave-2 의 판정 엔진에 실제 주체가 주입된다.",
+   "source_file": "docs/spec/00.decision-log.md",
+   "heading_path": "§2 확정 결정 — 인증·세션·PAT·설치 마법사",
+   "line_start": 236,
+   "line_end": 526,
+   "requirement_ids": [
+    "FR-AUTH-001",
+    "FR-AUTH-002",
+    "FR-AUTH-003",
+    "FR-AUTH-004",
+    "FR-AUTH-005",
+    "IR-AUTH-001",
+    "SEC-AUTH-001",
+    "SEC-AUTH-002",
+    "SEC-AUTH-003",
+    "SEC-AUTH-004",
+    "SEC-AUTH-005",
+    "SEC-AUTH-006",
+    "SEC-AUTH-007",
+    "SEC-AUTH-008",
+    "SEC-AUTH-009",
+    "SEC-AUTH-010",
+    "SEC-AUTH-011",
+    "SEC-AUTH-012",
+    "SEC-AUTH-013",
+    "SEC-AUTH-014",
+    "SEC-AUTH-015",
+    "SEC-AUTH-016",
+    "SEC-AUTH-017",
+    "SEC-AUTH-018",
+    "SEC-AUTH-019"
+   ],
+   "existing_modules": [
+    "백엔드 도메인 패키지",
+    "SQLite 스키마",
+    "프론트엔드 SPA 패키지 (wave-1 신설)"
+   ],
+   "design_items": [
+    {
+     "id": "R7",
+     "heading_path": "§2.3 사용자 · 그룹",
+     "line_start": 236,
+     "line_end": 236,
+     "statement": "가입 모드 3종을 지원한다: ① 자유 가입 ② 가입 요청 + 슈퍼유저 승인 ③ 슈퍼유저 직접 등록"
+    },
+    {
+     "id": "R8",
+     "heading_path": "§2.3 사용자 · 그룹",
+     "line_start": 237,
+     "line_end": 237,
+     "statement": "가입한 사용자는 자동으로 `default` 그룹에 소속된다"
+    },
+    {
+     "id": "R72",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 276,
+     "line_end": 276,
+     "statement": "**최초 슈퍼유저는 설치 마법사로 생성한다.** 슈퍼유저 그룹의 멤버가 0명인 상태에서 서버가 기동하면, 모든 요청을 **최초 1회 설치 화면**으로 돌리고 그 화면에서 슈퍼유저 계정을 만든다"
+    },
+    {
+     "id": "R72-a",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 277,
+     "line_end": 277,
+     "statement": "설치 마법사가 완료되기 전까지 **일반 가입·로그인·API·MCP 경로를 전부 차단**한다"
+    },
+    {
+     "id": "R72-b",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 278,
+     "line_end": 278,
+     "statement": "설치 마법사는 **서버 콘솔에 출력된 1회용 설치 토큰**을 요구한다"
+    },
+    {
+     "id": "R72-c",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 279,
+     "line_end": 279,
+     "statement": "**설치 토큰의 수명은 출력 시점부터 30분**이며, 만료 시각을 **절대시각으로 콘솔에 함께 출력**한다"
+    },
+    {
+     "id": "R72-d",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 280,
+     "line_end": 280,
+     "statement": "**서버 재기동 시 이전 토큰은 무효가 되고 새 값이 출력된다.** 같은 값을 다시 내보내지 않는다"
+    },
+    {
+     "id": "R72-e",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 281,
+     "line_end": 281,
+     "statement": "**토큰 분실·만료 시 복구 경로는 서버 프로세스 재기동 하나다.** 재발급 API·CLI 하위명령·토큰 파일을 두지 않는다"
+    },
+    {
+     "id": "R72-f",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 282,
+     "line_end": 282,
+     "statement": "**`1회용`(R72-b)은 \"설치를 성공적으로 완료하면 소진\"을 뜻한다** — 소진 시점은 최초 슈퍼유저를 만드는 트랜잭션이 커밋되는 순간이며, 그 전까지는 실패·중단과 무관하게 재입력할 수 있다"
+    },
+    {
+     "id": "R72-g",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 283,
+     "line_end": 283,
+     "statement": "**설치 마법사의 모든 서버 요청은 토큰 검증으로 발급된 설치 세션을 요구한다. 토큰을 진입 시점에만 검사하지 않는다**"
+    },
+    {
+     "id": "R72-h",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 284,
+     "line_end": 284,
+     "statement": "**설치 완료 전 응답하는 경로는 `설치 화면 · 그 정적 자산 · 토큰 검증 · 설치 커밋` 넷으로 한정한 허용목록이며, 그 밖의 모든 경로는 차단한다**"
+    },
+    {
+     "id": "R72-i",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 285,
+     "line_end": 285,
+     "statement": "**R57 rate limit(F2)의 적용 단위를 소스 IP 로 명시한다. 전역 카운터를 쓰지 않는다**"
+    },
+    {
+     "id": "R72-j",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 286,
+     "line_end": 286,
+     "statement": "**인지된 잔여 위험 — 토큰이 콘솔에 평문으로 출력된다.** 로그 수집기·화면 공유·터미널 스크롤백에 남는 것을 제품이 막지 못한다. R72-c 의 30분 수명이 노출 창을 줄이는 유일한 완화책이다"
+    },
+    {
+     "id": "R73",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 287,
+     "line_end": 287,
+     "statement": "**슈퍼유저 그룹의 `active` 멤버 수가 0 이 되는 결과를 만드는 모든 조작을 거부한다** — 멤버 제거, `suspended`/`pending`/`rejected` 전환 등 전 경로"
+    },
+    {
+     "id": "R83",
+     "heading_path": "§2.14 초기 상태",
+     "line_start": 503,
+     "line_end": 503,
+     "statement": "기본 워크스페이스에 대한 **default 그룹의 초기 권한은 설치 마법사(R72)에서 선택**한다: 없음 / 보기 / **편집(기본값)**"
+    },
+    {
+     "id": "R83-a",
+     "heading_path": "§2.14 초기 상태",
+     "line_start": 504,
+     "line_end": 504,
+     "statement": "접근 가능한 노드가 0개인 사용자에게는 **빈 상태 안내 화면**을 보여준다 — 상황 설명과 관리자 문의 안내"
+    },
+    {
+     "id": "R57",
+     "heading_path": "§2.15 인증",
+     "line_start": 513,
+     "line_end": 513,
+     "statement": "**개정 (2026-08-19)** — 1.0 과 **같은 기술 선택**을 쓰되 **구현은 신규 작성**한다 — bcrypt, HttpOnly 세션 쿠키, `express-rate-limit`"
+    },
+    {
+     "id": "R58",
+     "heading_path": "§2.15 인증",
+     "line_start": 514,
+     "line_end": 514,
+     "statement": "**1.0 의 전역 API Key 를 폐기**하고 **사용자별 개인 액세스 토큰(PAT)** 으로 대체한다"
+    },
+    {
+     "id": "R58-a",
+     "heading_path": "§2.15 인증",
+     "line_start": 515,
+     "line_end": 515,
+     "statement": "PAT 는 **해시로 DB 에 저장**하고, 발급 시 **평문을 1회만 노출**한다. 만료일·마지막 사용 시각을 기록하고 폐기할 수 있다"
+    },
+    {
+     "id": "R58-c",
+     "heading_path": "§2.15 인증",
+     "line_start": 517,
+     "line_end": 517,
+     "statement": "PAT 발급·폐기는 **본인만** 할 수 있다. 발급 시 **`읽기 전용 / 읽기+쓰기` 스코프**를 선택하며, 실제 권한은 스코프와 실시간 유효 권한(R59)의 **교집합**이다"
+    },
+    {
+     "id": "R59",
+     "heading_path": "§2.15 인증",
+     "line_start": 519,
+     "line_end": 519,
+     "statement": "**세션과 토큰에 권한 스냅샷을 담지 않는다.** 매 요청 principal 을 조회한다"
+    },
+    {
+     "id": "R60",
+     "heading_path": "§2.15 인증",
+     "line_start": 520,
+     "line_end": 520,
+     "statement": "**계정 상태 게이트**를 둔다: `active` / `pending`(승인 대기) / `suspended`(정지) / `rejected`(가입 거절). `active` 외 상태는 로그인·토큰 인증 단계에서 차단한다"
+    },
+    {
+     "id": "R60-a",
+     "heading_path": "§2.15 인증",
+     "line_start": 521,
+     "line_end": 521,
+     "statement": "**default 그룹 소속은 계정이 `active` 로 전환되는 시점**에 이뤄진다. `pending` 사용자는 어떤 그룹 ACL 의 유효 권한도 갖지 않는다"
+    },
+    {
+     "id": "R60-b",
+     "heading_path": "§2.15 인증",
+     "line_start": 522,
+     "line_end": 522,
+     "statement": "상태별 로그인 시 안내를 정의한다 — `pending`: \"승인 대기 중\" / `suspended`: \"계정이 정지됨\" / `rejected`: \"가입이 거절됨\". 거절 계정은 슈퍼유저가 가입 승인 화면에서 `pending` 으로 되돌려 재심사할 수 있다"
+    },
+    {
+     "id": "R143",
+     "heading_path": "§2.15 인증",
+     "line_start": 523,
+     "line_end": 523,
+     "statement": "**인증 전(pre-auth) 화면은 R23 의 모달 구조를 따르지 않고 전체 화면으로 둔다.** 대상은 **로그인 · 가입 신청 폼(R7-①②) · 설치 마법사(R72)** 다"
+    },
+    {
+     "id": "R143-a",
+     "heading_path": "§2.15 인증",
+     "line_start": 524,
+     "line_end": 524,
+     "statement": "**R7-③(슈퍼유저 직접 등록)은 인증 후 관리 기능이므로 R24 가 정면으로 적용된다.** 별도 화면을 만들지 않고 **설정 모달 › 인스턴스 › `사용자 관리`**(R24-a) 안의 조작으로 둔다"
+    },
+    {
+     "id": "R144",
+     "heading_path": "§2.15 인증",
+     "line_start": 525,
+     "line_end": 525,
+     "statement": "**본인이 자기 비밀번호를 변경할 수 있다.** 소재는 R24-a 개인 구역의 **`계정`** 카테고리이며 **본인만** 할 수 있다"
+    },
+    {
+     "id": "R145",
+     "heading_path": "§2.15 인증",
+     "line_start": 526,
+     "line_end": 526,
+     "statement": "**사용자가 자기 세션을 종료할 수 있다(로그아웃).** 소재는 R144 와 같은 **`계정`** 카테고리다"
+    }
+   ],
+   "excerpt_path": "docs/analysis/kiwi-wave-master-2026-08-20.doculight2.phase1-implementation/design-baseline/wave-3.md"
+  },
+  {
+   "wave": "wave-4",
+   "order": 4,
+   "name": "셸 골격과 노드 조작 — 트리·탭·설정 모달·휴지통",
+   "goal": "로그인 후 화면의 골격이 선다 — 좌측 사이드바 3탭·우측 사이드바 3탭·상단 문서 탭 스트립과 2단 문서 헤더·설정 모달. 트리가 wave-2 의 완전 숨김을 실제로 반영해 그리고, 컨텍스트 메뉴에서 만들기·개명·삭제가 되며, 삭제된 것이 휴지통으로 가서 복구되거나 보존 기간 경과 시 자동 영구 삭제된다. 런타임 설정의 단일 저장소가 DB 로 선다.",
+   "source_file": "docs/spec/00.decision-log.md",
+   "heading_path": "§2 확정 결정 — 셸 골격과 노드 조작 — 트리·탭·설정 모달·휴지통",
+   "line_start": 36,
+   "line_end": 550,
+   "requirement_ids": [
+    "CON-ARCH-004",
+    "CON-SHELL-001",
+    "DR-SHELL-001",
+    "DR-STORAGE-004",
+    "DR-STORAGE-006",
+    "FR-SHELL-001",
+    "FR-SHELL-002",
+    "FR-SHELL-003",
+    "FR-SHELL-004",
+    "FR-SHELL-005",
+    "FR-SHELL-006",
+    "FR-SHELL-007",
+    "FR-SHELL-012",
+    "FR-STORAGE-005",
+    "FR-STORAGE-006",
+    "FR-STORAGE-007",
+    "FR-WORKSPACE-003",
+    "IR-SHELL-001",
+    "IR-SHELL-002",
+    "IR-SHELL-003",
+    "SEC-SHELL-001",
+    "SEC-SHELL-002",
+    "SEC-STORAGE-002",
+    "SEC-STORAGE-003"
+   ],
+   "existing_modules": [
+    "프론트엔드 SPA 패키지",
+    "백엔드 도메인 패키지",
+    "SQLite 스키마"
+   ],
+   "design_items": [
+    {
+     "id": "R98",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 36,
+     "line_end": 36,
+     "statement": "**상단 문서 탭을 Phase 1 에 둔다** (옵시디언과 동일). 열린 문서를 탭으로 전환한다"
+    },
+    {
+     "id": "R99",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 37,
+     "line_end": 37,
+     "statement": "**문서 딥링크(URL 라우팅)를 도입한다.** URL 에는 **노드 ID(R76)** 를 사용하고, 권한 없는 노드에 대한 접근은 **404(R94)** 로 응답한다. 브라우저 뒤로/앞으로가 동작한다"
+    },
+    {
+     "id": "R99-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 38,
+     "line_end": 38,
+     "statement": "노드 ID 를 쓰므로 **문서를 개명·이동해도 링크가 깨지지 않는다**"
+    },
+    {
+     "id": "R100",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 39,
+     "line_end": 39,
+     "statement": "**휴지통 카테고리의 표시 조건은 \"접근 가능한 워크스페이스가 1개 이상\"이다.** 데이터 범위만 R85 로 분기한다 — 관리자는 범위 토글(전체/본인분), 일반 사용자는 본인 삭제분 고정"
+    },
+    {
+     "id": "R100-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 40,
+     "line_end": 40,
+     "statement": "휴지통은 **접근 가능한 전 워크스페이스의 통합 목록**이며 `워크스페이스` 열과 필터를 제공한다. **범위 판정(R85)과 영구 삭제 가능 여부(R74)는 행마다 그 행의 워크스페이스를 기준으로** 적용한다"
+    },
+    {
+     "id": "R100-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 41,
+     "line_end": 41,
+     "statement": "휴지통 영구 삭제 버튼은 **권한이 없으면 표시하지 않는다**"
+    },
+    {
+     "id": "R102",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 45,
+     "line_end": 45,
+     "statement": "**이름 충돌 처리를 하나로 통일한다 — 보이든 보이지 않든 항상 자동 접미사 + 동일한 안내.** 확인 단계를 두지 않는다"
+    },
+    {
+     "id": "R107",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 58,
+     "line_end": 58,
+     "statement": "**좌측 트리에서 문서를 클릭하면 활성 탭을 교체한다.** `Ctrl`+클릭이 새 탭이다"
+    },
+    {
+     "id": "R107-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 59,
+     "line_end": 59,
+     "statement": "**충돌 중단(R75-b)·저장 거부(R91-②) 상태의 탭은 자동 교체 대상에서 제외**하고 확인을 요구한다"
+    },
+    {
+     "id": "R108",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 60,
+     "line_end": 60,
+     "statement": "**문서 탭 스트립과 문서 헤더를 2단으로 분리**한다"
+    },
+    {
+     "id": "R3",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 180,
+     "line_end": 180,
+     "statement": "좌측 사이드바 **상단에 뷰 전환 탭**을 둔다: **문서 트리 / 검색 / 즐겨찾기**. 옵시디언 좌측 사이드바의 **탭 전환 구조와 배치**를 따른다"
+    },
+    {
+     "id": "R3-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 181,
+     "line_end": 181,
+     "statement": "즐겨찾기 대상은 문서와 **디렉토리 자체**를 모두 포함한다"
+    },
+    {
+     "id": "R88",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 182,
+     "line_end": 182,
+     "statement": "트리에 **컨텍스트 메뉴**와 **트리 상단 \"새 노트\" 버튼**을 둔다. 각 항목의 활성 여부는 R74 권한 표를 따른다"
+    },
+    {
+     "id": "R88-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 183,
+     "line_end": 183,
+     "statement": "컨텍스트 메뉴 항목: **새 문서 / 새 디렉토리 / 이름 변경 / 이동 / 복사 / 삭제 / 공유 / 즐겨찾기 / 새 버전 올리기**"
+    },
+    {
+     "id": "R88-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 184,
+     "line_end": 184,
+     "statement": "`새 버전 올리기` 는 **파일 노드 전용**이며 디렉토리·pass-through 노드에는 나타나지 않는다(R102-b). `복사` 는 **원본 `보기` 만으로 활성**된다(R97-b) — 이동·삭제와 달리 `편집` 을 요구하지 않는다"
+    },
+    {
+     "id": "R89",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 185,
+     "line_end": 185,
+     "statement": "**우측 사이드바를 신설한다** (옵시디언과 동일 위치·구조). 탭: **백링크 / 아웃고잉 링크 / 태그**. Phase 2 에 아웃라인·프로퍼티 탭 추가"
+    },
+    {
+     "id": "R23",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 186,
+     "line_end": 186,
+     "statement": "**모든 설정 화면도 옵시디언과 동일한 UI/UX** — 별도 페이지가 아니라 **모달 팝업**(좌측 카테고리 리스트 + 우측 설정 패널) 구조를 따른다"
+    },
+    {
+     "id": "R24",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 187,
+     "line_end": 187,
+     "statement": "모든 관리 기능은 별도 관리자 화면을 만들지 않고 R23 설정 모달의 좌측 카테고리로 편입한다"
+    },
+    {
+     "id": "R24-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 188,
+     "line_end": 188,
+     "statement": "**설정 모달 카테고리 전량 목록 + 카테고리별 표시 권한** (아래 표). 설정 모달을 여는 버튼은 옵시디언과 동일하게 **좌하단 기어**"
+    },
+    {
+     "id": "R24-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 189,
+     "line_end": 189,
+     "statement": "**문서 단위 기능은 설정 모달이 아니라 문서 헤더 메뉴**에 둔다: 공유(R12 모달) · 버전 기록(R61·R63-a) · **댓글 허용 여부(R148-a — Phase 2)**"
+    },
+    {
+     "id": "R96",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 190,
+     "line_end": 190,
+     "statement": "**런타임 변경 가능한 설정(가입 모드·업로드 제한·버전 개수·휴지통 보존 등)은 DB 를 단일 저장소로** 한다. config 파일은 **부트스트랩 전용**(포트·docsRoot·DB 경로)이다"
+    },
+    {
+     "id": "R41",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 357,
+     "line_end": 357,
+     "statement": "좌측 트리에 **접근 가능한 워크스페이스들이 나란히 표시**된다. 한 번에 하나만 여는 방식이 아니다"
+    },
+    {
+     "id": "R33-b",
+     "heading_path": "§2.11 프론트엔드 스택",
+     "line_start": 446,
+     "line_end": 446,
+     "statement": "UI 부품: `react-arborist`(가상 스크롤 트리), Radix UI + shadcn/ui(모달·탭·팝오버), `@tanstack/react-table`(관리 테이블), `cmdk`(사용자·그룹 검색 → Phase 2 커맨드 팔레트에 재사용), `@tanstack/react-query`(서버 상태), `@tanstack/react-virtual`(리스트)"
+    },
+    {
+     "id": "R52",
+     "heading_path": "§2.13 삭제 · 아카이브",
+     "line_start": 488,
+     "line_end": 488,
+     "statement": "문서·디렉토리 삭제는 **휴지통 방식**이다. 파일은 **`.trash` 디렉토리로 이동**하고, 삭제 인덱스는 **DB(SQLite)** 에 기록한다"
+    },
+    {
+     "id": "R53",
+     "heading_path": "§2.13 삭제 · 아카이브",
+     "line_start": 489,
+     "line_end": 489,
+     "statement": "휴지통 항목의 **영구 삭제와 복구는 권한이 있는 사람만** 수행할 수 있다"
+    },
+    {
+     "id": "R85",
+     "heading_path": "§2.13 삭제 · 아카이브",
+     "line_start": 490,
+     "line_end": 490,
+     "statement": "**휴지통 규칙** — 물리 저장은 `.trash/<노드ID>/원본이름` 격리(동명 덮어쓰기 원천 차단). 열람은 **본인이 삭제한 항목 + 워크스페이스 관리자는 전체**. 복구는 원본 노드에 대한 유효 `편집` 권한(원본 부모 체인 기준) — **부모 체인 소실 시 fail-closed 로 관리자만** 가능하며 대체 위치를 선택한다. 복구 시 이름 충돌은 자동 접미사. 영구 삭제는 `관리`(R74)"
+    },
+    {
+     "id": "R86",
+     "heading_path": "§2.13 삭제 · 아카이브",
+     "line_start": 491,
+     "line_end": 491,
+     "statement": "**휴지통 보존 기간 — 기본 30일, 경과 시 자동 영구 삭제.** 보존 일수는 **설정에서 변경 가능**(0 = 무제한). 아카이브는 자동 정리 없음 — 슈퍼유저의 명시적 조작만"
+    },
+    {
+     "id": "R67",
+     "heading_path": "§2.17 파일 레이아웃 규칙",
+     "line_start": 549,
+     "line_end": 549,
+     "statement": "**`.trash` 는 워크스페이스마다** 둔다 — `docsRoot/<워크스페이스ID>/.trash/`"
+    },
+    {
+     "id": "R68",
+     "heading_path": "§2.17 파일 레이아웃 규칙",
+     "line_start": 550,
+     "line_end": 550,
+     "statement": "**아카이브 위치는 `docsRoot/.archive/<워크스페이스ID>/`** — 루트 레벨 한 곳"
+    }
+   ],
+   "excerpt_path": "docs/analysis/kiwi-wave-master-2026-08-20.doculight2.phase1-implementation/design-baseline/wave-4.md"
+  },
+  {
+   "wave": "wave-5",
+   "order": 5,
+   "name": "본문 표면 — 에디터·자동 저장·버전·충돌·첨부",
+   "goal": "본문 영역이 완성된다 — 보기/편집 모드 토글과 라이브 프리뷰, 무버튼 자동 저장, 내용 해시 기반 충돌 감지와 머지 화면, 편집 세션당 1회의 버전 스냅샷과 복원. 같은 본문 슬롯에 비-md 파일이 들어와 이미지는 미리보기·그 외는 다운로드 링크가 되고, 트리 드래그앤드롭과 편집기 붙여넣기 두 경로로 첨부가 `.res` 해시 저장된다.",
+   "source_file": "docs/spec/00.decision-log.md",
+   "heading_path": "§2 확정 결정 — 본문 표면 — 에디터·자동 저장·버전·충돌·첨부",
+   "line_start": 32,
+   "line_end": 548,
+   "requirement_ids": [
+    "CON-ARCH-005",
+    "CON-ARCH-006",
+    "CON-ATTACH-001",
+    "CON-EDITOR-001",
+    "CON-EDITOR-002",
+    "CON-EDITOR-004",
+    "DR-ATTACH-001",
+    "DR-ATTACH-002",
+    "DR-ATTACH-003",
+    "DR-STORAGE-005",
+    "FR-ATTACH-001",
+    "FR-ATTACH-002",
+    "FR-ATTACH-003",
+    "FR-ATTACH-004",
+    "FR-ATTACH-005",
+    "FR-ATTACH-006",
+    "FR-EDITOR-001",
+    "FR-EDITOR-002",
+    "FR-EDITOR-003",
+    "FR-EDITOR-004",
+    "FR-EDITOR-005",
+    "FR-EDITOR-006",
+    "FR-EDITOR-007",
+    "FR-EDITOR-008",
+    "FR-SHELL-008",
+    "FR-STORAGE-001",
+    "FR-STORAGE-002",
+    "FR-STORAGE-003",
+    "FR-STORAGE-004",
+    "FR-STORAGE-008",
+    "IR-STORAGE-001",
+    "REL-ATTACH-001",
+    "SEC-ATTACH-001",
+    "SEC-ATTACH-002",
+    "SEC-ATTACH-003"
+   ],
+   "existing_modules": [
+    "packages/editor",
+    "프론트엔드 SPA 패키지",
+    "백엔드 도메인 패키지",
+    "SQLite 스키마"
+   ],
+   "design_items": [
+    {
+     "id": "R1",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 32,
+     "line_end": 32,
+     "statement": "옵시디언을 웹으로 옮긴 UI. 에디터와 렌더링 결과가 옵시디언과 동일해야 한다"
+    },
+    {
+     "id": "R2",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 33,
+     "line_end": 33,
+     "statement": "1.0의 \"업로드 모드 / 뷰어 모드\" 분리를 폐기한다. 화면은 하나이며 **상단 토글로 보기 모드 ↔ 편집 모드**를 전환한다"
+    },
+    {
+     "id": "R90",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 34,
+     "line_end": 34,
+     "statement": "**편집 모드 안에 라이브 프리뷰 ↔ 소스 하위 토글**을 둔다. 옵시디언의 3상태(읽기/라이브 프리뷰/소스)와 동일하며 **소스 모드는 Phase 1 에 포함**한다"
+    },
+    {
+     "id": "R91",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 35,
+     "line_end": 35,
+     "statement": "모드 토글 경계 상태 — ① 보기 권한만 있으면 편집 토글을 **비활성으로 노출**(진입 불가, 존재는 표시) ② 편집 중 권한 상실·충돌로 저장이 거부되면 **본문을 보존하고 로컬 복사/다운로드를 제공** ③ 비-md 파일은 본문 영역에서 열리되(R48) **모드 토글은 md 전용으로 숨긴다**"
+    },
+    {
+     "id": "R102-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 46,
+     "line_end": 46,
+     "statement": "**덮어쓰기는 \"기존 파일을 선택해 새 버전 올리기\"라는 별도 경로로만** 제공한다"
+    },
+    {
+     "id": "R102-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 47,
+     "line_end": 47,
+     "statement": "그 진입점은 **트리 컨텍스트 메뉴의 파일 노드 전용 항목**(`새 버전 올리기…`)이다. 디렉토리·pass-through 노드에는 나타나지 않는다"
+    },
+    {
+     "id": "R15",
+     "heading_path": "§2.6 범위 (Phase 구분)",
+     "line_start": 376,
+     "line_end": 376,
+     "statement": "**플러그인 시스템은 범위에서 제외**한다"
+    },
+    {
+     "id": "R16",
+     "heading_path": "§2.6 범위 (Phase 구분)",
+     "line_start": 377,
+     "line_end": 377,
+     "statement": "**Phase 1** = 편집·렌더링 경험 + 링크 계열(위키링크 `[[ ]]` 입력·자동완성, 백링크 패널, 아웃고잉 링크, 태그)"
+    },
+    {
+     "id": "R16-a",
+     "heading_path": "§2.6 범위 (Phase 구분)",
+     "line_start": 378,
+     "line_end": 378,
+     "statement": "라이브 프리뷰 대상 요소: **헤딩 · 강조 · 목록 · 링크 · 인용 · 코드블록 · 표 · 수식 · Mermaid**"
+    },
+    {
+     "id": "R31",
+     "heading_path": "§2.6 범위 (Phase 구분)",
+     "line_start": 380,
+     "line_end": 380,
+     "statement": "**모바일·태블릿 대응은 Phase 2** 로 미룬다. Phase 1 은 데스크탑 전용이다"
+    },
+    {
+     "id": "R18",
+     "heading_path": "§2.7 동시성",
+     "line_start": 387,
+     "line_end": 387,
+     "statement": "**낙관적 저장 + 충돌 병합.** 누구나 편집할 수 있고, 저장 시점에 원본이 변경되었으면 병합 화면을 띄운다"
+    },
+    {
+     "id": "R75",
+     "heading_path": "§2.7 동시성",
+     "line_start": 388,
+     "line_end": 388,
+     "statement": "**저장은 옵시디언과 동일한 무버튼 자동 저장**이다 — 입력이 멈추면(디바운스 ~2초) 저장한다"
+    },
+    {
+     "id": "R75-a",
+     "heading_path": "§2.7 동시성",
+     "line_start": 389,
+     "line_end": 389,
+     "statement": "**버전 스냅샷(R61)은 저장 단위가 아니라 편집 세션 단위**로 생성한다 — 문서를 열고 편집을 시작한 시점에 1회"
+    },
+    {
+     "id": "R75-b",
+     "heading_path": "§2.7 동시성",
+     "line_start": 390,
+     "line_end": 390,
+     "statement": "자동 저장이 충돌(R18)을 감지하면 **자동 저장을 일시 중단**하고 배너로 안내한다. 사용자가 머지 뷰를 열어 1회 해소하면 재개한다"
+    },
+    {
+     "id": "R75-c",
+     "heading_path": "§2.7 동시성",
+     "line_start": 391,
+     "line_end": 391,
+     "statement": "충돌 판정 근거는 **읽은 시점의 내용 해시**다. 저장 요청에 해시를 실어 서버가 현재 파일 해시와 비교한다"
+    },
+    {
+     "id": "R33-c",
+     "heading_path": "§2.11 프론트엔드 스택",
+     "line_start": 447,
+     "line_end": 447,
+     "statement": "에디터·머지·마크다운 파이프라인은 프레임워크 중립 패키지를 쓴다: `@codemirror/*`, `@lezer/markdown`, `@codemirror/merge`, `katex`, `mermaid`, `shiki`"
+    },
+    {
+     "id": "R33-d",
+     "heading_path": "§2.11 프론트엔드 스택",
+     "line_start": 448,
+     "line_end": 448,
+     "statement": "**문서 본문은 React state 로 올리지 않는다. CodeMirror 를 본문의 SSOT 로 둔다**"
+    },
+    {
+     "id": "R44",
+     "heading_path": "§2.12 파일 업로드 · 첨부",
+     "line_start": 463,
+     "line_end": 463,
+     "statement": "**업로드 전용 화면은 없지만 업로드 기능은 있다.** 로컬 파일을 트리에 **드래그앤드롭**하면 해당 디렉토리에 업로드된다"
+    },
+    {
+     "id": "R45",
+     "heading_path": "§2.12 파일 업로드 · 첨부",
+     "line_start": 465,
+     "line_end": 465,
+     "statement": "업로드 대상 디렉토리는 **사용자가 편집 권한을 가진 디렉토리**로 한정된다"
+    },
+    {
+     "id": "R46",
+     "heading_path": "§2.12 파일 업로드 · 첨부",
+     "line_start": 466,
+     "line_end": 466,
+     "statement": "**바이너리·이미지 등 모든 형식**을 허용한다"
+    },
+    {
+     "id": "R47",
+     "heading_path": "§2.12 파일 업로드 · 첨부",
+     "line_start": 467,
+     "line_end": 467,
+     "statement": "**md 가 아닌 파일도 트리 목록에 표시된다**"
+    },
+    {
+     "id": "R48",
+     "heading_path": "§2.12 파일 업로드 · 첨부",
+     "line_start": 468,
+     "line_end": 468,
+     "statement": "비-md 파일 클릭 시: **이미지는 미리보기**, 그 외는 **다운로드 링크만** 표시한다"
+    },
+    {
+     "id": "R49",
+     "heading_path": "§2.12 파일 업로드 · 첨부",
+     "line_start": 475,
+     "line_end": 475,
+     "statement": "문서 편집기에 이미지·바이너리를 **붙여넣기 또는 드래그**하면 업로드된다. UX 는 **GitHub 마크다운 편집기와 동일**하다"
+    },
+    {
+     "id": "R49-a",
+     "heading_path": "§2.12 파일 업로드 · 첨부",
+     "line_start": 476,
+     "line_end": 476,
+     "statement": "**문서에 대한 편집 권한은 그 문서 소유 첨부의 업로드 권한을 포함**한다"
+    },
+    {
+     "id": "R50",
+     "heading_path": "§2.12 파일 업로드 · 첨부",
+     "line_start": 477,
+     "line_end": 477,
+     "statement": "R49 로 올린 파일은 **해시 파일명**으로 **워크스페이스 루트의 `.res/` 한 곳**에 저장된다. 해시 앞 2글자로 서브디렉토리를 분할한다 (`.res/a3/f9c2….png`)"
+    },
+    {
+     "id": "R50-a",
+     "heading_path": "§2.12 파일 업로드 · 첨부",
+     "line_start": 478,
+     "line_end": 478,
+     "statement": "첨부마다 DB 에 **소유 문서**를 기록한다: `attachment(해시, 소유 노드 ID, 워크스페이스, 크기, 생성시각)`"
+    },
+    {
+     "id": "R50-b",
+     "heading_path": "§2.12 파일 업로드 · 첨부",
+     "line_start": 479,
+     "line_end": 479,
+     "statement": "본문의 첨부 링크는 **처음부터 워크스페이스 기준 절대경로**로 기록한다"
+    },
+    {
+     "id": "R50-c",
+     "heading_path": "§2.12 파일 업로드 · 첨부",
+     "line_start": 480,
+     "line_end": 480,
+     "statement": "소유 문서가 **영구 삭제되면 그 첨부도 함께 삭제**한다"
+    },
+    {
+     "id": "R50-d",
+     "heading_path": "§2.12 파일 업로드 · 첨부",
+     "line_start": 481,
+     "line_end": 481,
+     "statement": "`.res/index.json` 에 `(해시 → 소유 문서 경로)` 를 함께 기록한다"
+    },
+    {
+     "id": "R51",
+     "heading_path": "§2.12 파일 업로드 · 첨부",
+     "line_start": 482,
+     "line_end": 482,
+     "statement": "**업로드 파일 크기 제한을 설정에서 지정**할 수 있다"
+    },
+    {
+     "id": "R61",
+     "heading_path": "§2.16 버전 관리",
+     "line_start": 532,
+     "line_end": 532,
+     "statement": "문서 저장 시 이전 본문을 **`.versions` 디렉토리에 보관**하고, 버전 인덱스는 **DB(SQLite)** 에서 관리한다"
+    },
+    {
+     "id": "R62",
+     "heading_path": "§2.16 버전 관리",
+     "line_start": 533,
+     "line_end": 533,
+     "statement": "**보관 버전 개수를 설정에서 지정**한다. 개수를 초과하면 **오래된 버전부터 폐기**한다"
+    },
+    {
+     "id": "R63",
+     "heading_path": "§2.16 버전 관리",
+     "line_start": 534,
+     "line_end": 534,
+     "statement": "**버전 관리 대상은 문서 파일(md)뿐이다.** 첨부·바이너리는 대상이 아니다"
+    },
+    {
+     "id": "R63-a",
+     "heading_path": "§2.16 버전 관리",
+     "line_start": 535,
+     "line_end": 535,
+     "statement": "버전 비교·복원 UI 는 **`@codemirror/merge` 를 재사용**한다"
+    },
+    {
+     "id": "R65",
+     "heading_path": "§2.17 파일 레이아웃 규칙",
+     "line_start": 544,
+     "line_end": 544,
+     "statement": "문서를 다른 디렉토리로 이동해도 **첨부는 물리적으로 움직이지 않으며 본문 링크 갱신도 필요 없다**"
+    },
+    {
+     "id": "R66",
+     "heading_path": "§2.17 파일 레이아웃 규칙",
+     "line_start": 546,
+     "line_end": 546,
+     "statement": "**첨부 접근 권한은 그 첨부의 소유 문서(R50-a)의 보기 권한으로 판정**한다"
+    },
+    {
+     "id": "R66-a",
+     "heading_path": "§2.17 파일 레이아웃 규칙",
+     "line_start": 547,
+     "line_end": 547,
+     "statement": "다른 문서가 그 첨부를 링크로 참조하더라도 **판정은 항상 원 소유 문서 기준**이다. 권한이 없으면 깨진 이미지로 보인다"
+    },
+    {
+     "id": "R66-b",
+     "heading_path": "§2.17 파일 레이아웃 규칙",
+     "line_start": 548,
+     "line_end": 548,
+     "statement": "첨부 다운로드 시 **매 요청 권한을 검사**한다. \"해시 파일명이라 추측 불가\"에 기대지 않는다"
+    }
+   ],
+   "excerpt_path": "docs/analysis/kiwi-wave-master-2026-08-20.doculight2.phase1-implementation/design-baseline/wave-5.md"
+  },
+  {
+   "wave": "wave-6",
+   "order": 6,
+   "name": "찾기 계열 — 링크·백링크·태그·전역 검색·MCP",
+   "goal": "문서를 찾는 세 경로가 모두 선다 — 위키링크 자동완성과 백링크·아웃고잉 링크(워크스페이스 경계를 넘는 인덱스 위에서), 좌측 검색 탭의 텍스트 검색과 우측 태그 탭, 그리고 PAT 로 인증하고 호출자 ACL 로 결과가 갈리는 MCP·벡터검색 표면. 표시 직전 요청자 권한 필터가 이 표면 전량에 동일하게 걸린다.",
+   "source_file": "docs/spec/00.decision-log.md",
+   "heading_path": "§2 확정 결정 — 찾기 계열 — 링크·백링크·태그·전역 검색·MCP",
+   "line_start": 53,
+   "line_end": 545,
+   "requirement_ids": [
+    "CON-SHELL-002",
+    "FR-ARCH-001",
+    "FR-SHELL-009",
+    "FR-SHELL-010",
+    "FR-SHELL-011",
+    "FR-SHELL-013",
+    "FR-SHELL-014",
+    "FR-STORAGE-009",
+    "FR-WORKSPACE-002",
+    "FR-WORKSPACE-009",
+    "IR-AUTH-002",
+    "SEC-ARCH-001",
+    "SEC-ARCH-002",
+    "SEC-ARCH-003",
+    "SEC-STORAGE-007",
+    "SEC-WORKSPACE-004",
+    "SEC-WORKSPACE-005",
+    "SEC-WORKSPACE-006"
+   ],
+   "existing_modules": [
+    "packages/editor",
+    "프론트엔드 SPA 패키지",
+    "백엔드 도메인 패키지",
+    "SQLite 스키마",
+    "MCP 서버 패키지 (이 wave 신설)"
+   ],
+   "design_items": [
+    {
+     "id": "R106",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 53,
+     "line_end": 53,
+     "statement": "**개정 (2026-08-18) — 우측 사이드바 `태그` 탭은 접근 가능한 전 워크스페이스의 태그 목록과 각 태그의 출현 문서 수**를 보여준다. **집계 원천에 R80 을 적용한다** — 개수만 거르는 것이 아니라 **태그의 등장 자체가 필터를 거치므로**, 요청자가 볼 수 있는 문서에 한 번도 나타나지 않는 태그는 목록에 없다. 범위는 **접근 가능한 전 워크스페이스 통합 목록 + 범위 선택기**다. **개수의 단위는 `출현 문서 수` 이지 `출현 횟수` 가 아니다** — R80 이 문서 단위로 걸리므로 출현 횟수는 이 필터 위에서 정의되지 않는다. **옵시디언 문구(`number of occurrences`)를 그대로 옮기지 않는 것은 의도적이다**"
+    },
+    {
+     "id": "R106-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 54,
+     "line_end": 54,
+     "statement": "**개수 옆에 조건 없이 항상 같은 문구를 상시 표기한다** (예: *\"내가 볼 수 있는 문서 기준\"*). 숨은 항목의 유무에 따라 문구가 갈리지 않는다"
+    },
+    {
+     "id": "R106-d",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 55,
+     "line_end": 55,
+     "statement": "정렬은 **빈도순을 기본**으로 하고 이름순을 선택으로 제공한다 〔판단 — 원장 근거 없음〕"
+    },
+    {
+     "id": "R106-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 56,
+     "line_end": 56,
+     "statement": "**개정 (2026-08-18)** — **태그 클릭 → 좌측 검색 탭 활성 + 질의 채움.** 우측은 **색인**(어떤 태그가 얼마나 있는가)을 소유하고 좌측 검색 탭은 **결과**(그 태그가 달린 문서는 무엇인가)를 소유한다"
+    },
+    {
+     "id": "R149",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 191,
+     "line_end": 191,
+     "statement": "**전역 검색을 정의한다.** 검색 대상은 **문서 제목 · 본문 · 태그 · 첨부파일 이름** 넷이다. 소재는 **좌측 사이드바 검색 탭**(R3)이며 결과도 그 탭이 소유한다(R106-a)"
+    },
+    {
+     "id": "R149-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 192,
+     "line_end": 192,
+     "statement": "**검색 대상은 필터로 고른다** — 검색창 오른쪽 필터 버튼 → 팝오버 → **체크박스**로 네 대상(제목·본문·태그·첨부파일 이름)의 포함 여부를 정한다"
+    },
+    {
+     "id": "R149-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 193,
+     "line_end": 193,
+     "statement": "**질의 문법** — 공백은 **AND** 다. 다만 검색어 사이에 **`\\"
+    },
+    {
+     "id": "R149-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 194,
+     "line_end": 194,
+     "statement": "**최소 질의 길이는 2자다.** AND 는 **2자 이상 낱말이 하나라도 있으면** 나머지 항은 1자도 허용한다. OR 는 **모든 항이 2자 이상**이어야 한다"
+    },
+    {
+     "id": "R149-d",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 195,
+     "line_end": 195,
+     "statement": "**결과 표시는 1.0 과 동일한 형식이다** — 문서 제목을 머리로 두고 그 아래에 **찾은 내용들**(일치 지점의 발췌)을 쌓는다. 목록은 스크롤한다"
+    },
+    {
+     "id": "R149-e",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 196,
+     "line_end": 196,
+     "statement": "**AI 검색은 MCP 로만 제공한다.** 좌측 검색 탭은 텍스트 검색이며 여기에 AI·벡터 검색을 섞지 않는다"
+    },
+    {
+     "id": "R79",
+     "heading_path": "§2.2 저장",
+     "line_start": 222,
+     "line_end": 222,
+     "statement": "**벡터 인덱스는 노드 삭제·이동·아카이브 시 동기 갱신/제거한다.** 판정 대상 노드가 존재하지 않는 인덱스 엔트리는 검색 결과에서 **무조건 제외(fail-closed)** 한다"
+    },
+    {
+     "id": "R39",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 345,
+     "line_end": 345,
+     "statement": "**위키링크·백링크·그래프뷰·검색은 워크스페이스 경계를 넘는다**"
+    },
+    {
+     "id": "R80",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 346,
+     "line_end": 346,
+     "statement": "**R39 는 인덱싱 경계이지 표시 경계가 아니다.** 링크 계열·검색의 모든 결과 — 백링크 · 아웃고잉 링크 · `[[` 자동완성 후보 · 검색 결과 · 그래프뷰 노드 · **태그 목록과 그 집계(R106)** — 는 **표시 직전 요청자의 유효 권한으로 필터링**한다"
+    },
+    {
+     "id": "R80-a",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 347,
+     "line_end": 347,
+     "statement": "권한 없는 문서발 역참조는 **통째로 생략한다. 개수 힌트(\"비공개 N건\")도 표시하지 않는다**"
+    },
+    {
+     "id": "R80-b",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 348,
+     "line_end": 348,
+     "statement": "권한 없는 문서명을 **수동으로 타이핑해 위키링크를 거는 것은 막지 않는다.** 그 링크는 R42 대로 깨진 링크로 렌더된다"
+    },
+    {
+     "id": "R80-c",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 349,
+     "line_end": 349,
+     "statement": "**아웃고잉 링크 패널은 R80 필터의 예외다.** 본문에 있는 링크를 그대로 나열하며 미해결 링크도 표시한다. 단 **\"존재하지 않음\"과 \"권한 없음\"을 구분하지 않는다**"
+    },
+    {
+     "id": "R42",
+     "heading_path": "§2.5 워크스페이스",
+     "line_start": 358,
+     "line_end": 358,
+     "statement": "권한 없는 문서를 가리키는 위키링크는 **깨진 링크로 표시**한다 (옵시디언이 존재하지 않는 문서를 표시하는 방식과 동일)"
+    },
+    {
+     "id": "R13",
+     "heading_path": "§2.9 AI · MCP",
+     "line_start": 405,
+     "line_end": 405,
+     "statement": "**개정 (2026-08-19)** — 1.0 의 AI 기능(LangChain / 벡터검색 / smart_search)과 MCP 서버가 **제공하던 기능을 물려받는다.** 구현은 신규 작성이다"
+    },
+    {
+     "id": "R22",
+     "heading_path": "§2.9 AI · MCP",
+     "line_start": 406,
+     "line_end": 406,
+     "statement": "**MCP 호출에 사용자 인증을 필수화**하고, 모든 MCP 도구와 벡터검색 결과를 **해당 사용자의 ACL 로 필터링**한다"
+    },
+    {
+     "id": "R22-a",
+     "heading_path": "§2.9 AI · MCP",
+     "line_start": 407,
+     "line_end": 407,
+     "statement": "R22 를 읽기/쓰기로 분리 명시한다 — **읽기 도구는 결과를 ACL 로 필터링하고, 쓰기 도구는 대상 노드의 `편집` 유효 권한을 검사해 없으면 거부**한다"
+    },
+    {
+     "id": "R58-b",
+     "heading_path": "§2.15 인증",
+     "line_start": 516,
+     "line_end": 516,
+     "statement": "MCP 는 `Authorization: Bearer <PAT>` 로 사용자를 식별한다"
+    },
+    {
+     "id": "R65-a",
+     "heading_path": "§2.17 파일 레이아웃 규칙",
+     "line_start": 545,
+     "line_end": 545,
+     "statement": "문서 간 링크는 **이름 기반 위키링크로 해석**되어 대상·참조 문서의 이동에 안전하다. 에디터가 삽입하는 링크는 **위키링크 또는 워크스페이스 절대경로만** 사용한다(상대경로 삽입 금지)"
+    }
+   ],
+   "excerpt_path": "docs/analysis/kiwi-wave-master-2026-08-20.doculight2.phase1-implementation/design-baseline/wave-6.md"
+  },
+  {
+   "wave": "wave-7",
+   "order": 7,
+   "name": "권한·주체 관리 화면과 이동·복사",
+   "goal": "관리자가 권한 상태를 관측하고 손볼 수단이 선다 — 공유 모달의 상속 항목 표시와 권한 지정 UI, 접근자 지표 두 종, 유효 권한 시뮬레이션, 상속 끊김 노드 목록과 상속으로 되돌리기, 주체 단위 일괄 회수. 사용자·그룹 관리와 네 단계 오프보딩, PrincipalPicker 공용 컴포넌트가 함께 선다. 이동·복사도 여기서 완성된다 — 두 조작이 접근 가능 인원을 바꾸므로 그 프리뷰가 지표 위에서만 성립한다.",
+   "source_file": "docs/spec/00.decision-log.md",
+   "heading_path": "§2 확정 결정 — 권한·주체 관리 화면과 이동·복사",
+   "line_start": 43,
+   "line_end": 313,
+   "requirement_ids": [
+    "CON-PRINCIPAL-004",
+    "CON-PRINCIPAL-006",
+    "FR-ACL-001",
+    "FR-ACL-002",
+    "FR-ACL-003",
+    "FR-ACL-004",
+    "FR-ACL-005",
+    "FR-ACL-006",
+    "FR-PRINCIPAL-001",
+    "FR-PRINCIPAL-002",
+    "FR-PRINCIPAL-003",
+    "FR-PRINCIPAL-004",
+    "FR-PRINCIPAL-005",
+    "FR-PRINCIPAL-006",
+    "FR-PRINCIPAL-007",
+    "FR-PRINCIPAL-008",
+    "FR-PRINCIPAL-009",
+    "FR-PRINCIPAL-010",
+    "FR-PRINCIPAL-011",
+    "IR-ACL-001",
+    "IR-ACL-002",
+    "IR-ACL-003",
+    "SEC-ACL-015",
+    "SEC-PRINCIPAL-002",
+    "SEC-PRINCIPAL-003",
+    "SEC-SHELL-003"
+   ],
+   "existing_modules": [
+    "프론트엔드 SPA 패키지",
+    "백엔드 도메인 패키지",
+    "SQLite 스키마"
+   ],
+   "design_items": [
+    {
+     "id": "R101-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 43,
+     "line_end": 43,
+     "statement": "**그룹은 삭제할 수 있으며, 삭제 트랜잭션에 그 주체의 `acl_entry` 제거를 포함**한다 (시스템 그룹은 R30-a 로 삭제 불가)"
+    },
+    {
+     "id": "R105",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 50,
+     "line_end": 50,
+     "statement": "**디렉토리 복사 시 요청자에게 보이는 노드만 복사한다.** 누락을 알리지 않는다"
+    },
+    {
+     "id": "R105-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 51,
+     "line_end": 51,
+     "statement": "복사 다이얼로그에는 **숨은 노드 유무와 무관하게 항상 동일한 문구**(\"권한에 따라 일부 항목이 제외될 수 있습니다\")를 표시한다"
+    },
+    {
+     "id": "R105-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 52,
+     "line_end": 52,
+     "statement": "복사 완료 시 **복사된 항목 수**를 토스트로 알린다"
+    },
+    {
+     "id": "R109",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 62,
+     "line_end": 62,
+     "statement": "**워크스페이스의 마지막 `관리` 권한자 제거는 차단하지 않고 확인 다이얼로그로 경고**한다"
+    },
+    {
+     "id": "R109-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 63,
+     "line_end": 63,
+     "statement": "**설정 모달의 워크스페이스 목록과 워크스페이스 스코프 선택기**에 `관리자 없음` 배지를 상시 노출한다. **좌측 트리에는 붙이지 않는다**"
+    },
+    {
+     "id": "R111",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 66,
+     "line_end": 66,
+     "statement": "**새 워크스페이스 생성 폼에서 `default` 그룹의 초기 권한을 선택할 수 있다. 기본값은 `없음`(fail-closed)** 이다"
+    },
+    {
+     "id": "R111-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 67,
+     "line_end": 67,
+     "statement": "**R83(설치 마법사)의 기본값 `편집` 을 답습하지 않는다.** 신규 워크스페이스의 기본값은 `없음` 이다"
+    },
+    {
+     "id": "R111-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 68,
+     "line_end": 68,
+     "statement": "**생성 직후의 접근자는 지정된 관리자(R35-a)와 슈퍼유저(R29·R71)다.** \"접근자 0명\"이 아니다"
+    },
+    {
+     "id": "R111-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 69,
+     "line_end": 69,
+     "statement": "자유 가입 모드(R7-①)와 `편집` 을 함께 고르면 **경고를 표시**한다"
+    },
+    {
+     "id": "R112",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 70,
+     "line_end": 70,
+     "statement": "**공유 모달의 사용자 검색은 `active` 와 `pending` 을 노출하되 상태 배지를 붙인다. `rejected` 는 제외한다**"
+    },
+    {
+     "id": "R112-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 71,
+     "line_end": 71,
+     "statement": "`suspended` 계정에 부여할 때는 **확인 1단계**를 거친다. **주체 검색 결과의 배지 문구는 중립적으로 `비활성`** 을 쓴다"
+    },
+    {
+     "id": "R112-d",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 72,
+     "line_end": 72,
+     "statement": "**중립어 규칙의 적용 범위는 주체 검색 결과에 한정**된다. **슈퍼유저 전용 사용자 관리 화면에서는 R60 의 4상태(`활성`·`대기`·`정지`·`거절`)를 그대로 표시**한다"
+    },
+    {
+     "id": "R112-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 73,
+     "line_end": 73,
+     "statement": "사용자 검색에는 **최소 질의 길이 2자와 결과 건수 상한 20건**을 둔다"
+    },
+    {
+     "id": "R112-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 74,
+     "line_end": 74,
+     "statement": "**R112 계열은 공유 모달뿐 아니라 주체를 고르는 모든 화면에 적용**한다 — 워크스페이스 관리자 지정, 그룹 멤버 추가 등"
+    },
+    {
+     "id": "R112-e",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 75,
+     "line_end": 75,
+     "statement": "그 담보로 **주체 선택 UI 는 단일 공용 컴포넌트(`PrincipalPicker`)로 구현**한다. 화면마다 자체 검색 UI 를 만들지 않는다"
+    },
+    {
+     "id": "R101-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 76,
+     "line_end": 76,
+     "statement": "오프보딩(R101-b) 중 어느 단계가 R73 가드로 거부되면 **흐름을 멈추되 이전 단계의 결과는 유지**한다"
+    },
+    {
+     "id": "R101-d",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 77,
+     "line_end": 77,
+     "statement": "오프보딩 흐름은 **단일 컴포넌트**로 구현하고 사용자 관리(R24-a 인스턴스 구역)와 주체 일괄 회수(R43-1) **양쪽에서 같은 카드로 진입**한다. **진행 상태를 별도로 저장하지 않고 조회 시점의 실제 상태에서 파생**한다"
+    },
+    {
+     "id": "R101-e",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 78,
+     "line_end": 78,
+     "statement": "오프보딩 **④단계(ACL 일괄 회수)는 주체 일괄 회수 화면(R43-1)으로 위임**한다. 카드는 **진입 버튼과 완료 표시만** 갖는다"
+    },
+    {
+     "id": "R101-f",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 79,
+     "line_end": 79,
+     "statement": "일괄 회수 화면의 **적용 범위 문구는 요청자 레벨에 따라 달라진다** — 워크스페이스 관리자에게는 \"내가 관리하는 워크스페이스에만 적용\", 슈퍼유저에게는 **전 인스턴스에 적용됨을 명시**한다"
+    },
+    {
+     "id": "R118",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 173,
+     "line_end": 173,
+     "statement": "**접근자 명단은 어디서든 `관리` 전용이다** — 공유 모달의 접근자 목록·그룹 멤버 전개·시뮬레이션 결과 명단 전부. **수치는 `편집` 까지 허용**한다"
+    },
+    {
+     "id": "R119",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 174,
+     "line_end": 174,
+     "statement": "**시스템 그룹(슈퍼유저·`default`)도 주체 단위 일괄 회수(R43-1)의 대상이다.** 제외하지 않는다"
+    },
+    {
+     "id": "R119-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 175,
+     "line_end": 175,
+     "statement": "`default` 그룹에 대한 일괄 회수는 **L3**(타이핑 확인)이다. 슈퍼유저 그룹에 대한 회수는 R71 상방 게이트 때문에 실효가 없음을 화면에 안내한다"
+    },
+    {
+     "id": "R120",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 176,
+     "line_end": 176,
+     "statement": "**복사 다이얼로그의 접근자 프리뷰 수치는 목적지 기준으로 판정**한다. 복사는 항상 목적지 `편집` 을 요구하므로(R97-b) **수치는 언제나 표시된다**"
+    },
+    {
+     "id": "R121",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 177,
+     "line_end": 177,
+     "statement": "**접근자 지표를 둘로 분리한다** — **`접근 가능 N명`** = ACL·상속 + 상방 게이트(R71) 합계 / **`ACL 접근자 N명`** = ACL·상속 경유만(상방 게이트 제외)"
+    },
+    {
+     "id": "R121-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 178,
+     "line_end": 178,
+     "statement": "용도 — **`접근 가능`** 은 공유 모달·이동/복사 프리뷰(R43-5·R120), **`ACL 접근자`** 는 **상속 끊김 노드 감사 목록(R43-3)** 에 쓴다"
+    },
+    {
+     "id": "R121-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 179,
+     "line_end": 179,
+     "statement": "고립 노드 문구는 **\"아무도 볼 수 없습니다\"** 가 아니라 **\"권한으로 접근할 수 있는 사람이 없습니다 — 지금은 워크스페이스 관리자와 슈퍼유저만 볼 수 있습니다\"** 다"
+    },
+    {
+     "id": "R6",
+     "heading_path": "§2.3 사용자 · 그룹",
+     "line_start": 234,
+     "line_end": 234,
+     "statement": "사용자 관리와 사용자 그룹 관리를 제공한다"
+    },
+    {
+     "id": "R12",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 246,
+     "line_end": 246,
+     "statement": "지정 UX 는 구글 독스 방식 — 사용자와 그룹을 **각각 검색**해서 추가한다"
+    },
+    {
+     "id": "R43",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 269,
+     "line_end": 269,
+     "statement": "R14(D안) 채택에 따른 **부속 기능 5종을 모두 요건으로 확정**한다 (아래)"
+    },
+    {
+     "id": "R97-a",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 291,
+     "line_end": 291,
+     "statement": "**복사 규칙** — 새 노드 ID(R76)를 부여하고, ACL 은 대상 부모에서 상속하며(R14), 생성자에게 편집권이 부여된다(R28). **첨부는 대상 워크스페이스의 `.res/` 로 복제**되고 본문의 첨부 링크가 새 경로로 재작성된다. 원본 첨부는 그대로 둔다"
+    },
+    {
+     "id": "R97-c",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 293,
+     "line_end": 293,
+     "statement": "문서 간 위키링크는 이름 기반 해석(R65-a)이고 링크는 워크스페이스 경계를 넘으므로(R39), **복사본의 문서 링크는 재작성하지 않는다**"
+    },
+    {
+     "id": "R43-1",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 309,
+     "line_end": 309,
+     "statement": "**주체 단위 일괄 회수** — `DELETE FROM acl_entry WHERE principal_kind=? AND principal_id=?`. **ACL 항목만 제거**하며 그룹 멤버십·계정 상태는 건드리지 않는다(오프보딩 전체 흐름은 R101-b)"
+    },
+    {
+     "id": "R43-2",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 310,
+     "line_end": 310,
+     "statement": "**특정 사용자 관점 유효 권한 시뮬레이션 화면**"
+    },
+    {
+     "id": "R43-3",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 311,
+     "line_end": 311,
+     "statement": "**`상속 끊김` 노드 감사 목록** + \"상속으로 되돌리기\""
+    },
+    {
+     "id": "R43-4",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 312,
+     "line_end": 312,
+     "statement": "**공유 모달의 상속 항목 표시** — 출처 경로와 함께 회색 읽기전용"
+    },
+    {
+     "id": "R43-5",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 313,
+     "line_end": 313,
+     "statement": "**파일 이동 전 \"접근 가능 N명 → M명\" 프리뷰** — **인원 수만 표시**하고 명단은 `관리` 레벨 전용(R43-2 시뮬레이션으로 일원화)"
+    }
+   ],
+   "excerpt_path": "docs/analysis/kiwi-wave-master-2026-08-20.doculight2.phase1-implementation/design-baseline/wave-7.md"
+  },
+  {
+   "wave": "wave-8",
+   "order": 8,
+   "name": "확인 등급 — 파괴적 조작 앞의 마찰",
+   "goal": "L1·L2·L3 등급 체계와 배정 기준이 서고, 앞 wave 들이 만든 조작 전량에 등급이 얹힌다 — 휴지통·계정·그룹·토큰·권한 배정표, 이동·복사·상속 끊기·넓히기·회수·오프보딩·보존 기간 축소. 확인 화면이 수치를 열 때 재조회하고, 그 흐름이 완전 숨김을 우회하는 정보 통로가 되지 않도록 분모·미도달 건수·첨부 개수가 차단된다.",
+   "source_file": "docs/spec/00.decision-log.md",
+   "heading_path": "§2 확정 결정 — 확인 등급 — 파괴적 조작 앞의 마찰",
+   "line_start": 80,
+   "line_end": 171,
+   "requirement_ids": [
+    "CON-CONFIRM-001",
+    "DR-CONFIRM-001",
+    "FR-CONFIRM-001",
+    "FR-CONFIRM-002",
+    "FR-CONFIRM-003",
+    "FR-CONFIRM-004",
+    "FR-CONFIRM-005",
+    "FR-CONFIRM-006",
+    "FR-CONFIRM-007",
+    "FR-CONFIRM-008",
+    "FR-CONFIRM-009",
+    "FR-CONFIRM-010",
+    "FR-CONFIRM-011",
+    "FR-CONFIRM-012",
+    "FR-CONFIRM-013",
+    "FR-CONFIRM-014",
+    "FR-CONFIRM-015",
+    "FR-CONFIRM-016",
+    "FR-CONFIRM-017",
+    "FR-CONFIRM-018",
+    "FR-CONFIRM-019",
+    "FR-CONFIRM-020",
+    "FR-CONFIRM-021",
+    "FR-CONFIRM-022",
+    "FR-CONFIRM-023",
+    "IR-CONFIRM-001",
+    "SEC-CONFIRM-001",
+    "SEC-CONFIRM-002",
+    "SEC-CONFIRM-003",
+    "SEC-CONFIRM-004",
+    "SEC-CONFIRM-005",
+    "SEC-CONFIRM-006",
+    "SEC-CONFIRM-007"
+   ],
+   "existing_modules": [
+    "프론트엔드 SPA 패키지",
+    "백엔드 도메인 패키지"
+   ],
+   "design_items": [
+    {
+     "id": "R113",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 80,
+     "line_end": 80,
+     "statement": "**확인 다이얼로그를 존재 판정에 쓰지 않는다.** 확인 단계의 유무·문구가 요청자에게 보이지 않는 대상의 존재 여부에 따라 달라져서는 안 된다"
+    },
+    {
+     "id": "R114",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 81,
+     "line_end": 81,
+     "statement": "접근자 **인원 수에 시점을 표기하지 않는다** (예: \"12명(08-12 기준)\" 금지)"
+    },
+    {
+     "id": "R115",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 82,
+     "line_end": 82,
+     "statement": "**확인 등급 체계를 하나로 통일한다** — **L1** 확인 없이 즉시 실행 + 실행취소 토스트 / **L2** 확인 다이얼로그 / **L3** 타이핑 확인"
+    },
+    {
+     "id": "R115-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 83,
+     "line_end": 83,
+     "statement": "등급은 **두 축**으로 배정한다 — **가역성**과 **효과의 즉시성**. **L1** 가역이고 효과가 즉시 드러남 / **L2** 비가역**이거나** 효과가 **잠재·지연**됨 / **L3** L2 조건 + **광범위**(다건·서브트리·인스턴스 전역)"
+    },
+    {
+     "id": "R115-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 84,
+     "line_end": 84,
+     "statement": "배정 예 — 휴지통 영구 삭제 **단건 L2 · 일괄 L3**(비가역 — **일괄 조작은 R142 로 Phase 1 에 도입하지 않으며 이 배정은 도입 시점에 발효한다**) / `비활성` 계정에 부여 **L2**(가역이지만 **재활성화 시점에 되살아나는 잠재 효과**) / `default` 그룹 일괄 회수 **L3**(R119-a) / **그룹 삭제 L3** / **PAT 폐기 L2**(비가역 — 되살릴 수 없고 재발급뿐) / ACL 항목 회수 **L1**(가역·즉시) / **그룹 멤버 제거·가입 거절 L1**(가역·즉시 — R60-b 로 `rejected` 는 `pending` 으로 되돌릴 수 있다)"
+    },
+    {
+     "id": "R115-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 85,
+     "line_end": 85,
+     "statement": "**R102 자동 접미사 통지는 확인 등급 체계의 대상이 아니다**"
+    },
+    {
+     "id": "R115-d",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 86,
+     "line_end": 86,
+     "statement": "**요구사항이 등급을 직접 지정하면 R115-a 배정 기준보다 우선한다.** **이 조항의 적용 사례는 열린 목록이다** — 새 요구사항이 등급을 직접 지정하면 그때마다 늘어난다. 아래는 예시이며 **전량 열거가 아니다**"
+    },
+    {
+     "id": "R115-e",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 87,
+     "line_end": 87,
+     "statement": "**보존 기간 축소(휴지통 R86 · 감사 로그 R84-a)의 등급은 확인 시점의 실제 영향 건수로 정한다** — 영향 건수 **> 0 이면 L3**, **= 0 이면 L2**. L3 의 타이핑 토큰은 **영향 건수 자체**로 한다"
+    },
+    {
+     "id": "R115-f",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 88,
+     "line_end": 88,
+     "statement": "등급 표시와 무관하게, 지연 효과 조작에는 **\"지금은 아무 일도 일어나지 않고 다음 정리 시점에 한꺼번에 사라진다\"** 는 취지를 문구로 알린다"
+    },
+    {
+     "id": "R115-g",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 89,
+     "line_end": 89,
+     "statement": "**오프보딩 3단계(그룹 멤버십 제거)는 L2** 다. 그룹 상세 화면의 단건 멤버 제거(L1)와 갈린다"
+    },
+    {
+     "id": "R115-h",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 90,
+     "line_end": 90,
+     "statement": "오프보딩 3단계 확인 다이얼로그는 **제거될 그룹 이름을 모두 나열**한다"
+    },
+    {
+     "id": "R115-i",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 91,
+     "line_end": 91,
+     "statement": "**`새 버전 올리기`(R102-a)의 등급은 대상 형식으로 갈린다 — md 는 L1, 바이너리는 L2**"
+    },
+    {
+     "id": "R115-j",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 92,
+     "line_end": 92,
+     "statement": "**삭제(휴지통 이동)와 영구 삭제를 혼동하지 않는다** — 전자는 **L1**(가역 · R52 이동 + R85 복구 경로), 후자는 L2/L3(비가역)"
+    },
+    {
+     "id": "R122",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 93,
+     "line_end": 93,
+     "statement": "**넓히기(권한 부여·상속 되돌리기·복사)는 가역성 축에서 비가역으로 취급한다** — ACL 항목을 지워도 **이미 열람된 내용은 회수할 수 없다**"
+    },
+    {
+     "id": "R122-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 94,
+     "line_end": 94,
+     "statement": "넓히기의 등급은 **주체 집합의 명시성**으로 갈린다 — **주체가 명시적으로 지목된 단건이면 L1**(검색해 고르고 레벨을 선택하는 다단계 행위 자체가 확인 역할을 한다), **그룹이거나 불특정 집합이면 L2**. **주체를 지목하지 않는 조작(복사 · 상속 되돌리기 · 부모 권한 가져오기)은 언제나 불특정 집합이다.** **이 조항만으로 판정하지 않는다 — 대상 노드의 범위 축은 R125 가 소유한다**"
+    },
+    {
+     "id": "R122-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 95,
+     "line_end": 95,
+     "statement": "**상속 끊기는 L2** 다"
+    },
+    {
+     "id": "R122-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 96,
+     "line_end": 96,
+     "statement": "**조작 입력 폼은 확인 관문이 아니다.** 이동·복사 다이얼로그의 목적지 선택과 접근자 프리뷰는 등급 배정 대상이 아니며, 등급이 요구하는 확인은 **입력을 마친 뒤 한 번 더** 받는다"
+    },
+    {
+     "id": "R123",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 97,
+     "line_end": 97,
+     "statement": "**이동의 확인 등급은 `접근 가능`(R121) 수치의 변화로 정한다** — 변하면 **L2**, 동일하면 **L1**"
+    },
+    {
+     "id": "R123-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 98,
+     "line_end": 98,
+     "statement": "변화 없는 이동(같은 상속 구조 안에서의 폴더 정리)은 L1 이다"
+    },
+    {
+     "id": "R125",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 99,
+     "line_end": 99,
+     "statement": "**넓히기의 등급은 두 축으로 갈린다 — 주체 집합의 명시성(R122-a)과 대상 노드의 범위.** 단건 주체 × **문서**면 L1, **어느 한쪽이라도** 집합이거나 **컨테이너 노드(디렉토리·워크스페이스)** 면 **L2**"
+    },
+    {
+     "id": "R125-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 100,
+     "line_end": 100,
+     "statement": "**이 조항이 닫는 실제 구멍** — 개정 전에는 **워크스페이스에 개인 1명을 `보기` 로 부여하는 조작이 L1(무확인)** 이었다. `관리` 부여만 L2 로 잡혀 있어 **\"전 문서를 볼 수 있게 한다\"는 무확인이고 \"전 문서를 보고 권한도 만질 수 있게 한다\"만 확인을 받았다**"
+    },
+    {
+     "id": "R125-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 101,
+     "line_end": 101,
+     "statement": "**`워크스페이스 관리 부여 = L2` 의 근거는 R125 다** (컨테이너 노드에 대한 넓히기). R115-d 경로로 직접 지정한다"
+    },
+    {
+     "id": "R125-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 102,
+     "line_end": 102,
+     "statement": "**R115-a 의 광범위 조건 중 `서브트리` 는 좁히기·파괴 조작의 L3 판정에만 쓴다. 넓히기는 L2 를 넘지 않는다**"
+    },
+    {
+     "id": "R126",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 103,
+     "line_end": 103,
+     "statement": "**컨테이너 노드(디렉토리·워크스페이스)에 대한 부여의 확인 다이얼로그에 `적용 하위 N개` 를 표시한다** — **요청자에게 보이는 하위 노드 중 이 부여가 상속으로 실제 도달하는 것의 수**"
+    },
+    {
+     "id": "R126-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 104,
+     "line_end": 104,
+     "statement": "**이 수치는 존재 오라클이 아니다 — `도달 노드 집합 ⊆ 요청자에게 이미 보이는 노드 집합` 이 두 경로 모두에서 성립한다**"
+    },
+    {
+     "id": "R126-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 105,
+     "line_end": 105,
+     "statement": "**분모·미도달 건수·하위 집계형 접근자 수치를 표시하지 않는다.** `24 / 30` 형태와 \"적용되지 않는 항목 N개\" 를 금지한다"
+    },
+    {
+     "id": "R126-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 106,
+     "line_end": 106,
+     "statement": "**R121 의 두 지표와 라벨을 공유하지 않는다.** R121 은 **사람 수**, 이것은 **노드 수**로 축이 다르다"
+    },
+    {
+     "id": "R126-d",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 107,
+     "line_end": 107,
+     "statement": "소재는 **확인 다이얼로그**이며 모달 본문 상시 표시가 아니다. **R116 재조회 대상에 포함**한다"
+    },
+    {
+     "id": "R126-e",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 108,
+     "line_end": 108,
+     "statement": "**인지된 비용** — R14-b 의 비용 근거는 **상향 순회**인데 이 카운트는 **하향**이라 성질이 다르다. 다만 ① 트리 구조 카운트는 ACL 판정이 아니라 노드 경로 인덱스로 단일 쿼리 집계가 가능하고 ② 재조회는 다이얼로그를 열 때 1회다"
+    },
+    {
+     "id": "R127",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 109,
+     "line_end": 109,
+     "statement": "**\"여기서 부여한 권한이 하위 전체에 상속된다\"는 고지를 컨테이너 노드 공통으로 둔다.** 단일 템플릿에 목적어만 파라미터로 넣는다"
+    },
+    {
+     "id": "R127-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 110,
+     "line_end": 110,
+     "statement": "**\"상속이 끊긴 하위에는 적용되지 않습니다\" 를 끊긴 노드의 유무와 무관하게 항상 표시한다**"
+    },
+    {
+     "id": "R127-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 111,
+     "line_end": 111,
+     "statement": "**도달하지 못하는 하위가 있어도 부여를 거부하지 않는다. 도달 실패 노드를 개별 열거하지 않는다**"
+    },
+    {
+     "id": "R129",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 112,
+     "line_end": 112,
+     "statement": "**넓히기 L1 의 토스트는 `실행취소` 가 아니라 `회수` 로 표기하고, 되돌려도 이미 열람된 내용은 회수되지 않음을 문구에 남긴다**"
+    },
+    {
+     "id": "R130",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 113,
+     "line_end": 113,
+     "statement": "**컨테이너 노드(디렉토리·워크스페이스)에 대한 ACL 항목 회수는 L2 다.** 문서 대상 회수는 L1 을 유지한다"
+    },
+    {
+     "id": "R131",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 114,
+     "line_end": 114,
+     "statement": "**디렉토리에 대한 `상속 끊기` 는 L3 다.** 타이핑 토큰은 **영향 건수**로 한다. **워크스페이스는 대상이 아니다** — R35-a 로 상속의 시작점이라 끊을 상위가 없고 토글 자체를 렌더하지 않는다"
+    },
+    {
+     "id": "R133",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 116,
+     "line_end": 116,
+     "statement": "**복사의 확인 등급은 대상 유형과 무관하게 언제나 L2 다** — 문서 단건 복사도 L2. **G17 종결**"
+    },
+    {
+     "id": "R133-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 117,
+     "line_end": 117,
+     "statement": "**조건부로 두지 않는다** — R123(이동)처럼 수치 변화로 가르지 않고 **무조건 L2** 다"
+    },
+    {
+     "id": "R134",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 118,
+     "line_end": 118,
+     "statement": "**컨테이너 항목 회수 시 하위 문서 첨부의 개수를 표시하지 않는다.** 대신 **조건 없는 고정 문구 1줄**을 둔다 — \"이 폴더 안 문서의 첨부도 함께 접근할 수 없게 됩니다\"(R66). **G18 종결**"
+    },
+    {
+     "id": "R134-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 119,
+     "line_end": 119,
+     "statement": "**등재 사유 정정 — R126-a 는 첨부에 이식된다.** G18 초판이 \"첨부 집합은 트리 구조로 정해지지 않아 요청자마다 다른 수가 나온다\"고 적었으나 **그 전제는 거짓**이다"
+    },
+    {
+     "id": "R134-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 120,
+     "line_end": 120,
+     "statement": "대가는 수용한다 — 끊기는 모든 첨부는 **`영향 하위 N개` 안의 문서가 소유**하므로 **범위는 정확히 고지되고 밀도만 모른다.** 회수는 fail-closed 방향이고 재부여로 복구된다"
+    },
+    {
+     "id": "R135",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 121,
+     "line_end": 121,
+     "statement": "**`부모 권한 가져오기`(R14-a)의 필요 레벨은 `관리` 다.** `편집` 에게는 **노출하지 않는다.** 확인 등급은 **L2**. **G19 종결**"
+    },
+    {
+     "id": "R135-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 122,
+     "line_end": 122,
+     "statement": "**권한 상승 경로가 아니라는 점은 확인되었다** — 패널 3:0. `관리` 는 워크스페이스에만 부여되고(R36) 상방 게이트 보유자는 ACL 행으로 나타나지 않으며 워크스페이스에는 이 버튼이 없으므로(R35-a), **이 버튼이 만들 수 있는 최대 레벨은 `편집`** 이다. R70-a 의 \"자신의 레벨 이하만\"은 깨지지 않는다"
+    },
+    {
+     "id": "R135-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 123,
+     "line_end": 123,
+     "statement": "복사된 항목의 **`granted_by` 처분을 함께 규정한다** — 복사 항목은 **이 노드의 직접 항목**이 되므로 상위에서의 회수가 도달하지 않는다(R70-d)"
+    },
+    {
+     "id": "R136",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 124,
+     "line_end": 124,
+     "statement": "**워크스페이스 생성 시점의 부여도 L2 다** — 관리자 지정(R35-a)과 `default` 초기 권한(R111) **둘을 합쳐 확인 1개**를 둔다. **`[생성]` 버튼은 확인 관문이 아니다**(R122-c). **G20 종결**"
+    },
+    {
+     "id": "R136-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 125,
+     "line_end": 125,
+     "statement": "**`적용 하위`(R126)를 표시하지 않는다.** 생성 시점에는 항상 0 이라 **공허하다.** 대신 **R115-f 의 지연 고지**로 대체한다"
+    },
+    {
+     "id": "R136-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 126,
+     "line_end": 126,
+     "statement": "**`적용 하위 = 0` 은 등급을 낮추는 근거가 아니라 오히려 R115-a 둘째 축(효과의 잠재·지연)의 독립 근거다**"
+    },
+    {
+     "id": "R136-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 127,
+     "line_end": 127,
+     "statement": "**기존 장치는 확인을 대체하지 못한다** — R111-a(기본값 `없음`)는 **부주의**를 막고 확인은 **오판**을 막아 층이 다르다. R111-c(자유 가입 + `편집` 경고)는 ① **승인 모드**(사실상 전사)를 놓치고 ② **`보기` 를 포함하지 않아 R125-a 가 닫은 구멍이 그대로 남으며** ③ 소재가 폼 안이라 R122-c 문면상 **관문 자격이 없다**"
+    },
+    {
+     "id": "R136-d",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 128,
+     "line_end": 128,
+     "statement": "**같은 규칙을 설치 마법사의 초기 권한(R83)에도 적용한다** — 범위가 **인스턴스 전원**이라 더 넓다"
+    },
+    {
+     "id": "R142",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 163,
+     "line_end": 163,
+     "statement": "**휴지통 일괄 영구 삭제는 Phase 1 에 도입하지 않는다.** R115-b 의 `일괄 L3` 배정은 **삭제하지 않고 \"미도입 · 도입 시 발효\" 를 문면에 명시**해 조건부 규범으로 보존한다. **`G9` 의 첫째 갈래 종결**"
+    },
+    {
+     "id": "R142-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 164,
+     "line_end": 164,
+     "statement": "**주체 다건 일괄 회수를 허용한다** — R43-1 의 술어를 `IN (…)` 으로 넓히는 것이며 새 조작 종류가 아니다. 적용 범위는 R101-f 를 그대로 따르고, 시스템 그룹이 섞이면 R119·R119-a 의 안내가 **주체별로 각각** 표시된다(묶음 확인으로 접히지 않는다). **`G9` 의 둘째 갈래 종결**"
+    },
+    {
+     "id": "R142-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 165,
+     "line_end": 165,
+     "statement": "**일괄 조작의 확인은 묶음 1회다.** 항목 단위로 받지 않는다"
+    },
+    {
+     "id": "R142-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 166,
+     "line_end": 166,
+     "statement": "**일괄 회수 L3 의 타이핑 토큰은 영향 건수(회수될 `acl_entry` 항목 수)로 한다.** 건수는 R116 으로 확인 시점 재조회하고 R116-a 로 잠기면 토큰도 갱신된다. **`0건` 은 L2 로 강등하는 것이 아니라 실행 자체를 막는다**"
+    },
+    {
+     "id": "R142-d",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 167,
+     "line_end": 167,
+     "statement": "**오프보딩(R101-b) ①②③단계는 다건화하지 않는다.** 다건 회수는 **④단계에 한정**하며, 20명 오프보딩은 `①②③ × 20` + `④ 일괄 1회` 다"
+    },
+    {
+     "id": "R142-e",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 168,
+     "line_end": 168,
+     "statement": "**`G9` 등재 사유의 인과 서술을 정정한다** — *\"L3 20회를 피하려고 오프보딩을 미루면 안전 장치가 자기 목적을 무너뜨린다\"* 는 **심각도가 과장됐다.** ④단계를 미뤄 남는 것은 **즉시 노출이 아니라 휴면 잔존 권한**이다"
+    },
+    {
+     "id": "R142-f",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 169,
+     "line_end": 169,
+     "statement": "**`G26` ③ 과 `G9` 는 같은 자리가 아니다 — 두 결정은 독립이다.** `G9` 를 \"일괄 조작 없음\" 으로 닫아도 다건 감사 입도 문제는 그대로 남으므로 **R141 계열은 `G9` 와 무관하게 강제된다**"
+    },
+    {
+     "id": "R116",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 170,
+     "line_end": 170,
+     "statement": "**확인 다이얼로그를 열 때 표시할 수치를 재조회하고, 직전 값과 다르면 실행을 잠그고 갱신된 값을 보여준다**"
+    },
+    {
+     "id": "R116-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 171,
+     "line_end": 171,
+     "statement": "재조회로 수치가 바뀌어 실행이 잠기면 **L3 의 타이핑 토큰도 갱신된 수치로 바뀐다.** 잠금 해제 후에는 새 수치를 입력해야 한다"
+    }
+   ],
+   "excerpt_path": "docs/analysis/kiwi-wave-master-2026-08-20.doculight2.phase1-implementation/design-baseline/wave-8.md"
+  },
+  {
+   "wave": "wave-9",
+   "order": 9,
+   "name": "감사 기록·재조정 대기열·1.0 컷오버 (Phase 1 종료 관문)",
+   "goal": "무엇이 있었는가를 나중에 답할 수 있게 된다 — 세 기준으로 판정하는 기록 대상, 불변 감사 행과 그 스키마·행위자·스코프·마스킹, 다건 조작의 입도, 뷰어의 필터와 묶음 접기. 성질이 정반대인 재조정 대기열이 별개 저장소로 서고, 기동 시·주기 재조정이 그것을 채운다. 마지막으로 1.0 을 읽기 전용으로 동결하고 콘텐츠·인덱스·계정을 2.0 으로 옮긴다.",
+   "source_file": "docs/spec/00.decision-log.md",
+   "heading_path": "§2 확정 결정 — 감사 기록·재조정 대기열·1.0 컷오버 (Phase 1 종료 관문)",
+   "line_start": 129,
+   "line_end": 506,
+   "requirement_ids": [
+    "CON-AUDIT-001",
+    "DR-AUDIT-001",
+    "DR-AUDIT-002",
+    "DR-AUDIT-003",
+    "IR-AUDIT-001",
+    "IR-AUDIT-002",
+    "IR-AUDIT-003",
+    "MIG-AUTH-001",
+    "MIG-AUTH-002",
+    "OBS-ACL-001",
+    "OBS-AUDIT-001",
+    "OBS-AUDIT-002",
+    "OBS-AUDIT-003",
+    "OBS-AUDIT-004",
+    "OBS-AUDIT-005",
+    "OBS-AUDIT-006",
+    "OBS-AUDIT-007",
+    "OBS-AUDIT-008",
+    "OBS-AUDIT-009",
+    "OBS-AUDIT-010",
+    "OBS-AUDIT-011",
+    "REL-AUDIT-001",
+    "REL-AUDIT-002",
+    "REL-STORAGE-001",
+    "REL-STORAGE-002",
+    "SEC-AUDIT-001",
+    "SEC-AUDIT-002",
+    "SEC-AUDIT-003",
+    "SEC-AUDIT-004",
+    "SEC-AUDIT-005",
+    "SEC-AUDIT-006",
+    "SEC-AUDIT-007",
+    "SEC-AUDIT-008",
+    "SEC-AUDIT-009",
+    "SEC-AUDIT-010",
+    "SEC-AUDIT-011"
+   ],
+   "existing_modules": [
+    "백엔드 도메인 패키지",
+    "프론트엔드 SPA 패키지",
+    "SQLite 스키마",
+    "MCP 서버 패키지"
+   ],
+   "design_items": [
+    {
+     "id": "R137",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 129,
+     "line_end": 129,
+     "statement": "**감사 로그의 기록 대상은 열거가 아니라 기준으로 정한다.** 다음 중 하나라도 참이면 기록한다 — **① 노드의 존재·위치·본문이 바뀐다 ② 누가 그 노드에 도달하는가가 바뀐다 ③ R71 상방 게이트로 판정을 우회해 접근한다.** **순수 읽기는 제외**한다(R84 의 볼륨 근거)"
+    },
+    {
+     "id": "R137-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 130,
+     "line_end": 130,
+     "statement": "**제외축 — 다른 화면이 행위자·시각까지 영구히 재현하면 기록하지 않는다. `기간 한정 재현은 재현이 아니다`**"
+    },
+    {
+     "id": "R137-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 131,
+     "line_end": 131,
+     "statement": "**R84 의 현행 8개 열거는 규범이 아니라 예시로 강등한다.** 그 8개는 R137 기준으로 **전부 재도출된다**"
+    },
+    {
+     "id": "R137-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 132,
+     "line_end": 132,
+     "statement": "**누락분을 기록 대상에 추가한다** — **생성 · 복사 · 이동 · 삭제(휴지통 이동) · 휴지통 복구 · 업로드 · 바이너리 새 버전 · 워크스페이스 생성**"
+    },
+    {
+     "id": "R137-d",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 133,
+     "line_end": 133,
+     "statement": "**`삭제`(휴지통 이동)를 기록하지 않는 것은 의도가 아니라 누락이다. `휴지통 복구` 와 짝으로 기록한다**"
+    },
+    {
+     "id": "R137-e",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 134,
+     "line_end": 134,
+     "statement": "**인스턴스 설정 변경을 기록한다** — 특히 **감사 로그 보존 기간(R84-a)과 휴지통 보존 기간(R86)의 축소**"
+    },
+    {
+     "id": "R137-f",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 135,
+     "line_end": 135,
+     "statement": "**`04` 감사 로그 뷰어의 `조작` 필터는 R84 열거를 하드코딩하지 않고 실제 기록된 조작의 distinct 집합에서 파생시킨다**"
+    },
+    {
+     "id": "R137-g",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 136,
+     "line_end": 136,
+     "statement": "**~~G22~~ 등재 사유 정정 — \"복제된 콘텐츠는 추적 대상도 아니다\"는 부분적으로 거짓이었다**"
+    },
+    {
+     "id": "R137-h",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 137,
+     "line_end": 137,
+     "statement": "**인지된 잔여 위험 — R137 을 전부 반영해도 반출 경로가 완결되지 않는다.** **R97 이 \"경계를 넘는 유일한 수단\"인 것은 노드 조작 축에서만 참**이고, **R48 다운로드 · R66-b 첨부 다운로드 · R22·R58-b MCP 읽기**가 같은 결과를 내면서 설계상 무기록이다"
+    },
+    {
+     "id": "R138",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 138,
+     "line_end": 138,
+     "statement": "**경계를 넘는 복사는 감사 행이 2행이다** — **원본 노드 자리에 1행, 사본 노드 자리에 1행.** **〔행 수의 정본은 R140-d 다 — 워크스페이스 내부 복사는 1행이므로, 이 조항의 초판 문면이 쓴 `경계를 넘는 복사도` 라는 어법이 함의하던 \"복사는 원래 2행\" 이라는 기저값은 거짓이다〕** 각 행은 그 행의 **대상 노드가 속한 워크스페이스**의 감사 로그에 속하고, 그 워크스페이스 `관리` 보유자와 R71 상방 게이트 보유자가 읽는다"
+    },
+    {
+     "id": "R138-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 139,
+     "line_end": 139,
+     "statement": "**감사 행의 노드 참조는 노드 ID(R76)로 저장하고, 열람 시점에 그 행을 조회하는 워크스페이스에 속한 노드일 때만 경로로 해석한다.** 그렇지 않으면 **모든 외부 노드에 대해 동일한 고정 문구**(`이 워크스페이스 밖`)로 표시한다"
+    },
+    {
+     "id": "R138-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 140,
+     "line_end": 140,
+     "statement": "**그 고정 문구는 상대 워크스페이스에 따라 달라지는 값을 어떤 형태로도 포함하지 않는다** — 이름·해시 ID·가명·연번·색상·툴팁 전부"
+    },
+    {
+     "id": "R138-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 141,
+     "line_end": 141,
+     "statement": "**외부로 나간 건수의 집계·필터·배지를 만들지 않는다**"
+    },
+    {
+     "id": "R138-d",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 142,
+     "line_end": 142,
+     "statement": "**복사의 `조작` 값은 경계를 넘는지와 무관하게 언제나 `복사` 하나다.** `반출`·`외부 복사` 등 경계 여부를 드러내는 별도 조작명을 만들지 않는다"
+    },
+    {
+     "id": "R138-e",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 143,
+     "line_end": 143,
+     "statement": "**반출 목적지의 식별은 슈퍼유저(R71) 경유 조사가 유일한 경로다.** 워크스페이스 `관리` 에게 목적지를 노출하는 우회 화면·내보내기·API 를 만들지 않는다"
+    },
+    {
+     "id": "R138-f",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 144,
+     "line_end": 144,
+     "statement": "**복사의 행위자는 두 행 모두에 기록한다.** 행위자가 원본 워크스페이스에 `보기` 만 가진 경우와 R71 로 도달한 경우에도 예외를 두지 않는다"
+    },
+    {
+     "id": "R139",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 145,
+     "line_end": 145,
+     "statement": "**재조정(R77 계열·R40-d)이 지목하는 `감사 목록` 은 `audit_log` 와 별개인 `재조정 대기열` 이다** — `reconciliation_finding(유형, 참조 감사 행 1..N, 해소 감사 행)`. **일어난 일의 기록은 `audit_log` 에만 두고, 대기열은 유형과 감사 행 참조만 갖는다** — **시각 · 대상 노드 · 행위자 · 해소 시각 · 해소자를 자기 칸으로 갖지 않고 전부 참조 감사 행에서 읽는다. `미해소` 는 `해소 감사 행` 이 비어 있는 상태이지 별도 칸이 아니다**"
+    },
+    {
+     "id": "R139-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 146,
+     "line_end": 146,
+     "statement": "**R77 이 만든 신규 노드는 `audit_log` 에 `생성` 1행, 대기열에 그 행을 가리키는 항목 1건이다.** 사실은 두 번 적히지 않는다"
+    },
+    {
+     "id": "R139-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 147,
+     "line_end": 147,
+     "statement": "**사람이 아닌 주체의 `행위자` 는 하위체계별 예약 주체 행이다** — `system:reconciler` · `system:retention` 등. 로그인·상태 전환·삭제가 불가능하며, **`is_system` 판정은 단일 지점에 두고 주체를 열거하는 모든 화면이 그것을 경유한다**"
+    },
+    {
+     "id": "R139-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 148,
+     "line_end": 148,
+     "statement": "**대기열 항목의 해소(R77-a 수동 연결 포함)는 기존 감사 행을 수정하지 않고 해소 행위를 새 감사 행으로 추가하는 방식으로만 수행한다.** 원 감사 행은 R84-a 대로 불변이다. **그 해소 감사 행이 곧 대기열 항목의 `해소 감사 행` 이므로 해소 시각·해소자를 대기열이 따로 갖지 않는다**(R139)"
+    },
+    {
+     "id": "R139-d",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 149,
+     "line_end": 149,
+     "statement": "**재조정 대기열 화면은 `워크스페이스 관리 › 감사 로그` 카테고리 안의 두 번째 화면**(패널 내부 전환)이며, **R24-a 의 구역·카테고리 구성·표시 권한을 바꾸지 않는다.** 감사 로그 표에 섞지 않는다"
+    },
+    {
+     "id": "R139-e",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 150,
+     "line_end": 150,
+     "statement": "**대기열 항목의 스코프는 감사 행과 같은 기준으로 정한다 — 그 기준의 정본은 `R141` 이다**(*\"특정 워크스페이스의 노드에 귀속되는가\"* · **기준 문면을 여기 다시 적지 않는다 — R124**). 귀속되지 않는 항목과 **워크스페이스 경계를 넘는 항목은 인스턴스 스코프로 격상해 슈퍼유저에게만** 보인다. **스코프는 항목이 참조하는 감사 행들의 대상 노드에서 파생한다** — 대기열에 워크스페이스 칸을 두지 않는다(R139)"
+    },
+    {
+     "id": "R139-f",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 151,
+     "line_end": 151,
+     "statement": "**R77-b 가 완화책으로 든 통지는 좌측 카테고리에 붙는 미해소 건수 배지로 구현한다.** 배지는 그 사용자가 볼 수 있는 스코프의 미해소 건수만 센다"
+    },
+    {
+     "id": "R139-g",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 152,
+     "line_end": 152,
+     "statement": "**한정어 없는 `감사 목록` 을 지시어로 쓰지 않는다.** 셋은 각자의 이름으로 부른다 — **`재조정 대기열`**(R77 계열·R40-d — 이 조항이 새로 준 이름) · **`상속 끊김 노드 감사 목록`**(R43-3 — **기존 이름 그대로**) · **`감사 로그`**(R84)"
+    },
+    {
+     "id": "R140",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 153,
+     "line_end": 153,
+     "statement": "**감사 행은 노드 하나에 귀속된다 — `대상` 은 단수를 유지한다.** 2-노드 조작을 위해 **`상대 노드`(nullable · 노드 ID)** 와 **`대상 역할`(`원본`\\"
+    },
+    {
+     "id": "R140-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 154,
+     "line_end": 154,
+     "statement": "**2-노드 조작은 `복사` 하나뿐이다.** 이동·삭제(휴지통 이동)·휴지통 복구는 **노드 ID 를 보존하는 1-노드 조작**이며 `이전값`·`이후값` 두 칸이 이미 담는다. **〔2026-08-18 정정 — `개명` 을 이 열거에서 뺀다〕** 초판은 `개명` 을 함께 열거했으나 **기록 여부 자체가 `G29` 로 열려 있어** 그 행의 존재를 전제할 수 없었다(R137-c 의 누락분 열거에도 `개명` 이 없다). **기록하기로 결정되면 이 조항의 1-노드 판정이 그대로 적용된다** — 판정 자체는 R76-a 로 이미 성립한다. **재조정 상관 실패는 사건이 2-노드이나 감사 행은 각각 1-노드**다"
+    },
+    {
+     "id": "R140-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 155,
+     "line_end": 155,
+     "statement": "**`상대 노드` 에 R138-a 마스킹을 그대로 적용한다** — 열람 워크스페이스 안의 노드일 때만 경로로 해석하고, 밖이면 동일 고정 문구다. **마스킹은 화면·API·내보내기 전부에 걸린다** — 감사 조회 API 가 원시 노드 ID 를 그대로 실어 보내면 마스킹이 무력해지고, 그 ID 는 **R94 가 확인시켜 주지 않기로 한 사실(그 노드가 실재한다)** 을 알려준다"
+    },
+    {
+     "id": "R140-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 156,
+     "line_end": 156,
+     "statement": "**`대상 역할` 을 `조작` 값에 밀어 넣지 않는다** — `복사(원본)`·`복사(사본)` 같은 값을 만들지 않는다. 그리고 `상대 노드`·`대상 역할` 은 **필터·정렬·배지·집계의 축이 되지 않는다**"
+    },
+    {
+     "id": "R140-d",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 157,
+     "line_end": 157,
+     "statement": "**복사의 감사 행 수 — 사본 노드 자리에 1행은 언제나(R137 기준 ①), 원본 노드 자리에 1행은 경계를 넘을 때만(R138 의 유출 감사 사유).** 따라서 워크스페이스 **내부 복사는 1행**, 경계를 넘는 복사는 **2행**이다"
+    },
+    {
+     "id": "R141",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 158,
+     "line_end": 158,
+     "statement": "**다건 조작의 감사는 그 조작이 실제로 바꾼 것마다 1행이다** — **노드를 바꾸는 조작(삭제·복사·이동)은 노드마다 1행, `acl_entry` 를 바꾸는 조작(부여·회수)은 항목마다 1행**이다. `1행 + 영향 건수` 를 쓰지 않는다. **그리고 감사 행의 스코프는 그 행의 대상이 귀속되는 워크스페이스에서 파생하며, 귀속되지 않는 행은 인스턴스 스코프가 되어 슈퍼유저만 읽는다.** **〔복사는 예외가 아니라 다른 조항이 얹힌 것이다 — 행 수의 정본은 R140-d 다〕** 원본 노드는 아무것도 바뀌지 않으므로 이 조항만으로는 행이 생기지 않는다. 경계를 넘을 때 원본 자리에 행이 생기는 근거는 **R138 의 유출 감사 사유**이지 이 조항이 아니다. **`G26` ③ 종결**"
+    },
+    {
+     "id": "R141-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 159,
+     "line_end": 159,
+     "statement": "**저장은 낱행, 표시는 묶음 접기다.** 뷰어는 한 번의 조작에서 나온 행들을 접힌 1줄로 보이고 펼치면 낱행을 보인다. **묶음은 표시 산물이지 기록이 아니므로 `조작` distinct 필터(R137-f)의 원천이 되지 않는다**"
+    },
+    {
+     "id": "R141-b",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 160,
+     "line_end": 160,
+     "statement": "**묶음 건수는 열람자가 볼 수 있는 스코프의 행만 센다.** 총계·분모·`이 밖에 N건 더` 를 표시하지 않는다"
+    },
+    {
+     "id": "R141-c",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 161,
+     "line_end": 161,
+     "statement": "**R50-c 로 동반 삭제되는 첨부는 감사 행을 만들지 않고 건수도 표시하지 않는다.** 소유 문서의 `영구 삭제` 1행이 전부다"
+    },
+    {
+     "id": "R141-d",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 162,
+     "line_end": 162,
+     "statement": "**디렉토리 삭제·복사의 서브트리는 하위 노드마다 1행이다**"
+    },
+    {
+     "id": "R20-a",
+     "heading_path": "§2.2 저장",
+     "line_start": 214,
+     "line_end": 214,
+     "statement": "서버에서 파일을 직접 이동/개명하는 경우, chokidar 로 rename 을 감지해 ACL 이 따라가게 한다"
+    },
+    {
+     "id": "R77",
+     "heading_path": "§2.2 저장",
+     "line_start": 218,
+     "line_end": 218,
+     "statement": "**기동 시 및 주기적으로 파일시스템과 DB 를 전체 재조정한다.** 미등록 파일 → 신규 노드 생성(상속 적용) + **재조정 대기열**(R139) 기재. 파일이 사라진 노드 → **ACL 즉시 삭제 금지**, tombstone(`orphaned_at`) 처리 후 **재조정 대기열**"
+    },
+    {
+     "id": "R77-a",
+     "heading_path": "§2.2 저장",
+     "line_start": 219,
+     "line_end": 219,
+     "statement": "chokidar 의 unlink+add 상관 판정은 **fail-closed** — 내용 해시가 동일하고 짧은 시간 창 안의 쌍만 동일 노드로 인정한다. **불확실하면 이식하지 않고** 신규 노드 + 구 노드 tombstone"
+    },
+    {
+     "id": "R77-b",
+     "heading_path": "§2.2 저장",
+     "line_start": 220,
+     "line_end": 220,
+     "statement": "잔여 위험 — 정지 중 이동된 문서가 재조정에서 신규 노드(상속)가 되면 **일시적으로 원래보다 넓은 권한으로 보일 수 있다.** **재조정 대기열** 통지가 완화책이다(R139-f — 카테고리 미해소 건수 배지)"
+    },
+    {
+     "id": "R71-b",
+     "heading_path": "§2.4 접근 제어 (ACL)",
+     "line_start": 273,
+     "line_end": 273,
+     "statement": "**관리 권한에 의한 열람은 감사 로그에 남긴다**"
+    },
+    {
+     "id": "R93",
+     "heading_path": "§2.14 초기 상태",
+     "line_start": 502,
+     "line_end": 502,
+     "statement": "**1.0 → 2.0 이행은 읽기 전용 컷오버**다: ① 이행 시점에 1.0 을 읽기 전용으로 동결 — R21 의 \"1.0 계속 운영\"은 **읽기 전용 참조**로 해석을 확정 ② 일회성 이행 도구가 1.0 `docsRoot` 전체를 기본 워크스페이스로 복사(비-md 포함) ③ 1.0 계정을 전원 `active` + default 그룹으로 이행(bcrypt 해시 호환) ④ 전역 API Key 클라이언트는 유예 없이 PAT 재발급 안내 ⑤ 벡터 인덱스는 2.0 에서 재구축"
+    },
+    {
+     "id": "R84",
+     "heading_path": "§2.14 초기 상태",
+     "line_start": 505,
+     "line_end": 505,
+     "statement": "**감사 로그** — `audit_log(시각, 행위자, 대상, 조작, 이전값, 이후값)` **〔스키마 정본은 R140 이다 — `상대 노드`·`대상 역할` 두 칸이 추가되었다〕** 에 다음을 기록한다: ACL 부여·회수, 상속 끊기/되돌리기, 그룹 멤버십 변경, PAT 발급·폐기, 계정 상태 전환, 영구 삭제, 아카이브·복원, **관리 권한에 의한 열람(R71-b)**"
+    },
+    {
+     "id": "R84-a",
+     "heading_path": "§2.14 초기 상태",
+     "line_start": 506,
+     "line_end": 506,
+     "statement": "감사 로그는 **수정·삭제 불가**이며 보존 기간은 설정에서 지정한다"
+    }
+   ],
+   "excerpt_path": "docs/analysis/kiwi-wave-master-2026-08-20.doculight2.phase1-implementation/design-baseline/wave-9.md"
+  }
+ ],
+ "integration_items": [
+  {
+   "id": "R101-b",
+   "heading_path": "§2.1 UI · 에디터",
+   "line_start": 44,
+   "line_end": 44,
+   "statement": "**오프보딩 흐름** — ① 계정 `suspended` 전환 ② PAT 무효화(R58-d 로 자동) ③ 그룹 멤버십 제거 ④ ACL 일괄 회수(R43-1) 를 **하나의 안내된 흐름**으로 제공한다. 각 단계는 R73 가드를 개별 통과해야 한다",
+   "spans": [
+    "wave-7",
+    "wave-8"
+   ]
+  },
+  {
+   "id": "R78",
+   "heading_path": "§2.2 저장",
+   "line_start": 221,
+   "line_end": 221,
+   "statement": "**`.trash` 와 `.versions` 의 각 항목에 사이드카 메타 파일을 함께 기록한다** — 휴지통: 원본 노드 ID·원본 경로·삭제 시각·삭제자 / 버전: 문서 노드 ID·버전 순번·생성 시각. DB 인덱스는 이 메타의 캐시다",
+   "spans": [
+    "wave-4",
+    "wave-5"
+   ]
+  },
+  {
+   "id": "R21",
+   "heading_path": "§2.10 코드베이스 전략",
+   "line_start": 419,
+   "line_end": 419,
+   "statement": "**개정 (2026-08-19)** — `DocuLight2.0` 을 새 리포로 두고, 1.0 에서는 **코드가 아니라 「제공하는 기능」을 물려받는다.** 백엔드·프론트엔드 **전부 신규 작성**한다. 1.0 은 동결하여 계속 운영 가능하게 둔다",
+   "spans": [
+    "wave-1",
+    "wave-3",
+    "wave-6"
+   ]
+  },
+  {
+   "id": "R21-a",
+   "heading_path": "§2.10 코드베이스 전략",
+   "line_start": 420,
+   "line_end": 420,
+   "statement": "**A-RAG(MCP 의미 검색)도 신규 작성한다.** 1.0 의 `smart_search` 를 옮기지 않는다",
+   "spans": [
+    "wave-1",
+    "wave-6"
+   ]
+  },
+  {
+   "id": "R21-b",
+   "heading_path": "§2.10 코드베이스 전략",
+   "line_start": 421,
+   "line_end": 421,
+   "statement": "**물려받는 「기능 명세」의 형태를 정한다** — MCP **도구 계약**(도구 이름 · 입력 인자와 기본값 · 출력 포맷 · 에러 코드)과 화면이 제공하던 **동작**이다. 소스·의존성·내부 구조는 물려받지 않는다",
+   "spans": [
+    "wave-1",
+    "wave-6"
+   ]
+  },
+  {
+   "id": "R58-d",
+   "heading_path": "§2.15 인증",
+   "line_start": 518,
+   "line_end": 518,
+   "statement": "계정이 `active` 가 아니게 되거나 삭제되면 **그 계정의 모든 PAT 는 즉시 무효**가 된다",
+   "spans": [
+    "wave-3",
+    "wave-8"
+   ]
+  }
+ ],
+ "out_of_scope": [
+  {
+   "heading": "R103 (§2.1 UI · 에디터)",
+   "reason": "Phase 2 조항이다 — 대응 요구사항 CON-ACL-005 이 전부 target=phase-2 다. 원장 R92 가 Phase 2 로 미룬 항목이며 이 run 의 범위(Phase 1)에 들지 않는다.",
+   "exclusion_class": "user-excluded",
+   "requirements": [
+    "CON-ACL-005"
+   ],
+   "requirement_targets": [
+    "phase-2"
+   ]
+  },
+  {
+   "heading": "R106-b (§2.1 UI · 에디터)",
+   "reason": "취소선 조항 — 폐기(R27·R44-a) 또는 종결(R106-b·R108-a). 원장 §1.1 이 새 논증의 근거로 인용하지 말라고 못박는다.",
+   "exclusion_class": "superseded"
+  },
+  {
+   "heading": "R108-a (§2.1 UI · 에디터)",
+   "reason": "취소선 조항 — 폐기(R27·R44-a) 또는 종결(R106-b·R108-a). 원장 §1.1 이 새 논증의 근거로 인용하지 말라고 못박는다.",
+   "exclusion_class": "superseded"
+  },
+  {
+   "heading": "R27 (§2.4 접근 제어 (ACL))",
+   "reason": "취소선 조항 — 폐기(R27·R44-a) 또는 종결(R106-b·R108-a). 원장 §1.1 이 새 논증의 근거로 인용하지 말라고 못박는다.",
+   "exclusion_class": "superseded"
+  },
+  {
+   "heading": "R17 (§2.6 범위 (Phase 구분))",
+   "reason": "Phase 2 조항이다 — 대응 요구사항 CON-EDITOR-003 이 전부 target=phase-2 다. 원장 R92 가 Phase 2 로 미룬 항목이며 이 run 의 범위(Phase 1)에 들지 않는다.",
+   "exclusion_class": "user-excluded",
+   "requirements": [
+    "CON-EDITOR-003"
+   ],
+   "requirement_targets": [
+    "phase-2"
+   ]
+  },
+  {
+   "heading": "R44-a (§2.12 파일 업로드 · 첨부)",
+   "reason": "취소선 조항 — 폐기(R27·R44-a) 또는 종결(R106-b·R108-a). 원장 §1.1 이 새 논증의 근거로 인용하지 말라고 못박는다.",
+   "exclusion_class": "superseded"
+  },
+  {
+   "heading": "R146 (§2.12 파일 업로드 · 첨부)",
+   "reason": "Phase 2 조항이다 — 대응 요구사항 FR-ATTACH-007 이 전부 target=phase-2 다. 원장 R92 가 Phase 2 로 미룬 항목이며 이 run 의 범위(Phase 1)에 들지 않는다.",
+   "exclusion_class": "user-excluded",
+   "requirements": [
+    "FR-ATTACH-007"
+   ],
+   "requirement_targets": [
+    "phase-2"
+   ]
+  },
+  {
+   "heading": "R147 (§2.12 파일 업로드 · 첨부)",
+   "reason": "Phase 2 조항이다 — 대응 요구사항 FR-ATTACH-008 이 전부 target=phase-2 다. 원장 R92 가 Phase 2 로 미룬 항목이며 이 run 의 범위(Phase 1)에 들지 않는다.",
+   "exclusion_class": "user-excluded",
+   "requirements": [
+    "FR-ATTACH-008"
+   ],
+   "requirement_targets": [
+    "phase-2"
+   ]
+  },
+  {
+   "heading": "R148 (§2.12 파일 업로드 · 첨부)",
+   "reason": "Phase 2 조항이다 — 대응 요구사항 FR-ATTACH-009 이 전부 target=phase-2 다. 원장 R92 가 Phase 2 로 미룬 항목이며 이 run 의 범위(Phase 1)에 들지 않는다.",
+   "exclusion_class": "user-excluded",
+   "requirements": [
+    "FR-ATTACH-009"
+   ],
+   "requirement_targets": [
+    "phase-2"
+   ]
+  },
+  {
+   "heading": "R148-a (§2.12 파일 업로드 · 첨부)",
+   "reason": "Phase 2 조항이다 — 대응 요구사항 FR-ATTACH-010 이 전부 target=phase-2 다. 원장 R92 가 Phase 2 로 미룬 항목이며 이 run 의 범위(Phase 1)에 들지 않는다.",
+   "exclusion_class": "user-excluded",
+   "requirements": [
+    "FR-ATTACH-010"
+   ],
+   "requirement_targets": [
+    "phase-2"
+   ]
+  },
+  {
+   "heading": "R148-b (§2.12 파일 업로드 · 첨부)",
+   "reason": "Phase 2 조항이다 — 대응 요구사항 FR-ATTACH-011 이 전부 target=phase-2 다. 원장 R92 가 Phase 2 로 미룬 항목이며 이 run 의 범위(Phase 1)에 들지 않는다.",
+   "exclusion_class": "user-excluded",
+   "requirements": [
+    "FR-ATTACH-011"
+   ],
+   "requirement_targets": [
+    "phase-2"
+   ]
+  },
+  {
+   "heading": "R148-c (§2.12 파일 업로드 · 첨부)",
+   "reason": "Phase 2 조항이다 — 대응 요구사항 SEC-ATTACH-004 이 전부 target=phase-2 다. 원장 R92 가 Phase 2 로 미룬 항목이며 이 run 의 범위(Phase 1)에 들지 않는다.",
+   "exclusion_class": "user-excluded",
+   "requirements": [
+    "SEC-ATTACH-004"
+   ],
+   "requirement_targets": [
+    "phase-2"
+   ]
+  },
+  {
+   "heading": "R54 (§2.13 삭제 · 아카이브)",
+   "reason": "Phase 2 조항이다 — 대응 요구사항 FR-WORKSPACE-007 이 전부 target=phase-2 다. 원장 R92 가 Phase 2 로 미룬 항목이며 이 run 의 범위(Phase 1)에 들지 않는다.",
+   "exclusion_class": "user-excluded",
+   "requirements": [
+    "FR-WORKSPACE-007"
+   ],
+   "requirement_targets": [
+    "phase-2"
+   ]
+  },
+  {
+   "heading": "R55 (§2.13 삭제 · 아카이브)",
+   "reason": "Phase 2 조항이다 — 대응 요구사항 FR-WORKSPACE-008 이 전부 target=phase-2 다. 원장 R92 가 Phase 2 로 미룬 항목이며 이 run 의 범위(Phase 1)에 들지 않는다.",
+   "exclusion_class": "user-excluded",
+   "requirements": [
+    "FR-WORKSPACE-008"
+   ],
+   "requirement_targets": [
+    "phase-2"
+   ]
+  },
+  {
+   "heading": "R55-a (§2.13 삭제 · 아카이브)",
+   "reason": "Phase 2 조항이다 — 대응 요구사항 FR-WORKSPACE-008 이 전부 target=phase-2 다. 원장 R92 가 Phase 2 로 미룬 항목이며 이 run 의 범위(Phase 1)에 들지 않는다.",
+   "exclusion_class": "user-excluded",
+   "requirements": [
+    "FR-WORKSPACE-008"
+   ],
+   "requirement_targets": [
+    "phase-2"
+   ]
+  }
+ ]
+}

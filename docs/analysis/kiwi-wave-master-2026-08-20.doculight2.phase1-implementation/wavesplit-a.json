@@ -1,0 +1,322 @@
+{
+  "author": "A",
+  "wave_count": 9,
+  "wave_count_rationale": "9 를 고른 근거는 셋이다. ① 저장소에 백엔드가 0줄이고 모노레포 골격조차 없으므로(루트 package.json 부재, .github 부재) 「판을 세우는 wave」와 「판 위에 짓는 wave」가 반드시 갈린다 — CON-ARCH-002 가 신규 작성을 못박아 1.0 에서 코드를 가져오는 지름길이 봉쇄되어 있다. ② 요구 250건이 11개 scope 에 걸쳐 있는데 scope 경계가 곧 wave 경계는 아니다. 실제 의존 절단면은 「영속 → 주체·판정 → 인증 → 마찰 → 화면 골격 → 본문 표면 → 노드 수명주기 → 찾기 표면 → 기록」 아홉 자리이며, 이보다 적게 자르면 한 wave 가 두 개 이상의 선행 조건을 동시에 기다리게 된다(예: 확인 등급과 관리 화면을 합치면 FR-CONFIRM-006 배정표가 아직 없는 조작을 참조한 채 화면부터 서게 된다). ③ 6~7 로 줄이려면 AUDIT 31건과 CONFIRM 33건 중 하나를 다른 축과 합쳐야 하는데 둘 다 「한 곳에 모아야 한다」가 조항 자체의 취지다 — CONFIRM 은 11.confirmation-grades.srs.md §1 이 *\"배정 기준이 조작마다 다시 발명되면 같은 파괴력의 조작이 화면마다 다른 마찰을 갖게 된다\"* 로 집중을 요구하고, AUDIT 은 OBS-AUDIT-003 이 열거가 아니라 기준으로 대상을 정해 전 조작을 한 번에 훑어야 성립한다. 상한 9 를 다 쓰는 편이 이 둘을 쪼개는 것보다 안전하다.",
+  "waves": [
+    {
+      "order": 1,
+      "id": "wave-1",
+      "name": "모노레포 골격 · 서버 기동 · 영속 기반",
+      "goal": "루트 워크스페이스와 CI 를 세우고, Node 프로세스 1개가 SPA 빌드 산출물을 서빙하며 기동한다. SQLite 스키마와 경로 독립 노드 ID 가 서고, 최초 기동이 기본 워크스페이스를 물리 레이아웃대로 만든다. 이 wave 가 끝나면 「데이터가 어디에 어떤 형태로 앉는가」가 확정되고 그 위에 아무것도 아직 올라가 있지 않다.",
+      "dependency_rationale": "선행 wave 가 없다. 이 wave 가 뒤 전부의 토대다 — DR-STORAGE-002(SQLite 단일 저장소) 없이는 wave-2 의 DR-ACL-001 부여 행을 앉힐 곳이 없고, DR-STORAGE-003(경로 독립 안정 ID) 없이는 wave-5 의 FR-SHELL-006 딥링크와 wave-9 의 SEC-AUDIT-002(감사 행의 노드 참조를 ID 로 저장) 가 모두 성립하지 않는다. FR-WORKSPACE-001(노드 계층에 워크스페이스를 둔다)은 wave-2 의 SEC-WORKSPACE-001(워크스페이스가 상속 체인의 루트)이 가리킬 대상 자체이므로 먼저 서야 한다. OPS-ARCH-001(Node 프로세스 1개가 빌드 산출물을 서빙)이 wave-3 이후 모든 화면의 배달 경로다.",
+      "requirement_ids": [
+        "CON-ARCH-001", "CON-ARCH-002", "CON-ARCH-003", "CON-ARCH-004", "CON-ARCH-005",
+        "CON-ARCH-007", "CON-ARCH-008", "CON-ARCH-009", "OPS-ARCH-001",
+        "DR-STORAGE-001", "DR-STORAGE-002", "DR-STORAGE-003",
+        "SEC-STORAGE-001", "SEC-STORAGE-004", "SEC-STORAGE-005", "SEC-STORAGE-006",
+        "OPS-STORAGE-001",
+        "CON-WORKSPACE-001", "DR-WORKSPACE-001", "DR-WORKSPACE-002",
+        "FR-WORKSPACE-001", "FR-WORKSPACE-004", "FR-WORKSPACE-005", "FR-WORKSPACE-006"
+      ],
+      "existing_modules": [
+        "packages/editor/package.json",
+        "packages/editor/vite.config.ts"
+      ],
+      "acceptance_criteria_covered": [],
+      "blocked_notes": [],
+      "verifiable_output": "① 루트에서 `npm test` 가 지금 수집되지 않는 `packages/editor/src/vendor/atomic-editor/__tests__/` 7파일을 함께 수집한다 — 실측 현재값은 `test/` 아래 2파일(mermaid-blocks · mermaid-render)뿐이고 vite.config.ts:15 의 `include: ['test/**/*.test.{ts,tsx}']` 가 나머지를 배제한다. ② CI 워크플로가 붙어 push 마다 그 테스트가 돈다. ③ 서버를 기동하면 단일 프로세스가 SPA 산출물을 서빙한다(OPS-ARCH-001). ④ 빈 docsRoot 로 기동하면 기본 워크스페이스와 사이드카가 생성된다(FR-WORKSPACE-006 · DR-WORKSPACE-002). ⑤ 점으로 시작하는 경로 요청과 DB 레코드 없는 경로 요청이 거부된다(SEC-STORAGE-004 · SEC-STORAGE-006). ⑥ 노드 ID 가 추측 불가한 랜덤임을 통계 단언으로 확인한다(SEC-STORAGE-001). ⑦ 대소문자만 다른 동명이 충돌로 판정된다(FR-WORKSPACE-005)."
+    },
+    {
+      "order": 2,
+      "id": "wave-2",
+      "name": "주체 모델과 ACL 판정 엔진 (헤드리스)",
+      "goal": "사용자·그룹·부여 항목의 도메인 모델과 유효 권한 계산기가 선다. 상속·가산·상속 끊기·상방 게이트·완전 숨김이 화면 없이 순수 함수와 API 수준에서 동작하고 통합 테스트로 검증된다. 이 wave 가 끝나면 「이 주체가 이 노드에 무엇을 할 수 있는가」에 서버가 답할 수 있다.",
+      "dependency_rationale": "wave-1 에 의존한다 — DR-ACL-001 의 부여 행과 DR-PRINCIPAL-002 의 그룹 멤버십이 DR-STORAGE-002 가 세운 SQLite 위에 앉고, SEC-ACL-004(권한 없는 노드의 트리 숨김)·SEC-ACL-005(pass-through 조상)가 판정하는 대상이 FR-WORKSPACE-001 이 만든 노드 계층이다. 인증(wave-3)보다 앞서는 이유는 방향이 한쪽이기 때문이다 — SEC-AUTH-017(설치 마법사에서 기본 워크스페이스의 default 그룹 초기 권한을 고른다)과 SEC-AUTH-016(슈퍼유저 그룹 active 멤버 0 금지)은 부여 행과 그룹 모델이 이미 있어야 쓸 수 있는데, 반대로 CON-ACL-001~004 와 SEC-ACL-001~011 은 로그인 없이도 전부 계산 가능하다. SEC-AUTH-008(PAT 스코프와 실시간 유효 권한의 교집합)도 이 wave 의 계산기를 한쪽 항으로 받는다.",
+      "requirement_ids": [
+        "CON-PRINCIPAL-001", "CON-PRINCIPAL-002", "CON-PRINCIPAL-003", "CON-PRINCIPAL-005", "CON-PRINCIPAL-007",
+        "DR-PRINCIPAL-001", "DR-PRINCIPAL-002", "SEC-PRINCIPAL-001",
+        "CON-ACL-001", "CON-ACL-002", "CON-ACL-003", "CON-ACL-004", "DR-ACL-001",
+        "SEC-ACL-001", "SEC-ACL-002", "SEC-ACL-003", "SEC-ACL-004", "SEC-ACL-005", "SEC-ACL-006",
+        "SEC-ACL-008", "SEC-ACL-009", "SEC-ACL-010", "SEC-ACL-011",
+        "SEC-WORKSPACE-001", "SEC-WORKSPACE-002", "SEC-WORKSPACE-003"
+      ],
+      "existing_modules": [],
+      "acceptance_criteria_covered": [],
+      "blocked_notes": [],
+      "verifiable_output": "유효 권한 계산기에 대한 통합 테스트 — ① 상속·가산이 조상 체인을 따라 합집합으로 넓어지고 거부 규칙이 존재하지 않음(SEC-ACL-003 · CON-ACL-002) ② 상속 끊기가 유일한 좁히기 수단(SEC-ACL-003) ③ 권한 없는 노드의 응답이 존재하지 않는 노드와 바이트 단위로 동일하고 단일 코드 경로를 지남(SEC-ACL-006) ④ 접근 가능한 자손을 가진 조상이 이름만 노출되고 그 pass-through 값이 저장되지 않음(SEC-ACL-005 · CON-ACL-004) ⑤ 슈퍼유저·워크스페이스 관리 레벨이 판정을 우회함(SEC-ACL-008) ⑥ 슈퍼유저 판정이 그룹 소속 하나로만 이뤄지고 계정 레코드에 등급 컬럼이 없음(DR-PRINCIPAL-001 · CON-PRINCIPAL-001) ⑦ 관리 레벨을 디렉토리·문서에 부여하려는 시도가 거부됨(SEC-WORKSPACE-002)."
+    },
+    {
+      "order": 3,
+      "id": "wave-3",
+      "name": "인증 · 설치 마법사 · PAT",
+      "goal": "빈 인스턴스가 설치 마법사를 강제하고 최초 슈퍼유저를 만든다. 그 뒤 로그인·세션·계정 4상태 게이트·가입 모드 3종·PAT 발급과 무효화가 동작한다. 이 wave 가 끝나면 모든 요청에 「누가」가 붙고, 전역 API Key 는 존재하지 않는다.",
+      "dependency_rationale": "wave-2 에 의존한다 — SEC-AUTH-016(슈퍼유저 그룹의 active 멤버 수를 0 으로 만드는 조작 거부)은 DR-PRINCIPAL-001 의 그룹 소속 판정 위에서만 성립하고, SEC-AUTH-017(설치 마법사에서 기본 워크스페이스의 default 초기 권한 선택)은 DR-ACL-001 부여 행에 쓴다. SEC-AUTH-004(default 자동 소속이 active 전환 시점)는 CON-PRINCIPAL-002 의 시스템 그룹 정의를 전제한다. SEC-AUTH-008 은 wave-2 계산기와의 교집합으로 정의된다. wave-1 에도 의존한다 — SEC-AUTH-010 의 설치 강제 대상이 FR-WORKSPACE-006 이 만든 인스턴스이고, SEC-AUTH-011 의 허용목록 4경로 차단이 OPS-ARCH-001 서빙 경로 위에 걸린다.",
+      "requirement_ids": [
+        "FR-AUTH-001", "FR-AUTH-002", "FR-AUTH-003", "FR-AUTH-004", "FR-AUTH-005",
+        "IR-AUTH-001", "IR-AUTH-002",
+        "SEC-AUTH-001", "SEC-AUTH-002", "SEC-AUTH-003", "SEC-AUTH-004", "SEC-AUTH-005",
+        "SEC-AUTH-006", "SEC-AUTH-007", "SEC-AUTH-008", "SEC-AUTH-009", "SEC-AUTH-010",
+        "SEC-AUTH-011", "SEC-AUTH-012", "SEC-AUTH-013", "SEC-AUTH-014", "SEC-AUTH-015",
+        "SEC-AUTH-016", "SEC-AUTH-017", "SEC-AUTH-018", "SEC-AUTH-019"
+      ],
+      "existing_modules": [],
+      "acceptance_criteria_covered": [9, 13],
+      "blocked_notes": [
+        {
+          "id": "FR-AUTH-003",
+          "blocker": "G10 — 사용자 스키마가 미정이다. 이메일 필수 여부·표시 이름 규칙·본인이 자기 표시 이름을 바꿀 수 있는가가 어느 조항에도 없어, 슈퍼유저 직접 등록 폼이 무엇을 입력받고 만든 계정이 생성 직후 어느 상태인지가 닫히지 않는다(09.auth.srs.md §3)."
+        },
+        {
+          "id": "SEC-AUTH-018",
+          "blocker": "G33 ①④ — 비밀번호 변경이 그 계정의 PAT 를 무효화하는지, 현재 비밀번호 재입력을 요구하는지가 없다. SEC-AUTH-009 는 active 아님만 무효 사유로 들고 자격증명 변경을 덮지 않는다. 비밀번호 길이·복잡도 규칙도 어느 요구도 소유하지 않는다(09.auth.srs.md §2 Out of Scope)."
+        },
+        {
+          "id": "SEC-AUTH-019",
+          "blocker": "G33 ②③ — 로그아웃이 쿠키만 지우는지 서버 측 세션을 무효화하는지, 다른 기기의 세션까지 끊는지가 없다. 부수로 로그인 세션의 수명·만료 규정 자체가 원장에 없다."
+        }
+      ],
+      "verifiable_output": "통합 테스트 — ① 슈퍼유저 0명 상태로 기동하면 허용목록 4경로 외 모든 요청이 설치 화면으로 돌려지고 나머지는 차단된다(SEC-AUTH-010 · SEC-AUTH-011). ② 콘솔 토큰 없이 설치 커밋 엔드포인트를 직접 호출하면 거부된다(SEC-AUTH-015). ③ 재기동이 이전 토큰을 무효화하고 새 값을 낸다(SEC-AUTH-014). ④ active 외 상태 계정은 로그인·토큰 인증 단계에서 차단되고 상태별 안내 문구가 갈린다(SEC-AUTH-003 · FR-AUTH-001). ⑤ 전역 API Key 로는 어떤 요청도 성립하지 않고 PAT 는 해시로만 저장되며 평문이 발급 시 1회만 나온다(SEC-AUTH-005 · SEC-AUTH-006) — 수용 기준 9 의 후반부. ⑥ 계정이 active 가 아니게 되는 순간 그 계정의 PAT 가 즉시 무효가 된다(SEC-AUTH-009). ⑦ 설치 화면 강제는 수용 기준 13 의 후반부를 닫는다."
+    },
+    {
+      "order": 4,
+      "id": "wave-4",
+      "name": "확인 등급 체계 (마찰 레지스트리와 다이얼로그)",
+      "goal": "L1·L2·L3 세 단계와 배정 기준, 조작별 등급 배정표, 확인 화면이 정보를 새게 하지 않도록 막는 제약이 하나의 레지스트리와 하나의 공용 다이얼로그로 선다. 이 wave 가 끝나면 뒤 wave 들이 파괴적 조작을 만들 때 마찰을 새로 발명하지 않고 이 레지스트리에 조작 키를 물어본다.",
+      "dependency_rationale": "wave-1(SPA 스캐폴드와 CON-ARCH-004 모달·팝오버 부품)에 의존하고, 배정표가 가리키는 조작 개념은 wave-2 가 이미 정의했다 — FR-CONFIRM-011(넓히기의 등급은 주체 명시성과 대상 노드 범위로 정한다)·FR-CONFIRM-015(상속 끊기)·FR-CONFIRM-018(컨테이너 권한 항목 회수)이 모두 SEC-ACL-003·SEC-ACL-009 가 정의한 조작을 참조한다. 조작 구현(wave-5·wave-7)보다 **앞에** 두는 것이 이 순서의 핵심이다 — FR-ACL-003(주체 단위 일괄 회수)은 FR-CONFIRM-022(L3 토큰이 영향 건수이고 0건은 실행을 막는다) 없이는 만들 수 없고, FR-STORAGE-007 보존 기간 축소는 FR-CONFIRM-007 없이 만들 수 없다. 뒤로 미루면 wave-5·wave-7 이 각자 임시 확인 UI 를 만들고 나중에 전부 뜯어야 한다.",
+      "requirement_ids": [
+        "FR-CONFIRM-001", "FR-CONFIRM-002", "FR-CONFIRM-003", "FR-CONFIRM-004", "FR-CONFIRM-005",
+        "FR-CONFIRM-006", "FR-CONFIRM-007", "FR-CONFIRM-008", "FR-CONFIRM-009", "FR-CONFIRM-010",
+        "FR-CONFIRM-011", "FR-CONFIRM-012", "FR-CONFIRM-013", "FR-CONFIRM-014", "FR-CONFIRM-015",
+        "FR-CONFIRM-016", "FR-CONFIRM-017", "FR-CONFIRM-018", "FR-CONFIRM-019", "FR-CONFIRM-020",
+        "FR-CONFIRM-021", "FR-CONFIRM-022", "FR-CONFIRM-023",
+        "CON-CONFIRM-001", "DR-CONFIRM-001", "IR-CONFIRM-001",
+        "SEC-CONFIRM-001", "SEC-CONFIRM-002", "SEC-CONFIRM-003", "SEC-CONFIRM-004",
+        "SEC-CONFIRM-005", "SEC-CONFIRM-006", "SEC-CONFIRM-007"
+      ],
+      "existing_modules": [],
+      "acceptance_criteria_covered": [],
+      "blocked_notes": [],
+      "verifiable_output": "① 등급 레지스트리에 대한 표 구동 단위 테스트 — 조작 키를 넣으면 배정표(FR-CONFIRM-006)와 배정 기준(FR-CONFIRM-002)이 정한 등급이 나오고, 요구사항의 직접 지정이 기준을 이긴다(FR-CONFIRM-003). ② 공용 다이얼로그 컴포넌트 테스트 — 열 때 수치를 재조회하고 다르면 실행 버튼이 잠긴다(FR-CONFIRM-004), L3 토큰이 영향 건수이고 0건이면 실행이 막힌다(FR-CONFIRM-022), 넓히기 L1 토스트의 버튼 라벨이 「회수」다(FR-CONFIRM-014). ③ 누출 방지 단언 — 분모·미도달 건수·첨부 개수가 어떤 확인 화면에도 렌더되지 않고(SEC-CONFIRM-003 · SEC-CONFIRM-006), 상속 끊김 고지가 끊긴 노드 유무와 무관하게 항상 나온다(SEC-CONFIRM-004). ④ 조작 입력 폼의 [생성]·[이동] 버튼이 확인 관문으로 카운트되지 않음(FR-CONFIRM-005). 주의 — FR-CONFIRM-004 의 재조회 대상 API 는 wave-5 의 IR-ACL-001 이 낼 값이므로 이 wave 에서는 스텁으로 계약만 고정한다."
+    },
+    {
+      "order": 5,
+      "id": "wave-5",
+      "name": "셸 골격과 설정 모달 관리 표면",
+      "goal": "인증 후 화면의 골격 — 좌·우 사이드바, 워크스페이스 트리, 상단 문서 탭, 딥링크, 설정 모달 — 이 서고, 그 모달 안에 사용자·그룹 관리와 오프보딩, 권한 감사 화면이 들어간다. 이 wave 가 끝나면 두 계정으로 로그인해 상속·가산과 완전 숨김을 트리에서 눈으로 확인할 수 있고, 부여한 권한을 화면에서 회수할 수 있다.",
+      "dependency_rationale": "wave-3 에 의존한다 — 08.app-shell.srs.md §3 이 *\"이 scope 의 규정은 인증 후 화면을 전제한다. 인증 전에는 셸 자체가 없다\"* 로 못박고, IR-SHELL-002 의 카테고리별 표시 권한이 SEC-AUTH-003 의 계정 상태와 DR-PRINCIPAL-001 의 슈퍼유저 판정을 읽는다. wave-2 에 의존한다 — 트리가 SEC-ACL-004·SEC-ACL-005 의 판정 결과를 그리는 표면이고, FR-ACL-004(유효 권한 시뮬레이션)는 wave-2 계산기를 화면에 노출한 것에 지나지 않는다. wave-4 에 의존한다 — FR-ACL-003 일괄 회수가 FR-CONFIRM-022 의 L3 토큰을, FR-PRINCIPAL-008(비활성 계정 부여)이 확인 1단계를, FR-PRINCIPAL-011(시스템 그룹 일괄 회수)이 배정 등급을 각각 요구한다. CON-SHELL-001(관리 기능 진입점은 설정 모달 하나)이 골격과 관리 화면을 같은 wave 에 묶는 근거다 — 진입점과 그 안의 내용이 갈리면 CON-SHELL-001 을 검증할 대상이 두 wave 에 흩어진다.",
+      "requirement_ids": [
+        "CON-SHELL-001", "CON-SHELL-002", "DR-SHELL-001",
+        "FR-SHELL-001", "FR-SHELL-002", "FR-SHELL-003", "FR-SHELL-004", "FR-SHELL-005",
+        "FR-SHELL-006", "FR-SHELL-012",
+        "IR-SHELL-001", "IR-SHELL-002", "IR-SHELL-003",
+        "FR-WORKSPACE-003",
+        "CON-EDITOR-004",
+        "CON-PRINCIPAL-004", "CON-PRINCIPAL-006",
+        "FR-PRINCIPAL-001", "FR-PRINCIPAL-002", "FR-PRINCIPAL-003", "FR-PRINCIPAL-004",
+        "FR-PRINCIPAL-005", "FR-PRINCIPAL-006", "FR-PRINCIPAL-007", "FR-PRINCIPAL-008",
+        "FR-PRINCIPAL-009", "FR-PRINCIPAL-010", "FR-PRINCIPAL-011",
+        "SEC-PRINCIPAL-002", "SEC-PRINCIPAL-003",
+        "FR-ACL-003", "FR-ACL-004", "FR-ACL-005",
+        "IR-ACL-001", "IR-ACL-002", "IR-ACL-003",
+        "OBS-ACL-001", "SEC-ACL-015"
+      ],
+      "existing_modules": [
+        "packages/editor (공개 API 소비만 — src 를 수정하지 않고 에디터 컴포넌트를 본문 슬롯에 마운트한다)"
+      ],
+      "acceptance_criteria_covered": [4, 9],
+      "blocked_notes": [
+        {
+          "id": "IR-SHELL-002",
+          "blocker": "G8 — `에디터`·`외모` 카테고리의 개별 항목이 정의되어 있지 않다(R24-a 는 카테고리 이름만 확정했다). 함께 G10 — 사용자 스키마가 미정이라 `계정` 카테고리의 표시 이름 자리가 닫히지 않는다. 카테고리 전량 목록이 정본이어야 하는 요구인데 그 목록 자체가 미완이다(08.app-shell.srs.md §3)."
+        }
+      ],
+      "verifiable_output": "Playwright E2E 로 수용 기준 4 의 두 축을 닫는다 — ① 두 계정으로 R14(상속+가산)와 R25(완전 숨김)를 트리에서 단언하고, 접근 가능한 자손을 가진 조상이 이름만 뜨는지 확인한다. ② R43 부속 5종 중 넷 — R43-1 주체 단위 일괄 회수(FR-ACL-003) · R43-2 유효 권한 시뮬레이션(FR-ACL-004) · R43-3 상속 끊김 노드 감사 목록과 상속으로 되돌리기(FR-ACL-005) · R43-4 공유 모달의 상속 항목 읽기 전용 표시(IR-ACL-002) — 가 동작한다. 나머지 R43-5(이동 프리뷰)는 wave-7 이 닫는다. ③ 통합 테스트로 수용 기준 9 의 전반부 — 회수 직후 다음 요청부터 즉시 거부됨(SEC-AUTH-002 매 요청 principal 조회 × FR-ACL-003 회수 화면). ④ 설정 모달이 관리 기능의 유일한 진입점임을 화면 감사로 확인(CON-SHELL-001). ⑤ 딥링크가 노드 ID 로 열리고 권한 없으면 404 로 통일(FR-SHELL-006 × SEC-ACL-006). ⑥ 그룹 삭제가 그 그룹 앞 ACL 제거를 같은 트랜잭션에 포함(FR-PRINCIPAL-002). ⑦ 주체 검색의 최소 질의 2자·상한 20건이 모든 주체 선택 화면에서 같은 컴포넌트로 성립(SEC-PRINCIPAL-003 · CON-PRINCIPAL-006)."
+    },
+    {
+      "order": 6,
+      "id": "wave-6",
+      "name": "본문 표면 — 편집·렌더링·저장·버전·첨부·링크 계열",
+      "goal": "옵시디언과 같은 편집·열람 경험이 선다 — 모드 토글, 라이브 프리뷰, 자동 저장, 충돌 병합, 편집 세션당 버전 스냅샷. 같은 본문 표면 위에서 첨부 업로드 두 경로와 위키링크·백링크·아웃고잉 링크가 함께 동작한다. 이 wave 가 끝나면 실제 옵시디언 볼트를 넣고 브라우저에서 읽고 쓸 수 있다.",
+      "dependency_rationale": "wave-5 에 의존한다 — FR-EDITOR-002 의 모드 토글이 IR-SHELL-003 이 만든 2단 문서 헤더에 앉고, FR-EDITOR-001 이 열 문서를 FR-SHELL-001 트리와 FR-SHELL-005 탭이 가져온다. wave-2 에 의존한다 — FR-EDITOR-004(보기 권한만 있으면 편집 토글 비활성)와 SEC-ATTACH-002(첨부 권한은 소유 문서의 보기 유효 권한)가 wave-2 계산기를 읽는다. wave-1 에 의존한다 — FR-STORAGE-002 의 충돌 판정이 DR-STORAGE-001 파일시스템 SSOT 위에서, DR-ATTACH-001 의 `.res` 가 DR-WORKSPACE-001 워크스페이스 루트 아래에서 성립한다. **첨부와 링크 계열을 편집과 같은 wave 에 둔 이유는 모듈 경계다** — FR-ATTACH-004(편집기 붙여넣기·드래그 업로드)와 위키링크 `[[` 자동완성이 둘 다 `packages/editor/src` 를 건드리므로, 나누면 이 저장소의 유일한 기존 모듈을 세 wave 가 나눠 갖게 된다. `packages/editor/src` 전량의 소유를 이 wave 하나로 못박는다.",
+      "requirement_ids": [
+        "CON-EDITOR-001", "CON-EDITOR-002",
+        "FR-EDITOR-001", "FR-EDITOR-002", "FR-EDITOR-003", "FR-EDITOR-004",
+        "FR-EDITOR-005", "FR-EDITOR-006", "FR-EDITOR-007", "FR-EDITOR-008",
+        "CON-ARCH-006",
+        "FR-STORAGE-001", "FR-STORAGE-002", "FR-STORAGE-003", "FR-STORAGE-004",
+        "FR-STORAGE-009", "DR-STORAGE-005", "IR-STORAGE-001",
+        "FR-SHELL-008",
+        "CON-ATTACH-001", "DR-ATTACH-001", "DR-ATTACH-002", "DR-ATTACH-003",
+        "FR-ATTACH-001", "FR-ATTACH-002", "FR-ATTACH-003", "FR-ATTACH-004", "FR-ATTACH-006",
+        "REL-ATTACH-001", "SEC-ATTACH-001", "SEC-ATTACH-002", "SEC-ATTACH-003",
+        "FR-WORKSPACE-002", "FR-WORKSPACE-009",
+        "SEC-WORKSPACE-004", "SEC-WORKSPACE-005", "SEC-WORKSPACE-006",
+        "SEC-ACL-016"
+      ],
+      "existing_modules": [
+        "packages/editor/src (전량 — vendor/atomic-editor 포함)",
+        "packages/editor/test"
+      ],
+      "acceptance_criteria_covered": [1, 2, 3, 6, 7, 8, 12],
+      "blocked_notes": [
+        {
+          "id": "FR-EDITOR-007",
+          "blocker": "G31 — 본문의 `#태그` 가 어떻게 렌더되고 클릭 가능한지가 어느 조항에도 없다. R16 은 태그를 Phase 1 링크 계열에 넣었는데 R16-a 의 라이브 프리뷰 대상 9종 정본 목록에 태그가 없고, R16-a 는 스스로 §4 수용 기준 2 와 같은 목록임을 못박으므로 누락이면 수용 기준 2 에도 같은 구멍이 있다. 프론트매터 태그의 Phase 1 노출 수단도 같은 자리에 비어 있다. 의도적 배제인지 누락인지 먼저 판정해야 이 wave 의 렌더 목록이 닫힌다."
+        },
+        {
+          "id": "DR-STORAGE-005",
+          "blocker": "G28 — 버전 사이드카에 행위자 칸이 없다. R84 는 본문 저장을 기록하지 않고 R78 사이드카에도 작성자가 없어, R63-a 복원 UI(IR-STORAGE-001)가 「누가」를 표시할 수 없다. 휴지통 사이드카(DR-STORAGE-004)에는 `삭제자` 가 있는데 버전에는 없는 비대칭이라 최소 조치는 `작성자` 추가이며 R75-a 로 세션 단위라 볼륨 문제도 없다."
+        }
+      ],
+      "verifiable_output": "Playwright E2E 로 수용 기준 여섯을 닫는다 — 기준 2(라이브 프리뷰: 커서 없는 줄의 기호가 숨겨지고 커서를 올리면 원문이 드러나며 대상은 R16-a 전부) · 기준 6(두 세션이 같은 문서를 저장하면 머지 뷰) · 기준 8(트리 드래그앤드롭과 편집기 붙여넣기가 `.res` 해시 경로에 저장되고 크기 제한이 발동) · 기준 12(편집 세션당 1회 버전 생성, 상한 초과 시 오래된 것부터 폐기, 복원 동작) · 기준 3 의 링크 축(위키링크 `[[` 자동완성이 워크스페이스를 넘어 동작하고 백링크 패널이 권한 범위 내 역참조만 보인다; 아웃고잉 링크 패널은 SEC-WORKSPACE-005 로 필터의 명시적 예외) · 기준 1(실제 옵시디언 볼트로 읽기·편집 수동 검증). 수동 체크리스트로 기준 7(한글 IME 조합이 깨지지 않는다 — CON-ARCH-006 이 본문을 React state 로 올리지 않게 하는 것이 그 근거). 추가 단언 — 권한 없는 문서를 가리키는 위키링크가 깨진 링크로 표시되고 그 자리에 권한 요청 버튼이 없다(SEC-WORKSPACE-006 × SEC-ACL-016)."
+    },
+    {
+      "order": 7,
+      "id": "wave-7",
+      "name": "노드 수명주기 — 이동·복사·삭제·휴지통",
+      "goal": "노드를 옮기고 복사하고 지우는 조작이 필요 권한 표대로 동작하고, 삭제가 휴지통 이동이 되어 복구·자동 영구 삭제까지 왕복한다. 워크스페이스 경계를 넘는 이동은 막히고 복사만 허용된다. 이 wave 가 끝나면 문서가 시스템 안에서 움직이고 사라지는 모든 경로가 닫힌다.",
+      "dependency_rationale": "wave-6 에 의존한다 — FR-STORAGE-008(문서를 이동해도 첨부는 움직이지 않고 본문도 재작성하지 않는다)과 FR-ATTACH-005(소유 문서 영구 삭제 시 첨부 동반 삭제)는 wave-6 이 만든 `.res` 레이아웃과 `attachment` 테이블이 있어야 발화하고, FR-ACL-001(복사본의 ACL·첨부·링크 처리)은 wave-6 의 FR-STORAGE-009 위키링크 해석 규칙을 전제한다. wave-4 에 의존한다 — FR-CONFIRM-016(이동의 등급은 접근 가능 수치의 변화로 정한다)·FR-CONFIRM-017(복사는 언제나 L2)·FR-CONFIRM-006(휴지통 배정표)이 각각 이 wave 의 조작에 붙는다. wave-2 에 의존한다 — SEC-ACL-012 필요 권한 표와 SEC-ACL-013(숨은 하위가 있는 디렉토리의 이동·삭제는 관리 레벨)이 wave-2 계산기의 값을 조작 관문으로 쓴다. wave-5 에 의존한다 — FR-SHELL-007 휴지통 카테고리가 IR-SHELL-001 설정 모달 안에 놓이고 FR-ACL-006 이동 프리뷰가 IR-ACL-001 접근자 지표를 읽는다.",
+      "requirement_ids": [
+        "DR-STORAGE-004", "DR-STORAGE-006",
+        "FR-STORAGE-005", "FR-STORAGE-006", "FR-STORAGE-007", "FR-STORAGE-008",
+        "SEC-STORAGE-002", "SEC-STORAGE-003",
+        "FR-SHELL-007", "SEC-SHELL-001", "SEC-SHELL-002", "SEC-SHELL-003",
+        "SEC-ACL-007", "SEC-ACL-012", "SEC-ACL-013", "SEC-ACL-014",
+        "FR-ACL-001", "FR-ACL-002", "FR-ACL-006",
+        "FR-ATTACH-005"
+      ],
+      "existing_modules": [],
+      "acceptance_criteria_covered": [4, 10, 11],
+      "blocked_notes": [],
+      "verifiable_output": "Playwright E2E — ① 기준 11(휴지통 왕복): 삭제→복구 시 원위치·ACL·버전 이력이 보존되고 보존 기간 경과분이 자동 영구 삭제된다(FR-STORAGE-005 · FR-STORAGE-006 · FR-STORAGE-007 · DR-STORAGE-004). ② 기준 10(첨부 권한): 문서를 비공개 위치로 이동하면 기존 첨부 URL 이 거부되고 공개 위치로 되돌리면 즉시 열린다(FR-STORAGE-008 × SEC-ATTACH-002 × SEC-ATTACH-003 매 요청 검사). ③ 기준 4 의 잔여분 R43-5 이동 프리뷰(FR-ACL-006)와 복사 프리뷰의 목적지 기준 판정(FR-ACL-002). ④ 워크스페이스 경계를 넘는 이동이 거부되고 복사만 허용된다(SEC-ACL-014). ⑤ 보이지 않는 동명 노드와의 충돌이 자동 접미사로 처리되어 가시 충돌과 흐름이 구별되지 않는다(SEC-ACL-007 × SEC-SHELL-002) — 존재 오라클 미형성 단언. ⑥ 디렉토리 복사가 요청자에게 보이는 노드만 담는다(SEC-SHELL-003). ⑦ 휴지통 열람 범위가 본인 삭제분이고 관리자는 전체이며 영구 삭제 버튼이 권한 없으면 렌더되지 않는다(SEC-STORAGE-002 · SEC-SHELL-001)."
+    },
+    {
+      "order": 8,
+      "id": "wave-8",
+      "name": "찾기 표면 — 전역 검색 · 태그 탭 · MCP",
+      "goal": "좌측 검색 탭의 전역 텍스트 검색과 우측 태그 탭이 서고, MCP 도구가 PAT 로 인증된 사용자의 ACL 로 결과를 걸러 낸다. 이 wave 가 끝나면 R80 이 정한 표면 전부에서 권한 밖 문서가 목록에도 수치에도 나타나지 않는다.",
+      "dependency_rationale": "wave-6 에 의존한다 — FR-SHELL-009(태그 탭이 전 워크스페이스 태그를 출현 문서 수로 집계)의 원천이 wave-6 의 태그 파싱이고, FR-SHELL-010(태그 클릭이 검색 탭을 활성하고 질의를 채운다)이 그 둘을 잇는다. 검색 결과에 걸리는 필터의 **규범**은 wave-6 의 SEC-WORKSPACE-004 가 정본으로 갖고 이 wave 는 그것을 소비한다(08.app-shell.srs.md §2 Out of Scope). wave-3 에 의존한다 — SEC-ARCH-001(MCP 호출 인증 필수)이 IR-AUTH-002 의 Bearer PAT 식별 위에 서고, SEC-ARCH-003(쓰기 도구는 편집 유효 권한 없으면 거부)이 wave-2 계산기를 읽는다. wave-7 에 의존한다 — SEC-STORAGE-007(벡터 인덱스는 동기 갱신하고 없는 노드의 엔트리를 제외한다)이 발화하려면 노드를 없앨 수단(FR-STORAGE-005 · 영구 삭제)이 먼저 있어야 한다.",
+      "requirement_ids": [
+        "FR-SHELL-009", "FR-SHELL-010", "FR-SHELL-011", "FR-SHELL-013", "FR-SHELL-014",
+        "SEC-STORAGE-007",
+        "FR-ARCH-001", "SEC-ARCH-001", "SEC-ARCH-002", "SEC-ARCH-003"
+      ],
+      "existing_modules": [],
+      "acceptance_criteria_covered": [3, 5],
+      "blocked_notes": [
+        {
+          "id": "FR-SHELL-013",
+          "blocker": "G36 ①③④⑤ — 필터 팝오버의 기본값(네 대상 중 처음에 무엇이 켜져 있는가) · 결과 건수 상한과 발췌 길이 · 첨부파일 이름 검색의 권한 판정(R80 표면 목록에 첨부가 드는가) · 텍스트 색인 시점이 전부 미정이다. 특히 ③은 상한을 두면 「거른 뒤 N건」인지 「거르기 전 N건」인지가 갈리고 후자면 존재 오라클이 되므로 값 하나가 보안 판정이다."
+        },
+        {
+          "id": "FR-SHELL-014",
+          "blocker": "G36 ② — `가 나 | 다` 를 `(가 AND 나) OR 다` 로 읽는지 `가 AND (나 OR 다)` 로 읽는지, 괄호를 지원하는지가 정해지지 않았다. 공백=AND · 파이프=OR · 최소 2자까지만 확정되어 있다."
+        },
+        {
+          "id": "FR-SHELL-011",
+          "blocker": "Stability=draft — 태그 목록의 정렬(빈도순 기본 + 이름순 선택)이 아직 draft 다. CLAUDE.md 가 *\"Stability=draft 인 non-discarded 요구는 구현 전에 멈춘다\"* 를 요구하므로, 사용자 명시 override 없이는 이 항목만 wave 안에서 보류된다. 나머지 태그 탭 요구(FR-SHELL-009 · FR-SHELL-010)는 evolving 이라 진행 가능하다."
+        }
+      ],
+      "verifiable_output": "① 통합 테스트로 수용 기준 5 — PAT 로 인증한 두 사용자가 같은 MCP 도구를 호출하면 결과가 각자의 ACL 로 다르게 나오고(SEC-ARCH-002), 보기 권한만 있는 사용자의 쓰기 도구 호출이 거부된다(SEC-ARCH-003). 인증 없는 호출은 성립하지 않는다(SEC-ARCH-001). ② Playwright E2E 로 수용 기준 3 의 잔여 표면 — R80 이 정한 표면 목록을 판정 시점에 읽어 표면마다 단언을 만들고, 집계형 표면(태그 탭)은 목록 미노출과 수치 미가산을 각각 단언한다(FR-SHELL-009 AC-3·AC-4 × SEC-WORKSPACE-004 AC-4·AC-5). ③ 노드를 영구 삭제하면 벡터 인덱스에서 그 엔트리가 동기적으로 빠진다(SEC-STORAGE-007). ④ MCP 도구 계약(도구 이름·입력 인자와 기본값·출력 포맷·에러 코드)이 1.0 이 제공하던 것과 일치하되 소스는 신규다(FR-ARCH-001 × CON-ARCH-002). **이 wave 는 G36 종결에 사실상 종속된다** — 핵심 요구 둘이 그 공백으로 blocked 다."
+    },
+    {
+      "order": 9,
+      "id": "wave-9",
+      "name": "감사 로그 · 재조정 대기열 · 1.0 컷오버",
+      "goal": "기록 대상 기준에 따라 감사 행이 남고, 서버 정지 중 파일이 움직인 경우 기동 재조정이 그것을 대기열에 기재한다. 마지막으로 1.0 을 읽기 전용으로 동결하고 콘텐츠·인덱스·계정을 2.0 으로 넘긴다. 이 wave 가 끝나면 Phase 1 수용 기준 13개가 전건 통과한다.",
+      "dependency_rationale": "wave-5·wave-6·wave-7 전부에 의존한다 — OBS-AUDIT-003 은 기록 대상을 열거가 아니라 **기준**으로 정하므로(12.audit-log.srs.md §2: *\"기록 대상이 되는 조작 자체의 정의는 각 scope 가 소유한다\"*) 조작 전량이 이미 존재해야 기준을 전 조작에 적용해 재도출할 수 있다. OBS-AUDIT-007(복사의 감사 행 수는 내부 1행 경계 2행)·OBS-AUDIT-010(디렉토리 삭제·복사 서브트리는 하위 노드마다 1행)·OBS-AUDIT-009(동반 삭제 첨부는 행을 만들지 않는다)는 wave-7 의 복사·삭제가, OBS-AUDIT-008(다건 조작은 실제로 바꾼 것마다 1행)은 wave-5 의 FR-ACL-003 일괄 회수가, OBS-ACL-001 이 요구한 상방 게이트 열람 기록은 wave-2·wave-6 의 열람 경로가 각각 있어야 검증된다. REL-STORAGE-001·002(기동 시·주기 재조정과 fail-closed 상관 판정)를 여기 둔 것은 REL-AUDIT-002(대기열 항목의 해소는 새 감사 행 추가로만)와 SEC-AUDIT-007(항목 스코프는 참조 감사 행에서 파생)이 감사 행 없이는 성립하지 않기 때문이다. MIG-AUTH-001(읽기 전용 컷오버 — 1.0 동결과 콘텐츠·인덱스 이행)은 wave-8 의 색인 경로가, MIG-AUTH-002(계정·자격증명 이행)는 wave-3 의 자격증명 형식이 먼저 있어야 한다.",
+      "requirement_ids": [
+        "CON-AUDIT-001",
+        "DR-AUDIT-001", "DR-AUDIT-002", "DR-AUDIT-003",
+        "IR-AUDIT-001", "IR-AUDIT-002", "IR-AUDIT-003",
+        "OBS-AUDIT-001", "OBS-AUDIT-002", "OBS-AUDIT-003", "OBS-AUDIT-004", "OBS-AUDIT-005",
+        "OBS-AUDIT-006", "OBS-AUDIT-007", "OBS-AUDIT-008", "OBS-AUDIT-009", "OBS-AUDIT-010",
+        "OBS-AUDIT-011",
+        "REL-AUDIT-001", "REL-AUDIT-002",
+        "SEC-AUDIT-001", "SEC-AUDIT-002", "SEC-AUDIT-003", "SEC-AUDIT-004", "SEC-AUDIT-005",
+        "SEC-AUDIT-006", "SEC-AUDIT-007", "SEC-AUDIT-008", "SEC-AUDIT-009", "SEC-AUDIT-010",
+        "SEC-AUDIT-011",
+        "REL-STORAGE-001", "REL-STORAGE-002",
+        "MIG-AUTH-001", "MIG-AUTH-002"
+      ],
+      "existing_modules": [],
+      "acceptance_criteria_covered": [13],
+      "blocked_notes": [
+        {
+          "id": "OBS-AUDIT-011",
+          "blocker": "G27 — 감사 로그 보존 기간에 기본값이 없고, 휴지통 보존(FR-STORAGE-007, 기본 30일)과의 대소 관계도 없으며, 값 `0` 의 의미(무제한/즉시)도 없다. 감사 보존 < 휴지통 보존이면 삭제 기록이 휴지통보다 먼저 사라지는 역전이 생기고 R137-d 가 삭제를 기록 대상에 넣었으므로 실제 문제가 된다. 부수로 참조 감사 행이 만료로 사라질 때 대기열 항목(REL-AUDIT-002 · SEC-AUDIT-007)을 어떻게 처분할지도 같은 공백에 걸린다."
+        }
+      ],
+      "verifiable_output": "① 통합 테스트로 수용 기준 13 의 전반부 — 서버 정지 중 파일을 옮기고 기동하면 재조정 대기열에 기재되고(REL-STORAGE-001 · REL-AUDIT-001) 상관 판정이 fail-closed 로 떨어진다(REL-STORAGE-002). 미해소 건수 배지가 뜬다(IR-AUDIT-002). ② 감사 입도 테스트 — 내부 복사 1행 / 경계 복사 2행(OBS-AUDIT-007), 디렉토리 삭제 서브트리는 하위 노드마다 1행(OBS-AUDIT-010), 동반 삭제 첨부는 0행(OBS-AUDIT-009), 다건 회수는 실제로 바꾼 것마다 1행(OBS-AUDIT-008). ③ 불변성 — 기록된 행에 대한 UPDATE·DELETE 경로가 코드에 존재하지 않는다(OBS-AUDIT-002). ④ 상대 노드 칸의 마스킹이 화면·API·내보내기 셋 모두에 동시에 걸린다(SEC-AUDIT-008). ⑤ 묶음 건수가 열람자 스코프의 행만 센다(SEC-AUDIT-011) — 분모 유출 미형성 단언. ⑥ 컷오버 리허설 — 1.0 을 읽기 전용으로 동결한 사본에서 콘텐츠·인덱스·계정을 옮기고 로그인이 성립함을 확인한다(MIG-AUTH-001 · MIG-AUTH-002). 1.0 저장소는 읽기 전용이며 CON-ARCH-002 에 따라 코드는 한 줄도 가져오지 않는다."
+    }
+  ],
+  "assignment_check": {
+    "total": 250,
+    "assigned": 250,
+    "unassigned": [],
+    "duplicated": [],
+    "per_wave_counts": {
+      "wave-1": 24,
+      "wave-2": 26,
+      "wave-3": 26,
+      "wave-4": 33,
+      "wave-5": 38,
+      "wave-6": 38,
+      "wave-7": 20,
+      "wave-8": 10,
+      "wave-9": 35
+    },
+    "per_scope_counts": {
+      "ACL": {"inventory": 31, "assigned": 31, "waves": {"wave-2": 15, "wave-5": 8, "wave-6": 1, "wave-7": 7}},
+      "ARCH": {"inventory": 14, "assigned": 14, "waves": {"wave-1": 9, "wave-6": 1, "wave-8": 4}},
+      "ATTACH": {"inventory": 14, "assigned": 14, "waves": {"wave-6": 13, "wave-7": 1}},
+      "AUDIT": {"inventory": 31, "assigned": 31, "waves": {"wave-9": 31}},
+      "AUTH": {"inventory": 28, "assigned": 28, "waves": {"wave-3": 26, "wave-9": 2}},
+      "CONFIRM": {"inventory": 33, "assigned": 33, "waves": {"wave-4": 33}},
+      "EDITOR": {"inventory": 11, "assigned": 11, "waves": {"wave-5": 1, "wave-6": 10}},
+      "PRINCIPAL": {"inventory": 23, "assigned": 23, "waves": {"wave-2": 8, "wave-5": 15}},
+      "SHELL": {"inventory": 23, "assigned": 23, "waves": {"wave-5": 13, "wave-6": 1, "wave-7": 4, "wave-8": 5}},
+      "STORAGE": {"inventory": 26, "assigned": 26, "waves": {"wave-1": 8, "wave-6": 7, "wave-7": 8, "wave-8": 1, "wave-9": 2}},
+      "WORKSPACE": {"inventory": 16, "assigned": 16, "waves": {"wave-1": 7, "wave-2": 3, "wave-5": 1, "wave-6": 5}}
+    },
+    "blocked_placement": {
+      "FR-EDITOR-007": "wave-6",
+      "IR-SHELL-002": "wave-5",
+      "FR-SHELL-013": "wave-8",
+      "FR-SHELL-014": "wave-8",
+      "FR-AUTH-003": "wave-3",
+      "SEC-AUTH-018": "wave-3",
+      "SEC-AUTH-019": "wave-3",
+      "OBS-AUDIT-011": "wave-9",
+      "DR-STORAGE-005": "wave-6",
+      "FR-SHELL-011(draft)": "wave-8"
+    }
+  },
+  "acceptance_criteria_map": {
+    "1": ["wave-6"],
+    "2": ["wave-6"],
+    "3": ["wave-6", "wave-8"],
+    "4": ["wave-5", "wave-7"],
+    "5": ["wave-8"],
+    "6": ["wave-6"],
+    "7": ["wave-6"],
+    "8": ["wave-6"],
+    "9": ["wave-3", "wave-5"],
+    "10": ["wave-7"],
+    "11": ["wave-7"],
+    "12": ["wave-6"],
+    "13": ["wave-3", "wave-9"]
+  },
+  "risks": [
+    "기존 모듈 `packages/editor` 를 wave-1 과 wave-6 이 나눠 건드린다. 경계를 파일 단위로 못박아야 한다 — wave-1 은 `package.json` 과 `vite.config.ts` 만(하네스 배선), wave-6 이 `src/` 전량. wave-5 는 에디터를 마운트만 하고 `src/` 를 수정하지 않는다. 이 경계를 어기면 교차 wave 회귀가 난다.",
+    "wave-1 의 `test.include` 교정이 지금까지 한 번도 돌지 않던 테스트를 처음 실행시킨다. 실측 — `src/vendor/atomic-editor/__tests__/` 에 7파일이 있고 `test/` 에 2파일이 있는데 `vite.config.ts:15` 가 후자만 수집한다. 켜는 순간 red 가 드러날 수 있고 **그것이 wave-1 의 실제 작업량이며 지금은 그 크기를 모른다.**",
+    "wave-4(확인 등급)가 wave-5 의 접근자 지표 API 보다 앞선다. FR-CONFIRM-004(열 때 재조회하고 다르면 잠근다)는 이 wave 에서 스텁으로만 검증되므로, wave-5 에서 IR-ACL-001 실 API 를 붙일 때 계약 일치를 다시 확인해야 한다. 이것이 이 순서가 지불하는 유일한 대가다.",
+    "수용 기준 4 가 두 wave 에 걸쳐 닫힌다 — R43 부속 5종 중 R43-5(이동 프리뷰 = FR-ACL-006)만 이동 조작에 붙어 wave-7 로 간다. wave-5 종료 시점에 「수용 기준 4 통과」라고 적으면 거짓이 된다.",
+    "wave-8 은 G36 종결에 사실상 종속된다 — 10건 중 2건(FR-SHELL-013 · FR-SHELL-014)이 그 공백으로 blocked 이고 그 둘이 이 wave 의 핵심이다. G36 ③(결과 상한이 「거른 뒤」인지 「거르기 전」인지)은 값 선택이 아니라 존재 오라클 여부를 가르는 보안 판정이므로 임의로 정하면 안 된다.",
+    "감사 로그가 마지막 wave 라 wave-5·wave-6·wave-7 의 파괴적 조작이 한동안 무기록으로 돈다. 각 조작을 구현할 때 감사 훅 자리를 남겨 두지 않으면 wave-9 에서 조작 코드를 전부 다시 열어야 한다. OBS-AUDIT-003 이 열거가 아니라 기준이라 「어느 조작이 기록 대상인가」를 wave-9 에서 전수 재도출해야 하는 것도 같은 축이다.",
+    "CONFIRM 33건을 한 wave 에 묶었으므로 그 wave 가 늦어지면 wave-5 와 wave-7 이 함께 막힌다. 반대로 쪼개면 같은 파괴력의 조작이 화면마다 다른 마찰을 갖게 되어 11.confirmation-grades.srs.md §1 의 취지가 무너진다 — 트레이드오프를 인지하고 묶음을 택했다.",
+    "wave-5 와 wave-6 이 각각 38건으로 가장 크다. wave-5 는 CON-SHELL-001(관리 진입점은 설정 모달 하나)이 골격과 내용을 한 검증 대상으로 묶어서, wave-6 은 `packages/editor/src` 소유를 한 wave 로 못박아서 커졌다. 둘 다 나누면 각각 CON-SHELL-001 검증 대상 분산과 기존 모듈 3-wave 분할이라는 더 큰 대가를 치른다.",
+    "CON-ARCH-002 가 1.0 코드 반입을 금지하므로 wave-9 의 MIG-AUTH-001·002 는 「데이터 이행」이지 「코드 이식」이 아니다. 1.0 저장소(`C:\\Work\\git\\DocuLight\\DocLight`)는 읽기 전용이며 2.0 의 어떤 설정도 그 경로를 가리켜서는 안 된다(R21-b).",
+    "G14(화면의 최신성 — 다른 사용자의 변경이 언제 반영되는가)는 blocked 요구를 만들지 않아 이 분해에 표식이 없지만, wave-5 의 트리·즐겨찾기·우측 사이드바와 wave-8 의 검색 결과가 전부 그 공백 위에 선다. 구현자가 각 자리에서 갱신 계기를 임의로 정하면 네 자리가 서로 다르게 굳는다."
+  ]
+}
