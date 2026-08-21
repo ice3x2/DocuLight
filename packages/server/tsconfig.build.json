@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "dist",
+    "rootDir": "src",
+
+    // 운영 산출물은 Node 가 직접 읽는다. 번들러가 없으므로 해석 방식도
+    // Node 의 것이어야 한다 — `bundler` 로 두면 tsc 는 통과하는데 Node 가
+    // 런타임에 모듈을 찾지 못한다.
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+
+    "types": ["node"],
+    "declaration": false,
+    "sourceMap": true
+  },
+  "include": ["src"]
+}
