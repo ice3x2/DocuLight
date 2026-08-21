@@ -13,6 +13,7 @@ import type { NodeRecord, NodeRepository } from '../../domain/ports/node-reposit
 import type { PrincipalRepository } from '../../domain/ports/principal-repository.js';
 import type { SettingStore } from '../../domain/ports/setting-store.js';
 import type { WorkspaceRepository } from '../../domain/ports/workspace-repository.js';
+import type { Workspace } from '../../domain/workspace/workspace.js';
 import type { PrincipalId } from '../../domain/principal/principal.js';
 import { isSuperuser, subjectIdsOf } from '../../domain/principal/subject.js';
 import { isServable } from '../../domain/serving/servable.js';
@@ -237,6 +238,43 @@ export function resolveNode(
 export interface VisibleChild {
   node: NodeRecord;
   visibility: Exclude<Visibility, 'hidden'>;
+}
+
+/** 트리 최상위 한 줄 — 워크스페이스와 그 가시성. */
+export interface VisibleWorkspace {
+  workspace: Workspace;
+  visibility: Exclude<Visibility, 'hidden'>;
+}
+
+/**
+ * 요청자가 접근 가능한 워크스페이스 전부 (`FR-WORKSPACE-003`).
+ *
+ * **하나를 고른 상태를 담지 않는다** (AC-3) — 「현재 워크스페이스」 칸이
+ * 있으면 화면이 그것을 전환 UI 로 그린다. 그래서 반환값에는 목록과 각
+ * 항목의 가시성뿐이다.
+ *
+ * 워크스페이스 자체에 권한이 없어도 그 안에 닿을 노드가 있으면
+ * pass-through 로 나온다 — 나오지 않으면 권한은 있는데 열 길이 없는
+ * 상태가 되고, 그것이 `SEC-ACL-005` 가 예외를 둔 이유와 같다.
+ */
+export function visibleWorkspacesOf(stores: AclStores, actor: Actor): VisibleWorkspace[] {
+  const granted = stores.acl.grantedNodeIds(actor.requester.subjectIds);
+
+  // 부여받은 노드들이 어느 워크스페이스에 속하는지 — 질의 한 번.
+  const reachable = new Set(stores.nodes.chainsOf(granted).map((node) => node.workspaceId));
+
+  const visible: VisibleWorkspace[] = [];
+  for (const workspace of stores.workspaces.list()) {
+    const level = permissionOf(stores, actor, workspace.id);
+    if (level !== null) {
+      visible.push({ workspace, visibility: 'full' });
+      continue;
+    }
+    if (reachable.has(workspace.id)) {
+      visible.push({ workspace, visibility: 'pass-through' });
+    }
+  }
+  return visible;
 }
 
 /**

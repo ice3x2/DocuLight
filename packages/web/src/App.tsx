@@ -1,7 +1,11 @@
+import { AppShell } from './shell/AppShell.js';
+
 /**
- * 셸의 자리를 잡는 최소 컴포넌트. 화면 구성은 뒤 wave 가 소유한다
- * (좌측 사이드바·문서 탭·본문·우측 사이드바).
+ * 앱의 진입 컴포넌트.
+ *
+ * 셸 자체는 `AppShell` 이 소유한다 — 여기 두면 라우팅·인증 게이트가
+ * 붙을 때 그것들이 셸 구조와 한 파일에서 얽힌다.
  */
 export function App() {
-  return <main>DocuLight</main>;
+  return <AppShell />;
 }
