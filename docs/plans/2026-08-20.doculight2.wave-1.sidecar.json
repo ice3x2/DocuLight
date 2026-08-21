@@ -6022,11 +6022,9 @@
       "req_id": "DR-STORAGE-002",
       "stability": "stable",
       "ac_total": 3,
-      "ac_covered": 2,
-      "ac_deferred": 1,
-      "missing_ac_ids": [
-        "AC-3"
-      ],
+      "ac_covered": 3,
+      "ac_deferred": 0,
+      "missing_ac_ids": [],
       "covered_tasks": [
         "T-PH003-01",
         "T-PH003-02"
@@ -6236,14 +6234,6 @@
   "unreferenced_reqs": [],
   "excluded_reqs": [],
   "deferred_ac": [
-    {
-      "req_id": "DR-STORAGE-002",
-      "ac_id": "AC-3",
-      "ac_text": "가입 승인·그룹 변경·ACL 변경이 동시에 일어나도 전체 재기록 없이 각각이 반영된다.",
-      "reason": "AC 가 이름으로 드는 세 조작(가입 승인·그룹 변경·ACL 변경)의 테이블과 경로가 wave-1 에 하나도 없다. AUTH·ACL scope 의 뒤 wave 소유다. 동시성 자체는 wave-1 테이블로 시험할 수 있으나 AC 가 지목한 주체가 아니므로 대체 시험으로 닫지 않는다.",
-      "owner_hint": "AUTH·ACL scope 가 서는 wave",
-      "blocking": false
-    },
     {
       "req_id": "FR-WORKSPACE-005",
       "ac_id": "AC-3",
@@ -6844,7 +6834,7 @@
     {
       "phase_id": "PH-003",
       "title": "영속 기반 — SQLite 와 docsRoot",
-      "task_count": 8,
+      "task_count": 6,
       "ready": false,
       "blockers": [
         "T-PH002-03 의 대기열 스키마 계약이 먼저 확정돼야 T-PH003-05 의 red 를 쓸 수 있다"
