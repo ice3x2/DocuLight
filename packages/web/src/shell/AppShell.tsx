@@ -6,6 +6,7 @@ import { DocumentArea } from '../document/DocumentArea.js';
 import { FavoritesView, type Favorite } from '../favorites/FavoritesView.js';
 import type { TabState } from '../document/tab-state.js';
 import { DocumentTree } from '../tree/DocumentTree.js';
+import { EmptyState } from '../tree/EmptyState.js';
 import type { WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
   LEFT_TABS,
@@ -142,7 +143,11 @@ export function AppShell({
         // 한 파일에서 얽힌다.
       >
         {(tab) => {
-          if (tab.id === 'tree') return <DocumentTree workspaces={workspaces} />;
+          // 접근 가능한 것이 없으면 빈 트리가 아니라 안내를 세운다
+          // (`FR-AUTH-005` AC-1) — 아무 말 없는 빈 화면은 「권한이 없다」가
+          // 아니라 「고장났다」로 읽힌다.
+          if (tab.id === 'tree')
+            return workspaces.length === 0 ? <EmptyState /> : <DocumentTree workspaces={workspaces} />;
           if (tab.id === 'favorites') return <FavoritesView favorites={favorites} />;
           return <p>{tab.label}</p>;
         }}
