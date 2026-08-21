@@ -12,6 +12,9 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     globals: true,
-    include: ['test/**/*.test.{ts,tsx}'],
+    // vendor 드롭의 테스트도 수집한다. 초판은 `test/` 만 겨냥해
+    // `src/vendor/atomic-editor/__tests__/` 가 한 번도 실행되지 않았다.
+    include: ['test/**/*.test.{ts,tsx}', 'src/**/__tests__/**/*.test.{ts,tsx}'],
+    setupFiles: ['./src/vendor/atomic-editor/__tests__/setup.ts'],
   },
 });

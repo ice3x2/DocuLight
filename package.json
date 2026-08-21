@@ -1,0 +1,19 @@
+{
+  "name": "doculight2",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DocuLight 2.0 — 옵시디언의 편집·열람 경험을 웹으로 옮기고 사용자·그룹 접근제어를 더한 사내 문서 시스템",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "dev": "npm run dev --workspace @doculight/web"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
