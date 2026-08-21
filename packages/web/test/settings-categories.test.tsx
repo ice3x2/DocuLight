@@ -56,7 +56,7 @@ describe('IR-SHELL-002 — 설정 카테고리 전량 목록과 표시 권한', 
     expect(labelsFor(viewer({ workspaceCount: 1 }))).toContain('휴지통');
   });
 
-  it('FR-SHELL-007 AC-2: 워크스페이스가 하나도 없으면 휴지통이 보이지 않는다', () => {
+  it('IR-SHELL-002 AC-4 · FR-SHELL-007 AC-2: 워크스페이스가 하나도 없으면 휴지통이 보이지 않는다', () => {
     expect(labelsFor(viewer({ workspaceCount: 0 }))).not.toContain('휴지통');
   });
 

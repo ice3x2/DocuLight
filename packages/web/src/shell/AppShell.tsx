@@ -3,6 +3,7 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { useId, useState } from 'react';
 
 import { DocumentArea } from '../document/DocumentArea.js';
+import { FavoritesView, type Favorite } from '../favorites/FavoritesView.js';
 import type { TabState } from '../document/tab-state.js';
 import { DocumentTree } from '../tree/DocumentTree.js';
 import type { WorkspaceTreeView } from '../tree/tree-contract.js';
@@ -79,7 +80,11 @@ function SettingsModal({ viewer }: { viewer: Viewer }) {
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger>설정</Dialog.Trigger>
+      {/* 좌하단 기어가 자리다 (`IR-SHELL-002` AC-1) — 어디에 있어도 되는
+          버튼이면 사용자가 매번 찾아야 한다. */}
+      <div data-shell="settings-corner">
+        <Dialog.Trigger aria-label="설정">⚙</Dialog.Trigger>
+      </div>
 
       <Dialog.Portal>
         <Dialog.Overlay />
@@ -119,10 +124,12 @@ export function AppShell({
   viewer,
   workspaces = [],
   documents = { tabs: [], activeId: null },
+  favorites = [],
 }: {
   viewer: Viewer;
   workspaces?: readonly WorkspaceTreeView[];
   documents?: TabState;
+  favorites?: readonly Favorite[];
 }) {
   return (
     <div data-shell="root">
@@ -134,7 +141,11 @@ export function AppShell({
         // 자리에서 채워진다 — 여기서 함께 만들면 셸 구조와 그 안의 기능이
         // 한 파일에서 얽힌다.
       >
-        {(tab) => (tab.id === 'tree' ? <DocumentTree workspaces={workspaces} /> : <p>{tab.label}</p>)}
+        {(tab) => {
+          if (tab.id === 'tree') return <DocumentTree workspaces={workspaces} />;
+          if (tab.id === 'favorites') return <FavoritesView favorites={favorites} />;
+          return <p>{tab.label}</p>;
+        }}
       </Sidebar>
 
       <main>
