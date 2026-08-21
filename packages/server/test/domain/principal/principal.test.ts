@@ -114,11 +114,20 @@ describe('CON-PRINCIPAL-001 — 권한 계층은 슈퍼유저와 일반 유저 2
     expect(systemGroups.sort()).toEqual([DEFAULT_GROUP_ID, SUPERUSER_GROUP_ID].sort());
 
     // AC-1 의 후반 — 「그 밖의 전역 등급은 존재하지 않는다」. 전역 등급을
-    // 담을 수 있는 자리는 주체 테이블의 칸뿐이고, 그 칸들에 등급이 없다.
+    // 담을 수 있는 자리는 주체 테이블의 칸뿐이므로 그 칸들을 훑는다.
+    //
+    // 칸 목록을 통째로 고정하지 않는다 — 그러면 등급과 무관한 칸(자격증명
+    // 해시 같은 것)이 늘 때마다 이 시험이 깨지고, 깨진 이유가 「등급이
+    // 생겼다」인지 「다른 게 늘었다」인지 구별되지 않는다.
     const columns = db
       .all<{ name: string }>('PRAGMA table_info(principal)')
       .map((c) => c.name.toLowerCase());
-    expect(columns.sort()).toEqual(['id', 'kind', 'name', 'status']);
+
+    for (const column of columns) {
+      expect(column, `principal.${column} 이 전역 등급으로 보인다`).not.toMatch(
+        /role|grade|rank|tier|superuser|is_admin|privilege/,
+      );
+    }
   });
 
   it('AC-3: 사용자와 그룹이 같은 저장 구조를 쓴다 — 그룹 전용 권한 축이 없다', () => {
