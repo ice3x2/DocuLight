@@ -13,6 +13,10 @@ export {
 } from './core/mermaid-blocks';
 
 export { findTags, isFrontmatterRange, type TagMatch } from './core/tags';
+export { findMathBlocks, renderMath, type MathBlock } from './core/math-blocks';
+export { mathBlocks, mathField } from './core/math-decoration';
+export { tagDecorations, type TagClick } from './core/tag-decoration';
+export { doculightExtensions } from './doculight-extensions';
 
 export {
   defaultMermaidRenderer,
