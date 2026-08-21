@@ -31,17 +31,17 @@ export interface NodeRepository {
   findById(id: string): NodeRecord | undefined;
 
   /**
-   * 같은 부모 아래 이미 있는 이름들. 이름 충돌 판정의 입력이다
-   * (`FR-WORKSPACE-005`).
+   * 같은 부모 아래의 노드들. 트리 목록과 이름 충돌 판정이 **이 하나**를
+   * 함께 쓴다 — 같은 질의를 둘로 두면 한쪽만 조건이 바뀐다.
    *
-   * 개명은 자기 자신과 겹치므로 `except` 로 뺀다 — 빼지 않으면 이름을
-   * 그대로 두는 개명이 자기와 충돌해 접미사를 받는다.
+   * 여기서는 숨김 규칙을 적용하지 않는다. 충돌 판정은 보이지 않는 항목과도
+   * 겹치면 안 되므로(`R113`), 걸러진 목록을 받으면 숨은 이름과 겹치는
+   * 요청이 통과한다. 거르는 것은 표시 계층의 몫이다.
+   *
+   * @param except 개명은 자기 자신과 겹치므로 뺀다 — 빼지 않으면 이름을
+   *   그대로 두는 개명이 자기와 충돌해 접미사를 받는다.
    */
-  siblingNames(where: {
-    workspaceId: string;
-    parentId: NodeId | null;
-    except?: NodeId;
-  }): string[];
+  children(where: { workspaceId: string; parentId: NodeId | null; except?: NodeId }): NodeRecord[];
 
   /**
    * 부모 사슬을 거슬러 경로를 만든다.

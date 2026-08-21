@@ -50,7 +50,7 @@ export function createNode(nodes: NodeRepository, input: NewNode): Created | Rej
 
   const name = resolveNameCollision(
     input.name,
-    nodes.siblingNames({ workspaceId: input.workspaceId, parentId: input.parentId }),
+    nodes.children({ workspaceId: input.workspaceId, parentId: input.parentId }).map((n) => n.name),
   );
   return { ok: true, id: nodes.create({ ...input, name }), name };
 }
@@ -67,7 +67,7 @@ export function renameNode(nodes: NodeRepository, id: NodeId, name: string): Pla
   const resolved = resolveNameCollision(
     name,
     // 자기 자신을 빼지 않으면 이름을 그대로 두는 개명이 자기와 충돌한다.
-    nodes.siblingNames({ workspaceId: node.workspaceId, parentId: node.parentId, except: id }),
+    nodes.children({ workspaceId: node.workspaceId, parentId: node.parentId, except: id }).map((n) => n.name),
   );
   nodes.rename(id, resolved);
   return { ok: true, name: resolved };
@@ -94,7 +94,7 @@ export function moveNode(
 
   const resolved = resolveNameCollision(
     node.name,
-    nodes.siblingNames({ workspaceId: node.workspaceId, parentId, except: id }),
+    nodes.children({ workspaceId: node.workspaceId, parentId, except: id }).map((n) => n.name),
   );
 
   nodes.move(id, parentId);

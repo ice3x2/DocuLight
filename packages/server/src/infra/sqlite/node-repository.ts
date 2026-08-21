@@ -51,15 +51,15 @@ export class SqliteNodeRepository implements NodeRepository {
     return row === undefined ? undefined : toRecord(row);
   }
 
-  siblingNames(where: { workspaceId: string; parentId: NodeId | null; except?: NodeId }): string[] {
+  children(where: { workspaceId: string; parentId: NodeId | null; except?: NodeId }): NodeRecord[] {
     // `IS` 는 SQLite 의 널 안전 등가 비교다. `=` 로 쓰면 루트 형제(부모가
     // NULL)가 한 건도 걸리지 않아 충돌이 조용히 통과한다.
     return this.store
-      .all<{ name: string }>(
-        'SELECT name FROM node WHERE workspace_id = ? AND parent_id IS ? AND id IS NOT ?',
+      .all<Row>(
+        `SELECT ${COLUMNS} FROM node WHERE workspace_id = ? AND parent_id IS ? AND id IS NOT ? ORDER BY rowid`,
         [where.workspaceId, where.parentId, where.except ?? null],
       )
-      .map((r) => r.name);
+      .map(toRecord);
   }
 
   pathOf(id: NodeId): string {
