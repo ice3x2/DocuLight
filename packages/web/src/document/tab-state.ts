@@ -15,6 +15,10 @@ export interface OpenTab {
   /** 워크스페이스부터 이 문서까지. 헤더가 그대로 그린다 (`IR-SHELL-003` AC-2). */
   breadcrumb: readonly string[];
   save: SaveState;
+  /** 이 문서에 대한 요청자의 유효 권한. 본문 표면이 토글을 그리는 근거다. */
+  level?: 'view' | 'edit' | 'admin' | null;
+  /** 충돌 시 서버가 함께 준 현재 본문 — 병합 화면이 이것 없이는 열리지 않는다. */
+  serverBody?: string | null;
 }
 
 export interface TabState {

@@ -2,6 +2,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Tabs from '@radix-ui/react-tabs';
 import { useState } from 'react';
 
+import { DocumentSurface } from './DocumentSurface.js';
 import { DOCUMENT_MENU_ITEMS } from './document-menu.js';
 import { activeTab, closeTab, type SaveState, type TabState } from './tab-state.js';
 
@@ -77,6 +78,11 @@ export function DocumentArea({ initial }: { initial: TabState }) {
             <button type="button" onClick={() => setState((was) => closeTab(was, tab.nodeId))}>
               {tab.name} 닫기
             </button>
+            <DocumentSurface
+              file={{ nodeId: tab.nodeId, name: tab.name, level: tab.level ?? null }}
+              save={tab.save}
+              serverBody={tab.serverBody ?? null}
+            />
           </Tabs.Content>
         ))}
       </Tabs.Root>
