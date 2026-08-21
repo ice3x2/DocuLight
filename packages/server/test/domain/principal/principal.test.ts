@@ -112,16 +112,31 @@ describe('CON-PRINCIPAL-001 — 권한 계층은 슈퍼유저와 일반 유저 2
       .map((g) => g.id);
 
     expect(systemGroups.sort()).toEqual([DEFAULT_GROUP_ID, SUPERUSER_GROUP_ID].sort());
+
+    // AC-1 의 후반 — 「그 밖의 전역 등급은 존재하지 않는다」. 전역 등급을
+    // 담을 수 있는 자리는 주체 테이블의 칸뿐이고, 그 칸들에 등급이 없다.
+    const columns = db
+      .all<{ name: string }>('PRAGMA table_info(principal)')
+      .map((c) => c.name.toLowerCase());
+    expect(columns.sort()).toEqual(['id', 'kind', 'name', 'status']);
   });
 
-  it('AC-3: 사용자와 그룹이 같은 주체 테이블에 같은 구조로 들어간다 — 그룹 전용 권한 축이 없다', () => {
+  it('AC-3: 사용자와 그룹이 같은 저장 구조를 쓴다 — 그룹 전용 권한 축이 없다', () => {
     const u = principals.createUser('한범');
     const g = principals.createGroup('기획팀');
 
-    expect(u.kind).toBe('user');
-    expect(g.kind).toBe('group');
-    // 그룹 전용 권한 축이 없다는 것은 두 레코드가 같은 칸을 갖는다는 뜻이다.
-    expect(Object.keys(u).sort()).toEqual(Object.keys(g).sort());
+    // 반환 객체의 키를 맞대면 **같은 팩토리가 만들었으니** 당연히 같다.
+    // 재야 할 것은 저장 구조다 — 그룹만 갖는 칸이 있으면 거기서 갈린다.
+    const row = (id: string) =>
+      db.get<Record<string, unknown>>('SELECT * FROM principal WHERE id = ?', [id]);
+
+    expect(Object.keys(row(u.id)!).sort()).toEqual(Object.keys(row(g.id)!).sort());
+    // 그리고 그 칸들 중 어느 것도 권한을 담지 않는다.
+    for (const column of Object.keys(row(g.id)!)) {
+      expect(column, `주체 테이블에 권한 축으로 보이는 ${column} 이 있다`).not.toMatch(
+        /level|permission|grant|scope|acl/i,
+      );
+    }
   });
 });
 
@@ -174,8 +189,23 @@ describe('CON-PRINCIPAL-003 — 계정은 삭제하지 않고 suspended 로만 �
       surface.push(...Object.getOwnPropertyNames(proto));
     }
 
-    const deleters = surface.filter((m) => /^(remove|delete|drop|purge|destroy)User$/i.test(m));
+    // 미리 상상한 이름만 찾으면 `removePrincipal`·`deleteAccount` 를 놓친다.
+    // 지우는 뜻의 동사를 **전부** 잡되, **계정이 아닌 대상을 이름에 명시한
+    // 것**만 뺀다 — 이름이 대상을 밝히지 않는 삭제 메서드가 곧 위험한
+    // 것이고, `removeGroup`(그룹)·`removeMember`(멤버십)는 밝혔다.
+    const NOT_AN_ACCOUNT = ['removeGroup', 'removeMember'];
+    const deleters = surface.filter(
+      (m) => /^(remove|delete|drop|purge|destroy|erase|wipe)/i.test(m) && !NOT_AN_ACCOUNT.includes(m),
+    );
     expect(deleters, `계정 삭제 경로가 열려 있다: ${deleters.join(', ')}`).toEqual([]);
+
+    // 그 둘이 계정을 지우지 않는다는 것은 이름이 아니라 동작으로 잰다.
+    const u = principals.createUser('한범');
+    const g = principals.createGroup('기획팀');
+    principals.addMember(g.id, u.id);
+    principals.removeMember(g.id, u.id);
+    principals.removeGroup(g.id);
+    expect(principals.findById(u.id), '멤버십·그룹 삭제가 계정을 함께 지웠다').toBeDefined();
   });
 
   it('AC-2: 비활성화는 suspended 전환이며 레코드를 지우지 않는다', () => {

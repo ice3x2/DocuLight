@@ -116,6 +116,23 @@ export function createNode(
     return reject('unknown-workspace', `워크스페이스 ${input.workspaceId} 가 없습니다.`);
   }
 
+  // 부모는 **같은 워크스페이스**에 있어야 한다 (`SEC-WORKSPACE-003` AC-3).
+  //
+  // 검사하지 않으면 한 노드가 A 소속이면서 부모 사슬은 B 를 지나게 된다.
+  // 그러면 A 의 워크스페이스 ACL 이 B 의 디렉토리 아래 노드에 적용되고,
+  // 형제 조회(`workspace_id = A AND parent_id = B의디렉토리`)가 비어
+  // 접미사도 붙지 않아 같은 부모 아래 동명이 둘 남는다
+  // (`SEC-ACL-007` AC-1).
+  //
+  // 사유는 「없는 노드」다 — 다른 워크스페이스의 노드는 이 요청자에게
+  // 보이지 않아야 할 것이므로, 존재를 알려주는 별도 사유를 쓰지 않는다.
+  if (input.parentId !== null) {
+    const parent = nodes.findById(input.parentId);
+    if (parent === undefined || parent.workspaceId !== input.workspaceId) {
+      return unknownNode(input.parentId);
+    }
+  }
+
   // 부모의 편집을 요구한다 (`SEC-ACL-012` AC-1 · AC-2). 부모가 루트면
   // 워크스페이스가 그 자리다 — 워크스페이스가 상속 체인의 루트이므로
   // (`SEC-WORKSPACE-001`) 같은 판정이 그대로 답한다.
@@ -192,12 +209,17 @@ export function moveNode(
     return unknownNode(id);
   }
 
-  // 워크스페이스 경계를 넘는 이동은 아예 없다 (`SEC-ACL-014` AC-1) —
-  // `parentId` 가 다른 워크스페이스의 노드면 자리 검사가 아니라 여기서
-  // 막힌다. 대신 복사가 그 수요를 받는다(AC-2).
+  // 목적지는 **같은 워크스페이스의 실재하는 노드**여야 한다
+  // (`SEC-ACL-014` AC-1). 대신 복사가 경계를 넘는 수요를 받는다(AC-2).
+  //
+  // 존재 검사를 함께 두는 이유가 `SEC-ACL-006` AC-4 다. 없는 ID 를 그대로
+  // 흘려 보내면 아래 `place` 가 경로를 파생하다 **예외**를 던지고, 그러면
+  // 같은 입력이 실행자 레벨에 따라 어떤 때는 값으로 어떤 때는 예외로
+  // 갈린다 — 그 차이 자체가 존재 여부를 알려준다. 워크스페이스 ID 를
+  // 목적지로 준 경우도 여기서 함께 걸린다(노드 테이블에 없으므로).
   if (parentId !== null) {
     const destination = stores.nodes.findById(parentId);
-    if (destination !== undefined && destination.workspaceId !== node.workspaceId) {
+    if (destination === undefined || destination.workspaceId !== node.workspaceId) {
       return unknownNode(parentId);
     }
   }
@@ -248,6 +270,9 @@ export function copyNode(
     return unknownNode(id);
   }
 
+  // 복사는 경계를 넘을 수 있으므로(`SEC-ACL-014` AC-2) 워크스페이스가
+  // 같은지는 묻지 않는다. 실재하는지만 묻는다 — 없는 ID 를 흘리면 이동과
+  // 같은 이유로 예외가 난다.
   const destination = destinationId === null ? undefined : stores.nodes.findById(destinationId);
   if (destinationId !== null && destination === undefined) {
     return unknownNode(destinationId);

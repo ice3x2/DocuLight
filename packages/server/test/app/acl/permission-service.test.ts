@@ -142,11 +142,15 @@ describe('SEC-ACL-006 — 권한 없는 노드의 응답을 존재하지 않는 
     expect(forbidden).toBeUndefined();
   });
 
-  it('AC-3 · SEC-ACL-016 AC-1 · AC-2: 결과에 권한 부족을 뜻하는 값도 요청 표면도 없다', () => {
+  it('AC-3: 결과에 권한 부족을 뜻하는 값을 실을 자리가 없다', () => {
     const doc = idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'file', name: '비밀.md' }));
 
     // 값이 `undefined` 하나뿐이라 실을 자리가 없다 — 사유 코드도, 요청
     // 버튼을 그릴 근거가 될 `canRequestAccess` 도 담기지 않는다.
+    //
+    // `SEC-ACL-016` 을 이 자리에 라벨하지 않는다. 그 요구는 깨진 위키링크
+    // 화면과 딥링크 404 **화면의 버튼**에 관한 것이고, 그 화면들은 아직
+    // 없다 — 여기서 세면 없는 커버리지를 있다고 세는 것이 된다.
     expect(resolveNode(stores, me, doc)).toBeUndefined();
   });
 

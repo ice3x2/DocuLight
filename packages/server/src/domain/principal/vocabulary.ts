@@ -16,6 +16,8 @@ export const SUPERUSER_TERM = '슈퍼유저';
  */
 export const NO_ADMIN_BADGE = '관리자 없음';
 
+const TERM = '관리자';
+
 /** `관리자` 앞에 올 수 있는 범위 수식어. */
 const SCOPED = ['워크스페이스 ', '전 워크스페이스 ', '해당 워크스페이스 '];
 
@@ -29,15 +31,21 @@ const SCOPED = ['워크스페이스 ', '전 워크스페이스 ', '해당 워크
  * 문자열 안의 다른 단독 사용까지 통과시키지 않는다.
  */
 export function hasUnscopedAdminTerm(text: string): boolean {
-  // 예외 배지를 먼저 걷어낸다 — 남은 자리에 `관리자` 가 또 있으면 그것은
-  // 배지가 아니다.
-  const withoutBadge = text.split(NO_ADMIN_BADGE).join('');
+  // 배지가 놓인 **구간**을 표시해 둔다. 문자열에서 지우면 그 자리에서
+  // 앞뒤가 이어 붙어 없던 범위 수식어가 생긴다 —
+  // `워크스페이스 관리자 없음관리자에게` 가 `워크스페이스 관리자에게` 로
+  // 읽혀 통과한다. 위치를 바꾸지 않는 것이 그 우회를 막는 방법이다.
+  const badged: boolean[] = new Array(text.length).fill(false);
+  for (let at = text.indexOf(NO_ADMIN_BADGE); at !== -1; at = text.indexOf(NO_ADMIN_BADGE, at + 1)) {
+    for (let i = at; i < at + NO_ADMIN_BADGE.length; i += 1) badged[i] = true;
+  }
 
-  let index = withoutBadge.indexOf('관리자');
-  while (index !== -1) {
-    const before = withoutBadge.slice(0, index);
+  for (let index = text.indexOf(TERM); index !== -1; index = text.indexOf(TERM, index + 1)) {
+    // 배지 구간에 걸친 등장은 예외다 (AC-4).
+    if (badged[index] === true) continue;
+
+    const before = text.slice(0, index);
     if (!SCOPED.some((prefix) => before.endsWith(prefix))) return true;
-    index = withoutBadge.indexOf('관리자', index + 1);
   }
   return false;
 }

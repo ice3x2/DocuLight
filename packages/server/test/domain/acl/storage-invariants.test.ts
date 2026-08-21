@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { actorFor, permissionOf, type Actor } from '../../../src/app/acl/permission-service.js';
-import { grantPermission } from '../../../src/app/acl/grant-service.js';
+import { breakInheritance, grantPermission, inheritFromParent } from '../../../src/app/acl/grant-service.js';
 import type { NodeStores } from '../../../src/app/node/node-service.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
 import { nodeStores, superuserActor } from '../../support/acl-fixture.js';
@@ -29,8 +29,8 @@ afterEach(async () => {
   await rm(dir, { recursive: true, force: true });
 });
 
-const mkNode = (name: string, parentId: string | null = null) =>
-  stores.nodes.create({ workspaceId: WS, parentId, kind: 'file', name });
+const mkNode = (name: string, parentId: string | null = null, kind: 'file' | 'directory' = 'file') =>
+  stores.nodes.create({ workspaceId: WS, parentId, kind, name });
 
 describe('CON-ACL-002 — 거부 항목을 저장할 수 없다', () => {
   it('AC-2: 스키마가 거부를 뜻하는 레벨을 받지 않는다', () => {
@@ -160,5 +160,55 @@ describe('SEC-ACL-010 — 관리자가 준 편집과 편집자가 준 편집을 
     for (const level of levels) {
       expect(['view', 'edit', 'admin'], `모르는 레벨 ${level} 이 저장됐다`).toContain(level);
     }
+  });
+});
+
+describe('DR-ACL-001 — 노드 ACL 에는 관리 레벨 항목을 두지 않는다', () => {
+  it('AC-4: 저장소가 노드에 관리 레벨을 받지 않는다', () => {
+    const doc = mkNode('회의록.md');
+    const me = stores.principals.createUser('한범');
+
+    // 앱 계층의 `canGrant` 는 이미 막는다. 그러나 판정 쪽에 강등 로직이
+    // **두 곳** 필요했다는 사실이 저장 불변식이 없다는 증거다 — 방어가
+    // 둘이면 하나가 빠졌을 때 아무도 눈치채지 못한다.
+    expect(
+      () => stores.acl.grant({ nodeId: doc, principalId: me.id, level: 'admin', grantedBy: null }),
+      '문서 노드에 관리 항목이 저장된다',
+    ).toThrow();
+
+    expect(stores.acl.entriesOn(doc)).toEqual([]);
+  });
+
+  it('AC-4: 워크스페이스에는 그대로 저장된다 — 금지가 전체로 번지지 않는다', () => {
+    const me = stores.principals.createUser('한범');
+
+    expect(() =>
+      stores.acl.grant({ nodeId: WS, principalId: me.id, level: 'admin', grantedBy: null }),
+    ).not.toThrow();
+    expect(stores.acl.entriesOn(WS)).toHaveLength(1);
+  });
+});
+
+describe('SEC-ACL-010 — 부모 권한 가져오기도 감사에 남는다', () => {
+  it('AC-3: 조상에서 옮겨 온 항목마다 감사 행이 남는다', () => {
+    const folder = mkNode('기획', null, 'directory');
+    const doc = stores.nodes.create({ workspaceId: WS, parentId: folder, kind: 'file', name: '회의록.md' });
+    const a = stores.principals.createUser('갑');
+    const b = stores.principals.createUser('을');
+    grantPermission(stores, root, { nodeId: folder, principalId: a.id, level: 'edit' });
+    grantPermission(stores, root, { nodeId: folder, principalId: b.id, level: 'view' });
+
+    breakInheritance(stores, root, doc);
+    inheritFromParent(stores, root, doc);
+
+    const moved = stores.acl.entriesOn(doc);
+    expect(moved.length).toBeGreaterThan(0);
+
+    // 「전파를 막지 않는 대신 추적한다」는 거래의 한쪽만 남으면 안 된다.
+    const audited = db.all<{ n: number }>(
+      "SELECT COUNT(*) AS n FROM audit_log WHERE node_id = ? AND operation = 'acl.grant'",
+      [doc],
+    );
+    expect(audited[0]?.n, '조상에서 옮겨 온 부여가 감사에 없다').toBe(moved.length);
   });
 });

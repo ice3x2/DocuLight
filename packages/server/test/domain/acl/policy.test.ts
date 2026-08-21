@@ -126,8 +126,19 @@ describe('SEC-ACL-013 — 숨은 하위가 있는 디렉토리의 이동과 삭�
     // 값이 실려 있으면 거부 안내를 만드는 쪽이 언젠가 그것을 찍는다.
     const req = requirementFor('delete', { hasHiddenDescendant: true });
 
+    // 축이 넷으로 닫혀 있다는 것이 「실을 칸이 없다」의 내용이다.
     expect(Object.keys(req).sort()).toEqual(['destination', 'parent', 'target', 'workspace']);
-    expect(JSON.stringify(req)).not.toMatch(/count|name|path|hidden/i);
+
+    // 값도 레벨 셋과 `null` 뿐이라 개수·이름·경로가 들어갈 자리가 없다.
+    // 값 범위를 재지 않고 문자열만 훑으면 어떤 구현에서도 통과한다.
+    for (const value of Object.values(req)) {
+      expect([null, 'view', 'edit', 'admin'], `요구에 레벨 아닌 값 ${String(value)} 이 실렸다`).toContain(
+        value,
+      );
+    }
+
+    // 숨은 하위가 몇이든 요구가 같다 — 개수가 결과에 새지 않는다.
+    expect(requirementFor('delete', { hasHiddenDescendant: true })).toEqual(req);
   });
 });
 
@@ -298,6 +309,17 @@ describe('CON-PRINCIPAL-007 — 관리자를 단독으로 쓰지 않고 항상 �
     expect(hasUnscopedAdminTerm('관리자 없음')).toBe(false);
     // 그 배지 문구를 품었다고 해서 다른 단독 사용까지 면제되지는 않는다.
     expect(hasUnscopedAdminTerm('관리자 없음 — 관리자에게 문의')).toBe(true);
+  });
+
+  it('AC-4: 배지를 지워 앞뒤를 이어 붙이는 우회가 막힌다', () => {
+    // 배지를 문자열에서 **삭제**하면 그 자리에서 앞뒤가 붙어 없던 범위
+    // 수식어가 생긴다 — 「…관리자 없음관리자에게…」가 「워크스페이스
+    // 관리자에게」로 읽힌다.
+    expect(
+      hasUnscopedAdminTerm('워크스페이스 관리자 없음관리자에게 문의'),
+      '배지를 지워 만든 가짜 범위 수식어가 통과한다',
+    ).toBe(true);
+    expect(hasUnscopedAdminTerm('워크스페이스 관리자 없음관리자')).toBe(true);
   });
 
   it('부여 안내 문구가 이 규칙을 지킨다', () => {

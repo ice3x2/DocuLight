@@ -196,7 +196,10 @@ describe('grantedNodeIds — pass-through 판정의 입력', () => {
     acl.grant({ nodeId: doc, principalId: me, level: 'view', grantedBy: null });
     acl.grant({ nodeId: other, principalId: principals.createUser('남').id, level: 'view', grantedBy: null });
 
+    // 부여받은 것만, 그리고 **내 것만** 돌아온다. 조상(folder)도 남의
+    // 부여(other)도 섞이지 않는다.
     expect(acl.grantedNodeIds([me])).toEqual([doc]);
-    expect(folder).not.toBe(doc);
+    expect(acl.grantedNodeIds([me])).not.toContain(folder);
+    expect(acl.grantedNodeIds([me])).not.toContain(other);
   });
 });

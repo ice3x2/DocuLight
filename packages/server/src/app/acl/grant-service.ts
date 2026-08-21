@@ -136,6 +136,10 @@ export function inheritFromParent(
       level: entry.level === 'admin' ? 'edit' : entry.level,
       grantedBy: actor.id,
     });
+    // 이것도 부여다 (`SEC-ACL-010` AC-3). 한 번의 조작이 여러 항목을
+    // 만든다고 해서 기록이 면제되지 않는다 — 오히려 그래서 되짚을 근거가
+    // 더 필요하다.
+    stores.audit.append({ operation: ACL_GRANT, actor: actor.id, nodeId });
   }
   return { ok: true };
 }
