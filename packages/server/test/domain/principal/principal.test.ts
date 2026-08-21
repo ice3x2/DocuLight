@@ -12,15 +12,19 @@ import {
   addGroupMember,
   removeGroup,
   renameGroup,
-  suspendUser,
+  setAccountStatus,
 } from '../../../src/app/principal/principal-service.js';
 import { isSuperuser, subjectIdsOf } from '../../../src/domain/principal/subject.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
+import { SqliteSessionRepository } from '../../../src/infra/sqlite/session-repository.js';
 import { SqlitePrincipalRepository } from '../../../src/infra/sqlite/principal-repository.js';
 
 let dir: string;
 let db: Database;
 let principals: SqlitePrincipalRepository;
+
+/** 상태 변경은 슈퍼유저 바닥 가드를 지나야 한다 — 우회 진입점을 두지 않는다. */
+const guarded = () => ({ principals, sessions: new SqliteSessionRepository(db) });
 
 beforeEach(async () => {
   dir = await mkdtemp(join(tmpdir(), 'doculight-principal-'));
@@ -219,7 +223,7 @@ describe('CON-PRINCIPAL-003 — 계정은 삭제하지 않고 suspended 로만 �
 
   it('AC-2: 비활성화는 suspended 전환이며 레코드를 지우지 않는다', () => {
     const u = principals.createUser('한범');
-    expect(suspendUser(principals, u.id)).toEqual({ ok: true });
+    expect(setAccountStatus(guarded(), u.id, 'suspended')).toEqual({ ok: true });
 
     const after = principals.findById(u.id);
     expect(after?.status).toBe('suspended');
@@ -232,7 +236,7 @@ describe('CON-PRINCIPAL-003 — 계정은 삭제하지 않고 suspended 로만 �
       u.id,
     ]);
 
-    suspendUser(principals, u.id);
+    setAccountStatus(guarded(), u.id, 'suspended');
 
     const rows = db.all<{ actor: string }>('SELECT actor FROM audit_log WHERE id = ?', ['a1']);
     expect(rows).toHaveLength(1);
@@ -246,7 +250,7 @@ describe('CON-PRINCIPAL-003 — 계정은 삭제하지 않고 suspended 로만 �
       [u.id],
     );
 
-    suspendUser(principals, u.id);
+    setAccountStatus(guarded(), u.id, 'suspended');
 
     const entries = db.all<{ principal_id: string }>('SELECT principal_id FROM acl_entry');
     expect(entries).toHaveLength(1);

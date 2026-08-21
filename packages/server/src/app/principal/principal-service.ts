@@ -1,13 +1,19 @@
+import { canAuthenticate } from '../../domain/auth/account-gate.js';
 import type { PrincipalRepository } from '../../domain/ports/principal-repository.js';
-import type { PrincipalId } from '../../domain/principal/principal.js';
-import { isSystemGroup } from '../../domain/principal/system-groups.js';
+import type { SessionRepository } from '../../domain/ports/session-repository.js';
+import type { PrincipalId, PrincipalStatus } from '../../domain/principal/principal.js';
+import { SUPERUSER_GROUP_ID, isSystemGroup } from '../../domain/principal/system-groups.js';
 
 /** 거절 사유. 예외가 아니라 값이다 — 예측 가능한 분기는 예외로 흘리지 않는다. */
 export type PrincipalRule =
   | 'system-group-immutable'
   | 'member-must-be-user'
   | 'unknown-principal'
-  | 'not-a-group';
+  | 'not-a-group'
+  | 'last-active-superuser';
+
+/** 슈퍼유저 바닥을 지키는 가드가 내는 사유 (`SEC-AUTH-016`). */
+export type PrincipalGuardRule = Extract<PrincipalRule, 'last-active-superuser'>;
 
 export type PrincipalResult = { ok: true } | { ok: false; rule: PrincipalRule };
 
@@ -79,20 +85,100 @@ export function addGroupMember(
 }
 
 /**
- * 계정을 정지한다. **삭제가 아니다** (`CON-PRINCIPAL-003` AC-2).
+ * 이 조작이 슈퍼유저 바닥을 무너뜨리는가 (`SEC-AUTH-016`).
  *
- * 레코드가 남으므로 그 계정을 행위자로 가리키는 감사 로그(AC-3)와 그 앞으로
- * 부여된 ACL 항목(AC-4)의 참조가 그대로 산다. 정지를 ACL 거부 항목으로
- * 표현하지 않는 것도 같은 이유다 — 그러면 합집합 모델이 깨진다
- * (`CON-ACL-002` AC-4).
+ * **결과 상태로 판정한다** (AC-5). 「멤버 제거」·「상태 전환」 같은 조작을
+ * 열거하지 않는 이유가 그것이다 — 열거하면 열거되지 않은 경로가 조용히
+ * 통과하고, 그 경로는 대개 나중에 추가된다.
+ *
+ * 세는 것은 **`active` 인 멤버**다 (AC-2~AC-4). 멤버 수만 보면 정지된
+ * 슈퍼유저가 바닥을 떠받치는 것으로 읽혀, 아무도 들어올 수 없는 인스턴스가
+ * 만들어진다.
+ *
+ * @param after 조작이 끝난 뒤의 상태를 흉내 내는 함수. 실제로 쓰기 전에
+ *   그 결과를 세어 보는 것이 이 가드의 방식이다.
  */
-export function suspendUser(
+function wouldEmptySuperusers(
   principals: PrincipalRepository,
-  id: PrincipalId,
-): PrincipalResult {
-  const target = principals.findById(id);
-  if (target === undefined) return reject('unknown-principal');
+  after: (id: PrincipalId) => { inGroup: boolean; status: PrincipalStatus | undefined },
+): boolean {
+  const members = principals.membersOf(SUPERUSER_GROUP_ID);
 
-  principals.setStatus(id, 'suspended');
+  const isActive = (status: PrincipalStatus | undefined) =>
+    status !== undefined && canAuthenticate(status);
+
+  const before = members.filter((id) => isActive(principals.findById(id)?.status)).length;
+
+  // **이미 0명이면 이 조작이 0으로 만든 것이 아니다.** 그 상태를 막으면
+  // 설치 전(슈퍼유저가 아직 없는) 인스턴스에서 모든 상태 변경이 잠긴다 —
+  // 요구가 금지하는 것은 「0으로 **만드는**」 조작이다.
+  if (before === 0) return false;
+
+  const remaining = members.filter((id) => {
+    const next = after(id);
+    return next.inGroup && isActive(next.status);
+  });
+
+  return remaining.length === 0;
+}
+
+export interface GuardedStores {
+  principals: PrincipalRepository;
+  /** 정지가 세션도 함께 끊는다 — 남기면 「살아 있는 세션 목록」이 사실과 어긋난다. */
+  sessions: SessionRepository;
+}
+
+/**
+ * 그룹에서 멤버를 뺀다. 슈퍼유저 바닥을 무너뜨리면 거절한다.
+ */
+export function removeFromGroup(
+  stores: GuardedStores,
+  groupId: PrincipalId,
+  userId: PrincipalId,
+): PrincipalResult {
+  if (
+    groupId === SUPERUSER_GROUP_ID &&
+    wouldEmptySuperusers(stores.principals, (id) => ({
+      inGroup: id !== userId,
+      status: stores.principals.findById(id)?.status,
+    }))
+  ) {
+    return reject('last-active-superuser');
+  }
+
+  stores.principals.removeMember(groupId, userId);
+  return ok;
+}
+
+/**
+ * 계정 상태를 바꾼다. 슈퍼유저 바닥을 무너뜨리면 거절한다.
+ *
+ * `suspendUser` 와 나누지 않고 이것 하나를 둔다 — 상태를 바꾸는 자리가
+ * 둘이면 한쪽만 가드를 갖게 되고, 가드 없는 쪽이 곧 우회 경로가 된다.
+ */
+export function setAccountStatus(
+  stores: GuardedStores,
+  userId: PrincipalId,
+  status: PrincipalStatus,
+): PrincipalResult {
+  const account = stores.principals.findById(userId);
+  if (account === undefined) return reject('unknown-principal');
+
+  if (
+    wouldEmptySuperusers(stores.principals, (id) => ({
+      inGroup: true,
+      status: id === userId ? status : stores.principals.findById(id)?.status,
+    }))
+  ) {
+    return reject('last-active-superuser');
+  }
+
+  stores.principals.setStatus(userId, status);
+
+  // 열린 상태가 아니게 됐으면 그 계정의 세션을 함께 끊는다.
+  // 인증 단계가 상태를 다시 보므로 판정은 이미 닫혀 있지만, 행을 남기면
+  // 「살아 있는 세션」 목록이 사실과 어긋난다.
+  if (!canAuthenticate(status)) stores.sessions.removeAllFor(userId);
+
   return ok;
 }

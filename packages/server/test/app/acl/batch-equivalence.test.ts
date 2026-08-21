@@ -10,7 +10,8 @@ import {
   type Actor,
 } from '../../../src/app/acl/permission-service.js';
 import { breakInheritance, grantPermission } from '../../../src/app/acl/grant-service.js';
-import { suspendUser } from '../../../src/app/principal/principal-service.js';
+import { setAccountStatus } from '../../../src/app/principal/principal-service.js';
+import { SqliteSessionRepository } from '../../../src/infra/sqlite/session-repository.js';
 import type { NodeStores } from '../../../src/app/node/node-service.js';
 import { SUPERUSER_GROUP_ID } from '../../../src/domain/principal/system-groups.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
@@ -112,7 +113,7 @@ describe('permissionBatch ↔ permissionOf 동치', () => {
 
     expect(permissionBatch(stores, root, [doc], WS)(doc)).toBe(permissionOf(stores, root, doc));
 
-    suspendUser(stores.principals, me.id);
+    setAccountStatus({ ...stores, sessions: new SqliteSessionRepository(db) }, me.id, 'suspended');
     const suspended = actorFor(stores.principals, me.id);
     expect(permissionBatch(stores, suspended, [doc], WS)(doc)).toBe(
       permissionOf(stores, suspended, doc),

@@ -7,7 +7,8 @@ import { actorFor, permissionOf, type Actor } from '../../../src/app/acl/permiss
 import { grantPermission } from '../../../src/app/acl/grant-service.js';
 import { createWorkspaceAs } from '../../../src/app/workspace/create-workspace.js';
 import { copyNode, createNode, moveNode } from '../../../src/app/node/node-service.js';
-import { suspendUser } from '../../../src/app/principal/principal-service.js';
+import { setAccountStatus } from '../../../src/app/principal/principal-service.js';
+import { SqliteSessionRepository } from '../../../src/infra/sqlite/session-repository.js';
 import { FsWorkspaceFiles } from '../../../src/infra/fs/workspace-sidecar.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
 import { nodeStores, superuserActor } from '../../support/acl-fixture.js';
@@ -188,7 +189,7 @@ describe('CON-ACL-002 — 계정 정지는 ACL 이 아니라 주체 레벨 게�
     grantPermission(stores, root, { nodeId: doc, principalId: you.id, level: 'edit' });
     expect(permissionOf(stores, you, doc)).toBe('edit');
 
-    suspendUser(stores.principals, you.id);
+    setAccountStatus({ ...stores, sessions: new SqliteSessionRepository(db) }, you.id, 'suspended');
 
     // 항목은 남는다 — 정지를 거부 항목으로 만들면 합집합 모델이 깨진다.
     expect(stores.acl.entriesOn(doc).some((e) => e.principalId === you.id)).toBe(true);
@@ -197,7 +198,15 @@ describe('CON-ACL-002 — 계정 정지는 ACL 이 아니라 주체 레벨 게�
   });
 
   it('AC-4: 정지는 슈퍼유저의 우회보다도 앞선다', () => {
-    suspendUser(stores.principals, root.id);
+    // 마지막 active 슈퍼유저는 정지시킬 수 없으므로(`SEC-AUTH-016`) 둘째를
+    // 세운 뒤에 잰다. 그 가드가 없으면 이 시험은 아무도 못 들어오는
+    // 인스턴스를 만들어 놓고 그것을 「통과」로 셌을 것이다.
+    const spare = superuserActor(stores, '예비');
+    expect(spare.requester.superuser).toBe(true);
+
+    expect(
+      setAccountStatus({ ...stores, sessions: new SqliteSessionRepository(db) }, root.id, 'suspended'),
+    ).toEqual({ ok: true });
 
     expect(actorFor(stores.principals, root.id).requester.superuser).toBe(false);
   });
