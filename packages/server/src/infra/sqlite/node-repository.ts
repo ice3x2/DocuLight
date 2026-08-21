@@ -72,4 +72,23 @@ export class SqliteNodeRepository implements NodeRepository {
 
     return segments.join('/');
   }
+
+  rename(id: NodeId, name: string): void {
+    this.store.run("UPDATE node SET name = ?, updated_at = datetime('now') WHERE id = ?", [
+      name,
+      id,
+    ]);
+  }
+
+  move(id: NodeId, parentId: NodeId | null): void {
+    this.store.run("UPDATE node SET parent_id = ?, updated_at = datetime('now') WHERE id = ?", [
+      parentId,
+      id,
+    ]);
+  }
+
+  remove(id: NodeId): void {
+    // 하위는 `parent_id` 의 ON DELETE CASCADE 가 함께 지운다.
+    this.store.run('DELETE FROM node WHERE id = ?', [id]);
+  }
 }
