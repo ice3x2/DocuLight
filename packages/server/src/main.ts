@@ -9,7 +9,6 @@ import {
   type ReconciliationLoop,
 } from './app/reconciliation/reconcile.js';
 import { bootstrapDefaultWorkspace } from './app/workspace/bootstrap-default-workspace.js';
-import { reconcileWorkspaceSidecars } from './app/workspace/restore-from-sidecar.js';
 import { loadConfig, type ServerConfig } from './config/config.js';
 import { createHttpServer } from './http/server.js';
 import { FsDocumentStore } from './infra/fs/document-store.js';
@@ -66,16 +65,20 @@ export async function bootstrap(config: ServerConfig): Promise<ServerRuntime> {
   };
 
   try {
-    await reconcileWorkspaceSidecars(stores);
-    await bootstrapDefaultWorkspace(stores);
+    // 재조정이 사이드카 재구성을 안에서 먼저 돌린다 — 워크스페이스 목록이
+    // 확정돼야 그 안의 파일을 볼 수 있다.
     await reconcile(stores);
+    // 기본 워크스페이스는 그 뒤다. 앞서면 DB 만 비어 있는 복원 상황에서
+    // 사이드카로 되살아날 워크스페이스를 못 보고 하나를 더 만든다.
+    await bootstrapDefaultWorkspace(stores);
   } catch (error) {
     db.close();
     throw error;
   }
 
-  // 첫 회차는 위에서 이미 돌았다. 이 루프는 그 뒤의 주기 반복을 맡는다.
-  const reconciliation = startReconciliationLoop(stores);
+  // 첫 회차는 위에서 이미 돌았다 — 루프에게 다시 돌지 말라고 **말해야**
+  // 한다. 말하지 않으면 기동 직후 전체 스캔이 두 번 돈다.
+  const reconciliation = startReconciliationLoop(stores, { runImmediately: false });
 
   return {
     reconciliation,

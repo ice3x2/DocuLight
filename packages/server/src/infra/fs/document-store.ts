@@ -43,7 +43,11 @@ export class FsDocumentStore implements DocumentStore {
 
   async list(workspaceId: string): Promise<string[]> {
     const root = workspaceDirectory(this.root, workspaceId);
-    return (await walk(root, root)).sort();
+    // 루트는 **반드시 읽혀야 한다.** 못 읽는 것을 빈 것으로 흡수하면
+    // 재조정이 그 상태를 「전부 사라졌다」로 읽어, 멀쩡한 문서 전량에
+    // tombstone 을 찍고 대기열을 그 수만큼 채운다. 워크스페이스 디렉토리가
+    // 통째로 없는 것은 파일이 지워진 것이 아니라 **닿을 수 없는 것**이다.
+    return (await walk(root, root, true)).sort();
   }
 
   /**
@@ -76,12 +80,19 @@ export class FsDocumentStore implements DocumentStore {
  * Windows 의 역슬래시를 그대로 흘리면 같은 파일이 OS 마다 다른 경로로
  * 읽혀 재조정이 매번 신규 노드를 만든다.
  */
-async function walk(at: string, base: string): Promise<string[]> {
+async function walk(at: string, base: string, isRoot = false): Promise<string[]> {
   let entries;
   try {
     entries = await readdir(at, { withFileTypes: true });
-  } catch {
-    // 아직 만들어지지 않은 워크스페이스 디렉토리는 빈 것과 같다.
+  } catch (error) {
+    // 루트에서는 어떤 오류도 흡수하지 않는다 — 위 `list` 주석 참조.
+    //
+    // 하위에서 스캔 도중 사라진 것(`ENOENT`)은 빈 것과 같다. 그 아래
+    // 파일들은 실제로 없어졌고 tombstone 이 맞는 처분이다. 권한·입출력
+    // 오류는 그렇지 않으므로 그대로 올린다.
+    if (isRoot || (error as NodeJS.ErrnoException).code !== 'ENOENT') {
+      throw new Error(`cannot read ${at}`, { cause: error });
+    }
     return [];
   }
 

@@ -3,8 +3,10 @@ import { SYSTEM_RECONCILER, type AuditSink } from '../../domain/ports/audit-sink
 import type { DocumentStore } from '../../domain/ports/document-store.js';
 import type { FindingQueue } from '../../domain/ports/finding-queue.js';
 import type { NodeId } from '../../domain/node/node-id.js';
-import type { NodeRepository } from '../../domain/ports/node-repository.js';
+import type { NodeRecord, NodeRepository } from '../../domain/ports/node-repository.js';
+import type { WorkspaceFiles } from '../../domain/ports/workspace-files.js';
 import type { WorkspaceRepository } from '../../domain/ports/workspace-repository.js';
+import { reconcileWorkspaceSidecars } from '../workspace/restore-from-sidecar.js';
 
 /**
  * 파일시스템과 DB 의 전체 재조정 (`REL-STORAGE-001` · `R77`).
@@ -31,6 +33,7 @@ export interface ReconciliationStores {
   nodes: NodeRepository;
   workspaces: WorkspaceRepository;
   documents: DocumentStore;
+  files: WorkspaceFiles;
   audit: AuditSink;
   queue: FindingQueue;
 }
@@ -40,10 +43,28 @@ export interface ReconciliationResult {
   created: NodeId[];
   /** 대응 파일이 사라져 tombstone 으로 표시한 노드. */
   orphaned: NodeId[];
+  /** 파일이 돌아와 tombstone 을 푼 노드. */
+  revived: NodeId[];
+  /** 자기 자리에 있지 않아 격리한 워크스페이스 디렉토리. */
+  quarantined: string[];
 }
 
+/**
+ * 한 회차의 전체 재조정.
+ *
+ * **사이드카가 먼저다.** 워크스페이스 목록이 확정돼야 그 안의 파일을 볼 수
+ * 있고, 사이드카 검사를 기동에만 두면 서버가 도는 중에 들어온 백업 사본이
+ * 재기동 전까지 방치된다 — 그 사본 안의 파일은 어느 워크스페이스에도
+ * 속하지 않아 스캔 대상조차 아니다.
+ */
 export async function reconcile(stores: ReconciliationStores): Promise<ReconciliationResult> {
-  const result: ReconciliationResult = { created: [], orphaned: [] };
+  const sidecars = await reconcileWorkspaceSidecars(stores);
+  const result: ReconciliationResult = {
+    created: [],
+    orphaned: [],
+    revived: [],
+    quarantined: sidecars.quarantined,
+  };
 
   for (const workspace of stores.workspaces.list()) {
     await reconcileWorkspace(stores, workspace.id, result);
@@ -66,7 +87,19 @@ async function reconcileWorkspace(
   const known = new Map(nodes.allIn(workspaceId).map((node) => [nodes.pathOf(node.id), node]));
 
   for (const path of onDisk) {
-    if (known.has(path)) {
+    const existing = known.get(path);
+    if (existing !== undefined) {
+      // 사라졌던 파일이 돌아왔다. 새 노드로 대신하면 ID 가 바뀌어 그 노드
+      // 앞으로 부여된 권한과 이력이 끊긴다 — 있던 노드를 되살린다.
+      if (existing.orphanedAt !== null) {
+        nodes.clearOrphan(existing.id);
+        stores.audit.append({
+          operation: 'restore',
+          actor: SYSTEM_RECONCILER,
+          nodeId: existing.id,
+        });
+        result.revived.push(existing.id);
+      }
       continue;
     }
     const id = ensurePath(stores, workspaceId, path, known);
@@ -97,7 +130,7 @@ function ensurePath(
   stores: ReconciliationStores,
   workspaceId: string,
   path: string,
-  known: Map<string, { id: NodeId }>,
+  known: Map<string, NodeRecord>,
 ): NodeId {
   const segments = path.split('/');
   let parentId: NodeId | null = null;
@@ -112,13 +145,12 @@ function ensurePath(
     }
 
     const isLeaf = index === segments.length - 1;
-    const id = stores.nodes.create({
-      workspaceId,
-      parentId,
-      kind: isLeaf ? 'file' : 'directory',
-      name,
-    });
-    known.set(walked, { id });
+    const kind = isLeaf ? 'file' : 'directory';
+    const id = stores.nodes.create({ workspaceId, parentId, kind, name });
+    // 방금 만든 것도 **완전한 레코드**로 넣는다. 절반만 채운 값을 넣으면
+    // 아래 tombstone 루프가 `kind` 를 `undefined` 로 읽고, 그것이 우연히
+    // 걸러지는 조건 순서에 기대게 된다.
+    known.set(walked, { id, workspaceId, parentId, kind, name, orphanedAt: null });
     // 발견은 **사실**이므로 감사 로그가 먼저다. 대기열은 그 행을 참조한다
     // (`R139` — 같은 사실을 두 곳에 적지 않는다).
     record(stores, 'create', id, 'unregistered-file');
@@ -158,6 +190,11 @@ export function startReconciliationLoop(
   stores: ReconciliationStores,
   options: {
     intervalMs?: number;
+    /**
+     * 기동 즉시 한 회차를 돌 것인가. 호출자가 이미 한 번 돌렸다면 `false`
+     * 다 — 켠 채로 두면 큰 볼트에서 기동 직후 스캔 비용이 두 배가 된다.
+     */
+    runImmediately?: boolean;
     onRun?: (result: ReconciliationResult) => void;
   } = {},
 ): ReconciliationLoop {
@@ -184,13 +221,20 @@ export function startReconciliationLoop(
     });
   };
 
-  const first = setTimeout(run, 0);
+  const first = options.runImmediately === false ? undefined : setTimeout(run, 0);
   const timer = setInterval(run, options.intervalMs ?? RECONCILE_INTERVAL_MS);
+
+  // 타이머가 이벤트 루프를 잡지 않게 한다. 잡으면 할 일이 끝난 프로세스가
+  // `close()` 를 부르기 전까지 종료하지 못한다.
+  first?.unref?.();
+  timer.unref?.();
 
   return {
     async stop() {
       stopped = true;
-      clearTimeout(first);
+      if (first !== undefined) {
+        clearTimeout(first);
+      }
       clearInterval(timer);
       await inFlight;
     },

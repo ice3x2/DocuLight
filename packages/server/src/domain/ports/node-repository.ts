@@ -61,6 +61,16 @@ export interface NodeRepository {
   markOrphaned(id: NodeId, at: string): void;
 
   /**
+   * tombstone 을 푼다 (`REL-STORAGE-001` AC-2).
+   *
+   * tombstone 의 정당화는 「파일이 잠시 없었을 뿐인 경우」다. 그 「잠시」가
+   * 끝났을 때 돌아오는 길이 없으면 그 정당화가 성립하지 않는다. 새 노드를
+   * 만들어 대신하지 않는 이유는 ID 가 바뀌면 그 노드 앞으로 부여된 권한과
+   * 이력이 끊기기 때문이다.
+   */
+  clearOrphan(id: NodeId): void;
+
+  /**
    * 부모 사슬을 거슬러 경로를 만든다.
    *
    * 경로를 칸에 담지 않는 이유가 여기 있다 — 담으면 이동·개명 때 두 곳을

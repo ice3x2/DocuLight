@@ -48,7 +48,7 @@ beforeEach(async () => {
   queue = new SqliteFindingQueue(db);
   audit = new SqliteAuditLog(db);
 
-  stores = { nodes, workspaces, documents, audit, queue };
+  stores = { nodes, workspaces, documents, files, audit, queue };
   wsStores = { workspaces, files, audit, queue };
 
   ws = (await createWorkspace(wsStores, '기획팀')).id;

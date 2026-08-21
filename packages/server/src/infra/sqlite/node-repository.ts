@@ -114,6 +114,10 @@ export class SqliteNodeRepository implements NodeRepository {
     this.store.run('UPDATE node SET orphaned_at = ? WHERE id = ?', [at, id]);
   }
 
+  clearOrphan(id: NodeId): void {
+    this.store.run('UPDATE node SET orphaned_at = NULL WHERE id = ?', [id]);
+  }
+
   remove(id: NodeId): void {
     // 하위는 `parent_id` 의 ON DELETE CASCADE 가 함께 지운다.
     this.store.run('DELETE FROM node WHERE id = ?', [id]);

@@ -46,6 +46,7 @@ beforeEach(async () => {
     nodes,
     workspaces,
     documents,
+    files: new FsWorkspaceFiles(docsRoot),
     audit: new SqliteAuditLog(db),
     queue: new SqliteFindingQueue(db),
   };

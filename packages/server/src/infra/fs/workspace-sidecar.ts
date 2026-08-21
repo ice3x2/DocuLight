@@ -1,6 +1,7 @@
 import { mkdir, readFile, readdir, rename, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
+import { resolveNameCollision } from '../../domain/naming/collision.js';
 import type { FoundSidecar, WorkspaceFiles } from '../../domain/ports/workspace-files.js';
 import { QUARANTINE_DIRECTORY } from '../../domain/workspace/quarantine.js';
 import type { Workspace, WorkspaceId } from '../../domain/workspace/workspace.js';
@@ -69,7 +70,11 @@ export class FsWorkspaceFiles implements WorkspaceFiles {
 
     // 옮기기만 한다. 사본과 원본을 자동으로 판별할 수 없으므로 사람이
     // 판단할 때까지 둘 다 남긴다.
-    const at = join(shelf, directory);
+    //
+    // 자리가 이미 차 있으면 접미사를 붙인다. 덮어쓰면 먼저 격리된 것이
+    // 사라지고, 그냥 실패하면 그 실패가 기동을 세워 사람이 docsRoot 를
+    // 직접 손대기 전까지 매 기동이 같은 자리에서 죽는다.
+    const at = join(shelf, resolveNameCollision(directory, await readdir(shelf)));
     await rename(join(this.docsRoot, directory), at);
     return at;
   }
