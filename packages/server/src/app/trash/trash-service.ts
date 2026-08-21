@@ -2,6 +2,7 @@ import { basename } from 'node:path';
 
 import { permissionBatch, permissionOf, type AclStores, type Actor } from '../acl/permission-service.js';
 import type { Clock } from '../auth/login-service.js';
+import { purgeAttachmentsOf, type AttachmentPurgeStores } from '../attachment/attachment-service.js';
 import { readSetting } from '../settings/instance-settings.js';
 import { resolveNameCollision } from '../../domain/naming/collision.js';
 import { permits } from '../../domain/acl/level.js';
@@ -16,7 +17,7 @@ export const DEFAULT_RETENTION_DAYS = 30;
 
 /** 설정 키. 두 곳에 적으면 한쪽 오타가 조용히 기본값을 쓴다. */
 
-export interface TrashStores extends AclStores {
+export interface TrashStores extends AclStores, AttachmentPurgeStores {
   trash: TrashRepository;
   trashFiles: TrashFiles;
   clock: Clock;
@@ -226,6 +227,10 @@ export function canPurge(stores: TrashStores, actor: Actor, entry: TrashEntry): 
 /** 실체·사이드카·인덱스·노드·ACL 을 함께 걷는다 (`SEC-STORAGE-003` AC-4). */
 async function hardDelete(stores: TrashStores, entry: TrashEntry): Promise<void> {
   await stores.trashFiles.purge(entry);
+  // 첨부를 **여기서** 걷는다 (`FR-ATTACH-005`). 휴지통으로 보내는 경로에는
+  // 걸지 않는다(AC-3) — 복구할 수 있는 상태에서 첨부를 지우면 복구된
+  // 문서가 깨져서 돌아온다.
+  await purgeAttachmentsOf(stores, entry.nodeId);
   stores.trash.remove(entry.nodeId);
   // 노드 제거가 그 서브트리의 ACL 도 함께 걷는다 — 복구할 수 없다는 것이
   // 이 조작의 내용이다.

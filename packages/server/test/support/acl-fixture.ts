@@ -1,5 +1,6 @@
 import { actorFor, type Actor } from '../../src/app/acl/permission-service.js';
 import type { NodeStores } from '../../src/app/node/node-service.js';
+import type { AttachmentStores } from '../../src/app/attachment/attachment-service.js';
 import type { DocumentStores } from '../../src/app/document/save-service.js';
 import type { TrashStores } from '../../src/app/trash/trash-service.js';
 import { SUPERUSER_GROUP_ID } from '../../src/domain/principal/system-groups.js';
@@ -9,6 +10,7 @@ import { SqliteSettingStore } from '../../src/infra/sqlite/setting-store.js';
 import type { Database } from '../../src/infra/sqlite/database.js';
 import { FsTrashFiles } from '../../src/infra/fs/trash-files.js';
 import { SqliteNodeRepository } from '../../src/infra/sqlite/node-repository.js';
+import { SqliteAttachmentRepository } from '../../src/infra/sqlite/attachment-repository.js';
 import { SqliteTrashRepository } from '../../src/infra/sqlite/trash-repository.js';
 import { SqliteVersionRepository } from '../../src/infra/sqlite/version-repository.js';
 import { SqlitePrincipalRepository } from '../../src/infra/sqlite/principal-repository.js';
@@ -60,6 +62,8 @@ export function trashStores(
     ...nodeStores(db),
     trash: new SqliteTrashRepository(db),
     trashFiles: new FsTrashFiles(docsRoot),
+    attachments: new SqliteAttachmentRepository(db),
+    docsRoot,
     clock,
   };
 }
@@ -80,5 +84,19 @@ export function documentStores(
     versions: new SqliteVersionRepository(db),
     clock,
     docsRoot,
+  };
+}
+
+/** 첨부까지 세운다 — 첨부는 문서 본문 조작 위에 선다. */
+export function attachmentStores(
+  db: Database,
+  docsRoot: string,
+  clock: () => Date = () => new Date(),
+): AttachmentStores & TrashStores {
+  // 휴지통까지 함께 세운다 — 영구 삭제가 첨부를 걷으므로(FR-ATTACH-005)
+  // 그 축을 재려면 두 저장소가 같은 자리에 있어야 한다.
+  return {
+    ...documentStores(db, docsRoot, clock),
+    ...trashStores(db, docsRoot, clock),
   };
 }

@@ -36,8 +36,8 @@ export interface SaveInput {
   session?: string;
 }
 
-/** 워크스페이스 루트 기준 실체 경로. */
-export function workspaceRootOf(stores: DocumentStores, workspaceId: string): string {
+/** 워크스페이스 루트 기준 실체 경로. `docsRoot` 하나만 있으면 된다. */
+export function workspaceRootOf(stores: { docsRoot: string }, workspaceId: string): string {
   return join(stores.docsRoot, workspaceId);
 }
 

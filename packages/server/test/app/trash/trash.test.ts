@@ -19,11 +19,9 @@ import {
   type TrashStores,
 } from '../../../src/app/trash/trash-service.js';
 import { TRASH_DIRECTORY } from '../../../src/domain/trash/trash-layout.js';
-import { FsTrashFiles } from '../../../src/infra/fs/trash-files.js';
 import { FsWorkspaceFiles } from '../../../src/infra/fs/workspace-sidecar.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
-import { SqliteTrashRepository } from '../../../src/infra/sqlite/trash-repository.js';
-import { nodeStores, superuserActor } from '../../support/acl-fixture.js';
+import { superuserActor, trashStores } from '../../support/acl-fixture.js';
 
 let dir: string;
 let docsRoot: string;
@@ -53,12 +51,7 @@ beforeEach(async () => {
   await mkdir(docsRoot, { recursive: true });
   db = openDatabase(join(dir, 'doculight.db'));
   now = new Date('2026-08-22T09:00:00.000Z');
-  stores = {
-    ...nodeStores(db),
-    trash: new SqliteTrashRepository(db),
-    trashFiles: new FsTrashFiles(docsRoot),
-    clock: () => now,
-  };
+  stores = trashStores(db, docsRoot, () => now);
   root = superuserActor(stores);
   const files = new FsWorkspaceFiles(docsRoot);
   ws = (await createWorkspace({ workspaces: stores.workspaces, files }, '기획팀')).id;

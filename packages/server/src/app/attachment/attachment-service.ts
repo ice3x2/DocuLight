@@ -1,0 +1,180 @@
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+
+import { permissionOf, type Actor } from '../acl/permission-service.js';
+import { readSetting } from '../settings/instance-settings.js';
+import { workspaceRootOf, type DocumentStores } from '../document/save-service.js';
+import { permits } from '../../domain/acl/level.js';
+import type { NodeId } from '../../domain/node/node-id.js';
+import type {
+  AttachmentRecord,
+  AttachmentRepository,
+} from '../../domain/ports/attachment-repository.js';
+import {
+  extensionOf,
+  RESOURCE_DIRECTORY,
+  RESOURCE_INDEX,
+  resourceHash,
+  resourceLinkOf,
+  resourcePathOf,
+} from '../../domain/attachment/resource-layout.js';
+
+/**
+ * 첨부 폐기가 필요로 하는 것 **전부**.
+ *
+ * 좁게 잡는 이유는 영구 삭제를 소유한 휴지통이 이것을 받아야 하는데,
+ * 넓게 잡으면 휴지통이 버전·시계까지 끌고 오게 되기 때문이다 — 그 둘은
+ * 영구 삭제와 아무 관계가 없다.
+ */
+export interface AttachmentPurgeStores {
+  attachments: AttachmentRepository;
+  docsRoot: string;
+}
+
+export interface AttachmentStores extends DocumentStores, AttachmentPurgeStores {}
+
+export type AttachRule = 'unknown-node' | 'forbidden' | 'too-large';
+
+export type AttachOutcome =
+  | { ok: true; hash: string; link: string }
+  | { ok: false; rule: AttachRule };
+
+export type OpenOutcome = { ok: true; bytes: Buffer } | { ok: false; rule: 'unknown-node' | 'forbidden' };
+
+/** 설정된 업로드 상한 (`FR-ATTACH-006` AC-1). */
+export function uploadLimitBytes(stores: AttachmentStores): number {
+  const stored = Number(readSetting(stores.settings, 'upload-size-limit-bytes'));
+  return Number.isFinite(stored) && stored > 0 ? stored : 104857600;
+}
+
+const indexPathOf = (workspaceRoot: string) =>
+  join(workspaceRoot, RESOURCE_DIRECTORY, RESOURCE_INDEX);
+
+type IndexFile = Record<string, { ownerNodeId: string; extension: string; size: number; createdAt: string }>;
+
+async function readIndex(workspaceRoot: string): Promise<IndexFile> {
+  try {
+    return JSON.parse(await readFile(indexPathOf(workspaceRoot), 'utf8')) as IndexFile;
+  } catch {
+    // 없는 것과 깨진 것을 같이 다룬다 — 둘 다 「되세울 것이 없다」이고,
+    // 여기서 갈라 봐야 호출자가 할 수 있는 일이 다르지 않다.
+    return {};
+  }
+}
+
+/**
+ * 문서에 첨부를 올린다 (`FR-ATTACH-004` · `DR-ATTACH-001` · `DR-ATTACH-002`).
+ *
+ * 권한 판정 기준이 **그 문서**다(AC-3) — 디렉토리가 아니다. 어느 디렉토리에도
+ * 편집 권한이 없지만 문서 하나에만 편집 권한을 받은 사용자가 그 문서를
+ * 편집할 수 있어야 하고, 편집에는 이미지 붙여넣기가 든다.
+ */
+export async function attachToDocument(
+  stores: AttachmentStores,
+  actor: Actor,
+  input: { nodeId: NodeId; fileName: string; bytes: Buffer },
+): Promise<AttachOutcome> {
+  const node = stores.nodes.findById(input.nodeId);
+  if (node === undefined) return { ok: false, rule: 'unknown-node' };
+
+  const level = permissionOf(stores, actor, input.nodeId);
+  if (level === null || !permits(level, 'edit')) return { ok: false, rule: 'forbidden' };
+
+  // 크기 검사가 **쓰기 전**에 온다 — 뒤에 두면 거부된 업로드가 디스크에
+  // 실체를 남기고, 그 실체는 아무 소유도 갖지 않아 아무도 걷지 않는다.
+  if (input.bytes.byteLength > uploadLimitBytes(stores)) return { ok: false, rule: 'too-large' };
+
+  const root = workspaceRootOf(stores, node.workspaceId);
+  const hash = resourceHash(input.bytes);
+  const extension = extensionOf(input.fileName);
+  const path = resourcePathOf(root, hash, extension);
+
+  const record: AttachmentRecord = {
+    hash,
+    ownerNodeId: input.nodeId,
+    workspaceId: node.workspaceId,
+    extension,
+    size: input.bytes.byteLength,
+    createdAt: stores.clock().toISOString(),
+  };
+
+  await mkdir(dirname(path), { recursive: true });
+  await writeFile(path, input.bytes);
+
+  // 사이드카가 정본이므로 DB 보다 **먼저** 쓴다 — 뒤에 쓰면 DB 에만 있는
+  // 첨부가 생기고, 그것은 재구성으로 사라진다.
+  const index = await readIndex(root);
+  index[hash] = {
+    ownerNodeId: record.ownerNodeId,
+    extension: record.extension,
+    size: record.size,
+    createdAt: record.createdAt,
+  };
+  await writeFile(indexPathOf(root), JSON.stringify(index, null, 2), 'utf8');
+
+  stores.attachments.add(record);
+  return { ok: true, hash, link: resourceLinkOf(hash, extension) };
+}
+
+/**
+ * 첨부를 연다 (`SEC-ATTACH-002` · `SEC-ATTACH-003`).
+ *
+ * 판정 기준이 **소유 문서**다 — 첨부의 저장 위치도, 그것을 참조하는
+ * 문서도 아니다. 참조로 권한이 옮겨가면 누구든 링크 한 줄을 적어 남의
+ * 첨부를 열 수 있다(AC-5).
+ *
+ * 매 요청 판정한다(`SEC-ATTACH-003` AC-1) — 해시 이름이 추측 불가라는
+ * 사실을 통제 수단으로 쓰지 않는다. 링크는 복사되어 돌아다닌다.
+ */
+export async function openAttachment(
+  stores: AttachmentStores,
+  actor: Actor,
+  input: { workspaceId: string; hash: string },
+): Promise<OpenOutcome> {
+  const record = stores.attachments.find(input.workspaceId, input.hash);
+  if (record === undefined) return { ok: false, rule: 'unknown-node' };
+
+  const level = permissionOf(stores, actor, record.ownerNodeId);
+  if (level === null || !permits(level, 'view')) return { ok: false, rule: 'unknown-node' };
+
+  const path = resourcePathOf(workspaceRootOf(stores, record.workspaceId), record.hash, record.extension);
+  return { ok: true, bytes: await readFile(path) };
+}
+
+/**
+ * 소유 문서가 **영구 삭제**될 때 그 첨부를 함께 걷는다 (`FR-ATTACH-005`).
+ *
+ * 휴지통으로 보내는 것으로는 발화하지 않는다(AC-3) — 복구할 수 있는
+ * 상태에서 첨부를 지우면 복구된 문서가 깨져서 돌아온다.
+ */
+export async function purgeAttachmentsOf(
+  stores: AttachmentPurgeStores,
+  ownerNodeId: NodeId,
+): Promise<void> {
+  const owned = stores.attachments.listOf(ownerNodeId);
+  if (owned.length === 0) return;
+
+  for (const record of owned) {
+    const root = workspaceRootOf(stores, record.workspaceId);
+    await rm(resourcePathOf(root, record.hash, record.extension), { force: true });
+
+    const index = await readIndex(root);
+    delete index[record.hash];
+    await writeFile(indexPathOf(root), JSON.stringify(index, null, 2), 'utf8');
+  }
+
+  stores.attachments.removeAllOf(ownerNodeId);
+}
+
+/** `.res/index.json` 만으로 소유 관계를 되세운다 (`REL-ATTACH-001` AC-2). */
+export async function rebuildAttachmentIndex(
+  stores: AttachmentStores,
+  workspaceId: string,
+): Promise<void> {
+  const index = await readIndex(workspaceRootOf(stores, workspaceId));
+
+  stores.attachments.replaceAllIn(
+    workspaceId,
+    Object.entries(index).map(([hash, entry]) => ({ hash, workspaceId, ...entry })),
+  );
+}
