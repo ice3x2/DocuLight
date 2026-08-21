@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,11 +10,13 @@ import { createWorkspace } from '../../../src/app/workspace/create-workspace.js'
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
 import { SqliteNodeRepository } from '../../../src/infra/sqlite/node-repository.js';
 import { SqliteWorkspaceRepository } from '../../../src/infra/sqlite/workspace-repository.js';
+import { FsWorkspaceFiles } from '../../../src/infra/fs/workspace-sidecar.js';
 
 let dir: string;
 let db: Database;
 let nodes: SqliteNodeRepository;
 let workspaces: SqliteWorkspaceRepository;
+let wsStores: { workspaces: SqliteWorkspaceRepository; files: FsWorkspaceFiles };
 let stores: { nodes: SqliteNodeRepository; workspaces: SqliteWorkspaceRepository };
 let ws: string;
 
@@ -25,11 +27,14 @@ const idOf = (r: unknown) => (r as { ok: true; id: string }).id;
 
 beforeEach(async () => {
   dir = await mkdtemp(join(tmpdir(), 'doculight-hierarchy-'));
+  const docsRoot = join(dir, 'docs');
+  await mkdir(docsRoot, { recursive: true });
   db = openDatabase(join(dir, 'doculight.db'));
   nodes = new SqliteNodeRepository(db);
   workspaces = new SqliteWorkspaceRepository(db);
+  wsStores = { workspaces, files: new FsWorkspaceFiles(docsRoot) };
   stores = { nodes, workspaces };
-  ws = createWorkspace(workspaces, '기획팀').id;
+  ws = (await createWorkspace(wsStores, '기획팀')).id;
 });
 
 afterEach(async () => {
@@ -105,7 +110,7 @@ describe('FR-WORKSPACE-001 — 노드 계층은 루트 → 워크스페이스 �
     expect(nodes.pathOf(idOf(top))).toBe('회의');
   });
 
-  it('FR-WORKSPACE-001 AC-4 — 사용자에게 보이는 화면·문구·API 응답에서 이 계층을 `볼트`(vault)가 아니라 `워크스페이스`로 표기한다.', () => {
+  it('FR-WORKSPACE-001 AC-4 — 사용자에게 보이는 화면·문구·API 응답에서 이 계층을 `볼트`(vault)가 아니라 `워크스페이스`로 표기한다.', async () => {
     // 화면 문구는 SHELL scope 의 뒤 wave 가 받는다. 여기서 재는 것은
     // 서버가 내는 이름과 문구다.
     const src = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', 'src');
@@ -137,7 +142,7 @@ describe('FR-WORKSPACE-001 — 노드 계층은 루트 → 워크스페이스 �
     expect(offenders, `vault·볼트 표기: ${offenders.join(', ')}`).toEqual([]);
 
     // 도메인 타입과 API 표면의 이름이 workspace 다.
-    expect(Object.keys(createWorkspace(workspaces, '두번째'))).toContain('id');
+    expect(Object.keys(await createWorkspace(wsStores, '두번째'))).toContain('id');
     expect(columnsOf('node').map((c) => c.name)).toContain('workspace_id');
   });
 });

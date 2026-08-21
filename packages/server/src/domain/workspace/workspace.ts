@@ -24,6 +24,12 @@ export interface Workspace {
   id: WorkspaceId;
   /** 표시 이름. 권위는 DB 다 (`R40-d`). */
   name: string;
+  /**
+   * DB 가 붙인 생성 시각 문자열 (UTC `YYYY-MM-DD HH:MM:SS`). 사이드카가
+   * 이 값을 **그대로** 싣는다 (`R40-b`) — 형식을 옮겨 적으면 복원한 값이
+   * 원래 값과 달라진다.
+   */
+  createdAt: string;
 }
 
 export function newWorkspaceId(): WorkspaceId {

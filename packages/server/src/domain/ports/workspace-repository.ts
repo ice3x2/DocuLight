@@ -8,8 +8,18 @@ import type { Workspace, WorkspaceId } from '../workspace/workspace.js';
  * 그 규칙을 구조로 못박는 방법이다.
  */
 export interface WorkspaceRepository {
-  /** 새 워크스페이스를 만들고 발급한 ID 를 돌려준다. */
-  create(name: string): WorkspaceId;
+  /** 새 워크스페이스를 만들고 그 레코드를 돌려준다. */
+  create(name: string): Workspace;
+
+  /**
+   * 사이드카에서 읽은 워크스페이스를 **있던 그대로** 되살린다
+   * (`DR-WORKSPACE-002` AC-4).
+   *
+   * `create` 와 나눈 이유는 이쪽이 ID 와 생성 시각을 발급하지 않고
+   * 받아쓰기 때문이다. 한 메서드로 합치면 새로 만드는 호출자가 실수로
+   * ID 를 지어 넣을 자리가 생긴다.
+   */
+  restore(workspace: Workspace): void;
 
   /** 없으면 `undefined`. */
   findById(id: WorkspaceId): Workspace | undefined;
