@@ -156,7 +156,17 @@ function ensurePath(
     // 방금 만든 것도 **완전한 레코드**로 넣는다. 절반만 채운 값을 넣으면
     // 아래 tombstone 루프가 `kind` 를 `undefined` 로 읽고, 그것이 우연히
     // 걸러지는 조건 순서에 기대게 된다.
-    known.set(walked, { id, workspaceId, parentId, kind, name, orphanedAt: null });
+    // 디스크에서 주운 노드는 상속을 유지한 채 등재된다 — 재조정은 권한을
+    // 판단하지 않는다(`SEC-ACL-003` AC-1 의 기본값 그대로다).
+    known.set(walked, {
+      id,
+      workspaceId,
+      parentId,
+      kind,
+      name,
+      orphanedAt: null,
+      inheritsAcl: true,
+    });
     // 발견은 **사실**이므로 감사 로그가 먼저다. 대기열은 그 행을 참조한다
     // (`R139` — 같은 사실을 두 곳에 적지 않는다).
     record(stores, RECONCILE_OPERATION.create, id, FINDING_TYPE.unregisteredFile);

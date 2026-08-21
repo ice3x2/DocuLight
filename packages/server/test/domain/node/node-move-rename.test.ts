@@ -3,9 +3,12 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import type { Actor } from '../../../src/app/acl/permission-service.js';
+import type { NodeStores } from '../../../src/app/node/node-service.js';
+import { nodeStores, superuserActor } from '../../support/acl-fixture.js';
+
 import { moveNode } from '../../../src/app/node/node-service.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
-import { SqliteWorkspaceRepository } from '../../../src/infra/sqlite/workspace-repository.js';
 import { SqliteAuditLog } from '../../../src/infra/sqlite/audit-log-repository.js';
 import { SqliteNodeRepository } from '../../../src/infra/sqlite/node-repository.js';
 
@@ -14,7 +17,8 @@ const WORKSPACE = 'ws-0000';
 let dir: string;
 let db: Database;
 let nodes: SqliteNodeRepository;
-let stores: { nodes: SqliteNodeRepository; workspaces: SqliteWorkspaceRepository };
+let stores: NodeStores;
+let actor: Actor;
 let audit: SqliteAuditLog;
 
 /**
@@ -44,7 +48,9 @@ beforeEach(async () => {
   dir = await mkdtemp(join(tmpdir(), 'doculight-move-'));
   db = openDatabase(join(dir, 'doculight.db'));
   nodes = new SqliteNodeRepository(db);
-  stores = { nodes, workspaces: new SqliteWorkspaceRepository(db) };
+  stores = nodeStores(db);
+  nodes = stores.nodes as SqliteNodeRepository;
+  actor = superuserActor(stores);
   db.run('INSERT INTO workspace (id, name) VALUES (?, ?)', [WORKSPACE, '기획팀']);
   audit = new SqliteAuditLog(db);
 });
@@ -232,7 +238,7 @@ describe('DR-STORAGE-003 — 이동·개명은 ID 를 유지하고 삭제는 ID 
     // 허용하면 A 와 B 가 서로의 부모가 되어 루트에서 도달할 수 없는 고리가
     // 남고, 경로를 파생하는 모든 호출이 그 고리를 영원히 돈다.
     for (const target of [b, c, a]) {
-      const moved = moveNode(stores, a, target);
+      const moved = moveNode(stores, actor, a, target);
       expect(moved.ok, `A 를 ${target} 아래로 옮기는 것이 통과했다`).toBe(false);
     }
 
@@ -254,7 +260,7 @@ describe('DR-STORAGE-003 — 이동·개명은 ID 를 유지하고 삭제는 ID 
 
     // `D` 자신의 경로는 상한 안이지만 자손은 넘는다. 자기 이름만 재면
     // 사용자가 만들지도 않은 규칙 위반이 디스크에 남는다.
-    const moved = moveNode(stores, top, deep2);
+    const moved = moveNode(stores, actor, top, deep2);
     expect(moved.ok).toBe(false);
 
     expect(nodes.findById(top)?.parentId).toBeNull();

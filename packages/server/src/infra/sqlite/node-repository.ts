@@ -14,9 +14,16 @@ interface Row {
   kind: NodeKind;
   name: string;
   orphaned_at: string | null;
+  inherits_acl: number;
 }
 
-const COLUMNS = 'id, workspace_id, parent_id, kind, name, orphaned_at';
+const COLUMNS = 'id, workspace_id, parent_id, kind, name, orphaned_at, inherits_acl';
+
+/**
+ * 재귀 질의가 멈추는 깊이. 트리에는 고리가 없으므로 여기 닿는 것 자체가
+ * 파손 신호이고, 상한이 없으면 그 파손이 프로세스를 멈춰 세운다.
+ */
+const MAX_DEPTH = 4096;
 
 function toRecord(row: Row): NodeRecord {
   return {
@@ -26,6 +33,9 @@ function toRecord(row: Row): NodeRecord {
     kind: row.kind,
     name: row.name,
     orphanedAt: row.orphaned_at,
+    // SQLite 는 불리언이 없다 — 경계에서 한 번만 바꾼다. 위쪽이 0/1 을
+    // 보게 두면 그 값이 어디까지 퍼졌는지 아무도 모르게 된다.
+    inheritsAcl: row.inherits_acl === 1,
   };
 }
 
@@ -64,35 +74,65 @@ export class SqliteNodeRepository implements NodeRepository {
       .map(toRecord);
   }
 
-  pathOf(id: NodeId): string {
-    const segments: string[] = [];
-    const visited = new Set<string>();
-    let cursor: string | null = id;
+  /**
+   * 자기 자신부터 루트까지의 부모 사슬. 없는 노드면 빈 배열.
+   *
+   * **질의 한 번**이다. 부모를 하나씩 따라가면 깊이만큼 질의가 늘어나
+   * 판정 하나가 쓰는 질의를 2회로 묶은 `CON-ACL-001` AC-4 가 깨진다.
+   *
+   * 경로도 조상 목록도 이 하나에서 나온다 — 순회를 둘로 두면 한쪽만
+   * 무결성 방어를 갖게 된다.
+   */
+  chainOf(id: NodeId): NodeRecord[] {
+    const rows = this.store.all<Row & { depth: number }>(
+      `WITH RECURSIVE chain(id, workspace_id, parent_id, kind, name, orphaned_at, inherits_acl, depth) AS (
+         SELECT ${COLUMNS}, 0 FROM node WHERE id = ?
+         UNION ALL
+         SELECT n.id, n.workspace_id, n.parent_id, n.kind, n.name, n.orphaned_at, n.inherits_acl, c.depth + 1
+           FROM node n JOIN chain c ON n.id = c.parent_id
+          WHERE c.depth < ${MAX_DEPTH}
+       )
+       SELECT ${COLUMNS}, depth FROM chain ORDER BY depth`,
+      [id],
+    );
 
-    while (cursor !== null) {
-      // 부모 사슬은 트리라 고리가 있을 수 없다 — 그러나 없다고 **가정**하면
-      // 고리가 한 번 생겼을 때 이 루프가 돌아오지 않아 프로세스가 죽는다.
-      // 응용 계층이 고리를 막고(`node-service`), 여기서 한 번 더 확인한다.
-      if (visited.has(cursor)) {
-        throw new Error(`node ${id} sits on a parent cycle through ${cursor}`);
-      }
-      visited.add(cursor);
+    if (rows.length === 0) return [];
 
-      const row: Row | undefined = this.store.get<Row>(
-        `SELECT ${COLUMNS} FROM node WHERE id = ?`,
-        [cursor],
-      );
-      if (row === undefined) {
-        // 사슬 중간이 끊긴 것은 정상 분기가 아니라 무결성 파손이다.
-        // 외래키가 켜져 있으므로(`database.ts`) 여기 닿으려면 스키마 밖에서
-        // 손댄 것뿐이며, 그때는 빈 문자열보다 멈추는 편이 낫다.
-        throw new Error(`node ${cursor} is missing while resolving the path of ${id}`);
+    // 사슬은 루트에서 끝나야 한다. 끝나지 않았다면 고리이거나 중간이 끊긴
+    // 것이고, 둘 다 정상 분기가 아니라 무결성 파손이다 — 그때는 잘린 사슬을
+    // 돌려주는 것보다 멈추는 편이 낫다. 잘린 사슬은 조상의 ACL 항목을
+    // 조용히 빠뜨려 권한을 실제보다 좁게 판정한다.
+    const last = rows[rows.length - 1]!;
+    if (last.parent_id !== null) {
+      const seen = new Set<string>();
+      for (const row of rows) {
+        if (seen.has(row.id)) {
+          throw new Error(`node ${id} sits on a parent cycle through ${row.id}`);
+        }
+        seen.add(row.id);
       }
-      segments.unshift(row.name);
-      cursor = row.parent_id;
+      throw new Error(`node ${last.parent_id} is missing while resolving the chain of ${id}`);
     }
 
-    return segments.join('/');
+    return rows.map(toRecord);
+  }
+
+  pathOf(id: NodeId): string {
+    const chain = this.chainOf(id);
+    if (chain.length === 0) {
+      throw new Error(`node ${id} is missing while resolving its path`);
+    }
+    return chain
+      .map((node) => node.name)
+      .reverse()
+      .join('/');
+  }
+
+  setInheritance(id: NodeId, inherits: boolean): void {
+    this.store.run(
+      "UPDATE node SET inherits_acl = ?, updated_at = datetime('now') WHERE id = ?",
+      [inherits ? 1 : 0, id],
+    );
   }
 
   relocate(id: NodeId, to: { parentId: NodeId | null; name: string }): void {

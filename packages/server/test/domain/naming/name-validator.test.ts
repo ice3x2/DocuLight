@@ -3,6 +3,10 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import type { Actor } from '../../../src/app/acl/permission-service.js';
+import type { NodeStores } from '../../../src/app/node/node-service.js';
+import { nodeStores, superuserActor } from '../../support/acl-fixture.js';
+
 import {
   FORBIDDEN_CHARACTERS,
   MAX_NAME_BYTES,
@@ -12,7 +16,6 @@ import {
 import { validateNodeName } from '../../../src/domain/naming/name-validator.js';
 import { createNode, renameNode, validateUploadedName } from '../../../src/app/node/node-service.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
-import { SqliteWorkspaceRepository } from '../../../src/infra/sqlite/workspace-repository.js';
 import { SqliteNodeRepository } from '../../../src/infra/sqlite/node-repository.js';
 
 const WORKSPACE = 'ws-0000';
@@ -20,7 +23,8 @@ const WORKSPACE = 'ws-0000';
 let dir: string;
 let db: Database;
 let nodes: SqliteNodeRepository;
-let stores: { nodes: SqliteNodeRepository; workspaces: SqliteWorkspaceRepository };
+let stores: NodeStores;
+let actor: Actor;
 
 /** 워크스페이스 루트에 디렉토리 하나를 두고 그 아래에서 시험한다. */
 let root: string;
@@ -35,7 +39,9 @@ beforeEach(async () => {
   dir = await mkdtemp(join(tmpdir(), 'doculight-naming-'));
   db = openDatabase(join(dir, 'doculight.db'));
   nodes = new SqliteNodeRepository(db);
-  stores = { nodes, workspaces: new SqliteWorkspaceRepository(db) };
+  stores = nodeStores(db);
+  nodes = stores.nodes as SqliteNodeRepository;
+  actor = superuserActor(stores);
   // 노드는 실재하는 워크스페이스에만 만들 수 있다(`FR-WORKSPACE-001` AC-1).
   db.run('INSERT INTO workspace (id, name) VALUES (?, ?)', [WORKSPACE, '기획팀']);
   root = nodes.create({ workspaceId: WORKSPACE, parentId: null, kind: 'directory', name: '기획' });
@@ -52,7 +58,7 @@ describe('FR-WORKSPACE-004 — 이름 검증은 도메인 단일 지점에서 �
     expect(RESERVED_DEVICE_NAMES.length).toBeGreaterThan(0);
 
     for (const reserved of RESERVED_DEVICE_NAMES) {
-      const created = createNode(stores, {
+      const created = createNode(stores, actor, {
         workspaceId: WORKSPACE,
         parentId: root,
         kind: 'file',
@@ -81,7 +87,7 @@ describe('FR-WORKSPACE-004 — 이름 검증은 도메인 단일 지점에서 �
   });
 
   it('FR-WORKSPACE-004 AC-2 — 같은 검사가 개명 요청에도 적용된다.', () => {
-    const doc = createNode(stores, {
+    const doc = createNode(stores, actor, {
       workspaceId: WORKSPACE,
       parentId: root,
       kind: 'file',
@@ -90,13 +96,13 @@ describe('FR-WORKSPACE-004 — 이름 검증은 도메인 단일 지점에서 �
     expect(doc.ok).toBe(true);
     const id = (doc as { ok: true; id: string }).id;
 
-    const renamed = renameNode(stores, id, 'AUX.md');
+    const renamed = renameNode(stores, actor, id, 'AUX.md');
     expect(renamed.ok).toBe(false);
 
     // 거부된 개명은 아무것도 바꾸지 않는다.
     expect(nodes.findById(id)?.name).toBe('회의록.md');
 
-    expect(renameNode(stores, id, '주간회의.md').ok).toBe(true);
+    expect(renameNode(stores, actor, id, '주간회의.md').ok).toBe(true);
     expect(nodes.findById(id)?.name).toBe('주간회의.md');
   });
 
@@ -109,19 +115,19 @@ describe('FR-WORKSPACE-004 — 이름 검증은 도메인 단일 지점에서 �
     // 세 진입점이 같은 이름에 같은 판정을 낸다 — 검증기가 하나라는 말의
     // 관측 가능한 뜻이다. 한 곳만 고쳐지면 여기서 갈린다.
     const offender = 'NUL.md';
-    const create = createNode(stores, {
+    const create = createNode(stores, actor, {
       workspaceId: WORKSPACE,
       parentId: root,
       kind: 'file',
       name: offender,
     });
-    const seed = createNode(stores, {
+    const seed = createNode(stores, actor, {
       workspaceId: WORKSPACE,
       parentId: root,
       kind: 'file',
       name: 'seed.md',
     });
-    const rename = renameNode(stores, (seed as { ok: true; id: string }).id, offender);
+    const rename = renameNode(stores, actor, (seed as { ok: true; id: string }).id, offender);
     const upload = validateUploadedName(stores, root, offender);
 
     expect([create.ok, rename.ok, upload.ok]).toEqual([false, false, false]);
@@ -210,7 +216,7 @@ describe('FR-WORKSPACE-004 — 이름 검증은 도메인 단일 지점에서 �
       kind: 'directory',
       name: segment,
     });
-    const created = createNode(stores, {
+    const created = createNode(stores, actor, {
       workspaceId: WORKSPACE,
       parentId: deeper,
       kind: 'file',
@@ -244,7 +250,7 @@ describe('FR-WORKSPACE-004 — 이름 검증은 도메인 단일 지점에서 �
   it('FR-WORKSPACE-004 AC-8 — 검증 실패는 자동 접미사로 우회되지 않는다 — 이름 충돌 처리와는 별개 경로다.', () => {
     const before = childNames(root);
 
-    const created = createNode(stores, {
+    const created = createNode(stores, actor, {
       workspaceId: WORKSPACE,
       parentId: root,
       kind: 'file',
@@ -256,14 +262,14 @@ describe('FR-WORKSPACE-004 — 이름 검증은 도메인 단일 지점에서 �
     // 붙이면 사용자가 요청하지 않은 이름이 디스크에 남는다.
     expect(childNames(root)).toEqual(before);
 
-    const renamedSeed = createNode(stores, {
+    const renamedSeed = createNode(stores, actor, {
       workspaceId: WORKSPACE,
       parentId: root,
       kind: 'file',
       name: 'ok.md',
     });
     const id = (renamedSeed as { ok: true; id: string }).id;
-    expect(renameNode(stores, id, 'AUX').ok).toBe(false);
+    expect(renameNode(stores, actor, id, 'AUX').ok).toBe(false);
     expect(nodes.findById(id)?.name).toBe('ok.md');
   });
 });

@@ -5,6 +5,10 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import type { Actor } from '../../../src/app/acl/permission-service.js';
+import type { NodeStores } from '../../../src/app/node/node-service.js';
+import { nodeStores, superuserActor } from '../../support/acl-fixture.js';
+
 import { createNode } from '../../../src/app/node/node-service.js';
 import { createWorkspace } from '../../../src/app/workspace/create-workspace.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
@@ -17,7 +21,8 @@ let db: Database;
 let nodes: SqliteNodeRepository;
 let workspaces: SqliteWorkspaceRepository;
 let wsStores: { workspaces: SqliteWorkspaceRepository; files: FsWorkspaceFiles };
-let stores: { nodes: SqliteNodeRepository; workspaces: SqliteWorkspaceRepository };
+let stores: NodeStores;
+let actor: Actor;
 let ws: string;
 
 const columnsOf = (table: string) =>
@@ -30,10 +35,11 @@ beforeEach(async () => {
   const docsRoot = join(dir, 'docs');
   await mkdir(docsRoot, { recursive: true });
   db = openDatabase(join(dir, 'doculight.db'));
-  nodes = new SqliteNodeRepository(db);
-  workspaces = new SqliteWorkspaceRepository(db);
+  stores = nodeStores(db);
+  nodes = stores.nodes as SqliteNodeRepository;
+  workspaces = stores.workspaces as SqliteWorkspaceRepository;
   wsStores = { workspaces, files: new FsWorkspaceFiles(docsRoot) };
-  stores = { nodes, workspaces };
+  actor = superuserActor(stores);
   ws = (await createWorkspace(wsStores, '기획팀')).id;
 });
 
@@ -44,7 +50,7 @@ afterEach(async () => {
 
 describe('FR-WORKSPACE-001 — 노드 계층은 루트 → 워크스페이스 → 디렉토리 → 문서다', () => {
   it('FR-WORKSPACE-001 AC-1 — 모든 문서와 디렉토리는 정확히 하나의 워크스페이스에 속한다.', () => {
-    const created = createNode(stores, {
+    const created = createNode(stores, actor, {
       workspaceId: ws,
       parentId: null,
       kind: 'directory',
@@ -62,7 +68,7 @@ describe('FR-WORKSPACE-001 — 노드 계층은 루트 → 워크스페이스 �
     // 만들어지지 않는다 — 사후에 예외를 잡아 분기하지 않고 사전에 막고,
     // 거부는 던지지 않고 값으로 돌려준다. API 호출자가 상시 도달하는
     // 예측 가능한 분기이기 때문이다.
-    const orphan = createNode(stores, {
+    const orphan = createNode(stores, actor, {
       workspaceId: 'ws-없음',
       parentId: null,
       kind: 'file',
@@ -104,7 +110,7 @@ describe('FR-WORKSPACE-001 — 노드 계층은 루트 → 워크스페이스 �
 
     // parentId 가 null 인 것은 루트 직속이 아니라 **워크스페이스 바로 아래**다.
     // 두 상태를 같은 값으로 읽으면 AC-3 이 무의미해진다.
-    const top = createNode(stores, {
+    const top = createNode(stores, actor, {
       workspaceId: ws,
       parentId: null,
       kind: 'directory',
