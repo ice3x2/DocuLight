@@ -7,7 +7,7 @@
  * 에디터를 띄워야 한다.
  */
 
-import { fencedLines, insideCodeSpan } from './verbatim.js';
+import { maskVerbatim } from './verbatim.js';
 
 export interface TagMatch {
   /** `#` 를 뺀 이름. */
@@ -60,17 +60,14 @@ function frontmatterEnd(text: string): number | null {
  */
 export function findTags(text: string): TagMatch[] {
   const skipUntil = frontmatterEnd(text) ?? 0;
-  const lines = text.split('\n');
-  const fenced = fencedLines(lines);
+  // 수식과 **같은 가리기**를 쓴다 — 따로 판정하면 같은 줄에서 태그는
+  // 사라지는데 수식은 렌더되는 상태가 된다. 가린 사본은 길이와 오프셋을
+  // 그대로 두므로 여기서 찾은 자리를 원문에 그대로 쓸 수 있다.
+  const lines = maskVerbatim(text).split('\n');
   const found: TagMatch[] = [];
 
   let lineStart = 0;
-  for (const [row, line] of lines.entries()) {
-    if (fenced.has(row)) {
-      lineStart += line.length + 1;
-      continue;
-    }
-
+  for (const line of lines) {
     for (let i = 0; i < line.length; i += 1) {
       if (line[i] !== '#') continue;
 
@@ -83,7 +80,6 @@ export function findTags(text: string): TagMatch[] {
       if (before !== undefined && (NAME.test(before) || before === '#')) continue;
       // 사용자가 일부러 뺀 것을 다시 잡으면 뺄 방법이 없어진다.
       if (before === '\\') continue;
-      if (insideCodeSpan(line, i)) continue;
 
       let end = i + 1;
       while (end < line.length && NAME.test(line[end]!)) end += 1;
