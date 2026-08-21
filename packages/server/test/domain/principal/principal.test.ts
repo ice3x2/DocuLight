@@ -114,7 +114,7 @@ describe('CON-PRINCIPAL-001 — 권한 계층은 슈퍼유저와 일반 유저 2
     expect(systemGroups.sort()).toEqual([DEFAULT_GROUP_ID, SUPERUSER_GROUP_ID].sort());
   });
 
-  it('AC-2 · AC-3: 사용자와 그룹이 같은 주체 테이블에 같은 구조로 들어간다', () => {
+  it('AC-3: 사용자와 그룹이 같은 주체 테이블에 같은 구조로 들어간다 — 그룹 전용 권한 축이 없다', () => {
     const u = principals.createUser('한범');
     const g = principals.createGroup('기획팀');
 

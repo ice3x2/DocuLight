@@ -1,24 +1,36 @@
-import { Router } from 'express';
+import { Router, type Request } from 'express';
 
+import { resolveNode, type AclStores, type Actor } from '../../app/acl/permission-service.js';
 import type { DocumentStore } from '../../domain/ports/document-store.js';
-import type { NodeRepository } from '../../domain/ports/node-repository.js';
 import { resolveServableNode } from '../guards/fail-closed.js';
 
 /**
  * 문서 원문 라우트.
  *
- * **모든 경로가 가드를 먼저 거친다** (`SEC-STORAGE-006`). 가드를 우회하는
- * 라우트를 하나라도 두면 fail-closed 가 그 자리에서 무너진다.
+ * **모든 경로가 두 관문을 거친다** — 서빙 가드(`SEC-STORAGE-006`)와 ACL
+ * 판정(`SEC-ACL-006`). 하나라도 우회하는 라우트를 두면 그 자리에서 무너진다.
  *
- * 거부의 응답 **형태**는 이 라우트가 정하지 않는다 — 404 통일은 `R94` 가
- * 소유한다. 여기서 하는 것은 거부라는 사실뿐이다.
+ * 두 관문이 **같은 값**으로 거절한다. 권한 없음도, 존재하지 않음도, 점
+ * 경로도 전부 404 다 — 사유를 가르면 그 구분 자체가 경로 열거 오라클이
+ * 된다(`SEC-ACL-006` AC-3).
  */
 export interface DocumentRouteDeps {
-  nodes: NodeRepository;
+  stores: AclStores;
   documents: DocumentStore;
+  /**
+   * 이 요청을 누구로 볼 것인가. 세울 수 없으면 `undefined`.
+   *
+   * 선택 인자로 두지 않는 이유는 **인증 부재가 허용이 아니기** 때문이다 —
+   * 빠뜨린 호출이 모든 문서를 열어 준다. `undefined` 를 돌려주면 아무것도
+   * 서빙되지 않는다.
+   *
+   * 세션에서 주체를 세우는 것은 뒤 wave 의 몫이며(`SEC-AUTH-*`), 여기는
+   * 그것이 꽂힐 자리다.
+   */
+  actorOf: (request: Request) => Actor | undefined;
 }
 
-export function documentsRouter({ nodes, documents }: DocumentRouteDeps): Router {
+export function documentsRouter({ stores, documents, actorOf }: DocumentRouteDeps): Router {
   const router = Router();
 
   // 와일드카드 파라미터를 쓰지 않는다. 그 문법과 파라미터 이름이 Express
@@ -39,7 +51,14 @@ export function documentsRouter({ nodes, documents }: DocumentRouteDeps): Router
       .map((segment) => decodeURIComponent(segment))
       .join('/');
 
-    const node = resolveServableNode(nodes, workspaceId, relativePath);
+    const actor = actorOf(req);
+    const found = resolveServableNode(stores.nodes, workspaceId, relativePath);
+    // 요청자를 못 세우면 그 자리에서 닫힌다. `&&` 의 왼쪽이 거짓이면
+    // 오른쪽을 묻지 않는 것이 「인증 부재 = 아무 권한 없음」이다.
+    const node = actor === undefined || found === undefined
+      ? undefined
+      : resolveNode(stores, actor, found.id);
+
     if (node === undefined) {
       res.sendStatus(404);
       return;

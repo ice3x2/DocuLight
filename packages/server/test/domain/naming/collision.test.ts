@@ -46,7 +46,6 @@ function seed(name: string): string {
 beforeEach(async () => {
   dir = await mkdtemp(join(tmpdir(), 'doculight-collision-'));
   db = openDatabase(join(dir, 'doculight.db'));
-  nodes = new SqliteNodeRepository(db);
   stores = nodeStores(db);
   nodes = stores.nodes as SqliteNodeRepository;
   actor = superuserActor(stores);

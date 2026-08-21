@@ -8,6 +8,8 @@ import type { NodeRecord, NodeRepository } from '../../domain/ports/node-reposit
 import type { PrincipalRepository } from '../../domain/ports/principal-repository.js';
 import type { PrincipalId } from '../../domain/principal/principal.js';
 import { isSuperuser, subjectIdsOf } from '../../domain/principal/subject.js';
+import { isServable } from '../../domain/serving/servable.js';
+import { listChildren } from '../node/list-children.js';
 
 /** 판정에 필요한 저장소 묶음. */
 export interface AclStores {
@@ -69,7 +71,7 @@ export function actorFor(principals: PrincipalRepository, userId: PrincipalId): 
  * 하나가 3회를 쓴다. 없는 ID 를 넘겨도 해가 없다: 걸리는 항목이 없어
  * `null` 이 나오고, 존재 확인은 `resolveNode` 의 몫이다.
  */
-function ancestryOf(nodes: NodeRepository, id: string): Ancestry {
+export function ancestryOf(nodes: NodeRepository, id: string): Ancestry {
   const chain = nodes.chainOf(id);
   if (chain.length === 0) return { links: [], workspaceId: id };
 
@@ -77,6 +79,31 @@ function ancestryOf(nodes: NodeRepository, id: string): Ancestry {
     links: chain.map((node) => ({ id: node.id, inheritsAcl: node.inheritsAcl })),
     workspaceId: chain[0]!.workspaceId,
   };
+}
+
+/**
+ * 판정이 훑을 범위 — 자기 자신과 조상들, 그리고 워크스페이스.
+ *
+ * 아래 셋은 같은 `Ancestry` 에서 나오지만 담는 것이 다르다. 세 표현을 각각
+ * 이름 붙여 한 번씩만 정의하는 이유는, 손으로 `slice(1)` 을 붙이던 자리가
+ * 세 곳으로 늘면서 「자기 포함」과 「워크스페이스 포함」 두 축이 조용히
+ * 갈렸기 때문이다.
+ */
+export function judgementScope(ancestry: Ancestry): string[] {
+  return [...ancestry.links.map((link) => link.id), ancestry.workspaceId];
+}
+
+/** 물려받을 원천 — 조상들과 워크스페이스. 자기 것은 이미 자기 것이다. */
+export function inheritedSources(ancestry: Ancestry): string[] {
+  return [...ancestry.links.slice(1).map((link) => link.id), ancestry.workspaceId];
+}
+
+/**
+ * 트리 위의 조상들만. 워크스페이스는 트리 노드가 아니므로 빠진다 —
+ * pass-through 는 트리에 이름이 뜨는 노드를 가리키는 개념이다.
+ */
+export function treeAncestors(ancestry: Ancestry): string[] {
+  return ancestry.links.slice(1).map((link) => link.id);
 }
 
 /**
@@ -91,8 +118,7 @@ export function permissionOf(
   nodeId: string,
 ): PermissionLevel | null {
   const ancestry = ancestryOf(stores.nodes, nodeId);
-  const scope = [...ancestry.links.map((l) => l.id), ancestry.workspaceId];
-  const entries = stores.acl.entriesFor(scope, actor.requester.subjectIds);
+  const entries = stores.acl.entriesFor(judgementScope(ancestry), actor.requester.subjectIds);
 
   return effectivePermission(ancestry, entries, actor.requester);
 }
@@ -112,10 +138,14 @@ export function resolveNode(
   actor: Actor,
   nodeId: NodeId,
 ): NodeRecord | undefined {
-  const node = stores.nodes.findById(nodeId);
-  const visible = node !== undefined && permissionOf(stores, actor, nodeId) !== null;
+  const chain = stores.nodes.chainOf(nodeId);
 
-  return visible ? node : undefined;
+  // 관문이 권한보다 **앞선다.** 점 이름·아카이브·tombstone 은 권한 축이
+  // 아니므로 관리자에게도 같은 거부가 걸린다 — 뒤에 두면 슈퍼유저에게
+  // `.obsidian/workspace.json` 이 열린다.
+  const visible = isServable(chain) && permissionOf(stores, actor, nodeId) !== null;
+
+  return visible ? chain[0] : undefined;
 }
 
 /** 트리 한 층. 숨긴 것은 아예 빠지고 경로상의 조상은 이름만 남는다. */
@@ -141,11 +171,14 @@ export function visibleChildrenOf(
 ): VisibleChild[] {
   const through = passThroughIds(
     stores.acl.grantedNodeIds(actor.requester.subjectIds),
-    (id) => stores.nodes.chainOf(id).slice(1).map((n) => n.id),
+    (id) => treeAncestors(ancestryOf(stores.nodes, id)),
   );
 
   const visible: VisibleChild[] = [];
-  for (const node of stores.nodes.children(where)) {
+  // `listChildren` 을 거친다. 저장소를 직접 부르면 점 이름 규칙
+  // (`SEC-STORAGE-004` AC-1)이 이 목록에서만 빠져, ACL 은 보면서 예약
+  // 네임스페이스는 못 보는 두 번째 트리가 생긴다.
+  for (const node of listChildren(stores.nodes, where)) {
     const visibility = visibilityOf({
       kind: node.kind,
       effective: permissionOf(stores, actor, node.id),

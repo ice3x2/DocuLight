@@ -230,14 +230,16 @@ describe('SEC-ACL-010 — 편집자가 부여한 편집 권한은 다시 부여�
     );
   });
 
-  it('AC-2: 관리자가 준 편집과 편집자가 준 편집을 가르는 별도 레벨이 없다', () => {
-    // 레벨 축이 셋으로 닫혀 있다는 것이 그 별도 레벨의 부재다.
-    const levels = new Set(
-      (['view', 'edit', 'admin'] as const).map((l) =>
-        canGrant({ actorLevel: 'admin', requestedLevel: l, targetIsWorkspace: true }),
-      ),
-    );
-    expect(levels.size).toBe(1);
+  it('부여 판정의 입력에 「누가 줬는가」 축이 없다', () => {
+    // AC-2(별도 레벨 부재)를 실제로 재는 것은 저장·판정 쪽이며
+    // `storage-invariants.test.ts` 가 두 출처의 결과를 맞댄다. 여기서
+    // 재는 것은 그보다 앞의 사실 하나 — 부여 **판정**이 출처를 묻지 않는다.
+    type GrantInput = Parameters<typeof canGrant>[0];
+    type Unexpected = Exclude<keyof GrantInput, 'actorLevel' | 'requestedLevel' | 'targetIsWorkspace'>;
+    // 출처 축이 입력에 생기면 이 줄이 **컴파일되지 않는다.**
+    const closed: [Unexpected] extends [never] ? true : never = true;
+
+    expect(closed).toBe(true);
   });
 
   it('AC-4: 전파된 부여도 자신의 레벨 이하 제한을 그대로 받는다', () => {
@@ -263,14 +265,21 @@ describe('CON-ACL-003 — 부여에 적용 범위 선택지를 두지 않는다'
     }
   });
 
-  it('AC-1 · AC-2: 적용 범위를 고르는 값이 부여 입력에 존재하지 않는다', () => {
-    // 화면이 그리지 않는 것만으로는 부족하다 — 고를 값이 있으면 언젠가 UI 가
-    // 그것을 노출한다. `canGrant` 의 입력에 그 축이 아예 없다.
-    const inputKeys = ['actorLevel', 'requestedLevel', 'targetIsWorkspace'];
-    for (const key of inputKeys) {
-      expect(key).not.toMatch(/scope|applyTo|recursive|thisFolderOnly|cascade/i);
-    }
-    expect(inputKeys).toHaveLength(3);
+  it('적용 범위를 고르는 값이 부여 입력 타입에 존재하지 않는다', () => {
+    // 시험 파일이 스스로 적은 이름 배열을 스스로 검사하면 구현이 무엇이든
+    // 통과한다. 실제로 재려면 **타입에서** 봐야 한다.
+    type GrantInput = Parameters<typeof canGrant>[0];
+    type ScopeAxis = Extract<
+      keyof GrantInput,
+      `${string}scope${string}` | `${string}Scope${string}` | 'applyTo' | 'recursive' | 'cascade'
+    >;
+    // 적용 범위 축이 입력에 생기면 이 줄이 **컴파일되지 않는다.**
+    const absent: [ScopeAxis] extends [never] ? true : never = true;
+
+    expect(absent).toBe(true);
+    // AC-1·AC-2 의 화면 쪽(선택지를 렌더하지 않는다)은 부여 UI 가 서는
+    // wave 에서 판정한다 — 여기서는 그 선택지가 **표현 불가능**하다는
+    // 사실까지만 잰다.
   });
 });
 

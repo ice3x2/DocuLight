@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
 /**
- * 밖으로 나가는 식별자를 발급하는 **단 하나의 자리**.
+ * 노드·주체·ACL 항목의 외부 식별자를 발급한다.
  *
  * **순차 정수를 쓰지 않는다** (`SEC-STORAGE-001`). 이 값들은 URL 과 API
  * 응답에 그대로 실리므로, 순차값이면 훑는 것만으로 존재 여부를 재는 열거
@@ -12,7 +12,13 @@ import { randomUUID } from 'node:crypto';
  * 그 값을 외부 식별자로 삼아 내보내는 것이다.
  *
  * 종류마다 따로 발급 함수를 두지 않는 이유는 그 제약이 종류와 무관하게
- * 같기 때문이다 — 자리가 둘이면 한쪽만 바뀐다.
+ * 같기 때문이다.
+ *
+ * **이것이 저장소 전체의 유일한 발급 지점은 아니다.** 워크스페이스 ID 는
+ * `domain/workspace/workspace.ts` 가 16바이트 hex 로 따로 만들고, 감사 행과
+ * 재조정 대기열 행은 각자 `randomUUID` 를 부른다. 넷 다 추측 불가라는
+ * 성질은 만족하지만 한 자리에서 나오지는 않는다 — 이 주석을 믿고 여기만
+ * 고치면 나머지 셋은 따라오지 않는다.
  */
 export function newOpaqueId(): string {
   return randomUUID();

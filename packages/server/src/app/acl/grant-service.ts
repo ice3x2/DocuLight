@@ -2,7 +2,13 @@ import { canBreakInheritance, canGrant, canRevoke, type GrantRule } from '../../
 import type { PermissionLevel } from '../../domain/acl/level.js';
 import type { NodeId } from '../../domain/node/node-id.js';
 import type { PrincipalId } from '../../domain/principal/principal.js';
-import { permissionOf, type AclStores, type Actor } from './permission-service.js';
+import {
+  ancestryOf,
+  inheritedSources,
+  permissionOf,
+  type AclStores,
+  type Actor,
+} from './permission-service.js';
 
 /**
  * 감사 로그의 조작 이름. 하위체계를 `operation` 에 밀어 넣지 않는 규칙
@@ -116,8 +122,9 @@ export function inheritFromParent(
   const decision = canBreakInheritance(permissionOf(stores, actor, nodeId));
   if (!decision.allowed) return { ok: false, rule: decision.rule };
 
-  const ancestors = [...chain.slice(1).map((n) => n.id), chain[0]!.workspaceId];
-  for (const entry of stores.acl.entriesOnAny(ancestors)) {
+  // 조상 목록을 손으로 조립하지 않는다 — 「자기 포함」과 「워크스페이스
+  // 포함」 두 축이 자리마다 갈리면 권한이 조용히 달라진다.
+  for (const entry of stores.acl.entriesOnAny(inheritedSources(ancestryOf(stores.nodes, nodeId)))) {
     // 관리는 워크스페이스에만 산다 (`SEC-WORKSPACE-002`) — 내려 붙이면
     // 문서에 관리 항목이 생긴다. 편집으로 낮춰 옮긴다.
     stores.acl.grant({

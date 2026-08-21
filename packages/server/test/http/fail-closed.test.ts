@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import type { Actor } from '../../src/app/acl/permission-service.js';
 import { reconcile } from '../../src/app/reconciliation/reconcile.js';
 import { createWorkspace } from '../../src/app/workspace/create-workspace.js';
 import { ARCHIVE_DIRECTORY } from '../../src/domain/workspace/archive.js';
@@ -16,6 +17,7 @@ import { openDatabase, type Database } from '../../src/infra/sqlite/database.js'
 import { SqliteFindingQueue } from '../../src/infra/sqlite/finding-queue-repository.js';
 import { SqliteNodeRepository } from '../../src/infra/sqlite/node-repository.js';
 import { SqliteWorkspaceRepository } from '../../src/infra/sqlite/workspace-repository.js';
+import { nodeStores, superuserActor } from '../support/acl-fixture.js';
 
 let dir: string;
 let docsRoot: string;
@@ -26,6 +28,7 @@ let stores: Parameters<typeof reconcile>[0];
 let server: Server;
 let origin: string;
 let ws: string;
+let actor: Actor;
 
 /** `/api/documents/<워크스페이스>/<경로>` 를 친다. */
 const get = (path: string) =>
@@ -40,8 +43,13 @@ beforeEach(async () => {
 
   db = openDatabase(join(dir, 'doculight.db'));
   documents = new FsDocumentStore(docsRoot);
-  nodes = new SqliteNodeRepository(db);
-  const workspaces = new SqliteWorkspaceRepository(db);
+  // ACL 저장소까지 갖춘 묶음을 쓴다. 서빙 가드가 관심사이므로 요청자는
+  // ACL 을 우회하는 슈퍼유저로 세운다 — 판정을 **끄는** 것이 아니라
+  // 통과하는 주체를 세우는 것이라, 가드가 막는 것만 404 로 남는다.
+  const acl = nodeStores(db);
+  nodes = acl.nodes as SqliteNodeRepository;
+  const workspaces = acl.workspaces as SqliteWorkspaceRepository;
+  actor = superuserActor(acl);
   stores = {
     nodes,
     workspaces,
@@ -54,7 +62,7 @@ beforeEach(async () => {
 
   const app = createHttpServer({
     webRoot: join(dir, 'web'),
-    api: documentsRouter({ nodes, documents }),
+    api: documentsRouter({ stores: acl, documents, actorOf: () => actor }),
   });
   server = app.listen(0);
   await new Promise((resolve) => server.once('listening', resolve));

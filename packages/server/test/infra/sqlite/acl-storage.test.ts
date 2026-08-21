@@ -92,7 +92,7 @@ describe('DR-ACL-001 — 노드마다 지정할 수 있는 부여는 네 종류�
     expect(typeof userEntry.level).toBe('string');
   });
 
-  it('AC-4: 같은 주체·같은 노드에 같은 레벨을 두 번 부여해도 항목이 늘지 않는다', () => {
+  it('같은 주체·같은 노드에 같은 레벨을 두 번 부여해도 항목이 늘지 않는다', () => {
     const doc = mkNode('file', '회의록.md', null);
     acl.grant({ nodeId: doc, principalId: me, level: 'view', grantedBy: null });
     acl.grant({ nodeId: doc, principalId: me, level: 'view', grantedBy: null });

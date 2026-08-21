@@ -38,7 +38,6 @@ const childNames = (parentId: string) =>
 beforeEach(async () => {
   dir = await mkdtemp(join(tmpdir(), 'doculight-naming-'));
   db = openDatabase(join(dir, 'doculight.db'));
-  nodes = new SqliteNodeRepository(db);
   stores = nodeStores(db);
   nodes = stores.nodes as SqliteNodeRepository;
   actor = superuserActor(stores);
