@@ -2,6 +2,10 @@ import * as Dialog from '@radix-ui/react-dialog';
 import * as Tabs from '@radix-ui/react-tabs';
 import { useId, useState } from 'react';
 
+import { DocumentArea } from '../document/DocumentArea.js';
+import type { TabState } from '../document/tab-state.js';
+import { DocumentTree } from '../tree/DocumentTree.js';
+import type { WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
   LEFT_TABS,
   RIGHT_TABS,
@@ -111,13 +115,31 @@ function SettingsModal({ viewer }: { viewer: Viewer }) {
  * 그것을 소유한 요구가 서는 자리에서 채워진다 — 여기서 함께 만들면 셸의
  * 구조와 그 안의 기능이 한 파일에서 얽혀 어느 쪽을 고쳐도 다른 쪽이 흔들린다.
  */
-export function AppShell({ viewer }: { viewer: Viewer }) {
+export function AppShell({
+  viewer,
+  workspaces = [],
+  documents = { tabs: [], activeId: null },
+}: {
+  viewer: Viewer;
+  workspaces?: readonly WorkspaceTreeView[];
+  documents?: TabState;
+}) {
   return (
     <div data-shell="root">
-      <Sidebar label="좌측 사이드바" tabs={LEFT_TABS} side="left" />
+      <Sidebar
+        label="좌측 사이드바"
+        tabs={LEFT_TABS}
+        side="left"
+        // 트리만 내용을 갖는다. 검색·즐겨찾기는 그것을 소유한 요구가 서는
+        // 자리에서 채워진다 — 여기서 함께 만들면 셸 구조와 그 안의 기능이
+        // 한 파일에서 얽힌다.
+      >
+        {(tab) => (tab.id === 'tree' ? <DocumentTree workspaces={workspaces} /> : <p>{tab.label}</p>)}
+      </Sidebar>
 
       <main>
         <SettingsModal viewer={viewer} />
+        <DocumentArea initial={documents} />
       </main>
 
       <Sidebar label="우측 사이드바" tabs={RIGHT_TABS} side="right" />

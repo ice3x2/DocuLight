@@ -1,6 +1,8 @@
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Tabs from '@radix-ui/react-tabs';
 import { useState } from 'react';
 
+import { DOCUMENT_MENU_ITEMS } from './document-menu.js';
 import { activeTab, closeTab, type SaveState, type TabState } from './tab-state.js';
 
 const SAVE_LABEL: Record<SaveState, string> = {
@@ -28,9 +30,17 @@ function DocumentHeader({ state }: { state: TabState }) {
     <header aria-label="문서 헤더">
       <nav aria-label="브레드크럼">{tab.breadcrumb.join(' / ')}</nav>
       <span role="status">{SAVE_LABEL[tab.save]}</span>
-      <button type="button" aria-label={`${tab.name} 문서 메뉴`}>
-        ⋯
-      </button>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger aria-label={`${tab.name} 문서 메뉴`}>⋯</DropdownMenu.Trigger>
+
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content>
+            {DOCUMENT_MENU_ITEMS.map((item) => (
+              <DropdownMenu.Item key={item.id}>{item.label}</DropdownMenu.Item>
+            ))}
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
     </header>
   );
 }
