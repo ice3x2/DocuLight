@@ -1,16 +1,16 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-08-21T15:19:07.725Z",
+  "generatedAt": "2026-08-21T15:30:27.192Z",
   "source": "speckiwi",
   "specFingerprint": {
     "algorithm": "sha256",
-    "value": "ef67ffea78dae0c96e2c62d73858ee2fcd9351ba644ce1dca6a0c3c4cda1b799",
+    "value": "9c5b9f28bba558cde77e463d4b9bffd08eb604587a7b1d07020dd9b01f6c586c",
     "files": [
       {
         "path": "docs/spec/00.index.md",
-        "sha256": "18143d14c1fae9b58d4357f3fe6c70225ed5c530d0a6d02df12ba074ed427d84",
-        "size": 9287,
-        "mtimeMs": 1787297226211.2937
+        "sha256": "00643ff31d36bba781116b9fd6f2911a6d4533ccc511020a74e113549f6af8ba",
+        "size": 9288,
+        "mtimeMs": 1787326227162.6858
       },
       {
         "path": "docs/spec/02.product-architecture.srs.md",
@@ -38,9 +38,9 @@
       },
       {
         "path": "docs/spec/10.access-control.srs.md",
-        "sha256": "cb32a517671b70cda291c60257fa08db98c4726aad2bf52d947fad676991ce4c",
-        "size": 107069,
-        "mtimeMs": 1787325547698.8384
+        "sha256": "eb1d0b9d350cb02ffa03bd6b47b5e74998738e57ac4e67f179c5911a89087862",
+        "size": 110062,
+        "mtimeMs": 1787326220983.093
       },
       {
         "path": "docs/spec/11.confirmation-grades.srs.md",
@@ -56,9 +56,9 @@
       },
       {
         "path": "docs/spec/13.workspace.srs.md",
-        "sha256": "d30f783ae0996b90a7ad38349f215cb2ded139d95807921e317857ec911d2984",
-        "size": 76973,
-        "mtimeMs": 1787325529126.0405
+        "sha256": "a9921085ce91448db41ac9c1f6c767d8d699299a552c3372d7729db9b423df2a",
+        "size": 77352,
+        "mtimeMs": 1787326227132.7688
       },
       {
         "path": "docs/spec/14.storage.srs.md",
@@ -74,9 +74,9 @@
       },
       {
         "path": "docs/spec/16.principal.srs.md",
-        "sha256": "f23e19d284a2043cd02d8a4c30191de8e80fa2ca9a90c97d566a85de9305866d",
-        "size": 79850,
-        "mtimeMs": 1787325533675.5737
+        "sha256": "7e3f2dfb73ee7a5ed5cf51298ffd236031604f0bbf4b30104f94b61332765579",
+        "size": 81032,
+        "mtimeMs": 1787326222807.3071
       },
       {
         "path": "docs/spec/90.appendix.md",
