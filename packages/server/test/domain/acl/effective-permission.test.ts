@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import type { AclEntry } from '../../../src/domain/acl/acl-entry.js';
@@ -147,15 +148,22 @@ describe('SEC-ACL-008 — 슈퍼유저와 워크스페이스 관리 레벨은 AC
     expect(effectivePermission(broken, [entry(WS, ME, 'admin')], me())).toBe('admin');
   });
 
-  it('AC-5: 우회는 ACL 항목을 만들거나 남기지 않는다', () => {
-    const entries = [entry(WS, ME, 'admin')];
-    const snapshot = JSON.stringify(entries);
+  it('AC-5: 판정 함수에는 항목을 만들 수단 자체가 없다', () => {
+    // 인자 배열이 안 바뀌었다는 단언은 **구조적으로 항상 참**이라 정보가
+    // 없다 — 이 함수는 저장소를 인자로도 임포트로도 갖지 않기 때문이다.
+    // 그 「갖지 않음」을 직접 잰다.
+    const source = readFileSync(
+      new URL('../../../src/domain/acl/effective-permission.ts', import.meta.url),
+      'utf8',
+    );
 
-    effectivePermission(ancestry(), entries, me(true));
-    effectivePermission(ancestry(), entries, me());
-
-    // 판정은 순수 함수다 — 입력을 고치지 않는다.
-    expect(JSON.stringify(entries)).toBe(snapshot);
+    for (const forbidden of ['Repository', 'stores', 'grant(', 'insert', 'INSERT']) {
+      expect(source, `판정 함수가 ${forbidden} 을 안다 — 항목을 만들 수단이 생겼다`).not.toContain(
+        forbidden,
+      );
+    }
+    // 실제로 우회가 일어나는 서비스 계층의 단언은
+    // `app/acl/permission-service.test.ts` 와 `servable-composition.test.ts` 가 잰다.
   });
 });
 

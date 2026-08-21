@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { permits, type PermissionLevel } from '../../../src/domain/acl/level.js';
 import { passThroughIds, visibilityOf } from '../../../src/domain/acl/visibility.js';
 
 /**
@@ -110,10 +111,16 @@ describe('CON-ACL-004 — pass-through 여부를 저장하지 않고 매 요청 
   });
 
   it('AC-3: 통과를 뜻하는 권한 레벨이 신설되지 않았다', () => {
-    // pass-through 는 가시성 축의 값이지 권한 축의 값이 아니다. 권한 축에
-    // 있었다면 permits 로 비교되어 「통과 이상」 같은 판정이 생긴다.
-    const visibility = visibilityOf({ kind: 'directory', effective: null, isPassThrough: true });
-    expect(visibility).toBe('pass-through');
-    expect(['view', 'edit', 'admin']).not.toContain(visibility);
+    // 「가시성 값이 권한 목록에 없다」는 두 열거가 겹치지 않는 한 항상
+    // 참이라 정보가 없다. 재야 할 것은 **권한 축 자체**가 셋으로 닫혀
+    // 있다는 사실이다 — 넷째가 생기면 `permits` 로 비교되어 「통과 이상」
+    // 같은 판정이 태어난다.
+    const level: PermissionLevel = 'view';
+    type Unexpected = Exclude<PermissionLevel, 'view' | 'edit' | 'admin'>;
+    // 권한 축에 값이 하나라도 늘면 이 줄이 **컴파일되지 않는다.**
+    const closed: [Unexpected] extends [never] ? true : never = true;
+
+    expect(closed).toBe(true);
+    expect(permits(level, 'view')).toBe(true);
   });
 });

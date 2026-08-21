@@ -101,3 +101,46 @@ describe('보이는 노드의 정의는 한 자리에 있다', () => {
     expect(resolveNode(stores, root, id)?.id).toBe(id);
   });
 });
+
+describe('삭제된 노드 ID 가 권한을 남기지 않는다', () => {
+  it('지운 노드의 ACL 항목이 함께 사라진다', () => {
+    const folder = adopt('기획', null, 'directory');
+    const doc = adopt('회의록.md', folder);
+    const me = actorFor(stores.principals, stores.principals.createUser('한범').id);
+    grantPermission(stores, root, { nodeId: doc, principalId: me.id, level: 'edit' });
+    grantPermission(stores, root, { nodeId: folder, principalId: me.id, level: 'edit' });
+
+    stores.nodes.remove(folder);
+
+    // 노드가 사라졌으므로 그 앞으로 걸린 항목도 남을 이유가 없다.
+    // 남으면 그 ID 가 판정에서 되살아난다.
+    expect(stores.acl.entriesOn(folder)).toEqual([]);
+    expect(stores.acl.entriesOn(doc), '하위 노드의 항목이 고아로 남았다').toEqual([]);
+  });
+
+  it('지운 노드 ID 로 판정하면 권한이 없다 — 워크스페이스 루트로 격상되지 않는다', () => {
+    const doc = adopt('회의록.md', null);
+    const me = actorFor(stores.principals, stores.principals.createUser('한범').id);
+    grantPermission(stores, root, { nodeId: doc, principalId: me.id, level: 'edit' });
+
+    stores.nodes.remove(doc);
+
+    // 사슬이 비었다는 것만으로 워크스페이스로 읽으면, 지운 노드 ID 가
+    // 상속 체인의 루트가 되어 그 앞으로 남은 항목이 그대로 살아난다.
+    expect(permissionOf(stores, me, doc)).toBeNull();
+  });
+
+  it('실재하지 않는 ID 는 슈퍼유저가 아닌 누구에게도 열리지 않는다', () => {
+    const me = actorFor(stores.principals, stores.principals.createUser('한범').id);
+
+    expect(permissionOf(stores, me, 'no-such-id')).toBeNull();
+    expect(resolveNode(stores, me, 'no-such-id')).toBeUndefined();
+  });
+
+  it('워크스페이스 자신은 그대로 판정된다 — 닫힘이 전체로 번지지 않는다', () => {
+    const me = actorFor(stores.principals, stores.principals.createUser('한범').id);
+    grantPermission(stores, root, { nodeId: ws, principalId: me.id, level: 'admin' });
+
+    expect(permissionOf(stores, actorFor(stores.principals, me.id), ws)).toBe('admin');
+  });
+});

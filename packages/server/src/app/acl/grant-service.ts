@@ -124,7 +124,10 @@ export function inheritFromParent(
 
   // 조상 목록을 손으로 조립하지 않는다 — 「자기 포함」과 「워크스페이스
   // 포함」 두 축이 자리마다 갈리면 권한이 조용히 달라진다.
-  for (const entry of stores.acl.entriesOnAny(inheritedSources(ancestryOf(stores.nodes, nodeId)))) {
+  const ancestry = ancestryOf(stores, nodeId);
+  if (ancestry === undefined) return { ok: false, rule: 'unknown-target' };
+
+  for (const entry of stores.acl.entriesOnAny(inheritedSources(ancestry))) {
     // 관리는 워크스페이스에만 산다 (`SEC-WORKSPACE-002`) — 내려 붙이면
     // 문서에 관리 항목이 생긴다. 편집으로 낮춰 옮긴다.
     stores.acl.grant({

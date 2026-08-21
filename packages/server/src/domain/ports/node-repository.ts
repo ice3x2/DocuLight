@@ -101,6 +101,16 @@ export interface NodeRepository {
   chainOf(id: NodeId): NodeRecord[];
 
   /**
+   * 여러 노드의 사슬을 **한 번의 질의로** 모은다. 합집합이며 중복이 없다.
+   *
+   * 노드마다 `chainOf` 를 부르면 대상 수에 비례해 질의가 늘어
+   * `CON-ACL-001` AC-4 가 깨진다 — 그 AC 가 허용하는 O(N) 은 질의가
+   * 아니라 **메모리 순회**다. 각 행이 `parentId` 를 가지므로 호출자가
+   * 사슬을 메모리에서 다시 엮는다.
+   */
+  chainsOf(ids: readonly NodeId[]): NodeRecord[];
+
+  /**
    * 부모 사슬을 거슬러 경로를 만든다.
    *
    * 경로를 칸에 담지 않는 이유가 여기 있다 — 담으면 이동·개명 때 두 곳을

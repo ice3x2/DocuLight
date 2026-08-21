@@ -24,6 +24,7 @@ import type { MetadataStore } from '../../../src/domain/ports/metadata-store.js'
 import { SqliteAclRepository } from '../../../src/infra/sqlite/acl-repository.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
 import { SqliteNodeRepository } from '../../../src/infra/sqlite/node-repository.js';
+import { SqlitePrincipalRepository } from '../../../src/infra/sqlite/principal-repository.js';
 
 let dir: string;
 let db: Database;
@@ -329,10 +330,13 @@ describe('SEC-PRINCIPAL-001 — 슈퍼유저 그룹 멤버는 전 워크스페�
 });
 
 describe('CON-ACL-001 — 판정은 요청마다 계산되고 질의 두 번으로 끝난다', () => {
-  it('AC-4: 한 번의 판정이 저장소 질의 2회를 넘지 않는다', () => {
+  it('AC-4: 판정이 대상 수에 비례해 질의를 늘리지 않는다', () => {
     const folder = idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name: '기획' }));
-    const doc = idOf(createNode(stores, root, { workspaceId: ws, parentId: folder, kind: 'file', name: '회의록.md' }));
-    grantPermission(stores, root, { nodeId: doc, principalId: me.id, level: 'view' });
+    const ids: string[] = [];
+    for (let i = 0; i < 20; i += 1) {
+      ids.push(idOf(createNode(stores, root, { workspaceId: ws, parentId: folder, kind: 'file', name: `문서${i}.md` })));
+    }
+    grantPermission(stores, root, { nodeId: ids[0]!, principalId: me.id, level: 'view' });
 
     // 질의를 세는 저장소로 갈아 끼운다 — 「2회」는 세지 않으면 지켜지지 않는다.
     let queries = 0;
@@ -352,11 +356,30 @@ describe('CON-ACL-001 — 판정은 요청마다 계산되고 질의 두 번으�
       ...stores,
       nodes: new SqliteNodeRepository(counting),
       acl: new SqliteAclRepository(counting),
+      principals: new SqlitePrincipalRepository(counting),
     };
 
+    // ① 단일 노드 판정은 사슬 하나와 항목 하나로 끝난다.
     queries = 0;
-    expect(permissionOf(counted, me, doc)).toBe('view');
-    expect(queries, `판정이 질의 ${queries} 회를 썼다`).toBeLessThanOrEqual(2);
+    expect(permissionOf(counted, me, ids[0]!)).toBe('view');
+    expect(queries, `단일 판정이 질의 ${queries} 회를 썼다`).toBeLessThanOrEqual(2);
+
+    // ② 요청자를 세우는 것까지 포함한 「한 요청」도 상수여야 한다.
+    queries = 0;
+    permissionOf(counted, actorFor(counted.principals, me.id), ids[0]!);
+    const oneRequest = queries;
+
+    // ③ 트리 한 층. **이것이 이 AC 의 문면이다** — 「한 요청의 권한 판정」은
+    //    노드 하나가 아니라 그 요청이 판정하는 전부를 말한다. 노드마다
+    //    판정을 부르면 자식 수에 비례해 질의가 늘어난다.
+    queries = 0;
+    visibleChildrenOf(counted, me, { workspaceId: ws, parentId: folder });
+    const layer = queries;
+
+    expect(
+      layer,
+      `자식 20개인 층이 질의 ${layer} 회를 썼다 — 대상 수에 비례해 늘고 있다`,
+    ).toBeLessThanOrEqual(oneRequest + 4);
   });
 
   it('AC-2: 그룹 멤버를 더하면 재계산 없이 다음 판정부터 반영된다', () => {

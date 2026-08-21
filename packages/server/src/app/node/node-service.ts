@@ -10,6 +10,7 @@ import type { NodeId } from '../../domain/node/node-id.js';
 import type { NewNode, NodeRecord, NodeRepository } from '../../domain/ports/node-repository.js';
 import type { WorkspaceRepository } from '../../domain/ports/workspace-repository.js';
 import {
+  permissionBatch,
   permissionOf,
   resolveNode,
   type AclStores,
@@ -289,11 +290,15 @@ export function copyNode(
 function hasHiddenDescendant(stores: NodeStores, actor: Actor, node: NodeRecord): boolean {
   if (node.kind !== 'directory') return false;
 
-  for (const id of subtreeOf(stores.nodes, node).ids) {
-    if (id === node.id) continue;
-    if (permissionOf(stores, actor, id) === null) return true;
-  }
-  return false;
+  const descendants = [...subtreeOf(stores.nodes, node).ids].filter((id) => id !== node.id);
+  if (descendants.length === 0) return false;
+
+  // 서브트리를 **한 배치로** 판정한다. 노드마다 `permissionOf` 를 부르면
+  // 하위 수에 비례해 질의가 늘어 `CON-ACL-001` AC-4 가 깨진다 — 큰
+  // 디렉토리의 이동 하나가 수천 회를 친다.
+  const levelOf = permissionBatch(stores, actor, descendants, node.workspaceId);
+
+  return descendants.some((id) => levelOf(id) === null);
 }
 
 /**

@@ -117,6 +117,32 @@ export class SqliteNodeRepository implements NodeRepository {
     return rows.map(toRecord);
   }
 
+  chainsOf(ids: readonly NodeId[]): NodeRecord[] {
+    if (ids.length === 0) return [];
+
+    // 여러 사슬을 **한 번에** 뽑는다. 노드마다 `chainOf` 를 부르면 대상
+    // 수에 비례해 질의가 늘어 `CON-ACL-001` AC-4 가 깨진다 — 그 AC 가
+    // 말하는 O(N) 은 질의가 아니라 **메모리 순회**다.
+    //
+    // 합집합이라 어느 사슬의 것인지는 여기서 구별되지 않는다. 각 행이
+    // `parent_id` 를 갖고 있으므로 호출자가 메모리에서 다시 엮는다.
+    const placeholders = Array.from({ length: ids.length }, () => '?').join(', ');
+
+    return this.store
+      .all<Row>(
+        `WITH RECURSIVE chain(id, workspace_id, parent_id, kind, name, orphaned_at, inherits_acl, depth) AS (
+           SELECT ${COLUMNS}, 0 FROM node WHERE id IN (${placeholders})
+           UNION
+           SELECT n.id, n.workspace_id, n.parent_id, n.kind, n.name, n.orphaned_at, n.inherits_acl, c.depth + 1
+             FROM node n JOIN chain c ON n.id = c.parent_id
+            WHERE c.depth < ${MAX_DEPTH}
+         )
+         SELECT ${COLUMNS} FROM chain`,
+        [...ids],
+      )
+      .map(toRecord);
+  }
+
   pathOf(id: NodeId): string {
     const chain = this.chainOf(id);
     if (chain.length === 0) {
@@ -159,7 +185,36 @@ export class SqliteNodeRepository implements NodeRepository {
   }
 
   remove(id: NodeId): void {
-    // 하위는 `parent_id` 의 ON DELETE CASCADE 가 함께 지운다.
-    this.store.run('DELETE FROM node WHERE id = ?', [id]);
+    // 지운 노드 앞으로 걸린 ACL 항목을 **함께** 걷는다.
+    //
+    // `acl_entry.node_id` 에는 외래키가 없다 — 그 칸이 워크스페이스 ID 도
+    // 받기 때문이며(`001_init.sql`), 그래서 DB 가 대신 걷어 주지 않는다.
+    // 남기면 그 ID 가 판정에서 되살아난다: 같은 ID 를 가리키는 호출자에게
+    // 주인 없는 권한을 준다.
+    //
+    // 노드와 항목이 함께 사라지거나 함께 남는다 — 나누면 그 사이에서
+    // 실패했을 때 주인 없는 권한이 영구히 남는다.
+    this.store.transaction(() => {
+      const doomed = this.store.all<{ id: string }>(
+        `WITH RECURSIVE doomed(id, depth) AS (
+           SELECT id, 0 FROM node WHERE id = ?
+           UNION
+           SELECT n.id, d.depth + 1 FROM node n JOIN doomed d ON n.parent_id = d.id
+            WHERE d.depth < ${MAX_DEPTH}
+         )
+         SELECT id FROM doomed`,
+        [id],
+      );
+
+      if (doomed.length > 0) {
+        const placeholders = Array.from({ length: doomed.length }, () => '?').join(', ');
+        this.store.run(`DELETE FROM acl_entry WHERE node_id IN (${placeholders})`, [
+          ...doomed.map((row) => row.id),
+        ]);
+      }
+
+      // 하위 노드는 `parent_id` 의 ON DELETE CASCADE 가 함께 지운다.
+      this.store.run('DELETE FROM node WHERE id = ?', [id]);
+    });
   }
 }

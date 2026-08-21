@@ -1,4 +1,9 @@
-import { effectivePermission, type Ancestry, type Requester } from '../../domain/acl/effective-permission.js';
+import {
+  effectivePermission,
+  type AncestorLink,
+  type Ancestry,
+  type Requester,
+} from '../../domain/acl/effective-permission.js';
 import type { PermissionLevel } from '../../domain/acl/level.js';
 import { passThroughIds, visibilityOf, type Visibility } from '../../domain/acl/visibility.js';
 import type { NodeId } from '../../domain/node/node-id.js';
@@ -6,6 +11,7 @@ import type { AclRepository } from '../../domain/ports/acl-repository.js';
 import type { AuditSink } from '../../domain/ports/audit-sink.js';
 import type { NodeRecord, NodeRepository } from '../../domain/ports/node-repository.js';
 import type { PrincipalRepository } from '../../domain/ports/principal-repository.js';
+import type { WorkspaceRepository } from '../../domain/ports/workspace-repository.js';
 import type { PrincipalId } from '../../domain/principal/principal.js';
 import { isSuperuser, subjectIdsOf } from '../../domain/principal/subject.js';
 import { isServable } from '../../domain/serving/servable.js';
@@ -16,6 +22,13 @@ export interface AclStores {
   nodes: NodeRepository;
   acl: AclRepository;
   principals: PrincipalRepository;
+  /**
+   * 사슬의 루트가 실재하는지 되묻는 자리 (`ancestryOf`).
+   *
+   * 없으면 「사슬이 비었다 = 워크스페이스다」로 읽게 되고, 그러면 지운 노드
+   * ID 가 상속 체인의 루트로 격상된다.
+   */
+  workspaces: WorkspaceRepository;
   /**
    * 부여·회수가 남기는 자리 (`SEC-ACL-010` AC-3).
    *
@@ -65,20 +78,27 @@ export function actorFor(principals: PrincipalRepository, userId: PrincipalId): 
 }
 
 /**
- * 대상의 상속 사슬. 노드가 아니면 워크스페이스로 본다.
+ * 대상의 상속 사슬. 노드도 워크스페이스도 아니면 `undefined`.
  *
- * 워크스페이스인지 되묻지 않는 이유는 질의 예산 때문이다 — 되물으면 판정
- * 하나가 3회를 쓴다. 없는 ID 를 넘겨도 해가 없다: 걸리는 항목이 없어
- * `null` 이 나오고, 존재 확인은 `resolveNode` 의 몫이다.
+ * **사슬이 비었다는 것만으로 워크스페이스로 단정하지 않는다.** 그렇게
+ * 읽으면 지운 노드 ID 가 상속 체인의 루트로 격상되어, 그 ID 를 가리키는
+ * 판정이 열린다. 실재하는 워크스페이스일 때만 그렇게 본다.
+ *
+ * 되묻는 질의는 **사슬이 비었을 때만** 붙는다. 노드 판정은 첫 질의에서
+ * 사슬을 얻으므로 `CON-ACL-001` AC-4 의 2회 예산이 그대로 유지된다.
  */
-export function ancestryOf(nodes: NodeRepository, id: string): Ancestry {
-  const chain = nodes.chainOf(id);
-  if (chain.length === 0) return { links: [], workspaceId: id };
+export function ancestryOf(stores: AclStores, id: string): Ancestry | undefined {
+  const chain = stores.nodes.chainOf(id);
+  if (chain.length > 0) {
+    return {
+      links: chain.map((node) => ({ id: node.id, inheritsAcl: node.inheritsAcl })),
+      workspaceId: chain[0]!.workspaceId,
+    };
+  }
 
-  return {
-    links: chain.map((node) => ({ id: node.id, inheritsAcl: node.inheritsAcl })),
-    workspaceId: chain[0]!.workspaceId,
-  };
+  return stores.workspaces.findById(id) === undefined
+    ? undefined
+    : { links: [], workspaceId: id };
 }
 
 /**
@@ -107,6 +127,47 @@ export function treeAncestors(ancestry: Ancestry): string[] {
 }
 
 /**
+ * 여러 노드를 **한꺼번에** 판정한다. 질의는 대상 수와 무관하게 두 번이다.
+ *
+ * 이것이 `CON-ACL-001` AC-4 의 문면이다 — 「질의 2회와 노드 수 N 에 대한
+ * 메모리 순회 O(N)」. 노드마다 `permissionOf` 를 부르면 O(N) 이 메모리가
+ * 아니라 **질의** 쪽으로 옮겨 붙어 그 예산이 깨진다.
+ *
+ * 사슬을 합집합으로 한 번에 받아 `parentId` 로 메모리에서 다시 엮는다.
+ * 같은 조상을 공유하는 형제들이 그 조상을 한 번만 읽는다.
+ */
+export function permissionBatch(
+  stores: AclStores,
+  actor: Actor,
+  nodeIds: readonly string[],
+  workspaceId: string,
+): (nodeId: string) => PermissionLevel | null {
+  const chain = stores.nodes.chainsOf(nodeIds);
+  const byId = new Map(chain.map((node) => [node.id, node]));
+
+  const ancestryFor = (id: string): Ancestry => {
+    const links: AncestorLink[] = [];
+    const visited = new Set<string>();
+    for (let cursor: string | null = id; cursor !== null; ) {
+      const node: NodeRecord | undefined = byId.get(cursor);
+      // 사슬 밖이면 거기서 멈춘다. 합집합에 없는 것은 이 배치가 읽지
+      // 않은 것이고, 없는 조상을 있다고 가정하는 것보다 좁게 판정하는
+      // 편이 안전하다.
+      if (node === undefined || visited.has(cursor)) break;
+      visited.add(cursor);
+      links.push({ id: node.id, inheritsAcl: node.inheritsAcl });
+      cursor = node.parentId;
+    }
+    return { links, workspaceId };
+  };
+
+  const scope = new Set<string>([workspaceId, ...chain.map((node) => node.id)]);
+  const entries = stores.acl.entriesFor([...scope], actor.requester.subjectIds);
+
+  return (nodeId) => effectivePermission(ancestryFor(nodeId), entries, actor.requester);
+}
+
+/**
  * 유효 권한. 없으면 `null`.
  *
  * **질의 두 번**이다 (`CON-ACL-001` AC-4) — 사슬 하나와 항목 하나. 저장하지
@@ -117,7 +178,11 @@ export function permissionOf(
   actor: Actor,
   nodeId: string,
 ): PermissionLevel | null {
-  const ancestry = ancestryOf(stores.nodes, nodeId);
+  const ancestry = ancestryOf(stores, nodeId);
+  // 노드도 워크스페이스도 아닌 ID 는 판정 대상이 아니다. 슈퍼유저 우회도
+  // 여기서는 열리지 않는다 — 우회는 실재하는 대상에 대한 것이다.
+  if (ancestry === undefined) return null;
+
   const entries = stores.acl.entriesFor(judgementScope(ancestry), actor.requester.subjectIds);
 
   return effectivePermission(ancestry, entries, actor.requester);
@@ -169,19 +234,37 @@ export function visibleChildrenOf(
   actor: Actor,
   where: { workspaceId: string; parentId: NodeId | null },
 ): VisibleChild[] {
-  const through = passThroughIds(
-    stores.acl.grantedNodeIds(actor.requester.subjectIds),
-    (id) => treeAncestors(ancestryOf(stores.nodes, id)),
-  );
-
-  const visible: VisibleChild[] = [];
   // `listChildren` 을 거친다. 저장소를 직접 부르면 점 이름 규칙
   // (`SEC-STORAGE-004` AC-1)이 이 목록에서만 빠져, ACL 은 보면서 예약
   // 네임스페이스는 못 보는 두 번째 트리가 생긴다.
-  for (const node of listChildren(stores.nodes, where)) {
+  const children = listChildren(stores.nodes, where);
+  const granted = stores.acl.grantedNodeIds(actor.requester.subjectIds);
+
+  // 자식들과 부여받은 노드들의 사슬을 **한 번에** 받는다. 판정과
+  // pass-through 가 같은 합집합을 쓰므로 질의가 층 크기에 비례해 늘지
+  // 않는다 (`CON-ACL-001` AC-4).
+  const scope = [...children.map((node) => node.id), ...granted];
+  const levelOf = permissionBatch(stores, actor, scope, where.workspaceId);
+
+  const ancestorsFromBatch = stores.nodes.chainsOf(granted);
+  const byId = new Map(ancestorsFromBatch.map((node) => [node.id, node]));
+  const through = passThroughIds(granted, (id) => {
+    const ancestors: string[] = [];
+    const seen = new Set<string>();
+    for (let cursor = byId.get(id)?.parentId ?? null; cursor !== null; ) {
+      if (seen.has(cursor)) break;
+      seen.add(cursor);
+      ancestors.push(cursor);
+      cursor = byId.get(cursor)?.parentId ?? null;
+    }
+    return ancestors;
+  });
+
+  const visible: VisibleChild[] = [];
+  for (const node of children) {
     const visibility = visibilityOf({
       kind: node.kind,
-      effective: permissionOf(stores, actor, node.id),
+      effective: levelOf(node.id),
       isPassThrough: through.has(node.id),
     });
     if (visibility !== 'hidden') visible.push({ node, visibility });
