@@ -87,6 +87,11 @@ export function effectivePermission(
       // 이 계층에서만 유효 권한이 **줄어드는** 유일한 자리가 생겨
       // 「항목을 더하는 조작은 권한을 줄이지 않는다」(`SEC-ACL-003` AC-3)의
       // 단조성이 그 지점에서 깨진다.
+      //
+      // `009` 의 트리거가 그런 행의 저장을 막은 뒤로 이 가지는 현재 어떤
+      // 쓰기 경로로도 닿지 않는다. 그래도 남겨 두는 이유는 그 트리거가
+      // 서기 **전에** 들어온 행과 스키마 밖에서 손댄 경우가 남기 때문이다
+      // — 판정이 그런 행을 관리로 읽는 것보다 낮춰 읽는 편이 안전하다.
       if (e.nodeId === link.id) applicable.push(e.level === 'admin' ? 'edit' : e.level);
     }
     if (!link.inheritsAcl) {

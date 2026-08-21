@@ -15,8 +15,17 @@ export class SqliteAuditLog implements AuditSink {
   append(entry: AuditEntry): string {
     const id = randomUUID();
     this.store.run(
-      'INSERT INTO audit_log (id, operation, actor, node_id, workspace_id) VALUES (?, ?, ?, ?, ?)',
-      [id, entry.operation, entry.actor, entry.nodeId ?? null, entry.workspaceId ?? null],
+      `INSERT INTO audit_log (id, operation, actor, node_id, workspace_id, subject_id, level)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id,
+        entry.operation,
+        entry.actor,
+        entry.nodeId ?? null,
+        entry.workspaceId ?? null,
+        entry.subjectId ?? null,
+        entry.level ?? null,
+      ],
     );
     return id;
   }

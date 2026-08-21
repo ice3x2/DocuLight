@@ -58,7 +58,13 @@ export function grantPermission(
   // 전파를 막지 않는 대신 추적한다 (`SEC-ACL-010` AC-3). 편집자가 준 편집을
   // 받은 주체가 다시 부여해도 그 행이 **자기 이름으로** 남는다 — 부여자를
   // 항목과 감사 양쪽에 적는 이유는 항목이 회수되면 사라지기 때문이다.
-  stores.audit.append({ operation: ACL_GRANT, actor: actor.id, nodeId: grant.nodeId });
+  stores.audit.append({
+    operation: ACL_GRANT,
+    actor: actor.id,
+    nodeId: grant.nodeId,
+    subjectId: grant.principalId,
+    level: grant.level,
+  });
 
   return { ok: true, entryId: entry.id };
 }
@@ -82,7 +88,13 @@ export function revokePermission(
   if (!decision.allowed) return { ok: false, rule: decision.rule };
 
   stores.acl.revoke(entryId);
-  stores.audit.append({ operation: ACL_REVOKE, actor: actor.id, nodeId: entry.nodeId });
+  stores.audit.append({
+    operation: ACL_REVOKE,
+    actor: actor.id,
+    nodeId: entry.nodeId,
+    subjectId: entry.principalId,
+    level: entry.level,
+  });
   return { ok: true };
 }
 
@@ -130,16 +142,20 @@ export function inheritFromParent(
   for (const entry of stores.acl.entriesOnAny(inheritedSources(ancestry))) {
     // 관리는 워크스페이스에만 산다 (`SEC-WORKSPACE-002`) — 내려 붙이면
     // 문서에 관리 항목이 생긴다. 편집으로 낮춰 옮긴다.
-    stores.acl.grant({
-      nodeId,
-      principalId: entry.principalId,
-      level: entry.level === 'admin' ? 'edit' : entry.level,
-      grantedBy: actor.id,
-    });
+    const level = entry.level === 'admin' ? 'edit' : entry.level;
+    stores.acl.grant({ nodeId, principalId: entry.principalId, level, grantedBy: actor.id });
+
     // 이것도 부여다 (`SEC-ACL-010` AC-3). 한 번의 조작이 여러 항목을
     // 만든다고 해서 기록이 면제되지 않는다 — 오히려 그래서 되짚을 근거가
-    // 더 필요하다.
-    stores.audit.append({ operation: ACL_GRANT, actor: actor.id, nodeId });
+    // 더 필요하다. 주체와 레벨을 함께 적지 않으면 여기 남는 여러 행이
+    // 서로 구별되지 않아, 같은 행이 여러 번 찍힌 것과 다르지 않게 된다.
+    stores.audit.append({
+      operation: ACL_GRANT,
+      actor: actor.id,
+      nodeId,
+      subjectId: entry.principalId,
+      level,
+    });
   }
   return { ok: true };
 }

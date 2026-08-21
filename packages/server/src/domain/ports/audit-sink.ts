@@ -18,6 +18,17 @@ export interface AuditEntry {
    * 읽는 쪽이 어느 쪽인지 판정할 수 없기 때문이다.
    */
   workspaceId?: string;
+
+  /**
+   * 이 사건이 **누구에게** 일어났는가 — 부여·회수의 상대 (`SEC-ACL-010` AC-3).
+   *
+   * `actor` 와 나눠 둔다. 부여는 두 주체가 걸린 사건이고, 한 칸으로 합치면
+   * 「누가 줬나」와 「누가 받았나」가 구별되지 않는다.
+   */
+  subjectId?: string;
+
+  /** 무엇을 줬는가. 한 조작이 만든 여러 부여를 가르는 축이다. */
+  level?: string;
 }
 
 export interface AuditSink {

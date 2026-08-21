@@ -35,8 +35,17 @@ const placeholders = (n: number) => Array.from({ length: n }, () => '?').join(',
 export class SqliteAclRepository implements AclRepository {
   constructor(private readonly store: MetadataStore) {}
 
-  private isNode(id: string): boolean {
-    return this.store.get<{ id: string }>('SELECT id FROM node WHERE id = ?', [id]) !== undefined;
+  /**
+   * 실재하는 워크스페이스인가.
+   *
+   * 「노드 목록에 없으면 워크스페이스」라는 **음성** 판정을 쓰지 않는다 —
+   * 그것은 지운 ID·오타·앞으로 생길 다른 종류를 전부 통과시킨다. 물어야
+   * 할 것을 직접 묻는다.
+   */
+  private isWorkspace(id: string): boolean {
+    return (
+      this.store.get<{ id: string }>('SELECT id FROM workspace WHERE id = ?', [id]) !== undefined
+    );
   }
 
   grant(grant: {
@@ -52,10 +61,12 @@ export class SqliteAclRepository implements AclRepository {
     // 하나가 빠졌을 때 아무도 눈치채지 못한다. 여기서 저장 자체를 막으면
     // 그 강등들은 다시는 발화하지 않는 이중 방벽이 된다.
     //
-    // 노드 테이블에 없으면 워크스페이스다 — 두 계층이 서로 다른 테이블에
-    // 살기 때문에 이 판정에 별도 표식이 필요 없다.
-    if (grant.level === 'admin' && this.isNode(grant.nodeId)) {
-      throw new Error(`manage may only be granted on a workspace, not on node ${grant.nodeId}`);
+    // 저장소를 직접 만지는 경로는 `009` 의 트리거가 같은 것을 막는다.
+    // 여기 검사를 함께 두는 이유는 사유를 읽을 수 있는 형태로 돌려주기
+    // 위해서이고, 트리거가 없으면 이 검사만으로는 「지금은 아무도 안
+    // 쓴다」에 그친다.
+    if (grant.level === 'admin' && !this.isWorkspace(grant.nodeId)) {
+      throw new Error(`manage may only be granted on a workspace, not on ${grant.nodeId}`);
     }
 
     // `acl_entry_unique` 가 (노드, 주체, 레벨) 을 하나로 묶는다. 중복 부여는

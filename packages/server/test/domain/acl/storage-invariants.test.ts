@@ -52,12 +52,17 @@ describe('CON-ACL-002 — 거부 항목을 저장할 수 없다', () => {
       ).toThrow();
     }
 
-    // 허용 축 셋은 그대로 들어간다 — 거부가 전체로 번지지 않는다.
-    for (const level of ['view', 'edit', 'admin']) {
+    // 허용 축은 그대로 들어간다 — 거부가 전체로 번지지 않는다.
+    // 관리는 워크스페이스에만 걸리므로(`SEC-WORKSPACE-002`) 대상이 다르다.
+    for (const [level, target] of [
+      ['view', doc],
+      ['edit', doc],
+      ['admin', WS],
+    ] as const) {
       expect(() =>
         db.run("INSERT INTO acl_entry (id, node_id, principal_id, level) VALUES (?, ?, ?, ?)", [
           `ok-${level}`,
-          doc,
+          target,
           me.id,
           level,
         ]),
@@ -210,5 +215,72 @@ describe('SEC-ACL-010 — 부모 권한 가져오기도 감사에 남는다', ()
       [doc],
     );
     expect(audited[0]?.n, '조상에서 옮겨 온 부여가 감사에 없다').toBe(moved.length);
+  });
+});
+
+describe('SEC-WORKSPACE-002 — 관리 항목은 실재하는 워크스페이스에만 저장된다', () => {
+  it('AC-1 · AC-2: 원시 INSERT 도 노드에 관리 항목을 넣지 못한다', () => {
+    const doc = mkNode('회의록.md');
+    const me = stores.principals.createUser('한범');
+
+    // 저장소 메서드만 막으면 「지금은 아무도 안 쓴다」에 그친다 — `008` 이
+    // 시스템 그룹에 대해 채택한 것과 같은 이유, 같은 수단이 여기에도 있어야
+    // 판정 쪽 강등이 실제로 발화하지 않는 방벽이 된다.
+    expect(() =>
+      db.run("INSERT INTO acl_entry (id, node_id, principal_id, level) VALUES ('x1', ?, ?, 'admin')", [
+        doc,
+        me.id,
+      ]),
+    ).toThrow();
+
+    // 레벨을 나중에 올리는 경로도 막힌다.
+    stores.acl.grant({ nodeId: doc, principalId: me.id, level: 'edit', grantedBy: null });
+    expect(() => db.run("UPDATE acl_entry SET level = 'admin' WHERE node_id = ?", [doc])).toThrow();
+  });
+
+  it('실재하지 않는 ID 에도 관리 항목이 저장되지 않는다', () => {
+    const me = stores.principals.createUser('한범');
+    const gone = mkNode('사라질.md');
+    stores.nodes.remove(gone);
+
+    // 「노드 목록에 없으면 워크스페이스」라는 음성 판정은 지운 ID·오타·
+    // 앞으로 생길 다른 종류를 전부 통과시킨다. 실재하는 워크스페이스인지를
+    // **직접** 물어야 한다.
+    for (const id of [gone, 'typo-id']) {
+      expect(
+        () => stores.acl.grant({ nodeId: id, principalId: me.id, level: 'admin', grantedBy: null }),
+        `${id} 에 관리 항목이 저장된다`,
+      ).toThrow();
+    }
+
+    const orphans = db.all<{ node_id: string }>(
+      "SELECT node_id FROM acl_entry WHERE level = 'admin' AND node_id NOT IN (SELECT id FROM workspace)",
+    );
+    expect(orphans, '워크스페이스가 아닌 대상의 관리 항목이 남았다').toEqual([]);
+  });
+});
+
+describe('SEC-ACL-010 — 감사 행이 무엇을 누구에게 줬는지 담는다', () => {
+  it('AC-3: 한 조작이 만든 여러 부여가 서로 구별된다', () => {
+    const folder = mkNode('기획', null, 'directory');
+    const doc = stores.nodes.create({ workspaceId: WS, parentId: folder, kind: 'file', name: '회의록.md' });
+    const a = stores.principals.createUser('갑');
+    const b = stores.principals.createUser('을');
+    grantPermission(stores, root, { nodeId: folder, principalId: a.id, level: 'edit' });
+    grantPermission(stores, root, { nodeId: folder, principalId: b.id, level: 'view' });
+
+    breakInheritance(stores, root, doc);
+    inheritFromParent(stores, root, doc);
+
+    const rows = db.all<{ subject_id: string | null; level: string | null }>(
+      "SELECT subject_id, level FROM audit_log WHERE node_id = ? AND operation = 'acl.grant'",
+      [doc],
+    );
+
+    // 세 행이 전부 같으면 「전파를 막지 않는 대신 추적한다」는 거래를
+    // 실행할 수 없다 — 같은 행이 세 번 찍힌 것과 구별되지 않는다.
+    expect(rows).toHaveLength(2);
+    expect(new Set(rows.map((r) => `${r.subject_id}:${r.level}`)).size).toBe(2);
+    expect(rows.map((r) => r.subject_id).sort()).toEqual([a.id, b.id].sort());
   });
 });
