@@ -145,7 +145,12 @@ export function permissionBatch(
   const chain = stores.nodes.chainsOf(nodeIds);
   const byId = new Map(chain.map((node) => [node.id, node]));
 
-  const ancestryFor = (id: string): Ancestry => {
+  const ancestryFor = (id: string): Ancestry | undefined => {
+    // 실재하지 않는 대상은 판정 대상이 아니다 — `ancestryOf` 와 **같은**
+    // 판정이다. 여기서만 열어 두면 배치가 슈퍼유저에게 유령 ID 를
+    // `admin` 으로 돌려주고, 트리에 보이는 것과 열리는 것이 갈린다.
+    if (!byId.has(id) && id !== workspaceId) return undefined;
+
     const links: AncestorLink[] = [];
     const visited = new Set<string>();
     for (let cursor: string | null = id; cursor !== null; ) {
@@ -164,7 +169,12 @@ export function permissionBatch(
   const scope = new Set<string>([workspaceId, ...chain.map((node) => node.id)]);
   const entries = stores.acl.entriesFor([...scope], actor.requester.subjectIds);
 
-  return (nodeId) => effectivePermission(ancestryFor(nodeId), entries, actor.requester);
+  return (nodeId) => {
+    const ancestry = ancestryFor(nodeId);
+    return ancestry === undefined
+      ? null
+      : effectivePermission(ancestry, entries, actor.requester);
+  };
 }
 
 /**
