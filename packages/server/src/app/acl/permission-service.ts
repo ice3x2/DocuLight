@@ -11,6 +11,7 @@ import type { AclRepository } from '../../domain/ports/acl-repository.js';
 import type { AuditSink } from '../../domain/ports/audit-sink.js';
 import type { NodeRecord, NodeRepository } from '../../domain/ports/node-repository.js';
 import type { PrincipalRepository } from '../../domain/ports/principal-repository.js';
+import type { SettingStore } from '../../domain/ports/setting-store.js';
 import type { WorkspaceRepository } from '../../domain/ports/workspace-repository.js';
 import type { PrincipalId } from '../../domain/principal/principal.js';
 import { isSuperuser, subjectIdsOf } from '../../domain/principal/subject.js';
@@ -36,6 +37,15 @@ export interface AclStores {
    * 것이 이 모델의 거래이기 때문이다 — 기록이 빠지면 그 거래의 한쪽만 남는다.
    */
   audit: AuditSink;
+
+  /**
+   * 인스턴스 설정. 가입 모드가 여기 산다 (`FR-AUTH-004`).
+   *
+   * ACL 판정 자체는 이것을 보지 않지만, 이 묶음이 앱 계층 전체가 공유하는
+   * 저장소 집합이라 여기 둔다 — 묶음을 둘로 나누면 호출자가 어느 쪽을
+   * 넘길지 고르게 되고, 그 선택이 자리마다 갈린다.
+   */
+  settings: SettingStore;
 }
 
 /**
