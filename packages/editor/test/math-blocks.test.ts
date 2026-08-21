@@ -84,3 +84,28 @@ describe('수식 렌더', () => {
     expect(renderMath('\\frac{', false)).toContain('\\frac{');
   });
 });
+
+describe('FR-EDITOR-007 AC-8 — 수식으로 잡으면 안 되는 것들', () => {
+  it('코드 펜스 안의 `$$` 는 수식이 아니다 — 구문 트리 없이도 걸러야 한다', () => {
+    // 셸 스크립트를 문서에 넣으면 `$$`(PID)와 `$VAR` 가 수식이 된다.
+    expect(found('```sh\necho $$ 와 $HOME 사이\n```')).toEqual([]);
+  });
+
+  it('펜스 밖의 수식은 그대로 잡는다', () => {
+    expect(found('```sh\necho $$\n```\n\n$$\nE = mc^2\n$$').map((b) => b.tex.trim())).toEqual(['E = mc^2']);
+  });
+
+  it('인라인 코드 안의 `$x$` 는 수식이 아니다', () => {
+    expect(found('`$x$` 라고 쓴다')).toEqual([]);
+  });
+
+  it('세 개짜리 `$$$` 가 빈 수식을 만들지 않는다', () => {
+    // `$$ 와 $ 와 $$$` 처럼 `$` 가 흩어진 문장이 통째로 수식이 되면
+    // 그 문장이 화면에서 사라진다.
+    expect(found('$$ 와 $ 와 $$$')).toEqual([]);
+  });
+
+  it('여러 줄에 걸친 인라인 `$` 는 수식이 아니다', () => {
+    expect(found('$a\nb$')).toEqual([]);
+  });
+});

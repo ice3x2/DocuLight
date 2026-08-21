@@ -1,6 +1,7 @@
-import { syntaxTree } from '@codemirror/language';
 import type { EditorState } from '@codemirror/state';
 import katex from 'katex';
+
+import { maskVerbatim } from './verbatim.js';
 
 /**
  * 수식 (`FR-EDITOR-007` AC-8).
@@ -34,16 +35,6 @@ const DIGITS_ONLY = /^[\d\s.,]*$/;
 
 const isMeaningful = (tex: string) => tex.trim() !== '' && !DIGITS_ONLY.test(tex);
 
-/** 코드 계열 노드가 덮고 있는 자리인가 — 원문을 그대로 보여 주는 자리다. */
-function insideCode(state: EditorState, at: number): boolean {
-  let node = syntaxTree(state).resolveInner(at, 1);
-  while (node.parent !== null) {
-    if (/Code|Comment/.test(node.name)) return true;
-    node = node.parent;
-  }
-  return false;
-}
-
 const touchesSelection = (state: EditorState, from: number, to: number) =>
   state.selection.ranges.some((range) => range.from <= to && range.to >= from);
 
@@ -55,28 +46,33 @@ const touchesSelection = (state: EditorState, from: number, to: number) =>
  */
 export function findMathBlocks(state: EditorState): MathBlock[] {
   const doc = state.doc.toString();
+  // **가리고 찾는다.** 찾은 뒤 걸러 내면 펜스 안의 `$$` 가 이미 뒤쪽을
+  // 먹어 치워, 바로 다음에 오는 진짜 수식이 통째로 사라진다.
+  const searchable = maskVerbatim(doc);
   const found: MathBlock[] = [];
   const taken: Array<[number, number]> = [];
 
   for (const [pattern, display] of [
-    [/\$\$([\s\S]+?)\$\$/g, true],
+    // 여는 `$$` 뒤와 닫는 `$$` 앞에 붙은 공백만 허용하고, 알맹이에 홑
+    // `$` 가 남아 있으면 수식이 아니다 — `$$ 와 $ 와 $$$` 같은 문장이
+    // 통째로 수식이 되면 그 문장이 화면에서 사라진다.
+    [/\$\$([^$]+?)\$\$/g, true],
     // 여는 `$` 뒤와 닫는 `$` 앞에 공백이 오면 수식이 아니다. 이 하나가
     // `$5 와 $10` 같은 금액 표기를 걸러 낸다 — 숫자 검사만으로는 사이에
     // 글자가 낀 금액 나열을 잡지 못한다.
     [/\$(?!\s)([^$\n]*?)(?<!\s)\$/g, false],
   ] as const) {
-    for (const match of doc.matchAll(pattern)) {
+    for (const match of searchable.matchAll(pattern)) {
       const from = match.index!;
       const to = from + match[0].length;
       if (taken.some(([a, b]) => from < b && to > a)) continue;
       if (!isMeaningful(match[1]!)) continue;
-      if (insideCode(state, from)) continue;
 
       taken.push([from, to]);
       found.push({
         from,
         to,
-        tex: match[1]!,
+        tex: doc.slice(from + (display ? 2 : 1), to - (display ? 2 : 1)),
         display,
         revealed: touchesSelection(state, from, to),
       });

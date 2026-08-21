@@ -7,6 +7,8 @@
  * 에디터를 띄워야 한다.
  */
 
+import { fencedLines, insideCodeSpan } from './verbatim.js';
+
 export interface TagMatch {
   /** `#` 를 뺀 이름. */
   name: string;
@@ -49,13 +51,6 @@ function frontmatterEnd(text: string): number | null {
   return closing + '\n---'.length;
 }
 
-/** 코드 스팬(백틱) 안인가. 원문을 그대로 보여 주는 자리라 칠하지 않는다. */
-function insideCodeSpan(line: string, at: number): boolean {
-  let ticks = 0;
-  for (let i = 0; i < at; i += 1) if (line[i] === '`') ticks += 1;
-  return ticks % 2 === 1;
-}
-
 /**
  * 본문의 태그들 (`FR-EDITOR-007` AC-10).
  *
@@ -65,18 +60,29 @@ function insideCodeSpan(line: string, at: number): boolean {
  */
 export function findTags(text: string): TagMatch[] {
   const skipUntil = frontmatterEnd(text) ?? 0;
+  const lines = text.split('\n');
+  const fenced = fencedLines(lines);
   const found: TagMatch[] = [];
 
   let lineStart = 0;
-  for (const line of text.split('\n')) {
+  for (const [row, line] of lines.entries()) {
+    if (fenced.has(row)) {
+      lineStart += line.length + 1;
+      continue;
+    }
+
     for (let i = 0; i < line.length; i += 1) {
       if (line[i] !== '#') continue;
 
       const from = lineStart + i;
       if (from < skipUntil) continue;
+
+      const before = line[i - 1];
       // 단어 가운데의 `#` 은 태그가 아니다 — `C#` 을 태그로 잡으면 코드
-      // 이야기가 전부 칠해진다.
-      if (i > 0 && NAME.test(line[i - 1]!)) continue;
+      // 이야기가 전부 칠해진다. 앞이 `#` 이어도 아니다(`##겹침`).
+      if (before !== undefined && (NAME.test(before) || before === '#')) continue;
+      // 사용자가 일부러 뺀 것을 다시 잡으면 뺄 방법이 없어진다.
+      if (before === '\\') continue;
       if (insideCodeSpan(line, i)) continue;
 
       let end = i + 1;
@@ -88,6 +94,7 @@ export function findTags(text: string): TagMatch[] {
       found.push({ name, from, to: lineStart + end });
       i = end - 1;
     }
+
     lineStart += line.length + 1;
   }
 

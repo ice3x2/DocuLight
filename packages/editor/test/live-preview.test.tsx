@@ -152,3 +152,27 @@ describe('FR-EDITOR-007 AC-10 · AC-11 — 본문 태그', () => {
     expect(host.querySelector('.dl-tag')).toBeNull();
   });
 });
+
+describe('FR-EDITOR-007 AC-8 · AC-10 — 코드블록은 원문 그대로 남는다', () => {
+  it('코드블록 안의 `#include` 가 태그 칩이 되지 않는다', () => {
+    const host = mount('본문\n\n```c\n#include <stdio.h>\n```\n');
+
+    // 이걸 놓치면 C 코드를 담은 문서가 온통 칩으로 덮인다.
+    expect(host.querySelector('.dl-tag')).toBeNull();
+    expect(visibleText(host)).toContain('#include');
+  });
+
+  it('코드블록 안의 `$$` 가 수식으로 렌더되지 않는다', () => {
+    const host = mount('본문\n\n```sh\necho $$\n```\n');
+
+    expect(host.querySelector('.dl-math')).toBeNull();
+    expect(visibleText(host)).toContain('$$');
+  });
+
+  it('같은 문서의 코드블록 밖 수식은 그대로 렌더된다', () => {
+    const host = mount('본문\n\n```sh\necho $$\n```\n\n$$\nE = mc^2\n$$\n');
+
+    // 앞의 코드블록이 뒤의 수식을 삼키면 이 단언이 깨진다.
+    expect(host.querySelector('.dl-math')).not.toBeNull();
+  });
+});
