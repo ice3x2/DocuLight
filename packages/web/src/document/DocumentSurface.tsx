@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { AtomicCodeMirrorEditor, doculightExtensions } from '@doculight/editor';
+import { useMemo, useState } from 'react';
 
 import { urlForNode } from '../routing/deep-link.js';
 import {
@@ -85,14 +86,31 @@ export function DocumentSurface({
   initialMode = 'read',
   save = 'saved',
   serverBody = null,
+  body,
+  onTagClick,
 }: {
   file: OpenFile;
   initialMode?: Mode;
   save?: SaveState;
   serverBody?: string | null;
+  /**
+   * 서버에서 받아 온 본문. **초기 문서**를 넘기는 값이지 controlled
+   * `value` 가 아니다 (`CON-ARCH-006` AC-2) — 편집기가 이것을 한 번 받아
+   * 자기 문서로 삼고, 그 뒤로 정본은 편집기다.
+   *
+   * 아직 안 왔으면 편집기를 세우지 않는다. 빈 문자열로 세우면 사용자가
+   * 그 위에 쓰기 시작하고, 본문이 도착하는 순간 그 편집이 밀린다.
+   */
+  body?: string;
+  onTagClick?: (name: string) => void;
 }) {
   const [mode, setMode] = useState<Mode>(initialMode);
   const surface = surfaceOf(file.name);
+  // 확장 묶음을 마운트마다 다시 만들면 그때마다 편집기가 재구성된다.
+  const extensions = useMemo(
+    () => doculightExtensions(onTagClick === undefined ? {} : { onTagClick }),
+    [onTagClick],
+  );
 
   const change = (to: Mode) => setMode((from) => nextMode(from, to, { canEdit: canEditFile(file) }));
 
@@ -137,7 +155,18 @@ export function DocumentSurface({
         </div>
       )}
 
-      <div role="region" aria-label={MODE_LABEL[mode]} data-node={file.nodeId} />
+      <div role="region" aria-label={MODE_LABEL[mode]} data-node={file.nodeId}>
+        {body === undefined ? null : mode === 'read' ? (
+          // 읽기 모드도 같은 편집기로 그린다 — 두 렌더러를 두면 같은
+          // 문서가 두 모습으로 보이고, 그 차이는 아무도 눈치채지 못한다.
+          <AtomicCodeMirrorEditor markdownSource={body} extensions={extensions} readOnly />
+        ) : mode === 'source' ? (
+          // 소스는 원문 그대로다 — 데코레이션을 걸면 소스가 아니다.
+          <pre>{body}</pre>
+        ) : (
+          <AtomicCodeMirrorEditor markdownSource={body} extensions={extensions} />
+        )}
+      </div>
     </div>
   );
 }
