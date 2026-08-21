@@ -86,3 +86,23 @@ describe('CON-ARCH-006 AC-3 — 본문은 에디터 인스턴스에서 조회해
     expect(surface).not.toMatch(/useState<\s*string\s*>/);
   });
 });
+
+describe('Phase 1 종료 판정의 조건 — 문서로 고정한다', () => {
+  it('CON-EDITOR-001 AC-2 · CON-EDITOR-004 AC-2: 판정 조건이 SRS 에 적혀 있다', async () => {
+    const editor = await readFile(resolve(ROOT, '../../docs/spec/07.editor.srs.md'), 'utf8');
+
+    // 이 둘은 코드가 아니라 **판정 절차**를 정한다 — 코드에서 잴 수 없고,
+    // 잴 수 있는 척하면 통과가 거짓이 된다. 조건이 문서에 살아 있다는
+    // 사실만 고정하고, 실제 수행은 종료 판정이 한다.
+    expect(editor).toContain('플러그인으로만 제공되는 기능은 판정 대상에서 제외');
+    expect(editor).toContain('데스크탑 브라우저에서 수행');
+  });
+
+  it('FR-EDITOR-001 AC-1 · AC-2: 실제 볼트 판정 조건이 SRS 에 적혀 있다', async () => {
+    const editor = await readFile(resolve(ROOT, '../../docs/spec/07.editor.srs.md'), 'utf8');
+
+    // 실제 옵시디언 볼트를 넣어 확인하는 항이라 자동 시험으로 대신할 수
+    // 없다 — 볼트를 저장소에 넣는 것 자체가 이 제품의 범위 밖이다.
+    expect(editor).toContain('실제 옵시디언 볼트를 기본 워크스페이스에 그대로 넣었을 때');
+  });
+});

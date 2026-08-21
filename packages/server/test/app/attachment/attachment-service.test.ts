@@ -124,7 +124,7 @@ describe('DR-ATTACH-002 — 소유 문서 메타데이터', () => {
     expect(typeof row!.createdAt).toBe('string');
   });
 
-  it('AC-3 · FR-STORAGE-008 AC-4: 소유 문서를 옮겨도 소유 노드 ID 가 그대로다', async () => {
+  it('DR-ATTACH-002 AC-3 · FR-STORAGE-008 AC-4: 소유 문서를 옮겨도 소유 노드 ID 가 그대로다', async () => {
     await attach(root);
     const other = idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name: '보관' }));
 
@@ -143,7 +143,7 @@ describe('DR-ATTACH-003 — 본문 링크는 워크스페이스 기준 절대경
     expect(done.link).toContain(done.hash);
   });
 
-  it('AC-2 · FR-STORAGE-008 AC-2: 문서를 옮겨도 서버가 본문을 재작성하지 않는다', async () => {
+  it('DR-ATTACH-003 AC-2 · FR-STORAGE-008 AC-1 · AC-2: 문서를 옮겨도 첨부 경로와 본문 바이트가 그대로다', async () => {
     const done = (await attach(root)) as { ok: true; link: string };
     const body = `# 회의록\n\n![](${done.link})\n`;
     const before = join(docsRoot, ws, stores.nodes.pathOf(doc));
@@ -158,7 +158,7 @@ describe('DR-ATTACH-003 — 본문 링크는 워크스페이스 기준 절대경
     expect(await readFile(before, 'utf8')).toBe(body);
   });
 
-  it('AC-2: 링크에 소유 문서의 경로가 없다 — 그래서 이동이 링크를 낡게 만들 수 없다', async () => {
+  it('DR-ATTACH-003 AC-2 · AC-3: 링크에 소유 문서의 경로가 없다 — 그래서 이동이 링크를 낡게 만들 수 없다', async () => {
     const sub = idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name: '회의' }));
     const inner = idOf(createNode(stores, root, { workspaceId: ws, parentId: sub, kind: 'file', name: '안.md' }));
     await mkdir(join(docsRoot, ws, stores.nodes.pathOf(sub)), { recursive: true });

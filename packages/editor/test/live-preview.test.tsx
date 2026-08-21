@@ -49,11 +49,11 @@ afterEach(() => {
  * 이 표가 그 목록과 어긋나면 둘 중 하나가 틀린 것이다.
  */
 const NINE = [
-  { ac: 'AC-1', name: '헤딩', markdown: '# 제목입니다', keeps: '제목입니다', hides: '#' },
-  { ac: 'AC-2', name: '강조', markdown: '**굵게** 그리고 *기울임*', keeps: '굵게', hides: '**' },
-  { ac: 'AC-3', name: '목록', markdown: '- 첫째 항목', keeps: '첫째 항목', hides: '- ' },
-  { ac: 'AC-4', name: '링크', markdown: '[문서](https://example.test/x)', keeps: '문서', hides: 'https://example.test/x' },
-  { ac: 'AC-5', name: '인용', markdown: '> 인용된 문장', keeps: '인용된 문장', hides: '>' },
+  { ac: 'FR-EDITOR-007 AC-1', name: '헤딩', markdown: '# 제목입니다', keeps: '제목입니다', hides: '#' },
+  { ac: 'FR-EDITOR-007 AC-2', name: '강조', markdown: '**굵게** 그리고 *기울임*', keeps: '굵게', hides: '**' },
+  { ac: 'FR-EDITOR-007 AC-3', name: '목록', markdown: '- 첫째 항목', keeps: '첫째 항목', hides: '- ' },
+  { ac: 'FR-EDITOR-007 AC-4', name: '링크', markdown: '[문서](https://example.test/x)', keeps: '문서', hides: 'https://example.test/x' },
+  { ac: 'FR-EDITOR-007 AC-5', name: '인용', markdown: '> 인용된 문장', keeps: '인용된 문장', hides: '>' },
 ] as const;
 
 describe('FR-EDITOR-007 — 커서가 없는 줄에서 마크다운 기호가 숨는다', () => {
