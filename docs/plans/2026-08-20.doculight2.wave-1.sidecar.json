@@ -11,8 +11,8 @@
   "totals": {
     "reqs": 24,
     "ac_total": 118,
-    "ac_covered": 111,
-    "ac_deferred": 7,
+    "ac_covered": 112,
+    "ac_deferred": 6,
     "ac_missing": 0,
     "phases": 9,
     "tasks": 53,
