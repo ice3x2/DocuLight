@@ -1,0 +1,202 @@
+import { mkdir, mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import {
+  RECONCILE_INTERVAL_MS,
+  reconcile,
+  startReconciliationLoop,
+} from '../../../src/app/reconciliation/reconcile.js';
+import { createWorkspace } from '../../../src/app/workspace/create-workspace.js';
+import { FsDocumentStore } from '../../../src/infra/fs/document-store.js';
+import { FsWorkspaceFiles } from '../../../src/infra/fs/workspace-sidecar.js';
+import { SqliteAuditLog } from '../../../src/infra/sqlite/audit-log-repository.js';
+import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
+import { SqliteFindingQueue } from '../../../src/infra/sqlite/finding-queue-repository.js';
+import { SqliteNodeRepository } from '../../../src/infra/sqlite/node-repository.js';
+import { SqliteWorkspaceRepository } from '../../../src/infra/sqlite/workspace-repository.js';
+
+const UUID_V4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+
+let dir: string;
+let docsRoot: string;
+let db: Database;
+let documents: FsDocumentStore;
+let nodes: SqliteNodeRepository;
+let workspaces: SqliteWorkspaceRepository;
+let queue: SqliteFindingQueue;
+let stores: Parameters<typeof reconcile>[0];
+let ws: string;
+
+/** 서버가 정지한 동안 누군가 디스크에 파일을 둔 상황을 만든다. */
+const putOnDisk = (path: string, body = '# 본문') => documents.write(ws, path, body);
+
+const pathsInDb = () =>
+  nodes
+    .allIn(ws)
+    .filter((n) => n.kind === 'file')
+    .map((n) => nodes.pathOf(n.id))
+    .sort();
+
+beforeEach(async () => {
+  dir = await mkdtemp(join(tmpdir(), 'doculight-reconcile-'));
+  docsRoot = join(dir, 'docs');
+  await mkdir(docsRoot, { recursive: true });
+  db = openDatabase(join(dir, 'doculight.db'));
+
+  documents = new FsDocumentStore(docsRoot);
+  nodes = new SqliteNodeRepository(db);
+  workspaces = new SqliteWorkspaceRepository(db);
+  queue = new SqliteFindingQueue(db);
+
+  stores = {
+    nodes,
+    workspaces,
+    documents,
+    audit: new SqliteAuditLog(db),
+    queue,
+  };
+
+  ws = (await createWorkspace({ workspaces, files: new FsWorkspaceFiles(docsRoot) }, '기획팀')).id;
+});
+
+afterEach(async () => {
+  vi.useRealTimers();
+  db.close();
+  await rm(dir, { recursive: true, force: true });
+});
+
+describe('REL-STORAGE-001 · DR-STORAGE-001 — 재조정이 정지 중의 변경을 따라잡는다', () => {
+  it('REL-STORAGE-001 AC-1 — 서버가 정지한 동안 docsRoot 에 추가된 파일은 기동 직후 재조정에서 신규 노드로 생성되고 부모의 ACL 을 상속한다.', async () => {
+    await putOnDisk('회의 기록/2026 상반기/기획 회의.md');
+
+    const result = await reconcile(stores);
+
+    expect(result.created).toHaveLength(1);
+    expect(pathsInDb()).toEqual(['회의 기록/2026 상반기/기획 회의.md']);
+
+    // 중간 디렉토리도 함께 선다. 서지 않으면 파일 노드가 부모 없이 떠서
+    // 상속의 출발점 자체가 없어진다.
+    const created = nodes.findById(result.created[0]!)!;
+    expect(created.kind).toBe('file');
+    expect(created.parentId).not.toBeNull();
+    expect(nodes.pathOf(created.parentId!)).toBe('회의 기록/2026 상반기');
+
+    // 한계 — ACL 테이블이 wave-1 에 없어 상속 자체는 관측 대상이 아니다.
+    // 여기서 고정하는 것은 상속이 걸릴 **부모 사슬이 실제로 선다**는 것이며,
+    // 상속 규칙은 ACL scope 가 서는 wave 가 자기 자리에서 판정한다.
+  });
+
+  it('REL-STORAGE-001 AC-2 — 서버가 정지한 동안 사라진 파일의 노드는 ACL 이 삭제되지 않고 orphaned_at 이 기록된 tombstone 상태가 된다.', async () => {
+    await putOnDisk('회의록.md');
+    await reconcile(stores);
+    const [id] = nodes.allIn(ws).filter((n) => n.kind === 'file').map((n) => n.id);
+
+    await rm(join(docsRoot, ws, '회의록.md'));
+    const result = await reconcile(stores);
+
+    // 지우지 않는다. 삭제는 되돌릴 수 없고, 파일이 잠시 없었을 뿐인
+    // 경우에도 권한이 영구히 사라진다.
+    expect(result.orphaned).toEqual([id]);
+    const tombstone = nodes.findById(id!);
+    expect(tombstone).not.toBeUndefined();
+    expect(tombstone?.orphanedAt).toBeTruthy();
+
+    // 이미 tombstone 인 노드를 매 회차마다 다시 세지 않는다 — 세면
+    // 대기열이 같은 사실로 채워진다.
+    expect((await reconcile(stores)).orphaned).toEqual([]);
+  });
+
+  it('REL-STORAGE-001 AC-3 — 위 두 경우 모두 재조정 대기열에 미해소 항목으로 기재된다.', async () => {
+    await putOnDisk('회의록.md');
+    await reconcile(stores);
+    expect(queue.unresolved()).toHaveLength(1);
+
+    await rm(join(docsRoot, ws, '회의록.md'));
+    await reconcile(stores);
+
+    const kinds = queue.unresolved().map((f) => f.type).sort();
+    expect(kinds).toHaveLength(2);
+    // 두 사실은 서로 다른 유형이다 — 같은 유형이면 대기열을 보는 사람이
+    // 무엇이 일어났는지 구별할 수 없다.
+    expect(new Set(kinds).size).toBe(2);
+
+    // 항목마다 참조 감사 행이 있다. 비면 시각·대상 노드·행위자의 유일한
+    // 출처가 사라진다(`R139`).
+    for (const finding of queue.unresolved()) {
+      expect(queue.auditRefsOf(finding.id).length).toBeGreaterThan(0);
+    }
+  });
+
+  it('REL-STORAGE-001 AC-4 — 재조정은 기동 시 1회 수행되고 그 뒤로도 주기적으로 반복된다.', async () => {
+    vi.useFakeTimers();
+    const ran: number[] = [];
+    const loop = startReconciliationLoop(stores, { onRun: () => ran.push(ran.length) });
+
+    // 기동 시 1회.
+    await vi.advanceTimersByTimeAsync(0);
+    expect(ran).toHaveLength(1);
+
+    // 그 뒤 주기 반복.
+    await vi.advanceTimersByTimeAsync(RECONCILE_INTERVAL_MS);
+    expect(ran).toHaveLength(2);
+    await vi.advanceTimersByTimeAsync(RECONCILE_INTERVAL_MS * 2);
+    expect(ran).toHaveLength(4);
+
+    loop.stop();
+    await vi.advanceTimersByTimeAsync(RECONCILE_INTERVAL_MS * 3);
+    expect(ran).toHaveLength(4);
+  });
+
+  it('REL-STORAGE-001 AC-5 — 재조정이 만든 신규 노드에도 경로 독립적인 노드 ID 가 부여된다.', async () => {
+    await putOnDisk('가/나/다.md');
+
+    const result = await reconcile(stores);
+
+    // 파일 하나와 중간 디렉토리 둘.
+    expect(nodes.allIn(ws)).toHaveLength(3);
+    for (const node of nodes.allIn(ws)) {
+      expect(node.id).toMatch(UUID_V4);
+      expect(node.id).not.toContain(node.name);
+    }
+    expect(result.created.every((id) => UUID_V4.test(id))).toBe(true);
+  });
+
+  it('DR-STORAGE-001 AC-3 — 문서 본문은 데이터베이스에 보관되지 않는다 — DB 를 비우고 재구성해도 파일시스템의 문서 본문은 그대로 남는다.', async () => {
+    await putOnDisk('회의록.md', '# 원문 그대로');
+    await reconcile(stores);
+
+    // DB 를 통째로 비운다.
+    db.run('DELETE FROM node');
+    db.run('DELETE FROM workspace');
+    expect(nodes.allIn(ws)).toEqual([]);
+
+    // 본문은 남아 있다.
+    expect(await documents.read(ws, '회의록.md')).toBe('# 원문 그대로');
+
+    // 어느 테이블에도 본문을 담는 칸이 없다.
+    const tables = db
+      .all<{ name: string }>("SELECT name FROM sqlite_master WHERE type = 'table'")
+      .map((r) => r.name);
+    for (const table of tables) {
+      const columns = db.all<{ name: string }>(`PRAGMA table_info(${table})`).map((c) => c.name);
+      expect(
+        columns.filter((c) => /body|content|markdown|text_body/.test(c)),
+        `${table} 이 본문을 담는다`,
+      ).toEqual([]);
+    }
+  });
+
+  it('REL-STORAGE-001 — 점으로 시작하는 경로는 노드로 등재하지 않는다.', async () => {
+    // 사이드카와 `.obsidian` 은 제품·도구가 쓰는 예약 자리다. 노드로
+    // 만들면 숨김 규칙이 낸 자리에 트리 항목이 들어앉는다.
+    await mkdir(join(docsRoot, ws, '.obsidian'), { recursive: true });
+    await documents.write(ws, '.obsidian/app.json', '{}');
+    await putOnDisk('회의록.md');
+
+    await reconcile(stores);
+
+    expect(pathsInDb()).toEqual(['회의록.md']);
+  });
+});
