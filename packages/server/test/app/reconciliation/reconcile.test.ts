@@ -155,6 +155,46 @@ describe('REL-STORAGE-001 · DR-STORAGE-001 — 재조정이 정지 중의 변�
     expect(RECONCILE_INTERVAL_MS).toBeGreaterThan(0);
   });
 
+  it('REL-STORAGE-001 AC-4 — 간격을 주지 않으면 운영 기본 간격이 실제로 배선된다.', async () => {
+    // 위 시험이 간격을 주입하는 바람에 **기본값이 실제로 쓰이는지**가 어느
+    // 자리에서도 재지지 않았다. 그것을 여기서 정확한 회차 수로 잰다.
+    //
+    // 워크스페이스가 하나도 없는 저장소를 흉내 내어 파일시스템을 아예
+    // 건드리지 않는다 — 실제 I/O 가 없으면 가짜 시계로 회차를 정확히
+    // 셀 수 있고, 여기서 재려는 것은 재조정의 내용이 아니라 **일정**이다.
+    const idle = {
+      workspaces: { list: () => [] },
+      files: { readAllSidecars: async () => [] },
+    } as unknown as Parameters<typeof reconcile>[0];
+
+    vi.useFakeTimers();
+    // 루프를 **가짜 시계 안에서** 멈춰야 한다. 시계를 되돌린 뒤에 멈추면
+    // 가짜 핸들을 진짜 `clearInterval` 에 넘기게 되어 타이머가 남고,
+    // 워커가 종료하지 못한다.
+    let scheduled: ReconciliationLoop | undefined;
+    try {
+      const ran: number[] = [];
+      scheduled = startReconciliationLoop(idle, { onRun: () => ran.push(ran.length) });
+
+      await vi.advanceTimersByTimeAsync(0);
+      expect(ran).toHaveLength(1);
+
+      await vi.advanceTimersByTimeAsync(RECONCILE_INTERVAL_MS - 1);
+      // 간격 **직전**에는 돌지 않는다. 이 단언이 없으면 기본값이 1ms 여도
+      // 「주기적으로 돈다」가 통과한다.
+      expect(ran).toHaveLength(1);
+
+      await vi.advanceTimersByTimeAsync(1);
+      expect(ran).toHaveLength(2);
+
+      await vi.advanceTimersByTimeAsync(RECONCILE_INTERVAL_MS * 2);
+      expect(ran).toHaveLength(4);
+    } finally {
+      await scheduled?.stop();
+      vi.useRealTimers();
+    }
+  });
+
   it('REL-STORAGE-001 AC-5 — 재조정이 만든 신규 노드에도 경로 독립적인 노드 ID 가 부여된다.', async () => {
     await putOnDisk('가/나/다.md');
 
