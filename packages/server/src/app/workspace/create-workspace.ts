@@ -1,4 +1,6 @@
+import type { PrincipalId } from '../../domain/principal/principal.js';
 import type { Workspace } from '../../domain/workspace/workspace.js';
+import type { AclStores, Actor } from '../acl/permission-service.js';
 import type { WorkspaceStores } from './restore-from-sidecar.js';
 
 /**
@@ -23,4 +25,51 @@ export async function createWorkspace(
   await files.createDirectory(workspace.id);
   await files.writeSidecar(workspace);
   return workspace;
+}
+
+export type WorkspaceRule = 'needs-superuser' | 'unknown-administrator';
+
+export type WorkspaceCreated =
+  | { ok: true; workspace: Workspace }
+  | { ok: false; rule: WorkspaceRule };
+
+/**
+ * 관리자를 지정해 워크스페이스를 만든다
+ * (`SEC-WORKSPACE-001` AC-4 · AC-5 · `SEC-PRINCIPAL-001` AC-2).
+ *
+ * 관리자 지정을 **인자로 받고 검사한 뒤에야** 레코드를 만드는 이유가 AC-5 다
+ * — 만들고 나서 지정하게 하면 관리자 없는 워크스페이스가 그 사이에 존재하고,
+ * 그 상태에서 실패하면 아무도 손댈 수 없는 워크스페이스가 영구히 남는다.
+ * 워크스페이스는 상속 체인의 루트라 위에서 구해 줄 주체가 없다
+ * (`SEC-WORKSPACE-001` AC-1).
+ *
+ * 슈퍼유저만 실행한다 — 워크스페이스는 권한 경계 자체이므로 그것을 만드는
+ * 권능은 경계 안쪽에서 나올 수 없다.
+ */
+export async function createWorkspaceAs(
+  stores: AclStores & WorkspaceStores,
+  actor: Actor,
+  input: { name: string; administratorId: PrincipalId },
+): Promise<WorkspaceCreated> {
+  if (!actor.requester.superuser) {
+    return { ok: false, rule: 'needs-superuser' };
+  }
+
+  const administrator = stores.principals.findById(input.administratorId);
+  if (administrator === undefined) {
+    return { ok: false, rule: 'unknown-administrator' };
+  }
+
+  const workspace = await createWorkspace(stores, input.name);
+
+  // `grantedBy` 를 `null` 로 두는 것이 이 항목을 시스템의 것으로 만든다 —
+  // 생성자 자동 부여와 같은 이유다.
+  stores.acl.grant({
+    nodeId: workspace.id,
+    principalId: administrator.id,
+    level: 'admin',
+    grantedBy: null,
+  });
+
+  return { ok: true, workspace };
 }

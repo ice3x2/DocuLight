@@ -4,6 +4,13 @@ import type { NodeId } from '../../domain/node/node-id.js';
 import type { PrincipalId } from '../../domain/principal/principal.js';
 import { permissionOf, type AclStores, type Actor } from './permission-service.js';
 
+/**
+ * 감사 로그의 조작 이름. 하위체계를 `operation` 에 밀어 넣지 않는 규칙
+ * (`R139-b`) 아래에서 ACL 축의 이름을 여기 한 자리에 둔다.
+ */
+export const ACL_GRANT = 'acl.grant';
+export const ACL_REVOKE = 'acl.revoke';
+
 export type GrantFailure = GrantRule | 'unknown-target' | 'unknown-entry';
 
 export type GrantOutcome = { ok: true; entryId: string } | { ok: false; rule: GrantFailure };
@@ -41,6 +48,12 @@ export function grantPermission(
   if (!decision.allowed) return { ok: false, rule: decision.rule };
 
   const entry = stores.acl.grant({ ...grant, grantedBy: actor.id });
+
+  // 전파를 막지 않는 대신 추적한다 (`SEC-ACL-010` AC-3). 편집자가 준 편집을
+  // 받은 주체가 다시 부여해도 그 행이 **자기 이름으로** 남는다 — 부여자를
+  // 항목과 감사 양쪽에 적는 이유는 항목이 회수되면 사라지기 때문이다.
+  stores.audit.append({ operation: ACL_GRANT, actor: actor.id, nodeId: grant.nodeId });
+
   return { ok: true, entryId: entry.id };
 }
 
@@ -63,6 +76,7 @@ export function revokePermission(
   if (!decision.allowed) return { ok: false, rule: decision.rule };
 
   stores.acl.revoke(entryId);
+  stores.audit.append({ operation: ACL_REVOKE, actor: actor.id, nodeId: entry.nodeId });
   return { ok: true };
 }
 

@@ -3,6 +3,7 @@ import type { PermissionLevel } from '../../domain/acl/level.js';
 import { passThroughIds, visibilityOf, type Visibility } from '../../domain/acl/visibility.js';
 import type { NodeId } from '../../domain/node/node-id.js';
 import type { AclRepository } from '../../domain/ports/acl-repository.js';
+import type { AuditSink } from '../../domain/ports/audit-sink.js';
 import type { NodeRecord, NodeRepository } from '../../domain/ports/node-repository.js';
 import type { PrincipalRepository } from '../../domain/ports/principal-repository.js';
 import type { PrincipalId } from '../../domain/principal/principal.js';
@@ -13,6 +14,13 @@ export interface AclStores {
   nodes: NodeRepository;
   acl: AclRepository;
   principals: PrincipalRepository;
+  /**
+   * 부여·회수가 남기는 자리 (`SEC-ACL-010` AC-3).
+   *
+   * 선택으로 두지 않는 이유는 전파를 막지 않는 대신 **추적으로 감당하겠다**는
+   * 것이 이 모델의 거래이기 때문이다 — 기록이 빠지면 그 거래의 한쪽만 남는다.
+   */
+  audit: AuditSink;
 }
 
 /**
@@ -34,6 +42,19 @@ export interface Actor {
  * (`CON-ACL-001` AC-2), 그래서 무효화할 캐시가 없다(AC-3).
  */
 export function actorFor(principals: PrincipalRepository, userId: PrincipalId): Actor {
+  const account = principals.findById(userId);
+
+  // 계정 상태는 **주체 레벨 게이트**다 (`CON-ACL-002` AC-4). ACL 거부
+  // 항목으로 표현하지 않는 이유는 그것이 합집합 모델을 깨기 때문이고,
+  // 여기서 닫는 이유는 그래야 그 계정의 ACL 항목이 **그대로 남는다**는
+  // 사실과 「지금은 못 들어온다」가 함께 성립하기 때문이다.
+  //
+  // 슈퍼유저 우회보다 앞선다 — 뒤에 두면 정지된 슈퍼유저가 전 워크스페이스를
+  // 그대로 연다.
+  if (account === undefined || account.status !== 'active') {
+    return { id: userId, requester: { subjectIds: [], superuser: false } };
+  }
+
   const groups = principals.groupsOf(userId);
   return {
     id: userId,

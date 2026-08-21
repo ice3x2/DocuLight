@@ -16,25 +16,18 @@ import {
   inheritFromParent,
   revokePermission,
 } from '../../../src/app/acl/grant-service.js';
-import { createNode, moveNode, renameNode } from '../../../src/app/node/node-service.js';
+import { createNode, moveNode, renameNode, type NodeStores } from '../../../src/app/node/node-service.js';
+import { nodeStores, superuserActor } from '../../support/acl-fixture.js';
 import { createWorkspace } from '../../../src/app/workspace/create-workspace.js';
-import { SUPERUSER_GROUP_ID } from '../../../src/domain/principal/system-groups.js';
 import { FsWorkspaceFiles } from '../../../src/infra/fs/workspace-sidecar.js';
-import { SqliteAclRepository } from '../../../src/infra/sqlite/acl-repository.js';
 import type { MetadataStore } from '../../../src/domain/ports/metadata-store.js';
+import { SqliteAclRepository } from '../../../src/infra/sqlite/acl-repository.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
 import { SqliteNodeRepository } from '../../../src/infra/sqlite/node-repository.js';
-import { SqlitePrincipalRepository } from '../../../src/infra/sqlite/principal-repository.js';
-import { SqliteWorkspaceRepository } from '../../../src/infra/sqlite/workspace-repository.js';
 
 let dir: string;
 let db: Database;
-let stores: {
-  nodes: SqliteNodeRepository;
-  workspaces: SqliteWorkspaceRepository;
-  acl: SqliteAclRepository;
-  principals: SqlitePrincipalRepository;
-};
+let stores: NodeStores;
 let ws: string;
 let root: Actor;
 let me: Actor;
@@ -51,17 +44,8 @@ beforeEach(async () => {
   await mkdir(docsRoot, { recursive: true });
   db = openDatabase(join(dir, 'doculight.db'));
 
-  const principals = new SqlitePrincipalRepository(db);
-  stores = {
-    nodes: new SqliteNodeRepository(db),
-    workspaces: new SqliteWorkspaceRepository(db),
-    acl: new SqliteAclRepository(db),
-    principals,
-  };
-
-  const rootUser = principals.createUser('설치자');
-  principals.addMember(SUPERUSER_GROUP_ID, rootUser.id);
-  root = actorFor(principals, rootUser.id);
+  stores = nodeStores(db);
+  root = superuserActor(stores);
 
   ws = (await createWorkspace({ workspaces: stores.workspaces, files: new FsWorkspaceFiles(docsRoot) }, '기획팀')).id;
   me = newActor('한범');

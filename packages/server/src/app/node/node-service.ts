@@ -221,6 +221,65 @@ export function moveNode(
 }
 
 /**
+ * 복사한다 — 워크스페이스 경계를 **넘을 수 있는 유일한 조작**이다
+ * (`SEC-ACL-014` AC-2).
+ *
+ * 이동과 갈라 둔 이유가 요구의 전부다. 이동은 원본을 목적지의 권한 경계로
+ * 끌고 가므로 두 경계 사이에서 권한이 갈리는데, 복사는 새 노드를 만들 뿐이라
+ * 그 문제가 없다 — 그래서 원본에는 **보기**면 족하고(AC-3) 목적지에만
+ * 편집이 필요하다.
+ *
+ * 복사본의 생성자는 복사를 실행한 사용자다 (`SEC-ACL-011` AC-5) — 원본
+ * 생성자를 물려주면 복사 한 번으로 남의 편집권이 새 경계 안에 생긴다.
+ *
+ * 본문 복제는 여기 없다 — 본문의 SSOT 는 파일시스템이고(`DR-STORAGE-001`)
+ * 그 복제와 첨부·링크 처리 규칙은 `FR-ACL-001` 이 소유한다(뒤 wave).
+ * 여기서 서는 것은 노드와 그 권한이다.
+ */
+export function copyNode(
+  stores: NodeStores,
+  actor: Actor,
+  id: NodeId,
+  destinationId: NodeId | null,
+): Created | Rejected {
+  const source = resolveNode(stores, actor, id);
+  if (source === undefined) {
+    return unknownNode(id);
+  }
+
+  const destination = destinationId === null ? undefined : stores.nodes.findById(destinationId);
+  if (destinationId !== null && destination === undefined) {
+    return unknownNode(destinationId);
+  }
+  // 목적지가 루트면 그 워크스페이스를 알 길이 없다 — 복사는 경계를 넘으므로
+  // 원본의 워크스페이스를 물려받을 수 없기 때문이다.
+  const workspaceId = destination?.workspaceId ?? source.workspaceId;
+
+  const held: Held = {
+    parent: null,
+    target: permissionOf(stores, actor, id),
+    destination: permissionOf(stores, actor, destinationId ?? workspaceId),
+    workspace: null,
+  };
+  if (!satisfies(requirementFor('copy'), held)) {
+    return reject('forbidden', '이 노드를 복사할 권한이 없습니다.');
+  }
+
+  // 자기 자신이나 자기 하위로 복사하면 사본이 다시 복사 대상이 되어
+  // 끝나지 않는다. 이동과 같은 방어를 같은 자리에서 쓴다.
+  if (destinationId !== null && subtreeOf(stores.nodes, source).ids.has(destinationId)) {
+    return reject('move-into-descendant', '노드를 자기 자신이나 그 하위로 복사할 수 없습니다.');
+  }
+
+  return createNode(stores, actor, {
+    workspaceId,
+    parentId: destinationId,
+    kind: source.kind,
+    name: source.name,
+  });
+}
+
+/**
  * 이 서브트리에 요청자가 볼 수 없는 노드가 하나라도 있는가
  * (`SEC-ACL-013` AC-1 · AC-2).
  *

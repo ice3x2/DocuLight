@@ -2,6 +2,7 @@ import { actorFor, type Actor } from '../../src/app/acl/permission-service.js';
 import type { NodeStores } from '../../src/app/node/node-service.js';
 import { SUPERUSER_GROUP_ID } from '../../src/domain/principal/system-groups.js';
 import { SqliteAclRepository } from '../../src/infra/sqlite/acl-repository.js';
+import { SqliteAuditLog } from '../../src/infra/sqlite/audit-log-repository.js';
 import type { Database } from '../../src/infra/sqlite/database.js';
 import { SqliteNodeRepository } from '../../src/infra/sqlite/node-repository.js';
 import { SqlitePrincipalRepository } from '../../src/infra/sqlite/principal-repository.js';
@@ -20,6 +21,7 @@ export function nodeStores(db: Database): NodeStores {
     workspaces: new SqliteWorkspaceRepository(db),
     acl: new SqliteAclRepository(db),
     principals: new SqlitePrincipalRepository(db),
+    audit: new SqliteAuditLog(db),
   };
 }
 
