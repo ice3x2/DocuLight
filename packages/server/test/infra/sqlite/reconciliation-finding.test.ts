@@ -99,19 +99,37 @@ describe('REL-AUDIT-001 — 재조정 대기열은 감사 로그와 별개 저�
     expect(queue.auditRefsOf(id)).toEqual([created, tombstoned]);
   });
 
-  it('AC-7 — 참조 감사 행 없이 항목을 열 수 없다 (같은 사실을 대기열이 따로 적지 않는다)', () => {
+  it('AC-2 — 참조 감사 행 없이 항목을 열 수 없다 (같은 사실을 대기열이 따로 적지 않는다)', () => {
     // 비우면 시각·대상 노드·행위자의 유일한 출처가 사라진다.
     expect(() => queue.open({ type: FINDING_TYPE.unregisteredFile, auditRefs: [] })).toThrow(
       /at least one audit reference/i,
     );
   });
 
-  it('AC-8 — 해소되지 않은 항목은 남는다', () => {
-    const a1 = audit.append({ operation: RECONCILE_OPERATION.create, actor: SYSTEM_RECONCILER, nodeId: 'n1' });
+  it('AC-8 — 대기열 항목이 보존 기간 만료로 사라지지 않고 해소될 때까지 남는다', () => {
+    const a1 = audit.append({
+      operation: RECONCILE_OPERATION.create,
+      actor: SYSTEM_RECONCILER,
+      nodeId: 'n1',
+    });
     const id = queue.open({ type: FINDING_TYPE.unregisteredFile, auditRefs: [a1] });
 
-    // 보존 기간으로 지우는 경로가 대기열에 없어야 한다 — 해소만이 목록에서 뺀다.
+    // **지우는 경로가 없다는 것**이 이 AC 의 실질이다. 앞서 이 자리는
+    // `Object.keys(queue)` 로 확인했는데 그것은 자기 열거 속성만 돌려주고
+    // 메서드는 프로토타입에 있어 — 실제로 만료 메서드를 더해도 통과했다.
+    // 프로토타입 사슬까지 훑어야 재는 것이 된다.
+    const reachable: string[] = [];
+    for (let o = queue as object; o !== null && o !== Object.prototype; o = Object.getPrototypeOf(o)) {
+      reachable.push(...Object.getOwnPropertyNames(o));
+    }
+    const removal = reachable.filter((name) => /purge|expire|prune|evict|delete|remove/i.test(name));
+    expect(
+      removal,
+      `대기열에 지우는 경로가 생겼다: ${removal.join(', ')}. 해소만이 목록에서 빼야 한다`,
+    ).toEqual([]);
+
+    // 감사 로그와 성질이 반대다 — 로그는 보존 기간으로 사라지지만 대기열은
+    // 남아야 하고, 사라지면 재조정 통지라는 완화책이 무너진다.
     expect(queue.unresolved().map((f) => f.id)).toEqual([id]);
-    expect(Object.keys(queue)).not.toContain('purgeExpired');
   });
 });
