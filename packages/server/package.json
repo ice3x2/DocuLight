@@ -6,7 +6,7 @@
   "description": "DocuLight 2.0 백엔드 — Express + SQLite. 1.0 에서는 코드가 아니라 기능을 물려받는다 (CON-ARCH-002)",
   "main": "./src/main.ts",
   "scripts": {
-    "dev": "tsx watch src/main.ts",
+    "dev": "tsx watch --env-file=.env.development src/main.ts",
     "start": "tsx src/main.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

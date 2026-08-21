@@ -83,9 +83,13 @@ describe('DR-WORKSPACE-001 — 워크스페이스는 docsRoot 아래 해시 디�
     expect(workspaceDirectory).toHaveLength(2);
     expect(createWorkspaceDirectory).toHaveLength(2);
 
-    // 설정에도 워크스페이스별 경로 키가 없다.
+    // 설정에도 워크스페이스별 경로 키가 없다. 키 목록을 통째로 고정하지
+    // 않는 이유는 그러면 무관한 설정이 하나 늘 때마다 이 단언이 깨져
+    // 정작 재려던 것(워크스페이스별 경로의 부재)이 묻히기 때문이다.
     const config = loadConfig({});
-    expect(Object.keys(config).sort()).toEqual(['databaseFile', 'docsRoot', 'port']);
+    expect(Object.keys(config).filter((key) => /workspace/i.test(key))).toEqual([]);
+    // 문서 루트는 하나뿐이다.
+    expect(typeof config.docsRoot).toBe('string');
   });
 
   it('DR-WORKSPACE-001 AC-2 — 워크스페이스 디렉토리의 이름은 해시 ID 이며 표시 이름을 포함하지 않는다.', async () => {
