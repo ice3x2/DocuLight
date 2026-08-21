@@ -8,7 +8,9 @@ import { registerAccount } from '../../../src/app/auth/account-service.js';
 import type { Clock } from '../../../src/app/auth/login-service.js';
 import {
   INSTALL_TOKEN_MINUTES,
+  beginInstallSession,
   commitInstall,
+  forgetInstallTokenForTest,
   isInstalled,
   mintInstallToken,
   verifyInstallToken,
@@ -37,6 +39,7 @@ beforeEach(async () => {
   db = openDatabase(join(dir, 'doculight.db'));
   now = new Date('2026-08-22T09:00:00.000Z');
   printed = [];
+  forgetInstallTokenForTest();
   stores = {
     ...nodeStores(db),
     passwords: new BcryptPasswordHasher(),
@@ -53,8 +56,18 @@ afterEach(async () => {
   await rm(dir, { recursive: true, force: true });
 });
 
+/**
+ * 토큰으로 설치 세션을 연 뒤 커밋한다 — 마법사가 실제로 지나는 순서다
+ * (`SEC-AUTH-015`). 토큰을 커밋에 그대로 넘기면 그 값이 한 번만 쓰이도록
+ * 설계된 성질을 잃는다.
+ */
+const sessionFor = (token: string): string => {
+  const begun = beginInstallSession(stores, token);
+  return begun.ok ? begun.installSession : '';
+};
+
 const commit = (token: string, overrides: Partial<Parameters<typeof commitInstall>[2]> = {}) =>
-  commitInstall(stores, token, {
+  commitInstall(stores, sessionFor(token), {
     superuserName: '설치자',
     password: '올바른-말-네-개',
     workspaceName: '기획팀',

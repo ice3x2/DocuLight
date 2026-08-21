@@ -17,6 +17,15 @@ export const INSTALL_TOKEN_MINUTES = 30;
 /** 기본 워크스페이스에 대한 default 그룹의 초기 권한 (`SEC-AUTH-017` AC-1). */
 export type DefaultGroupLevel = GrantLevel | 'none';
 
+/**
+ * 그 선택의 기본값 (`SEC-AUTH-017` AC-2).
+ *
+ * 화면이 아니라 여기 두는 이유는 기본값이 **요구사항**이기 때문이다 —
+ * 화면에 두면 그 화면을 다시 만들 때 값이 갈리고, 갈린 사실을 아무도
+ * 알아채지 못한다.
+ */
+export const DEFAULT_GROUP_LEVEL: DefaultGroupLevel = 'edit';
+
 export interface InstallStores extends AclStores {
   passwords: PasswordHasher;
   files: WorkspaceFiles;
@@ -37,6 +46,18 @@ export interface InstallStores extends AclStores {
 let liveToken: { value: string; expiresAt: number } | null = null;
 
 /**
+ * 토큰 검증으로 발급된 설치 세션 (`SEC-AUTH-015` AC-1).
+ *
+ * 토큰과 **따로** 두는 이유가 AC-2 다 — 이후 요청이 토큰 자체를 다시
+ * 들고 오게 하면 그 값이 매 요청 네트워크를 오가고, 한 번만 쓰이도록
+ * 설계된 값이 상시 자격증명이 된다.
+ *
+ * 토큰과 같은 수명을 쓴다. 세션이 토큰보다 오래 살면 만료된 토큰으로
+ * 시작한 설치가 계속 진행되어 30분 제한이 무의미해진다.
+ */
+let liveInstallSession: { value: string; expiresAt: number } | null = null;
+
+/**
  * 새 설치 토큰을 만들어 콘솔에 낸다. **기동 경로가 부른다.**
  *
  * 요청을 받아 이것을 부르는 진입점을 두지 않는다 (`SEC-AUTH-014` AC-4) —
@@ -48,6 +69,9 @@ export function mintInstallToken(stores: InstallStores): string {
   const value = newSecretToken();
   const expiresAt = stores.clock().getTime() + INSTALL_TOKEN_MINUTES * 60 * 1000;
   liveToken = { value, expiresAt };
+  // 새 토큰은 이전 세션도 죽인다 — 남기면 옛 토큰으로 시작한 설치가
+  // 새 토큰이 나온 뒤에도 계속된다.
+  liveInstallSession = null;
 
   // 만료를 **절대시각**으로 낸다 (`SEC-AUTH-013` AC-3) — 「30분 뒤」는
   // 언제 출력됐는지를 모르면 쓸모가 없고, 로그를 나중에 읽는 사람은
@@ -65,6 +89,41 @@ export function verifyInstallToken(stores: InstallStores, presented: string): bo
   if (stores.clock().getTime() >= liveToken.expiresAt) return false;
 
   return secretTokenEquals(presented, liveToken.value);
+}
+
+export type InstallSessionOutcome =
+  | { ok: true; installSession: string }
+  | { ok: false; rule: 'bad-token' };
+
+/**
+ * 토큰을 검증하고 설치 세션을 발급한다 (`SEC-AUTH-015` AC-1).
+ *
+ * 이 함수가 곧 「토큰 검증」 엔드포인트의 몸통이며, 허용목록 넷 중 하나가
+ * 이것을 부른다.
+ */
+export function beginInstallSession(
+  stores: InstallStores,
+  presented: string,
+): InstallSessionOutcome {
+  if (!verifyInstallToken(stores, presented)) return { ok: false, rule: 'bad-token' };
+
+  const value = newSecretToken();
+  liveInstallSession = { value, expiresAt: liveToken?.expiresAt ?? 0 };
+
+  return { ok: true, installSession: value };
+}
+
+/**
+ * 이 설치 세션이 유효한가 (`SEC-AUTH-015` AC-2 · AC-4).
+ *
+ * 토큰 검증 이후의 **모든** 설치 요청이 이것을 지난다. 진입 시점에만
+ * 검사하면 클라이언트가 단계 전환 상태를 조작해 다음 단계로 건너뛴다.
+ */
+export function requireInstallSession(stores: InstallStores, presented: string): boolean {
+  if (liveInstallSession === null || presented.length === 0) return false;
+  if (stores.clock().getTime() >= liveInstallSession.expiresAt) return false;
+
+  return secretTokenEquals(presented, liveInstallSession.value);
 }
 
 /**
@@ -101,7 +160,7 @@ export type InstallOutcome =
  */
 export async function commitInstall(
   stores: InstallStores,
-  token: string,
+  installSession: string,
   input: {
     superuserName: string;
     password: string;
@@ -111,7 +170,11 @@ export async function commitInstall(
   },
 ): Promise<InstallOutcome> {
   if (isInstalled(stores)) return { ok: false, rule: 'already-installed' };
-  if (!verifyInstallToken(stores, token)) return { ok: false, rule: 'bad-token' };
+
+  // **설치 세션을 요구한다** (`SEC-AUTH-015` AC-3). 토큰을 그대로 받지
+  // 않는 이유는 그 값이 한 번만 쓰이도록 설계됐기 때문이다 — 커밋까지
+  // 들고 다니게 하면 상시 자격증명이 된다.
+  if (!requireInstallSession(stores, installSession)) return { ok: false, rule: 'bad-token' };
 
   const account = await registerAccount(stores, {
     name: input.superuserName,
@@ -145,8 +208,10 @@ export async function commitInstall(
 
   stores.settings.set('signup-mode', input.signupMode);
 
-  // 토큰은 여기서 소진된다 — 슈퍼유저가 실제로 선 뒤다.
+  // 토큰과 세션이 **함께** 소진된다 — 슈퍼유저가 실제로 선 뒤다.
+  // 세션만 남기면 그것이 설치를 다시 여는 두 번째 문이 된다.
   liveToken = null;
+  liveInstallSession = null;
 
   return {
     ok: true,
@@ -176,4 +241,5 @@ function warningsFor(mode: SignupMode, level: DefaultGroupLevel): string[] {
 /** 시험이 프로세스 상태를 격리할 수 있게 하는 자리. 프로덕션 경로는 부르지 않는다. */
 export function forgetInstallTokenForTest(): void {
   liveToken = null;
+  liveInstallSession = null;
 }
