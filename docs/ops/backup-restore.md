@@ -88,6 +88,10 @@ DocuLight 2.0 은 **두 저장소**에 상태를 나눠 둔다.
 시점이 어긋난 백업으로 복원하면 재조정이 두 방향의 차이를 발견하고, 각각을
 재조정 대기열에 **미해소** 항목으로 남긴다 (`AC-3`).
 
+값의 정본은 코드다 — 유형명은 `packages/server/src/domain/reconciliation/vocabulary.ts`,
+격리 자리는 `packages/server/src/domain/workspace/quarantine.ts` 다. 아래 표는 그것을
+읽는 사람을 위한 안내이지 정의가 아니다.
+
 | 상황 | 재조정이 하는 일 | 대기열 항목 |
 |---|---|---|
 | 파일은 있는데 DB 에 노드가 없다 | 노드를 새로 만든다. **부모에서 권한을 상속하므로 원래보다 넓게 보일 수 있다** | `unregistered-file` |
@@ -117,6 +121,8 @@ DocuLight 2.0 은 **두 저장소**에 상태를 나눠 둔다.
 복원 뒤 이 넷을 확인한다.
 
 - [ ] `pm2 list` 에 `doculight` 프로세스가 **1개** 떠 있다 (`OPS-ARCH-001` AC-2)
-- [ ] 브라우저에서 `http://<호스트>:3399/` 가 열린다
+- [ ] 브라우저에서 서버 포트로 접속이 열린다 — 기본값의 정본은
+      `packages/server/src/config/config.ts` 의 `DEFAULT_PORT` 이고, 배포가
+      `PORT` 로 덮었다면 그 값이다
 - [ ] 워크스페이스 목록이 복원 전과 같다
 - [ ] 재조정 대기열의 미해소 항목을 전부 확인했다 (§2.2)

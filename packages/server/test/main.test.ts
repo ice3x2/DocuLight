@@ -17,11 +17,12 @@ describe('server entry point', () => {
     expect(typeof app).toBe('function');
   });
 
-  it('운영 기본 포트는 3399 다 — 개발과 운영에서 사용자 주소가 같아진다', () => {
-    // 개발에서는 Vite 가 이 번호로 앱을 띄우고 `/api` 를 3400 으로
-    // 프록시한다. 운영에서는 한 프로세스가 둘 다 올리므로 프록시가
-    // 사라지고 이 번호가 그대로 사용자 주소가 된다.
-    expect(loadConfig({}).port).toBe(3399);
-    expect(loadConfig({ PORT: '3400' }).port).toBe(3400);
+  it('운영 기본 포트가 있고 환경변수가 그것을 이긴다', () => {
+    // 번호와 그 사유의 정본은 `config.ts` 의 `DEFAULT_PORT` 다. 여기 다시
+    // 적으면 값이 둘이 되므로, 여기서는 **기본값이 있다는 것**과 **환경변수가
+    // 그것을 이긴다는 것**만 잰다.
+    expect(loadConfig({}).port).toBeGreaterThan(0);
+    expect(loadConfig({ PORT: '4321' }).port).toBe(4321);
+    expect(loadConfig({ PORT: '이건 숫자가 아니다' }).port).toBe(loadConfig({}).port);
   });
 });

@@ -1,5 +1,5 @@
 /**
- * 중복 사이드카 격리의 어휘 (`DR-WORKSPACE-002` AC-5 · AC-6 · `R40-d`).
+ * 중복 사이드카가 옮겨 가는 **자리** (`DR-WORKSPACE-002` AC-5 · `R40-d`).
  *
  * 응용 계층과 파일시스템 어댑터가 **둘 다** 이 값을 쓴다. 어느 한쪽에 두면
  * 다른 쪽이 그것을 가리키느라 의존 방향이 뒤집히므로 도메인에 둔다.
@@ -24,8 +24,6 @@
  */
 export const QUARANTINE_DIRECTORY = '.quarantine';
 
-/** 격리 사실의 감사 조작명. */
-export const QUARANTINE_OPERATION = 'quarantine';
-
-/** 그 사실을 가리키는 대기열 항목의 유형. */
-export const DUPLICATE_SIDECAR_FINDING = 'duplicate-workspace-sidecar';
+// 격리 사실의 감사 조작명과 대기열 유형은 재조정 어휘가 소유한다
+// (`domain/reconciliation/vocabulary.ts`) — 그 둘은 이 자리 이름과 달리
+// 재조정이 남기는 말이고, 같은 열거에 있어야 셋이 갈리지 않는다.

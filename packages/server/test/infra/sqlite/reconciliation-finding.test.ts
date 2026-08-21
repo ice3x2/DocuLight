@@ -3,6 +3,11 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { SYSTEM_RECONCILER } from '../../../src/domain/ports/audit-sink.js';
+import {
+  FINDING_TYPE,
+  RECONCILE_OPERATION,
+} from '../../../src/domain/reconciliation/vocabulary.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
 import { SqliteFindingQueue } from '../../../src/infra/sqlite/finding-queue-repository.js';
 import { SqliteAuditLog } from '../../../src/infra/sqlite/audit-log-repository.js';
@@ -69,8 +74,8 @@ describe('REL-AUDIT-001 — 재조정 대기열은 감사 로그와 별개 저�
   });
 
   it('AC-4 — 미해소가 해소 감사 행의 비어 있음으로 판정되며 별도 칸이 아니다', () => {
-    const a1 = audit.append({ operation: 'create', actor: 'system:reconciler', nodeId: 'n1' });
-    const id = queue.open({ type: 'unregistered-file', auditRefs: [a1] });
+    const a1 = audit.append({ operation: RECONCILE_OPERATION.create, actor: SYSTEM_RECONCILER, nodeId: 'n1' });
+    const id = queue.open({ type: FINDING_TYPE.unregisteredFile, auditRefs: [a1] });
 
     expect(queue.unresolved().map((f) => f.id)).toEqual([id]);
 
@@ -86,24 +91,24 @@ describe('REL-AUDIT-001 — 재조정 대기열은 감사 로그와 별개 저�
   });
 
   it('AC-5 — 참조 감사 행이 복수를 담고 신규 노드와 tombstone 두 행이 한 항목으로 묶인다', () => {
-    const created = audit.append({ operation: 'create', actor: 'system:reconciler', nodeId: 'n2' });
-    const tombstoned = audit.append({ operation: 'orphan', actor: 'system:reconciler', nodeId: 'n1' });
+    const created = audit.append({ operation: RECONCILE_OPERATION.create, actor: SYSTEM_RECONCILER, nodeId: 'n2' });
+    const tombstoned = audit.append({ operation: RECONCILE_OPERATION.orphan, actor: SYSTEM_RECONCILER, nodeId: 'n1' });
 
-    const id = queue.open({ type: 'correlation-failed', auditRefs: [created, tombstoned] });
+    const id = queue.open({ type: FINDING_TYPE.missingFile, auditRefs: [created, tombstoned] });
 
     expect(queue.auditRefsOf(id)).toEqual([created, tombstoned]);
   });
 
   it('AC-7 — 참조 감사 행 없이 항목을 열 수 없다 (같은 사실을 대기열이 따로 적지 않는다)', () => {
     // 비우면 시각·대상 노드·행위자의 유일한 출처가 사라진다.
-    expect(() => queue.open({ type: 'unregistered-file', auditRefs: [] })).toThrow(
+    expect(() => queue.open({ type: FINDING_TYPE.unregisteredFile, auditRefs: [] })).toThrow(
       /at least one audit reference/i,
     );
   });
 
   it('AC-8 — 해소되지 않은 항목은 남는다', () => {
-    const a1 = audit.append({ operation: 'create', actor: 'system:reconciler', nodeId: 'n1' });
-    const id = queue.open({ type: 'unregistered-file', auditRefs: [a1] });
+    const a1 = audit.append({ operation: RECONCILE_OPERATION.create, actor: SYSTEM_RECONCILER, nodeId: 'n1' });
+    const id = queue.open({ type: FINDING_TYPE.unregisteredFile, auditRefs: [a1] });
 
     // 보존 기간으로 지우는 경로가 대기열에 없어야 한다 — 해소만이 목록에서 뺀다.
     expect(queue.unresolved().map((f) => f.id)).toEqual([id]);

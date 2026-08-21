@@ -149,4 +149,27 @@ describe('FR-WORKSPACE-001 — 노드 계층은 루트 → 워크스페이스 �
     expect(Object.keys(await createWorkspace(wsStores, '두번째'))).toContain('id');
     expect(columnsOf('node').map((c) => c.name)).toContain('workspace_id');
   });
+
+  it('CON-WORKSPACE-001 AC-1 · AC-2 · AC-4 — 계층의 **종류**는 넷이고, 디렉토리 중첩 겹수는 묶이지 않는다.', () => {
+    // AC-4 의 「4단계를 넘는 조상 체인을 전제하지 않는다」는 계층의 *종류*가
+    // 넷이라는 뜻이지 경로 깊이가 넷이라는 뜻이 아니다. 깊이로 읽으면
+    // 옵시디언 볼트를 그대로 넣는 요구(`DR-WORKSPACE-001` AC-7)와 정면으로
+    // 충돌한다 — 실제 볼트는 폴더를 두 겹 이상 쓰는 것이 보통이다.
+    //
+    // 그래서 여기서 재는 것은 「깊이를 막는가」가 아니라 **깊이를 전제하는
+    // 코드가 없는가** 다.
+    let parent: string | null = null;
+    for (const name of ['가', '나', '다', '라', '마', '바']) {
+      parent = nodes.create({ workspaceId: ws, parentId: parent, kind: 'directory', name });
+    }
+    expect(nodes.pathOf(parent!)).toBe('가/나/다/라/마/바');
+
+    // 계층의 종류를 늘릴 자리가 없다 — 워크스페이스에 부모 칸이 없고
+    // 노드 종류는 둘뿐이다.
+    expect(columnsOf('workspace').map((c) => c.name)).toEqual(['id', 'name', 'created_at']);
+    const kindCheck = db
+      .get<{ sql: string }>("SELECT sql FROM sqlite_master WHERE name = 'node'")!
+      .sql.replace(/\s+/g, ' ');
+    expect(kindCheck).toContain("kind IN ('directory', 'file')");
+  });
 });

@@ -48,6 +48,11 @@ CREATE TABLE group_member (
 
 -- ACL — 상속과 가산으로만 넓히고 거부 규칙을 두지 않는다(CON-ACL-002).
 -- 그래서 deny 칸이 없다. 만료일도 두지 않는다(CON-PRINCIPAL-005).
+-- `node_id` 에 외래키를 **일부러 걸지 않았다.** 관리 권한이 워크스페이스
+-- 계층에도 부여되므로(`SEC-WORKSPACE-002` AC-4 — 워크스페이스 자체·하위
+-- 디렉토리·문서 세 계층) 이 칸에는 노드 ID 와 워크스페이스 ID 가 함께
+-- 들어온다. `REFERENCES node (id)` 를 더하면 워크스페이스 단위 ACL 이
+-- 삽입 시점에 막힌다 — 누락으로 보고 채우지 마라.
 CREATE TABLE acl_entry (
   id            TEXT PRIMARY KEY,
   node_id       TEXT NOT NULL,

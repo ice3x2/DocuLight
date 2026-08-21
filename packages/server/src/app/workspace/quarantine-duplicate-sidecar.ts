@@ -1,17 +1,11 @@
 import { SYSTEM_RECONCILER, type AuditSink } from '../../domain/ports/audit-sink.js';
 import type { FindingQueue } from '../../domain/ports/finding-queue.js';
 import type { WorkspaceFiles } from '../../domain/ports/workspace-files.js';
-import {
-  DUPLICATE_SIDECAR_FINDING,
-  QUARANTINE_OPERATION,
-} from '../../domain/workspace/quarantine.js';
+import { FINDING_TYPE, RECONCILE_OPERATION } from '../../domain/reconciliation/vocabulary.js';
 import type { WorkspaceId } from '../../domain/workspace/workspace.js';
 
-export {
-  DUPLICATE_SIDECAR_FINDING,
-  QUARANTINE_DIRECTORY,
-  QUARANTINE_OPERATION,
-} from '../../domain/workspace/quarantine.js';
+// 상수를 여기서 다시 내보내지 않는다. 내보내면 같은 값에 진입점이 둘이
+// 되어 src 는 도메인 경로로, 테스트는 이 경로로 가져오게 된다(§10.1).
 
 /**
  * 자기 자리에 있지 않은 사이드카를 격리한다 (`DR-WORKSPACE-002` AC-5 · AC-6).
@@ -34,9 +28,9 @@ export async function quarantineDuplicateSidecar(
   await stores.files.quarantine(directory);
 
   const auditId = stores.audit.append({
-    operation: QUARANTINE_OPERATION,
+    operation: RECONCILE_OPERATION.quarantine,
     actor: SYSTEM_RECONCILER,
     workspaceId,
   });
-  stores.queue.open({ type: DUPLICATE_SIDECAR_FINDING, auditRefs: [auditId] });
+  stores.queue.open({ type: FINDING_TYPE.duplicateWorkspaceSidecar, auditRefs: [auditId] });
 }

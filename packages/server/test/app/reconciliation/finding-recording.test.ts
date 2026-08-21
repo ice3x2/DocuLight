@@ -6,7 +6,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { reconcile } from '../../../src/app/reconciliation/reconcile.js';
 import { createWorkspace } from '../../../src/app/workspace/create-workspace.js';
 import { reconcileWorkspaceSidecars } from '../../../src/app/workspace/restore-from-sidecar.js';
-import { QUARANTINE_DIRECTORY } from '../../../src/app/workspace/quarantine-duplicate-sidecar.js';
+import { RECONCILE_OPERATION } from '../../../src/domain/reconciliation/vocabulary.js';
+import { QUARANTINE_DIRECTORY } from '../../../src/domain/workspace/quarantine.js';
 import { FsDocumentStore } from '../../../src/infra/fs/document-store.js';
 import { FsWorkspaceFiles } from '../../../src/infra/fs/workspace-sidecar.js';
 import { SqliteAuditLog } from '../../../src/infra/sqlite/audit-log-repository.js';
@@ -152,7 +153,7 @@ describe('REL-AUDIT-001 · DR-WORKSPACE-002 — 발견은 감사 1행 + 대기�
     expect(refs).toHaveLength(1);
 
     const row = auditRows().find((r) => r.id === refs[0]);
-    expect(row?.operation).toBe('quarantine');
+    expect(row?.operation).toBe(RECONCILE_OPERATION.quarantine);
     // 대상이 노드가 아니라 워크스페이스다 — 노드 칸에 워크스페이스를
     // 넣으면 같은 칸이 두 사실을 담는다.
     expect(row?.node_id).toBeNull();

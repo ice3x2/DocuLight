@@ -1,5 +1,11 @@
 import { hasDotSegment } from '../../domain/naming/hidden-name-rule.js';
 import { SYSTEM_RECONCILER, type AuditSink } from '../../domain/ports/audit-sink.js';
+import {
+  FINDING_TYPE,
+  RECONCILE_OPERATION,
+  type FindingType,
+  type ReconcileOperation,
+} from '../../domain/reconciliation/vocabulary.js';
 import type { DocumentStore } from '../../domain/ports/document-store.js';
 import type { FindingQueue } from '../../domain/ports/finding-queue.js';
 import type { NodeId } from '../../domain/node/node-id.js';
@@ -94,7 +100,7 @@ async function reconcileWorkspace(
       if (existing.orphanedAt !== null) {
         nodes.clearOrphan(existing.id);
         stores.audit.append({
-          operation: 'restore',
+          operation: RECONCILE_OPERATION.restore,
           actor: SYSTEM_RECONCILER,
           nodeId: existing.id,
         });
@@ -115,7 +121,7 @@ async function reconcileWorkspace(
     }
     const at = new Date().toISOString();
     nodes.markOrphaned(node.id, at);
-    record(stores, 'orphan', node.id, 'missing-file');
+    record(stores, RECONCILE_OPERATION.orphan, node.id, FINDING_TYPE.missingFile);
     result.orphaned.push(node.id);
   }
 }
@@ -153,7 +159,7 @@ function ensurePath(
     known.set(walked, { id, workspaceId, parentId, kind, name, orphanedAt: null });
     // 발견은 **사실**이므로 감사 로그가 먼저다. 대기열은 그 행을 참조한다
     // (`R139` — 같은 사실을 두 곳에 적지 않는다).
-    record(stores, 'create', id, 'unregistered-file');
+    record(stores, RECONCILE_OPERATION.create, id, FINDING_TYPE.unregisteredFile);
     parentId = id;
   });
 
@@ -162,9 +168,9 @@ function ensurePath(
 
 function record(
   stores: ReconciliationStores,
-  operation: 'create' | 'orphan',
+  operation: ReconcileOperation,
   nodeId: NodeId,
-  type: string,
+  type: FindingType,
 ): void {
   const auditId = stores.audit.append({ operation, actor: SYSTEM_RECONCILER, nodeId });
   stores.queue.open({ type, auditRefs: [auditId] });
