@@ -1,4 +1,4 @@
-import { access, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { access, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 
 import type { DocumentStore } from '../../domain/ports/document-store.js';
@@ -41,6 +41,11 @@ export class FsDocumentStore implements DocumentStore {
     }
   }
 
+  async list(workspaceId: string): Promise<string[]> {
+    const root = workspaceDirectory(this.root, workspaceId);
+    return (await walk(root, root)).sort();
+  }
+
   /**
    * 워크스페이스 루트 안으로 떨어지는 절대 경로를 만든다.
    *
@@ -64,4 +69,30 @@ export class FsDocumentStore implements DocumentStore {
     }
     return target;
   }
+}
+
+/**
+ * 디렉토리 아래 모든 **파일**의 상대 경로. 구분자는 `/` 로 통일한다 —
+ * Windows 의 역슬래시를 그대로 흘리면 같은 파일이 OS 마다 다른 경로로
+ * 읽혀 재조정이 매번 신규 노드를 만든다.
+ */
+async function walk(at: string, base: string): Promise<string[]> {
+  let entries;
+  try {
+    entries = await readdir(at, { withFileTypes: true });
+  } catch {
+    // 아직 만들어지지 않은 워크스페이스 디렉토리는 빈 것과 같다.
+    return [];
+  }
+
+  const found: string[] = [];
+  for (const entry of entries) {
+    const full = join(at, entry.name);
+    if (entry.isDirectory()) {
+      found.push(...(await walk(full, base)));
+    } else {
+      found.push(relative(base, full).split(sep).join('/'));
+    }
+  }
+  return found;
 }

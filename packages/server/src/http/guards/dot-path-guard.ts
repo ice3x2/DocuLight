@@ -1,4 +1,8 @@
-import { isHiddenName } from '../../domain/naming/hidden-name-rule.js';
+import { hasDotSegment } from '../../domain/naming/hidden-name-rule.js';
+
+// 세그먼트 판정은 도메인이 소유한다 — 재조정 등재 제외가 같은 판정을
+// 쓰므로 여기서 다시 정의하면 두 규칙이 갈린다.
+export { hasDotSegment };
 
 /**
  * 점으로 시작하는 경로에 대한 직접 접근을 거부한다 (`SEC-STORAGE-004` ·
@@ -26,16 +30,6 @@ export type DotPathExemption = (typeof DOT_PATH_EXEMPTIONS)[number];
  * 되어 목록에 적는 것을 잊는 순간 fail-open 이 된다.
  */
 export const EXEMPT_ENDPOINTS: readonly DotPathExemption[] = [];
-
-/**
- * 경로에 점으로 시작하는 **세그먼트**가 있는가 (`AC-6`).
- *
- * 역슬래시도 구분자로 본다. 슬래시만 보면 Windows 에서 온
- * `기획\.trash\x.md` 가 세그먼트 하나로 읽혀 그대로 통과한다.
- */
-export function hasDotSegment(relativePath: string): boolean {
-  return relativePath.split(/[\\/]+/).some(isHiddenName);
-}
 
 export type GuardVerdict = { allowed: true } | { allowed: false; reason: 'hidden-path' };
 

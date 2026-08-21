@@ -14,6 +14,13 @@ export interface NewNode {
 
 export interface NodeRecord extends NewNode {
   id: NodeId;
+  /**
+   * 대응 파일이 사라진 시각 (`REL-STORAGE-001` AC-2). 비어 있으면 살아 있다.
+   *
+   * 별도의 상태 칸을 두지 않는 이유는 두 값이 갈릴 자리를 만들지 않기
+   * 위해서다 — 재조정 대기열이 미해소를 판정하는 방식과 같다(`R139`).
+   */
+  orphanedAt: string | null;
 }
 
 /**
@@ -42,6 +49,16 @@ export interface NodeRepository {
    *   그대로 두는 개명이 자기와 충돌해 접미사를 받는다.
    */
   children(where: { workspaceId: string; parentId: NodeId | null; except?: NodeId }): NodeRecord[];
+
+  /** 한 워크스페이스의 노드 전부. 재조정이 파일시스템과 맞대는 쪽이다. */
+  allIn(workspaceId: string): NodeRecord[];
+
+  /**
+   * tombstone 으로 표시한다. **지우지 않는다** (`REL-STORAGE-001` AC-2) —
+   * 삭제는 되돌릴 수 없고, 파일이 잠시 없었을 뿐인 경우에도 그 노드 앞으로
+   * 부여된 권한이 영구히 사라진다.
+   */
+  markOrphaned(id: NodeId, at: string): void;
 
   /**
    * 부모 사슬을 거슬러 경로를 만든다.

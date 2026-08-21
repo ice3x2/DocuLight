@@ -13,9 +13,10 @@ interface Row {
   parent_id: string | null;
   kind: NodeKind;
   name: string;
+  orphaned_at: string | null;
 }
 
-const COLUMNS = 'id, workspace_id, parent_id, kind, name';
+const COLUMNS = 'id, workspace_id, parent_id, kind, name, orphaned_at';
 
 function toRecord(row: Row): NodeRecord {
   return {
@@ -24,6 +25,7 @@ function toRecord(row: Row): NodeRecord {
     parentId: row.parent_id,
     kind: row.kind,
     name: row.name,
+    orphanedAt: row.orphaned_at,
   };
 }
 
@@ -96,6 +98,16 @@ export class SqliteNodeRepository implements NodeRepository {
       parentId,
       id,
     ]);
+  }
+
+  allIn(workspaceId: string): NodeRecord[] {
+    return this.store
+      .all<Row>(`SELECT ${COLUMNS} FROM node WHERE workspace_id = ? ORDER BY rowid`, [workspaceId])
+      .map(toRecord);
+  }
+
+  markOrphaned(id: NodeId, at: string): void {
+    this.store.run('UPDATE node SET orphaned_at = ? WHERE id = ?', [at, id]);
   }
 
   remove(id: NodeId): void {

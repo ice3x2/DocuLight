@@ -19,4 +19,13 @@ export interface DocumentStore {
 
   /** 파일이 있는가. 존재 판정을 예외로 하지 않기 위해 별도로 둔다. */
   exists(workspaceId: string, relativePath: string): Promise<boolean>;
+
+  /**
+   * 워크스페이스 안의 모든 파일을 워크스페이스 루트 기준 상대 경로로
+   * 돌려준다. 재조정이 DB 와 맞대는 쪽이다 (`REL-STORAGE-001`).
+   *
+   * 디렉토리는 돌려주지 않는다 — 노드 트리의 디렉토리는 파일 경로에서
+   * 파생되므로, 둘 다 돌려주면 같은 사실을 두 번 세게 된다.
+   */
+  list(workspaceId: string): Promise<string[]>;
 }

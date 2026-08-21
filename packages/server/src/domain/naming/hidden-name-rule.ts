@@ -14,3 +14,17 @@ export const HIDDEN_NAME_PREFIX = '.';
 export function isHiddenName(name: string): boolean {
   return name.startsWith(HIDDEN_NAME_PREFIX);
 }
+
+
+/**
+ * 경로에 점으로 시작하는 **세그먼트**가 있는가.
+ *
+ * 역슬래시도 구분자로 본다. 슬래시만 보면 Windows 에서 온
+ * `기획\.trash\x.md` 가 세그먼트 하나로 읽혀 그대로 통과한다.
+ *
+ * API 거부(`SEC-STORAGE-004`)와 재조정 등재 제외가 같은 판정을 쓴다 —
+ * 갈리면 거부되는 경로가 노드로는 등재되는 상태가 생긴다.
+ */
+export function hasDotSegment(relativePath: string): boolean {
+  return relativePath.split(/[\\/]+/).some(isHiddenName);
+}

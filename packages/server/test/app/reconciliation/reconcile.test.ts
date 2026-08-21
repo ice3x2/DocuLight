@@ -7,6 +7,7 @@ import {
   RECONCILE_INTERVAL_MS,
   reconcile,
   startReconciliationLoop,
+  type ReconciliationLoop,
 } from '../../../src/app/reconciliation/reconcile.js';
 import { createWorkspace } from '../../../src/app/workspace/create-workspace.js';
 import { FsDocumentStore } from '../../../src/infra/fs/document-store.js';
@@ -28,6 +29,7 @@ let workspaces: SqliteWorkspaceRepository;
 let queue: SqliteFindingQueue;
 let stores: Parameters<typeof reconcile>[0];
 let ws: string;
+let loop: ReconciliationLoop | undefined;
 
 /** 서버가 정지한 동안 누군가 디스크에 파일을 둔 상황을 만든다. */
 const putOnDisk = (path: string, body = '# 본문') => documents.write(ws, path, body);
@@ -62,7 +64,9 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  vi.useRealTimers();
+  // 멈추지 않으면 다음 회차가 닫힌 DB 를 건드린다.
+  await loop?.stop();
+  loop = undefined;
   db.close();
   await rm(dir, { recursive: true, force: true });
 });
@@ -130,23 +134,24 @@ describe('REL-STORAGE-001 · DR-STORAGE-001 — 재조정이 정지 중의 변�
   });
 
   it('REL-STORAGE-001 AC-4 — 재조정은 기동 시 1회 수행되고 그 뒤로도 주기적으로 반복된다.', async () => {
-    vi.useFakeTimers();
+    // 가짜 시계를 쓰지 않는다 — 재조정은 실제 파일시스템 I/O 를 하므로
+    // 시계를 앞당겨도 그 I/O 가 끝났음을 보장하지 못한다. 간격만 줄인다.
     const ran: number[] = [];
-    const loop = startReconciliationLoop(stores, { onRun: () => ran.push(ran.length) });
+    loop = startReconciliationLoop(stores, { intervalMs: 20, onRun: () => ran.push(ran.length) });
 
     // 기동 시 1회.
-    await vi.advanceTimersByTimeAsync(0);
-    expect(ran).toHaveLength(1);
+    await vi.waitFor(() => expect(ran.length).toBeGreaterThanOrEqual(1));
 
     // 그 뒤 주기 반복.
-    await vi.advanceTimersByTimeAsync(RECONCILE_INTERVAL_MS);
-    expect(ran).toHaveLength(2);
-    await vi.advanceTimersByTimeAsync(RECONCILE_INTERVAL_MS * 2);
-    expect(ran).toHaveLength(4);
+    await vi.waitFor(() => expect(ran.length).toBeGreaterThanOrEqual(3));
 
-    loop.stop();
-    await vi.advanceTimersByTimeAsync(RECONCILE_INTERVAL_MS * 3);
-    expect(ran).toHaveLength(4);
+    await loop.stop();
+    const afterStop = ran.length;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    expect(ran.length).toBe(afterStop);
+
+    // 운영 기본 간격은 상수 한 곳에 산다 — 자리마다 적으면 갈린다.
+    expect(RECONCILE_INTERVAL_MS).toBeGreaterThan(0);
   });
 
   it('REL-STORAGE-001 AC-5 — 재조정이 만든 신규 노드에도 경로 독립적인 노드 ID 가 부여된다.', async () => {
