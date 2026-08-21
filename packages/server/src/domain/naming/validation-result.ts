@@ -10,6 +10,8 @@
 /** 어긴 규칙의 식별자. 문구를 파싱해야 알 수 있으면 클라이언트가 문구에 묶인다. */
 export type NameRule =
   | 'empty-name'
+  /** 점으로 시작하는 이름 — 제품이 자기 것으로 쓰는 자리다 (`SEC-STORAGE-005`). */
+  | 'reserved-namespace'
   | 'reserved-device-name'
   | 'forbidden-character'
   | 'control-character'

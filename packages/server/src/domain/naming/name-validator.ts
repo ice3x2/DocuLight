@@ -1,4 +1,5 @@
 import { foldCase } from './case-folding.js';
+import { isHiddenName } from './hidden-name-rule.js';
 import {
   FORBIDDEN_CHARACTERS,
   MAX_NAME_BYTES,
@@ -41,6 +42,13 @@ export function validateNodeName(name: string, parentPath: string): NameValidati
     violations.push({ rule: 'empty-name', message: '이름이 비어 있습니다.' });
     // 빈 이름에 나머지 규칙을 물리면 같은 사실을 여러 줄로 알리게 된다.
     return invalid(violations);
+  }
+
+  if (isHiddenName(name)) {
+    violations.push({
+      rule: 'reserved-namespace',
+      message: '이름을 점으로 시작할 수 없습니다. 그 자리는 제품이 예약해 씁니다.',
+    });
   }
 
   const control = [...name].filter((ch) => ch.charCodeAt(0) <= 0x1f);
