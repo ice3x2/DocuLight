@@ -1,5 +1,5 @@
 import { hasDotSegment } from '../../domain/naming/hidden-name-rule.js';
-import type { AuditSink } from '../../domain/ports/audit-sink.js';
+import { SYSTEM_RECONCILER, type AuditSink } from '../../domain/ports/audit-sink.js';
 import type { DocumentStore } from '../../domain/ports/document-store.js';
 import type { FindingQueue } from '../../domain/ports/finding-queue.js';
 import type { NodeId } from '../../domain/node/node-id.js';
@@ -13,9 +13,6 @@ import type { WorkspaceRepository } from '../../domain/ports/workspace-repositor
  * 이 절차가 그 간극을 메운다 — 등록되지 않은 파일은 노드로 세우고, 대응
  * 파일이 사라진 노드는 **지우지 않고** tombstone 으로 표시한다.
  */
-
-/** 행위자 이름. 사람이 한 일이 아니라는 것을 감사 로그에서 구별할 수 있어야 한다. */
-const RECONCILER = 'system:reconciler';
 
 /**
  * 주기 재조정 간격.
@@ -137,7 +134,7 @@ function record(
   nodeId: NodeId,
   type: string,
 ): void {
-  const auditId = stores.audit.append({ operation, actor: RECONCILER, nodeId });
+  const auditId = stores.audit.append({ operation, actor: SYSTEM_RECONCILER, nodeId });
   stores.queue.open({ type, auditRefs: [auditId] });
 }
 

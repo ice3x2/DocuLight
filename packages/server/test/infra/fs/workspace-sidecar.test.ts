@@ -6,7 +6,9 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { createWorkspace } from '../../../src/app/workspace/create-workspace.js';
 import { reconcileWorkspaceSidecars } from '../../../src/app/workspace/restore-from-sidecar.js';
 import { FsWorkspaceFiles, SIDECAR_FILENAME } from '../../../src/infra/fs/workspace-sidecar.js';
+import { SqliteAuditLog } from '../../../src/infra/sqlite/audit-log-repository.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
+import { SqliteFindingQueue } from '../../../src/infra/sqlite/finding-queue-repository.js';
 import { SqliteWorkspaceRepository } from '../../../src/infra/sqlite/workspace-repository.js';
 
 let dir: string;
@@ -14,7 +16,7 @@ let docsRoot: string;
 let db: Database;
 let workspaces: SqliteWorkspaceRepository;
 let files: FsWorkspaceFiles;
-let deps: { workspaces: SqliteWorkspaceRepository; files: FsWorkspaceFiles };
+let deps: Parameters<typeof reconcileWorkspaceSidecars>[0];
 
 const sidecarPath = (id: string) => join(docsRoot, id, SIDECAR_FILENAME);
 
@@ -28,7 +30,7 @@ beforeEach(async () => {
   db = openDatabase(join(dir, 'doculight.db'));
   workspaces = new SqliteWorkspaceRepository(db);
   files = new FsWorkspaceFiles(docsRoot);
-  deps = { workspaces, files };
+  deps = { workspaces, files, audit: new SqliteAuditLog(db), queue: new SqliteFindingQueue(db) };
 });
 
 afterEach(async () => {

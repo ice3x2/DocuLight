@@ -7,7 +7,9 @@ import { bootstrapDefaultWorkspace } from './app/workspace/bootstrap-default-wor
 import { reconcileWorkspaceSidecars } from './app/workspace/restore-from-sidecar.js';
 import { loadConfig, type ServerConfig } from './config/config.js';
 import { FsWorkspaceFiles } from './infra/fs/workspace-sidecar.js';
+import { SqliteAuditLog } from './infra/sqlite/audit-log-repository.js';
 import { openDatabase } from './infra/sqlite/database.js';
+import { SqliteFindingQueue } from './infra/sqlite/finding-queue-repository.js';
 import { SqliteWorkspaceRepository } from './infra/sqlite/workspace-repository.js';
 
 /**
@@ -37,6 +39,8 @@ export async function bootstrap(config: ServerConfig): Promise<void> {
     const stores = {
       workspaces: new SqliteWorkspaceRepository(db),
       files: new FsWorkspaceFiles(config.docsRoot),
+      audit: new SqliteAuditLog(db),
+      queue: new SqliteFindingQueue(db),
     };
     await reconcileWorkspaceSidecars(stores);
     await bootstrapDefaultWorkspace(stores);

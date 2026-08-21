@@ -11,7 +11,13 @@ export const SYSTEM_RECONCILER = 'system:reconciler' as const;
 export interface AuditEntry {
   operation: string;
   actor: string;
+  /** 대상 노드. 워크스페이스 단위 사건에는 없다. */
   nodeId?: string;
+  /**
+   * 대상 워크스페이스. 노드 칸과 나눠 두는 이유는 한 칸이 두 사실을 담으면
+   * 읽는 쪽이 어느 쪽인지 판정할 수 없기 때문이다.
+   */
+  workspaceId?: string;
 }
 
 export interface AuditSink {

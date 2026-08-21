@@ -1,7 +1,8 @@
-import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, rename, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-import type { WorkspaceFiles } from '../../domain/ports/workspace-files.js';
+import type { FoundSidecar, WorkspaceFiles } from '../../domain/ports/workspace-files.js';
+import { QUARANTINE_DIRECTORY } from '../../domain/workspace/quarantine.js';
 import type { Workspace, WorkspaceId } from '../../domain/workspace/workspace.js';
 import { createWorkspaceDirectory, workspaceDirectory } from './workspace-layout.js';
 
@@ -44,20 +45,33 @@ export class FsWorkspaceFiles implements WorkspaceFiles {
     await writeFile(join(at, SIDECAR_FILENAME), `${body}\n`, 'utf8');
   }
 
-  async readAllSidecars(): Promise<Workspace[]> {
+  async readAllSidecars(): Promise<FoundSidecar[]> {
     const entries = await readdir(this.docsRoot, { withFileTypes: true });
-    const found: Workspace[] = [];
+    const found: FoundSidecar[] = [];
 
-    for (const entry of entries) {
-      if (!entry.isDirectory()) {
+    for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
+      // 점으로 시작하는 자리는 제품이 쓰는 자리다 — 격리 보관소가 거기
+      // 있으므로, 훑으면 격리한 것을 매 회차마다 다시 발견한다.
+      if (!entry.isDirectory() || entry.name.startsWith('.')) {
         continue;
       }
-      const sidecar = await this.readOne(join(this.docsRoot, entry.name, SIDECAR_FILENAME));
-      if (sidecar !== undefined) {
-        found.push(sidecar);
+      const workspace = await this.readOne(join(this.docsRoot, entry.name, SIDECAR_FILENAME));
+      if (workspace !== undefined) {
+        found.push({ directory: entry.name, workspace });
       }
     }
     return found;
+  }
+
+  async quarantine(directory: string): Promise<string> {
+    const shelf = join(this.docsRoot, QUARANTINE_DIRECTORY);
+    await mkdir(shelf, { recursive: true });
+
+    // 옮기기만 한다. 사본과 원본을 자동으로 판별할 수 없으므로 사람이
+    // 판단할 때까지 둘 다 남긴다.
+    const at = join(shelf, directory);
+    await rename(join(this.docsRoot, directory), at);
+    return at;
   }
 
   private async readOne(at: string): Promise<Workspace | undefined> {
