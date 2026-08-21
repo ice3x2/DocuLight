@@ -1,0 +1,288 @@
+[
+ {
+  "id": "CON-ARCH-001",
+  "stability": "stable",
+  "ac_total": 3,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3"
+  ]
+ },
+ {
+  "id": "CON-ARCH-002",
+  "stability": "stable",
+  "ac_total": 8,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4",
+   "AC-5",
+   "AC-6",
+   "AC-7",
+   "AC-8"
+  ]
+ },
+ {
+  "id": "CON-ARCH-003",
+  "stability": "stable",
+  "ac_total": 4,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4"
+  ]
+ },
+ {
+  "id": "CON-ARCH-007",
+  "stability": "stable",
+  "ac_total": 3,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3"
+  ]
+ },
+ {
+  "id": "CON-ARCH-008",
+  "stability": "stable",
+  "ac_total": 4,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4"
+  ]
+ },
+ {
+  "id": "CON-ARCH-009",
+  "stability": "evolving",
+  "ac_total": 4,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4"
+  ]
+ },
+ {
+  "id": "CON-WORKSPACE-001",
+  "stability": "stable",
+  "ac_total": 4,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4"
+  ]
+ },
+ {
+  "id": "DR-STORAGE-001",
+  "stability": "stable",
+  "ac_total": 3,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3"
+  ]
+ },
+ {
+  "id": "DR-STORAGE-002",
+  "stability": "stable",
+  "ac_total": 3,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3"
+  ]
+ },
+ {
+  "id": "DR-STORAGE-003",
+  "stability": "stable",
+  "ac_total": 5,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4",
+   "AC-5"
+  ]
+ },
+ {
+  "id": "DR-WORKSPACE-001",
+  "stability": "stable",
+  "ac_total": 7,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4",
+   "AC-5",
+   "AC-6",
+   "AC-7"
+  ]
+ },
+ {
+  "id": "DR-WORKSPACE-002",
+  "stability": "stable",
+  "ac_total": 7,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4",
+   "AC-5",
+   "AC-6",
+   "AC-7"
+  ]
+ },
+ {
+  "id": "FR-WORKSPACE-001",
+  "stability": "stable",
+  "ac_total": 4,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4"
+  ]
+ },
+ {
+  "id": "FR-WORKSPACE-004",
+  "stability": "evolving",
+  "ac_total": 8,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4",
+   "AC-5",
+   "AC-6",
+   "AC-7",
+   "AC-8"
+  ]
+ },
+ {
+  "id": "FR-WORKSPACE-005",
+  "stability": "stable",
+  "ac_total": 6,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4",
+   "AC-5",
+   "AC-6"
+  ]
+ },
+ {
+  "id": "FR-WORKSPACE-006",
+  "stability": "stable",
+  "ac_total": 6,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4",
+   "AC-5",
+   "AC-6"
+  ]
+ },
+ {
+  "id": "OPS-ARCH-001",
+  "stability": "stable",
+  "ac_total": 4,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4"
+  ]
+ },
+ {
+  "id": "OPS-STORAGE-001",
+  "stability": "stable",
+  "ac_total": 4,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4"
+  ]
+ },
+ {
+  "id": "REL-AUDIT-001",
+  "stability": "stable",
+  "ac_total": 8,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4",
+   "AC-5",
+   "AC-6",
+   "AC-7",
+   "AC-8"
+  ]
+ },
+ {
+  "id": "REL-STORAGE-001",
+  "stability": "stable",
+  "ac_total": 5,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4",
+   "AC-5"
+  ]
+ },
+ {
+  "id": "SEC-STORAGE-001",
+  "stability": "stable",
+  "ac_total": 3,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3"
+  ]
+ },
+ {
+  "id": "SEC-STORAGE-004",
+  "stability": "stable",
+  "ac_total": 6,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4",
+   "AC-5",
+   "AC-6"
+  ]
+ },
+ {
+  "id": "SEC-STORAGE-005",
+  "stability": "stable",
+  "ac_total": 5,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4",
+   "AC-5"
+  ]
+ },
+ {
+  "id": "SEC-STORAGE-006",
+  "stability": "stable",
+  "ac_total": 4,
+  "ac_ids": [
+   "AC-1",
+   "AC-2",
+   "AC-3",
+   "AC-4"
+  ]
+ }
+]
