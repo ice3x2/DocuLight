@@ -1,0 +1,217 @@
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
+import {
+  DEFAULT_GROUP_ID,
+  SUPERUSER_GROUP_ID,
+  isSystemGroup,
+} from '../../../src/domain/principal/system-groups.js';
+import {
+  addGroupMember,
+  removeGroup,
+  renameGroup,
+  suspendUser,
+} from '../../../src/app/principal/principal-service.js';
+import { isSuperuser, subjectIdsOf } from '../../../src/domain/principal/subject.js';
+import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
+import { SqlitePrincipalRepository } from '../../../src/infra/sqlite/principal-repository.js';
+
+let dir: string;
+let db: Database;
+let principals: SqlitePrincipalRepository;
+
+beforeEach(async () => {
+  dir = await mkdtemp(join(tmpdir(), 'doculight-principal-'));
+  db = openDatabase(join(dir, 'doculight.db'));
+  principals = new SqlitePrincipalRepository(db);
+});
+
+afterEach(async () => {
+  db.close();
+  await rm(dir, { recursive: true, force: true });
+});
+
+describe('DR-PRINCIPAL-001 — 슈퍼유저 여부는 슈퍼유저 그룹 소속 하나로만 판정한다', () => {
+  it('AC-1: 판정이 슈퍼유저 그룹 멤버십 조회 하나로 이뤄진다', () => {
+    const u = principals.createUser('한범');
+    expect(isSuperuser(principals.groupsOf(u.id))).toBe(false);
+
+    principals.addMember(SUPERUSER_GROUP_ID, u.id);
+    expect(isSuperuser(principals.groupsOf(u.id))).toBe(true);
+  });
+
+  it('AC-2: 사용자 레코드에 등급 필드도 슈퍼유저 플래그 필드도 없다', () => {
+    const columns = db
+      .all<{ name: string }>('PRAGMA table_info(principal)')
+      .map((c) => c.name.toLowerCase());
+
+    // 플래그가 하나라도 있으면 판정의 정본이 둘이 되고, 그 둘은 반드시 갈린다.
+    for (const forbidden of ['role', 'grade', 'rank', 'is_superuser', 'superuser', 'is_admin']) {
+      expect(columns, `principal.${forbidden} 이 있으면 판정 정본이 둘이 된다`).not.toContain(
+        forbidden,
+      );
+    }
+  });
+
+  it('AC-3: 멤버십을 빼면 즉시 슈퍼유저가 아니며 계정 쪽에 갱신할 값이 없다', () => {
+    const u = principals.createUser('한범');
+    principals.addMember(SUPERUSER_GROUP_ID, u.id);
+
+    const before = principals.findById(u.id);
+    principals.removeMember(SUPERUSER_GROUP_ID, u.id);
+    const after = principals.findById(u.id);
+
+    expect(isSuperuser(principals.groupsOf(u.id))).toBe(false);
+    // 계정 행은 한 칸도 바뀌지 않는다 — 바뀔 칸이 있으면 그것이 두 번째 정본이다.
+    expect(after).toEqual(before);
+  });
+});
+
+describe('DR-PRINCIPAL-002 — 그룹은 사용자만을 멤버로 가지며 중첩되지 않는다', () => {
+  it('AC-1: 그룹을 멤버로 지정하는 요청이 거부된다', () => {
+    const outer = principals.createGroup('기획팀');
+    const inner = principals.createGroup('기획팀-리드');
+
+    expect(addGroupMember(principals, outer.id, inner.id)).toEqual({
+      ok: false,
+      rule: 'member-must-be-user',
+    });
+    expect(principals.membersOf(outer.id)).toEqual([]);
+  });
+
+  it('AC-2: 저장 구조 자체가 그룹을 멤버로 표현할 칸을 갖지 않는다', () => {
+    const outer = principals.createGroup('기획팀');
+    const inner = principals.createGroup('기획팀-리드');
+
+    // 서비스 계층을 우회해 직접 밀어 넣어도 저장소가 거부한다 — 앱 계층의
+    // 검사만으로는 "칸이 없다"가 아니라 "지금은 아무도 안 쓴다"에 그친다.
+    expect(() => principals.addMember(outer.id, inner.id)).toThrow();
+  });
+
+  it('AC-3: 유효 권한 계산은 직접 소속 그룹까지만 따라간다', () => {
+    const u = principals.createUser('한범');
+    const team = principals.createGroup('기획팀');
+    principals.addMember(team.id, u.id);
+
+    // 주체 집합 = 자기 자신 + 직접 소속 그룹. 그룹→그룹 참조를 순회할 자리가 없다.
+    expect(subjectIdsOf(u.id, principals.groupsOf(u.id)).sort()).toEqual(
+      [u.id, team.id, DEFAULT_GROUP_ID].sort(),
+    );
+  });
+});
+
+describe('CON-PRINCIPAL-001 — 권한 계층은 슈퍼유저와 일반 유저 2단계뿐이다', () => {
+  it('AC-1: 인스턴스 전역 등급은 슈퍼유저 하나뿐이다', () => {
+    // 전역 등급을 표현하는 자리는 시스템 그룹 열거 하나이며 그 안의 전역
+    // 권한자는 슈퍼유저 하나다. default 는 전역 등급이 아니라 기본 소속이다.
+    const systemGroups = principals
+      .list('group')
+      .filter((g) => isSystemGroup(g.id))
+      .map((g) => g.id);
+
+    expect(systemGroups.sort()).toEqual([DEFAULT_GROUP_ID, SUPERUSER_GROUP_ID].sort());
+  });
+
+  it('AC-2 · AC-3: 사용자와 그룹이 같은 주체 테이블에 같은 구조로 들어간다', () => {
+    const u = principals.createUser('한범');
+    const g = principals.createGroup('기획팀');
+
+    expect(u.kind).toBe('user');
+    expect(g.kind).toBe('group');
+    // 그룹 전용 권한 축이 없다는 것은 두 레코드가 같은 칸을 갖는다는 뜻이다.
+    expect(Object.keys(u).sort()).toEqual(Object.keys(g).sort());
+  });
+});
+
+describe('CON-PRINCIPAL-002 — 시스템 그룹은 삭제·개명할 수 없다', () => {
+  it('AC-1: 슈퍼유저 그룹 삭제가 거부된다', () => {
+    expect(removeGroup(principals, SUPERUSER_GROUP_ID)).toEqual({
+      ok: false,
+      rule: 'system-group-immutable',
+    });
+    expect(principals.findById(SUPERUSER_GROUP_ID)).toBeDefined();
+  });
+
+  it('AC-2: default 그룹 삭제가 거부된다', () => {
+    expect(removeGroup(principals, DEFAULT_GROUP_ID)).toEqual({
+      ok: false,
+      rule: 'system-group-immutable',
+    });
+    expect(principals.findById(DEFAULT_GROUP_ID)).toBeDefined();
+  });
+
+  it('AC-3: 두 시스템 그룹의 개명이 거부된다', () => {
+    for (const id of [SUPERUSER_GROUP_ID, DEFAULT_GROUP_ID]) {
+      const before = principals.findById(id);
+      expect(renameGroup(principals, id, '아무거나')).toEqual({
+        ok: false,
+        rule: 'system-group-immutable',
+      });
+      expect(principals.findById(id)).toEqual(before);
+    }
+  });
+
+  it('시스템 그룹이 아닌 그룹은 개명도 삭제도 된다 — 금지가 전체로 번지지 않는다', () => {
+    const g = principals.createGroup('기획팀');
+    expect(renameGroup(principals, g.id, '전략팀')).toEqual({ ok: true });
+    expect(principals.findById(g.id)?.name).toBe('전략팀');
+    expect(removeGroup(principals, g.id)).toEqual({ ok: true });
+    expect(principals.findById(g.id)).toBeUndefined();
+  });
+});
+
+describe('CON-PRINCIPAL-003 — 계정은 삭제하지 않고 suspended 로만 관리한다', () => {
+  it('AC-1: 계정을 영구 삭제하는 조작이 저장소 경계에 존재하지 않는다', () => {
+    // 있는 것을 안 쓰는 것과 없는 것은 다르다 — 있으면 언젠가 누가 부른다.
+    const surface: string[] = [];
+    for (
+      let proto = Object.getPrototypeOf(principals);
+      proto && proto !== Object.prototype;
+      proto = Object.getPrototypeOf(proto)
+    ) {
+      surface.push(...Object.getOwnPropertyNames(proto));
+    }
+
+    const deleters = surface.filter((m) => /^(remove|delete|drop|purge|destroy)User$/i.test(m));
+    expect(deleters, `계정 삭제 경로가 열려 있다: ${deleters.join(', ')}`).toEqual([]);
+  });
+
+  it('AC-2: 비활성화는 suspended 전환이며 레코드를 지우지 않는다', () => {
+    const u = principals.createUser('한범');
+    expect(suspendUser(principals, u.id)).toEqual({ ok: true });
+
+    const after = principals.findById(u.id);
+    expect(after?.status).toBe('suspended');
+    expect(after?.name).toBe('한범');
+  });
+
+  it('AC-3: suspended 계정을 가리키는 감사 로그 행의 참조가 깨지지 않는다', () => {
+    const u = principals.createUser('한범');
+    db.run("INSERT INTO audit_log (id, operation, actor, node_id) VALUES ('a1', 'test', ?, 'n1')", [
+      u.id,
+    ]);
+
+    suspendUser(principals, u.id);
+
+    const rows = db.all<{ actor: string }>('SELECT actor FROM audit_log WHERE id = ?', ['a1']);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]?.actor).toBe(u.id);
+  });
+
+  it('AC-4: suspended 계정 앞으로 부여된 acl_entry 가 그대로 남고 고아가 생기지 않는다', () => {
+    const u = principals.createUser('한범');
+    db.run(
+      "INSERT INTO acl_entry (id, node_id, principal_id, level) VALUES ('e1', 'n1', ?, 'edit')",
+      [u.id],
+    );
+
+    suspendUser(principals, u.id);
+
+    const entries = db.all<{ principal_id: string }>('SELECT principal_id FROM acl_entry');
+    expect(entries).toHaveLength(1);
+    // 고아 = 가리키는 주체가 사라진 행. 주체가 남아 있으므로 고아가 아니다.
+    expect(principals.findById(entries[0]!.principal_id)).toBeDefined();
+  });
+});

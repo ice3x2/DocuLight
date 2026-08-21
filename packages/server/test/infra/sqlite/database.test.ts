@@ -3,6 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { DEFAULT_GROUP_ID } from '../../../src/domain/principal/system-groups.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
 
 let dir: string;
@@ -20,10 +21,14 @@ afterEach(async () => {
 
 describe('DR-STORAGE-002 — 메타데이터의 단일 SQLite 저장소', () => {
   it('AC-1 — 사용자·그룹·ACL 메타데이터는 SQLite 데이터베이스 한 곳에만 저장되며 같은 사실을 담은 별도의 파일 저장소가 존재하지 않는다', async () => {
+    // default 그룹은 마이그레이션이 심는다 — 테스트가 자기 것을 만들면
+    // 실제로 배정되는 그룹과 다른 행을 재게 된다.
     db.transaction(() => {
       db.run("INSERT INTO principal (id, kind, name) VALUES ('u1', 'user', 'alice')");
-      db.run("INSERT INTO principal (id, kind, name) VALUES ('g1', 'group', 'default')");
-      db.run("INSERT INTO group_member (group_id, user_id) VALUES ('g1', 'u1')");
+      db.run('INSERT INTO group_member (group_id, user_id) VALUES (?, ?)', [
+        DEFAULT_GROUP_ID,
+        'u1',
+      ]);
     });
 
     // 같은 사실이 두 곳에 있으면 한 곳이 뒤처진다. DB 파일과 그 저널 외에
@@ -34,16 +39,22 @@ describe('DR-STORAGE-002 — 메타데이터의 단일 SQLite 저장소', () => 
       `metadata found outside the single sqlite store: ${produced.join(', ')}`,
     ).toEqual([]);
 
-    expect(db.all("SELECT id FROM principal ORDER BY id")).toEqual([{ id: 'g1' }, { id: 'u1' }]);
+    expect(db.all("SELECT id FROM principal WHERE kind = 'user' ORDER BY id")).toEqual([
+      { id: 'u1' },
+    ]);
+    expect(db.all('SELECT group_id, user_id FROM group_member')).toEqual([
+      { group_id: DEFAULT_GROUP_ID, user_id: 'u1' },
+    ]);
   });
 
   it('AC-2 — 사용자 생성과 default 그룹 배정처럼 둘 이상을 함께 바꾸는 조작은 하나의 트랜잭션으로 처리되어 일부만 반영된 상태가 남지 않는다', () => {
-    db.run("INSERT INTO principal (id, kind, name) VALUES ('g1', 'group', 'default')");
-
     expect(() =>
       db.transaction(() => {
         db.run("INSERT INTO principal (id, kind, name) VALUES ('u1', 'user', 'alice')");
-        db.run("INSERT INTO group_member (group_id, user_id) VALUES ('g1', 'u1')");
+        db.run('INSERT INTO group_member (group_id, user_id) VALUES (?, ?)', [
+          DEFAULT_GROUP_ID,
+          'u1',
+        ]);
         throw new Error('boom — 조작 도중 실패');
       }),
     ).toThrow('boom');
@@ -56,10 +67,12 @@ describe('DR-STORAGE-002 — 메타데이터의 단일 SQLite 저장소', () => 
 
   it('AC-3 — 가입 승인·그룹 변경·ACL 변경이 동시에 일어나도 전체 재기록 없이 각각이 반영된다', () => {
     db.transaction(() => {
-      db.run("INSERT INTO principal (id, kind, name) VALUES ('g1', 'group', 'default')");
       db.run("INSERT INTO principal (id, kind, name) VALUES ('u1', 'user', 'alice')");
       db.run("INSERT INTO principal (id, kind, name) VALUES ('u2', 'user', 'bob')");
-      db.run("INSERT INTO group_member (group_id, user_id) VALUES ('g1', 'u1')");
+      db.run('INSERT INTO group_member (group_id, user_id) VALUES (?, ?)', [
+        DEFAULT_GROUP_ID,
+        'u1',
+      ]);
       db.run(
         "INSERT INTO acl_entry (id, node_id, principal_id, level) VALUES ('a0', 'n0', 'u2', 'view')",
       );
@@ -82,7 +95,10 @@ describe('DR-STORAGE-002 — 메타데이터의 단일 SQLite 저장소', () => 
     const other = openDatabase(join(dir, 'doculight.db'));
     try {
       db.run("UPDATE principal SET status = 'active' WHERE id = 'u1'");
-      other.run("INSERT INTO group_member (group_id, user_id) VALUES ('g1', 'u2')");
+      other.run('INSERT INTO group_member (group_id, user_id) VALUES (?, ?)', [
+        DEFAULT_GROUP_ID,
+        'u2',
+      ]);
       db.run(
         "INSERT INTO acl_entry (id, node_id, principal_id, level) VALUES ('a1', 'n1', 'u1', 'view')",
       );
