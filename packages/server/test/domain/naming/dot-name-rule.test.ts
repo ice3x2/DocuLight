@@ -19,8 +19,8 @@ let root: string;
 
 const idOf = (r: unknown) => (r as { ok: true; id: string }).id;
 
-const rulesOf = (result: { violations?: { rule: string }[] }) =>
-  (result.violations ?? []).map((v) => v.rule).sort();
+const rulesOf = (result: { ok: boolean }): string[] =>
+  ('violations' in result ? (result.violations as { rule: string }[]) : []).map((v) => v.rule).sort();
 
 const rowsUnder = (parentId: string) =>
   db
