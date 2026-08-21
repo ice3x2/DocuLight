@@ -105,9 +105,13 @@ export function saveRejected(state: AutosaveState): AutosaveState {
  *
  * 합친 본문과 그 시점의 해시를 함께 받는다 — 해시 없이 재개하면 첫 저장이
  * 곧바로 다시 충돌하고, 사용자에게는 머지가 아무것도 하지 않은 것으로 보인다.
+ *
+ * 이전 상태에서 **아무것도 가져오지 않는다.** 남은 편집·서버 본문·더티
+ * 표식이 하나라도 넘어오면 재개 직후에 그것이 다시 발화한다. 그래도
+ * 인자로 받는 것은 이것이 전이라는 사실을 호출부에서 읽히게 하기 위해서다.
  */
 export function resolvedOnce(
-  state: AutosaveState,
+  _state: AutosaveState,
   merged: { body: string; hash: string },
 ): AutosaveState {
   return {
