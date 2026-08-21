@@ -1,4 +1,4 @@
-import express, { type Express, type Router } from 'express';
+import express, { type Express, type RequestHandler, type Router } from 'express';
 
 import { API_PREFIX, mountStaticSpa } from './static-spa.js';
 
@@ -18,10 +18,25 @@ export interface HttpDeps {
   webRoot: string;
   /** `/api` 아래에 붙일 라우트. 없으면 API 는 전부 404 다. */
   api?: Router;
+
+  /**
+   * 모든 라우트보다 **앞에** 서는 관문. 설치 게이트가 여기 꽂힌다
+   * (`SEC-AUTH-011`).
+   *
+   * `api` 안이 아니라 여기 두는 이유는 그 게이트가 정적 자산과 SPA
+   * fallback 까지 덮어야 하기 때문이다 — API 만 막으면 설치 전에 앱 셸이
+   * 그대로 뜬다.
+   */
+  gate?: RequestHandler;
 }
 
 export function createHttpServer(deps: HttpDeps): Express {
   const app = express();
+
+  // 관문이 가장 앞이다. 뒤에 두면 그 사이에 낀 라우트가 열린 채 남는다.
+  if (deps.gate !== undefined) {
+    app.use(deps.gate);
+  }
 
   // 순서가 규칙이다 — ① API 라우트 ② API 미매칭 404 ③ SPA fallback.
   //
