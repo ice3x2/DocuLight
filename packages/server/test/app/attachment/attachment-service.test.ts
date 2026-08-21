@@ -307,3 +307,37 @@ describe('REL-ATTACH-001 — .res/index.json 재구성 사이드카', () => {
     expect(stores.attachments.listOf(doc).map((a) => a.hash)).toEqual([done.hash]);
   });
 });
+
+describe('SEC-ATTACH-002 — 소유 문서의 권한 변화가 첨부에 곧바로 걸린다', () => {
+  it('AC-3: 소유 문서를 비공개 위치로 옮기면 기존 URL 이 거부된다', async () => {
+    const done = (await attach(root)) as { ok: true; hash: string };
+    grantPermission(stores, root, { nodeId: doc, principalId: me.id, level: 'view' });
+    expect((await openAttachment(stores, actorFor(stores.principals, me.id), { workspaceId: ws, hash: done.hash })).ok).toBe(true);
+
+    // 상속을 끊으면 그 문서가 이 사용자에게서 사라진다 — 「비공개 위치로
+    // 옮겼다」와 같은 상태다.
+    stores.nodes.setInheritance(doc, false);
+    const entries = stores.acl.entriesOn(doc);
+    for (const entry of entries) revokePermission(stores, root, entry.id);
+
+    expect((await openAttachment(stores, actorFor(stores.principals, me.id), { workspaceId: ws, hash: done.hash })).ok).toBe(false);
+  });
+
+  it('AC-4: 다시 열리면 첨부도 곧바로 열린다 — 캐시가 판정을 붙들지 않는다', async () => {
+    const done = (await attach(root)) as { ok: true; hash: string };
+    expect((await openAttachment(stores, actorFor(stores.principals, me.id), { workspaceId: ws, hash: done.hash })).ok).toBe(false);
+
+    grantPermission(stores, root, { nodeId: doc, principalId: me.id, level: 'view' });
+
+    expect((await openAttachment(stores, actorFor(stores.principals, me.id), { workspaceId: ws, hash: done.hash })).ok).toBe(true);
+  });
+
+  it('AC-6: 거부된 첨부는 바이트를 주지 않는다 — 그래서 본문에서 깨진 이미지로 보인다', async () => {
+    const done = (await attach(root)) as { ok: true; hash: string };
+
+    const denied = await openAttachment(stores, actorFor(stores.principals, me.id), { workspaceId: ws, hash: done.hash });
+
+    // 자리표시 이미지를 대신 주면 사용자는 그것이 진짜 내용이라고 믿는다.
+    expect(denied).not.toHaveProperty('bytes');
+  });
+});

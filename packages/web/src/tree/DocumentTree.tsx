@@ -1,6 +1,7 @@
 import * as ContextMenu from '@radix-ui/react-context-menu';
 import { useState } from 'react';
 
+import { acceptedDrop, type UploadRequest } from '../attachment/upload-contract.js';
 import {
   CONTEXT_MENU_ITEMS,
   enabledMenuItems,
@@ -42,14 +43,34 @@ function NodeMenu({ node, children }: { node: TreeNodeView; children: React.Reac
 }
 
 /** 트리 한 줄. 디렉토리면 펼치기 버튼을 함께 낸다. */
-function TreeRow({ node, depth }: { node: TreeNodeView; depth: number }) {
+function TreeRow({
+  node,
+  depth,
+  onUpload,
+}: {
+  node: TreeNodeView;
+  depth: number;
+  onUpload?: (request: UploadRequest) => void;
+}) {
   const [open, setOpen] = useState(false);
   const expandable = node.kind === 'directory' && node.children.length > 0;
 
   return (
     <li role="none">
       <NodeMenu node={node}>
-        <div role="treeitem" aria-level={depth} aria-expanded={expandable ? open : undefined}>
+        <div
+          role="treeitem"
+          aria-level={depth}
+          aria-expanded={expandable ? open : undefined}
+          // 업로드는 **현재 화면에서 완결된다** (`FR-ATTACH-001` AC-3) —
+          // 별도 업로드 화면·모드로 보내지 않는다.
+          onDragOver={(event) => event.preventDefault()}
+          onDrop={(event) => {
+            event.preventDefault();
+            const accepted = acceptedDrop(node, [...event.dataTransfer.files]);
+            if (accepted.ok) onUpload?.(accepted.request);
+          }}
+        >
           {expandable && (
             <button type="button" onClick={() => setOpen((was) => !was)}>
               {node.name} {open ? '접기' : '펼치기'}
@@ -62,7 +83,7 @@ function TreeRow({ node, depth }: { node: TreeNodeView; depth: number }) {
       {expandable && open && (
         <ul role="group">
           {node.children.map((child) => (
-            <TreeRow key={child.id} node={child} depth={depth + 1} />
+            <TreeRow key={child.id} node={child} depth={depth + 1} onUpload={onUpload} />
           ))}
         </ul>
       )}
@@ -82,7 +103,13 @@ function TreeRow({ node, depth }: { node: TreeNodeView; depth: number }) {
  * 트리 목록 자체는 서버가 이미 걸러 준 것이다 — 여기서 다시 거르지
  * 않는다. 두 곳이 거르면 한쪽만 규칙이 바뀐다.
  */
-export function DocumentTree({ workspaces }: { workspaces: readonly WorkspaceTreeView[] }) {
+export function DocumentTree({
+  workspaces,
+  onUpload,
+}: {
+  workspaces: readonly WorkspaceTreeView[];
+  onUpload?: (request: UploadRequest) => void;
+}) {
   const [openWorkspaces, setOpenWorkspaces] = useState<ReadonlySet<string>>(
     () => new Set(workspaces.map((entry) => entry.workspace.id)),
   );
@@ -111,7 +138,7 @@ export function DocumentTree({ workspaces }: { workspaces: readonly WorkspaceTre
             {openWorkspaces.has(entry.workspace.id) && (
               <ul role="group">
                 {entry.roots.map((node) => (
-                  <TreeRow key={node.id} node={node} depth={2} />
+                  <TreeRow key={node.id} node={node} depth={2} onUpload={onUpload} />
                 ))}
               </ul>
             )}

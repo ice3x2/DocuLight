@@ -1,5 +1,6 @@
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
+import { join } from 'node:path';
 
 import { permissionOf, type Actor } from '../acl/permission-service.js';
 import { readSetting } from '../settings/instance-settings.js';
@@ -156,4 +157,64 @@ export async function restoreVersion(
   });
 
   return saved.ok ? { ok: true } : { ok: false, rule: 'forbidden' };
+}
+
+/**
+ * 사이드카만으로 버전 인덱스를 되세운다 (`DR-STORAGE-005` AC-2 · AC-3).
+ *
+ * **사이드카가 정본이고 DB 는 그 캐시다.** 둘이 어긋나면 사이드카가 이긴다 —
+ * DB 가 손상돼도 파일시스템만으로 목록을 되세울 수 있어야 하기 때문이며,
+ * 그 성질은 되세우는 경로가 실제로 있을 때만 참이다.
+ *
+ * **실체 없는 사이드카는 건너뛴다.** 남겨 두면 목록에 유령이 섞이고,
+ * 사용자가 그것을 고르면 열리지 않는 버전이 된다.
+ */
+export async function rebuildVersionIndex(stores: DocumentStores, nodeId: NodeId): Promise<void> {
+  const node = stores.nodes.findById(nodeId);
+  if (node === undefined) return;
+
+  const root = workspaceRootOf(stores, node.workspaceId);
+  const home = versionDirectoryOf(root, nodeId);
+
+  let names: string[];
+  try {
+    names = await readdir(home);
+  } catch {
+    // 디렉토리가 없다는 것은 버전이 하나도 없다는 뜻이다.
+    stores.versions.replaceAllOf(nodeId, []);
+    return;
+  }
+
+  const found: VersionRecord[] = [];
+  for (const name of names) {
+    if (!name.endsWith('.json')) continue;
+
+    const sidecarPath = join(home, name);
+    const bodyPath = sidecarPath.slice(0, -'.json'.length);
+    if (!(await exists(bodyPath))) continue;
+
+    try {
+      const record = JSON.parse(await readFile(sidecarPath, 'utf8')) as VersionRecord;
+      // 파일 이름이 아니라 사이드카가 적은 값을 믿는다 — 이름은 바뀔 수
+      // 있지만 사이드카는 그 자체가 정본이다.
+      if (record.nodeId === nodeId) found.push(record);
+    } catch {
+      // 깨진 사이드카는 없는 것과 같이 다룬다 — 반쪽만 읽어 목록에 넣으면
+      // 그 항목이 나중에 어디서 터질지 알 수 없다.
+    }
+  }
+
+  stores.versions.replaceAllOf(
+    nodeId,
+    found.sort((a, b) => a.seq - b.seq),
+  );
+}
+
+async function exists(path: string): Promise<boolean> {
+  try {
+    await stat(path);
+    return true;
+  } catch {
+    return false;
+  }
 }
