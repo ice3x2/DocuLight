@@ -25,6 +25,18 @@ export interface PrincipalRepository {
   setStatus(id: PrincipalId, status: PrincipalStatus): void;
 
   /**
+   * 비밀번호 해시를 둔다 (`SEC-AUTH-001` AC-1).
+   *
+   * `PrincipalRecord` 에 이 값을 싣지 않는 이유가 중요하다 — 그 레코드는
+   * 목록·검색·화면으로 흘러 나가고, 해시가 거기 실려 있으면 언젠가 응답에
+   * 섞인다. 필요할 때만 `passwordHashOf` 로 꺼낸다.
+   */
+  setPasswordHash(id: PrincipalId, hash: string): void;
+
+  /** 없으면 `null` — 그룹에는 비밀번호가 없다. */
+  passwordHashOf(id: PrincipalId): string | null;
+
+  /**
    * 멤버는 사용자만이다 (`DR-PRINCIPAL-002` AC-1 · AC-2). 그룹을 넘기면
    * 저장소가 던진다 — 앱 계층의 검사만으로는 「칸이 없다」가 아니라
    * 「지금은 아무도 안 쓴다」에 그친다.

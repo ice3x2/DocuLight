@@ -64,6 +64,18 @@ export class SqlitePrincipalRepository implements PrincipalRepository {
     this.store.run('UPDATE principal SET status = ? WHERE id = ?', [status, id]);
   }
 
+  setPasswordHash(id: PrincipalId, hash: string): void {
+    this.store.run('UPDATE principal SET password_hash = ? WHERE id = ?', [hash, id]);
+  }
+
+  passwordHashOf(id: PrincipalId): string | null {
+    const row = this.store.get<{ password_hash: string | null }>(
+      'SELECT password_hash FROM principal WHERE id = ?',
+      [id],
+    );
+    return row?.password_hash ?? null;
+  }
+
   addMember(groupId: PrincipalId, userId: PrincipalId): void {
     // 그룹을 넘기면 `006` 의 트리거가 던진다 — 검사를 여기 두면 저장소를
     // 만지는 두 번째 경로가 생기는 순간 무너진다.
