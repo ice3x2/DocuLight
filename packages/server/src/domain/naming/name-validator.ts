@@ -16,14 +16,44 @@ const RESERVED_FOLDED = new Set(RESERVED_DEVICE_NAMES.map(foldCase));
 const bytes = (text: string) => Buffer.byteLength(text, 'utf8');
 
 /**
- * 장치 이름 판정에 쓰는 부분 — **첫 마침표 앞**이다.
+ * 장치 이름 판정에 쓰는 부분 — **첫 마침표 앞**이고 말단 공백·마침표를 뗀다.
  *
  * Windows 는 `CON.txt` 도 `CON.txt.md` 도 장치로 해석하므로 확장자를 붙였다고
- * 통과시키면 검증이 무의미해진다. `.gitignore` 처럼 선두가 마침표면 빈
- * 문자열이 되어 어느 장치와도 일치하지 않는다.
+ * 통과시키면 검증이 무의미해진다. 그리고 Win32 는 경로 요소의 **말단 공백과
+ * 마침표를 잘라내므로** `CON .md` 도 콘솔 장치가 된다 — 떼지 않으면 공백
+ * 하나로 이 검사가 우회된다.
+ *
+ * `.gitignore` 처럼 선두가 마침표면 빈 문자열이 되어 어느 장치와도 일치하지
+ * 않는다.
  */
 function deviceCandidate(name: string): string {
-  return name.split('.')[0] ?? '';
+  // 말단 공백·마침표를 뗀다. Win32 가 경로 요소의 그 문자들을 잘라내므로
+  // `CON .md` 도 콘솔 장치가 되고, 떼지 않으면 공백 하나로 우회된다.
+  return (name.split('.')[0] ?? '').replace(/[ .]+$/, '');
+}
+
+/**
+ * 워크스페이스 루트 기준 상대 경로가 상한 안인가.
+ *
+ * 이름 검증과 **서브트리 이동 검사**가 같은 판정을 쓴다 — 두 곳이 각자
+ * 재면 한쪽만 고쳐졌을 때 개명으로는 뚫리는 상태가 생긴다.
+ */
+export function checkPathLength(path: string): NameViolation | undefined {
+  const pathBytes = bytes(path);
+  if (pathBytes <= MAX_RELATIVE_PATH_BYTES) {
+    return undefined;
+  }
+  return {
+    rule: 'path-too-long',
+    message: `결과 경로가 ${pathBytes}바이트로 상한 ${MAX_RELATIVE_PATH_BYTES}바이트를 넘습니다.`,
+    limitBytes: MAX_RELATIVE_PATH_BYTES,
+    actualBytes: pathBytes,
+  };
+}
+
+/** 부모 경로와 이름을 잇는다. 루트 바로 아래면 이름뿐이다. */
+export function joinPath(parentPath: string, name: string): string {
+  return parentPath === '' ? name : `${parentPath}${PATH_SEPARATOR}${name}`;
 }
 
 /**
@@ -93,14 +123,9 @@ export function validateNodeName(name: string, parentPath: string): NameValidati
     });
   }
 
-  const pathBytes = bytes(parentPath === '' ? name : `${parentPath}${PATH_SEPARATOR}${name}`);
-  if (pathBytes > MAX_RELATIVE_PATH_BYTES) {
-    violations.push({
-      rule: 'path-too-long',
-      message: `결과 경로가 ${pathBytes}바이트로 상한 ${MAX_RELATIVE_PATH_BYTES}바이트를 넘습니다.`,
-      limitBytes: MAX_RELATIVE_PATH_BYTES,
-      actualBytes: pathBytes,
-    });
+  const tooLong = checkPathLength(joinPath(parentPath, name));
+  if (tooLong !== undefined) {
+    violations.push(tooLong);
   }
 
   return violations.length === 0 ? valid : invalid(violations);

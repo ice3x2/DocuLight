@@ -69,26 +69,19 @@ export interface NodeRepository {
   pathOf(id: NodeId): string;
 
   /**
-   * 이름만 바꾼다. **ID 는 바뀌지 않는다** (`DR-STORAGE-003` AC-3).
+   * 자리와 이름을 **한 번에** 옮긴다 (`DR-STORAGE-003` AC-3 · AC-4).
    *
-   * 부모를 인자로 받지 않으므로 개명이 자리를 옮길 수 없다. 두 축을 한
-   * 메서드에 담으면 호출자가 나머지 한쪽을 옮겨 적어야 하고, 옮겨 적는
-   * 자리마다 실수가 난다.
-   */
-  rename(id: NodeId, name: string): void;
-
-  /**
-   * 자리만 옮긴다. 이름은 그대로다.
+   * 둘을 나누지 않는 이유가 AC-4 다 — 자리 갱신과 이름 갱신이 별개 쓰기면
+   * 그 사이에서 실패했을 때 노드가 **새 부모 아래에 옛 이름으로** 남는다.
+   * 한 문장이면 그 틈이 성립할 자리가 없다.
    *
    * 하위 노드의 행은 하나도 건드리지 않는다 — 경로가 부모 사슬에서
    * 파생되므로 이 한 번의 갱신으로 subtree 의 경로가 함께 바뀐다.
-   * `AC-4` 가 말하는 「ID 매핑이 갱신되지 않은 중간 상태」는 그래서
-   * 존재할 자리가 없다.
    *
    * 파일 감시는 이 경로에 개입하지 않는다 — 태우면 fail-closed 상관
    * 판정이 정상 이동을 신규 노드로 만들어 이력이 끊긴다.
    */
-  move(id: NodeId, parentId: NodeId | null): void;
+  relocate(id: NodeId, to: { parentId: NodeId | null; name: string }): void;
 
   /**
    * 노드와 그 하위를 지운다. **ID 는 되살아나지 않는다** (`AC-5`) —

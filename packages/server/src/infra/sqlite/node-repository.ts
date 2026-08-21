@@ -66,9 +66,18 @@ export class SqliteNodeRepository implements NodeRepository {
 
   pathOf(id: NodeId): string {
     const segments: string[] = [];
+    const visited = new Set<string>();
     let cursor: string | null = id;
 
     while (cursor !== null) {
+      // 부모 사슬은 트리라 고리가 있을 수 없다 — 그러나 없다고 **가정**하면
+      // 고리가 한 번 생겼을 때 이 루프가 돌아오지 않아 프로세스가 죽는다.
+      // 응용 계층이 고리를 막고(`node-service`), 여기서 한 번 더 확인한다.
+      if (visited.has(cursor)) {
+        throw new Error(`node ${id} sits on a parent cycle through ${cursor}`);
+      }
+      visited.add(cursor);
+
       const row: Row | undefined = this.store.get<Row>(
         `SELECT ${COLUMNS} FROM node WHERE id = ?`,
         [cursor],
@@ -86,18 +95,13 @@ export class SqliteNodeRepository implements NodeRepository {
     return segments.join('/');
   }
 
-  rename(id: NodeId, name: string): void {
-    this.store.run("UPDATE node SET name = ?, updated_at = datetime('now') WHERE id = ?", [
-      name,
-      id,
-    ]);
-  }
-
-  move(id: NodeId, parentId: NodeId | null): void {
-    this.store.run("UPDATE node SET parent_id = ?, updated_at = datetime('now') WHERE id = ?", [
-      parentId,
-      id,
-    ]);
+  relocate(id: NodeId, to: { parentId: NodeId | null; name: string }): void {
+    // 한 문장이다. 자리와 이름이 함께 서거나 함께 서지 않는다 — 나누면
+    // 그 사이에서 실패했을 때 새 부모 아래에 옛 이름이 남는다.
+    this.store.run(
+      "UPDATE node SET parent_id = ?, name = ?, updated_at = datetime('now') WHERE id = ?",
+      [to.parentId, to.name, id],
+    );
   }
 
   allIn(workspaceId: string): NodeRecord[] {

@@ -185,5 +185,19 @@ describe('FR-WORKSPACE-005 — 대소문자만 다른 동명은 거부가 아니
     expect(resolved).not.toBe(atLimit);
     expect(Buffer.byteLength(resolved, 'utf8')).toBeLessThanOrEqual(MAX_NAME_BYTES);
     expect(resolved.endsWith('.md')).toBe(true);
+
+    // 확장자가 이름 대부분을 차지하면 접미사를 붙일 자리가 남지 않는다.
+    // 확장자를 지키려다 상한을 넘기면 사용자가 치지도 않은 이름이 규칙을
+    // 어긴 채 디스크에 남는다 — 그때는 확장자 쪽을 포기한다.
+    const longExtension = `a.${'b'.repeat(MAX_NAME_BYTES - 2)}`;
+    expect(Buffer.byteLength(longExtension, 'utf8')).toBe(MAX_NAME_BYTES);
+
+    const squeezed = resolveNameCollision(longExtension, [longExtension]);
+    expect(
+      Buffer.byteLength(squeezed, 'utf8'),
+      `접미사를 붙인 이름이 상한을 넘었다: ${squeezed}`,
+    ).toBeLessThanOrEqual(MAX_NAME_BYTES);
+    // 이름의 앞부분이 통째로 사라지면 어느 파일에서 온 것인지 알 수 없다.
+    expect(squeezed.startsWith('a')).toBe(true);
   });
 });

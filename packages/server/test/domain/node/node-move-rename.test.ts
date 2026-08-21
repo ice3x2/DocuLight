@@ -3,7 +3,9 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { moveNode } from '../../../src/app/node/node-service.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
+import { SqliteWorkspaceRepository } from '../../../src/infra/sqlite/workspace-repository.js';
 import { SqliteAuditLog } from '../../../src/infra/sqlite/audit-log-repository.js';
 import { SqliteNodeRepository } from '../../../src/infra/sqlite/node-repository.js';
 
@@ -12,6 +14,7 @@ const WORKSPACE = 'ws-0000';
 let dir: string;
 let db: Database;
 let nodes: SqliteNodeRepository;
+let stores: { nodes: SqliteNodeRepository; workspaces: SqliteWorkspaceRepository };
 let audit: SqliteAuditLog;
 
 /**
@@ -41,6 +44,8 @@ beforeEach(async () => {
   dir = await mkdtemp(join(tmpdir(), 'doculight-move-'));
   db = openDatabase(join(dir, 'doculight.db'));
   nodes = new SqliteNodeRepository(db);
+  stores = { nodes, workspaces: new SqliteWorkspaceRepository(db) };
+  db.run('INSERT INTO workspace (id, name) VALUES (?, ?)', [WORKSPACE, '기획팀']);
   audit = new SqliteAuditLog(db);
 });
 
@@ -96,11 +101,11 @@ describe('DR-STORAGE-003 — 이동·개명은 ID 를 유지하고 삭제는 ID 
     audit.append({ operation: 'create', actor: 'u1', nodeId: doc });
     expect(nodes.pathOf(doc)).toBe('기획/회의록.md');
 
-    nodes.rename(doc, '주간회의.md');
+    nodes.relocate(doc, { parentId: from, name: '주간회의.md' });
     expect(nodes.findById(doc)?.name).toBe('주간회의.md');
     expect(nodes.pathOf(doc)).toBe('기획/주간회의.md');
 
-    nodes.move(doc, to);
+    nodes.relocate(doc, { parentId: to, name: '주간회의.md' });
     expect(nodes.pathOf(doc)).toBe('보관/주간회의.md');
 
     // ID 가 그대로이므로 승계는 따로 옮기는 일이 아니라 아무것도 하지
@@ -140,7 +145,7 @@ describe('DR-STORAGE-003 — 이동·개명은 ID 를 유지하고 삭제는 ID 
 
     // 디렉토리를 통째로 옮긴다. 하위 노드의 행은 하나도 건드리지 않지만
     // 파생 경로는 전부 함께 바뀐다.
-    nodes.move(sub, shelf);
+    nodes.relocate(sub, { parentId: shelf, name: '2026' });
     expect(nodes.pathOf(leaf)).toBe('보관/2026/회의록.md');
     expect(nodes.findById(leaf)?.id).toBe(leaf);
     expect(nodes.findById(leaf)?.parentId).toBe(sub);
@@ -148,7 +153,7 @@ describe('DR-STORAGE-003 — 이동·개명은 ID 를 유지하고 삭제는 ID 
     // 실패한 이동은 아무것도 남기지 않는다 — 이름만 바뀌고 부모는
     // 그대로인 절반 적용 상태가 없어야 한다.
     const before = nodes.findById(leaf);
-    expect(() => nodes.move(leaf, 'no-such-parent')).toThrow();
+    expect(() => nodes.relocate(leaf, { parentId: 'no-such-parent', name: '옮긴이름.md' })).toThrow();
     expect(nodes.findById(leaf)).toEqual(before);
     expect(nodes.pathOf(leaf)).toBe('보관/2026/회의록.md');
   });
@@ -207,5 +212,51 @@ describe('DR-STORAGE-003 — 이동·개명은 ID 를 유지하고 삭제는 ID 
     // 남으면 어느 워크스페이스에도 닿지 않는 노드가 되고, 그 ID 를 아는
     // 사람에게는 계속 도달 가능한 상태로 남는다.
     expect(nodes.findById(child)).toBeUndefined();
+  });
+
+  it('DR-STORAGE-003 AC-4 — 자리와 이름을 한 문장으로 옮긴다 — 절반만 적용된 상태가 없다.', () => {
+    // 자리 갱신과 이름 갱신이 별개 문장이면 그 사이에서 프로세스가 죽었을 때
+    // 노드가 **새 부모 아래에 옛 이름으로** 남는다 — 충돌 접미사가 막으려던
+    // 바로 그 상태다. 문장을 하나로 두면 그 틈이 성립하지 않는다.
+    const record = nodes as unknown as Record<string, unknown>;
+    expect(typeof record.relocate).toBe('function');
+    expect(record.move, '자리만 옮기는 별도 경로가 남아 있다').toBeUndefined();
+    expect(record.rename, '이름만 바꾸는 별도 경로가 남아 있다').toBeUndefined();
+  });
+
+  it('DR-STORAGE-003 AC-4 — 노드를 자기 자손 아래로 옮길 수 없다.', () => {
+    const a = nodes.create({ workspaceId: WORKSPACE, parentId: null, kind: 'directory', name: 'A' });
+    const b = nodes.create({ workspaceId: WORKSPACE, parentId: a, kind: 'directory', name: 'B' });
+    const c = nodes.create({ workspaceId: WORKSPACE, parentId: b, kind: 'directory', name: 'C' });
+
+    // 허용하면 A 와 B 가 서로의 부모가 되어 루트에서 도달할 수 없는 고리가
+    // 남고, 경로를 파생하는 모든 호출이 그 고리를 영원히 돈다.
+    for (const target of [b, c, a]) {
+      const moved = moveNode(stores, a, target);
+      expect(moved.ok, `A 를 ${target} 아래로 옮기는 것이 통과했다`).toBe(false);
+    }
+
+    expect(nodes.findById(a)?.parentId).toBeNull();
+    expect(nodes.pathOf(c)).toBe('A/B/C');
+  });
+
+  it('FR-WORKSPACE-004 AC-6 — 서브트리를 옮길 때 자손의 결과 경로도 상한 안이어야 한다.', () => {
+    const segment = 'a'.repeat(200);
+
+    // 얕은 자리에 깊은 서브트리를 만든다.
+    const top = nodes.create({ workspaceId: WORKSPACE, parentId: null, kind: 'directory', name: 'D' });
+    const mid = nodes.create({ workspaceId: WORKSPACE, parentId: top, kind: 'directory', name: segment });
+    nodes.create({ workspaceId: WORKSPACE, parentId: mid, kind: 'file', name: segment });
+
+    // 깊은 자리를 만든다.
+    const deep1 = nodes.create({ workspaceId: WORKSPACE, parentId: null, kind: 'directory', name: segment });
+    const deep2 = nodes.create({ workspaceId: WORKSPACE, parentId: deep1, kind: 'directory', name: segment });
+
+    // `D` 자신의 경로는 상한 안이지만 자손은 넘는다. 자기 이름만 재면
+    // 사용자가 만들지도 않은 규칙 위반이 디스크에 남는다.
+    const moved = moveNode(stores, top, deep2);
+    expect(moved.ok).toBe(false);
+
+    expect(nodes.findById(top)?.parentId).toBeNull();
   });
 });

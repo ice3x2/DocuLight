@@ -59,15 +59,19 @@ describe('FR-WORKSPACE-001 — 노드 계층은 루트 → 워크스페이스 �
     expect(membership.map((c) => c.name)).toEqual(['workspace_id']);
 
     // 나머지 절반은 **없을 수 없다**는 것이다. 없는 워크스페이스를 대면
-    // 만들어지지 않는다 — 사후에 예외를 잡아 분기하지 않고 사전에 막는다.
-    expect(() =>
-      createNode(stores, {
-        workspaceId: 'ws-없음',
-        parentId: null,
-        kind: 'file',
-        name: '고아.md',
-      }),
-    ).toThrow(/workspace/i);
+    // 만들어지지 않는다 — 사후에 예외를 잡아 분기하지 않고 사전에 막고,
+    // 거부는 던지지 않고 값으로 돌려준다. API 호출자가 상시 도달하는
+    // 예측 가능한 분기이기 때문이다.
+    const orphan = createNode(stores, {
+      workspaceId: 'ws-없음',
+      parentId: null,
+      kind: 'file',
+      name: '고아.md',
+    });
+    expect(orphan.ok).toBe(false);
+    expect((orphan as { violations: { rule: string }[] }).violations.map((v) => v.rule)).toEqual([
+      'unknown-workspace',
+    ]);
     expect(db.all('SELECT id FROM node')).toHaveLength(1);
   });
 

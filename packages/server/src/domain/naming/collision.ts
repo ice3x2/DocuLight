@@ -44,7 +44,15 @@ function candidateAt(base: string, extension: string, ordinal: number): string {
   // 길이 규칙을 어긴 채 디스크에 남는다. 줄이는 쪽은 base 다 —
   // 확장자를 줄이면 md 가 md 로 읽히지 않는다.
   const room = MAX_NAME_BYTES - Buffer.byteLength(suffix + extension, 'utf8');
-  return `${truncateToBytes(base, room)}${suffix}${extension}`;
+  if (room >= 1) {
+    return `${truncateToBytes(base, room)}${suffix}${extension}`;
+  }
+
+  // 확장자가 이름 대부분을 차지하면 base 에 남는 자리가 없다. 확장자를
+  // 지키려다 상한을 넘기면 사용자가 치지도 않은 이름이 규칙을 어긴 채
+  // 남으므로, 그때는 확장자 쪽을 포기하고 이름 전체를 자른다.
+  const whole = MAX_NAME_BYTES - Buffer.byteLength(suffix, 'utf8');
+  return `${truncateToBytes(base + extension, whole)}${suffix}`;
 }
 
 /**
