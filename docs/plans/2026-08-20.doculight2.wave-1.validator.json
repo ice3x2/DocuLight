@@ -187,18 +187,6 @@
                 "count": 1
               },
               {
-                "key": "T-PH003-03|Requirement|REL-AUDIT-001",
-                "count": 1
-              },
-              {
-                "key": "T-PH003-04|Requirement|REL-AUDIT-001",
-                "count": 1
-              },
-              {
-                "key": "T-PH003-04|Doc|docs/spec/00.decision-log.md#R139-b",
-                "count": 1
-              },
-              {
                 "key": "T-PH003-05|Requirement|REL-AUDIT-001",
                 "count": 1
               },
@@ -208,6 +196,10 @@
               },
               {
                 "key": "T-PH003-06|Doc|docs/spec/00.decision-log.md#R139",
+                "count": 1
+              },
+              {
+                "key": "T-PH003-06|Doc|docs/spec/00.decision-log.md#R139-b",
                 "count": 1
               },
               {
