@@ -22,9 +22,8 @@ export function documentsRouter({ nodes, documents }: DocumentRouteDeps): Router
   const router = Router();
 
   // 와일드카드 파라미터를 쓰지 않는다. 그 문법과 파라미터 이름이 Express
-  // 4 와 5 에서 다른데 이 패키지는 지금 런타임 4 에 타입 5 를 물고 있어,
-  // 어느 쪽에 맞춰 써도 다른 쪽이 깨진다. `use` 로 접두를 떼면 나머지
-  // 경로를 `req.path` 로 읽을 수 있고 두 판에서 같게 동작한다.
+  // 4 와 5 에서 다르기 때문이다. `use` 로 접두를 떼면 나머지 경로를
+  // `req.path` 로 읽을 수 있고, 판이 바뀌어도 이 자리는 그대로다.
   router.use('/documents/:workspaceId', async (req, res, next) => {
     if (req.method !== 'GET') {
       next();
