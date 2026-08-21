@@ -2,6 +2,7 @@ import { access, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 
 import type { DocumentStore } from '../../domain/ports/document-store.js';
+import { workspaceDirectory } from './workspace-layout.js';
 
 /**
  * `docsRoot` 아래에 마크다운을 그대로 두는 저장소 (`DR-STORAGE-001`).
@@ -52,7 +53,9 @@ export class FsDocumentStore implements DocumentStore {
       throw new Error(`path escapes the workspace root (absolute): ${relativePath}`);
     }
 
-    const workspaceRoot = resolve(join(this.root, workspaceId));
+    // 워크스페이스 자리는 레이아웃 모듈이 정한다 — 여기서 다시 조립하면
+    // 쓰는 자리와 만드는 자리가 갈린다.
+    const workspaceRoot = workspaceDirectory(this.root, workspaceId);
     const target = resolve(join(workspaceRoot, relativePath));
     const rel = relative(workspaceRoot, target);
 
