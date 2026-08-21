@@ -12,6 +12,8 @@ export {
   type MermaidBlocksConfig,
 } from './core/mermaid-blocks';
 
+export { findTags, isFrontmatterRange, type TagMatch } from './core/tags';
+
 export {
   defaultMermaidRenderer,
   getCachedSize,
