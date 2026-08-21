@@ -6,10 +6,8 @@ import type { SettingStore } from '../../domain/ports/setting-store.js';
 import type { PrincipalId } from '../../domain/principal/principal.js';
 import { isSuperuser } from '../../domain/principal/subject.js';
 import { setAccountStatus } from '../principal/principal-service.js';
+import { readSetting, writeSetting } from '../settings/instance-settings.js';
 import { registerAccount, type AccountRule } from './account-service.js';
-
-/** 설정 키. 문자열을 두 곳에 적으면 한쪽 오타가 조용히 기본값을 쓴다. */
-const SIGNUP_MODE_KEY = 'signup-mode';
 
 /**
  * 설정된 적 없을 때의 가입 모드.
@@ -38,7 +36,7 @@ const isBoss = (stores: SignupStores, actor: PrincipalId) =>
   isSuperuser(stores.principals.groupsOf(actor));
 
 export function currentSignupMode(stores: Pick<SignupStores, 'settings'>): SignupMode {
-  const stored = stores.settings.get(SIGNUP_MODE_KEY);
+  const stored = readSetting(stores.settings, 'signup-mode');
   return stored === 'open' || stored === 'approval' || stored === 'invite-only'
     ? stored
     : FALLBACK_MODE;
@@ -52,7 +50,7 @@ export function setSignupMode(
 ): SignupOutcome {
   if (!isBoss(stores, actor)) return { ok: false, rule: 'needs-superuser' };
 
-  stores.settings.set(SIGNUP_MODE_KEY, mode);
+  writeSetting(stores.settings, 'signup-mode', mode);
   return { ok: true };
 }
 

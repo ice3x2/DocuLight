@@ -1,11 +1,14 @@
 import { actorFor, type Actor } from '../../src/app/acl/permission-service.js';
 import type { NodeStores } from '../../src/app/node/node-service.js';
+import type { TrashStores } from '../../src/app/trash/trash-service.js';
 import { SUPERUSER_GROUP_ID } from '../../src/domain/principal/system-groups.js';
 import { SqliteAclRepository } from '../../src/infra/sqlite/acl-repository.js';
 import { SqliteAuditLog } from '../../src/infra/sqlite/audit-log-repository.js';
 import { SqliteSettingStore } from '../../src/infra/sqlite/setting-store.js';
 import type { Database } from '../../src/infra/sqlite/database.js';
+import { FsTrashFiles } from '../../src/infra/fs/trash-files.js';
 import { SqliteNodeRepository } from '../../src/infra/sqlite/node-repository.js';
+import { SqliteTrashRepository } from '../../src/infra/sqlite/trash-repository.js';
 import { SqlitePrincipalRepository } from '../../src/infra/sqlite/principal-repository.js';
 import { SqliteWorkspaceRepository } from '../../src/infra/sqlite/workspace-repository.js';
 
@@ -38,4 +41,23 @@ export function superuserActor(stores: NodeStores, name = '설치자'): Actor {
   const user = stores.principals.createUser(name);
   stores.principals.addMember(SUPERUSER_GROUP_ID, user.id);
   return actorFor(stores.principals, user.id);
+}
+
+/**
+ * 휴지통 조작에 필요한 저장소까지 세운다.
+ *
+ * `nodeStores` 를 감싸는 이유는 휴지통이 노드 조작 위에 서기 때문이다 —
+ * 둘을 나란히 조립하면 한쪽 시험만 저장소 하나를 빠뜨린 채로 돌게 된다.
+ */
+export function trashStores(
+  db: Database,
+  docsRoot: string,
+  clock: () => Date = () => new Date(),
+): TrashStores {
+  return {
+    ...nodeStores(db),
+    trash: new SqliteTrashRepository(db),
+    trashFiles: new FsTrashFiles(docsRoot),
+    clock,
+  };
 }

@@ -2,6 +2,7 @@ import { basename } from 'node:path';
 
 import { permissionBatch, permissionOf, type AclStores, type Actor } from '../acl/permission-service.js';
 import type { Clock } from '../auth/login-service.js';
+import { readSetting } from '../settings/instance-settings.js';
 import { resolveNameCollision } from '../../domain/naming/collision.js';
 import { permits } from '../../domain/acl/level.js';
 import { requirementFor, satisfies } from '../../domain/acl/operation-policy.js';
@@ -14,7 +15,6 @@ import { isExpired, type TrashEntry } from '../../domain/trash/trash-entry.js';
 export const DEFAULT_RETENTION_DAYS = 30;
 
 /** 설정 키. 두 곳에 적으면 한쪽 오타가 조용히 기본값을 쓴다. */
-const RETENTION_KEY = 'trash-retention-days';
 
 export interface TrashStores extends AclStores {
   trash: TrashRepository;
@@ -200,13 +200,27 @@ export async function purgeFromTrash(
   const entry = stores.trash.find(nodeId);
   if (entry === undefined) return { ok: false, rule: 'not-in-trash' };
 
-  const level = permissionOf(stores, actor, entry.workspaceId);
-  if (!satisfies(requirementFor('purge'), { parent: null, target: null, destination: null, workspace: level })) {
-    return { ok: false, rule: 'forbidden' };
-  }
+  if (!canPurge(stores, actor, entry)) return { ok: false, rule: 'forbidden' };
 
   await hardDelete(stores, entry);
   return { ok: true };
+}
+
+/**
+ * 이 요청자가 이 항목을 영구 삭제할 수 있는가 (`SEC-STORAGE-003` AC-5 · `SEC-SHELL-001`).
+ *
+ * 화면의 버튼 표시와 서버의 거절이 **같은 판정을 쓴다.** 둘로 나누면
+ * 열려 보이는 버튼이 눌렀을 때 거절되거나 그 반대가 되고, 사용자에게는
+ * 양쪽 다 고장으로 보인다.
+ */
+export function canPurge(stores: TrashStores, actor: Actor, entry: TrashEntry): boolean {
+  const level = permissionOf(stores, actor, entry.workspaceId);
+  return satisfies(requirementFor('purge'), {
+    parent: null,
+    target: null,
+    destination: null,
+    workspace: level,
+  });
 }
 
 /** 실체·사이드카·인덱스·노드·ACL 을 함께 걷는다 (`SEC-STORAGE-003` AC-4). */
@@ -220,7 +234,7 @@ async function hardDelete(stores: TrashStores, entry: TrashEntry): Promise<void>
 
 /** 설정된 보존 일수. 없거나 숫자가 아니면 기본값 (`FR-STORAGE-007` AC-1 · AC-3). */
 export function retentionDays(stores: TrashStores): number {
-  const stored = Number(stores.settings.get(RETENTION_KEY));
+  const stored = Number(readSetting(stores.settings, 'trash-retention-days'));
   return Number.isFinite(stored) && stored >= 0 ? stored : DEFAULT_RETENTION_DAYS;
 }
 
