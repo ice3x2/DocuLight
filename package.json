@@ -13,6 +13,9 @@
     "build": "npm run build --workspaces --if-present",
     "dev": "npm run dev --workspace @doculight/web"
   },
+  "devDependencies": {
+    "happy-dom": "^20.10.6"
+  },
   "engines": {
     "node": ">=20"
   }

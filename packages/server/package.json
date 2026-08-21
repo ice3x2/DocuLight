@@ -1,0 +1,27 @@
+{
+  "name": "@doculight/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DocuLight 2.0 백엔드 — Express + SQLite. 1.0 에서는 코드가 아니라 기능을 물려받는다 (CON-ARCH-002)",
+  "main": "./src/main.ts",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.1",
+    "tsx": "^4.19.2",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  }
+}
