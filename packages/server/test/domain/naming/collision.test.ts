@@ -9,6 +9,7 @@ import { MAX_NAME_BYTES } from '../../../src/domain/naming/naming-policy.js';
 import * as nodeService from '../../../src/app/node/node-service.js';
 import { createNode, moveNode, renameNode } from '../../../src/app/node/node-service.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
+import { SqliteWorkspaceRepository } from '../../../src/infra/sqlite/workspace-repository.js';
 import { SqliteNodeRepository } from '../../../src/infra/sqlite/node-repository.js';
 
 const WORKSPACE = 'ws-0000';
@@ -16,6 +17,7 @@ const WORKSPACE = 'ws-0000';
 let dir: string;
 let db: Database;
 let nodes: SqliteNodeRepository;
+let stores: { nodes: SqliteNodeRepository; workspaces: SqliteWorkspaceRepository };
 let root: string;
 
 const idOf = (r: unknown) => (r as { ok: true; id: string }).id;
@@ -27,7 +29,7 @@ const childNames = (parentId: string) =>
     .map((r) => r.name);
 
 function seed(name: string): string {
-  const created = createNode(nodes, {
+  const created = createNode(stores, {
     workspaceId: WORKSPACE,
     parentId: root,
     kind: 'file',
@@ -41,6 +43,9 @@ beforeEach(async () => {
   dir = await mkdtemp(join(tmpdir(), 'doculight-collision-'));
   db = openDatabase(join(dir, 'doculight.db'));
   nodes = new SqliteNodeRepository(db);
+  stores = { nodes, workspaces: new SqliteWorkspaceRepository(db) };
+  // 노드는 실재하는 워크스페이스에만 만들 수 있다(`FR-WORKSPACE-001` AC-1).
+  db.run('INSERT INTO workspace (id, name) VALUES (?, ?)', [WORKSPACE, '기획팀']);
   root = nodes.create({ workspaceId: WORKSPACE, parentId: null, kind: 'directory', name: '기획' });
 });
 
@@ -53,7 +58,7 @@ describe('FR-WORKSPACE-005 — 대소문자만 다른 동명은 거부가 아니
   it('FR-WORKSPACE-005 AC-1 — 같은 디렉토리에 `Report.md` 가 있을 때 `report.md` 를 만드는 요청은 거부되지 않는다.', () => {
     seed('Report.md');
 
-    const created = createNode(nodes, {
+    const created = createNode(stores, {
       workspaceId: WORKSPACE,
       parentId: root,
       kind: 'file',
@@ -69,7 +74,7 @@ describe('FR-WORKSPACE-005 — 대소문자만 다른 동명은 거부가 아니
   it('FR-WORKSPACE-005 AC-2 — 그 요청은 자동 접미사가 붙은 이름으로 생성된다.', () => {
     seed('Report.md');
 
-    const created = createNode(nodes, {
+    const created = createNode(stores, {
       workspaceId: WORKSPACE,
       parentId: root,
       kind: 'file',
@@ -98,7 +103,7 @@ describe('FR-WORKSPACE-005 — 대소문자만 다른 동명은 거부가 아니
 
     // 한 번의 호출이 최종 결과를 돌려준다. 두 번째 왕복을 요구하는
     // 대기 상태가 없다.
-    const created = createNode(nodes, {
+    const created = createNode(stores, {
       workspaceId: WORKSPACE,
       parentId: root,
       kind: 'file',
@@ -119,7 +124,7 @@ describe('FR-WORKSPACE-005 — 대소문자만 다른 동명은 거부가 아니
     seed('Report.md');
     const other = seed('메모.md');
 
-    const renamed = renameNode(nodes, other, 'REPORT.MD');
+    const renamed = renameNode(stores, other, 'REPORT.MD');
     expect(renamed.ok).toBe(true);
     expect(nodes.findById(other)?.name).not.toBe('REPORT.MD');
     expect(foldCase(nodes.findById(other)!.name)).not.toBe(foldCase('Report.md'));
@@ -137,7 +142,7 @@ describe('FR-WORKSPACE-005 — 대소문자만 다른 동명은 거부가 아니
       name: 'REPORT.md',
     });
 
-    const moved = moveNode(nodes, moving, root);
+    const moved = moveNode(stores, moving, root);
     expect(moved.ok).toBe(true);
     // 옮겨 간 자리에서 겹치므로 이름이 바뀐 채로 자리를 옮긴다.
     expect(nodes.findById(moving)?.parentId).toBe(root);
@@ -159,7 +164,7 @@ describe('FR-WORKSPACE-005 — 대소문자만 다른 동명은 거부가 아니
     expect(foldCase(nfc)).toBe(foldCase(nfd));
 
     seed(nfc);
-    const created = createNode(nodes, {
+    const created = createNode(stores, {
       workspaceId: WORKSPACE,
       parentId: root,
       kind: 'file',

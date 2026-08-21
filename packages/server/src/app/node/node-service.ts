@@ -3,6 +3,7 @@ import { validateNodeName } from '../../domain/naming/name-validator.js';
 import type { NameValidation } from '../../domain/naming/validation-result.js';
 import type { NodeId } from '../../domain/node/node-id.js';
 import type { NewNode, NodeRepository } from '../../domain/ports/node-repository.js';
+import type { WorkspaceRepository } from '../../domain/ports/workspace-repository.js';
 
 /**
  * 새 이름이 들어오는 진입점들 — 생성·개명·이동·업로드
@@ -21,6 +22,18 @@ import type { NewNode, NodeRepository } from '../../domain/ports/node-repository
  * 있는 것을 등재하는 경로는 검증 대상이 아니라 **사실의 기록**이라,
  * 저장소가 막으면 이미 존재하는 파일을 등재할 방법이 사라진다.
  */
+
+/**
+ * 이 진입점들이 쓰는 저장소 묶음.
+ *
+ * 하나로 묶는 이유는 넷이 같은 모양을 갖게 하기 위해서다 — 어떤 것은
+ * 저장소 하나를, 어떤 것은 둘을 받으면 호출자가 매번 어느 쪽인지 확인해야
+ * 한다.
+ */
+export interface NodeStores {
+  nodes: NodeRepository;
+  workspaces: WorkspaceRepository;
+}
 
 /** 만들어졌을 때의 결과. `name` 은 접미사가 붙었을 수 있는 **최종** 이름이다. */
 export type Created = { ok: true; id: NodeId; name: string };
@@ -42,7 +55,14 @@ function parentPathOf(nodes: NodeRepository, parentId: NodeId | null): string {
  * **거부된 이름에 접미사를 붙여 대신 만들지 않는다** (`FR-WORKSPACE-004`
  * AC-8) — 붙이면 사용자가 요청하지 않은 이름이 디스크에 남는다.
  */
-export function createNode(nodes: NodeRepository, input: NewNode): Created | Rejected {
+export function createNode({ nodes, workspaces }: NodeStores, input: NewNode): Created | Rejected {
+  // 사전 검사다. 없는 워크스페이스를 대면 만들지 않는다 — 소속 없는 노드는
+  // 어느 권한 경계에도 들지 않아 트리에서도 권한 계산에서도 사라진다
+  // (`FR-WORKSPACE-001` AC-1).
+  if (workspaces.findById(input.workspaceId) === undefined) {
+    throw new Error(`cannot create a node in unknown workspace ${input.workspaceId}`);
+  }
+
   const verdict = validateNodeName(input.name, parentPathOf(nodes, input.parentId));
   if (!verdict.ok) {
     return verdict;
@@ -56,7 +76,7 @@ export function createNode(nodes: NodeRepository, input: NewNode): Created | Rej
 }
 
 /** 개명에도 같은 두 단계가 걸린다. 거부되면 이름은 그대로다. */
-export function renameNode(nodes: NodeRepository, id: NodeId, name: string): Placed | Rejected {
+export function renameNode({ nodes }: NodeStores, id: NodeId, name: string): Placed | Rejected {
   const node = mustFind(nodes, id, 'rename');
 
   const verdict = validateNodeName(name, parentPathOf(nodes, node.parentId));
@@ -81,7 +101,7 @@ export function renameNode(nodes: NodeRepository, id: NodeId, name: string): Pla
  * 다만 결과 **경로**는 새 자리에서 달라지므로 다시 잰다.
  */
 export function moveNode(
-  nodes: NodeRepository,
+  { nodes }: NodeStores,
   id: NodeId,
   parentId: NodeId | null,
 ): Placed | Rejected {
@@ -112,7 +132,7 @@ export function moveNode(
  * 남는다. 충돌은 그 라우트가 `createNode` 로 넘길 때 함께 풀린다.
  */
 export function validateUploadedName(
-  nodes: NodeRepository,
+  { nodes }: NodeStores,
   parentId: NodeId | null,
   filename: string,
 ): NameValidation {
