@@ -68,3 +68,44 @@ describe('FR-SHELL-002 — 문서 단위 기능은 문서 헤더 메뉴에 둔�
     }
   });
 });
+
+describe('FR-SHELL-006 — 딥링크가 왕복하는가 (실측)', () => {
+  const HARD = [
+    'n-abc123',
+    'a/b',
+    'a b',
+    '한글아이디',
+    'a?b=c',
+    'a#b',
+    'a%2Fb',
+    'a&b',
+    '..',
+    'a+b',
+    '@user',
+    'x'.repeat(200),
+  ];
+
+  it('어떤 ID 를 넣어도 그대로 돌아온다', () => {
+    // 하나라도 어긋나면 그 문서의 링크가 다른 문서를 열거나 아무것도
+    // 열지 않는다 — 그리고 그 사실은 그 링크를 누를 때까지 드러나지 않는다.
+    for (const id of HARD) {
+      expect(nodeIdOf(urlForNode(id)), id).toBe(id);
+    }
+  });
+
+  it('만들어진 주소가 언제나 문서 주소로 읽힌다', () => {
+    for (const id of HARD) {
+      expect(urlForNode(id).startsWith('/d/'), id).toBe(true);
+      expect(nodeIdOf(urlForNode(id)), id).not.toBeNull();
+    }
+  });
+
+  it('망가진 인코딩에도 던지지 않는다 — 주소창은 사용자가 손댈 수 있다', () => {
+    // 던지면 잘못 붙여넣은 주소 하나가 앱 전체를 멈춘다.
+    expect(() => nodeIdOf('/d/%')).not.toThrow();
+    expect(() => nodeIdOf('/d/%E0%A4%A')).not.toThrow();
+    // 읽을 수 없는 주소는 문서 주소가 아닌 것과 같이 다룬다 — 반쪽만
+    // 읽어 넘기면 그 값으로 없는 문서를 찾게 된다.
+    expect(nodeIdOf('/d/%')).toBeNull();
+  });
+});

@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -339,5 +339,88 @@ describe('SEC-ATTACH-002 — 소유 문서의 권한 변화가 첨부에 곧바�
 
     // 자리표시 이미지를 대신 주면 사용자는 그것이 진짜 내용이라고 믿는다.
     expect(denied).not.toHaveProperty('bytes');
+  });
+});
+
+describe('첨부 — 실패 경로가 디스크에 쓰레기를 남기지 않는다', () => {
+  const resRoot = () => join(docsRoot, ws, RESOURCE_DIRECTORY);
+
+  it('크기 초과 업로드는 실체도 인덱스도 남기지 않는다', async () => {
+    writeSetting(stores.settings, 'upload-size-limit-bytes', '1');
+
+    await attach(root);
+
+    // 검사가 쓰기 뒤에 오면 소유 없는 실체가 남고, 그것은 아무도 걷지 않는다.
+    await expect(readdir(resRoot())).rejects.toThrow();
+  });
+
+  it('권한 없는 업로드도 마찬가지다', async () => {
+    await attach(actorFor(stores.principals, me.id));
+
+    await expect(readdir(resRoot())).rejects.toThrow();
+  });
+
+  it('없는 노드에 올리려 해도 마찬가지다', async () => {
+    await attach(root, { nodeId: 'no-such-node' });
+
+    await expect(readdir(resRoot())).rejects.toThrow();
+  });
+
+  it('성공한 업로드만 실체를 남긴다', async () => {
+    await attach(root);
+
+    expect((await readdir(resRoot())).length).toBeGreaterThan(0);
+  });
+});
+
+describe('첨부 — 이름과 해시의 경계', () => {
+  it('경로 탈출을 노린 이름이 자리를 벗어나지 못한다', async () => {
+    const done = await attach(root, { name: '../../../etc/passwd' });
+
+    // 저장 자리는 해시로만 정해진다 — 이름은 확장자만 떠온다. 그래서
+    // 이름에 무엇이 들어와도 `.res` 밖으로 나갈 길이 없다.
+    expect(done.ok).toBe(true);
+    const { hash } = done as { ok: true; hash: string };
+    expect(resourcePathOf(join(docsRoot, ws), hash, 'passwd')).toContain(RESOURCE_DIRECTORY);
+    expect(resourcePathOf(join(docsRoot, ws), hash, 'passwd')).not.toContain('..');
+  });
+
+  it('확장자 없는 이름도 받는다', async () => {
+    const done = await attach(root, { name: 'README' });
+
+    expect(done.ok).toBe(true);
+    // 링크에는 `.res` 가 늘 들어 있으므로 마지막 조각만 본다.
+    const last = (done as { ok: true; link: string }).link.split('/').pop()!;
+    expect(last).not.toContain('.');
+  });
+
+  it('점으로 시작하는 이름의 앞점을 확장자로 읽지 않는다', async () => {
+    const done = await attach(root, { name: '.gitignore' });
+
+    expect(done.ok).toBe(true);
+    // `.gitignore` 를 확장자 `gitignore` 로 읽으면 이름이 저장 자리에 샌다.
+    expect((done as { ok: true; link: string }).link).not.toContain('gitignore');
+  });
+
+  it('빈 바이트도 받는다 — 빈 파일은 올릴 수 있는 파일이다', async () => {
+    const done = await attach(root, { name: '빈것.txt', bytes: Buffer.alloc(0) });
+
+    expect(done.ok).toBe(true);
+  });
+
+  it('없는 해시를 열려 하면 없는 노드와 같은 답이다', async () => {
+    const opened = await openAttachment(stores, root, { workspaceId: ws, hash: 'ffff' });
+
+    expect(opened).toMatchObject({ ok: false });
+  });
+
+  it('다른 워크스페이스의 해시로는 열리지 않는다 — 같은 내용이어도 권한이 다르다', async () => {
+    const other = (await createWorkspace(
+      { workspaces: stores.workspaces, files: new FsWorkspaceFiles(docsRoot) },
+      '인사팀',
+    )).id;
+    const done = (await attach(root)) as { ok: true; hash: string };
+
+    expect((await openAttachment(stores, root, { workspaceId: other, hash: done.hash })).ok).toBe(false);
   });
 });

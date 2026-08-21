@@ -17,12 +17,22 @@ export function urlForNode(nodeId: string): string {
   return PREFIX + encodeURIComponent(nodeId);
 }
 
-/** 그 주소가 가리키는 문서. 문서 주소가 아니면 `null`. */
+/**
+ * 그 주소가 가리키는 문서. 문서 주소가 아니면 `null`.
+ *
+ * **던지지 않는다.** 주소창은 사용자가 손댈 수 있는 자리라 망가진 인코딩이
+ * 언제든 들어온다 — 던지면 잘못 붙여넣은 링크 하나가 앱 전체를 멈춘다.
+ * 읽을 수 없는 주소는 문서 주소가 아닌 것과 같이 다룬다.
+ */
 export function nodeIdOf(pathname: string): string | null {
   if (!pathname.startsWith(PREFIX)) return null;
 
   const raw = pathname.slice(PREFIX.length);
   if (raw === '') return null;
 
-  return decodeURIComponent(raw);
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return null;
+  }
 }
