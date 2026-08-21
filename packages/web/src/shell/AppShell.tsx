@@ -2,7 +2,13 @@ import * as Dialog from '@radix-ui/react-dialog';
 import * as Tabs from '@radix-ui/react-tabs';
 import { useId, useState } from 'react';
 
-import { LEFT_TABS, RIGHT_TABS, SETTINGS_CATEGORIES, type ShellTab } from './shell-contract.js';
+import {
+  LEFT_TABS,
+  RIGHT_TABS,
+  visibleCategories,
+  type ShellTab,
+  type Viewer,
+} from './shell-contract.js';
 
 /**
  * 사이드바 하나 — 탭 줄과 그 아래 본문.
@@ -58,9 +64,14 @@ function Sidebar({
  * 따로 두면 그것이 두 번째 진입점이 되고, 두 진입점은 곧 서로 다른 것을
  * 보여 주게 된다.
  */
-function SettingsModal() {
+function SettingsModal({ viewer }: { viewer: Viewer }) {
   const [open, setOpen] = useState(false);
   const titleId = useId();
+  // 보이지 않는 카테고리는 **그리지 않는다.** 트리 컨텍스트 메뉴는 반대로
+  // 비활성으로 남기는데(`FR-SHELL-003` AC-3), 그것은 권한을 얻으면 열리는
+  // 조작이기 때문이다. 여기 감춰지는 것들은 권한 자체를 못 얻는 자리다 —
+  // 비활성으로 보여 주면 그것이 언젠가 열릴 것처럼 읽힌다.
+  const categories = visibleCategories(viewer);
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -72,16 +83,16 @@ function SettingsModal() {
           <Dialog.Title id={titleId}>설정</Dialog.Title>
 
           {/* 좌측 카테고리 — 관리 기능이 전부 이 목록 안에 든다(AC-2). */}
-          <Tabs.Root defaultValue={SETTINGS_CATEGORIES[0]!.id} orientation="vertical">
+          <Tabs.Root defaultValue={categories[0]!.id} orientation="vertical">
             <Tabs.List aria-label="설정 카테고리">
-              {SETTINGS_CATEGORIES.map((category) => (
+              {categories.map((category) => (
                 <Tabs.Trigger key={category.id} value={category.id}>
                   {category.label}
                 </Tabs.Trigger>
               ))}
             </Tabs.List>
 
-            {SETTINGS_CATEGORIES.map((category) => (
+            {categories.map((category) => (
               <Tabs.Content key={category.id} value={category.id}>
                 <p>{category.label}</p>
               </Tabs.Content>
@@ -100,13 +111,13 @@ function SettingsModal() {
  * 그것을 소유한 요구가 서는 자리에서 채워진다 — 여기서 함께 만들면 셸의
  * 구조와 그 안의 기능이 한 파일에서 얽혀 어느 쪽을 고쳐도 다른 쪽이 흔들린다.
  */
-export function AppShell() {
+export function AppShell({ viewer }: { viewer: Viewer }) {
   return (
     <div data-shell="root">
       <Sidebar label="좌측 사이드바" tabs={LEFT_TABS} side="left" />
 
       <main>
-        <SettingsModal />
+        <SettingsModal viewer={viewer} />
       </main>
 
       <Sidebar label="우측 사이드바" tabs={RIGHT_TABS} side="right" />
