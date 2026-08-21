@@ -7,7 +7,7 @@ import { FavoritesView, type Favorite } from '../favorites/FavoritesView.js';
 import type { TabState } from '../document/tab-state.js';
 import { DocumentTree } from '../tree/DocumentTree.js';
 import { EmptyState } from '../tree/EmptyState.js';
-import type { WorkspaceTreeView } from '../tree/tree-contract.js';
+import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
   LEFT_TABS,
   RIGHT_TABS,
@@ -126,11 +126,16 @@ export function AppShell({
   workspaces = [],
   documents = { tabs: [], activeId: null },
   favorites = [],
+  bodies = {},
+  onOpen,
 }: {
   viewer: Viewer;
   workspaces?: readonly WorkspaceTreeView[];
   documents?: TabState;
   favorites?: readonly Favorite[];
+  /** 노드 ID → 서버에서 받아 온 본문. 아직 안 온 것은 없다. */
+  bodies?: Readonly<Record<string, string>>;
+  onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
 }) {
   return (
     <div data-shell="root">
@@ -147,7 +152,11 @@ export function AppShell({
           // (`FR-AUTH-005` AC-1) — 아무 말 없는 빈 화면은 「권한이 없다」가
           // 아니라 「고장났다」로 읽힌다.
           if (tab.id === 'tree')
-            return workspaces.length === 0 ? <EmptyState /> : <DocumentTree workspaces={workspaces} />;
+            return workspaces.length === 0 ? (
+              <EmptyState />
+            ) : (
+              <DocumentTree workspaces={workspaces} onOpen={onOpen} />
+            );
           if (tab.id === 'favorites') return <FavoritesView favorites={favorites} />;
           return <p>{tab.label}</p>;
         }}
@@ -155,7 +164,7 @@ export function AppShell({
 
       <main>
         <SettingsModal viewer={viewer} />
-        <DocumentArea initial={documents} />
+        <DocumentArea initial={documents} bodies={bodies} />
       </main>
 
       <Sidebar label="우측 사이드바" tabs={RIGHT_TABS} side="right" />

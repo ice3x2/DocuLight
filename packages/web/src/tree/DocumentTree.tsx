@@ -47,10 +47,12 @@ function TreeRow({
   node,
   depth,
   onUpload,
+  onOpen,
 }: {
   node: TreeNodeView;
   depth: number;
   onUpload?: (request: UploadRequest) => void;
+  onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
 }) {
   const [open, setOpen] = useState(false);
   const expandable = node.kind === 'directory' && node.children.length > 0;
@@ -76,14 +78,28 @@ function TreeRow({
               {node.name} {open ? '접기' : '펼치기'}
             </button>
           )}
-          <span>{node.name}</span>
+          {node.kind === 'file' ? (
+            // 클릭은 활성 탭을 교체하고 `Ctrl`+클릭이 새 탭이다
+            // (`FR-SHELL-012` AC-1 · AC-2).
+            <button type="button" onClick={(event) => onOpen?.(node, event.ctrlKey || event.metaKey)}>
+              {node.name}
+            </button>
+          ) : (
+            <span>{node.name}</span>
+          )}
         </div>
       </NodeMenu>
 
       {expandable && open && (
         <ul role="group">
           {node.children.map((child) => (
-            <TreeRow key={child.id} node={child} depth={depth + 1} onUpload={onUpload} />
+            <TreeRow
+              key={child.id}
+              node={child}
+              depth={depth + 1}
+              onUpload={onUpload}
+              onOpen={onOpen}
+            />
           ))}
         </ul>
       )}
@@ -106,9 +122,11 @@ function TreeRow({
 export function DocumentTree({
   workspaces,
   onUpload,
+  onOpen,
 }: {
   workspaces: readonly WorkspaceTreeView[];
   onUpload?: (request: UploadRequest) => void;
+  onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
 }) {
   const [openWorkspaces, setOpenWorkspaces] = useState<ReadonlySet<string>>(
     () => new Set(workspaces.map((entry) => entry.workspace.id)),
@@ -138,7 +156,7 @@ export function DocumentTree({
             {openWorkspaces.has(entry.workspace.id) && (
               <ul role="group">
                 {entry.roots.map((node) => (
-                  <TreeRow key={node.id} node={node} depth={2} onUpload={onUpload} />
+                  <TreeRow key={node.id} node={node} depth={2} onUpload={onUpload} onOpen={onOpen} />
                 ))}
               </ul>
             )}

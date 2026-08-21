@@ -1,6 +1,6 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Tabs from '@radix-ui/react-tabs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { DocumentSurface } from './DocumentSurface.js';
 import { DOCUMENT_MENU_ITEMS } from './document-menu.js';
@@ -52,8 +52,18 @@ function DocumentHeader({ state }: { state: TabState }) {
  * 상태를 여기서 들고 있는 것은 wave-4 범위가 셸 골격까지이기 때문이다.
  * 에디터가 붙는 자리(`Tabs.Content` 안)는 wave-5 가 채운다.
  */
-export function DocumentArea({ initial }: { initial: TabState }) {
+export function DocumentArea({
+  initial,
+  bodies = {},
+}: {
+  initial: TabState;
+  /** 노드 ID → 서버에서 받아 온 본문. 아직 안 온 것은 없다. */
+  bodies?: Readonly<Record<string, string>>;
+}) {
   const [state, setState] = useState<TabState>(initial);
+  // 탭 목록은 바깥이 소유한다 — 안에서만 들면 트리 클릭으로 연 문서가
+  // 여기 반영되지 않는다.
+  useEffect(() => setState(initial), [initial]);
 
   if (state.tabs.length === 0) return <div data-empty="documents" />;
 
@@ -82,6 +92,7 @@ export function DocumentArea({ initial }: { initial: TabState }) {
               file={{ nodeId: tab.nodeId, name: tab.name, level: tab.level ?? null }}
               save={tab.save}
               serverBody={tab.serverBody ?? null}
+              {...(bodies[tab.nodeId] === undefined ? {} : { body: bodies[tab.nodeId] })}
             />
           </Tabs.Content>
         ))}
