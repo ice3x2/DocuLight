@@ -32,5 +32,12 @@ export function isServable(chain: readonly NodeRecord[]): boolean {
   if (node === undefined) return false;
   if (node.orphanedAt !== null) return false;
 
+  // 휴지통에 들어간 노드는 트리에도 서빙에도 나오지 않는다
+  // (`FR-STORAGE-005`). 노드 행은 남아 있으므로(AC-5 — ACL 과 이력이
+  // 보존된다) 여기서 막지 않으면 지운 문서가 그대로 열린다.
+  //
+  // 조상까지 본다 — 디렉토리를 지우면 그 아래 전부가 함께 사라져야 한다.
+  if (chain.some((link) => link.trashedAt !== null)) return false;
+
   return !chain.some((link) => isHiddenName(link.name) || link.name === ARCHIVE_DIRECTORY);
 }

@@ -15,15 +15,26 @@ interface Row {
   name: string;
   orphaned_at: string | null;
   inherits_acl: number;
+  trashed_at: string | null;
 }
 
-const COLUMNS = 'id, workspace_id, parent_id, kind, name, orphaned_at, inherits_acl';
+// `trashed_at` 은 `node` 의 칸이 아니라 `trash_entry` 에서 조인해 온다 —
+// 같은 사실을 두 곳에 적지 않기 위해서다. 그래서 SELECT 목록과 FROM 절이
+// 함께 다녀야 하고, 둘을 한 상수로 묶어 둔다.
+const NODE_SOURCE = `node LEFT JOIN trash_entry ON trash_entry.node_id = node.id`;
+const COLUMNS =
+  'node.id AS id, node.workspace_id AS workspace_id, node.parent_id AS parent_id, ' +
+  'node.kind AS kind, node.name AS name, node.orphaned_at AS orphaned_at, ' +
+  'node.inherits_acl AS inherits_acl, trash_entry.deleted_at AS trashed_at';
 
 /**
  * 재귀 질의가 멈추는 깊이. 트리에는 고리가 없으므로 여기 닿는 것 자체가
  * 파손 신호이고, 상한이 없으면 그 파손이 프로세스를 멈춰 세운다.
  */
 const MAX_DEPTH = 4096;
+
+/** 재귀 CTE 안에서는 조인 없이 `node` 의 칸만 쓴다 — 조인은 바깥에서 한 번. */
+const CHAIN_COLUMNS = 'id, workspace_id, parent_id, kind, name, orphaned_at, inherits_acl';
 
 function toRecord(row: Row): NodeRecord {
   return {
@@ -36,6 +47,7 @@ function toRecord(row: Row): NodeRecord {
     // SQLite 는 불리언이 없다 — 경계에서 한 번만 바꾼다. 위쪽이 0/1 을
     // 보게 두면 그 값이 어디까지 퍼졌는지 아무도 모르게 된다.
     inheritsAcl: row.inherits_acl === 1,
+    trashedAt: row.trashed_at,
   };
 }
 
@@ -59,7 +71,7 @@ export class SqliteNodeRepository implements NodeRepository {
   }
 
   findById(id: string): NodeRecord | undefined {
-    const row = this.store.get<Row>(`SELECT ${COLUMNS} FROM node WHERE id = ?`, [id]);
+    const row = this.store.get<Row>(`SELECT ${COLUMNS} FROM ${NODE_SOURCE} WHERE node.id = ?`, [id]);
     return row === undefined ? undefined : toRecord(row);
   }
 
@@ -68,7 +80,7 @@ export class SqliteNodeRepository implements NodeRepository {
     // NULL)가 한 건도 걸리지 않아 충돌이 조용히 통과한다.
     return this.store
       .all<Row>(
-        `SELECT ${COLUMNS} FROM node WHERE workspace_id = ? AND parent_id IS ? AND id IS NOT ? ORDER BY rowid`,
+        `SELECT ${COLUMNS} FROM ${NODE_SOURCE} WHERE node.workspace_id = ? AND node.parent_id IS ? AND node.id IS NOT ? ORDER BY node.rowid`,
         [where.workspaceId, where.parentId, where.except ?? null],
       )
       .map(toRecord);
@@ -86,13 +98,15 @@ export class SqliteNodeRepository implements NodeRepository {
   chainOf(id: NodeId): NodeRecord[] {
     const rows = this.store.all<Row & { depth: number }>(
       `WITH RECURSIVE chain(id, workspace_id, parent_id, kind, name, orphaned_at, inherits_acl, depth) AS (
-         SELECT ${COLUMNS}, 0 FROM node WHERE id = ?
+         SELECT ${CHAIN_COLUMNS}, 0 FROM node WHERE id = ?
          UNION ALL
          SELECT n.id, n.workspace_id, n.parent_id, n.kind, n.name, n.orphaned_at, n.inherits_acl, c.depth + 1
            FROM node n JOIN chain c ON n.id = c.parent_id
           WHERE c.depth < ${MAX_DEPTH}
        )
-       SELECT ${COLUMNS}, depth FROM chain ORDER BY depth`,
+       SELECT chain.*, trash_entry.deleted_at AS trashed_at
+         FROM chain LEFT JOIN trash_entry ON trash_entry.node_id = chain.id
+        ORDER BY depth`,
       [id],
     );
 
@@ -131,13 +145,14 @@ export class SqliteNodeRepository implements NodeRepository {
     return this.store
       .all<Row>(
         `WITH RECURSIVE chain(id, workspace_id, parent_id, kind, name, orphaned_at, inherits_acl, depth) AS (
-           SELECT ${COLUMNS}, 0 FROM node WHERE id IN (${placeholders})
+           SELECT ${CHAIN_COLUMNS}, 0 FROM node WHERE id IN (${placeholders})
            UNION
            SELECT n.id, n.workspace_id, n.parent_id, n.kind, n.name, n.orphaned_at, n.inherits_acl, c.depth + 1
              FROM node n JOIN chain c ON n.id = c.parent_id
             WHERE c.depth < ${MAX_DEPTH}
          )
-         SELECT ${COLUMNS} FROM chain`,
+         SELECT chain.*, trash_entry.deleted_at AS trashed_at
+           FROM chain LEFT JOIN trash_entry ON trash_entry.node_id = chain.id`,
         [...ids],
       )
       .map(toRecord);
@@ -172,7 +187,7 @@ export class SqliteNodeRepository implements NodeRepository {
 
   allIn(workspaceId: string): NodeRecord[] {
     return this.store
-      .all<Row>(`SELECT ${COLUMNS} FROM node WHERE workspace_id = ? ORDER BY rowid`, [workspaceId])
+      .all<Row>(`SELECT ${COLUMNS} FROM ${NODE_SOURCE} WHERE node.workspace_id = ? ORDER BY node.rowid`, [workspaceId])
       .map(toRecord);
   }
 

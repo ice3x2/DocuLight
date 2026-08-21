@@ -30,6 +30,15 @@ export interface NodeRecord extends NewNode {
    * 그것은 하위에 대한 거부라 `CON-ACL-002` 가 금지한다.
    */
   inheritsAcl: boolean;
+
+  /**
+   * 휴지통에 들어간 시각 (`FR-STORAGE-005`). 비어 있으면 트리에 있다.
+   *
+   * `node` 테이블의 칸이 아니라 `trash_entry` 에서 **조인해 온 값**이다 —
+   * 같은 사실을 두 곳에 적으면 한쪽만 바뀌고, 그 어긋남이 곧 「목록에는
+   * 없는데 열리는 문서」가 된다.
+   */
+  trashedAt: string | null;
 }
 
 /**

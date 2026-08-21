@@ -157,9 +157,17 @@ export function createNode(
   // 형제 **전부**와 겹치지 않게 푼다 — 보이지 않는 형제도 포함해서
   // (`SEC-ACL-007` AC-1 · AC-3). 걸러진 목록을 받으면 숨은 이름과 겹치는
   // 요청이 그대로 통과해, 흐름 차이가 그 노드의 존재를 알려준다.
+  //
+  // **휴지통에 든 형제는 세지 않는다** (`FR-STORAGE-005` AC-4). 그 이름은
+  // 자리를 비웠고, 세면 같은 이름을 두 번 지우는 흔한 흐름에서 두 번째
+  // 것이 접미사를 받아 원본 이름을 잃는다. 권한으로 안 보이는 것과
+  // 다르다 — 저쪽은 여전히 그 자리를 차지하고 있다.
   const name = resolveNameCollision(
     input.name,
-    nodes.children({ workspaceId: input.workspaceId, parentId: input.parentId }).map((n) => n.name),
+    nodes
+      .children({ workspaceId: input.workspaceId, parentId: input.parentId })
+      .filter((sibling) => sibling.trashedAt === null)
+      .map((sibling) => sibling.name),
   );
 
   const id = nodes.create({ ...input, name });

@@ -166,6 +166,7 @@ function ensurePath(
       name,
       orphanedAt: null,
       inheritsAcl: true,
+      trashedAt: null,
     });
     // 발견은 **사실**이므로 감사 로그가 먼저다. 대기열은 그 행을 참조한다
     // (`R139` — 같은 사실을 두 곳에 적지 않는다).

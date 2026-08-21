@@ -16,5 +16,12 @@ export function listChildren(
   nodes: NodeRepository,
   where: { workspaceId: string; parentId: NodeId | null },
 ): NodeRecord[] {
-  return nodes.children(where).filter((node) => !isHiddenName(node.name));
+  return nodes
+    .children(where)
+    // 휴지통에 들어간 노드는 트리에 없다 (`FR-STORAGE-005`). 노드 행은
+    // 남아 있으므로 여기서 걸러 주지 않으면 지운 항목이 목록에 뜬다.
+    //
+    // 충돌 판정이 이 함수를 쓰지 않는 것이 여기서도 중요하다 — 휴지통에
+    // 든 이름은 그 자리를 비웠으므로 새 노드가 같은 이름을 써도 된다.
+    .filter((node) => node.trashedAt === null && !isHiddenName(node.name));
 }
