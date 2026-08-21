@@ -50,7 +50,17 @@ export function uploadLimitBytes(stores: AttachmentStores): number {
 const indexPathOf = (workspaceRoot: string) =>
   join(workspaceRoot, RESOURCE_DIRECTORY, RESOURCE_INDEX);
 
-type IndexFile = Record<string, { ownerNodeId: string; extension: string; size: number; createdAt: string }>;
+interface IndexEntry {
+  /** 첫 소유자. 옛 형식과의 호환을 위해 남긴다. */
+  ownerNodeId: string;
+  /** 소유한 문서 전부 — 같은 바이트를 두 문서에 올릴 수 있다. */
+  owners?: readonly string[];
+  extension: string;
+  size: number;
+  createdAt: string;
+}
+
+type IndexFile = Record<string, IndexEntry>;
 
 async function readIndex(workspaceRoot: string): Promise<IndexFile> {
   try {
@@ -104,11 +114,14 @@ export async function attachToDocument(
   // 사이드카가 정본이므로 DB 보다 **먼저** 쓴다 — 뒤에 쓰면 DB 에만 있는
   // 첨부가 생기고, 그것은 재구성으로 사라진다.
   const index = await readIndex(root);
+  const before = index[hash];
+  const owners = new Set([...(before?.owners ?? (before ? [before.ownerNodeId] : [])), record.ownerNodeId]);
   index[hash] = {
-    ownerNodeId: record.ownerNodeId,
+    ownerNodeId: before?.ownerNodeId ?? record.ownerNodeId,
+    owners: [...owners],
     extension: record.extension,
     size: record.size,
-    createdAt: record.createdAt,
+    createdAt: before?.createdAt ?? record.createdAt,
   };
   await writeFile(indexPathOf(root), JSON.stringify(index, null, 2), 'utf8');
 
@@ -131,13 +144,19 @@ export async function openAttachment(
   actor: Actor,
   input: { workspaceId: string; hash: string },
 ): Promise<OpenOutcome> {
-  const record = stores.attachments.find(input.workspaceId, input.hash);
-  if (record === undefined) return { ok: false, rule: 'unknown-node' };
+  const owners = stores.attachments.ownersOf(input.workspaceId, input.hash);
+  if (owners.length === 0) return { ok: false, rule: 'unknown-node' };
 
-  const level = permissionOf(stores, actor, record.ownerNodeId);
-  if (level === null || !permits(level, 'view')) return { ok: false, rule: 'unknown-node' };
+  // 소유가 여럿인 것은 같은 바이트를 두 문서에 올렸다는 뜻이다. **그중
+  // 하나라도** 볼 수 있으면 연다 — 그 문서의 첨부는 그 문서를 볼 수 있는
+  // 사람의 것이고, 다른 문서의 존재가 그것을 막을 이유가 없다.
+  const mine = owners.find((record) => {
+    const level = permissionOf(stores, actor, record.ownerNodeId);
+    return level !== null && permits(level, 'view');
+  });
+  if (mine === undefined) return { ok: false, rule: 'unknown-node' };
 
-  const path = resourcePathOf(workspaceRootOf(stores, record.workspaceId), record.hash, record.extension);
+  const path = resourcePathOf(workspaceRootOf(stores, mine.workspaceId), mine.hash, mine.extension);
   return { ok: true, bytes: await readFile(path) };
 }
 
@@ -154,16 +173,30 @@ export async function purgeAttachmentsOf(
   const owned = stores.attachments.listOf(ownerNodeId);
   if (owned.length === 0) return;
 
+  stores.attachments.removeAllOf(ownerNodeId);
+
   for (const record of owned) {
+    // **아직 소유한 문서가 남아 있으면 실체를 걷지 않는다.** 걷으면 살아
+    // 있는 문서의 첨부가 영구히 사라지고, 사이드카가 정본이라 재구성으로도
+    // 되살아나지 않는다.
+    const remaining = stores.attachments.ownersOf(record.workspaceId, record.hash);
     const root = workspaceRootOf(stores, record.workspaceId);
-    await rm(resourcePathOf(root, record.hash, record.extension), { force: true });
 
     const index = await readIndex(root);
-    delete index[record.hash];
+    if (remaining.length === 0) {
+      await rm(resourcePathOf(root, record.hash, record.extension), { force: true });
+      delete index[record.hash];
+    } else {
+      index[record.hash] = {
+        ownerNodeId: remaining[0]!.ownerNodeId,
+        owners: remaining.map((r) => r.ownerNodeId),
+        extension: remaining[0]!.extension,
+        size: remaining[0]!.size,
+        createdAt: remaining[0]!.createdAt,
+      };
+    }
     await writeFile(indexPathOf(root), JSON.stringify(index, null, 2), 'utf8');
   }
-
-  stores.attachments.removeAllOf(ownerNodeId);
 }
 
 /** `.res/index.json` 만으로 소유 관계를 되세운다 (`REL-ATTACH-001` AC-2). */
@@ -175,6 +208,15 @@ export async function rebuildAttachmentIndex(
 
   stores.attachments.replaceAllIn(
     workspaceId,
-    Object.entries(index).map(([hash, entry]) => ({ hash, workspaceId, ...entry })),
+    Object.entries(index).flatMap(([hash, entry]) =>
+      (entry.owners ?? [entry.ownerNodeId]).map((ownerNodeId) => ({
+        hash,
+        workspaceId,
+        ownerNodeId,
+        extension: entry.extension,
+        size: entry.size,
+        createdAt: entry.createdAt,
+      })),
+    ),
   );
 }

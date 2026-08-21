@@ -31,8 +31,7 @@ export class SqliteAttachmentRepository implements AttachmentRepository {
   add(record: AttachmentRecord): void {
     this.store.run(
       `INSERT INTO attachment (${COLUMNS}) VALUES (?, ?, ?, ?, ?, ?)
-       ON CONFLICT (workspace_id, hash) DO UPDATE SET
-         owner_node_id = excluded.owner_node_id,
+       ON CONFLICT (workspace_id, hash, owner_node_id) DO UPDATE SET
          extension = excluded.extension,
          size = excluded.size,
          created_at = excluded.created_at`,
@@ -47,12 +46,13 @@ export class SqliteAttachmentRepository implements AttachmentRepository {
     );
   }
 
-  find(workspaceId: string, hash: string): AttachmentRecord | undefined {
-    const row = this.store.get<Row>(
-      `SELECT ${COLUMNS} FROM attachment WHERE workspace_id = ? AND hash = ?`,
-      [workspaceId, hash],
-    );
-    return row === undefined ? undefined : toRecord(row);
+  ownersOf(workspaceId: string, hash: string): AttachmentRecord[] {
+    return this.store
+      .all<Row>(
+        `SELECT ${COLUMNS} FROM attachment WHERE workspace_id = ? AND hash = ? ORDER BY created_at`,
+        [workspaceId, hash],
+      )
+      .map(toRecord);
   }
 
   listOf(ownerNodeId: string): AttachmentRecord[] {

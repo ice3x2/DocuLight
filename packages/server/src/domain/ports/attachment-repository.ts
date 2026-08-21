@@ -11,7 +11,14 @@ export interface AttachmentRecord {
 
 export interface AttachmentRepository {
   add(record: AttachmentRecord): void;
-  find(workspaceId: string, hash: string): AttachmentRecord | undefined;
+  /**
+   * 이 해시를 소유한 **모든** 문서의 행.
+   *
+   * 여럿인 이유는 같은 바이트를 두 문서에 올릴 수 있기 때문이다. 실체는
+   * 하나지만 소유는 문서마다다 — 하나로 접으면 마지막 업로더가 앞 문서의
+   * 소유를 덮어써서 그 문서에서 첨부가 열리지 않게 된다.
+   */
+  ownersOf(workspaceId: string, hash: string): AttachmentRecord[];
   listOf(ownerNodeId: string): AttachmentRecord[];
   removeAllOf(ownerNodeId: string): void;
   /** 캐시 재구성 — `.res/index.json` 이 정본이므로 통째로 갈아 끼우는 경로가 있다. */

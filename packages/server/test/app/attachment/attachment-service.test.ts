@@ -424,3 +424,71 @@ describe('첨부 — 이름과 해시의 경계', () => {
     expect((await openAttachment(stores, root, { workspaceId: other, hash: done.hash })).ok).toBe(false);
   });
 });
+
+describe('SEC-ATTACH-002 — 같은 바이트를 두 문서에 올려도 소유가 옮겨가지 않는다', () => {
+  let second: string;
+
+  beforeEach(async () => {
+    second = idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'file', name: '보고서.md' }));
+    await writeFile(join(docsRoot, ws, stores.nodes.pathOf(second)), '# 보고서\n', 'utf8');
+  });
+
+  it('첫 문서의 소유가 그대로 남는다', async () => {
+    await attach(root);
+    await attach(root, { nodeId: second });
+
+    // 마지막 업로더가 소유를 덮으면, 앞 문서의 첨부가 그 문서를 못 보는
+    // 사람 손에 넘어가고 앞 문서에서는 열리지 않는다.
+    expect(stores.attachments.listOf(doc)).toHaveLength(1);
+    expect(stores.attachments.listOf(second)).toHaveLength(1);
+  });
+
+  it('각 문서의 보기 권한으로 각자 열린다', async () => {
+    const done = (await attach(root)) as { ok: true; hash: string };
+    await attach(root, { nodeId: second });
+
+    grantPermission(stores, root, { nodeId: doc, principalId: me.id, level: 'view' });
+
+    // 첫 문서만 볼 수 있는 사람도 자기 문서의 첨부를 연다.
+    expect((await openAttachment(stores, actorFor(stores.principals, me.id), { workspaceId: ws, hash: done.hash })).ok).toBe(true);
+  });
+
+  it('한 문서를 영구 삭제해도 다른 문서의 첨부는 살아 있다', async () => {
+    const done = (await attach(root)) as { ok: true; hash: string };
+    await attach(root, { nodeId: second });
+    const path = resourcePathOf(join(docsRoot, ws), done.hash, 'png');
+
+    await moveToTrash(stores, root, second);
+    await purgeFromTrash(stores, root, second);
+
+    // 실체를 함께 지우면 살아 있는 문서의 첨부가 영구 소실된다.
+    expect(await readFile(path)).toEqual(PNG);
+    expect(stores.attachments.listOf(doc)).toHaveLength(1);
+  });
+
+  it('마지막 소유 문서를 지우면 그때 실체도 사라진다', async () => {
+    const done = (await attach(root)) as { ok: true; hash: string };
+    await attach(root, { nodeId: second });
+    const path = resourcePathOf(join(docsRoot, ws), done.hash, 'png');
+
+    for (const target of [second, doc]) {
+      await moveToTrash(stores, root, target);
+      await purgeFromTrash(stores, root, target);
+    }
+
+    // 아무도 소유하지 않는 실체가 남으면 아무도 걷지 않는다.
+    await expect(readFile(path)).rejects.toThrow();
+  });
+
+  it('소유가 남아 있으면 인덱스 항목도 남는다 — 재구성이 되살릴 수 있어야 한다', async () => {
+    const done = (await attach(root)) as { ok: true; hash: string };
+    await attach(root, { nodeId: second });
+
+    await moveToTrash(stores, root, second);
+    await purgeFromTrash(stores, root, second);
+    stores.attachments.removeAllOf(doc);
+    await rebuildAttachmentIndex(stores, ws);
+
+    expect(stores.attachments.listOf(doc).map((a) => a.hash)).toEqual([done.hash]);
+  });
+});

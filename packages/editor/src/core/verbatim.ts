@@ -80,7 +80,11 @@ export function insideCodeSpanAt(text: string, at: number): boolean {
  * 뒤쪽을 먹어 치워, 바로 다음에 오는 진짜 수식이 통째로 사라진다.
  */
 export function maskVerbatim(text: string): string {
-  const masked = [...text];
+  // `[...text]` 로 쪼개면 **코드 포인트** 단위가 되는데 여기 써 넣는
+  // 인덱스는 전부 **코드 유닛** 오프셋이다. 이모지가 하나만 있어도 그
+  // 뒤의 가리기가 통째로 밀려, 펜스 밖의 본문이 지워지거나 수식이 엉뚱한
+  // 원문을 렌더한다. `split('')` 은 코드 유닛으로 쪼갠다.
+  const masked = text.split('');
 
   for (const [from, to] of fencedRanges(text)) {
     for (let at = from; at < to && at < masked.length; at += 1) {

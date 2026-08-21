@@ -113,3 +113,56 @@ describe('태그와 수식이 같은 답을 낸다 — 갈리면 한쪽만 규�
     expect(findMathBlocks(EditorState.create({ doc }))).toEqual([]);
   });
 });
+
+describe('가리기 — 서로게이트 페어 (검증자 CRITICAL)', () => {
+  it('이모지가 있어도 길이가 그대로다', () => {
+    const text = '🎉\n```\n$x$ #tag\n```\n뒤';
+
+    // 코드 포인트로 쪼개면 이모지 하나가 두 코드 유닛인데 인덱스는 코드
+    // 유닛이라, 그 뒤의 마스킹이 통째로 밀린다.
+    expect(maskVerbatim(text)).toHaveLength(text.length);
+  });
+
+  it('이모지 뒤의 펜스가 제대로 가려진다', () => {
+    const masked = maskVerbatim('🎉\n```\n$x$ #tag\n```\n뒤');
+
+    expect(masked).not.toContain('$x$');
+    expect(masked).not.toContain('#tag');
+    // 펜스 **밖**의 본문이 지워지면 안 된다.
+    expect(masked).toContain('뒤');
+  });
+
+  it('이모지 뒤의 코드 스팬도 제대로 가려진다', () => {
+    const text = '🎉 `$a$` 밖';
+    const masked = maskVerbatim(text);
+
+    expect(masked).toHaveLength(text.length);
+    expect(masked).not.toContain('$a$');
+    expect(masked).toContain('밖');
+  });
+
+  it('코드블록 안의 이모지가 뒤의 수식 자리를 밀지 않는다', async () => {
+    const { findMathBlocks } = await import('../src/core/math-blocks');
+    const { EditorState } = await import('@codemirror/state');
+    const doc = '```\n🎉 #hash $x$\n```\n본문 #진짜 와 $y$ 끝';
+
+    // 자리가 밀리면 엉뚱한 원문을 엉뚱한 자리에 렌더한다.
+    expect(findMathBlocks(EditorState.create({ doc })).map((b) => b.tex)).toEqual(['y']);
+  });
+
+  it('코드 스팬 안의 이모지도 마찬가지다', async () => {
+    const { findMathBlocks } = await import('../src/core/math-blocks');
+    const { EditorState } = await import('@codemirror/state');
+    const doc = '`🎉 #hash` 본문 #진짜 와 $y$ 끝';
+
+    expect(findMathBlocks(EditorState.create({ doc })).map((b) => b.tex)).toEqual(['y']);
+  });
+
+  it('이모지가 있어도 태그 자리가 원문과 맞는다', async () => {
+    const { findTags } = await import('../src/core/tags');
+    const doc = '🎉 본문의 #회의 다';
+    const [only] = findTags(doc);
+
+    expect(doc.slice(only!.from, only!.to)).toBe('#회의');
+  });
+});
