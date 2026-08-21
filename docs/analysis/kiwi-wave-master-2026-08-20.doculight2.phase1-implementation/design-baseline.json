@@ -13,7 +13,7 @@
    "goal": "저장소에 루트 package.json 과 워크스페이스를 세우고, Express 백엔드 + Vite/React/TS SPA 를 한 Node 프로세스로 띄운다. 파일시스템(docsRoot)과 SQLite 두 저장소를 열고, 모든 노드에 경로 독립적인 랜덤 안정 ID 를 붙이며, 워크스페이스 물리 레이아웃과 사이드카·이름 검증·서빙 거부 규칙을 세운다. 최초 기동 시 기본 워크스페이스가 생긴다.",
    "source_file": "docs/spec/00.decision-log.md",
    "heading_path": "§2 확정 결정 — 모노레포 골격과 영속 기반",
-   "line_start": 212,
+   "line_start": 145,
    "line_end": 574,
    "requirement_ids": [
     "CON-ARCH-001",
@@ -34,6 +34,8 @@
     "FR-WORKSPACE-006",
     "OPS-ARCH-001",
     "OPS-STORAGE-001",
+    "REL-AUDIT-001",
+    "REL-STORAGE-001",
     "SEC-STORAGE-001",
     "SEC-STORAGE-004",
     "SEC-STORAGE-005",
@@ -43,6 +45,20 @@
     "packages/editor"
    ],
    "design_items": [
+    {
+     "id": "R139",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 145,
+     "line_end": 145,
+     "statement": "**재조정(R77 계열·R40-d)이 지목하는 `감사 목록` 은 `audit_log` 와 별개인 `재조정 대기열` 이다** — `reconciliation_finding(유형, 참조 감사 행 1..N, 해소 감사 행)`. **일어난 일의 기록은 `audit_log` 에만 두고, 대기열은 유형과 감사 행 참조만 갖는다** — **시각 · 대상 노드 · 행위자 · 해소 시각 · 해소자를 자기 칸으로 갖지 않고 전부 참조 감사 행에서 읽는다. `미해소` 는 `해소 감사 행` 이 비어 있는 상태이지 별도 칸이 아니다**"
+    },
+    {
+     "id": "R139-a",
+     "heading_path": "§2.1 UI · 에디터",
+     "line_start": 146,
+     "line_end": 146,
+     "statement": "**R77 이 만든 신규 노드는 `audit_log` 에 `생성` 1행, 대기열에 그 행을 가리키는 항목 1건이다.** 사실은 두 번 적히지 않는다"
+    },
     {
      "id": "R4",
      "heading_path": "§2.2 저장",
@@ -77,6 +93,20 @@
      "line_start": 217,
      "line_end": 217,
      "statement": "**노드 ID 는 추측 불가한 형식(UUIDv4 등 충분한 엔트로피의 랜덤 값)이어야 한다. 순차 정수를 쓰지 않는다**"
+    },
+    {
+     "id": "R77",
+     "heading_path": "§2.2 저장",
+     "line_start": 218,
+     "line_end": 218,
+     "statement": "**기동 시 및 주기적으로 파일시스템과 DB 를 전체 재조정한다.** 미등록 파일 → 신규 노드 생성(상속 적용) + **재조정 대기열**(R139) 기재. 파일이 사라진 노드 → **ACL 즉시 삭제 금지**, tombstone(`orphaned_at`) 처리 후 **재조정 대기열**"
+    },
+    {
+     "id": "R77-b",
+     "heading_path": "§2.2 저장",
+     "line_start": 220,
+     "line_end": 220,
+     "statement": "잔여 위험 — 정지 중 이동된 문서가 재조정에서 신규 노드(상속)가 되면 **일시적으로 원래보다 넓은 권한으로 보일 수 있다.** **재조정 대기열** 통지가 완화책이다(R139-f — 카테고리 미해소 건수 배지)"
     },
     {
      "id": "R35",
@@ -2419,9 +2449,7 @@
     "OBS-AUDIT-009",
     "OBS-AUDIT-010",
     "OBS-AUDIT-011",
-    "REL-AUDIT-001",
     "REL-AUDIT-002",
-    "REL-STORAGE-001",
     "REL-STORAGE-002",
     "SEC-AUDIT-001",
     "SEC-AUDIT-002",
@@ -2555,20 +2583,6 @@
      "statement": "**복사의 행위자는 두 행 모두에 기록한다.** 행위자가 원본 워크스페이스에 `보기` 만 가진 경우와 R71 로 도달한 경우에도 예외를 두지 않는다"
     },
     {
-     "id": "R139",
-     "heading_path": "§2.1 UI · 에디터",
-     "line_start": 145,
-     "line_end": 145,
-     "statement": "**재조정(R77 계열·R40-d)이 지목하는 `감사 목록` 은 `audit_log` 와 별개인 `재조정 대기열` 이다** — `reconciliation_finding(유형, 참조 감사 행 1..N, 해소 감사 행)`. **일어난 일의 기록은 `audit_log` 에만 두고, 대기열은 유형과 감사 행 참조만 갖는다** — **시각 · 대상 노드 · 행위자 · 해소 시각 · 해소자를 자기 칸으로 갖지 않고 전부 참조 감사 행에서 읽는다. `미해소` 는 `해소 감사 행` 이 비어 있는 상태이지 별도 칸이 아니다**"
-    },
-    {
-     "id": "R139-a",
-     "heading_path": "§2.1 UI · 에디터",
-     "line_start": 146,
-     "line_end": 146,
-     "statement": "**R77 이 만든 신규 노드는 `audit_log` 에 `생성` 1행, 대기열에 그 행을 가리키는 항목 1건이다.** 사실은 두 번 적히지 않는다"
-    },
-    {
      "id": "R139-b",
      "heading_path": "§2.1 UI · 에디터",
      "line_start": 147,
@@ -2688,25 +2702,11 @@
      "statement": "서버에서 파일을 직접 이동/개명하는 경우, chokidar 로 rename 을 감지해 ACL 이 따라가게 한다"
     },
     {
-     "id": "R77",
-     "heading_path": "§2.2 저장",
-     "line_start": 218,
-     "line_end": 218,
-     "statement": "**기동 시 및 주기적으로 파일시스템과 DB 를 전체 재조정한다.** 미등록 파일 → 신규 노드 생성(상속 적용) + **재조정 대기열**(R139) 기재. 파일이 사라진 노드 → **ACL 즉시 삭제 금지**, tombstone(`orphaned_at`) 처리 후 **재조정 대기열**"
-    },
-    {
      "id": "R77-a",
      "heading_path": "§2.2 저장",
      "line_start": 219,
      "line_end": 219,
      "statement": "chokidar 의 unlink+add 상관 판정은 **fail-closed** — 내용 해시가 동일하고 짧은 시간 창 안의 쌍만 동일 노드로 인정한다. **불확실하면 이식하지 않고** 신규 노드 + 구 노드 tombstone"
-    },
-    {
-     "id": "R77-b",
-     "heading_path": "§2.2 저장",
-     "line_start": 220,
-     "line_end": 220,
-     "statement": "잔여 위험 — 정지 중 이동된 문서가 재조정에서 신규 노드(상속)가 되면 **일시적으로 원래보다 넓은 권한으로 보일 수 있다.** **재조정 대기열** 통지가 완화책이다(R139-f — 카테고리 미해소 건수 배지)"
     },
     {
      "id": "R71-b",
