@@ -1,3 +1,4 @@
+import { foldCase } from './case-folding.js';
 import {
   FORBIDDEN_CHARACTERS,
   MAX_NAME_BYTES,
@@ -7,7 +8,9 @@ import {
 } from './naming-policy.js';
 import { invalid, valid, type NameValidation, type NameViolation } from './validation-result.js';
 
-const RESERVED_FOLDED = new Set(RESERVED_DEVICE_NAMES.map((n) => n.toLowerCase()));
+// 이름 비교의 정규화는 저장소에 한 함수뿐이다. 여기서 따로 소문자화하면
+// 충돌 판정과 예약어 판정이 서로 다른 규칙을 쓰게 된다.
+const RESERVED_FOLDED = new Set(RESERVED_DEVICE_NAMES.map(foldCase));
 
 const bytes = (text: string) => Buffer.byteLength(text, 'utf8');
 
@@ -65,7 +68,7 @@ export function validateNodeName(name: string, parentPath: string): NameValidati
     });
   }
 
-  if (RESERVED_FOLDED.has(deviceCandidate(name).toLowerCase())) {
+  if (RESERVED_FOLDED.has(foldCase(deviceCandidate(name)))) {
     violations.push({
       rule: 'reserved-device-name',
       message: `${deviceCandidate(name)} 은(는) 예약된 장치 이름이라 확장자를 붙여도 쓸 수 없습니다.`,

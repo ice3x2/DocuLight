@@ -31,6 +31,19 @@ export interface NodeRepository {
   findById(id: string): NodeRecord | undefined;
 
   /**
+   * 같은 부모 아래 이미 있는 이름들. 이름 충돌 판정의 입력이다
+   * (`FR-WORKSPACE-005`).
+   *
+   * 개명은 자기 자신과 겹치므로 `except` 로 뺀다 — 빼지 않으면 이름을
+   * 그대로 두는 개명이 자기와 충돌해 접미사를 받는다.
+   */
+  siblingNames(where: {
+    workspaceId: string;
+    parentId: NodeId | null;
+    except?: NodeId;
+  }): string[];
+
+  /**
    * 부모 사슬을 거슬러 경로를 만든다.
    *
    * 경로를 칸에 담지 않는 이유가 여기 있다 — 담으면 이동·개명 때 두 곳을
