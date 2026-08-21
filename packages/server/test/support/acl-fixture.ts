@@ -1,5 +1,6 @@
 import { actorFor, type Actor } from '../../src/app/acl/permission-service.js';
 import type { NodeStores } from '../../src/app/node/node-service.js';
+import type { DocumentStores } from '../../src/app/document/save-service.js';
 import type { TrashStores } from '../../src/app/trash/trash-service.js';
 import { SUPERUSER_GROUP_ID } from '../../src/domain/principal/system-groups.js';
 import { SqliteAclRepository } from '../../src/infra/sqlite/acl-repository.js';
@@ -9,6 +10,7 @@ import type { Database } from '../../src/infra/sqlite/database.js';
 import { FsTrashFiles } from '../../src/infra/fs/trash-files.js';
 import { SqliteNodeRepository } from '../../src/infra/sqlite/node-repository.js';
 import { SqliteTrashRepository } from '../../src/infra/sqlite/trash-repository.js';
+import { SqliteVersionRepository } from '../../src/infra/sqlite/version-repository.js';
 import { SqlitePrincipalRepository } from '../../src/infra/sqlite/principal-repository.js';
 import { SqliteWorkspaceRepository } from '../../src/infra/sqlite/workspace-repository.js';
 
@@ -59,5 +61,24 @@ export function trashStores(
     trash: new SqliteTrashRepository(db),
     trashFiles: new FsTrashFiles(docsRoot),
     clock,
+  };
+}
+
+/**
+ * 문서 본문 조작에 필요한 저장소까지 세운다.
+ *
+ * `docsRoot` 가 여기 드는 이유는 본문의 SSOT 가 파일시스템이기 때문이다 —
+ * 저장 서비스가 그 경로 없이는 아무것도 읽지 못한다.
+ */
+export function documentStores(
+  db: Database,
+  docsRoot: string,
+  clock: () => Date = () => new Date(),
+): DocumentStores {
+  return {
+    ...nodeStores(db),
+    versions: new SqliteVersionRepository(db),
+    clock,
+    docsRoot,
   };
 }
