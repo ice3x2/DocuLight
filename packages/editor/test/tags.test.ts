@@ -107,3 +107,39 @@ describe('FR-EDITOR-007 AC-10 — 태그로 잡으면 안 되는 것들', () => 
     expect(names('- 목록\n  ```\n  #해시\n  ```')).toEqual([]);
   });
 });
+
+describe('FR-EDITOR-007 AC-10 — 검증자 탐침이 짚은 축', () => {
+  it('URL 의 fragment 는 태그가 아니다', () => {
+    expect(names('see http://x/#y here')).toEqual([]);
+    expect(names('see http://x.com#y here')).toEqual([]);
+  });
+
+  it('16진수처럼 보이는 것도 태그다 — 옵시디언과 같게 둔다', () => {
+    // 검증자가 `color: #fff` 를 오탐으로 짚었지만, 옵시디언은 그것을
+    // 태그로 본다. 요구가 옵시디언 동일성을 말하므로 여기서 갈라서면
+    // 그 요구를 어긴다 — 그리고 CSS 는 대개 코드블록 안에 있고 그 자리는
+    // 이미 원문으로 남는다.
+    expect(names('color: #fff;')).toEqual(['fff']);
+    expect(names('#abc')).toEqual(['abc']);
+  });
+
+  it('닫는 `---` 이 있어도 그 앞이 프론트매터가 아니면 본문이다', () => {
+    // `---\nhello #a\n---\nworld #b` 는 첫 줄이 `---` 이므로 프론트매터로
+    // 읽히고, 그 안의 `#a` 는 빠진다. 이것이 의도다.
+    expect(names('---\nhello #a\n---\nworld #b')).toEqual(['b']);
+  });
+
+  it('닫히지 않은 프론트매터는 본문이다', () => {
+    expect(names('---\nhello #a')).toEqual(['a']);
+  });
+
+  it('`#Title` 은 태그다 — 헤딩은 뒤에 공백이 온다', () => {
+    expect(names('#Title')).toEqual(['Title']);
+    expect(names('# Title')).toEqual([]);
+    expect(names('## Title')).toEqual([]);
+  });
+
+  it('`#C 언어` 처럼 한 글자 태그도 잡는다', () => {
+    expect(names('#C 언어')).toEqual(['C']);
+  });
+});

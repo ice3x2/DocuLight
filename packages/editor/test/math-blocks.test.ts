@@ -109,3 +109,39 @@ describe('FR-EDITOR-007 AC-8 — 수식으로 잡으면 안 되는 것들', () =
     expect(found('$a\nb$')).toEqual([]);
   });
 });
+
+describe('FR-EDITOR-007 AC-8 — 금액 표기가 수식이 되지 않는다', () => {
+  // 검증자 탐침이 찾은 부류다. 하나라도 통과시키면 가격을 적은 문장이
+  // 통째로 사라지고, 그 사실은 그 문서를 열 때까지 드러나지 않는다.
+  const MONEY = [
+    '가격은 $5-$10 입니다',
+    'costs $100-$200 total',
+    '$5와$10',
+    '$5~$10',
+    '$5/$10',
+    '$5+$10',
+    '($5) and ($10)',
+    'USD$50 vs USD$60',
+    '비용 $1,000, $2,000 입니다',
+    '$5 와 $10',
+    '$5 dollars and $10 dollars',
+  ];
+
+  for (const doc of MONEY) {
+    it(`\`${doc}\` 는 수식이 아니다`, () => {
+      expect(found(doc)).toEqual([]);
+    });
+  }
+
+  it('셸 변수 나열도 수식이 아니다', () => {
+    expect(found('echo $A$B')).toEqual([]);
+    expect(found('run $HOME/bin and $PATH/x')).toEqual([]);
+  });
+
+  it('그래도 진짜 수식은 그대로 잡는다 — 다 막으면 기능이 없는 것과 같다', () => {
+    expect(found('문장 안의 $a^2$ 수식').map((b) => b.tex)).toEqual(['a^2']);
+    expect(found('$x$').map((b) => b.tex)).toEqual(['x']);
+    expect(found('($x$)').map((b) => b.tex)).toEqual(['x']);
+    expect(found('$2x + 1$ 을 풀어라').map((b) => b.tex)).toEqual(['2x + 1']);
+  });
+});
