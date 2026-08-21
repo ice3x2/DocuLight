@@ -2,70 +2,88 @@
 
 | Field | Value |
 | --- | --- |
-| 작성일 | 2026-08-21 |
+| 작성일 | 2026-08-21 (2차 갱신) |
 | 저장소 / 브랜치 | `C:\Work\git\DocuLight2.0` / `master` |
-| 최종 작업 목표 | Phase 1 요구사항 250건을 9개 wave 로 나눠 전건 구현하고, 원장 §4 수용 기준 13개와 wave 9개 완주를 **둘 다** 통과시킨다 |
-| 현재 상태 | **wave-1 계획 확정·검증 완료 · 코드 미착수.** 분해·설계 기준선·저널 완료 |
+| 최종 작업 목표 | **wave 9개를 끝까지 완주해 완성된 제품을 만든다.** Phase 1 요구사항 250건 전건 구현 |
+| 현재 상태 | **wave-1 의 9개 Phase 중 3개 완료 · 53 Task 중 15개 완료.** 코드가 돌고 있다 |
 | SSOT | `C:\Work\git\DocuLight2.0\docs\spec\00.decision-log.md` (요구사항 원장) · `C:\Work\git\DocuLight2.0\kiwi\waves.jsonl` (wave 진행) |
-| 다음 세션 첫 행동 | 계획 검증이 낸 **HIGH 3** 을 처분한 뒤 `T-PH001-01` 부터 구현에 들어간다 |
+| 다음 세션 첫 행동 | **`T-PH004-01` 부터.** 노드 ID 발급 red 테스트를 쓰고 red 를 확인한 뒤 green |
 
-> 이 문서는 다음 세션이 **이 문서와 SSOT 만 읽고** 이어갈 수 있도록 정리한 것이다. 대화 히스토리에 의존하지 말 것.
+> 이 문서는 다음 세션이 **이 문서와 여기서 가리키는 문서만 읽고** 이어갈 수 있도록 정리한 것이다.
+> 대화 히스토리에 의존하지 말 것.
 
 ---
 
 ## 0. 다음 세션의 첫 행동
 
 1. 이 문서를 끝까지 읽는다.
-2. `C:\Work\git\DocuLight2.0\docs\next\03.wave-decision-gate.md` 를 읽는다 — 분해 결과와 확정된 결정이 거기 있다.
-3. `git status --porcelain` 으로 워킹트리가 §3 과 일치하는지 확인한다.
-4. `kiwi/waves.jsonl` 의 마지막 줄로 재개 지점을 확인한다. **`wave-1` / `in_progress` / `phase=pipeline`** 이면 §8 대로 이어간다.
-5. `C:\Work\git\DocuLight2.0\docs\analysis\kiwi-planner-2026-08-20.doculight2.wave-1\eval.md` 를 읽는다 — 계획 검증 결과(**CRITICAL 0 · HIGH 3 · MEDIUM 7 · LOW 5**)가 다음 작업의 출발점이다.
-6. §8-1 부터 시작 — HIGH 3 을 처분한다.
+2. `git status --porcelain` 과 `git log --oneline -5` 로 §3 과 실제가 일치하는지 확인한다.
+3. **`export NODE_ENV=development`** 를 먼저 한다 — §9 의 함정 ①이다.
+4. `npm test` 로 기준선을 확인한다 → **editor 9파일 102 passed · server 4파일 17 passed · exit 0**.
+5. 계획의 `T-PH004-01` 명세를 읽는다:
+   ```
+   node -e "const s=require('./docs/plans/2026-08-20.doculight2.wave-1.sidecar.json');const t=s.tasks.find(x=>x.id==='T-PH004-01');console.log(JSON.stringify(t,null,1))"
+   ```
+6. **red 를 먼저 쓰고 러너로 red 를 확인한 뒤** green 을 만든다. 이 순서를 지킨다.
 
 ---
 
 ## 1. 최종 작업 목표
 
-DocuLight 2.0 의 **Phase 1 을 구현해 끝낸다.** 요구사항 250건이 `phase-1` target 에 저작돼 있고(전건 `planned`/`blocked`, 구현 0건), 이것을 9개 wave 로 나눠 순차 완주한다.
+**DocuLight 2.0 의 Phase 1 을 완주해 제품을 만든다.**
+
+옵시디언의 편집·열람 경험을 웹으로 옮기고, 옵시디언에 없는 사용자·그룹 접근제어를 더한
+사내 문서 시스템이다. 사내 단일 인스턴스 · 수백~수천 명 · 데스크탑 전용.
 
 **완료 조건은 이중 게이트다** (사용자 결정 · `constraints-2.json` C-22):
 
 1. 원장 §4 **수용 기준 13개** 전건 통과
 2. **wave 9개** 전건 완주
 
-둘 다 요구하는 이유 — 확인 등급 wave(33건)는 수용 기준 13개 중 어느 것도 닫지 않는다. 수용 기준만으로 판정하면 33건이 미구현으로 남은 채 「완료」가 된다. 원장 §4 서두도 인증 축에 같은 구멍을 〔판정 필요〕로 열어 두었다.
+둘 다 요구하는 이유 — 확인 등급 wave(33건)는 수용 기준 13개 중 어느 것도 닫지 않는다.
+수용 기준만으로 판정하면 33건이 미구현으로 남은 채 「완료」가 된다.
 
 ---
 
 ## 2. 현재까지 완료한 작업
 
-- [x] **Preflight** — MCP workspace root ↔ git root 일치 확인. work-mode `sdd`. 위험 옵션(`--wt`·`--skip-regression`) 요청 없음
-- [x] **회귀 기준선 pin** — `npm test` (in `C:\Work\git\DocuLight2.0\packages\editor`, 2026-08-20 실행) → exit 0, 2파일 27 PASS, `failing_tests=[]`
-- [x] **wave 분해** — 독립 담당자 3인이 서로 보지 못한 채 각자 분해. 셋 다 독립으로 9 wave 를 골랐고 배정 검사(250/250 · 미배정 0 · 중복 0 · 수용 기준 13개 전량)를 전건 통과. 묶음 일치도(Rand) A-B 91.9% · A-C 95.3% · B-C 92.7% 로 C 가 중심이라 C 채택 — `C:\Work\git\DocuLight2.0\docs\analysis\kiwi-wave-master-2026-08-20.doculight2.phase1-implementation\wave-assignment.json`
-- [x] **설계 기준선 물질화** — 원장 조항 350행 전량 배정, 커버리지 게이트 PASS (329 wave 배정 + 6 교차 + 15 범위 밖 = 350) — `...\design-baseline.json`
-- [x] **조항→요구사항 추적 실측** — 살아 있는 조항 346건 전부가 요구사항으로 번역됨(미매핑 0), 역방향으로 원장 추적 없는 요구사항 0건, 존재하지 않는 조항 참조 0건 — `...\clause-requirement-map.json`
-- [x] **저널 개설** — `C:\Work\git\DocuLight2.0\kiwi\waves.jsonl` (wave-1 의 `srs-authoring` → `pipeline` 이벤트 3줄)
-- [x] **원장 `R33-a` 스윕 완결** — 커밋 `192a9ea`, 그 서술 결함 수정 `5d90ac3`
-- [x] **wave-1 구현 가능성 판정 + 독립 검증** — 검증이 CRITICAL 1 · HIGH 4 · MEDIUM 5 · LOW 6 을 냈고 전건 처분 — `...\docs\analysis\kiwi-srs-feasibility-2026-08-20.doculight2.wave-1\report.md` · `verify.md`
-- [x] **depends_on 전수 검사** — Requirement trace 간선 264개 중 순서 위반 4건 적발. wave-1 의 2건은 경계 수정으로 닫음(커밋 `0c1a3cf`), wave-4 의 2건은 그 wave 착수 전 판정으로 남김
-- [x] **wave-1 계획** — 9 Phase · 55 Task · AC 118개 중 커버 111 · 유예 7 (커밋 `0637c1e`) — `C:\Work\git\DocuLight2.0\docs\plans\2026-08-20.doculight2.wave-1.plan.md`
-- [x] **계획 스키마 정합화** — `validator.mjs` 실행(2026-08-21) 결과 errors **6 → 2**. 남은 둘은 계획 결함이 아니다: `R01` 은 validator 가 자기 run_id 에 `kiwi-planner-` 접두를 붙여 41자가 된 파생 부작용(사이드카의 `run_id` 28자는 정규식 만족), `C15` 는 `mcp_call_log` 가 설계상 빈 배열이라 나는 것으로 뒤 단계가 채운다
-- [x] **계획 독립 검증** — **CRITICAL 0 · HIGH 3 · MEDIUM 7 · LOW 5** — `C:\Work\git\DocuLight2.0\docs\analysis\kiwi-planner-2026-08-20.doculight2.wave-1\eval.md`. 검증자가 *"팀 리드가 지목한 `R139` 위반은 없다 — 계획은 참조 감사 행을 nullable 로 만들지 않았고 세 자리에서 NOT NULL 을 명시적으로 못 박았다"* 고 판정
+### 2.1 준비 단계 (문서·계획)
 
-> **코드는 한 줄도 쓰지 않았다.** 이번 세션 산출물은 전부 문서·계획·저널이다.
+- [x] **wave 분해** — 독립 담당자 3인이 서로 보지 못한 채 각자 분해. 셋 다 독립으로 **9 wave** 를 골랐고 배정 검사(250/250 · 미배정 0 · 중복 0 · 수용 기준 13개 전량)를 전건 통과. 묶음 일치도(Rand) A-B 91.9% · A-C 95.3% · B-C 92.7% 로 C 가 중심이라 C 채택 — `docs/analysis/kiwi-wave-master-2026-08-20.doculight2.phase1-implementation/wave-assignment.json`
+- [x] **설계 기준선** — 원장 조항 350행 전량 배정, 커버리지 게이트 PASS (329 + 6 + 15 = 350)
+- [x] **조항→요구사항 추적 실측** — 살아 있는 조항 346건 전부 매핑(미매핑 0), 역방향 누락 0
+- [x] **원장 `R33-a` 스윕 완결** — 커밋 `192a9ea` · 그 서술 결함 수정 `5d90ac3`
+- [x] **wave-1 feasibility + 독립 검증** — CRITICAL 1 · HIGH 4 · MEDIUM 5 · LOW 6 전건 처분
+- [x] **depends_on 전수 검사** — trace 간선 264개 중 순서 위반 4건 적발. wave-1 의 2건 수정(`0c1a3cf`), wave-4 의 2건은 그 wave 착수 전 판정으로 남김
+- [x] **wave-1 계획** — 9 Phase · **53 Task** · AC 118개 중 커버 111 · 유예 7 (`0637c1e`)
+- [x] **계획 독립 검증 + HIGH 3 처분** — `5a541b2`
 
-> **수치 대조 실측** (2026-08-21) — 위 수치 전건을 스크립트로 재확인했다: wave 9 · 요구사항 250 · wave-1 24건 · 원장 조항 350행 · 커버리지 329+6+15=350 · 살아 있는 조항 346 전건 매핑(미매핑 0) · 원장 추적 없는 요구사항 0 · AC 118 · Phase 9 · Task 55 · 유예 7 · trace 간선 264 · 커밋 7개 실존 · `vite.config.ts:15` 가 `include: ['test/**/*.test.{ts,tsx}'],`.
+### 2.2 구현 (코드)
+
+- [x] **PH-001 모노레포 골격** (6 Task) — 커밋 `f385556` · `d8725f7`
+  - 루트 `package.json` + npm workspaces · `tsconfig.base.json`
+  - **잠자던 vendor 테스트를 켰다** — 파일 2→9, 케이스 27→**102**, 실패 0
+  - `packages/server` (Express) · `packages/web` (Vite+React+TS SPA, 포트 3399) 스캐폴드
+- [x] **PH-002 착수 전 결정 확정** (3 Task) — 커밋 `1dfb045`
+  - `FR-WORKSPACE-004` 세 값 + 예약어 전량을 MCP 로 요구사항에 기록
+  - `CON-WORKSPACE-001` 을 **계층의 종류 제한**으로 판정 (깊이 상한이 아니다)
+  - `R139` 계열 **8행 전수** 대조로 재조정 대기열 계약 확정
+- [x] **PH-003 영속 기반** (6 Task) — 커밋 `c4ac5c4`
+  - SQLite 단일 메타데이터 저장소 (WAL + 외래키 강제) · 마이그레이션 러너
+  - 재조정 대기열 (`reconciliation_finding` + 참조 테이블) · 감사 로그 최소형
+  - `docsRoot` 문서 본문 저장소 (경로 탈출 fail-closed)
+  - 포트 넷을 도메인이 소유 — **도메인이 인프라를 import 하는 자리 0건**
+
+> **검증 (2026-08-21 실행)** — `npm run typecheck` 세 패키지 전건 exit 0 ·
+> `npm test` editor 9파일 **102 passed** + server 4파일 **17 passed** · exit 0.
 
 ---
 
 ## 3. 현재 워킹트리·저장소 상태
 
-- 브랜치 `master`. 원격 `origin` = `B:/work/git/DocuLight2.0.git` (로컬 백업). 커밋 `8870bc2` 까지 push 완료
-- 미커밋 (2026-08-21 시점):
-  - `docs/plans/2026-08-20.doculight2.wave-1.plan.md` · `.sidecar.json` (수정 — 스키마 정합화)
-  - `docs/plans/2026-08-20.doculight2.wave-1.validator.json` (수정 — errors 2)
-  - `docs/analysis/kiwi-planner-2026-08-20.doculight2.wave-1/eval.md` (수정 — 검증 완료)
-- **판단**: 위를 먼저 커밋하고 시작하라. **`git status --porcelain` 을 직접 읽어 실제와 대조하라** — 이 목록은 작성 시점의 스냅샷이라 반드시 낡는다
+- 브랜치 `master`. 원격 `origin` = `B:/work/git/DocuLight2.0.git` (로컬 백업). **커밋 `c4ac5c4` 까지 push 완료**
+- 미커밋: `kiwi/.status.json` (speckiwi 가 자동 갱신하는 지문 파일) 하나뿐
+- **`git status --porcelain` 을 직접 읽어 실제와 대조하라** — 이 목록은 작성 시점 스냅샷이라 반드시 낡는다
 
 ---
 
@@ -74,121 +92,172 @@ DocuLight 2.0 의 **Phase 1 을 구현해 끝낸다.** 요구사항 250건이 `p
 | 문서 | 절대경로 | 역할 |
 | --- | --- | --- |
 | **원장 (SSOT)** | `C:\Work\git\DocuLight2.0\docs\spec\00.decision-log.md` | 요구사항의 진실. 조항 350행 · §4 수용 기준 13개 |
-| **wave 저널** | `C:\Work\git\DocuLight2.0\kiwi\waves.jsonl` | 재개 지점. 마지막 줄이 현재 위치 |
-| **분해 결과** | `C:\Work\git\DocuLight2.0\docs\next\03.wave-decision-gate.md` | 9 wave 구성 · 확정 결정 · 3인 수렴 지점 |
-| **wave 배정** | `C:\Work\git\DocuLight2.0\docs\analysis\kiwi-wave-master-2026-08-20.doculight2.phase1-implementation\wave-assignment.json` | 요구사항 250건의 wave 배정 · `dependency_audit` |
-| **설계 기준선** | `...\design-baseline.json` · `...\design-baseline\wave-{1..9}.md` | wave 별 원장 조항 발췌 |
-| **선언 제약** | `...\constraints-2.json` | 사용자 제약 23건 (C-01~C-23). **최신 아티팩트는 이것** |
-| wave-1 판정 | `C:\Work\git\DocuLight2.0\docs\analysis\kiwi-srs-feasibility-2026-08-20.doculight2.wave-1\report.md` | 구현 가능성 · 값 권장 · 열린 자리 |
-| wave-1 판정 검증 | `...\verify.md` | 위 판정의 독립 검증 (전건 처분됨) |
-| **wave-1 계획** | `C:\Work\git\DocuLight2.0\docs\plans\2026-08-20.doculight2.wave-1.plan.md` | 9 Phase · 55 Task |
-| wave-1 사이드카 | `C:\Work\git\DocuLight2.0\docs\plans\2026-08-20.doculight2.wave-1.sidecar.json` | 기계 판독용. **스키마 수정 필요 (§8-1)** |
-| validator 결과 | `C:\Work\git\DocuLight2.0\docs\plans\2026-08-20.doculight2.wave-1.validator.json` | errors 6 · warnings 1 |
+| **wave 저널** | `C:\Work\git\DocuLight2.0\kiwi\waves.jsonl` | 재개 지점 |
+| **wave-1 계획** | `C:\Work\git\DocuLight2.0\docs\plans\2026-08-20.doculight2.wave-1.plan.md` | 9 Phase · 53 Task 사람이 읽는 판 |
+| **wave-1 사이드카** | `C:\Work\git\DocuLight2.0\docs\plans\2026-08-20.doculight2.wave-1.sidecar.json` | **기계 판독용. Task 명세·AC 커버리지·TDD test_case 가 여기 있다** |
+| 계획 검증 | `C:\Work\git\DocuLight2.0\docs\analysis\kiwi-planner-2026-08-20.doculight2.wave-1\eval.md` | CRITICAL 0 · HIGH 3(처분됨) · MEDIUM 7 · LOW 5 |
+| 처분 기록 | `...\kiwi-planner-2026-08-20.doculight2.wave-1\notes.md` | HIGH·MEDIUM·LOW 각각의 고침/기각 사유 |
+| **계층 판정** | `...\kiwi-planner-2026-08-20.doculight2.wave-1\T-PH002-02-hierarchy-review.md` | `CON-WORKSPACE-001` 판정 — **구현 전에 읽어라** |
+| **대기열 계약** | `...\kiwi-planner-2026-08-20.doculight2.wave-1\T-PH002-03-queue-contract.md` | `R139` 8행 대조 · 금지 칸 8개 |
+| wave 배정 | `...\kiwi-wave-master-2026-08-20.doculight2.phase1-implementation\wave-assignment.json` | 9 wave · 250건 · `dependency_audit` |
+| **선언 제약** | `...\kiwi-wave-master-2026-08-20.doculight2.phase1-implementation\constraints-2.json` | 사용자 제약 23건 (C-01~C-23). **최신 아티팩트** |
 | 프로젝트 전반 | `C:\Work\git\DocuLight2.0\docs\next\00.handoff.md` | 작업 방식 제약 · 과거 실패 유형 |
 
-**수정 대상 코드**: 현재 없음 — wave-1 이 만들 것은 전부 신규다. 기존 코드는 `C:\Work\git\DocuLight2.0\packages\editor` 하나뿐이고 **`src/**` 는 이 wave 에서 건드리지 않는다**(빌드 배선만).
+### 코드 (현재 존재하는 것)
 
-**validator 실행 명령** (복붙 가능):
 ```
-cd /c/Work/git/DocuLight2.0 && node /c/Users/beom/.claude/skills/kiwi-planner/validator.mjs \
-  docs/plans/2026-08-20.doculight2.wave-1.plan.md \
-  docs/plans/2026-08-20.doculight2.wave-1.sidecar.json \
-  --target phase-1 \
-  --inventory-file docs/analysis/kiwi-planner-2026-08-20.doculight2.wave-1/inventory.json \
-  --out docs/plans/2026-08-20.doculight2.wave-1.validator.json
+C:\Work\git\DocuLight2.0\
+  package.json                  루트 workspaces + happy-dom (§9 함정 ②)
+  tsconfig.base.json            공통 컴파일러 옵션
+  packages/editor/              CodeMirror 6 에디터 (기존 · src 는 wave-5 소유)
+  packages/server/
+    src/domain/ports/           MetadataStore · DocumentStore · AuditSink · FindingQueue
+    src/infra/sqlite/           database.ts · migration-runner.ts · migrations/*.sql
+                                audit-log-repository.ts · finding-queue-repository.ts
+    src/infra/fs/               document-store.ts
+    src/config/config.ts        docsRoot · databaseFile · port
+    src/main.ts                 createApp / startServer (분리돼 있다)
+    test/                       17 tests
+  packages/web/                 Vite + React SPA (포트 3399, /api → 3400 프록시)
 ```
+
+**요구사항 조회**: `npx speckiwi show <REQ-ID> --json`
 
 ---
 
 ## 5. 확정된 결정 (변경 금지)
 
-1. **wave 구성**: 9개로 확정. 순서는 골격 → ACL 판정 코어 → 인증 → 셸 → 본문 → 찾기 → 권한 관리 → 확인 등급 → 감사. (근거: 독립 3인이 각자 9를 골랐고 위치별로도 C 가 다수)
-2. **범위 밖 15건**: Phase 2 조항 11 + 취소선 4 를 이 run 에서 구현하지 않음. 사용자 승인 완료.
-3. **1.0 PM2 배포 구성**: 파일로 **복사하지 않는다.** 읽기 전용 참고에 그치고 구성은 2.0 용으로 신규 작성. (`constraints-2.json` C-21 · 원장 `R33-a` 개정 반영 완료)
-4. **Phase 1 종료 판정**: **이중 게이트** — 수용 기준 13개 전건 통과 **그리고** wave 9개 전건 완주. (C-22)
-5. **wave target 이름**: `wave-{n}` 전용 target 을 만들지 않고 `phase-1` 안에서 요구사항 ID 부분집합으로 한정. (근거: 재저작은 `CON-ARCH-008`(한 사실은 한 곳에) 위반이며 그것이 Phase 1 요구사항 자신이다. C-23)
-6. **결정 게이트 처리**: 앞으로 사용자 결정 게이트가 나오면 **묻지 않고 권장안을 선택해 진행**한다. 게이트 자체는 기록하고 도큐라이트로 보여주되 답을 기다리며 멈추지 않는다. (사용자 지시 2026-08-20 · C-20)
-7. **`CON-WORKSPACE-001` 판정**: 경로 **깊이 상한이 아니다.** 계층의 **종류**를 닫은 조항이다. (근거: AC 셋이 전부 *"중간 계층이 존재하지 않는다"* 형태이고 `Verification Method` 가 `review`. 깊이로 읽어 거부하면 옵시디언 볼트가 열리지 않아 `R1`·`R3` 을 깬다)
-8. **`R139` 대기열**: 참조 감사 행을 **nullable 로 만들지 않는다.** (근거: 시각·대상 노드·행위자·해소 시각·해소자의 유일한 출처가 그 참조이고, `R139-a` 는 참조 존재 자체를 `R124` 무위반의 조건으로 든다)
-9. **wave-1 경계**: `REL-STORAGE-001`(R77 재조정)·`REL-AUDIT-001`(R139 대기열)을 wave-9 에서 wave-1 로 이동. 22 → 24건. (근거: `SEC-STORAGE-006`·`OPS-STORAGE-001` 이 `depends_on` 으로 걸려 있고 `SEC-STORAGE-006` AC-3 이 재조정 없이는 원리적으로 통과 불가)
+1. **wave 구성**: 9개. 순서는 골격 → ACL 판정 코어 → 인증 → 셸 → 본문 → 찾기 → 권한 관리 → 확인 등급 → 감사
+2. **범위 밖 15건**: Phase 2 조항 11 + 취소선 4 를 이 run 에서 구현하지 않음. 사용자 승인 완료
+3. **1.0 PM2 배포 구성**: 파일로 **복사하지 않는다.** 읽기 전용 참고만 (C-21)
+4. **Phase 1 종료 판정**: **이중 게이트** — 수용 기준 13개 **그리고** wave 9개 (C-22)
+5. **wave target**: `wave-{n}` 전용 target 을 만들지 않고 `phase-1` 안에서 ID 부분집합으로 한정 (근거: 재저작은 `CON-ARCH-008` 위반이며 그것이 Phase 1 요구사항 자신이다. C-23)
+6. **결정 게이트**: 사용자에게 묻지 않고 **권장안을 선택해 진행**한다. 게이트는 기록하되 답을 기다리지 않는다 (C-20)
+7. **`CON-WORKSPACE-001`**: 경로 **깊이 상한이 아니다.** 계층의 **종류**를 닫은 조항이다. 깊이로 읽어 거부하면 옵시디언 볼트가 열리지 않아 `R1`·`R3` 을 깬다
+8. **`R139` 대기열**: 참조 감사 행을 **nullable 로 만들지 않는다.** 금지 칸 8개 (계약 문서 참조)
+9. **`FR-WORKSPACE-004` 세 값**: 금지 문자 = Win32 예약 문자 9 + 제어문자 + 말단 공백·마침표 / 최대 이름 길이 = **UTF-8 255바이트** / 경로 총길이 = **워크스페이스 루트 기준 상대 255**
+10. **예약어 전량**: `CON`·`PRN`·`AUX`·`NUL`·`COM1~9`·**`COM¹²³`**·`LPT1~9`·**`LPT¹²³`**. 판정은 **확장자를 뗀 basename 에 대소문자 무시**
+11. **아키텍처**: 도메인이 포트를 소유하고 인프라가 구현한다. **도메인은 `better-sqlite3`·`node:fs`·`express` 를 import 하지 않는다**
+12. **server 진입점**: `createApp`(리스너 안 염) / `startServer`(엶) 분리. 뒤 Task 가 포트 없이 라우트를 시험할 수 있어야 한다
 
 ---
 
 ## 6. 미결정·유예 항목
 
-- **`FR-WORKSPACE-004` 의 경로 총길이 상한** — 초판이 `CON-WORKSPACE-001` 을 깊이 상한으로 오독해 255 를 정당화했는데 그 근거가 철회됐다. 금지 문자 집합과 최대 이름 길이(UTF-8 255바이트)는 권장값이 나와 있다. 결정 방법: 계획의 `T-PH002-01` 에서 확정하고 근거를 요구사항에 기록
-- **`OPS-STORAGE-001` 의 검증 방법** — 백업을 `docsRoot`+DB 동일 시점으로 묶는 운영 요건이라 자동 테스트로 닫히지 않는다. 결정 방법: 문서화로 닫을지 스크립트로 닫을지 선택
-- **비-ASCII 케이스 폴딩** — 터키어 `ı`/`I` 등에서 폴딩 규칙이 갈린다. 원장에 규정 없음. 한글은 대소문자가 없어 영향 없음. 결정 방법: 로케일 독립 Unicode default case folding 채택 여부
-- **wave-4 의 depends_on 위반 2건** — `FR-SHELL-004` → `SEC-WORKSPACE-004`(wave-6), `FR-WORKSPACE-003` → `FR-WORKSPACE-002`(wave-6). 결정 방법: wave-4 착수 전에 각각이 구현 의존인지 범위 경계 참조인지 판정
-- **유예 AC 7건** — 전부 다른 scope 가 소유. `docs/plans/...sidecar.json` 의 `deferred_ac[]` 에 사유가 건마다 있다
+- **`OPS-STORAGE-001` 검증 방법** — 백업 운영 요건이라 자동 테스트로 닫히지 않는다. 문서화/스크립트 택일. **PH-008 에서 결정**
+- **비-ASCII 케이스 폴딩** — 터키어 `ı`/`I` 등. 원장에 규정 없음. 한글은 영향 없음. **PH-004(`T-PH004-07/08`)에서 로케일 독립 Unicode default case folding 채택 여부 결정**
+- **wave-4 의 depends_on 위반 2건** — `FR-SHELL-004` → `SEC-WORKSPACE-004`(wave-6), `FR-WORKSPACE-003` → `FR-WORKSPACE-002`(wave-6). **wave-4 착수 전** 각각이 구현 의존인지 범위 경계 참조인지 판정
+- **유예 AC 7건** — 사이드카 `deferred_ac[]` 에 사유가 건마다 있다
+- **`FR-SHELL-011` `Stability=draft`** — `CLAUDE.md` 가 구현 전 중단을 요구. **wave-6 착수 전** evolving 이상으로 올리거나 override
+- **`G36` ③ 검색 결과 상한** — 「거른 뒤」인지 「거르기 전」인지가 존재 오라클 여부를 가른다. **wave-6 착수 전.** 「거르기 전 N건」을 기본으로 구현하지 마라
+- **`G14` 화면 최신성** — 갱신 계기 미확정. **wave-4 에서 한 번 정하고 wave-6 이 재사용**
 
 ---
 
 ## 7. 남은 작업 전체 목록
 
-- [x] **wave-1 계획의 validator errors 를 0 으로** — R01·C15 를 제외한 errors 0 달성 (2026-08-21)
-- [x] **wave-1 계획 독립 검증** — CRITICAL 0 · HIGH 3 · MEDIUM 7 · LOW 5 (2026-08-21)
-- [ ] **계획 검증의 HIGH 3 처분** — 완료 조건: 셋 각각 고치거나 사유와 함께 기각
-- [ ] **wave-1 구현** — 완료 조건: 55 Task 완주 + 요구사항 24건의 AC 111개(118 − 유예 7) 통과 (의존성: 위)
-- [ ] **wave-1 종료 상호검증** — 완료 조건: 검증자 2기 교차반박 통과 후 `waves.jsonl` 에 `complete` 기록 (의존성: 위)
-- [ ] **wave-2 ~ wave-9** — 각 wave 마다 feasibility → 계획 → 구현 → 종료 검증 (의존성: 앞 wave 의 `complete`)
-- [ ] **run 창 종료 리뷰** — 마지막 wave 완료 뒤, run 전체 커밋 창을 1회 리뷰
-- [ ] **전체 wave 최종 검증** — 완료 조건: 설계 기준선 전체 + 교차 항목 6개 대비 최종 패스 통과
-- [ ] **Phase 1 종료 판정** — 완료 조건: 수용 기준 13개 **그리고** wave 9개 (§5-4 이중 게이트)
+### 7.1 wave-1 — 38 Task 남음 (53 중 15 완료)
+
+- [x] **PH-001** 모노레포 골격과 빌드 배선 (6)
+- [x] **PH-002** 착수 전 결정 확정 (3)
+- [x] **PH-003** 영속 기반 — SQLite 와 docsRoot (6)
+- [ ] **PH-004** 노드 ID 와 이름 규칙 (**12**) — 아래 §8 이 상세
+- [ ] **PH-005** 워크스페이스 계층·레이아웃·초기 상태 (8)
+- [ ] **PH-006** 재조정과 대기열 연동 (6)
+- [ ] **PH-007** 서빙 — 단일 프로세스와 fail-closed (4)
+- [ ] **PH-008** 운영 구성과 런북 (2)
+- [ ] **PH-009** 규약 검토와 정합성 판정 (6)
+- [ ] **wave-1 종료 상호검증** — 검증자 2기 교차반박 통과 후 `waves.jsonl` 에 `complete`
+
+### 7.2 wave-2 ~ wave-9 — 226건
+
+각 wave 마다 **feasibility → 계획 → 구현 → 종료 검증** 사이클을 돈다.
+
+| wave | 이름 | 요구 |
+|---|---|---:|
+| 2 | 주체와 ACL 판정 코어 (헤드리스 도메인) | 31 |
+| 3 | 인증·세션·PAT·설치 마법사 | 25 |
+| 4 | 셸 골격과 노드 조작 — 트리·탭·설정 모달·휴지통 | 24 |
+| 5 | 본문 표면 — 에디터·자동 저장·버전·충돌·첨부 | 35 |
+| 6 | 찾기 계열 — 링크·백링크·태그·전역 검색·MCP | 18 |
+| 7 | 권한·주체 관리 화면과 이동·복사 | 26 |
+| 8 | 확인 등급 — 파괴적 조작 앞의 마찰 | 33 |
+| 9 | 감사 기록·재조정 대기열·1.0 컷오버 | 34 |
+
+### 7.3 마무리
+
+- [ ] **run 창 종료 리뷰** — 마지막 wave 완료 뒤 run 전체 커밋 창을 1회 리뷰
+- [ ] **전체 wave 최종 검증** — 설계 기준선 전체 + 교차 항목 6개 대비
+- [ ] **Phase 1 종료 판정** — 수용 기준 13개 **그리고** wave 9개 (§5-4)
 
 ---
 
-## 8. 다음 세션 지시서
+## 8. 다음 세션 지시서 — PH-004 (12 Task)
 
-1. **미커밋을 커밋한다** → 검증: `git status --porcelain` 이 빔
-2. **계획 검증의 HIGH 3 을 처분한다** (`eval.md` §종합 판정) → 검증: 셋 각각에 대해 「고침」 또는 「기각 + 사유」가 기록됨
-   - **H-1** — `CON-ARCH-002` AC-7 이 covered 가 아니라 deferred 여야 한다. 계획이 §6.1 에서 스스로 선언한 covered/deferred 판정 규칙을 그 자리에서 어겼다
-   - **H-2** — `CON-ARCH-003` AC-4 의 유예 사유가 사실과 다르고 **mermaid 축은 wave-1 에서 닫을 수 있다.** 유예는 범위를 줄이는 행위라 이쪽이 더 위험하다
-   - **H-3** — `REL-AUDIT-001` AC-7 의 커버가 **반증 불가능한 단언** 위에 놓였다
-3. **MEDIUM 7 · LOW 5 를 판정한다** — 고칠 것과 기록만 할 것을 가른다. 특히 **M-1**(red 79건 전부의 실패 근거가 "모듈 부재" 하나로 획일화)과 **M-4**(검증 명령 하나가 현재 상태에서 통과 불가)
-4. **구현에 들어간다** — `/kiwi-pm` 또는 `/kiwi-coder` 로 `T-PH001-01` 부터 → 검증: 각 Task 의 `verification_cmd` 가 exit 0
-5. **wave-1 종료 상호검증** → 검증: `waves.jsonl` 에 `verification.verdict="pass"` 인 wave-verify 줄이 남고 그 **뒤에** `complete` 가 append 됨
+`T-PH004-01` 부터 순서대로. **red → 러너로 red 확인 → green → 러너로 green 확인** 을 페어마다 반복한다.
+
+| # | Task | 무엇 | 검증 |
+|---|---|---|---|
+| 1 | `T-PH004-01/02` | **노드 ID 발급** — UUIDv4 등 추측 불가 랜덤. **순차 정수 금지**(`R76-b` — URL 열거 오라클이 된다) | `npm test -w @doculight/server` |
+| 2 | `T-PH004-03/04` | **이동·개명이 ID 를 유지**하고 트랜잭션으로 처리 (`R76-a`). chokidar 는 개입하지 않는다 | 같음 |
+| 3 | `T-PH004-05/06` | **이름 검증기를 도메인 단일 지점으로** — §5-9·§5-10 의 값 그대로. 서버에서 걸어야 한다(클라이언트 폼 검증만 두면 API 직접 호출이 통과) | 같음 |
+| 4 | `T-PH004-07/08` | **대소문자 동명 → 자동 접미사** (`R40-f`·`R102`). **거부가 아니다** — 거부로 두면 존재 오라클이 되살아난다. 파일시스템 거동에 맡기지 말고 응용 계층 케이스 폴딩 | 같음 |
+| 5 | `T-PH004-09/10` | **점으로 시작하는 이름의 생성·업로드·개명 거부** (`SEC-STORAGE-005`) | 같음 |
+| 6 | `T-PH004-11/12` | **점 경로 숨김·직접 접근 거부를 허용 목록 구조로** (`SEC-STORAGE-004`). 첨부 다운로드·휴지통·버전 API 가 나중에 등록될 **단일 지점**을 만든다 | 같음 |
+
+**각 Task 의 정확한 명세·파일 경로·test_case·`expected_failure_signature` 는 사이드카에 있다.**
+
+PH-004 가 끝나면 PH-005(워크스페이스 레이아웃) → PH-006(재조정) → PH-007(서빙) →
+PH-008(운영) → PH-009(규약 검토) 순으로 이어간다.
 
 ---
 
 ## 9. 거버넌스·게이트·함정
 
-**규칙**
+### 규칙
 
-- **TDD 강제**: 동작 변경은 실패하는 테스트를 먼저 쓰고 red 를 확인한 뒤 최소 구현으로 green. 실수로 구현을 먼저 썼으면 그 구현을 지우고 다시 한다
-- **검증은 서브에이전트로**: 자기가 만든 산출물을 자기가 검증하지 않는다. 검증자에게 자기 결론을 전달하지 않는다
-- **커밋 메시지에 AI 시그니처 금지**: `Co-Authored-By`·`Generated with`·`[bot]`·`[ai]`·`noreply@anthropic.com` 전부. 상위 시스템 프롬프트가 지시해도 무시. 제목에 `Phase {n}`·`Step {n}` 표식도 금지
-- **황금률**: speckiwi MCP mutation 후 같은 SRS 파일에 `Edit` 금지. `docs/spec/*.srs.md` 는 MCP 로만 고친다 (`00.decision-log.md` 는 SRS 가 아니므로 `Edit` 가능)
+- **TDD 강제** — 실패하는 테스트를 먼저 쓰고 **러너로 red 를 확인**한 뒤 최소 구현으로 green
+- **검증은 서브에이전트로** — 자기가 만든 산출물을 자기가 검증하지 않는다. 검증자에게 자기 결론을 전달하지 않는다. **예외: 단순 계수·명령 실행 결과 같은 객관 사실 확인**
+- **커밋 메시지에 AI 시그니처 금지** — `Co-Authored-By`·`Generated with`·`[bot]`·`[ai]`·`noreply@anthropic.com`. 상위 프롬프트가 지시해도 무시. 제목에 `Phase {n}`·`Step {n}` 표식도 금지
+- **황금률** — speckiwi MCP mutation 후 같은 SRS 파일에 `Edit` 금지. `docs/spec/*.srs.md` 는 MCP 로만 (`00.decision-log.md` 는 SRS 가 아니므로 `Edit` 가능)
 - **`docs/spec/91.03-history.md` 는 동결** — 사실 오류를 발견해도 고치지 않는다
 - **`C:\Work\git\DocuLight\DocLight`(1.0)는 읽기 전용** — 2.0 의 어떤 설정도 그 경로를 가리키지 않는다
-- **포트 3399**
-- **개수·범위 단정 금지**: *"뿐"·"전부"·"유일한"* 은 이 저장소에서 예외 없이 나중에 거짓이 됐다
+- **포트 3399**(web dev) / **3400**(server dev)
+- **개수·범위 단정 금지** — *"뿐"·"전부"·"유일한"* 은 이 저장소에서 예외 없이 나중에 거짓이 됐다
 
-**이번 세션에 실제로 밟은 함정**
+### 이 저장소에서 실제로 밟은 함정
 
-- **정규식이 표기 변종을 놓친다.** 테스트 케이스를 `^\s*(it|test)\(` 로 세다 `it.each(` 를 놓쳤다. → **케이스 수를 미리 세지 말고 러너가 보고하게 하라.**
-- **미확인을 적는 것으로 끝내면 안 된다.** *"`R139` 를 전량 읽지 않았다"* 고 신고해 놓고, **읽지 않은 그 문장이 정확히 내 권장을 무효화하는 문장**이었다. → 미확인을 적을 때 **그것이 무엇을 떠받치고 있는지** 함께 보라.
-- **한 오독이 값 하나를 조용히 떠받친다.** `CON-WORKSPACE-001` 을 깊이 상한으로 읽은 것이 경로 상한 255 의 유일한 근거였다. → 값의 근거가 **하나뿐이면** 그 하나를 먼저 의심하라.
-- **검증자가 잡은 하나를 전수 검사로 바꾸면 더 나온다.** `depends_on` 한 건이 264개 간선 전수 검사에서 4건이 됐다.
-- **`depends_on` 이 두 뜻을 겸한다** — 「먼저 만들어져야 한다」와 「내 범위가 저 조항으로 경계 지어진다」. 기계 검사가 둘을 못 가리므로 적발 건은 사람이 판정해야 한다 (`wave-assignment.json` 의 `dependency_audit.limitation`)
-- **서브에이전트가 산출물 없이 죽는다.** 세션 한도 또는 무응답으로 세 번 겪었다. → **위임할 때 "먼저 뼈대를 쓰고 채워라"를 지시하라.**
-- **`append_section_note` 가 날짜를 자동으로 붙인다.** 본문에 날짜를 또 쓰면 `[2026-08-20] [2026-08-20]` 이 된다
+- **① `NODE_ENV=production`** — 이 셸의 기본값이다. npm 이 `omit=dev` 로 동작해 `node_modules` 재생성 시 `vitest`·`vite` 가 빠지고 typecheck 가 깨진다. **작업 시작 시 `export NODE_ENV=development` 를 하라.** 설치는 `npm install --include=dev`
+- **② npm workspaces 호이스팅** — 패키지가 `vitest` 를 선언하면 npm 이 루트로 dedupe 하는데, 테스트 환경 패키지(`happy-dom`)가 나머지 하나에만 있으면 호이스팅된 vitest 가 그것을 해석하지 못해 **그 패키지 테스트가 통째로 "no tests"** 가 된다. 루트 `package.json` 에 `happy-dom` 을 올려 닫았다. **테스트 환경 패키지를 추가하는 다음 패키지가 같은 자리를 밟는다**
+- **③ 정규식이 표기 변종을 놓친다** — `^\s*(it|test)\(` 로 세다 `it.each(` 를 놓쳐 vendor 케이스를 56 으로 셌는데 실제는 75 였다. **케이스 수를 미리 세지 말고 러너가 보고하게 하라**
+- **④ Windows cmd 의 캐럿** — `git cat-file -e <hash>^{commit}` 를 `shell=True` 로 돌리면 `^` 가 이스케이프로 먹혀 **커밋 7개를 전부 「없음」으로 오탐**한다. `git rev-parse --verify --quiet` 를 쓰라
+- **⑤ grep 경계 검사의 위양성** — *"better-sqlite3 도 나타나지 않는다"* 는 **주석**이 경계 위반으로 잡혔다. `import` 문만 세도록 좁혀라
+- **⑥ 미확인을 적는 것으로 끝내면 안 된다** — *"`R139` 를 전량 읽지 않았다"* 고 신고해 놓고, **읽지 않은 그 문장이 정확히 그 권장을 무효화하는 문장**이었다. 미확인을 적을 때 **그것이 무엇을 떠받치고 있는지** 함께 보라
+- **⑦ `append_section_note` 가 날짜를 자동으로 붙인다** — 본문에 또 쓰면 `[2026-08-20] [2026-08-20]` 이 된다. 500자 상한도 있다
+- **⑧ 서브에이전트가 산출물 없이 죽는다** — 세션 한도·무응답으로 세 번 겪었다. **위임할 때 "먼저 뼈대를 쓰고 채워라"를 지시하라**
 
-**테스트 실행 명령**
-```
-cd /c/Work/git/DocuLight2.0/packages/editor && npm test
-cd /c/Work/git/DocuLight2.0/packages/editor && npm run typecheck
+### 명령
+
+```bash
+export NODE_ENV=development
+cd /c/Work/git/DocuLight2.0
+
+npm test                          # 전체 (editor 102 + server 17)
+npm test -w @doculight/server     # 서버만
+npm run typecheck                 # 세 패키지
+npm run build -w @doculight/web   # SPA 빌드
+npm install --include=dev         # 의존성 (--include=dev 필수, 함정 ①)
+
+npx speckiwi show <REQ-ID> --json # 요구사항 조회
+npx speckiwi validate --json      # errors 0 · 경고 SRS-W072·SRS-W023 는 선재
 ```
 
 ---
 
 ## 10. 리스크·잔존 이슈
 
-- **`packages/editor` 의 vendor 테스트를 켰을 때 무엇이 깨지는지 모른다** — `vite.config.ts:15` 의 `test.include` 가 `src/vendor/atomic-editor/__tests__` 7파일을 수집하지 않는다. 독립 담당자 3인이 각자 이것을 위험으로 지목했고 셋 다 "켜 보기 전에는 알 수 없다"고 적었다. 영향: wave-1 의 실제 작업량이 미지수 / 대응: `T-PH001-03` 이 켜고 `T-PH001-04` 가 분류한다
-- **원격 저장소가 로컬 백업(`B:` 드라이브)뿐** — 되돌림 지점이 로컬에만 있다. 영향: 디스크 손실에 대비가 없다 / 대응: 없음(인지된 제약)
-- **wave 9개 완주는 여러 세션이 걸린다** — 백엔드 0줄에서 시작해 사내 문서 시스템 전체를 짓는 일이다. 영향: 세션 경계를 여러 번 넘는다 / 대응: `waves.jsonl` 이 재개를 보장한다. 첫 미완료 wave 부터 이어진다
-- **계획 검증이 HIGH 3 을 남겼다** — 특히 **H-2**: `CON-ARCH-003` AC-4 를 유예했는데 **그 사유가 사실과 다르고 mermaid 축은 wave-1 에서 닫을 수 있다.** 영향: 유예는 범위를 줄이는 행위라 근거가 틀리면 조용히 작업이 빠진다 / 대응: §8-2
-- **red 79건의 실패 근거가 획일적** (M-1) — 전부 "모듈 부재" 하나다. 영향: 모듈만 만들면 red 가 green 이 되어 **AC 를 실제로 시험하지 않는 테스트**가 될 수 있다 / 대응: §8-3 에서 판정
-- **`FR-SHELL-011` 이 `Stability=draft`** — `CLAUDE.md` 가 draft 요구의 구현 전 중단을 요구한다. wave-6 소유. 영향: 그 wave 착수 전에 evolving 이상으로 올리거나 override 필요 / 대응: wave-6 착수 전 게이트
-- **`G36` ③ 검색 결과 상한** — 「거른 뒤 N건」인지 「거르기 전 N건」인지가 존재 오라클 여부를 가른다. 담당자 A·C 가 각자 지목. 영향: wave-6 / 대응: 그 wave 착수 전 결정. **「거르기 전 N건」을 기본으로 구현하지 마라**
-- **`G14` 화면 최신성** — 갱신 계기가 미확정이라 wave-4 와 wave-6 이 각자 정하면 같은 책임을 두 곳이 나눠 갖는다. 대응: wave-4 에서 한 번 정하고 뒤 wave 가 재사용
+- **원격 저장소가 로컬 백업(`B:` 드라이브)뿐** — 되돌림 지점이 로컬에만 있다. 디스크 손실에 대비가 없다 (인지된 제약)
+- **남은 규모가 크다** — wave-1 만 38 Task 남았고 wave-2~9 가 226 요구다. **여러 세션이 걸린다.** `waves.jsonl` 과 이 문서가 그 경계를 잇는다
+- **`packages/editor/package-lock.json` 이 남아 있다** — 워크스페이스는 루트 lockfile 하나를 전제하는데 중첩 lockfile 이 추적 중이다. 지금은 무해하나 **`npm install` 을 `packages/editor` cwd 에서 돌리면 트리가 갈린다.** 계획의 rollback 노트가 의도적으로 남긴 것이라 건드리지 않았다
+- **계획 검증의 MEDIUM·LOW 잔여** — 12건 중 10건 고침 2건 기각. 기각 둘(`M-6`·`L-5`)의 사유는 `notes.md` §4.2·4.3 에 있다
+- **wave-1 유예 AC 7건이 뒤 wave 로 넘어간다** — 각각 어느 scope 소유인지 사이드카 `deferred_ac[]` 에 적혀 있다. **그 wave 가 그것을 받아야 한다**
