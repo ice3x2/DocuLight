@@ -39,7 +39,15 @@ const TREE_HEIGHT = 640;
  * 있는 조작」을 비활성으로 보여 주면 그것이 언젠가 열릴 수 있는 것처럼
  * 읽힌다. 열릴 수 없는 것과 지금 못 하는 것은 다르다.
  */
-function NodeMenu({ node, children }: { node: TreeNodeView; children: React.ReactNode }) {
+function NodeMenu({
+  node,
+  children,
+  onSelect,
+}: {
+  node: TreeNodeView;
+  children: React.ReactNode;
+  onSelect?: (itemId: string, node: TreeNodeView) => void;
+}) {
   const enabled = new Set(enabledMenuItems(node).map((item) => item.id));
 
   return (
@@ -50,7 +58,11 @@ function NodeMenu({ node, children }: { node: TreeNodeView; children: React.Reac
         <ContextMenu.Content>
           {CONTEXT_MENU_ITEMS.filter((item) => item.filesOnly !== true || node.kind === 'file').map(
             (item) => (
-              <ContextMenu.Item key={item.id} disabled={!enabled.has(item.id)}>
+              <ContextMenu.Item
+                key={item.id}
+                disabled={!enabled.has(item.id)}
+                onSelect={() => onSelect?.(item.id, node)}
+              >
                 {item.label}
               </ContextMenu.Item>
             ),
@@ -114,6 +126,7 @@ function TreeRow({
 function TreeRowWrapper(
   { node, innerRef, attrs, children }: RowRendererProps<Row>,
   onUpload?: (request: UploadRequest) => void,
+  onMenu?: (itemId: string, node: TreeNodeView) => void,
 ) {
   const view = node.data.node;
 
@@ -135,7 +148,13 @@ function TreeRowWrapper(
     </div>
   );
 
-  return view === undefined ? line : <NodeMenu node={view}>{line}</NodeMenu>;
+  return view === undefined ? (
+    line
+  ) : (
+    <NodeMenu node={view} onSelect={onMenu}>
+      {line}
+    </NodeMenu>
+  );
 }
 
 const toRow = (node: TreeNodeView): Row => ({
@@ -164,11 +183,14 @@ export function DocumentTree({
   onUpload,
   onOpen,
   onCreateNote,
+  onFavorite,
 }: {
   workspaces: readonly WorkspaceTreeView[];
   onUpload?: (request: UploadRequest) => void;
   onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
   onCreateNote?: () => void;
+  /** 즐겨찾기에 더한다 (`FR-SHELL-001` AC-3 · AC-4). 문서와 디렉토리를 가리지 않는다. */
+  onFavorite?: (nodeId: string) => void;
 }) {
   const rows = useMemo<Row[]>(
     () =>
@@ -209,7 +231,11 @@ export function DocumentTree({
           overscanCount={rows.length + 64}
           disableDrag
           disableDrop
-          renderRow={(props: RowRendererProps<Row>) => TreeRowWrapper(props, onUpload)}
+          renderRow={(props: RowRendererProps<Row>) =>
+            TreeRowWrapper(props, onUpload, (itemId, node) => {
+              if (itemId === 'favorite') onFavorite?.(node.id);
+            })
+          }
         >
           {({ node, style }: NodeRendererProps<Row>) => (
             <div style={style}>

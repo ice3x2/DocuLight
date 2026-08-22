@@ -1,5 +1,6 @@
 import type { Extension } from '@codemirror/state';
 
+import { highlightCode, isHighlightable } from './core/code-highlight.js';
 import { mathBlocks } from './core/math-decoration.js';
 import { pasteUploadExtension, type AttachUpload } from './core/paste-upload.js';
 import { mermaidBlocks } from './core/mermaid-blocks.js';
@@ -16,6 +17,14 @@ import { tagDecorations, type TagClick } from './core/tag-decoration.js';
  * 있게 하기 위해서다. 화면마다 확장을 골라 붙이면 어느 화면에서 무엇이
  * 되는지가 갈리고, 그 갈림은 요구 대비 판정을 무의미하게 만든다.
  */
+/**
+ * 읽기 화면의 코드 하이라이팅 (`CON-ARCH-005` AC-6).
+ *
+ * 확장 묶음이 이것을 함께 낸다 — 소비자가 따로 가져다 쓰면 어떤 화면에서
+ * 색이 붙고 어떤 화면에서 안 붙는지가 갈린다.
+ */
+export const codeHighlight = { highlightCode, isHighlightable };
+
 export function doculightExtensions(
   options: { onTagClick?: TagClick; onAttach?: AttachUpload } = {},
 ): Extension[] {

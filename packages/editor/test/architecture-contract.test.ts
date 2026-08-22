@@ -83,3 +83,18 @@ describe('CON-ARCH-006 — 본문의 정본은 CodeMirror 이고 React state 로
     expect(offenders, `본문이 React state 로 올라간 자리: ${offenders.join(', ')}`).toEqual([]);
   });
 });
+
+describe('CON-ARCH-005 AC-6 — 코드 하이라이팅이 shiki 다', () => {
+  it('shiki 를 실제로 부르는 자리가 있다', async () => {
+    const highlight = await readFile(join(ROOT, 'src/core/code-highlight.ts'), 'utf8');
+
+    // 의존성에 있는 것과 쓰이는 것은 다르다.
+    expect(highlight).toContain("from 'shiki'");
+  });
+
+  it('그 자리가 확장 묶음에 들어 있다', async () => {
+    const bundle = await readFile(join(ROOT, 'src/doculight-extensions.ts'), 'utf8');
+
+    expect(bundle).toContain('codeHighlight');
+  });
+});

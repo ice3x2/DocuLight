@@ -348,3 +348,43 @@ describe('IR-STORAGE-001 · FR-SHELL-002 AC-3 — 버전 목록과 복원', () =
     expect((await request(app).get(`/api/documents/${doc}/versions`)).status).toBe(404);
   });
 });
+
+describe('DR-SHELL-001 · IR-SHELL-002 AC-7 — 런타임 설정을 화면에서 바꾼다', () => {
+  it('현재 값을 준다', async () => {
+    const res = await request(app).get('/api/settings');
+
+    expect(res.status).toBe(200);
+    expect(res.body).toMatchObject({
+      'signup-mode': 'approval',
+      'trash-retention-days': '30',
+      'retained-version-count': '20',
+    });
+  });
+
+  it('AC-1: 값을 바꿔 저장할 수 있다', async () => {
+    const saved = await request(app).put('/api/settings').send({ 'trash-retention-days': '7' });
+
+    expect(saved.status).toBe(204);
+    expect((await request(app).get('/api/settings')).body['trash-retention-days']).toBe('7');
+  });
+
+  it('슈퍼유저가 아니면 거절한다 — 인스턴스 설정은 인스턴스의 것이다', async () => {
+    actingAs = actorFor(stores.principals, me.id);
+
+    expect((await request(app).get('/api/settings')).status).toBe(403);
+    expect((await request(app).put('/api/settings').send({ 'trash-retention-days': '7' })).status).toBe(403);
+  });
+
+  it('열거에 없는 키는 거절한다 — 오타가 조용한 기본값으로 살아남는다', async () => {
+    const saved = await request(app).put('/api/settings').send({ 'trash-retention-day': '7' });
+
+    expect(saved.status).toBe(400);
+  });
+
+  it('AC-3: 바꾼 값이 DB 에 남는다 — 재기동해도 유지된다', async () => {
+    await request(app).put('/api/settings').send({ 'retained-version-count': '3' });
+
+    // 같은 DB 를 다시 읽는 것이 재기동이 보는 것과 같은 상태다.
+    expect(stores.settings.get('retained-version-count')).toBe('3');
+  });
+});

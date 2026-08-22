@@ -16,7 +16,8 @@ export { findTags, isFrontmatterRange, type TagMatch } from './core/tags';
 export { findMathBlocks, renderMath, type MathBlock } from './core/math-blocks';
 export { mathBlocks, mathField } from './core/math-decoration';
 export { tagDecorations, type TagClick } from './core/tag-decoration';
-export { doculightExtensions, type AttachUpload } from './doculight-extensions';
+export { codeHighlight, doculightExtensions, type AttachUpload } from './doculight-extensions';
+export { highlightCode, isHighlightable } from './core/code-highlight';
 export { pasteUploadExtension } from './core/paste-upload';
 
 export {

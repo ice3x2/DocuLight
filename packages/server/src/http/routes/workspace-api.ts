@@ -12,6 +12,12 @@ import {
 } from '../../app/acl/permission-service.js';
 import { isSuperuser } from '../../domain/principal/subject.js';
 import {
+  INSTANCE_SETTING_KEYS,
+  readSetting,
+  writeSetting,
+  type InstanceSettingKey,
+} from '../../app/settings/instance-settings.js';
+import {
   attachToDocument,
   openAttachment,
   uploadLimitBytes,
@@ -485,6 +491,60 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
         ? {}
         : { notice: noticeFor(created.name) }),
     });
+  });
+
+  /**
+   * 런타임 설정 (`DR-SHELL-001` · `IR-SHELL-002` AC-7).
+   *
+   * **슈퍼유저만** 읽고 쓴다 — 인스턴스 설정은 인스턴스의 것이고, 그 값
+   * 하나가 모든 워크스페이스의 동작을 바꾼다.
+   *
+   * 열거에 없는 키는 거절한다. 받아 주면 오타 하나가 새 설정을 만들고,
+   * 아무도 그것을 읽지 않으므로 「저장했는데 안 바뀐다」로 나타난다.
+   */
+  const settingsGate = (req: Request): boolean => {
+    const actor = actorFor(req);
+    return actor !== undefined && isSuperuser(stores.principals.groupsOf(actor.id));
+  };
+
+  router.get('/settings', (req, res) => {
+    if (actorFor(req) === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+    if (!settingsGate(req)) {
+      res.sendStatus(403);
+      return;
+    }
+
+    res.json(
+      Object.fromEntries(INSTANCE_SETTING_KEYS.map((key) => [key, readSetting(stores.settings, key)])),
+    );
+  });
+
+  router.put('/settings', (req, res) => {
+    if (actorFor(req) === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+    if (!settingsGate(req)) {
+      res.sendStatus(403);
+      return;
+    }
+
+    const patch = req.body as Record<string, unknown>;
+    const known = new Set<string>(INSTANCE_SETTING_KEYS);
+    // **먼저 전부 검사한 뒤에** 쓴다 — 쓰면서 검사하면 오타 하나가 앞의
+    // 값들만 바꿔 놓은 절반의 상태를 남긴다.
+    if (Object.keys(patch).some((key) => !known.has(key) || typeof patch[key] !== 'string')) {
+      res.sendStatus(400);
+      return;
+    }
+
+    for (const [key, value] of Object.entries(patch)) {
+      writeSetting(stores.settings, key as InstanceSettingKey, value as string);
+    }
+    res.sendStatus(204);
   });
 
   router.get('/trash', (req, res) => {

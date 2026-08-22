@@ -9,6 +9,7 @@ import type { SaveState, TabState } from '../document/tab-state.js';
 import { DocumentTree } from '../tree/DocumentTree.js';
 import type { UploadRequest } from '../attachment/upload-contract.js';
 import { EmptyState } from '../tree/EmptyState.js';
+import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { TrashPanel, type TrashRowView } from '../trash/TrashPanel.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
@@ -109,7 +110,19 @@ function SettingsModal({ viewer, trash = [] }: { viewer: Viewer; trash?: readonl
               <Tabs.Content key={category.id} value={category.id}>
                 {/* 휴지통만 내용을 갖는다 — 나머지 카테고리는 그것을
                     소유한 요구가 서는 자리에서 채워진다. */}
-                {category.id === 'trash' ? <TrashPanel rows={trash} /> : <p>{category.label}</p>}
+                {category.id === 'trash' ? (
+                  <TrashPanel rows={trash} />
+                ) : category.id === 'instance' ? (
+                  <InstanceSettings />
+                ) : category.id === 'account' ? (
+                  // 계정 카테고리가 담기로 확정된 두 조작 (`IR-SHELL-002` AC-3).
+                  <>
+                    <button type="button">비밀번호 변경</button>
+                    <button type="button">로그아웃</button>
+                  </>
+                ) : (
+                  <p>{category.label}</p>
+                )}
               </Tabs.Content>
             ))}
           </Tabs.Root>

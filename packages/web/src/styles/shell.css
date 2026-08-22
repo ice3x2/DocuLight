@@ -1,0 +1,62 @@
+/**
+ * 셸의 레이아웃 (`IR-SHELL-003` · `CON-EDITOR-004`).
+ *
+ * **탭 스트립과 문서 헤더가 서로 다른 행이다**(AC-1). 그리드로 행을 나눠
+ * 두면 탭이 늘어나도 헤더가 밀려 잘리지 않는다(AC-3) — 같은 행에 두면
+ * 브레드크럼과 저장 상태가 탭 개수에 밀려 사라지는데, 그 둘은 지금 무엇을
+ * 편집하며 그것이 저장됐는지를 알려 주는 자리다.
+ *
+ * 좁은 화면 전용 분기를 두지 않는다 (`CON-EDITOR-004` AC-1) — Phase 1 은
+ * 데스크탑 전용이고, 분기를 두면 그것이 곧 그 조항이 배제한 레이아웃이다.
+ */
+
+[data-shell='root'] {
+  display: grid;
+  grid-template-columns: 280px minmax(480px, 1fr) 320px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+[data-shell='root'] > aside {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  /* 트리가 길어져도 사이드바가 화면을 밀지 않는다. */
+  overflow: auto;
+}
+
+[data-shell='root'] > main {
+  display: grid;
+  /* 탭 스트립 · 문서 헤더 · 본문 — 세 행이다. */
+  grid-template-rows: auto auto minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+}
+
+[data-shell='root'] > main [role='tablist'] {
+  display: flex;
+  /* 탭이 많아지면 **탭 줄만** 가로로 스크롤된다 — 헤더를 밀지 않는다. */
+  overflow-x: auto;
+  flex: 0 0 auto;
+}
+
+[data-shell='root'] > main > div > header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* 헤더는 줄어들지 않는다 — 브레드크럼이 잘리는 것보다 탭이 스크롤되는
+     편이 낫다. */
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+[data-shell='settings-corner'] {
+  /* 좌하단이 자리다 (`IR-SHELL-002` AC-1). */
+  position: fixed;
+  left: 0;
+  bottom: 0;
+}
+
+.cm-editor {
+  height: 100%;
+}

@@ -148,3 +148,13 @@ export const loadVersion = (nodeId: string, seq: number) =>
 
 export const restoreVersion = (nodeId: string, seq: number) =>
   call<void>(`/documents/${encodeURIComponent(nodeId)}/versions/${seq}/restore`, { method: 'POST' });
+
+/** 런타임 설정 (`DR-SHELL-001`). 슈퍼유저만 읽고 쓴다. */
+export const loadSettings = () => call<Record<string, string>>('/settings');
+
+export const saveSettings = (patch: Record<string, string>) =>
+  call<void>('/settings', {
+    method: 'PUT',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(patch),
+  });
