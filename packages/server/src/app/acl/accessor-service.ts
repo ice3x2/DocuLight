@@ -54,19 +54,8 @@ export function accessorsOf(
   actor: Actor,
   nodeId: NodeId,
 ): AccessorReport | null {
-  // 관문이 권한보다 앞선다 — 휴지통·아카이브·점 이름 아래의 노드는
-  // 관리자에게도 지표를 내지 않는다.
-  //
-  // 사슬은 **한 번만** 읽고 그것으로 관문과 상속 사슬을 함께 세운다.
-  // `chainOf` 를 관문·판정·사슬에서 각각 부르면 한 호출이 같은 질의를
-  // 세 번 낸다.
-  const chain = stores.nodes.chainOf(nodeId);
-  if (chain.length === 0 || !isServable(chain)) return null;
-
-  const ancestry: Ancestry = {
-    links: chain.map((node) => ({ id: node.id, inheritsAcl: node.inheritsAcl })),
-    workspaceId: chain[0]!.workspaceId,
-  };
+  const ancestry = servableAncestryOf(stores, nodeId);
+  if (ancestry === null) return null;
 
   // 주체를 가리지 않고 사슬 위의 항목을 **한 번에** 받는다. 사람마다
   // 질의하면 인원 수만큼 질의가 붙는다.
@@ -77,11 +66,30 @@ export function accessorsOf(
   const level = effectivePermission(ancestry, entries, actor.requester);
   if (level === null || !permits(level, 'edit')) return null;
 
+  const tally = tallyOf(stores.principals, ancestry, entries);
+
+  return {
+    metrics: { reachable: tally.roster.length, viaAcl: tally.viaAcl },
+    roster: permits(level, 'admin') ? tally.roster : null,
+  };
+}
+
+/**
+ * 이 사슬의 접근자를 센다 — **가정된 사슬에도 그대로 쓴다**.
+ *
+ * 이동 프리뷰는 「목적지 아래에 있었다면」을 묻는데, 그 답을 따로 계산하면
+ * 같은 물음에 두 규칙이 생긴다. 사슬만 바꿔 이 함수를 부르면 규칙은 하나다.
+ */
+export function tallyOf(
+  principals: PrincipalRepository,
+  ancestry: Ancestry,
+  entries: readonly AclEntry[],
+): { roster: PrincipalId[]; viaAcl: number } {
   const withoutGate = entries.filter((entry) => !isUpwardGate(entry, ancestry));
   const roster: PrincipalId[] = [];
   let viaAcl = 0;
 
-  for (const candidate of activeUsers(stores.principals)) {
+  for (const candidate of activeUsers(principals)) {
     // 판정 규칙을 여기서 다시 쓰지 않는다 — `effectivePermission` 하나가
     // 정본이고 이쪽은 요청자만 바꿔 가며 그것을 부른다. 규칙을 옮겨 적으면
     // 상속 끊김·워크스페이스 루트 같은 가지가 두 곳에서 갈린다.
@@ -95,10 +103,33 @@ export function accessorsOf(
     if (effectivePermission(ancestry, withoutGate, grounded) !== null) viaAcl += 1;
   }
 
-  return {
-    metrics: { reachable: roster.length, viaAcl },
-    roster: permits(level, 'admin') ? roster : null,
-  };
+  return { roster, viaAcl };
+}
+
+/**
+ * 그 자리의 상속 사슬 — **노드일 수도 워크스페이스일 수도 있다.**
+ *
+ * 워크스페이스도 받는 이유는 복사 목적지가 루트인 경로가 실제로 있기
+ * 때문이다. 그 자리를 못 다루면 「수치가 표시되지 않는 복사 경로가 없다」가
+ * 곧바로 깨진다 (`FR-ACL-002` AC-3).
+ *
+ * 관문은 노드에만 선다 — 워크스페이스에는 점 이름도 휴지통도 없다.
+ * 사슬을 한 번만 읽는 이유는 관문·판정·조상을 같은 값으로 세우기 위해서다.
+ */
+export function servableAncestryOf(stores: AclStores, targetId: string): Ancestry | null {
+  const chain = stores.nodes.chainOf(targetId);
+  if (chain.length === 0) {
+    return stores.workspaces.findById(targetId) === undefined
+      ? null
+      : { links: [], workspaceId: targetId };
+  }
+
+  return isServable(chain)
+    ? {
+        links: chain.map((node) => ({ id: node.id, inheritsAcl: node.inheritsAcl })),
+        workspaceId: chain[0]!.workspaceId,
+      }
+    : null;
 }
 
 /**
