@@ -7,6 +7,7 @@ import {
   MINIMUM_QUERY,
   RESULT_LIMIT,
   searchPrincipals,
+  type PrincipalHit,
 } from '../../../src/app/principal/principal-search-service.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
 import { SqlitePrincipalRepository } from '../../../src/infra/sqlite/principal-repository.js';
@@ -41,6 +42,22 @@ describe('SEC-PRINCIPAL-003 — 최소 질의 길이 2자와 결과 상한 20건
     named('한범');
 
     expect(searchPrincipals(principals, '  한  ')).toEqual([]);
+  });
+
+  it('AC-2: 앞뒤 공백은 길이에도 일치에도 세지 않는다', () => {
+    const found = named('한범');
+
+    // 위 시험만으로는 공백 처리가 재어지지 않는다 — 공백을 안 걷어내도
+    // 「길이 5 라 통과했으나 이름에 공백이 없어 안 걸린다」로 같은 빈
+    // 목록이 나오기 때문이다. 걸려야 하는 쪽을 함께 재야 갈린다.
+    expect(searchPrincipals(principals, '  한범  ').map((row) => row.id)).toEqual([found.id]);
+  });
+
+  it('대소문자를 무시한다 — 어느 AC 도 이 축을 정하지 않았고 관측 거동만 고정한다', () => {
+    const found = named('Alice');
+
+    expect(searchPrincipals(principals, 'ali').map((row) => row.id)).toEqual([found.id]);
+    expect(searchPrincipals(principals, 'ALI').map((row) => row.id)).toEqual([found.id]);
   });
 
   it('AC-1: 빈 질의는 명부 전체를 주지 않는다', () => {
@@ -85,12 +102,28 @@ describe('SEC-PRINCIPAL-003 — 최소 질의 길이 2자와 결과 상한 20건
     expect(twice[0]).toEqual(twice[1]);
   });
 
-  it('AC-4: 최소 길이와 상한을 넘겨받는 자리가 없다', () => {
-    // 인자로 받는 순간 화면마다 다른 값을 줄 수 있게 된다. 두 값은
-    // 이 모듈이 소유하고 호출자는 질의만 준다.
-    expect(searchPrincipals).toHaveLength(2);
+  it('AC-4: 값을 넘겨도 두 규칙이 그대로다', () => {
+    for (let n = 0; n < 25; n += 1) named(`검색대상${n}`);
+
+    // 선언 인자 수만 재면 **기본값 인자**가 그대로 빠져나간다
+    // (`(p, q, limit = 20, min = 2)` 는 `Function.length` 가 2 다).
+    // 그래서 넘겨 보고 값이 안 바뀌는 것을 잰다 — AC-4 가 금지한 것은
+    // 시그니처의 모양이 아니라 덮어쓸 수 있는 **경로**다.
+    const forced = searchPrincipals as unknown as (...args: unknown[]) => PrincipalHit[];
+
+    expect(forced(principals, '검색대상', 100, 1)).toHaveLength(RESULT_LIMIT);
+    expect(forced(principals, '검', 100, 1)).toEqual([]);
     expect(MINIMUM_QUERY).toBe(2);
     expect(RESULT_LIMIT).toBe(20);
+  });
+
+  it('AC-3: 상한에 걸리면 그룹이 먼저 잘린다 — 어느 AC 도 정하지 않은 축이다', () => {
+    for (let n = 0; n < 20; n += 1) named(`검색대상${n}`);
+    principals.createGroup('검색대상팀');
+
+    // 우선순위를 정한 조항이 없으므로 규칙을 지어내지 않고 지금의 거동만
+    // 못박는다. 정하는 조항이 생기면 이 시험이 먼저 깨진다.
+    expect(searchPrincipals(principals, '검색대상').every((row) => row.kind === 'user')).toBe(true);
   });
 });
 

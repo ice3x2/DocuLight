@@ -12,7 +12,6 @@ import type { UploadRequest } from '../attachment/upload-contract.js';
 import { EmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
-import { PrincipalPicker } from '../principal/PrincipalPicker.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
@@ -158,11 +157,6 @@ function SettingsModal({
                   />
                 ) : category.id === 'instance' ? (
                   <InstanceSettings />
-                ) : category.id === 'users' || category.id === 'groups' ? (
-                  // 두 카테고리가 **같은 부품**을 쓴다 (`CON-ARCH-004` AC-4) —
-                  // 권한은 주체에 붙지 종류에 붙지 않으므로 둘을 가를 이유가
-                  // 없고, 두 벌로 만들면 한쪽만 고쳐진다.
-                  <PrincipalPicker />
                 ) : category.id === 'account' ? (
                   // 계정 카테고리가 담기로 확정된 두 조작 (`IR-SHELL-002` AC-3).
                   <>
@@ -170,6 +164,14 @@ function SettingsModal({
                     <button type="button">로그아웃</button>
                   </>
                 ) : (
+                  // `사용자 관리`·`그룹 관리` 가 여기로 떨어지는 것은 의도다.
+                  // 그 둘은 슈퍼유저 전용 관리 화면이라 원장 `R112-d` 로
+                  // 계정 4상태(`활성`·`대기`·`정지`·`거절`)를 **그대로**
+                  // 표시해야 한다. `PrincipalPicker` 는 반대로 부여하는
+                  // 제3자에게 함의를 감추는 중립어 부품이라 여기 두면
+                  // `rejected` 계정이 슈퍼유저에게서 사라지고 `suspended`
+                  // 가 `비활성` 으로 읽힌다. 그 화면은 `FR-PRINCIPAL-009`
+                  // 가 소유하며 아직 서지 않았다.
                   <p>{category.label}</p>
                 )}
               </Tabs.Content>

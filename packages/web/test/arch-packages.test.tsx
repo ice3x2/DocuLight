@@ -58,6 +58,13 @@ describe('CON-ARCH-004 — 지정 패키지가 실제로 쓰인다', () => {
     expect(await src('search/SearchPanel.tsx')).toContain('cmdk');
   });
 
+  it('AC-4: 사용자·그룹 검색도 cmdk 위에 선다', async () => {
+    // 조항이 이름 댄 것은 **사용자·그룹 검색 UI** 이고 그것을 소유한
+    // 부품은 이제 `PrincipalPicker` 하나다 (`CON-PRINCIPAL-006`).
+    // 어느 화면이 그것을 배치하는지는 이 조항이 정하지 않는다.
+    expect(await src('principal/PrincipalPicker.tsx')).toContain('cmdk');
+  });
+
   it('AC-5: 서버 상태가 @tanstack/react-query 로 관리된다', async () => {
     expect(await src('api/queries.ts')).toContain('@tanstack/react-query');
     // 소유가 `App` 에 있다 — 마운트 지점에서 조립해 넘기면 앱을 세우는

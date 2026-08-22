@@ -184,6 +184,8 @@ Phase 1 은 **wave 9개**로 분해돼 있고 배정의 정본은 `C:\Work\git\D
 | **`G37`** | **열려 있다.** 보존 만료로 사라지는 감사 행을 참조하던 재조정 대기열 항목의 처분. 갈래 둘 — ⓐ 참조가 걸린 행은 만료에서 제외 ⓑ 대기열이 값을 자기 안에 복사. **wave-9 범위** |
 | **`G15`·`G16`·`G23`·`G29`·`G30`·`G32`·`G33`·`G34`·`G35`** | 열려 있다. Phase 1 을 막지 않는다 |
 | **PDF `#page=N` 프래그먼트** | **실측하지 않았다.** 표준이 아니라 브라우저 재량이다. Phase 2 착수 시 재고, 안 되면 `pdf.js` 뷰어 임베드(`R146`)로 간다 |
+| **주체 검색의 인가 축** | **열려 있다.** `/api/principals` 는 슈퍼유저 전용인데 `CON-PRINCIPAL-006` AC-1 이 이름 댄 세 화면은 워크스페이스 관리자가 쓴다. 조항이 없다 — B-3 착수 전에 정해야 한다 |
+| **`R112-d` 와 `CON-PRINCIPAL-006` AC-2 의 경계** | 슈퍼유저 전용 사용자 관리 화면은 4상태를 그대로 보여야 하므로(`R112-d`) 중립어 `PrincipalPicker` 를 쓸 수 없다. 그런데 AC-2 는 자체 구현 검색 부품을 금지한다. `FR-PRINCIPAL-009` 를 세울 때 이 둘이 부딪친다 |
 | **tombstone 복사** | 실체가 사라진 노드가 복사에 따라온다. **어느 AC 도 이 축을 정하지 않았다.** `deep-copy.test.ts` 가 관측 거동을 고정해 두었으니 정하면 그 시험이 먼저 깨진다 |
 
 ---
@@ -196,7 +198,8 @@ Phase 1 은 **wave 9개**로 분해돼 있고 배정의 정본은 `C:\Work\git\D
 
 - [ ] **B-1** `wave-assignment.json` 의 wave-7 `requirement_ids` 26건 상태를 MCP `get_requirement` 로 재확인 — 완료 조건: 15건의 미완 목록이 확정됐다
 - [ ] **B-2** `CON-PRINCIPAL-006`(단일 `PrincipalPicker`) + `SEC-PRINCIPAL-002`(계정 노출 범위·상태 배지) + `SEC-PRINCIPAL-003`(최소 질의 2자·상한 20건) — **여기부터 착수한다.** 완료 조건: 세 요구의 AC 가 시험으로 재어지고, 주체를 고르는 화면들이 이 컴포넌트 하나를 쓴다
-- [ ] **B-3** `IR-ACL-002`(공유 모달의 상속 항목 읽기 전용 표시) · `IR-ACL-003`(사용자·그룹을 각각 검색해 추가) — 완료 조건: 두 요구의 AC 가 재어진다
+- [ ] **B-3** `IR-ACL-002`(공유 모달의 상속 항목 읽기 전용 표시) · `IR-ACL-003`(사용자·그룹을 각각 검색해 추가) — 완료 조건: 두 요구의 AC 가 재어진다.
+  **선행 결정이 필요하다** — `/api/principals` 가 슈퍼유저 전용이라 워크스페이스 관리자는 403 을 받는다(`packages/server/src/http/routes/workspace-api.ts` 의 `isSuperuser` 게이트). 공유 모달은 워크스페이스 관리자가 쓰는 화면이므로 그대로는 주체를 찾을 수 없다. **어느 요구도 「누가 주체를 검색할 수 있는가」를 소유하지 않는다** — `R112` 계열은 노출 범위·상한만 정한다. 게이트를 임의로 풀지 말고 조항을 먼저 세워라
 - [ ] **B-4** `FR-PRINCIPAL-001`(사용자·그룹 관리) · `FR-PRINCIPAL-002`(그룹 삭제가 ACL 제거를 같은 트랜잭션에) · `FR-PRINCIPAL-009`(4상태 그대로 표시) — 완료 조건: 셋의 AC 가 재어진다
 - [ ] **B-5** `FR-PRINCIPAL-003`(네 단계 오프보딩) · `CON-PRINCIPAL-004`(단일 컴포넌트·진행 상태 미저장) · `FR-PRINCIPAL-011`(시스템 그룹 회수의 확인 등급) — 완료 조건: 셋의 AC 가 재어진다
 - [ ] **B-6** `FR-PRINCIPAL-005`(마지막 관리자 제거는 차단이 아니라 경고) · `FR-PRINCIPAL-006`(`관리자 없음` 배지) · `FR-PRINCIPAL-007`(생성 폼 `default` 초기 권한, 기본 `없음`) · `FR-PRINCIPAL-008`(비활성 계정 부여 시 확인 1단계) — 완료 조건: 넷의 AC 가 재어진다
@@ -241,7 +244,7 @@ Phase 1 은 **wave 9개**로 분해돼 있고 배정의 정본은 `C:\Work\git\D
 
 ### I. 소소한 잔존
 
-- [ ] **J-1** `C:\Work\git\DocuLight2.0\packages\web\src\principal\PrincipalSearch.tsx` 디바운스 없음 — **B-2 에서 `PrincipalPicker` 로 흡수될 가능성이 높다**
+- [ ] **J-1** `C:\Work\git\DocuLight2.0\packages\web\src\principal\PrincipalPicker.tsx` 디바운스 없음 — `PrincipalSearch.tsx` 는 2026-08-23 에 이 부품으로 갈렸다. 최소 두 글자 관문이 붙었으나 두 글자 이상에서는 여전히 타건마다 요청이 나간다. 어느 AC 도 요청 빈도를 정하지 않는다
 - [ ] **J-2** 노드 영구 삭제 후 `favorite` 표에 죽은 행이 남음
 - [ ] **J-3** `C:\Work\git\DocuLight2.0\packages\server\src\http\routes\workspace-api.ts` 의 `one()` 이 깊게 중첩된 JSON 배열에 500. ⚠️ 미검증 — 그 함수가 85~86행에 재귀 헬퍼로 실재하고 중첩 깊이만큼 재귀하는 것까지는 확인됐으나, 실제로 500 이 나오는지는 재현하지 않았다. 확인할 방법: 서버를 띄우고 깊게 중첩된 배열을 그 엔드포인트에 보낸다
 

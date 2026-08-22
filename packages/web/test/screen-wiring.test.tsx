@@ -317,7 +317,7 @@ describe('CON-EDITOR-002 AC-2 · AC-3 — 백링크와 아웃고잉 링크 패�
   });
 });
 
-describe('CON-ARCH-004 AC-4 — 사용자·그룹 검색이 cmdk 로 선다', () => {
+describe('R112-d — 슈퍼유저 전용 관리 화면에 중립어 부품을 두지 않는다', () => {
   const openCategory = async (name: string) => {
     const user = await openTree();
     await user.click(screen.getByRole('button', { name: '설정' }));
@@ -327,29 +327,17 @@ describe('CON-ARCH-004 AC-4 — 사용자·그룹 검색이 cmdk 로 선다', ()
     return user;
   };
 
-  it('사용자 관리에서 친 글자가 질의로 나가고 결과가 목록에 뜬다', async () => {
-    routes.set('/api/principals', () =>
-      json([
-        { id: 'p1', name: '한범', kind: 'user', status: 'active' },
-        { id: 'g1', name: '기획팀', kind: 'group', status: 'active' },
-      ]),
-    );
-    const user = await openCategory('사용자 관리');
+  for (const name of ['사용자 관리', '그룹 관리']) {
+    it(`${name} 에 주체 검색 상자가 서지 않는다`, async () => {
+      await openCategory(name);
 
-    // 두 글자를 친다 — 한 글자로는 질의가 나가지 않는다
-    // (`SEC-PRINCIPAL-003` AC-1). 그 규칙은 이 시험이 아니라
-    // `principal-picker.test.tsx` 가 잰다.
-    await user.type(await screen.findByRole('combobox', { name: '사용자·그룹 검색' }), '한범');
-
-    await waitFor(() => expect(screen.getByText('한범')).toBeDefined());
-  });
-
-  it('그룹 관리도 같은 검색을 쓴다 — 두 벌을 만들면 한쪽만 고쳐진다', async () => {
-    routes.set('/api/principals', () => json([{ id: 'g1', name: '기획팀', kind: 'group', status: 'active' }]));
-    await openCategory('그룹 관리');
-
-    expect(await screen.findByRole('combobox', { name: '사용자·그룹 검색' })).toBeDefined();
-  });
+      // `PrincipalPicker` 는 `suspended` 를 `비활성` 으로 적고 `rejected`
+      // 를 감춘다. 슈퍼유저가 그 상태를 **직접 설정하는** 화면에 두면
+      // 원장 `R112-d` 가 지키려는 4상태 게이트가 보이지 않게 된다.
+      // 이 화면은 `FR-PRINCIPAL-009` 가 소유하며 아직 서지 않았다.
+      expect(screen.queryByRole('combobox', { name: '사용자·그룹 검색' })).toBeNull();
+    });
+  }
 });
 
 describe('검증에서 나온 나머지 — 안내 소거·취소·포커스', () => {

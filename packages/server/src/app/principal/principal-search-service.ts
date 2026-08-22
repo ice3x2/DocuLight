@@ -1,5 +1,9 @@
 import type { PrincipalRepository } from '../../domain/ports/principal-repository.js';
-import type { PrincipalKind, PrincipalStatus } from '../../domain/principal/principal.js';
+import type {
+  PrincipalKind,
+  PrincipalRecord,
+  PrincipalStatus,
+} from '../../domain/principal/principal.js';
 
 /**
  * 검색 결과 한 줄.
@@ -8,12 +12,24 @@ import type { PrincipalKind, PrincipalStatus } from '../../domain/principal/prin
  * (`SEC-PRINCIPAL-002` AC-4). 상태를 빼고 주면 화면이 다른 경로로 다시
  * 물어야 하고, 그 경로가 곧 상태 필터를 우회하는 두 번째 문이 된다.
  */
+export type VisibleStatus = Exclude<PrincipalStatus, 'rejected'>;
+
 export interface PrincipalHit {
   readonly id: string;
   readonly name: string;
   readonly kind: PrincipalKind;
-  readonly status: PrincipalStatus;
+  /**
+   * `rejected` 가 **타입에서 빠져 있다** (`SEC-PRINCIPAL-002` AC-3).
+   *
+   * 런타임 `filter` 한 줄만으로 지키면 그 줄이 바뀔 때 아무것도 알려
+   * 주지 않는다. 여기서 좁혀 두면 거르기를 빼는 순간 컴파일이 깨진다.
+   */
+  readonly status: VisibleStatus;
 }
+
+/** `rejected` 를 걸러 내면서 그 사실을 타입으로 옮긴다. */
+const visible = (record: PrincipalRecord): record is PrincipalRecord & { status: VisibleStatus } =>
+  record.status !== 'rejected';
 
 /**
  * 최소 질의 길이 (`SEC-PRINCIPAL-003` AC-1).
@@ -40,6 +56,12 @@ export const RESULT_LIMIT = 20;
  * `rejected` 만 뺀다 (`SEC-PRINCIPAL-002` AC-3). 검색에서 흔적 없이
  * 사라진 계정은 「오타인가, 계정이 없는가」를 가를 수 없어 문의를 만들고,
  * `pending` 을 빼면 입사 전 사전 세팅이라는 실제 수요가 막힌다.
+ *
+ * **어느 조항도 정하지 않은 축이 셋 있다** — 질의의 앞뒤 공백을 길이에
+ * 세는가, 대소문자를 무시하는가, 상한에 걸릴 때 무엇이 먼저 잘리는가.
+ * 여기서 각각 「세지 않는다 · 무시한다 · 그룹이 먼저 잘린다」로 정했고
+ * 시험이 그 관측 거동을 고정한다. 정하는 조항이 생기면 그 시험이 먼저
+ * 깨진다 — 규칙을 지어내는 대신 지금 무엇을 하고 있는지를 못박은 것이다.
  */
 export function searchPrincipals(principals: PrincipalRepository, query: string): PrincipalHit[] {
   const wanted = query.trim().toLowerCase();
@@ -48,7 +70,7 @@ export function searchPrincipals(principals: PrincipalRepository, query: string)
   const matching = (kind: PrincipalKind): PrincipalHit[] =>
     principals
       .list(kind)
-      .filter((record) => record.status !== 'rejected')
+      .filter(visible)
       .filter((record) => record.name.toLowerCase().includes(wanted))
       .map((record) => ({
         id: record.id,
@@ -58,6 +80,7 @@ export function searchPrincipals(principals: PrincipalRepository, query: string)
       }));
 
   // 종류마다 자르지 않고 **합친 뒤에** 자른다 — 종류마다 상한을 걸면 한
-  // 질의로 상한의 두 배가 나간다.
+  // 질의로 상한의 두 배가 나간다. 사용자를 앞에 두므로 상한에 걸리면
+  // 그룹이 먼저 잘려 나간다.
   return [...matching('user'), ...matching('group')].slice(0, RESULT_LIMIT);
 }
