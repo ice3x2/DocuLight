@@ -147,7 +147,9 @@ describe('FR-EDITOR-005 · FR-EDITOR-008 — 저장 거부와 병합', () => {
     render(<DocumentSurface file={md} initialMode="live" save="conflict" serverBody="# 남의 것" />);
 
     const merge = screen.getByRole('region', { name: '병합' });
-    expect(within(merge).getByText(/남의 것/)).toBeDefined();
+    // 서버의 현재 내용이 **왼쪽**에 선다 — 오른쪽은 내가 편집 중인 것이다.
+    // 자리를 지정해 보지 않으면 어느 쪽을 보고 있는지 시험이 말하지 못한다.
+    expect(within(merge).getByLabelText('왼쪽').textContent).toContain('남의 것');
   });
 
   it('FR-EDITOR-008 AC-1: 잠금 안내가 없다 — 동시 편집이 막히지 않는다', () => {
