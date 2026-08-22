@@ -117,6 +117,28 @@ export function breakInheritance(stores: AclStores, actor: Actor, nodeId: NodeId
 }
 
 /**
+ * 상속으로 되돌린다 (`FR-ACL-005` AC-2 · AC-3).
+ *
+ * 끊기와 **같은 문턱**이다 — 상속 플래그를 만지는 두 방향이 한 자리에
+ * 있어야 한쪽만 조용히 열리는 일이 없다. 되돌리기는 조상의 항목을 다시
+ * 닿게 하므로 넓히기이고, 그래서 좁히기와 같은 관리 레벨을 요구한다.
+ *
+ * **부모 항목을 복사해 오지 않는다.** 그것은 `inheritFromParent` 라는 다른
+ * 조작이다 — 한 버튼 뒤에 둘을 묶으면 되돌린 뒤 부모에서 회수해도 사본이
+ * 남아 권한이 조용히 유지된다.
+ */
+export function restoreInheritance(stores: AclStores, actor: Actor, nodeId: NodeId): PlainOutcome {
+  const node = stores.nodes.findById(nodeId);
+  if (node === undefined) return { ok: false, rule: 'unknown-target' };
+
+  const decision = canBreakInheritance(permissionOf(stores, actor, nodeId));
+  if (!decision.allowed) return { ok: false, rule: decision.rule };
+
+  stores.nodes.setInheritance(nodeId, true);
+  return { ok: true };
+}
+
+/**
  * 부모 권한 가져오기 — 상속 끊기와 **별개 조작**이다 (`SEC-ACL-003` AC-6).
  *
  * 끊긴 노드가 조상에게서 받던 것을 자기 항목으로 굳힌다. 넓히기이므로

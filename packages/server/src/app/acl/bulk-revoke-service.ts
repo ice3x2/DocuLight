@@ -1,8 +1,10 @@
 import type { AclEntry } from '../../domain/acl/acl-entry.js';
 import type { PermissionLevel } from '../../domain/acl/level.js';
 import type { PrincipalId } from '../../domain/principal/principal.js';
+import { pathIndex } from '../node/node-paths.js';
+import { managedWorkspacesOf } from './admin-scope.js';
 import { revokePermission } from './grant-service.js';
-import { permissionOf, type AclStores, type Actor } from './permission-service.js';
+import type { AclStores, Actor } from './permission-service.js';
 
 /**
  * 이 회수가 닿는 범위 (`FR-PRINCIPAL-004`).
@@ -93,22 +95,19 @@ export function revokeAllFor(
  * 두기 위해 치르는 값이며, 그래서 회수 실행의 질의는 항목 수에 비례한다.
  */
 function plan(stores: AclStores, actor: Actor, principalId: PrincipalId): Revocation | null {
-  const workspaces = stores.workspaces.list();
-  const managed = new Set(
-    workspaces
-      .filter((workspace) => permissionOf(stores, actor, workspace.id) === 'admin')
-      .map((workspace) => workspace.id),
-  );
-  if (managed.size === 0) return null;
+  const workspaces = managedWorkspacesOf(stores, actor);
+  if (workspaces.length === 0) return null;
 
+  const managed = new Set(workspaces.map((workspace) => workspace.id));
   const entries = stores.acl.entriesOfPrincipal(principalId);
   const chain = stores.nodes.chainsOf(entries.map((entry) => entry.nodeId));
   const byId = new Map(chain.map((node) => [node.id, node]));
+  const pathOf = pathIndex(chain);
   const workspaceNames = new Map(workspaces.map((workspace) => [workspace.id, workspace.name]));
 
   const rows: RevocationRow[] = [];
   for (const entry of entries) {
-    const placed = locate(entry, byId, workspaceNames);
+    const placed = locate(entry, byId, workspaceNames, pathOf);
     // 어느 워크스페이스에도 속하지 않는 항목 — 노드가 이미 사라진 자리다.
     // 걷을 근거를 세울 수 없으므로 표에도 올리지 않는다.
     if (placed === null || !managed.has(placed.workspaceId)) continue;
@@ -152,28 +151,25 @@ interface Placement {
 /** 항목이 걸린 자리 — 워크스페이스 자체이거나 그 안의 노드다. */
 function locate(
   entry: AclEntry,
-  byId: Map<string, { id: string; name: string; parentId: string | null; workspaceId: string }>,
+  byId: Map<string, { id: string; workspaceId: string }>,
   workspaceNames: Map<string, string>,
+  pathOf: (id: string) => string | null,
 ): Placement | null {
   const node = byId.get(entry.nodeId);
   if (node === undefined) {
+    // 노드가 아니면 워크스페이스 자체다 — 그 계층에도 항목이 걸린다.
     const name = workspaceNames.get(entry.nodeId);
     return name === undefined
       ? null
       : { workspaceId: entry.nodeId, workspaceName: name, path: null };
   }
 
-  const names: string[] = [];
-  for (let cursor: string | null = node.id; cursor !== null; ) {
-    const step = byId.get(cursor);
-    if (step === undefined) break;
-    names.push(step.name);
-    cursor = step.parentId;
-  }
-
-  return {
-    workspaceId: node.workspaceId,
-    workspaceName: workspaceNames.get(node.workspaceId) ?? '',
-    path: names.reverse().join('/'),
-  };
+  const path = pathOf(node.id);
+  return path === null
+    ? null
+    : {
+        workspaceId: node.workspaceId,
+        workspaceName: workspaceNames.get(node.workspaceId) ?? '',
+        path,
+      };
 }
