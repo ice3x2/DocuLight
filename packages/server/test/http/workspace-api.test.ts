@@ -293,3 +293,58 @@ describe('FR-SHELL-003 · FR-ATTACH-001 — 노드 생성과 디렉토리 업로
     expect(res.status).toBe(413);
   });
 });
+
+describe('IR-STORAGE-001 · FR-SHELL-002 AC-3 — 버전 목록과 복원', () => {
+  it('버전 목록을 준다', async () => {
+    const { session } = (await request(app).post(`/api/documents/${doc}/session`)).body;
+    const { hash } = (await request(app).get(`/api/documents/${doc}`)).body;
+    await request(app).put(`/api/documents/${doc}`).send({ body: '# 고침\n', baseHash: hash, session });
+
+    const res = await request(app).get(`/api/documents/${doc}/versions`);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveLength(1);
+    expect(res.body[0]).toMatchObject({ seq: 1 });
+    expect(typeof res.body[0].author).toBe('string');
+    expect(typeof res.body[0].createdAt).toBe('string');
+  });
+
+  it('한 버전의 본문을 준다 — 그것 없이는 나란히 놓을 것이 없다', async () => {
+    const { session } = (await request(app).post(`/api/documents/${doc}/session`)).body;
+    const { hash } = (await request(app).get(`/api/documents/${doc}`)).body;
+    await request(app).put(`/api/documents/${doc}`).send({ body: '# 고침\n', baseHash: hash, session });
+
+    const res = await request(app).get(`/api/documents/${doc}/versions/1`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.body).toBe('# 처음\n');
+  });
+
+  it('AC-2: 고른 버전으로 복원한다', async () => {
+    const { session } = (await request(app).post(`/api/documents/${doc}/session`)).body;
+    const { hash } = (await request(app).get(`/api/documents/${doc}`)).body;
+    await request(app).put(`/api/documents/${doc}`).send({ body: '# 고침\n', baseHash: hash, session });
+
+    const res = await request(app).post(`/api/documents/${doc}/versions/1/restore`);
+
+    expect(res.status).toBe(204);
+    expect(await readFile(fileOf(doc), 'utf8')).toBe('# 처음\n');
+  });
+
+  it('보기 권한만으로는 복원되지 않는다 — 복원은 본문을 바꾸는 일이다', async () => {
+    const { session } = (await request(app).post(`/api/documents/${doc}/session`)).body;
+    const { hash } = (await request(app).get(`/api/documents/${doc}`)).body;
+    await request(app).put(`/api/documents/${doc}`).send({ body: '# 고침\n', baseHash: hash, session });
+
+    grantPermission(stores, root, { nodeId: doc, principalId: me.id, level: 'view' });
+    actingAs = actorFor(stores.principals, me.id);
+
+    expect((await request(app).post(`/api/documents/${doc}/versions/1/restore`)).status).toBe(403);
+  });
+
+  it('권한 없는 문서의 버전 목록은 404 다', async () => {
+    actingAs = actorFor(stores.principals, me.id);
+
+    expect((await request(app).get(`/api/documents/${doc}/versions`)).status).toBe(404);
+  });
+});

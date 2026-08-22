@@ -131,3 +131,20 @@ export function uploadIntoDirectory(parentId: string, file: File) {
     { method: 'POST', body: form },
   );
 }
+
+/** 버전 목록 한 줄 (`IR-STORAGE-001` AC-1). 실체 경로는 오지 않는다. */
+export interface VersionRow {
+  seq: number;
+  createdAt: string;
+  /** 그 버전을 만든 주체 — 「누가」가 없으면 어느 것을 고를지 알 수 없다. */
+  author: string;
+}
+
+export const listVersions = (nodeId: string) =>
+  call<VersionRow[]>(`/documents/${encodeURIComponent(nodeId)}/versions`);
+
+export const loadVersion = (nodeId: string, seq: number) =>
+  call<{ seq: number; body: string }>(`/documents/${encodeURIComponent(nodeId)}/versions/${seq}`);
+
+export const restoreVersion = (nodeId: string, seq: number) =>
+  call<void>(`/documents/${encodeURIComponent(nodeId)}/versions/${seq}/restore`, { method: 'POST' });

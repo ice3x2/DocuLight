@@ -3,6 +3,8 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { useEffect, useState } from 'react';
 
 import { DocumentSurface } from './DocumentSurface.js';
+import { ShareModal } from './ShareModal.js';
+import { VersionHistory } from './VersionHistory.js';
 import { DOCUMENT_MENU_ITEMS } from './document-menu.js';
 import { activeTab, closeTab, type SaveState, type TabState } from './tab-state.js';
 
@@ -23,7 +25,13 @@ const SAVE_LABEL: Record<SaveState, string> = {
  * `⋯` 메뉴의 대상은 언제나 **활성 문서**다 — 탭 스트립 쪽에 두면 어느 탭을
  * 가리키는지가 마우스 위치에 달리게 된다.
  */
-function DocumentHeader({ state }: { state: TabState }) {
+function DocumentHeader({
+  state,
+  onSelect,
+}: {
+  state: TabState;
+  onSelect?: (id: string) => void;
+}) {
   const tab = activeTab(state);
   if (tab === undefined) return null;
 
@@ -37,7 +45,9 @@ function DocumentHeader({ state }: { state: TabState }) {
         <DropdownMenu.Portal>
           <DropdownMenu.Content>
             {DOCUMENT_MENU_ITEMS.map((item) => (
-              <DropdownMenu.Item key={item.id}>{item.label}</DropdownMenu.Item>
+              <DropdownMenu.Item key={item.id} onSelect={() => onSelect?.(item.id)}>
+                {item.label}
+              </DropdownMenu.Item>
             ))}
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
@@ -66,6 +76,13 @@ export function DocumentArea({
   onSaveState?: (nodeId: string, state: SaveState) => void;
 }) {
   const [state, setState] = useState<TabState>(initial);
+  /**
+   * 헤더 메뉴가 연 자리.
+   *
+   * 문서마다 따로 들지 않는다 — 활성 문서 하나에 대해서만 열리기 때문이다
+   * (`IR-SHELL-003` AC-4).
+   */
+  const [panel, setPanel] = useState<string | null>(null);
   // 탭 목록은 바깥이 소유한다 — 안에서만 들면 트리 클릭으로 연 문서가
   // 여기 반영되지 않는다.
   useEffect(() => setState(initial), [initial]);
@@ -86,13 +103,25 @@ export function DocumentArea({
           ))}
         </Tabs.List>
 
-        <DocumentHeader state={state} />
+        <DocumentHeader state={state} onSelect={setPanel} />
 
         {state.tabs.map((tab) => (
           <Tabs.Content key={tab.nodeId} value={tab.nodeId}>
             <button type="button" onClick={() => setState((was) => closeTab(was, tab.nodeId))}>
               {tab.name} 닫기
             </button>
+            {panel === 'versions' && (
+              <VersionHistory
+                nodeId={tab.nodeId}
+                currentBody={bodies[tab.nodeId] ?? ''}
+                onRestored={() => setPanel(null)}
+              />
+            )}
+            <ShareModal
+              name={tab.name}
+              open={panel === 'share'}
+              onOpenChange={(next) => setPanel(next ? 'share' : null)}
+            />
             <DocumentSurface
               file={{ nodeId: tab.nodeId, name: tab.name, level: tab.level ?? null }}
               save={tab.save}

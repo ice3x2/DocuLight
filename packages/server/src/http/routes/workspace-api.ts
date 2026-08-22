@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
 import { Router, json, type Request } from 'express';
@@ -20,7 +20,11 @@ import {
 import { createNode } from '../../app/node/node-service.js';
 import { noticeFor } from '../../domain/node/collision-notice.js';
 import { readDocument, saveDocument, workspaceRootOf } from '../../app/document/save-service.js';
-import { beginEditSession } from '../../app/document/version-service.js';
+import {
+  beginEditSession,
+  listVersions,
+  restoreVersion,
+} from '../../app/document/version-service.js';
 import { moveToTrash, purgeFromTrash, type TrashStores } from '../../app/trash/trash-service.js';
 import { trashView, type TrashScope } from '../../app/trash/trash-view.js';
 import type { NodeId } from '../../domain/node/node-id.js';
@@ -232,6 +236,90 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       return;
     }
     res.sendStatus(saved.rule === 'forbidden' ? 403 : 404);
+  });
+
+  /**
+   * 버전 목록 (`IR-STORAGE-001` AC-1 · `FR-SHELL-002` AC-3).
+   *
+   * 실체 경로는 **주지 않는다** — 그것을 주면 화면이 파일시스템을 알게
+   * 되고, 그 순간 저장 자리를 바꿀 수 없게 된다. 본문은 별도 경로로 준다.
+   */
+  router.get('/documents/:nodeId/versions', async (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const nodeId = one(req.params.nodeId);
+    if (nodeId === undefined) {
+      res.sendStatus(404);
+      return;
+    }
+
+    // 문서를 볼 수 없으면 그 버전 목록도 없는 것과 같다.
+    const read = await readDocument(stores, actor, nodeId);
+    if (!read.ok) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(
+      listVersions(stores, actor, nodeId).map((version) => ({
+        seq: version.seq,
+        createdAt: version.createdAt,
+        author: version.author,
+      })),
+    );
+  });
+
+  /** 한 버전의 본문. 나란히 놓으려면 그 내용이 있어야 한다. */
+  router.get('/documents/:nodeId/versions/:seq', async (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const nodeId = one(req.params.nodeId);
+    const seq = Number(one(req.params.seq));
+    if (nodeId === undefined || !Number.isInteger(seq)) {
+      res.sendStatus(404);
+      return;
+    }
+
+    const read = await readDocument(stores, actor, nodeId);
+    if (!read.ok) {
+      res.sendStatus(404);
+      return;
+    }
+
+    const found = listVersions(stores, actor, nodeId).find((version) => version.seq === seq);
+    if (found === undefined) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json({ seq: found.seq, body: await readFile(found.path, 'utf8') });
+  });
+
+  /** 그 버전으로 되돌린다 (`IR-STORAGE-001` AC-2). */
+  router.post('/documents/:nodeId/versions/:seq/restore', async (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const nodeId = one(req.params.nodeId);
+    const seq = Number(one(req.params.seq));
+    if (nodeId === undefined || !Number.isInteger(seq)) {
+      res.sendStatus(404);
+      return;
+    }
+
+    const done = await restoreVersion(stores, actor, { nodeId, seq });
+    res.sendStatus(done.ok ? 204 : done.rule === 'forbidden' ? 403 : 404);
   });
 
   router.post('/documents/:nodeId/attachments', upload.single('file'), async (req, res) => {
