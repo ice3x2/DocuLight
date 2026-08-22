@@ -7,6 +7,7 @@ import { FavoritesView, type Favorite } from '../favorites/FavoritesView.js';
 import { SearchPanel, type SearchHit } from '../search/SearchPanel.js';
 import type { TabState } from '../document/tab-state.js';
 import { DocumentTree } from '../tree/DocumentTree.js';
+import type { UploadRequest } from '../attachment/upload-contract.js';
 import { EmptyState } from '../tree/EmptyState.js';
 import { TrashPanel, type TrashRowView } from '../trash/TrashPanel.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
@@ -136,6 +137,7 @@ export function AppShell({
   trash = [],
   onQuery,
   onOpen,
+  onUpload,
 }: {
   viewer: Viewer;
   workspaces?: readonly WorkspaceTreeView[];
@@ -151,6 +153,7 @@ export function AppShell({
   trash?: readonly TrashRowView[];
   onQuery?: (query: string) => void;
   onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
+  onUpload?: (request: UploadRequest) => void;
 }) {
   return (
     <div data-shell="root">
@@ -170,7 +173,7 @@ export function AppShell({
             return workspaces.length === 0 ? (
               <EmptyState />
             ) : (
-              <DocumentTree workspaces={workspaces} onOpen={onOpen} />
+              <DocumentTree workspaces={workspaces} onOpen={onOpen} onUpload={onUpload} />
             );
           if (tab.id === 'search')
             return (

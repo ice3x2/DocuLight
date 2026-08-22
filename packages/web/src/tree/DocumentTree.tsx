@@ -71,29 +71,17 @@ function NodeMenu({ node, children }: { node: TreeNodeView; children: React.Reac
 function TreeRow({
   row,
   api,
-  onUpload,
   onOpen,
 }: {
   row: Row;
   api: NodeApi<Row>;
-  onUpload?: (request: UploadRequest) => void;
   onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
 }) {
   const node = row.node;
   const expandable = !api.isLeaf;
 
   return (
-    <div
-      // 업로드는 **현재 화면에서 완결된다** (`FR-ATTACH-001` AC-3) —
-      // 별도 업로드 화면·모드로 보내지 않는다.
-      onDragOver={(event) => event.preventDefault()}
-      onDrop={(event) => {
-        event.preventDefault();
-        if (node === undefined) return;
-        const accepted = acceptedDrop(node, [...event.dataTransfer.files]);
-        if (accepted.ok) onUpload?.(accepted.request);
-      }}
-    >
+    <div>
       {expandable && (
         <button type="button" onClick={() => api.toggle()}>
           {row.name} {api.isOpen ? '접기' : '펼치기'}
@@ -114,23 +102,39 @@ function TreeRow({
 }
 
 /**
- * 행 래퍼 — 컨텍스트 메뉴가 여기 붙는다.
+ * 행 래퍼 — 컨텍스트 메뉴와 드롭이 여기 붙는다.
  *
- * 줄 안쪽이 아니라 **행 전체**를 감싸는 이유는 사용자가 줄 어디를 우클릭해도
- * 메뉴가 열려야 하기 때문이다. 안쪽에 붙이면 이름 글자 위에서만 열리고,
- * 빈 여백을 눌렀을 때 아무 일도 안 일어난다.
+ * 줄 안쪽이 아니라 **행 전체**를 감싸는 이유는 사용자가 줄 어디를 우클릭하거나
+ * 어디에 떨궈도 동작해야 하기 때문이다. 안쪽에 붙이면 이름 글자 위에서만
+ * 열리고, 빈 여백을 눌렀을 때 아무 일도 안 일어난다.
  *
- * 워크스페이스 줄에는 서지 않는다 — 그 아홉 항목은 노드에 대한 조작이고,
- * 워크스페이스는 노드가 아니다.
+ * 워크스페이스 줄에는 컨텍스트 메뉴가 서지 않는다 — 그 아홉 항목은 노드에
+ * 대한 조작이고, 워크스페이스는 노드가 아니다.
  */
-function TreeRowWrapper({ node, innerRef, attrs, children }: RowRendererProps<Row>) {
+function TreeRowWrapper(
+  { node, innerRef, attrs, children }: RowRendererProps<Row>,
+  onUpload?: (request: UploadRequest) => void,
+) {
+  const view = node.data.node;
+
   const line = (
-    <div ref={innerRef} {...attrs}>
+    <div
+      ref={innerRef}
+      {...attrs}
+      // 업로드는 **현재 화면에서 완결된다** (`FR-ATTACH-001` AC-3) —
+      // 별도 업로드 화면·모드로 보내지 않는다.
+      onDragOver={(event) => event.preventDefault()}
+      onDrop={(event) => {
+        event.preventDefault();
+        if (view === undefined) return;
+        const accepted = acceptedDrop(view, [...event.dataTransfer.files]);
+        if (accepted.ok) onUpload?.(accepted.request);
+      }}
+    >
       {children}
     </div>
   );
 
-  const view = node.data.node;
   return view === undefined ? line : <NodeMenu node={view}>{line}</NodeMenu>;
 }
 
@@ -201,11 +205,11 @@ export function DocumentTree({
           overscanCount={rows.length + 64}
           disableDrag
           disableDrop
-          renderRow={TreeRowWrapper}
+          renderRow={(props: RowRendererProps<Row>) => TreeRowWrapper(props, onUpload)}
         >
           {({ node, style }: NodeRendererProps<Row>) => (
             <div style={style}>
-              <TreeRow row={node.data} api={node} onUpload={onUpload} onOpen={onOpen} />
+              <TreeRow row={node.data} api={node} onOpen={onOpen} />
             </div>
           )}
         </Tree>

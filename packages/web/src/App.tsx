@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { ApiError, fetchSession, fetchTree, fetchTrash, loadDocument, type SessionBody } from './api/client.js';
+import { uploadAttachment } from './api/client.js';
+import type { UploadRequest } from './attachment/upload-contract.js';
 import type { TrashRowView } from './trash/TrashPanel.js';
 import { PreAuthScreen } from './auth/PreAuthScreen.js';
 import { AppShell } from './shell/AppShell.js';
@@ -95,6 +97,25 @@ export function App() {
     [],
   );
 
+  /**
+   * 트리에 떨군 파일을 올린다 (`FR-ATTACH-001`).
+   *
+   * 올린 뒤 트리를 **다시 받는다**(AC-2) — 새 파일이 그 디렉토리의 자식으로
+   * 나타나야 하고, 안 받으면 사용자는 파일이 안 올라간 것으로 읽는다.
+   * 거부됐으면 다시 받지 않는다: 바뀐 것이 없으므로 헛된 왕복이다.
+   */
+  const upload = useCallback(async (request: UploadRequest) => {
+    const target = request.ownerNodeId ?? request.parentId;
+    if (target === undefined) return;
+
+    const done = await Promise.all(
+      request.files.map((file) => uploadAttachment(target, file).then(() => true).catch(() => false)),
+    );
+    if (!done.some(Boolean)) return;
+
+    setWorkspaces(await fetchTree<WorkspaceTreeView[]>().catch(() => []));
+  }, []);
+
   // 주소에 문서가 실려 들어왔으면 그것을 연다 (`FR-SHELL-006` AC-2).
   useEffect(() => {
     const wanted = nodeIdOf(window.location.pathname);
@@ -116,6 +137,7 @@ export function App() {
       hashes={hashes}
       trash={trash}
       onOpen={open}
+      onUpload={upload}
     />
   );
 }
