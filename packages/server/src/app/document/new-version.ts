@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import { permissionOf, type Actor } from '../acl/permission-service.js';
+import { uploadLimitBytes } from '../attachment/attachment-service.js';
 import { permits } from '../../domain/acl/level.js';
 import { isVersioned } from '../../domain/document/version-layout.js';
 import type { NodeId } from '../../domain/node/node-id.js';
@@ -9,7 +10,7 @@ import { isServable } from '../../domain/serving/servable.js';
 import { beginEditSession, snapshotIfFirstSave } from './version-service.js';
 import { workspaceRootOf, type DocumentStores } from './save-service.js';
 
-export type NewVersionRule = 'unknown-node' | 'forbidden' | 'not-a-file';
+export type NewVersionRule = 'unknown-node' | 'forbidden' | 'not-a-file' | 'too-large';
 
 export type NewVersionOutcome = { ok: true } | { ok: false; rule: NewVersionRule };
 
@@ -55,6 +56,13 @@ export async function uploadNewVersion(
   if (!permits(level, 'edit')) return { ok: false, rule: 'forbidden' };
 
   if (node.kind !== 'file') return { ok: false, rule: 'not-a-file' };
+
+  // **쓰기 전에** 재고 거절한다. 뒤로 미루면 거절된 파일이 이미 원본을
+  // 덮은 뒤가 되고, 그 원본은 되돌릴 수 없다.
+  //
+  // 판정을 라우트가 아니라 여기서 하는 이유 — 라우트마다 손으로 적으면
+  // 새 경로를 낼 때 빠뜨리게 되고, 빠뜨린 그 경로에서만 제한이 없다.
+  if (input.bytes.byteLength > uploadLimitBytes(stores)) return { ok: false, rule: 'too-large' };
 
   const root = workspaceRootOf(stores, node.workspaceId);
   const path = join(root, stores.nodes.pathOf(input.nodeId));

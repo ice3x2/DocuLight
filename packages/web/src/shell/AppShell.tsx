@@ -202,6 +202,7 @@ export function AppShell({
   onCreateNote,
   onFavorite,
   onNewVersion,
+  onNoticeDismiss,
   confirmReplace,
   onSaveState,
 }: {
@@ -239,6 +240,8 @@ export function AppShell({
   onFavorite?: (nodeId: string) => void;
   /** 그 파일에 새 버전을 올린다 (`FR-SHELL-008` AC-2). */
   onNewVersion?: (node: TreeNodeView, file: File) => void;
+  /** 안내를 닫았다. 문구를 바깥이 들고 있으므로 지우는 것도 바깥이 한다. */
+  onNoticeDismiss?: () => void;
   /**
    * 활성 탭을 교체하기 전에 받아야 할 확인 (`FR-SHELL-012` AC-3 · AC-4).
    *
@@ -254,7 +257,7 @@ export function AppShell({
    * 여기서 드는 이유는 이 탭을 여는 자리가 **둘**이기 때문이다 — 탭을
    * 직접 누르는 것과 본문 태그를 누르는 것(`FR-EDITOR-007` AC-11).
    */
-  const [leftTab, setLeftTab] = useState<string>(LEFT_TABS[0]!.id);
+  const [leftTab, setLeftTab] = useState(LEFT_TABS[0]!.id);
   /** 새 버전을 올릴 대상. 골라 둔 뒤 확인과 파일 고르기가 이어진다. */
   const [overwriting, setOverwriting] = useState<TreeNodeView | null>(null);
 
@@ -323,9 +326,19 @@ export function AppShell({
           // `status` 인 이유는 이것이 사용자의 조작을 막지 않기 때문이다 —
           // 알림은 이미 끝난 일을 알리는 것이고, 대화상자로 세우면 확인
           // 단계가 하나 생겨 `SEC-SHELL-002` AC-4 가 깨진다.
-          <p role="status" aria-label="알림">
-            {notice}
-          </p>
+          //
+          // **닫을 수 있어야 한다.** 세션 내내 남으면 지난 조작의 말이
+          // 지금 것으로 읽힌다.
+          <div>
+            {/* 닫기 버튼을 이 안에 넣지 않는다 — `status` 는 읽어 주는
+                자리라, 버튼 글자까지 함께 읽히면 안내가 길어진다. */}
+            <p role="status" aria-label="알림">
+              {notice}
+            </p>
+            <button type="button" onClick={() => onNoticeDismiss?.()}>
+              알림 닫기
+            </button>
+          </div>
         )}
         <DocumentArea
           initial={documents}

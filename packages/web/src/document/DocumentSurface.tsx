@@ -207,10 +207,26 @@ export function DocumentSurface({
    * (`CON-ARCH-006` AC-2).
    */
   const lastBody = useRef<string | undefined>(body);
+  /**
+   * 마지막으로 받아들인 **서버 본문**.
+   *
+   * `lastBody` 와 따로 드는 이유는 둘이 묻는 것이 다르기 때문이다 — 저쪽은
+   * 「지금 편집기에 무엇이 있나」, 이쪽은 「서버가 준 것이 새것인가」다.
+   * 이것 없이는 갓 도착한 본문과 이미 받아들인 본문을 구별할 수 없다.
+   */
+  const lastServerBody = useRef<string | undefined>(body);
   // 본문이 **나중에** 도착한다. 탭은 곧바로 서고 서버 응답은 그 뒤에
   // 오므로, 처음 한 번만 채우는 초기값에 기대면 그 자리가 빈 채로 굳는다 —
   // 그 상태로 Ctrl+S 를 누르면 빈 문자열이 저장되어 문서가 지워진다.
-  if (body !== undefined && lastBody.current === undefined) lastBody.current = body;
+  //
+  // **처음뿐 아니라 바뀔 때마다** 받아들인다. 새 버전 올리기가 같은 탭의
+  // 본문을 갈아 끼우는데, 처음 한 번만 채우면 화면은 옛 본문을 든 채
+  // 기준 해시만 새것이 된다 — 그 조합은 서버의 충돌 판정을 그대로 통과해
+  // 방금 올린 버전을 조용히 되돌린다.
+  if (body !== undefined && body !== lastServerBody.current) {
+    lastServerBody.current = body;
+    lastBody.current = body;
+  }
   /** 지금 편집기가 들고 있는 본문. 저장·내려받기·머지가 이것을 읽는다. */
   const readBody = () => lastBody.current ?? '';
   // **모드나 문서가 바뀔 때만** 다시 읽는다. 타이핑마다 새 값을 넘기면

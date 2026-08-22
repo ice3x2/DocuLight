@@ -339,3 +339,48 @@ describe('CON-ARCH-004 AC-4 — 사용자·그룹 검색이 cmdk 로 선다', ()
     expect(await screen.findByRole('combobox', { name: '사용자·그룹 검색' })).toBeDefined();
   });
 });
+
+describe('검증에서 나온 나머지 — 안내 소거·취소·포커스', () => {
+  it('안내를 닫으면 사라진다 — 세션 내내 남으면 지난 조작의 말이 지금 것으로 읽힌다', async () => {
+    routes.set('/api/nodes', () =>
+      json({ id: 'n9', name: '제목 없음 (2).md', notice: '같은 이름이 있어 바꿔 만들었습니다.' }),
+    );
+    const user = await openTree();
+
+    await user.click(screen.getByRole('button', { name: '새 노트' }));
+    await screen.findByRole('status', { name: '알림' });
+    await user.click(screen.getByRole('button', { name: '알림 닫기' }));
+
+    expect(screen.queryByRole('status', { name: '알림' })).toBeNull();
+  });
+
+  it('md 문서의 새 버전 올리기도 그만둘 수 있다 — 파일을 고르는 것 말고 없앨 방법이 있어야 한다', async () => {
+    const user = await openTree();
+
+    await user.pointer({
+      keys: '[MouseRight]',
+      target: screen.getByRole('treeitem', { name: /회의록/ }),
+    });
+    await user.click(
+      within(await screen.findByRole('menu')).getByRole('menuitem', { name: '새 버전 올리기' }),
+    );
+    await user.click(await screen.findByRole('button', { name: '그만두기' }));
+
+    expect(screen.queryByLabelText('회의록.md 새 버전 파일')).toBeNull();
+  });
+
+  it('되돌릴 수 없는 파일의 경고는 모달로 선다 — 뒤가 조작 가능하면 경고를 지나칠 수 있다', async () => {
+    const user = await openTree();
+
+    await user.pointer({
+      keys: '[MouseRight]',
+      target: screen.getByRole('treeitem', { name: /설계.zip/ }),
+    });
+    await user.click(
+      within(await screen.findByRole('menu')).getByRole('menuitem', { name: '새 버전 올리기' }),
+    );
+
+    const warning = await screen.findByRole('alertdialog', { name: '새 버전 올리기' });
+    expect(warning.getAttribute('aria-modal')).toBe('true');
+  });
+});

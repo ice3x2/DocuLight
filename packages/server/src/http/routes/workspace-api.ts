@@ -715,7 +715,15 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       return;
     }
 
-    res.sendStatus(done.rule === 'forbidden' ? 403 : done.rule === 'not-a-file' ? 400 : 404);
+    res.sendStatus(
+      done.rule === 'forbidden'
+        ? 403
+        : done.rule === 'too-large'
+          ? 413
+          : done.rule === 'not-a-file'
+            ? 400
+            : 404,
+    );
   });
 
   router.get('/trash', (req, res) => {

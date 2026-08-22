@@ -65,24 +65,57 @@ describe('CON-ARCH-005 — 프레임워크 중립 패키지를 쓴다', () => {
   });
 });
 
+/**
+ * 본문이 React state 로 올라간 자리인가 (`CON-ARCH-006` AC-1 · AC-2).
+ *
+ * **두 판정을 함께 쓴다.**
+ * ① 선언된 이름이 본문을 가리키는가 — 타입을 적지 않은 `useState('')` 까지
+ *    잡는다.
+ * ② `useState<string>` 과 본문 낱말이 한 파일에 함께 있는가 — 이름이
+ *    `markdown` 처럼 본문 낱말을 안 쓰는 경우를 잡는다.
+ *
+ * 하나만 남기면 다른 쪽이 잡던 형태가 통째로 새어 나간다. ②가 오탐을 내면
+ * 그 자리의 **불필요한 타입 표기를 지우는 것**이 답이다 — 판정을 좁히면
+ * 진짜 위반까지 함께 빠져나간다.
+ *
+ * 에디터에 `value=` 로 본문을 주입하는 형태도 같은 결함이다: 정본이 둘이 된다.
+ */
+export function bodyInReactState(text: string): boolean {
+  const namedBody = /const\s*\[\s*\w*(body|content|본문)\w*\s*,[^\]]*\]\s*=\s*useState/i;
+  const typedString = /useState<\s*string\s*>\s*\(/;
+  const bodyWord = /body|본문/i;
+  const editorValue = /<\s*\w*(Editor|CodeMirror)\b[^>]*\bvalue=/s;
+
+  return (
+    namedBody.test(text) ||
+    (typedString.test(text) && bodyWord.test(text)) ||
+    editorValue.test(text)
+  );
+}
+
 describe('CON-ARCH-006 — 본문의 정본은 CodeMirror 이고 React state 로 올리지 않는다', () => {
+  // 판정 자체를 먼저 재다 — 이것이 틀리면 아래 시험은 무엇도 재지 않으면서
+  // 통과하고, 그 통과가 「위반이 없다」로 읽힌다.
+  it('판정이 위반 형태를 실제로 잡는다', () => {
+    expect(bodyInReactState("const [body, setBody] = useState('');")).toBe(true);
+    expect(bodyInReactState('const [markdown, setMarkdown] = useState<string>(serverBody);')).toBe(
+      true,
+    );
+    expect(bodyInReactState('<MarkdownEditor value={body} />')).toBe(true);
+
+    expect(bodyInReactState("const [tab, setTab] = useState('tree');")).toBe(false);
+    expect(bodyInReactState('const [open, setOpen] = useState(false);')).toBe(false);
+  });
+
   it('AC-1 · AC-2: 본문 문자열을 controlled value 로 묶는 자리가 없다', async () => {
-    const sources = [...(await sourcesUnder(join(ROOT, 'src'))), ...(await sourcesUnder(join(WEB, 'src')))];
+    const sources = [
+      ...(await sourcesUnder(join(ROOT, 'src'))),
+      ...(await sourcesUnder(join(WEB, 'src'))),
+    ];
 
     const offenders: string[] = [];
     for (const path of sources) {
-      const text = await readFile(path, 'utf8');
-      // `useState` 에 본문이 올라가는 형태와, 에디터에 `value=` 로 본문을
-      // 주입하는 형태 둘 다 본문의 정본을 둘로 만든다.
-      //
-      // **선언된 이름으로 판정한다.** 파일 어딘가에 `본문` 이라는 낱말이
-      // 있는지로 재면 그 낱말을 주석에 쓴 파일이 전부 걸리고, 타입을
-      // 적지 않은 `useState('')` 는 그대로 빠져나간다 — 두 방향으로 다
-      // 틀린다.
-      if (/const\s*\[\s*\w*(body|content|본문)\w*\s*,[^\]]*\]\s*=\s*useState/i.test(text)) {
-        offenders.push(path);
-      }
-      if (/<\s*\w*(Editor|CodeMirror)\b[^>]*\bvalue=/s.test(text)) offenders.push(path);
+      if (bodyInReactState(await readFile(path, 'utf8'))) offenders.push(path);
     }
 
     expect(offenders, `본문이 React state 로 올라간 자리: ${offenders.join(', ')}`).toEqual([]);

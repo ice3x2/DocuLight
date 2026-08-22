@@ -3,6 +3,7 @@ import { dirname, join } from 'node:path';
 
 import { permissionOf, type Actor } from '../acl/permission-service.js';
 import { readSetting } from '../settings/instance-settings.js';
+import type { SettingStore } from '../../domain/ports/setting-store.js';
 import { workspaceRootOf, type DocumentStores } from '../document/save-service.js';
 import { permits } from '../../domain/acl/level.js';
 import type { NodeId } from '../../domain/node/node-id.js';
@@ -42,7 +43,7 @@ export type AttachOutcome =
 export type OpenOutcome = { ok: true; bytes: Buffer } | { ok: false; rule: 'unknown-node' | 'forbidden' };
 
 /** 설정된 업로드 상한 (`FR-ATTACH-006` AC-1). */
-export function uploadLimitBytes(stores: AttachmentStores): number {
+export function uploadLimitBytes(stores: { settings: SettingStore }): number {
   const stored = Number(readSetting(stores.settings, 'upload-size-limit-bytes'));
   return Number.isFinite(stored) && stored > 0 ? stored : 104857600;
 }

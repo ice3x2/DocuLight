@@ -19,9 +19,14 @@ const json = (body: unknown, status = 200) =>
 
 let saves: Array<{ body: string; baseHash: string; session?: string }>;
 let saveResponse: () => Response;
+/** 서버가 지금 들고 있는 본문. 새 버전 올리기가 이 값을 바꾼다. */
+let body: { body: string; hash: string };
+let uploaded: string[];
 
 beforeEach(() => {
   saves = [];
+  uploaded = [];
+  body = { body: '# 처음\n', hash: 'h1' };
   saveResponse = () => json({ hash: 'h2' });
 
   vi.stubGlobal(
@@ -35,7 +40,15 @@ beforeEach(() => {
         saves.push(JSON.parse(String(init.body)));
         return Promise.resolve(saveResponse());
       }
-      if (path === '/api/documents/n1') return Promise.resolve(json({ body: '# 처음\n', hash: 'h1' }));
+      if (path === '/api/documents/n1') return Promise.resolve(json(body));
+      if (path === '/api/nodes/n1/new-version') {
+        uploaded.push('n1');
+        return Promise.resolve(json(null, 204));
+      }
+      if (path === '/api/favorites') return Promise.resolve(json([]));
+      if (path === '/api/trash') return Promise.resolve(json([]));
+      if (path === '/api/documents/n1/links')
+        return Promise.resolve(json({ outgoing: [], backlinks: [] }));
       return Promise.resolve(json(null, 404));
     }),
   );
@@ -169,5 +182,40 @@ describe('편집 없이 저장해도 본문을 지우지 않는다', () => {
 
     await waitFor(() => expect(saves.length).toBeGreaterThan(0));
     expect(saves[saves.length - 1]!.body).toContain('고침');
+  });
+});
+
+describe('FR-SHELL-008 AC-2 — 열려 있는 문서에 새 버전을 올려도 다음 저장이 되돌리지 않는다', () => {
+  it('올린 뒤 아무것도 치지 않고 저장하면 방금 올린 본문이 나간다', async () => {
+    const user = await openDocument();
+
+    // 올리고 나면 서버가 새 본문을 준다. 화면이 그것을 받아들이지 못하면
+    // **옛 본문 + 새 해시**가 되어 서버의 충돌 판정을 그대로 통과하고,
+    // 방금 올린 버전이 조용히 되돌려진다.
+    body = { body: '# 새 버전\n', hash: 'h9' };
+
+    const sidebar = screen.getByRole('complementary', { name: '좌측 사이드바' });
+    await user.pointer({
+      keys: '[MouseRight]',
+      target: within(sidebar).getByRole('treeitem', { name: /회의록/ }),
+    });
+    await user.click(
+      within(await screen.findByRole('menu')).getByRole('menuitem', { name: '새 버전 올리기' }),
+    );
+    await user.upload(
+      screen.getByLabelText('회의록.md 새 버전 파일'),
+      new File(['# 새 버전\n'], '회의록.md', { type: 'text/markdown' }),
+    );
+
+    await waitFor(() => expect(uploaded).toHaveLength(1));
+    await waitFor(() =>
+      expect(document.querySelector('.cm-content')?.textContent).toContain('새 버전'),
+    );
+
+    await user.click(screen.getByRole('button', { name: '편집' }));
+    await user.keyboard('{Control>}s{/Control}');
+
+    await waitFor(() => expect(saves).toHaveLength(1));
+    expect(saves[0]!.body).toBe('# 새 버전\n');
   });
 });

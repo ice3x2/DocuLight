@@ -567,3 +567,27 @@ describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
     expect((await request(app).get('/api/principals').query({ q: '한' })).status).toBe(401);
   });
 });
+
+describe('새 버전 올리기도 업로드 크기 제한을 지킨다 (`IR-SHELL-002` AC-7)', () => {
+  it('제한을 넘는 파일은 413 이고 원본은 그대로다', async () => {
+    writeSetting(stores.settings, 'upload-size-limit-bytes', '8');
+
+    const sent = await request(app)
+      .post(`/api/nodes/${doc}/new-version`)
+      .attach('file', Buffer.alloc(64, 1), '회의록.md');
+
+    expect(sent.status).toBe(413);
+    // 검사가 쓰기보다 **먼저**여야 한다 — 뒤면 거절된 파일이 이미 덮여 있다.
+    expect(await readFile(fileOf(doc), 'utf8')).toBe('# 처음\n');
+  });
+
+  it('제한 안이면 그대로 올라간다', async () => {
+    writeSetting(stores.settings, 'upload-size-limit-bytes', '1024');
+
+    const sent = await request(app)
+      .post(`/api/nodes/${doc}/new-version`)
+      .attach('file', Buffer.from('# 다음\n'), '회의록.md');
+
+    expect(sent.status).toBe(204);
+  });
+});

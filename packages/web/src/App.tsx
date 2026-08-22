@@ -360,6 +360,7 @@ function AppBody() {
       onCreateNote={createNote}
       onFavorite={favorite}
       onNewVersion={newVersion}
+      onNoticeDismiss={() => setNotice(undefined)}
       onSaveState={noteSaveState}
       {...(notice === undefined ? {} : { notice })}
       {...(pendingOpen === null
