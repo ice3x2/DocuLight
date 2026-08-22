@@ -144,3 +144,30 @@ describe('FR-STORAGE-001 AC-4 — Ctrl+S 가 강제 스냅샷을 요청한다', 
     expect((saves[0] as { forceSnapshot?: boolean }).forceSnapshot).toBeUndefined();
   });
 });
+
+describe('편집 없이 저장해도 본문을 지우지 않는다', () => {
+  it('아무것도 치지 않고 Ctrl+S 를 누르면 받아 온 본문 그대로 저장된다', async () => {
+    const user = await openDocument();
+    await user.click(screen.getByRole('button', { name: '편집' }));
+
+    await user.keyboard('{Control>}s{/Control}');
+
+    await waitFor(() => expect(saves).toHaveLength(1));
+    // 빈 문자열로 나가면 기준 해시는 맞으므로 서버가 받아들이고, 사용자
+    // 화면의 글이 통째로 사라진다.
+    expect(saves[0]!.body).toBe('# 처음\n');
+  });
+
+  it('고친 뒤에는 고친 것이 나간다', async () => {
+    const user = await openDocument();
+    await user.click(screen.getByRole('button', { name: '편집' }));
+
+    const content = document.querySelector('.cm-content') as HTMLElement;
+    await user.click(content);
+    await user.keyboard('고침');
+    await user.keyboard('{Control>}s{/Control}');
+
+    await waitFor(() => expect(saves.length).toBeGreaterThan(0));
+    expect(saves[saves.length - 1]!.body).toContain('고침');
+  });
+});

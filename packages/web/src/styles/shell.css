@@ -26,11 +26,20 @@
 }
 
 [data-shell='root'] > main {
-  display: grid;
-  /* 탭 스트립 · 문서 헤더 · 본문 — 세 행이다. */
-  grid-template-rows: auto auto minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   min-height: 0;
+}
+
+/* 본문 영역이 남은 높이를 전부 받는다. 격자로 행을 세지 않는 이유는
+   그 사이에 라이브러리 래퍼가 몇 겹 끼어 있어 행 수가 DOM 구조에 묶이기
+   때문이다 — 구조가 바뀌면 조용히 어긋난다. */
+[data-shell='root'] > main > * {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 auto;
 }
 
 [data-shell='root'] > main [role='tablist'] {
@@ -40,7 +49,9 @@
   flex: 0 0 auto;
 }
 
-[data-shell='root'] > main > div > header {
+/* 문서 헤더. 자손 선택자를 쓰는 이유는 탭 라이브러리가 그 사이에 래퍼를
+   끼우기 때문이다 — 직계로 적으면 래퍼가 하나 늘 때 규칙이 죽는다. */
+[data-shell='root'] > main header {
   display: flex;
   align-items: center;
   gap: 0.5rem;

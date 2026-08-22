@@ -146,7 +146,10 @@ export function DocumentSurface({
    */
   const attach = useCallback(
     async (file: File): Promise<string | null> => {
-      const allowed = pasteUpload({ nodeId: file.name === '' ? '' : fileRef.current.nodeId, level: fileRef.current.level }, [file]);
+      const allowed = pasteUpload(
+        { nodeId: fileRef.current.nodeId, level: fileRef.current.level },
+        [file],
+      );
       if (!allowed.ok) return null;
 
       const done = await uploadAttachment(fileRef.current.nodeId, file).catch(() => null);
@@ -173,9 +176,6 @@ export function DocumentSurface({
   fileRef.current = file;
 
   const autosave = useAutosave(file.nodeId, baseHash);
-  // 편집기 인스턴스에서 본문을 꺼낸다 — 정본이 거기이기 때문이다
-  // (`CON-ARCH-006` AC-3).
-  const readBody = useRef<() => string>(() => body ?? '');
   /**
    * 편집기에 넘길 문서.
    *
@@ -188,7 +188,12 @@ export function DocumentSurface({
    * (`CON-ARCH-006` AC-2).
    */
   const lastBody = useRef<string | undefined>(body);
+  // 본문이 **나중에** 도착한다. 탭은 곧바로 서고 서버 응답은 그 뒤에
+  // 오므로, 처음 한 번만 채우는 초기값에 기대면 그 자리가 빈 채로 굳는다 —
+  // 그 상태로 Ctrl+S 를 누르면 빈 문자열이 저장되어 문서가 지워진다.
   if (body !== undefined && lastBody.current === undefined) lastBody.current = body;
+  /** 지금 편집기가 들고 있는 본문. 저장·내려받기·머지가 이것을 읽는다. */
+  const readBody = () => lastBody.current ?? '';
   // **모드나 문서가 바뀔 때만** 다시 읽는다. 타이핑마다 새 값을 넘기면
   // 편집기가 자기 문서와 다른 값을 계속 받아 흔들리고, 글자가 새어 나간다.
   const documentText = useMemo(
@@ -204,7 +209,7 @@ export function DocumentSurface({
     (event: KeyboardEvent) => {
       if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== 's') return;
       event.preventDefault();
-      autosave.saveNow(readBody.current());
+      autosave.saveNow(readBody());
     },
     [autosave],
   );
@@ -250,7 +255,7 @@ export function DocumentSurface({
           <p>저장이 거부되었습니다. 편집 중이던 본문은 그대로 남아 있습니다.</p>
           {/* 본문을 되찾을 길을 함께 준다 (`FR-EDITOR-005` AC-2) — 알리기만
               하면 사용자는 화면을 닫는 순간 자기 글을 잃는다. */}
-          <button type="button" onClick={() => downloadBody(file.name, readBody.current())}>
+          <button type="button" onClick={() => downloadBody(file.name, readBody())}>
             내려받기
           </button>
         </div>
@@ -265,9 +270,8 @@ export function DocumentSurface({
           <MergeView
             label="병합"
             left={conflictBody ?? ''}
-            right={readBody.current()}
+            right={readBody()}
             onResolve={(merged) => {
-              readBody.current = () => merged;
               lastBody.current = merged;
               autosave.resolve(merged);
             }}
@@ -285,7 +289,6 @@ export function DocumentSurface({
             aria-label="원문"
             defaultValue={documentText}
             onChange={(event) => {
-              readBody.current = () => event.target.value;
               lastBody.current = event.target.value;
               autosave.changed(event.target.value);
             }}
@@ -300,9 +303,10 @@ export function DocumentSurface({
             extensions={extensions}
             readOnly={mode === 'read'}
             onMarkdownChange={(next: string) => {
-              // 본문을 상태에 올리지 않고 **꺼내 오는 함수**만 갱신한다
-              // (`CON-ARCH-006` AC-1) — 올리면 정본이 둘이 된다.
-              readBody.current = () => next;
+              // 본문을 상태에 올리지 않고 **ref 한 곳**만 갱신한다
+              // (`CON-ARCH-006` AC-1) — 올리면 정본이 둘이 된다. 두 ref 로
+              // 나눠 들면 그중 하나만 갱신되는 자리가 생기고, 그 자리가
+              // 위에서 말한 데이터 손실이었다.
               lastBody.current = next;
               if (mode !== 'read') autosave.changed(next);
             }}

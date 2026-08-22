@@ -88,14 +88,30 @@ export const SETTINGS_CATEGORIES: readonly SettingsCategory[] = [
   { id: 'instance', label: '인스턴스 설정', section: 'instance', gate: 'superuser' },
 ];
 
-/** `인스턴스 설정` 카테고리가 담는 다섯 설정 (`IR-SHELL-002` AC-7). */
-export const INSTANCE_SETTINGS: readonly string[] = [
-  '가입 모드',
-  '업로드 크기 제한',
-  '보관 버전 개수',
-  '휴지통 보존 일수',
-  '감사 로그 보존 기간',
+/**
+ * `인스턴스 설정` 카테고리가 담는 다섯 설정 (`IR-SHELL-002` AC-7).
+ *
+ * **라벨과 저장 키를 함께 든다.** 따로 적으면 하나를 고쳤을 때 다른 하나가
+ * 남아 바꾼 값이 엉뚱한 자리에 저장되고, 그 어긋남은 저장해 본 사람만
+ * 알아챈다.
+ */
+export interface InstanceSettingField {
+  key: string;
+  label: string;
+}
+
+export const INSTANCE_SETTING_FIELDS: readonly InstanceSettingField[] = [
+  { key: 'signup-mode', label: '가입 모드' },
+  { key: 'upload-size-limit-bytes', label: '업로드 크기 제한' },
+  { key: 'retained-version-count', label: '보관 버전 개수' },
+  { key: 'trash-retention-days', label: '휴지통 보존 일수' },
+  { key: 'audit-retention-days', label: '감사 로그 보존 기간' },
 ];
+
+/** 그 라벨들만. 목록을 확인하는 자리가 쓴다. */
+export const INSTANCE_SETTINGS: readonly string[] = INSTANCE_SETTING_FIELDS.map(
+  (field) => field.label,
+);
 
 /**
  * 이 요청자에게 보이는 카테고리들.

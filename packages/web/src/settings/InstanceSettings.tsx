@@ -1,25 +1,18 @@
 import { useEffect, useState } from 'react';
 
 import { loadSettings, saveSettings } from '../api/client.js';
+import { INSTANCE_SETTING_FIELDS } from '../shell/shell-contract.js';
 
 /**
  * 인스턴스 설정 (`IR-SHELL-002` AC-7 · `DR-SHELL-001` AC-3).
  *
- * 다섯 설정의 **이름과 키를 한 표에 묶는다.** 화면 라벨과 저장 키를 따로
- * 적으면 하나를 고쳤을 때 다른 하나가 남아, 바꾼 값이 엉뚱한 자리에 저장된다.
+ * 다섯 설정의 이름과 키는 **셸 계약이 소유한다** — 여기서 다시 적으면
+ * 그 목록이 둘이 되고, 목록이 갈리면 아무도 알아채지 못한다.
  *
  * 값을 문자열로 다룬다 — 저장소가 문자열만 담고, 해석은 그 설정을 쓰는
  * 쪽이 한다. 여기서 숫자로 바꿔 주면 잘못된 값의 처리 방식이 설정마다
  * 달라야 하는데 그 판단이 이 화면에 없다.
  */
-const FIELDS = [
-  { key: 'signup-mode', label: '가입 모드' },
-  { key: 'upload-size-limit-bytes', label: '업로드 크기 제한' },
-  { key: 'retained-version-count', label: '보관 버전 개수' },
-  { key: 'trash-retention-days', label: '휴지통 보존 일수' },
-  { key: 'audit-retention-days', label: '감사 로그 보존 기간' },
-] as const;
-
 export function InstanceSettings() {
   const [values, setValues] = useState<Record<string, string> | null>(null);
   const [failed, setFailed] = useState(false);
@@ -43,7 +36,7 @@ export function InstanceSettings() {
         void saveSettings(values).catch(() => setFailed(true));
       }}
     >
-      {FIELDS.map((field) => (
+      {INSTANCE_SETTING_FIELDS.map((field) => (
         <label key={field.key}>
           {field.label}
           <input
