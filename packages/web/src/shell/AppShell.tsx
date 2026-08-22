@@ -127,6 +127,7 @@ export function AppShell({
   documents = { tabs: [], activeId: null },
   favorites = [],
   bodies = {},
+  hashes = {},
   onOpen,
 }: {
   viewer: Viewer;
@@ -135,6 +136,8 @@ export function AppShell({
   favorites?: readonly Favorite[];
   /** 노드 ID → 서버에서 받아 온 본문. 아직 안 온 것은 없다. */
   bodies?: Readonly<Record<string, string>>;
+  /** 노드 ID → 그 본문의 기준 해시. */
+  hashes?: Readonly<Record<string, string>>;
   onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
 }) {
   return (
@@ -164,7 +167,7 @@ export function AppShell({
 
       <main>
         <SettingsModal viewer={viewer} />
-        <DocumentArea initial={documents} bodies={bodies} />
+        <DocumentArea initial={documents} bodies={bodies} hashes={hashes} />
       </main>
 
       <Sidebar label="우측 사이드바" tabs={RIGHT_TABS} side="right" />

@@ -41,6 +41,9 @@ export function App() {
   const [workspaces, setWorkspaces] = useState<readonly WorkspaceTreeView[]>([]);
   const [documents, setDocuments] = useState<TabState>({ tabs: [], activeId: null });
   const [bodies, setBodies] = useState<Readonly<Record<string, string>>>({});
+  // 본문과 그 **기준 해시**를 함께 들고 있는다 — 저장 요청이 해시를
+  // 실어야 충돌이 판정되고, 둘이 갈리면 그 판정이 남의 본문을 근거로 한다.
+  const [hashes, setHashes] = useState<Readonly<Record<string, string>>>({});
 
   useEffect(() => {
     void (async () => {
@@ -75,7 +78,10 @@ export function App() {
       window.history.pushState(null, '', urlForNode(node.id));
 
       void loadDocument(node.id)
-        .then(({ body }) => setBodies((was) => ({ ...was, [node.id]: body })))
+        .then(({ body, hash }) => {
+          setBodies((was) => ({ ...was, [node.id]: body }));
+          setHashes((was) => ({ ...was, [node.id]: hash }));
+        })
         // 본문을 못 받으면 그 자리를 비워 둔다 — 빈 문자열을 넣으면
         // 사용자가 그 위에 쓰기 시작하고, 저장이 남의 본문을 지운다.
         .catch(() => undefined);
@@ -101,6 +107,7 @@ export function App() {
       workspaces={workspaces}
       documents={documents}
       bodies={bodies}
+      hashes={hashes}
       onOpen={open}
     />
   );

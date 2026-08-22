@@ -1,5 +1,5 @@
 import { AtomicCodeMirrorEditor, doculightExtensions } from '@doculight/editor';
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { urlForNode } from '../routing/deep-link.js';
 import {
@@ -11,6 +11,7 @@ import {
   type Mode,
 } from './surface-contract.js';
 import type { SaveState } from './tab-state.js';
+import { useAutosave } from './useAutosave.js';
 
 export interface OpenFile {
   nodeId: string;
@@ -87,12 +88,15 @@ export function DocumentSurface({
   save = 'saved',
   serverBody = null,
   body,
+  baseHash,
   onTagClick,
 }: {
   file: OpenFile;
   initialMode?: Mode;
   save?: SaveState;
   serverBody?: string | null;
+  /** 서버가 본문과 함께 준 기준 해시 — 저장 요청이 이것을 싣는다. */
+  baseHash?: string;
   /**
    * 서버에서 받아 온 본문. **초기 문서**를 넘기는 값이지 controlled
    * `value` 가 아니다 (`CON-ARCH-006` AC-2) — 편집기가 이것을 한 번 받아
@@ -113,6 +117,34 @@ export function DocumentSurface({
   );
 
   const change = (to: Mode) => setMode((from) => nextMode(from, to, { canEdit: canEditFile(file) }));
+
+  const autosave = useAutosave(file.nodeId, baseHash);
+  // 편집기 인스턴스에서 본문을 꺼낸다 — 정본이 거기이기 때문이다
+  // (`CON-ARCH-006` AC-3).
+  const readBody = useRef<() => string>(() => body ?? '');
+
+  // Ctrl+S 는 디바운스를 건너뛰고 스냅샷을 강제한다 (`FR-STORAGE-001`
+  // AC-3 · AC-4). 브라우저의 저장 대화상자를 막는다 — 그것이 뜨면
+  // 사용자는 이 앱이 저장하지 않는다고 읽는다.
+  const forceKey = useCallback(
+    (event: KeyboardEvent) => {
+      if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== 's') return;
+      event.preventDefault();
+      autosave.saveNow(readBody.current());
+    },
+    [autosave],
+  );
+
+  useEffect(() => {
+    window.addEventListener('keydown', forceKey);
+    return () => window.removeEventListener('keydown', forceKey);
+  }, [forceKey]);
+
+  // 자동 저장의 상태가 화면의 저장 상태를 이긴다 — 바깥이 준 값은 처음
+  // 한 번뿐이고, 그 뒤로 실제 저장을 아는 것은 이쪽이다.
+  const shown: SaveState =
+    autosave.status === 'conflict' ? 'conflict' : autosave.status === 'rejected' ? 'rejected' : save;
+  const conflictBody = autosave.serverBody ?? serverBody;
 
   if (surface === 'image') {
     return (
@@ -137,7 +169,7 @@ export function DocumentSurface({
     <div>
       <ModeToggle file={file} mode={mode} onChange={change} />
 
-      {save === 'rejected' && (
+      {shown === 'rejected' && (
         <div role="alert">
           <p>저장이 거부되었습니다. 편집 중이던 본문은 그대로 남아 있습니다.</p>
           {/* 본문을 되찾을 길을 함께 준다 (`FR-EDITOR-005` AC-2) — 알리기만
@@ -146,12 +178,12 @@ export function DocumentSurface({
         </div>
       )}
 
-      {save === 'conflict' && (
+      {shown === 'conflict' && (
         <div role="region" aria-label="병합">
           <div role="alert">저장 중 원본이 바뀌어 병합이 필요합니다.</div>
           {/* 양쪽을 나란히 둔다 (`FR-EDITOR-008` AC-3) — 서버의 현재 내용이
               없으면 사용자는 무엇을 고를지 알 수 없다. */}
-          <pre aria-label="서버의 현재 내용">{serverBody}</pre>
+          <pre aria-label="서버의 현재 내용">{conflictBody}</pre>
         </div>
       )}
 
@@ -164,7 +196,16 @@ export function DocumentSurface({
           // 소스는 원문 그대로다 — 데코레이션을 걸면 소스가 아니다.
           <pre>{body}</pre>
         ) : (
-          <AtomicCodeMirrorEditor markdownSource={body} extensions={extensions} />
+          <AtomicCodeMirrorEditor
+            markdownSource={body}
+            extensions={extensions}
+            onMarkdownChange={(next: string) => {
+              // 본문을 상태에 올리지 않고 **꺼내 오는 함수**만 갱신한다
+              // (`CON-ARCH-006` AC-1) — 올리면 정본이 둘이 된다.
+              readBody.current = () => next;
+              autosave.changed(next);
+            }}
+          />
         )}
       </div>
     </div>

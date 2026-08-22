@@ -75,8 +75,12 @@ describe('FR-ATTACH-001 · SEC-ATTACH-001 — 트리 드래그앤드롭', () => 
 
 describe('FR-ATTACH-004 — 편집기 붙여넣기·드래그', () => {
   it('AC-1 · AC-2: 붙여넣기와 드래그가 같은 요청을 만든다', () => {
-    const pasted = pasteUpload({ nodeId: 'n1', level: 'edit' }, [file()]);
-    const dragged = pasteUpload({ nodeId: 'n1', level: 'edit' }, [file()]);
+    // **같은 파일**로 두 번 부른다. 파일을 두 개 만들어 비교하면
+    // `lastModified` 가 밀리초 경계에서 갈려 시험이 이따금 깨진다 —
+    // 재는 것은 두 경로가 같은 요청을 만드는가이지 파일의 동일성이 아니다.
+    const one = file();
+    const pasted = pasteUpload({ nodeId: 'n1', level: 'edit' }, [one]);
+    const dragged = pasteUpload({ nodeId: 'n1', level: 'edit' }, [one]);
 
     // 경로가 둘이면 한쪽에만 크기 제한이 걸리거나 한쪽만 권한을 본다.
     expect(pasted).toEqual(dragged);
