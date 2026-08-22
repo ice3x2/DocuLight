@@ -1,7 +1,7 @@
 import { mkdir } from 'node:fs/promises';
 import { dirname } from 'node:path';
 
-import type { Express } from 'express';
+import { Router, type Express, type Request } from 'express';
 
 import {
   reconcile,
@@ -9,14 +9,29 @@ import {
   type ReconciliationLoop,
 } from './app/reconciliation/reconcile.js';
 import { bootstrapDefaultWorkspace } from './app/workspace/bootstrap-default-workspace.js';
+import { actorFor, type Actor } from './app/acl/permission-service.js';
+import { authenticateSession } from './app/auth/login-service.js';
+import type { AttachmentStores } from './app/attachment/attachment-service.js';
+import type { TrashStores } from './app/trash/trash-service.js';
 import { loadConfig, type ServerConfig } from './config/config.js';
 import { createHttpServer } from './http/server.js';
+import { authRouter, sessionTokenOf } from './http/routes/auth.js';
+import { workspaceApiRouter } from './http/routes/workspace-api.js';
 import { FsDocumentStore } from './infra/fs/document-store.js';
+import { FsTrashFiles } from './infra/fs/trash-files.js';
 import { FsWorkspaceFiles } from './infra/fs/workspace-sidecar.js';
+import { SqliteAclRepository } from './infra/sqlite/acl-repository.js';
+import { SqliteAttachmentRepository } from './infra/sqlite/attachment-repository.js';
 import { SqliteAuditLog } from './infra/sqlite/audit-log-repository.js';
 import { openDatabase } from './infra/sqlite/database.js';
 import { SqliteFindingQueue } from './infra/sqlite/finding-queue-repository.js';
 import { SqliteNodeRepository } from './infra/sqlite/node-repository.js';
+import { SqlitePrincipalRepository } from './infra/sqlite/principal-repository.js';
+import { BcryptPasswordHasher } from './infra/crypto/bcrypt-hasher.js';
+import { SqliteSessionRepository } from './infra/sqlite/session-repository.js';
+import { SqliteSettingStore } from './infra/sqlite/setting-store.js';
+import { SqliteTrashRepository } from './infra/sqlite/trash-repository.js';
+import { SqliteVersionRepository } from './infra/sqlite/version-repository.js';
 import { SqliteWorkspaceRepository } from './infra/sqlite/workspace-repository.js';
 
 /**
@@ -24,17 +39,59 @@ import { SqliteWorkspaceRepository } from './infra/sqlite/workspace-repository.j
  *
  * 프로세스를 띄우는 일과 앱을 만드는 일을 나눠 두는 이유는, 라우트를
  * 서버를 실제로 띄우지 않고도 시험할 수 있어야 하기 때문이다.
+ *
+ * **런타임을 주면 API 가 붙는다.** 주지 않으면 정적 산출물만 올라간다 —
+ * 그 경우가 필요한 것은 정적 서빙만 시험할 때뿐이며, 운영 진입점은 언제나
+ * 준다. 안 주면 `/api/*` 가 전부 404 가 되고, 화면은 세션을 영영 못 받아
+ * 로딩 상태에 머문다.
  */
-export function createApp(config: ServerConfig): Express {
-  return createHttpServer({ webRoot: config.webRoot });
+export function createApp(config: ServerConfig, runtime?: ServerRuntime): Express {
+  return createHttpServer({
+    webRoot: config.webRoot,
+    ...(runtime === undefined ? {} : { api: apiRouter(runtime) }),
+  });
+}
+
+/**
+ * `/api` 아래에 붙는 것 전부.
+ *
+ * 한 자리에 모으는 이유는 **빠뜨림이 곧 침묵**이기 때문이다 — 라우터를
+ * 안 붙이면 그 경로가 404 를 주는데, 그것은 「없는 자원」과 구별되지 않아
+ * 아무도 알아채지 못한다.
+ */
+function apiRouter(runtime: ServerRuntime): Router {
+  const router = Router();
+
+  router.use(authRouter(runtime.stores));
+  router.use(workspaceApiRouter({ stores: runtime.stores, actorOf: runtime.actorOf }));
+
+  return router;
 }
 
 /** 기동이 잡은 자원. 잡은 쪽이 아니라 **연 쪽**이 닫는다. */
 export interface ServerRuntime {
   /** 주기 재조정 (`REL-STORAGE-001` AC-4). */
   reconciliation: ReconciliationLoop;
+  /** 라우트가 쓰는 저장소 전부. */
+  stores: RuntimeStores;
+  /**
+   * 이 요청을 누구로 볼 것인가.
+   *
+   * 세션 쿠키에서 세운다. **세울 수 없으면 `undefined`** — 인증 부재가
+   * 허용이 아니므로, 못 세운 요청은 아무것도 하지 못한다.
+   */
+  actorOf: (request: Request) => Actor | undefined;
   close(): Promise<void>;
 }
+
+/** 라우트가 필요로 하는 저장소의 합집합. */
+type RuntimeStores = AttachmentStores &
+  TrashStores &
+  Parameters<typeof authRouter>[0] & {
+    documents: FsDocumentStore;
+    queue: SqliteFindingQueue;
+    files: FsWorkspaceFiles;
+  };
 
 /**
  * 기동 시 한 번 도는 준비 절차.
@@ -55,13 +112,26 @@ export async function bootstrap(config: ServerConfig): Promise<ServerRuntime> {
   await mkdir(dirname(config.databaseFile), { recursive: true });
 
   const db = openDatabase(config.databaseFile);
-  const stores = {
+  // 저장소를 **한 번만** 조립한다. 라우트마다 따로 만들면 같은 DB 위에
+  // 서로 다른 캐시가 서고, 한쪽이 쓴 것을 다른 쪽이 못 본다.
+  const stores: RuntimeStores = {
     nodes: new SqliteNodeRepository(db),
     workspaces: new SqliteWorkspaceRepository(db),
+    acl: new SqliteAclRepository(db),
+    principals: new SqlitePrincipalRepository(db),
+    sessions: new SqliteSessionRepository(db),
+    passwords: new BcryptPasswordHasher(),
+    settings: new SqliteSettingStore(db),
+    versions: new SqliteVersionRepository(db),
+    attachments: new SqliteAttachmentRepository(db),
+    trash: new SqliteTrashRepository(db),
+    trashFiles: new FsTrashFiles(config.docsRoot),
     files: new FsWorkspaceFiles(config.docsRoot),
     documents: new FsDocumentStore(config.docsRoot),
     audit: new SqliteAuditLog(db),
     queue: new SqliteFindingQueue(db),
+    docsRoot: config.docsRoot,
+    clock: () => new Date(),
   };
 
   try {
@@ -82,6 +152,14 @@ export async function bootstrap(config: ServerConfig): Promise<ServerRuntime> {
 
   return {
     reconciliation,
+    stores,
+    actorOf: (request: Request): Actor | undefined => {
+      const token = sessionTokenOf(request.headers.cookie);
+      if (token === undefined) return undefined;
+
+      const session = authenticateSession(stores, token);
+      return session === undefined ? undefined : actorFor(stores.principals, session.userId);
+    },
     async close() {
       // 돌고 있는 회차를 기다린 뒤에 닫는다 — 기다리지 않으면 닫힌 DB 에
       // 그 회차의 쓰기가 도착한다.
@@ -95,13 +173,16 @@ export async function bootstrap(config: ServerConfig): Promise<ServerRuntime> {
  * 운영 진입점. 정적 산출물과 API 를 **한 프로세스**가 같은 오리진에 올린다
  * (`OPS-ARCH-001`). 별도의 프론트엔드 서버를 두지 않는다.
  */
-export function startServer(config: ServerConfig): ReturnType<Express['listen']> {
-  return createApp(config).listen(config.port);
+export function startServer(
+  config: ServerConfig,
+  runtime: ServerRuntime,
+): ReturnType<Express['listen']> {
+  return createApp(config, runtime).listen(config.port);
 }
 
 // `node main.js` 로 직접 실행될 때만 리스너를 연다 — import 시에는 열지 않는다.
 if (process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '/'))) {
   const config = loadConfig();
-  await bootstrap(config);
-  startServer(config);
+  const runtime = await bootstrap(config);
+  startServer(config, runtime);
 }

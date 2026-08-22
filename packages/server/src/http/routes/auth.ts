@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import rateLimit from 'express-rate-limit';
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 
 import {
   authenticateSession,
@@ -44,8 +44,13 @@ export function authRouter(stores: AuthStores): Router {
       // 프록시 뒤를 전제한다. `x-forwarded-for` 가 없으면 소켓 주소를 쓴다.
       const forwarded = req.headers['x-forwarded-for'];
       const first = Array.isArray(forwarded) ? forwarded[0] : forwarded?.split(',')[0];
-      return (first ?? req.ip ?? req.socket.remoteAddress ?? 'unknown').trim();
+      return loginRateKey(first ?? req.ip ?? req.socket.remoteAddress);
     },
+    // 이 검사는 keyGenerator **본문**에서 `ipKeyGenerator` 호출을 찾는다.
+    // 우리 것은 `loginRateKey` 안에서 부르므로 그 눈에 안 잡힐 뿐, IPv6 는
+    // 실제로 `/64` 로 묶인다 — 그 사실을 `composition.test.ts` 가 값으로
+    // 확인한다. 로직을 여기 인라인하면 그 확인이 불가능해진다.
+    validate: { keyGeneratorIpFallback: false },
   });
 
   router.post('/auth/login', limiter, async (req, res) => {
@@ -103,6 +108,30 @@ export function authRouter(stores: AuthStores): Router {
  * 직접 파싱하는 이유는 이 라우터가 읽는 쿠키가 하나뿐이기 때문이다 —
  * 파서를 들이면 그것이 앱 전역에 붙고, 다른 라우트가 쿠키를 읽기 시작한다.
  */
+/**
+ * 로그인 제한의 열쇠 (`SEC-AUTH-013`).
+ *
+ * IPv6 는 **`/64` 단위로 묶는다.** 한 사용자에게 그 블록이 통째로 배정되는
+ * 것이 보통이라, 주소마다 열쇠를 나누면 그 안에서 주소를 돌리는 것만으로
+ * 제한이 무력화된다. 반대로 전부 묶으면 한 사람이 같은 대역의 모두를
+ * 잠글 수 있으므로 `/64` 보다 넓히지 않는다.
+ *
+ * 주소를 못 읽으면 **하나로 묶는다** — 못 읽는 것을 무제한으로 두면
+ * 그것이 곧 우회로가 된다.
+ */
+export function loginRateKey(address: string | undefined): string {
+  const trimmed = address?.trim();
+  if (trimmed === undefined || trimmed === '') return 'unknown';
+
+  // IPv4 는 주소 그대로다 — 한 주소가 대개 한 사용자다.
+  if (!trimmed.includes(':')) return trimmed;
+
+  // IPv6 는 라이브러리가 주는 `/64` 정규화를 쓴다. 직접 자르면 압축
+  // 표기(`::`)와 IPv4 사상 주소(`::ffff:…`)에서 같은 주소가 두 열쇠로
+  // 갈리고, 그 갈림이 곧 우회로가 된다.
+  return ipKeyGenerator(trimmed);
+}
+
 export function sessionTokenOf(header: string | undefined): string | undefined {
   if (header === undefined) return undefined;
 
