@@ -39,7 +39,18 @@ export interface Autosave {
   resolve: (body: string) => void;
 }
 
-export function useAutosave(nodeId: string | null, baseHash: string | undefined): Autosave {
+export function useAutosave(
+  nodeId: string | null,
+  baseHash: string | undefined,
+  /**
+   * 이 본문이 서버에 올라갔다.
+   *
+   * 알리는 이유는 **그 뒤로 서버가 이 본문을 돌려주기 때문**이다. 받는
+   * 쪽이 그것을 「남이 갈아 끼운 새 본문」으로 읽으면, 저장 뒤에 더 친
+   * 글자가 그 시점에 밀린다.
+   */
+  onSaved?: (body: string, hash: string) => void,
+): Autosave {
   const [state, setState] = useState<AutosaveState>(() => initialAutosave(baseHash ?? ''));
   const session = useRef<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -71,6 +82,7 @@ export function useAutosave(nodeId: string | null, baseHash: string | undefined)
           ...(forceSnapshot ? { forceSnapshot: true } : {}),
         });
         setState((was) => saveSucceeded(was, hash));
+        onSaved?.(body, hash);
       } catch (error) {
         if (error instanceof ApiError && error.status === 409) {
           setState((was) => conflictDetected(was, error.current ?? ''));
@@ -79,7 +91,7 @@ export function useAutosave(nodeId: string | null, baseHash: string | undefined)
         setState((was) => saveRejected(was));
       }
     },
-    [nodeId],
+    [nodeId, onSaved],
   );
 
   const changed = useCallback(

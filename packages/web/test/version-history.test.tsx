@@ -89,7 +89,7 @@ describe('IR-STORAGE-001 — 버전 비교·복원', () => {
 
 describe('FR-SHELL-002 AC-2 · AC-3 — 문서 헤더 메뉴가 실제로 연다', () => {
   it('AC-3: 버전 기록을 고르면 그 화면이 뜬다', async () => {
-    const { DocumentArea } = await import('../src/document/DocumentArea.js');
+    const { ControlledDocumentArea: DocumentArea } = await import('./support/document-area.js');
     const user = userEvent.setup();
     render(
       <DocumentArea
@@ -108,7 +108,7 @@ describe('FR-SHELL-002 AC-2 · AC-3 — 문서 헤더 메뉴가 실제로 연다
   });
 
   it('AC-2: 공유를 고르면 그 문서의 공유 모달이 뜬다', async () => {
-    const { DocumentArea } = await import('../src/document/DocumentArea.js');
+    const { ControlledDocumentArea: DocumentArea } = await import('./support/document-area.js');
     const user = userEvent.setup();
     render(
       <DocumentArea

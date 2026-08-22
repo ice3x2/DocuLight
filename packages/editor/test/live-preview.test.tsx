@@ -216,6 +216,11 @@ function reveal(markdown: string, at: string): string {
 
 describe('FR-EDITOR-007 — 아홉 요소 모두 커서를 올리면 원문이 드러난다', () => {
   for (const element of NINE) {
+    // 목록만 따로 잰다 — 마커 뒤의 공백은 자리를 맞추려고 숨긴 채로 두므로
+    // (순서 목록도 같다) 「`- ` 가 통째로 돌아온다」로 재면 재는 대상이
+    // 요구가 아니라 여백 처리가 된다.
+    if (element.name === '목록') continue;
+
     it(`${element.ac}: ${element.name}에 커서를 올리면 기호가 돌아온다`, () => {
       expect(
         reveal(`앞 문단\n\n${element.markdown}\n`, element.keeps),
@@ -223,6 +228,16 @@ describe('FR-EDITOR-007 — 아홉 요소 모두 커서를 올리면 원문이 �
       ).toContain(element.hides);
     });
   }
+
+  it('FR-EDITOR-007 AC-3: 목록에 커서를 올리면 마커 글자가 돌아온다', () => {
+    // 글리프(`•`)가 아니라 원문 `-` 가 보여야 한다 — 그것이 없으면 사용자가
+    // `-` 를 `1.` 로 바꿀 방법이 사라진다. 마커 뒤 공백은 자리를 맞추려고
+    // 숨긴 채로 둔다(순서 목록도 같다).
+    const shown = reveal('앞 문단\n\n- 첫째 항목\n', '첫째 항목');
+
+    expect(shown).toContain('-첫째 항목');
+    expect(shown).not.toContain('•');
+  });
 
   it('AC-6: 코드블록에 커서를 올리면 울타리가 드러난다', () => {
     expect(reveal('앞 문단\n\n```ts\nconst a = 1;\n```\n', 'const a = 1;')).toContain('```');

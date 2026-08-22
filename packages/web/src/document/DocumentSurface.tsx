@@ -110,6 +110,7 @@ export function DocumentSurface({
   baseHash,
   onTagClick,
   onOpenWikiLink,
+  onSaved,
   onSaveState,
 }: {
   file: OpenFile;
@@ -130,6 +131,13 @@ export function DocumentSurface({
   onTagClick?: (name: string) => void;
   /** 위키링크를 눌렀다 (`CON-EDITOR-002` AC-1). 그 문서를 여는 일은 셸이 한다. */
   onOpenWikiLink?: (target: string) => void;
+  /**
+   * 이 본문이 서버에 올라갔다.
+   *
+   * 받는 쪽이 서버 상태 캐시를 그 값으로 맞춘다 — 맞추지 않으면 탭을 닫았다
+   * 열었을 때 저장 전 본문이 돌아온다.
+   */
+  onSaved?: (body: string, hash: string) => void;
   /**
    * 저장 상태가 바뀌었다.
    *
@@ -194,7 +202,24 @@ export function DocumentSurface({
   const fileRef = useRef(file);
   fileRef.current = file;
 
-  const autosave = useAutosave(file.nodeId, baseHash);
+  /**
+   * 저장이 성공하면 그 판본을 **아는 것**으로 적어 둔다.
+   *
+   * 적어 두지 않으면 그 판본이 캐시를 타고 되돌아올 때 「남이 갈아 끼운
+   * 것」으로 읽혀, 저장 뒤에 더 친 글자가 그 자리에서 밀린다.
+   */
+  const noteSaved = useCallback(
+    (savedBody: string, hash: string) => {
+      // 이 판본은 **우리가 만든 것**이다. 적어 두지 않으면 그것이 캐시를
+      // 타고 돌아올 때 남이 갈아 끼운 것으로 읽힌다.
+      knownHashes.current.add(hash);
+      onSaved?.(savedBody, hash);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- ref 는 의도적으로 뺀다
+    [onSaved],
+  );
+
+  const autosave = useAutosave(file.nodeId, baseHash, noteSaved);
   /**
    * 편집기에 넘길 문서.
    *
@@ -208,23 +233,31 @@ export function DocumentSurface({
    */
   const lastBody = useRef<string | undefined>(body);
   /**
-   * 마지막으로 받아들인 **서버 본문**.
+   * 우리가 아는 **서버 쪽 판본들**.
    *
-   * `lastBody` 와 따로 드는 이유는 둘이 묻는 것이 다르기 때문이다 — 저쪽은
-   * 「지금 편집기에 무엇이 있나」, 이쪽은 「서버가 준 것이 새것인가」다.
-   * 이것 없이는 갓 도착한 본문과 이미 받아들인 본문을 구별할 수 없다.
+   * 판정을 본문이 아니라 해시로 하는 이유가 중요하다. 본문으로 재면 우리가
+   * 방금 저장한 글이 캐시를 타고 되돌아올 때 그것이 「남이 갈아 끼운 새
+   * 본문」과 구별되지 않고, 그 사이에 더 친 글자가 밀린다. 해시로 재면
+   * **우리가 만든 판본인지**가 곧바로 갈린다 — 저장 왕복이 도는 중에
+   * 옛 본문이 다시 와도 그 해시는 이미 아는 것이라 아무 일도 없다.
    */
-  const lastServerBody = useRef<string | undefined>(body);
+  const knownHashes = useRef<Set<string>>(new Set(baseHash === undefined ? [] : [baseHash]));
   // 본문이 **나중에** 도착한다. 탭은 곧바로 서고 서버 응답은 그 뒤에
   // 오므로, 처음 한 번만 채우는 초기값에 기대면 그 자리가 빈 채로 굳는다 —
   // 그 상태로 Ctrl+S 를 누르면 빈 문자열이 저장되어 문서가 지워진다.
   //
-  // **처음뿐 아니라 바뀔 때마다** 받아들인다. 새 버전 올리기가 같은 탭의
-  // 본문을 갈아 끼우는데, 처음 한 번만 채우면 화면은 옛 본문을 든 채
-  // 기준 해시만 새것이 된다 — 그 조합은 서버의 충돌 판정을 그대로 통과해
-  // 방금 올린 버전을 조용히 되돌린다.
-  if (body !== undefined && body !== lastServerBody.current) {
-    lastServerBody.current = body;
+  // 판본이 우리가 모르는 것으로 바뀌면 **본문도 함께** 받아들인다. 새 버전
+  // 올리기가 그 경우다: 해시만 갈아 끼우고 본문을 두면 옛 본문 + 새 해시가
+  // 되어 서버의 충돌 판정을 그대로 통과하고, 방금 올린 판본이 조용히
+  // 되돌려진다.
+  //
+  // **하나가 아니라 아는 것 전부**를 든다. 마지막 하나만 들면 저장 응답이
+  // 새 해시를 적어 둔 뒤 아직 옛 해시를 들고 있는 렌더가 한 번 끼는데,
+  // 그때 「모르는 판본」으로 읽혀 옛 본문이 화면을 덮는다.
+  if (baseHash !== undefined && !knownHashes.current.has(baseHash) && body !== undefined) {
+    knownHashes.current.add(baseHash);
+    lastBody.current = body;
+  } else if (body !== undefined && lastBody.current === undefined) {
     lastBody.current = body;
   }
   /** 지금 편집기가 들고 있는 본문. 저장·내려받기·머지가 이것을 읽는다. */

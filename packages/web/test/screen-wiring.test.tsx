@@ -42,6 +42,8 @@ const TREE = [
 const routes = new Map<string, (init?: RequestInit) => Response>();
 /** 서버로 나간 요청 — 배선이 끊기면 여기가 빈다. */
 let sent: { path: string; method: string; body: unknown }[];
+/** 주소 이력에 쌓인 자리. 같은 자리가 두 번 쌓이면 뒤로 가기가 멈춘 것처럼 된다. */
+let pushed: string[];
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
@@ -52,6 +54,13 @@ beforeEach(() => {
   window.history.replaceState(null, '', '/');
   routes.clear();
   sent = [];
+  pushed = [];
+  // 원본을 부르지 않는다 — happy-dom 의 구현이 다시 이 자리를 타고 들어와
+  // 한 번의 호출이 수백 번으로 불어난다. 여기서 재려는 것은 **몇 번
+  // 밀렸는가**뿐이므로 기록만 한다.
+  vi.spyOn(window.history, 'pushState').mockImplementation((_data, _unused, url) => {
+    pushed.push(String(url));
+  });
   routes.set('/api/session', () =>
     json({ superuser: true, workspaceCount: 1, adminWorkspaceCount: 1 }),
   );
@@ -382,5 +391,116 @@ describe('검증에서 나온 나머지 — 안내 소거·취소·포커스', (
 
     const warning = await screen.findByRole('alertdialog', { name: '새 버전 올리기' });
     expect(warning.getAttribute('aria-modal')).toBe('true');
+  });
+});
+
+describe('탭 상태의 정본은 하나다', () => {
+  const TWO = [
+    {
+      workspace: { id: 'ws-1', name: '기획팀' },
+      visibility: 'full',
+      roots: [
+        { id: 'n1', name: '가.md', kind: 'file', visibility: 'full', level: 'edit', parentLevel: 'edit', children: [] },
+        { id: 'n2', name: '나.md', kind: 'file', visibility: 'full', level: 'edit', parentLevel: 'edit', children: [] },
+      ],
+    },
+  ];
+
+  const openBoth = async () => {
+    routes.set('/api/tree', () => json(TWO));
+    routes.set('/api/documents/n1', () => json({ body: '가 본문\n', hash: 'a1' }));
+    routes.set('/api/documents/n2', () => json({ body: '나 본문\n', hash: 'b1' }));
+    routes.set('/api/documents/n1/links', () => json({ outgoing: [], backlinks: [] }));
+    routes.set('/api/documents/n2/links', () =>
+      json({ outgoing: [], backlinks: [{ nodeId: 'n1', name: '가.md', workspaceName: '기획팀', resolved: true }] }),
+    );
+
+    const user = userEvent.setup();
+    render(<App />);
+    const sidebar = await screen.findByRole('complementary', { name: '좌측 사이드바' });
+    await user.click(await within(sidebar).findByRole('button', { name: '가.md' }));
+    await user.pointer({ keys: '[MouseLeft>]' });
+    await user.keyboard('{Control>}');
+    await user.click(within(sidebar).getByRole('button', { name: '나.md' }));
+    await user.keyboard('{/Control}');
+    return user;
+  };
+
+  it('CON-EDITOR-002 AC-2: 탭을 바꾸면 백링크도 그 문서 것으로 바뀐다', async () => {
+    const user = await openBoth();
+
+    // 탭 스트립에서 첫 문서로 돌아간다 — 그 전환이 앱에 닿지 않으면
+    // 우측 패널이 앞 문서의 링크를 계속 보인다.
+    const tabs = screen.getByRole('tablist', { name: '열린 문서' });
+    await user.click(within(tabs).getByRole('tab', { name: '가.md' }));
+
+    await waitFor(() => {
+      const list = screen.getByRole('list', { name: '백링크' });
+      expect(within(list).queryByText('가.md')).toBeNull();
+    });
+  });
+});
+
+describe('휴지통 복구·영구 삭제가 서버까지 닿는다 (`FR-SHELL-007` · `SEC-SHELL-001`)', () => {
+  const TRASH_ROW = [
+    {
+      nodeId: 't1',
+      workspaceId: 'ws-1',
+      workspaceName: '기획팀',
+      originalPath: '기획팀/회의록.md',
+      deletedAt: '2026-08-20T01:00:00.000Z',
+      deletedBy: '한범',
+      canPurge: true,
+    },
+  ];
+
+  const openTrashPanel = async () => {
+    routes.set('/api/trash', () => json(TRASH_ROW));
+    routes.set('/api/trash/t1', () => json(null, 204));
+    routes.set('/api/nodes/t1/restore', () => json(null, 204));
+    const user = await openTree();
+    await user.click(screen.getByRole('button', { name: '설정' }));
+    await user.click(
+      within(await screen.findByRole('dialog', { name: '설정' })).getByRole('tab', { name: '휴지통' }),
+    );
+    return user;
+  };
+
+  it('영구 삭제를 누르면 그 요청이 나간다', async () => {
+    const user = await openTrashPanel();
+
+    await user.click(await screen.findByRole('button', { name: /영구 삭제/ }));
+
+    await waitFor(() =>
+      expect(sent.some((one) => one.path === '/api/trash/t1' && one.method === 'DELETE')).toBe(true),
+    );
+  });
+
+  it('복구를 누르면 그 요청이 나간다', async () => {
+    const user = await openTrashPanel();
+
+    await user.click(await screen.findByRole('button', { name: /복구/ }));
+
+    await waitFor(() => expect(sent.some((one) => one.path.includes('restore'))).toBe(true));
+  });
+});
+
+describe('FR-SHELL-006 AC-4 — 트리가 갱신돼도 이력이 쌓이지 않는다', () => {
+  it('업로드로 트리를 다시 받아도 딥링크가 같은 자리를 또 밀지 않는다', async () => {
+    routes.set('/api/documents/n1/links', () => json({ outgoing: [], backlinks: [] }));
+    routes.set('/api/nodes/n1/uploads', () => json({ id: 'n5', name: '새 파일.txt' }));
+    const user = await openTree();
+
+    await user.click(screen.getByRole('button', { name: '회의록.md' }));
+    await waitFor(() => expect(pushed.filter((one) => one.includes('n1'))).toHaveLength(1));
+
+    // 트리를 다시 받게 만든다 — 그때마다 딥링크 효과가 다시 도는데,
+    // 그것이 주소를 또 밀면 뒤로 가기가 여러 번 눌러야 동작한다.
+    await user.click(screen.getByRole('tab', { name: '문서 트리' }));
+    routes.set('/api/tree', () => json(TREE.map((entry) => ({ ...entry }))));
+    await user.click(screen.getByRole('button', { name: '새 노트' }));
+    await waitFor(() => expect(sent.some((one) => one.path === '/api/nodes')).toBe(true));
+
+    expect(pushed.filter((one) => one.includes('n1'))).toHaveLength(1);
   });
 });

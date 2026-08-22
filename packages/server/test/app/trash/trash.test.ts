@@ -243,12 +243,35 @@ describe('FR-STORAGE-006 — 복구는 원본 편집 권한을 요구한다', ()
     expect(resolveNode(stores, me, doc)?.id).toBe(doc);
   });
 
-  it('AC-2: 권한이 없으면 거부되고 항목이 그대로 남는다', async () => {
+  it('AC-2: 볼 수도 없는 요청자에게는 없는 항목과 같은 답이 온다', async () => {
     const doc = await place(ws, '회의록.md');
     await moveToTrash(stores, root, doc);
 
     const outsider = actorFor(stores.principals, stores.principals.createUser('외부인').id);
-    expect(await restoreFromTrash(stores, outsider, doc)).toEqual({ ok: false, rule: 'forbidden' });
+
+    // 「못 고친다」로 답하면 그 차이가 「거기 그런 항목이 있다」를 알린다
+    // (`SEC-ACL-006`). 휴지통은 지워진 문서의 목록이라 그 사실 자체가
+    // 새 정보다.
+    expect(await restoreFromTrash(stores, outsider, doc)).toEqual({
+      ok: false,
+      rule: 'not-in-trash',
+    });
+
+    expect(existsSync(join(docsRoot, ws, TRASH_DIRECTORY, doc, '회의록.md'))).toBe(true);
+  });
+
+  it('AC-2: 볼 수는 있으나 못 고치는 요청자에게는 거절이 정직한 답이다', async () => {
+    const doc = await place(ws, '회의록.md');
+    await moveToTrash(stores, root, doc);
+
+    const viewer = stores.principals.createUser('보기만');
+    grantPermission(stores, root, { nodeId: ws, principalId: viewer.id, level: 'view' });
+
+    // 그는 그 항목이 있다는 것을 이미 알고 있으므로 숨길 것이 없다.
+    expect(await restoreFromTrash(stores, actorFor(stores.principals, viewer.id), doc)).toEqual({
+      ok: false,
+      rule: 'forbidden',
+    });
 
     expect(existsSync(join(docsRoot, ws, TRASH_DIRECTORY, doc, '회의록.md'))).toBe(true);
   });

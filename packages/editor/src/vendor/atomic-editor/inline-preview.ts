@@ -643,10 +643,22 @@ function buildInlineDecorations(view: EditorView): DecorationSet {
           // 3행)는 목록의 「커서 안 표시」를 **원문 마커 노출**로 못박는다.
           // 그것이 없으면 사용자가 `-` 를 `1.` 로 바꿀 방법이 사라진다.
           // 상류 병합 시 이 분기가 사라지지 않았는지 확인할 것.
-          if (activeLines.has(line.number)) {
-            // 아무것도 대체하지 않는다 — 들여쓰기 장식은 위에서 이미
-            // 걸렸고 그것은 글자를 숨기지 않는다.
-          } else if (markText === '-' || markText === '*' || markText === '+') {
+          const bullet = markText === '-' || markText === '*' || markText === '+';
+          if (bullet && activeLines.has(line.number)) {
+            // 글리프로 바꾸지 않되 **자리는 그대로 둔다.** 들여쓰기 장식이
+            // 마커 폭을 1.2em 으로 전제하므로(`text-indent: -1.2em`),
+            // 아무것도 얹지 않으면 그 줄만 「- 」의 자연 폭만큼 본문이
+            // 좌우로 튄다 — 커서를 올릴 때마다 줄이 흔들린다.
+            //
+            // 순서 목록은 이 분기를 타지 않는다. 그쪽은 비활성에서도 원문을
+            // 그대로 두므로 커서 유무로 달라질 것이 없다.
+            ranges.push(
+              Decoration.mark({ class: 'cm-atomic-list-marker' }).range(node.from, node.to),
+            );
+            if (hasTrailingSpace) {
+              pushReplace(ranges, doc, node.to, markEnd);
+            }
+          } else if (bullet) {
             // Bullet: substitute with the fixed-width marker
             // widget, swallowing the trailing space so content
             // starts precisely at padding-left.

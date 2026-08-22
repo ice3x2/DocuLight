@@ -113,3 +113,108 @@ describe('백링크 (`CON-EDITOR-002` AC-2)', () => {
     expect(await linksOf(stores, mine, 설계)).toBeNull();
   });
 });
+
+describe('같은 이름이 여러 워크스페이스에 있을 때', () => {
+  it('가리킨 문서와 같은 워크스페이스의 것을 고른다 — 본문에 워크스페이스를 적을 문법이 없다', async () => {
+    const other = (
+      await createWorkspace(
+        { workspaces: stores.workspaces, files: new FsWorkspaceFiles(docsRoot) },
+        '인사팀',
+      )
+    ).id;
+    const 남의회의록 = idOf(
+      createNode(stores, root, {
+        workspaceId: other,
+        parentId: null,
+        kind: 'file',
+        name: '회의록.md',
+      }),
+    );
+    const 남의설계 = idOf(
+      createNode(stores, root, {
+        workspaceId: other,
+        parentId: null,
+        kind: 'file',
+        name: '설계.md',
+      }),
+    );
+    const at = (ws: string, id: string) => join(docsRoot, ws, stores.nodes.pathOf(id));
+    await writeFile(at(other, 남의회의록), '지난 [[설계]] 를 다시 본다\n', 'utf8');
+    await writeFile(at(other, 남의설계), '남의 것\n', 'utf8');
+
+    // 먼저 훑히는 것은 기획팀의 `설계.md` 다. 이름만 보고 첫 일치를 고르면
+    // 인사팀 문서가 남의 워크스페이스 문서를 가리키게 된다.
+    const links = (await linksOf(stores, root, 남의회의록))!;
+
+    expect(links.outgoing[0]).toMatchObject({ nodeId: 남의설계, workspaceName: '인사팀' });
+  });
+
+  it('같은 워크스페이스에 없으면 다른 곳의 것이라도 푼다 — 못 풀면 링크가 죽는다', async () => {
+    const other = (
+      await createWorkspace(
+        { workspaces: stores.workspaces, files: new FsWorkspaceFiles(docsRoot) },
+        '인사팀',
+      )
+    ).id;
+    const 남의회의록 = idOf(
+      createNode(stores, root, {
+        workspaceId: other,
+        parentId: null,
+        kind: 'file',
+        name: '주간.md',
+      }),
+    );
+    await writeFile(
+      join(docsRoot, other, stores.nodes.pathOf(남의회의록)),
+      '지난 [[설계]] 를 다시 본다\n',
+      'utf8',
+    );
+
+    const links = (await linksOf(stores, root, 남의회의록))!;
+
+    expect(links.outgoing[0]).toMatchObject({ nodeId: 설계, workspaceName: '기획팀' });
+  });
+});
+
+describe('CON-ACL-001 AC-4 — 질의가 문서 수에 비례해 늘지 않는다', () => {
+  /** 문서 N 개를 만들고 링크를 한 번 물었을 때의 질의 횟수. */
+  const cost = async (count: number): Promise<number> => {
+    for (let n = 0; n < count; n += 1) {
+      const id = idOf(
+        createNode(stores, root, {
+          workspaceId: ws,
+          parentId: null,
+          kind: 'file',
+          name: `문서${n}.md`,
+        }),
+      );
+      await write(id, '아무것도 가리키지 않는다\n');
+    }
+
+    let queries = 0;
+    const count_ = <T,>(fn: T): T =>
+      ((...args: unknown[]) => {
+        queries += 1;
+        return (fn as (...a: unknown[]) => unknown)(...args);
+      }) as T;
+    const original = { all: db.all.bind(db), get: db.get.bind(db) };
+    db.all = count_(original.all);
+    db.get = count_(original.get);
+
+    await linksOf(stores, root, 회의록);
+
+    db.all = original.all;
+    db.get = original.get;
+    return queries;
+  };
+
+  it('문서를 스무 개 더해도 질의가 스무 배로 늘지 않는다', async () => {
+    const small = await cost(2);
+    const large = await cost(20);
+
+    // 노드마다 권한이나 경로를 다시 물으면 이 값이 문서 수를 따라 커진다 —
+    // 그것이 `CON-ACL-001` AC-4 가 막으려던 것이다. 같아야 한다: 워크스페이스
+    // 수에만 비례하고 그 안의 문서 수에는 비례하지 않는다.
+    expect(large).toBe(small);
+  });
+});

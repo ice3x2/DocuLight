@@ -1,7 +1,12 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-import { permissionOf, visibleWorkspacesOf, type Actor } from '../acl/permission-service.js';
+import {
+  permissionBatch,
+  permissionOf,
+  visibleWorkspacesOf,
+  type Actor,
+} from '../acl/permission-service.js';
 import { permits } from '../../domain/acl/level.js';
 import { isVersioned } from '../../domain/document/version-layout.js';
 import { findWikiLinks } from '../../domain/document/wiki-link.js';
@@ -56,13 +61,14 @@ export async function linksOf(
   const level = permissionOf(stores, actor, nodeId);
   if (level === null || !permits(level, 'view')) return null;
 
-  const visible = await visibleDocuments(stores, actor);
-  const me = visible.find((one) => one.node.id === nodeId);
+  const visible = visibleMarkdown(stores, actor);
+  const names = await linkNamesOf(stores, visible);
+  const mine = chain[0]!;
 
   return {
-    outgoing: outgoingOf(me?.body ?? '', visible, nodeId),
+    outgoing: outgoingOf(names.get(nodeId) ?? [], visible, nodeId, mine.workspaceId),
     backlinks: visible
-      .filter((one) => one.node.id !== nodeId && linksTo(one.body, chain[0]!.name))
+      .filter((one) => one.node.id !== nodeId && linksTo(names.get(one.node.id) ?? [], mine.name))
       .map((one) => row(one)),
   };
 }
@@ -70,7 +76,14 @@ export async function linksOf(
 interface VisibleDocument {
   node: { id: NodeId; name: string; workspaceId: string };
   workspaceName: string;
-  body: string;
+  /**
+   * 워크스페이스 루트 기준 경로.
+   *
+   * 여기서 들고 다니는 이유는 `pathOf` 가 노드마다 사슬을 다시 **질의**하기
+   * 때문이다 — 문서 수만큼 질의가 붙어 `CON-ACL-001` AC-4 의 예산이 깨진다.
+   * 그 워크스페이스의 노드를 이미 전부 들고 있으므로 메모리에서 엮는다.
+   */
+  path: string;
 }
 
 const row = (one: VisibleDocument): LinkRow => ({
@@ -83,18 +96,30 @@ const row = (one: VisibleDocument): LinkRow => ({
 /** 확장자를 뗀 이름 — 사람은 `[[회의록]]` 이라 적지 `[[회의록.md]]` 라 적지 않는다. */
 const stem = (name: string) => name.replace(/\.[^.]+$/, '');
 
-const linksTo = (body: string, name: string) =>
-  findWikiLinks(body).some((target) => target === stem(name) || target === name);
+const linksTo = (targets: readonly string[], name: string) =>
+  targets.some((target) => target === stem(name) || target === name);
 
+/**
+ * 본문이 가리키는 것들.
+ *
+ * 이름이 겹치면 **같은 워크스페이스의 것을 고른다.** 본문에 적히는 것은
+ * 이름뿐이라 어느 워크스페이스인지를 표현할 문법이 없는데, 순회 순서로
+ * 고르면 남의 워크스페이스 문서를 가리키는 링크가 조용히 생긴다 — 그리고
+ * 그 어긋남은 두 워크스페이스에 같은 이름이 생기기 전까지 드러나지 않는다.
+ */
 function outgoingOf(
-  body: string,
+  targets: readonly string[],
   visible: readonly VisibleDocument[],
   self: NodeId,
+  workspaceId: string,
 ): LinkRow[] {
-  return findWikiLinks(body).map((target) => {
-    const found = visible.find(
+  return targets.map((target) => {
+    const named = visible.filter(
       (one) => one.node.id !== self && (stem(one.node.name) === target || one.node.name === target),
     );
+    // 같은 워크스페이스에 없으면 다른 곳의 것이라도 푼다 — 못 풀면 링크가
+    // 죽고, 워크스페이스를 가로지르는 참조 자체는 막을 이유가 없다.
+    const found = named.find((one) => one.node.workspaceId === workspaceId) ?? named[0];
     return found === undefined
       ? { nodeId: null, name: target, workspaceName: null, resolved: false }
       : row(found);
@@ -126,19 +151,62 @@ export function wikiTargets(
   query: string,
 ): WikiTarget[] {
   const wanted = query.trim().toLowerCase();
-  const found: WikiTarget[] = [];
+
+  // 이름으로 **먼저** 걸러 낸 뒤 판정한다 — 판정이 먼저면 이름이 안 맞는
+  // 문서까지 권한을 재게 되고, `[[` 를 친 직후처럼 질의가 빈 순간에는
+  // 그 비용이 워크스페이스 전체가 된다.
+  return visibleMarkdown(stores, actor)
+    .filter((one) => wanted === '' || stem(one.node.name).toLowerCase().includes(wanted))
+    .map((one) => ({
+      target: stem(one.node.name),
+      label: one.node.name,
+      detail: one.workspaceName,
+    }));
+}
+
+/**
+ * 요청자가 볼 수 있는 md 문서들 — 워크스페이스마다 **질의 두 번**.
+ *
+ * 노드마다 `permissionOf` 를 부르면 O(N) 이 메모리가 아니라 질의 쪽으로
+ * 옮겨 붙어 `CON-ACL-001` AC-4 의 예산이 깨진다. 그 조항이 `permissionBatch`
+ * 를 둔 이유가 정확히 이것이다.
+ *
+ * 경로도 함께 받아 둔다 — 뒤에서 `pathOf` 를 다시 부르면 그것이 사슬을
+ * 또 읽어 노드마다 질의가 하나씩 더 붙는다.
+ */
+function visibleMarkdown(stores: DocumentStores, actor: Actor): VisibleDocument[] {
+  const found: VisibleDocument[] = [];
 
   for (const entry of visibleWorkspacesOf(stores, actor)) {
-    for (const node of stores.nodes.allIn(entry.workspace.id)) {
-      if (node.kind !== 'file' || !isVersioned(node.name)) continue;
+    const all = stores.nodes.allIn(entry.workspace.id);
+    const candidates = all.filter((node) => node.kind === 'file' && isVersioned(node.name));
+    if (candidates.length === 0) continue;
 
-      const target = stem(node.name);
-      if (wanted !== '' && !target.toLowerCase().includes(wanted)) continue;
+    const permits_ = permissionBatch(
+      stores,
+      actor,
+      candidates.map((node) => node.id),
+      entry.workspace.id,
+    );
 
-      const level = permissionOf(stores, actor, node.id);
+    // 경로는 메모리에서 엮는다 — 규칙은 `pathOf` 와 같다: 이름을 루트부터
+    // 이어 붙인다.
+    const byId = new Map(all.map((node) => [node.id, node]));
+    const pathOf = (id: NodeId): string => {
+      const names: string[] = [];
+      for (let cursor: NodeId | null = id; cursor !== null; ) {
+        const node = byId.get(cursor);
+        if (node === undefined) break;
+        names.push(node.name);
+        cursor = node.parentId;
+      }
+      return names.reverse().join('/');
+    };
+
+    for (const node of candidates) {
+      const level = permits_(node.id);
       if (level === null || !permits(level, 'view')) continue;
-
-      found.push({ target, label: node.name, detail: entry.workspace.name });
+      found.push({ node, workspaceName: entry.workspace.name, path: pathOf(node.id) });
     }
   }
 
@@ -146,36 +214,28 @@ export function wikiTargets(
 }
 
 /**
- * 요청자가 볼 수 있는 md 문서와 그 본문 전부.
+ * 그 문서들이 가리키는 이름들 — 본문을 **붙들지 않는다.**
  *
- * md 만 읽는 이유는 링크 문법이 md 안에만 있기 때문이다 — 바이너리를
- * 문자열로 읽으면 우연히 `[[` 가 나올 뿐 아니라 파일 크기만큼 메모리를 쓴다.
+ * 링크 판정에 필요한 것은 `findWikiLinks` 의 결과뿐인데 본문을 배열에
+ * 쌓아 두면 요청 하나가 워크스페이스 전체 크기만큼 메모리를 잡고, 동시
+ * 요청 수만큼 곱해진다.
  */
-async function visibleDocuments(
+async function linkNamesOf(
   stores: DocumentStores,
-  actor: Actor,
-): Promise<VisibleDocument[]> {
-  const found: VisibleDocument[] = [];
+  documents: readonly VisibleDocument[],
+): Promise<Map<NodeId, readonly string[]>> {
+  const names = new Map<NodeId, readonly string[]>();
 
-  for (const entry of visibleWorkspacesOf(stores, actor)) {
-    const root = workspaceRootOf(stores, entry.workspace.id);
-
-    for (const node of stores.nodes.allIn(entry.workspace.id)) {
-      if (node.kind !== 'file' || !isVersioned(node.name)) continue;
-
-      const level = permissionOf(stores, actor, node.id);
-      if (level === null || !permits(level, 'view')) continue;
-
-      const body = await readIfPresent(join(root, stores.nodes.pathOf(node.id)));
-      // 실체가 아직 없는 노드는 링크를 갖지 못한다 — 재조정이 안 닿았을 뿐
-      // 조작이 잘못된 것은 아니므로 건너뛴다.
-      if (body === null) continue;
-
-      found.push({ node, workspaceName: entry.workspace.name, body });
-    }
+  for (const one of documents) {
+    const root = workspaceRootOf(stores, one.node.workspaceId);
+    const body = await readIfPresent(join(root, one.path));
+    // 실체가 아직 없는 노드는 링크를 갖지 못한다 — 재조정이 안 닿았을 뿐
+    // 조작이 잘못된 것은 아니므로 건너뛴다.
+    if (body === null) continue;
+    names.set(one.node.id, findWikiLinks(body));
   }
 
-  return found;
+  return names;
 }
 
 async function readIfPresent(path: string): Promise<string | null> {

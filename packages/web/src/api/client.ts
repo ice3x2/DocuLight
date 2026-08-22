@@ -111,6 +111,10 @@ export const moveNodeToTrash = (nodeId: string) =>
 export const purgeFromTrash = (nodeId: string) =>
   call<void>(`/trash/${encodeURIComponent(nodeId)}`, { method: 'DELETE' });
 
+/** 휴지통에서 되돌린다 (`FR-SHELL-007`). 영구 삭제와 필요 권한이 다르다. */
+export const restoreFromTrash = (nodeId: string) =>
+  call<void>(`/trash/${encodeURIComponent(nodeId)}/restore`, { method: 'POST' });
+
 /** 새 노드를 만든다 (`FR-SHELL-003` AC-1). */
 export const createNode = (input: {
   workspaceId: string;

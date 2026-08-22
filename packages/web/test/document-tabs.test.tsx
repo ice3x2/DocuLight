@@ -2,7 +2,7 @@ import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { DocumentArea } from '../src/document/DocumentArea.js';
+import { ControlledDocumentArea as DocumentArea } from './support/document-area.js';
 import {
   closeTab,
   openInActiveTab,

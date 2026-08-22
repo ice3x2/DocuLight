@@ -1,6 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Tabs from '@radix-ui/react-tabs';
-import { useId, useState } from 'react';
+import { useCallback, useId, useState } from 'react';
 
 import { DocumentArea } from '../document/DocumentArea.js';
 import { FavoritesView, type Favorite } from '../favorites/FavoritesView.js';
@@ -98,12 +98,16 @@ function SettingsModal({
   workspaces = [],
   trashLens,
   onTrashLens,
+  onTrashPurge,
+  onTrashRestore,
 }: {
   viewer: Viewer;
   trash?: readonly TrashRowView[];
   workspaces?: readonly { id: string; name: string }[];
   trashLens?: TrashLens;
   onTrashLens?: (lens: TrashLens) => void;
+  onTrashPurge?: (nodeId: string) => void;
+  onTrashRestore?: (nodeId: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const titleId = useId();
@@ -149,6 +153,8 @@ function SettingsModal({
                     canWidenScope={viewer.adminWorkspaceCount > 0}
                     {...(trashLens === undefined ? {} : { lens: trashLens })}
                     {...(onTrashLens === undefined ? {} : { onLens: onTrashLens })}
+                    {...(onTrashPurge === undefined ? {} : { onPurge: onTrashPurge })}
+                    {...(onTrashRestore === undefined ? {} : { onRestore: onTrashRestore })}
                   />
                 ) : category.id === 'instance' ? (
                   <InstanceSettings />
@@ -195,6 +201,8 @@ export function AppShell({
   trash = [],
   trashLens,
   onTrashLens,
+  onTrashPurge,
+  onTrashRestore,
   query = '',
   onQuery,
   onOpen,
@@ -205,6 +213,8 @@ export function AppShell({
   onNoticeDismiss,
   confirmReplace,
   onSaveState,
+  onSaved,
+  onDocuments,
 }: {
   viewer: Viewer;
   workspaces?: readonly WorkspaceTreeView[];
@@ -230,6 +240,10 @@ export function AppShell({
   /** 휴지통 목록을 좁혀 보는 조건 (`FR-SHELL-007` AC-4 · AC-5). */
   trashLens?: TrashLens;
   onTrashLens?: (lens: TrashLens) => void;
+  /** 그 항목을 영구 삭제한다 (`SEC-SHELL-001`). 버튼은 서버 판정을 따라 그려진다. */
+  onTrashPurge?: (nodeId: string) => void;
+  /** 그 항목을 되돌린다 (`FR-SHELL-007`). */
+  onTrashRestore?: (nodeId: string) => void;
   /** 좌측 검색 탭의 질의. 태그 클릭도 이 값을 채운다. */
   query?: string;
   onQuery?: (query: string) => void;
@@ -250,6 +264,10 @@ export function AppShell({
    */
   confirmReplace?: { name: string; accept: () => void; cancel: () => void };
   onSaveState?: (nodeId: string, state: SaveState) => void;
+  /** 그 문서의 이 본문이 서버에 올라갔다 — 서버 상태 캐시를 맞추는 자리가 쓴다. */
+  onSaved?: (nodeId: string, body: string, hash: string) => void;
+  /** 열린 탭이 바뀌었다 — 닫기·전환이 이 길로 바깥에 닿는다. */
+  onDocuments?: (next: TabState) => void;
 }) {
   /**
    * 좌측에서 열린 탭.
@@ -261,10 +279,33 @@ export function AppShell({
   /** 새 버전을 올릴 대상. 골라 둔 뒤 확인과 파일 고르기가 이어진다. */
   const [overwriting, setOverwriting] = useState<TreeNodeView | null>(null);
 
-  const searchFor = (text: string) => {
-    setLeftTab('search');
-    onQuery?.(text);
-  };
+  // **정체가 흔들리면 안 된다.** 이 둘은 편집기 확장 묶음에 들어가는데,
+  // 렌더마다 새로 만들면 그때마다 편집기가 통째로 재구성되어 커서·되돌리기
+  // 이력이 사라지고, 한글 조합 중이면 그 글자가 깨진다.
+  const searchFor = useCallback(
+    (text: string) => {
+      setLeftTab('search');
+      onQuery?.(text);
+    },
+    [onQuery],
+  );
+
+  /**
+   * 위키링크를 눌렀다 (`CON-EDITOR-002` AC-1).
+   *
+   * 이름으로 찾는다 — 본문에 적히는 것이 이름뿐이기 때문이다. 못 찾으면
+   * **아무 일도 하지 않는다**: 아직 없는 문서를 눌렀을 뿐이고, 그 자리에서
+   * 새로 만들면 오타 하나가 문서를 만든다.
+   */
+  const openByName = useCallback(
+    (target: string) => {
+      const found = workspaces
+        .flatMap((entry) => entry.roots)
+        .find((node) => node.name.replace(/\.[^.]+$/, '') === target || node.name === target);
+      if (found !== undefined) onOpen?.(found, false);
+    },
+    [workspaces, onOpen],
+  );
 
   return (
     <div data-shell="root">
@@ -321,6 +362,8 @@ export function AppShell({
           workspaces={workspaces.map((entry) => entry.workspace)}
           {...(trashLens === undefined ? {} : { trashLens })}
           {...(onTrashLens === undefined ? {} : { onTrashLens })}
+          {...(onTrashPurge === undefined ? {} : { onTrashPurge })}
+          {...(onTrashRestore === undefined ? {} : { onTrashRestore })}
         />
         {notice !== undefined && (
           // `status` 인 이유는 이것이 사용자의 조작을 막지 않기 때문이다 —
@@ -341,11 +384,14 @@ export function AppShell({
           </div>
         )}
         <DocumentArea
-          initial={documents}
+          state={documents}
+          onState={(next) => onDocuments?.(next)}
           bodies={bodies}
           hashes={hashes}
           {...(onSaveState === undefined ? {} : { onSaveState })}
+          {...(onSaved === undefined ? {} : { onSaved })}
           onTagClick={searchFor}
+          onOpenWikiLink={openByName}
         />
       </main>
 

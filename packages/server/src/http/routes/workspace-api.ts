@@ -39,7 +39,12 @@ import {
   listVersions,
   restoreVersion,
 } from '../../app/document/version-service.js';
-import { moveToTrash, purgeFromTrash, type TrashStores } from '../../app/trash/trash-service.js';
+import {
+  moveToTrash,
+  purgeFromTrash,
+  restoreFromTrash,
+  type TrashStores,
+} from '../../app/trash/trash-service.js';
 import { trashView, type TrashScope } from '../../app/trash/trash-view.js';
 import type { NodeId } from '../../domain/node/node-id.js';
 import { RESOURCE_DIRECTORY } from '../../domain/attachment/resource-layout.js';
@@ -754,6 +759,23 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     }
 
     const done = await moveToTrash(stores, actor, req.params.nodeId!);
+    res.sendStatus(done.ok ? 204 : done.rule === 'forbidden' ? 403 : 404);
+  });
+
+  /**
+   * 휴지통에서 되돌린다 (`FR-SHELL-007`).
+   *
+   * 영구 삭제와 **같은 자리**에 두되 동사를 나눈다 — 되돌리기는 `편집`,
+   * 영구 삭제는 `관리` 이고, 한 경로에 두면 필요 권한이 둘인 조작이 된다.
+   */
+  router.post('/trash/:nodeId/restore', async (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const done = await restoreFromTrash(stores, actor, one(req.params.nodeId)!);
     res.sendStatus(done.ok ? 204 : done.rule === 'forbidden' ? 403 : 404);
   });
 

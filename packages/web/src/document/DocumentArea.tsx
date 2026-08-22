@@ -1,6 +1,6 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Tabs from '@radix-ui/react-tabs';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { DocumentSurface } from './DocumentSurface.js';
 import { ShareModal } from './ShareModal.js';
@@ -63,13 +63,24 @@ function DocumentHeader({
  * 에디터가 붙는 자리(`Tabs.Content` 안)는 wave-5 가 채운다.
  */
 export function DocumentArea({
-  initial,
+  state,
+  onState,
   bodies = {},
   hashes = {},
   onSaveState,
+  onSaved,
   onTagClick,
+  onOpenWikiLink,
 }: {
-  initial: TabState;
+  /**
+   * 열린 탭들. **바깥이 소유한다.**
+   *
+   * 여기서 복사해 들면 정본이 둘이 된다 — 탭을 닫거나 바꾼 사실이 바깥에
+   * 닿지 않아, 닫은 문서를 계속 다시 받고 우측 링크 패널이 앞 문서 것을
+   * 보인다. 그 어긋남은 두 탭을 오가 보기 전까지 드러나지 않는다.
+   */
+  state: TabState;
+  onState: (next: TabState) => void;
   /** 노드 ID → 서버에서 받아 온 본문. 아직 안 온 것은 없다. */
   bodies?: Readonly<Record<string, string>>;
   /** 노드 ID → 그 본문의 기준 해시. 저장 요청이 이것을 싣는다. */
@@ -77,8 +88,11 @@ export function DocumentArea({
   onSaveState?: (nodeId: string, state: SaveState) => void;
   /** 본문 태그를 눌렀다 (`FR-EDITOR-007` AC-11). 받는 쪽은 좌측 검색 탭이다. */
   onTagClick?: (name: string) => void;
+  /** 그 문서의 이 본문이 서버에 올라갔다. 서버 상태 캐시를 맞추는 자리가 쓴다. */
+  onSaved?: (nodeId: string, body: string, hash: string) => void;
+  /** 위키링크를 눌렀다 (`CON-EDITOR-002` AC-1). 그 문서를 여는 일은 셸이 한다. */
+  onOpenWikiLink?: (target: string) => void;
 }) {
-  const [state, setState] = useState<TabState>(initial);
   /**
    * 헤더 메뉴가 연 자리.
    *
@@ -86,9 +100,6 @@ export function DocumentArea({
    * (`IR-SHELL-003` AC-4).
    */
   const [panel, setPanel] = useState<string | null>(null);
-  // 탭 목록은 바깥이 소유한다 — 안에서만 들면 트리 클릭으로 연 문서가
-  // 여기 반영되지 않는다.
-  useEffect(() => setState(initial), [initial]);
 
   if (state.tabs.length === 0) return <div data-empty="documents" />;
 
@@ -96,7 +107,7 @@ export function DocumentArea({
     <div>
       <Tabs.Root
         value={state.activeId ?? undefined}
-        onValueChange={(activeId) => setState((was) => ({ ...was, activeId }))}
+        onValueChange={(activeId) => onState({ ...state, activeId })}
       >
         <Tabs.List aria-label="열린 문서">
           {state.tabs.map((tab) => (
@@ -110,7 +121,7 @@ export function DocumentArea({
 
         {state.tabs.map((tab) => (
           <Tabs.Content key={tab.nodeId} value={tab.nodeId}>
-            <button type="button" onClick={() => setState((was) => closeTab(was, tab.nodeId))}>
+            <button type="button" onClick={() => onState(closeTab(state, tab.nodeId))}>
               {tab.name} 닫기
             </button>
             {panel === 'versions' && (
@@ -132,7 +143,9 @@ export function DocumentArea({
               {...(bodies[tab.nodeId] === undefined ? {} : { body: bodies[tab.nodeId] })}
               {...(hashes[tab.nodeId] === undefined ? {} : { baseHash: hashes[tab.nodeId] })}
               onSaveState={(next) => onSaveState?.(tab.nodeId, next)}
+              onSaved={(body, hash) => onSaved?.(tab.nodeId, body, hash)}
               {...(onTagClick === undefined ? {} : { onTagClick })}
+              {...(onOpenWikiLink === undefined ? {} : { onOpenWikiLink })}
             />
           </Tabs.Content>
         ))}

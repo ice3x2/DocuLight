@@ -591,3 +591,22 @@ describe('새 버전 올리기도 업로드 크기 제한을 지킨다 (`IR-SHEL
     expect(sent.status).toBe(204);
   });
 });
+
+describe('휴지통 복구 (`FR-SHELL-007`)', () => {
+  it('복구하면 트리에 다시 나타난다', async () => {
+    await request(app).delete(`/api/nodes/${doc}`);
+    expect((await request(app).get('/api/trash').query({ scope: 'all' })).body).toHaveLength(1);
+
+    const back = await request(app).post(`/api/trash/${doc}/restore`);
+
+    expect(back.status).toBe(204);
+    expect((await request(app).get('/api/trash').query({ scope: 'all' })).body).toEqual([]);
+  });
+
+  it('볼 수 없는 항목은 복구할 수 없다', async () => {
+    await request(app).delete(`/api/nodes/${doc}`);
+    actingAs = actorFor(stores.principals, me.id);
+
+    expect((await request(app).post(`/api/trash/${doc}/restore`)).status).toBe(404);
+  });
+});

@@ -8,6 +8,8 @@ import {
   loadDocument,
   uploadAttachment,
   uploadIntoDirectory,
+  purgeFromTrash,
+  restoreFromTrash,
   uploadNewVersion,
 } from './api/client.js';
 import {
@@ -176,10 +178,8 @@ function AppBody() {
   const open = useCallback(
     (node: TreeNodeView, inNewTab: boolean) => {
       let blocked = false;
-      let alreadyOpen = false;
 
       setDocuments((was) => {
-        alreadyOpen = was.tabs.some((tab) => tab.nodeId === node.id);
         const current = activeTab(was);
         if (!inNewTab && current !== undefined && needsConfirmBeforeReplace(current)) {
           blocked = true;
@@ -193,17 +193,55 @@ function AppBody() {
         return;
       }
 
-      // **닫혔던 문서를 열 때만** 본문을 낡은 것으로 표시한다. 저장은
-      // 편집기가 자기 해시 사슬로 이어 가므로 이 캐시가 갱신되지 않는데,
-      // 그 값을 그대로 다시 쓰면 사용자가 방금 저장한 글 대신 저장 전
-      // 본문을 보게 된다.
-      //
-      // 이미 열려 있으면 건드리지 않는다 — 그 자리의 정본은 편집기이고,
-      // 다시 받아 밀어 넣으면 아직 저장되지 않은 글자가 사라진다. 그 사이
-      // 서버 본문이 달라졌다면 그것은 충돌 화면이 다룰 일이다.
-      if (!alreadyOpen)
-        void queries.invalidateQueries({ queryKey: QUERY_KEYS.document(node.id) });
-      window.history.pushState(null, '', urlForNode(node.id));
+      // 여기서 본문을 다시 받지 **않는다.** 저장이 그때마다 캐시를 맞추므로
+      // (`noteSaved`) 캐시가 낡을 자리가 없고, 무효화를 걸면 열려 있는
+      // 문서의 아직 저장되지 않은 글자가 그 자리에서 밀린다.
+      // 이미 그 자리에 있으면 밀지 않는다 — 같은 자리가 두 번 쌓이면
+      // 뒤로 가기가 멈춘 것처럼 보인다 (`FR-SHELL-006` AC-4).
+      const url = urlForNode(node.id);
+      if (window.location.pathname !== url) window.history.pushState(null, '', url);
+    },
+    [],
+  );
+
+  /**
+   * 저장된 본문을 서버 상태 캐시에 그대로 앉힌다.
+   *
+   * 무효화가 아니라 **되쓰기**다 — 무효화는 왕복을 한 번 더 돌면서 그
+   * 사이의 편집을 밀어낼 자리를 만든다. 우리는 서버가 무엇을 갖게 됐는지
+   * 이미 알고 있으므로 다시 물을 이유가 없다.
+   */
+  /**
+   * 휴지통 항목을 되돌리거나 영구 삭제한다 (`FR-SHELL-007` · `SEC-SHELL-001`).
+   *
+   * 끝나면 목록과 트리를 **둘 다** 무효화한다 — 되돌린 문서는 트리에
+   * 나타나야 하고 목록에서는 사라져야 하는데, 한쪽만 갱신하면 사용자는
+   * 그것이 어디로 갔는지 알 수 없다.
+   */
+  const afterTrashAction = useCallback(async () => {
+    await queries.invalidateQueries({ queryKey: ['trash'] });
+    await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
+  }, [queries]);
+
+  const purgeTrash = useCallback(
+    async (nodeId: string) => {
+      await purgeFromTrash(nodeId).catch(() => undefined);
+      await afterTrashAction();
+    },
+    [afterTrashAction],
+  );
+
+  const restoreTrash = useCallback(
+    async (nodeId: string) => {
+      await restoreFromTrash(nodeId).catch(() => undefined);
+      await afterTrashAction();
+    },
+    [afterTrashAction],
+  );
+
+  const noteSaved = useCallback(
+    (nodeId: string, savedBody: string, hash: string) => {
+      queries.setQueryData(QUERY_KEYS.document(nodeId), { body: savedBody, hash });
     },
     [queries],
   );
@@ -310,13 +348,18 @@ function AppBody() {
   }, []);
 
   // 주소에 문서가 실려 들어왔으면 그것을 연다 (`FR-SHELL-006` AC-2).
+  //
+  // **이미 그 문서가 활성이면 아무 일도 하지 않는다.** 이 효과는 트리를
+  // 다시 받을 때마다 도는데, 그때마다 열면 주소가 같은 자리에 또 쌓여
+  // 뒤로 가기가 여러 번 눌러야 동작한다 (AC-4).
+  const activeId = documents.activeId;
   useEffect(() => {
     const wanted = nodeIdOf(window.location.pathname);
-    if (wanted === null || workspaces.length === 0) return;
+    if (wanted === null || wanted === activeId || workspaces.length === 0) return;
 
     const node = findNode(workspaces, wanted);
     if (node !== undefined) open(node, false);
-  }, [workspaces, open]);
+  }, [workspaces, open, activeId]);
 
   /**
    * 뒤로·앞으로 (`FR-SHELL-006` AC-4).
@@ -359,6 +402,8 @@ function AppBody() {
       trash={trash.data ?? []}
       trashLens={trashLens}
       onTrashLens={setTrashLens}
+      onTrashPurge={purgeTrash}
+      onTrashRestore={restoreTrash}
       favorites={favorites.data ?? []}
       links={links.data ?? { outgoing: [], backlinks: [] }}
       query={query}
@@ -370,6 +415,8 @@ function AppBody() {
       onNewVersion={newVersion}
       onNoticeDismiss={() => setNotice(undefined)}
       onSaveState={noteSaveState}
+      onSaved={noteSaved}
+      onDocuments={setDocuments}
       {...(notice === undefined ? {} : { notice })}
       {...(pendingOpen === null
         ? {}

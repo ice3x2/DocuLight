@@ -151,6 +151,12 @@ export async function restoreFromTrash(
       .chainOf(node.parentId)
       .every((link) => link.trashedAt === null) &&
       stores.nodes.findById(node.parentId) !== undefined;
+  // **볼 수 없으면 없는 것과 같은 답이다** (`SEC-ACL-006`). 못 고친다는
+  // 답을 주면 그 차이가 「거기 그런 항목이 있다」를 알린다 — 휴지통은
+  // 지워진 문서의 목록이라 그 사실 자체가 새 정보다.
+  const visible = permissionOf(stores, actor, nodeId);
+  if (visible === null || !permits(visible, 'view')) return { ok: false, rule: 'not-in-trash' };
+
   const workspaceLevel = permissionOf(stores, actor, entry.workspaceId);
   const isWorkspaceAdmin = workspaceLevel !== null && permits(workspaceLevel, 'admin');
 
