@@ -80,4 +80,7 @@ export const useLinks = (nodeId: string | null): UseQueryResult<DocumentLinksBod
  * 따로 들면 그 판정이 남의 본문을 근거로 하게 된다.
  */
 export const useDocument = (nodeId: string): UseQueryResult<DocumentBody> =>
-  useQuery({ queryKey: QUERY_KEYS.document(nodeId), queryFn: () => loadDocument(nodeId) });
+  useQuery({
+    queryKey: QUERY_KEYS.document(nodeId),
+    queryFn: () => loadDocument(nodeId),
+  });

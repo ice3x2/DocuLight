@@ -173,25 +173,32 @@ function AppBody() {
    * 자동 저장이 멈췄거나 저장이 거부된 탭에는 그 탭에만 있는 편집이
    * 남아 있고, 교체하면 그것이 사라진다.
    */
-  const open = useCallback((node: TreeNodeView, inNewTab: boolean) => {
-    let blocked = false;
+  const open = useCallback(
+    (node: TreeNodeView, inNewTab: boolean) => {
+      let blocked = false;
 
-    setDocuments((was) => {
-      const current = activeTab(was);
-      if (!inNewTab && current !== undefined && needsConfirmBeforeReplace(current)) {
-        blocked = true;
-        return was;
+      setDocuments((was) => {
+        const current = activeTab(was);
+        if (!inNewTab && current !== undefined && needsConfirmBeforeReplace(current)) {
+          blocked = true;
+          return was;
+        }
+        return inNewTab ? openInNewTab(was, toTab(node)) : openInActiveTab(was, toTab(node));
+      });
+
+      if (blocked) {
+        setPendingOpen(node);
+        return;
       }
-      return inNewTab ? openInNewTab(was, toTab(node)) : openInActiveTab(was, toTab(node));
-    });
 
-    if (blocked) {
-      setPendingOpen(node);
-      return;
-    }
-
-    window.history.pushState(null, '', urlForNode(node.id));
-  }, []);
+      // **열 때 본문을 낡은 것으로 표시한다.** 저장은 편집기가 자기 해시
+      // 사슬로 이어 가므로 이 캐시가 갱신되지 않는데, 그 값을 그대로 다시
+      // 쓰면 사용자가 방금 저장한 글 대신 저장 전 본문을 보게 된다.
+      void queries.invalidateQueries({ queryKey: QUERY_KEYS.document(node.id) });
+      window.history.pushState(null, '', urlForNode(node.id));
+    },
+    [queries],
+  );
 
   /**
    * 새 문서를 만든다 (`FR-SHELL-003` AC-1).
