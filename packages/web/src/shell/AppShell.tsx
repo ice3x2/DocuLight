@@ -13,7 +13,10 @@ import { EmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { PersonalSettings } from '../settings/PersonalSettings.js';
+import { GroupRoster } from '../principal/GroupRoster.js';
+import { UserRoster } from '../principal/UserRoster.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
+import type { RosterGroup, RosterUser } from '../api/client.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
   LEFT_TABS,
@@ -98,10 +101,13 @@ function SettingsModal({
   workspaces = [],
   trashLens,
   personalSettings = {},
+  userRoster = [],
+  groupRoster = [],
   onTrashLens,
   onTrashPurge,
   onTrashRestore,
   onPersonalSetting,
+  onGroupRemove,
 }: {
   viewer: Viewer;
   trash?: readonly TrashRowView[];
@@ -109,10 +115,14 @@ function SettingsModal({
   trashLens?: TrashLens;
   /** 이 사용자의 개인 설정 (`DR-SHELL-002`). 없는 항목은 기본값으로 그린다. */
   personalSettings?: Readonly<Record<string, string>>;
+  /** 슈퍼유저 전용 명부 (`R163`). 슈퍼유저가 아니면 비어 있다. */
+  userRoster?: readonly RosterUser[];
+  groupRoster?: readonly RosterGroup[];
   onTrashLens?: (lens: TrashLens) => void;
   onTrashPurge?: (nodeId: string) => void;
   onTrashRestore?: (nodeId: string) => void;
   onPersonalSetting?: (key: string, value: string) => void;
+  onGroupRemove?: (groupId: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const titleId = useId();
@@ -178,15 +188,18 @@ function SettingsModal({
                     <button type="button">비밀번호 변경</button>
                     <button type="button">로그아웃</button>
                   </>
+                ) : category.id === 'users' ? (
+                  // 여기에 `PrincipalPicker` 를 두지 않는다 (`R163`). 그
+                  // 부품은 `rejected` 를 아예 받지 않고 `suspended` 를
+                  // 중립어로 적는데, 이 화면은 원장 `R112-d` 로 네 상태를
+                  // 그대로 표시해야 한다.
+                  <UserRoster users={userRoster} />
+                ) : category.id === 'groups' ? (
+                  <GroupRoster
+                    groups={groupRoster}
+                    {...(onGroupRemove === undefined ? {} : { onRemove: onGroupRemove })}
+                  />
                 ) : (
-                  // `사용자 관리`·`그룹 관리` 가 여기로 떨어지는 것은 의도다.
-                  // 그 둘은 슈퍼유저 전용 관리 화면이라 원장 `R112-d` 로
-                  // 계정 4상태(`활성`·`대기`·`정지`·`거절`)를 **그대로**
-                  // 표시해야 한다. `PrincipalPicker` 는 반대로 부여하는
-                  // 제3자에게 함의를 감추는 중립어 부품이라 여기 두면
-                  // `rejected` 계정이 슈퍼유저에게서 사라지고 `suspended`
-                  // 가 `비활성` 으로 읽힌다. 그 화면은 `FR-PRINCIPAL-009`
-                  // 가 소유하며 아직 서지 않았다.
                   <p>{category.label}</p>
                 )}
               </Tabs.Content>
@@ -218,10 +231,13 @@ export function AppShell({
   trash = [],
   trashLens,
   personalSettings = {},
+  userRoster = [],
+  groupRoster = [],
   onTrashLens,
   onTrashPurge,
   onTrashRestore,
   onPersonalSetting,
+  onGroupRemove,
   query = '',
   onQuery,
   onOpen,
@@ -271,6 +287,10 @@ export function AppShell({
    */
   personalSettings?: Readonly<Record<string, string>>;
   onPersonalSetting?: (key: string, value: string) => void;
+  /** 슈퍼유저 전용 명부 (`R163`). 슈퍼유저가 아니면 서버가 주지 않는다. */
+  userRoster?: readonly RosterUser[];
+  groupRoster?: readonly RosterGroup[];
+  onGroupRemove?: (groupId: string) => void;
   /** 좌측 검색 탭의 질의. 태그 클릭도 이 값을 채운다. */
   query?: string;
   onQuery?: (query: string) => void;
@@ -393,6 +413,9 @@ export function AppShell({
           {...(onTrashRestore === undefined ? {} : { onTrashRestore })}
           personalSettings={personalSettings}
           {...(onPersonalSetting === undefined ? {} : { onPersonalSetting })}
+          userRoster={userRoster}
+          groupRoster={groupRoster}
+          {...(onGroupRemove === undefined ? {} : { onGroupRemove })}
         />
         {notice !== undefined && (
           // `status` 인 이유는 이것이 사용자의 조작을 막지 않기 때문이다 —

@@ -37,6 +37,13 @@ import {
   writePersonalSettings,
 } from '../../app/settings/personal-settings.js';
 import type { PersonalSettingStore } from '../../domain/ports/personal-setting-store.js';
+import type { SessionRepository } from '../../domain/ports/session-repository.js';
+import {
+  groupRoster,
+  removeGroupWithGrants,
+  userRoster,
+} from '../../app/principal/roster-service.js';
+import { addGroupMember, removeFromGroup } from '../../app/principal/principal-service.js';
 import { uploadNewVersion, warnsIrreversible } from '../../app/document/new-version.js';
 import { noticeFor } from '../../domain/node/collision-notice.js';
 import { linksOf, wikiTargets } from '../../app/document/link-service.js';
@@ -68,7 +75,9 @@ import { RESOURCE_DIRECTORY } from '../../domain/attachment/resource-layout.js';
  * 저장 충돌은 **409**. 그 밖의 사유를 만들지 않는다.
  */
 export interface WorkspaceApiDeps {
-  stores: AttachmentStores & TrashStores & FavoriteStores & { personalSettings: PersonalSettingStore };
+  stores: AttachmentStores &
+    TrashStores &
+    FavoriteStores & { personalSettings: PersonalSettingStore; sessions: SessionRepository };
   /**
    * 이 요청을 누구로 볼 것인가. 세울 수 없으면 `undefined`.
    *
@@ -683,6 +692,97 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     // 그대로 보내고, 그것을 500 으로 답하면 서버 결함처럼 읽힌다.
     const saved = writePersonalSettings(stores.personalSettings, actor.id, req.body ?? {});
     res.sendStatus(saved.ok ? 204 : 400);
+  });
+
+  /**
+   * 슈퍼유저 전용 명부 (`R163` · `FR-PRINCIPAL-001`).
+   *
+   * **`/principals` 와 다른 문이다.** 상한이 없고 `rejected` 를 담으므로
+   * 인가가 한 번 느슨해지면 그쪽보다 넓은 문이 된다 — 그래서 스코프
+   * 검사(`R162`)가 이 라우트로 새지 않도록 fail-closed 를 **독립으로**
+   * 박고, 자격이 없으면 없는 자리와 같은 답을 준다 (`R163-a`).
+   */
+  router.get('/roster/users', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const roster = userRoster(stores, actor);
+    if (roster === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(roster);
+  });
+
+  router.get('/roster/groups', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const roster = groupRoster(stores, actor);
+    if (roster === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(roster);
+  });
+
+  router.delete('/roster/groups/:groupId', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const removed = removeGroupWithGrants(stores, actor, req.params.groupId!);
+    if (removed.ok) {
+      res.sendStatus(204);
+      return;
+    }
+
+    // 자격이 없거나 없는 그룹이면 같은 답 — 갈리면 그룹 ID 열거가 된다.
+    res.sendStatus(removed.rule === 'system-group-immutable' ? 403 : 404);
+  });
+
+  /**
+   * 그룹 멤버십 변경 (`FR-PRINCIPAL-001` AC-2).
+   *
+   * **슈퍼유저만** 지난다. 이 자리가 열리면 슈퍼유저 그룹에 사람을 넣는
+   * 두 번째 경로가 되어 `SEC-AUTH-010` AC-2 가 걸린다.
+   */
+  const membership = (req: Request): 'ok' | 'unauthenticated' | 'denied' => {
+    const actor = actorFor(req);
+    if (actor === undefined) return 'unauthenticated';
+    return isSuperuser(stores.principals.groupsOf(actor.id)) ? 'ok' : 'denied';
+  };
+
+  router.post('/roster/groups/:groupId/members', (req, res) => {
+    const gate = membership(req);
+    if (gate !== 'ok') {
+      res.sendStatus(gate === 'unauthenticated' ? 401 : 404);
+      return;
+    }
+
+    const added = addGroupMember(stores.principals, req.params.groupId!, one(req.body?.userId) ?? '');
+    res.sendStatus(added.ok ? 204 : 400);
+  });
+
+  router.delete('/roster/groups/:groupId/members/:userId', (req, res) => {
+    const gate = membership(req);
+    if (gate !== 'ok') {
+      res.sendStatus(gate === 'unauthenticated' ? 401 : 404);
+      return;
+    }
+
+    const removed = removeFromGroup(stores, req.params.groupId!, req.params.userId!);
+    res.sendStatus(removed.ok ? 204 : 400);
   });
 
   router.get('/wiki-targets', (req, res) => {

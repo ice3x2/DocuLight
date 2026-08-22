@@ -3,7 +3,9 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import {
   fetchFavorites,
   fetchLinks,
+  fetchGroupRoster,
   fetchPersonalSettings,
+  fetchUserRoster,
   fetchSession,
   fetchTrash,
   fetchTree,
@@ -11,6 +13,8 @@ import {
   type DocumentBody,
   type DocumentLinksBody,
   type FavoriteRow,
+  type RosterGroup,
+  type RosterUser,
   type SessionBody,
 } from './client.js';
 import type { TrashRowView } from '../trash/TrashPanel.js';
@@ -34,6 +38,8 @@ export const QUERY_KEYS = {
   trash: (scope: 'mine' | 'all', workspaceId?: string) => ['trash', scope, workspaceId] as const,
   links: (nodeId: string) => ['links', nodeId] as const,
   personalSettings: ['personal-settings'] as const,
+  userRoster: ['roster', 'users'] as const,
+  groupRoster: ['roster', 'groups'] as const,
   document: (nodeId: string) => ['document', nodeId] as const,
 };
 
@@ -54,6 +60,13 @@ export const usePersonalSettings = (
   enabled: boolean,
 ): UseQueryResult<Record<string, string>> =>
   useQuery({ queryKey: QUERY_KEYS.personalSettings, queryFn: fetchPersonalSettings, enabled });
+
+/** 슈퍼유저 전용 명부 (`R163`). 슈퍼유저가 아니면 서버가 404 로 답한다. */
+export const useUserRoster = (enabled: boolean): UseQueryResult<RosterUser[]> =>
+  useQuery({ queryKey: QUERY_KEYS.userRoster, queryFn: fetchUserRoster, enabled, retry: false });
+
+export const useGroupRoster = (enabled: boolean): UseQueryResult<RosterGroup[]> =>
+  useQuery({ queryKey: QUERY_KEYS.groupRoster, queryFn: fetchGroupRoster, enabled, retry: false });
 
 export const useFavorites = (enabled: boolean): UseQueryResult<FavoriteRow[]> =>
   useQuery({ queryKey: QUERY_KEYS.favorites, queryFn: fetchFavorites, enabled });

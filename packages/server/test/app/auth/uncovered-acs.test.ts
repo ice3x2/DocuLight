@@ -168,18 +168,22 @@ describe('SEC-AUTH-010 AC-2 — 마법사 밖에서 최초 슈퍼유저를 만�
     ]);
   });
 
-  it('그 둘째 자리는 아직 어떤 라우트에도 닿지 않는다', () => {
+  it('그 둘째 자리로 가는 라우트는 전부 슈퍼유저를 요구한다', () => {
     // 마법사가 아닌 자리(그룹 멤버십 서비스)는 **이미 슈퍼유저가 있는**
-    // 인스턴스에서 슈퍼유저가 쓰는 조작이다. 지금은 그것을 부르는 라우트가
-    // 없어 최초 슈퍼유저를 만드는 경로가 마법사뿐이다.
+    // 인스턴스에서 슈퍼유저가 쓰는 조작이다. 그러니 그 라우트가 슈퍼유저를
+    // 요구하는 한 최초 슈퍼유저를 만드는 경로는 여전히 마법사뿐이다 —
+    // 슈퍼유저가 0명이면 그 관문을 지날 사람이 없다.
     //
-    // `FR-PRINCIPAL-001` 이 그 화면을 세우면 이 시험이 먼저 깨진다 — 그때
-    // 「그 라우트가 슈퍼유저를 요구하는가」로 판정식을 옮겨야 한다.
-    const 부르는곳 = sourceFiles(join(SRC, 'http'))
-      .filter((file) => /addGroupMember|addMember\s*\(/.test(codeOf(readFileSync(file, 'utf8'))))
-      .map((file) => file.slice(SRC.length + 1));
+    // 관문이 실제로 거절하는지는 `test/http/workspace-api.test.ts` 의
+    // 「슈퍼유저만 멤버십을 바꾼다」가 요청으로 잰다. 여기서는 관문 **없이**
+    // 그 서비스를 부르는 라우트 파일이 생기는 것을 막는다.
+    const 관문없이 = sourceFiles(join(SRC, 'http'))
+      .map((file) => ({ file, code: codeOf(readFileSync(file, 'utf8')) }))
+      .filter(({ code }) => /addGroupMember|addMember\s*\(/.test(code))
+      .filter(({ code }) => !code.includes('isSuperuser'))
+      .map(({ file }) => file.slice(SRC.length + 1));
 
-    expect(부르는곳).toEqual([]);
+    expect(관문없이).toEqual([]);
   });
 
   it('마법사는 슈퍼유저가 이미 있으면 두 번째로 통과하지 않는다', () => {

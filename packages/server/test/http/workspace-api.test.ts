@@ -613,6 +613,48 @@ describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
     expect(shorter.body).toEqual([]);
   });
 
+  it('R163 · FR-PRINCIPAL-009: 명부는 rejected 를 담고 상한이 없다', async () => {
+    for (let n = 0; n < 25; n += 1) stores.principals.createUser(`사람${n}`);
+    const 거절된 = stores.principals.createUser('거절자');
+    stores.principals.setStatus(거절된.id, 'rejected');
+
+    const got = await request(app).get('/api/roster/users');
+
+    expect(got.status).toBe(200);
+    expect(got.body.length).toBeGreaterThanOrEqual(26);
+    expect(got.body.find((row: { name: string }) => row.name === '거절자')?.status).toBe('rejected');
+  });
+
+  it('R163-a: 슈퍼유저가 아니면 명부가 없는 자리와 같은 답을 받는다', async () => {
+    actingAs = actorFor(stores.principals, me.id);
+
+    expect((await request(app).get('/api/roster/users')).status).toBe(404);
+    expect((await request(app).get('/api/roster/groups')).status).toBe(404);
+  });
+
+  it('FR-PRINCIPAL-002: 그룹을 지우면 그 그룹의 ACL 항목도 사라진다', async () => {
+    const 팀 = stores.principals.createGroup('기획팀원');
+    grantPermission(stores, root, { nodeId: ws, principalId: 팀.id, level: 'edit' });
+
+    const gone = await request(app).delete(`/api/roster/groups/${팀.id}`);
+
+    expect(gone.status).toBe(204);
+    expect(stores.acl.entriesOfPrincipal(팀.id)).toEqual([]);
+  });
+
+  it('FR-PRINCIPAL-001 AC-2: 슈퍼유저만 멤버십을 바꾼다', async () => {
+    const 팀 = stores.principals.createGroup('기획팀원');
+    actingAs = actorFor(stores.principals, me.id);
+
+    const 거절 = await request(app).post(`/api/roster/groups/${팀.id}/members`).send({ userId: me.id });
+    actingAs = root;
+    const 허용 = await request(app).post(`/api/roster/groups/${팀.id}/members`).send({ userId: me.id });
+
+    expect(거절.status).toBe(404);
+    expect(허용.status).toBe(204);
+    expect(stores.principals.membersOf(팀.id)).toEqual([me.id]);
+  });
+
   it('DR-SHELL-002 AC-1 · AC-3: 개인 설정을 쓰면 그 사용자에게만 그 값이 나온다', async () => {
     actingAs = me;
 

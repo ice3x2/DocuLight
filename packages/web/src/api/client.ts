@@ -207,6 +207,35 @@ export const fetchPrincipals = (query: string, scope: PrincipalScope) =>
   );
 
 /** 위키링크 자동완성 후보 (`CON-EDITOR-002` AC-1). 거르는 일은 서버가 한다. */
+/**
+ * 슈퍼유저 전용 명부의 계정 상태 (`FR-PRINCIPAL-009`).
+ *
+ * `PrincipalStatus` 와 **다른 타입이다** — 이쪽은 `rejected` 를 담는다.
+ * 하나로 합치면 주체 검색 결과에도 그 갈래가 생기고, 그 갈래를 채우는
+ * 순간 `SEC-PRINCIPAL-002` AC-3 이 깨진다.
+ */
+export type RosterUserStatus = 'active' | 'pending' | 'suspended' | 'rejected';
+
+export interface RosterUser {
+  id: string;
+  name: string;
+  status: RosterUserStatus;
+}
+
+export interface RosterGroup {
+  id: string;
+  name: string;
+  system: boolean;
+  members: RosterUser[];
+}
+
+export const fetchUserRoster = () => call<RosterUser[]>('/roster/users');
+
+export const fetchGroupRoster = () => call<RosterGroup[]>('/roster/groups');
+
+export const removeGroup = (groupId: string) =>
+  call<void>(`/roster/groups/${encodeURIComponent(groupId)}`, { method: 'DELETE' });
+
 export const fetchWikiTargets = (query: string) =>
   call<{ target: string; label: string; detail: string }[]>(
     `/wiki-targets?q=${encodeURIComponent(query)}`,

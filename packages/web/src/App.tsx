@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   ApiError,
   addFavorite,
+  removeGroup,
   savePersonalSetting,
   createNode,
   loadDocument,
@@ -16,7 +17,9 @@ import {
 import {
   QUERY_KEYS,
   useFavorites,
+  useGroupRoster,
   usePersonalSettings,
+  useUserRoster,
   useLinks,
   useSession,
   useTrash,
@@ -139,6 +142,9 @@ function AppBody() {
   const trash = useTrash(trashLens, signedIn);
   const favorites = useFavorites(signedIn);
   const personal = usePersonalSettings(signedIn);
+  // 슈퍼유저가 아니면 서버가 404 로 답한다 — 화면이 다시 판정하지 않는다.
+  const users = useUserRoster(signedIn && session.data?.superuser === true);
+  const groups = useGroupRoster(signedIn && session.data?.superuser === true);
   const links = useLinks(documents.activeId);
 
   /**
@@ -293,6 +299,17 @@ function AppBody() {
    * 쓴 뒤 다시 받는다 — 화면이 고른 값을 자기 상태로 복사해 두면 서버가
    * 거절했을 때(모르는 키·값) 화면만 바뀐 채 남는다.
    */
+  /** 그룹을 지운다 (`FR-PRINCIPAL-002`). 그 그룹의 ACL 항목도 함께 걷힌다. */
+  const dropGroup = useCallback(
+    async (groupId: string) => {
+      await removeGroup(groupId).catch(() => undefined);
+      // 트리도 다시 받는다 — 그 그룹으로 보이던 노드가 사라질 수 있다.
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.groupRoster });
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
+    },
+    [queries],
+  );
+
   const pickPersonalSetting = useCallback(
     async (key: string, value: string) => {
       await savePersonalSetting(key, value).catch(() => undefined);
@@ -423,6 +440,9 @@ function AppBody() {
       onTrashRestore={restoreTrash}
       personalSettings={personal.data ?? {}}
       onPersonalSetting={pickPersonalSetting}
+      userRoster={users.data ?? []}
+      groupRoster={groups.data ?? []}
+      onGroupRemove={dropGroup}
       favorites={favorites.data ?? []}
       links={links.data ?? { outgoing: [], backlinks: [] }}
       query={query}
