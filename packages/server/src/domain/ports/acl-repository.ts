@@ -53,6 +53,20 @@ export interface AclRepository {
   entriesOnAny(nodeIds: readonly string[]): AclEntry[];
 
   /**
+   * 한 주체 앞으로 부여된 항목 전부 — **주체 축**의 조회다
+   * (`FR-ACL-003` AC-1).
+   *
+   * `grantedNodeIds` 와 나눈 이유는 묻는 것이 다르기 때문이다. 저쪽은
+   * pass-through 판정이 쓰는 「어느 노드에 걸렸나」이고 이쪽은 회수 화면이
+   * 쓰는 「무엇을 걷어야 하나」다. 노드 ID 만으로는 레벨도 부여자도 부여
+   * 시각도 없어 영향 범위 표를 세울 수 없다.
+   *
+   * **여러 주체를 받지 않는다.** 회수는 한 번에 한 주체다 — 목록을 받으면
+   * 그 자체가 다건 회수의 문을 열고, 그 허용 범위는 다른 조항이 정한다.
+   */
+  entriesOfPrincipal(principalId: PrincipalId): AclEntry[];
+
+  /**
    * 이 주체들이 **직접** 부여받은 노드들. pass-through 판정의 입력이다
    * (`SEC-ACL-005`).
    */

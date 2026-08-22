@@ -11,9 +11,10 @@ interface Row {
   principal_id: string;
   level: PermissionLevel;
   granted_by: string | null;
+  granted_at: string;
 }
 
-const COLUMNS = 'id, node_id, principal_id, level, granted_by';
+const COLUMNS = 'id, node_id, principal_id, level, granted_by, granted_at';
 
 const toEntry = (row: Row): AclEntry => ({
   id: row.id,
@@ -21,6 +22,7 @@ const toEntry = (row: Row): AclEntry => ({
   principalId: row.principal_id,
   level: row.level,
   grantedBy: row.granted_by,
+  grantedAt: row.granted_at,
 });
 
 /** `?, ?, ?` — 목록 파라미터를 안전하게 펼친다. */
@@ -129,6 +131,15 @@ export class SqliteAclRepository implements AclRepository {
       .all<Row>(`SELECT ${COLUMNS} FROM acl_entry WHERE node_id = ? ORDER BY granted_at, id`, [
         nodeId,
       ])
+      .map(toEntry);
+  }
+
+  entriesOfPrincipal(principalId: PrincipalId): AclEntry[] {
+    return this.store
+      .all<Row>(
+        `SELECT ${COLUMNS} FROM acl_entry WHERE principal_id = ? ORDER BY granted_at, id`,
+        [principalId],
+      )
       .map(toEntry);
   }
 

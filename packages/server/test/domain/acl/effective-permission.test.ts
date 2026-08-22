@@ -21,7 +21,8 @@ const entry = (
   principalId: string,
   level: AclEntry['level'],
   grantedBy: string | null = null,
-): AclEntry => ({ id: `e${++seq}`, nodeId, principalId, level, grantedBy });
+  // 판정은 부여 시각을 보지 않는다 — 만료 칸이 아니므로 아무 값이나 좋다.
+): AclEntry => ({ id: `e${++seq}`, nodeId, principalId, level, grantedBy, grantedAt: '' });
 
 /** 문서 → 디렉토리 → 워크스페이스. 상속은 기본값(유지)이다. */
 const ancestry = (

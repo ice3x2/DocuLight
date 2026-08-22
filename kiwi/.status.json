@@ -1,16 +1,16 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-08-22T12:25:49.020Z",
+  "generatedAt": "2026-08-22T12:34:10.552Z",
   "source": "speckiwi",
   "specFingerprint": {
     "algorithm": "sha256",
-    "value": "e932171c6bc6db81771469380b79bcda0d3fea804a7a476881e44c028ef6c97a",
+    "value": "181ac9a68cf9213c7dbd41865b623de2959b11e4de8897a28644fc072525d47e",
     "files": [
       {
         "path": "docs/spec/00.index.md",
-        "sha256": "b6c960fc6b27ddbc6a1beba51238f21360610f0a46d32dd7fb8c887f1c703a01",
+        "sha256": "e11527041b826afa275410aaad996ece93ada649fe93263d120f16b276582444",
         "size": 9288,
-        "mtimeMs": 1787401548990.0332
+        "mtimeMs": 1787402050525.1826
       },
       {
         "path": "docs/spec/02.product-architecture.srs.md",
@@ -38,9 +38,9 @@
       },
       {
         "path": "docs/spec/10.access-control.srs.md",
-        "sha256": "5ba3b27602161f145b71a2cadf4541ad871f347df2f540a51ac236628e0eb2c0",
-        "size": 120949,
-        "mtimeMs": 1787401548945.197
+        "sha256": "36790f7220bdb2636ed3d5caa8fb7191867c11eac455918677bd50738ad25b07",
+        "size": 121936,
+        "mtimeMs": 1787402039589.9038
       },
       {
         "path": "docs/spec/11.confirmation-grades.srs.md",
@@ -74,9 +74,9 @@
       },
       {
         "path": "docs/spec/16.principal.srs.md",
-        "sha256": "9b147577c12a040bf9f040ad76f63d9134e885d69695ede976d5b219b5c19d00",
-        "size": 82905,
-        "mtimeMs": 1787383672992.1
+        "sha256": "ed649bb4da30cb976404226e2535ddc31e6f9e607ac1c8e25eee2510b34aa077",
+        "size": 84221,
+        "mtimeMs": 1787402050505.0464
       },
       {
         "path": "docs/spec/90.appendix.md",

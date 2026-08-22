@@ -31,6 +31,8 @@ const entry = (grantedBy: string | null): AclEntry => ({
   principalId: OTHER,
   level: 'view',
   grantedBy,
+  // 회수 판정은 부여 시각을 보지 않는다 — 보면 만료가 되어 버린다.
+  grantedAt: '',
 });
 
 describe('SEC-ACL-012 — 파일 조작별 필요 권한을 조작 단위로 확정한다', () => {

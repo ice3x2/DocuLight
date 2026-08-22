@@ -36,4 +36,14 @@ export interface AclEntry {
    * (`SEC-ACL-010` AC-3). 시스템이 자동으로 넣은 항목은 `null` 이다.
    */
   grantedBy: PrincipalId | null;
+
+  /**
+   * 부여 시각 (`FR-ACL-003` AC-4).
+   *
+   * **만료가 아니다.** 판정은 이 값을 보지 않으므로 시간이 흘러도 유효
+   * 권한이 달라지지 않는다 — 만료 칸을 두지 않은 이유(`CON-PRINCIPAL-005`)와
+   * 충돌하지 않는 것이 그래서다. `grantedBy` 와 같은 축의 값이며, 회수
+   * 화면이 「언제부터 열려 있었나」를 보여줄 때 쓴다.
+   */
+  grantedAt: string;
 }
