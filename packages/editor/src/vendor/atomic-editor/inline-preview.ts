@@ -637,7 +637,16 @@ function buildInlineDecorations(view: EditorView): DecorationSet {
           pushReplace(ranges, doc, node.from, taskFrom);
         } else {
           const markText = doc.sliceString(node.from, node.to);
-          if (markText === '-' || markText === '*' || markText === '+') {
+          // DocuLight 변경 — 커서가 놓인 줄에서는 마커를 원문 그대로 둔다.
+          // 상류에는 이 판정이 없어 불릿이 언제나 글리프로 바뀌는데,
+          // 라이브 프리뷰 대상 표(`02.feature-request-live-preview.md` §3.1
+          // 3행)는 목록의 「커서 안 표시」를 **원문 마커 노출**로 못박는다.
+          // 그것이 없으면 사용자가 `-` 를 `1.` 로 바꿀 방법이 사라진다.
+          // 상류 병합 시 이 분기가 사라지지 않았는지 확인할 것.
+          if (activeLines.has(line.number)) {
+            // 아무것도 대체하지 않는다 — 들여쓰기 장식은 위에서 이미
+            // 걸렸고 그것은 글자를 숨기지 않는다.
+          } else if (markText === '-' || markText === '*' || markText === '+') {
             // Bullet: substitute with the fixed-width marker
             // widget, swallowing the trailing space so content
             // starts precisely at padding-left.

@@ -1,3 +1,4 @@
+import { EditorView } from '@codemirror/view';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -174,5 +175,87 @@ describe('FR-EDITOR-007 AC-8 · AC-10 — 코드블록은 원문 그대로 남�
 
     // 앞의 코드블록이 뒤의 수식을 삼키면 이 단언이 깨진다.
     expect(host.querySelector('.dl-math')).not.toBeNull();
+  });
+});
+
+/**
+ * 커서를 올리면 원문이 드러난다 — 요구의 **나머지 절반**.
+ *
+ * 앞의 표는 숨는 것만 잰다. 숨기만 하고 드러나지 않으면 그것은 라이브
+ * 프리뷰가 아니라 그냥 렌더링이고, 사용자는 기호를 고칠 방법을 잃는다.
+ *
+ * 커서를 올리는 일에는 **포커스가 필요하다.** 선택 위치만 옮기면 vendor 의
+ * 판정이 「활성 줄이 없다」로 남아 원문이 드러나지 않는다 — 그 상태로 재면
+ * 통과할 수 없는 시험이 되고, 통과시키려다 구현을 잘못 고치게 된다.
+ */
+function reveal(markdown: string, at: string): string {
+  const host = mount(markdown);
+  const view = EditorView.findFromDOM(host.querySelector('.cm-editor') as HTMLElement);
+  if (view === null) throw new Error('편집기를 찾지 못했다');
+
+  const offset = markdown.indexOf(at);
+  if (offset < 0) throw new Error(`문서에 ${at} 가 없다`);
+
+  // 포커스가 먼저다 — vendor 의 판정이 `view.hasFocus` 를 보므로, 선택만
+  // 옮기면 활성 줄이 서지 않는다. 그리고 그 뒤의 선택 이동이 데코레이션을
+  // 다시 세우는 갱신을 만든다.
+  // 포커스가 먼저다 — vendor 의 판정이 `view.hasFocus` 를 보므로, 선택만
+  // 옮기면 활성 줄이 서지 않는다. 그리고 `focus()` 만으로는 데코레이션이
+  // 다시 서지 않으므로(그 갱신을 만드는 것은 뒤의 선택 이동이다) 둘 다
+  // 필요하다.
+  act(() => {
+    view.focus();
+  });
+  // 선택 이동은 `act` **밖**에서 건다. CodeMirror 는 React 가 아니라
+  // dispatch 시점에 자기 DOM 을 곧바로 고치므로 `act` 가 필요 없고,
+  // 안에서 걸면 관측자가 같은 흐름에서 되쏘아 갱신이 겹친다.
+  view.dispatch({ selection: { anchor: offset + at.length } });
+
+  return visibleText(host);
+}
+
+describe('FR-EDITOR-007 — 아홉 요소 모두 커서를 올리면 원문이 드러난다', () => {
+  for (const element of NINE) {
+    it(`${element.ac}: ${element.name}에 커서를 올리면 기호가 돌아온다`, () => {
+      expect(
+        reveal(`앞 문단\n\n${element.markdown}\n`, element.keeps),
+        `${element.name}의 기호가 커서 아래에서도 숨어 있다`,
+      ).toContain(element.hides);
+    });
+  }
+
+  it('AC-6: 코드블록에 커서를 올리면 울타리가 드러난다', () => {
+    expect(reveal('앞 문단\n\n```ts\nconst a = 1;\n```\n', 'const a = 1;')).toContain('```');
+  });
+
+  /**
+   * AC-7 의 드러남만 **자동으로 재지 못한다.**
+   *
+   * 커서가 표에 닿는 순간 위젯이 통째로 걷히는데, happy-dom 이 그 DOM 변화를
+   * 선택 변경으로 되쏘고 CM6 가 그 재진입을 「갱신 중 갱신」이라며 거부한다.
+   * 다른 여덟 요소는 걷히는 DOM 이 작아 이 경로를 타지 않는다.
+   *
+   * 이 항의 **숨는 절반**은 위 `AC-7: 표가 구분선 없이 렌더된다` 가 잰다.
+   * 드러나는 절반은 실제 브라우저에서 확인해야 하며, 그것을 자동으로 잴
+   * 자리는 Playwright E2E 다 — 거기서는 이 재진입이 일어나지 않는다.
+   *
+   * **통과로 세지 않으려고 남겨 둔다.** 지우면 이 구멍이 목록에서 사라지고,
+   * 통과시키려 손대면 재는 대상이 바뀐다.
+   */
+  it.skip('AC-7: 표에 커서를 올리면 구분선이 드러난다 (브라우저에서 확인)', () => {
+    const table = '| 머리 | 둘 |\n| --- | --- |\n| 값 | 둘 |';
+    expect(reveal(`앞 문단\n\n${table}\n`, '값')).toContain('---');
+  });
+
+  it('AC-9: Mermaid 블록에 커서를 올리면 울타리가 드러난다', () => {
+    expect(reveal('앞 문단\n\n```mermaid\ngraph TD;\n  A-->B;\n```\n', 'graph TD;')).toContain(
+      '```mermaid',
+    );
+  });
+
+  it('AC-10: 태그에 커서를 올리면 `#` 를 포함한 원문이 드러난다', () => {
+    const shown = reveal('앞 문단\n\n오늘 #회의 를 했다\n', '#회의');
+
+    expect(shown).toContain('#회의');
   });
 });
