@@ -86,6 +86,13 @@ export const SETTINGS_CATEGORIES: readonly SettingsCategory[] = [
   { id: 'signup-approval', label: '가입 승인', section: 'instance', gate: 'superuser' },
   { id: 'all-workspaces', label: '전체 워크스페이스', section: 'instance', gate: 'superuser' },
   { id: 'instance', label: '인스턴스 설정', section: 'instance', gate: 'superuser' },
+  // 열넷째는 **계약을 늘려** 들어왔다 (`R157-a` — `R24-a` 표 개정). 이
+  // 목록이 전량이라는 규범은 그대로이고, 바뀐 것은 전량의 내용이다.
+  //
+  // `인스턴스 설정` 안에 넣지 않았다 — 그 카테고리는 **값을 정하는** 자리고
+  // (아래 `INSTANCE_SETTINGS` 다섯) 이쪽은 **상태를 보는** 자리다. 설정 폼
+  // 안에 상태 표를 두면 AC-7 의 「다섯」이 무엇을 세는 값인지 흐려진다.
+  { id: 'index-queue', label: '색인 대기열', section: 'instance', gate: 'superuser' },
 ];
 
 /**

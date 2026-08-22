@@ -32,7 +32,29 @@ describe('IR-SHELL-002 — 설정 카테고리 전량 목록과 표시 권한', 
       '가입 승인',
       '전체 워크스페이스',
       '인스턴스 설정',
+      '색인 대기열',
     ]);
+  });
+
+  it('AC-8: 색인 대기열은 슈퍼유저에게만 보이는 인스턴스 카테고리다', () => {
+    // 열넷째는 계약을 늘려 들어왔다 — 구현이 임의로 만든 것이 아니라
+    // 원장 표(`R24-a`)와 이 요구를 먼저 고친 뒤에 선 자리다.
+    //
+    // `인스턴스 설정` 안에 넣지 않은 이유는 그 카테고리가 **값을 정하는**
+    // 자리이고 대기열은 **상태를 보는** 자리이기 때문이다. 설정 폼 안에
+    // 상태 표를 넣으면 그 카테고리의 다섯 열거가 무엇을 세는 것인지
+    // 흐려진다.
+    expect(labelsFor(viewer({ superuser: true, adminWorkspaceCount: 1 }))).toContain(
+      '색인 대기열',
+    );
+    expect(labelsFor(viewer({ adminWorkspaceCount: 1 }))).not.toContain('색인 대기열');
+  });
+
+  it('색인 대기열은 인스턴스 설정의 다섯 값에 섞이지 않는다', () => {
+    // 상태 화면이 설정 값 목록에 끼면 AC-7 의 「다섯」이 무엇을 세는
+    // 값인지가 갈린다.
+    expect(INSTANCE_SETTINGS.map((s) => s.label)).not.toContain('색인 대기열');
+    expect(INSTANCE_SETTINGS).toHaveLength(5);
   });
 
   it('AC-2: 개인 구역 세 카테고리가 전원에게 보인다', () => {
