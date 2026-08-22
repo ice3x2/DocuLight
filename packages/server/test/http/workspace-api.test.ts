@@ -510,3 +510,32 @@ describe('링크 — 백링크와 아웃고잉 (`CON-EDITOR-002` AC-2 · AC-3)',
     expect((await request(app).get(`/api/documents/${doc}/links`)).status).toBe(404);
   });
 });
+
+describe('위키링크 대상 제안 (`CON-EDITOR-002` AC-1)', () => {
+  it('이름이 걸리는 문서를 준다', async () => {
+    createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'file', name: '설계.md' });
+
+    const got = await request(app).get('/api/wiki-targets').query({ q: '회의' });
+
+    expect(got.status).toBe(200);
+    expect(got.body).toEqual([{ target: '회의록', label: '회의록.md', detail: '기획팀' }]);
+  });
+
+  it('질의가 비면 전부 준다 — `[[` 만 친 순간에도 고를 것이 보여야 한다', async () => {
+    const got = await request(app).get('/api/wiki-targets').query({ q: '' });
+
+    expect(got.body).toHaveLength(1);
+  });
+
+  it('볼 수 없는 문서는 제안되지 않는다', async () => {
+    actingAs = actorFor(stores.principals, me.id);
+
+    expect((await request(app).get('/api/wiki-targets').query({ q: '회의' })).body).toEqual([]);
+  });
+
+  it('md 가 아닌 파일은 제안되지 않는다 — 위키링크는 문서 사이의 것이다', async () => {
+    createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'file', name: '설계.zip' });
+
+    expect((await request(app).get('/api/wiki-targets').query({ q: '설계' })).body).toEqual([]);
+  });
+});

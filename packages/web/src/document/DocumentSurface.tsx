@@ -1,7 +1,7 @@
 import { AtomicCodeMirrorEditor, doculightExtensions } from '@doculight/editor';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { uploadAttachment } from '../api/client.js';
+import { fetchWikiTargets, uploadAttachment } from '../api/client.js';
 import { pasteUpload } from '../attachment/upload-contract.js';
 import { urlForNode } from '../routing/deep-link.js';
 import { MergeView } from './MergeView.js';
@@ -109,6 +109,7 @@ export function DocumentSurface({
   body,
   baseHash,
   onTagClick,
+  onOpenWikiLink,
   onSaveState,
 }: {
   file: OpenFile;
@@ -127,6 +128,8 @@ export function DocumentSurface({
    */
   body?: string;
   onTagClick?: (name: string) => void;
+  /** 위키링크를 눌렀다 (`CON-EDITOR-002` AC-1). 그 문서를 여는 일은 셸이 한다. */
+  onOpenWikiLink?: (target: string) => void;
   /**
    * 저장 상태가 바뀌었다.
    *
@@ -158,14 +161,30 @@ export function DocumentSurface({
     [],
   );
 
+  /**
+   * `[[` 뒤의 후보 (`CON-EDITOR-002` AC-1).
+   *
+   * 못 받으면 **빈 목록**이다 — 던지면 편집기의 자동완성이 그 자리에서
+   * 멈추고, 그 뒤로는 후보가 다시 뜨지 않는다.
+   */
+  const suggest = useCallback(
+    (query: string) =>
+      fetchWikiTargets(query)
+        .then((rows) => rows.map((row) => ({ target: row.target, label: row.label, detail: row.detail })))
+        .catch(() => []),
+    [],
+  );
+
   // 확장 묶음을 마운트마다 다시 만들면 그때마다 편집기가 재구성된다.
   const extensions = useMemo(
     () =>
       doculightExtensions({
         ...(onTagClick === undefined ? {} : { onTagClick }),
+        ...(onOpenWikiLink === undefined ? {} : { onOpenWikiLink }),
         onAttach: attach,
+        suggestWikiLinks: suggest,
       }),
-    [onTagClick, attach],
+    [onTagClick, onOpenWikiLink, attach],
   );
 
   const change = (to: Mode) => setMode((from) => nextMode(from, to, { canEdit: canEditFile(file) }));

@@ -32,7 +32,7 @@ import {
 import { createNode } from '../../app/node/node-service.js';
 import { uploadNewVersion, warnsIrreversible } from '../../app/document/new-version.js';
 import { noticeFor } from '../../domain/node/collision-notice.js';
-import { linksOf } from '../../app/document/link-service.js';
+import { linksOf, wikiTargets } from '../../app/document/link-service.js';
 import { readDocument, saveDocument, workspaceRootOf } from '../../app/document/save-service.js';
 import {
   beginEditSession,
@@ -594,6 +594,22 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     }
 
     res.json(links);
+  });
+
+  /**
+   * 위키링크 자동완성 후보 (`CON-EDITOR-002` AC-1).
+   *
+   * 거르는 일을 서버가 한다 — 전부 내려 주고 화면에서 고르게 하면 볼 수
+   * 있는 문서 이름 전부가 이미 브라우저에 와 있게 된다.
+   */
+  router.get('/wiki-targets', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    res.json(wikiTargets(stores, actor, one(req.query.q) ?? ''));
   });
 
   router.get('/favorites', (req, res) => {

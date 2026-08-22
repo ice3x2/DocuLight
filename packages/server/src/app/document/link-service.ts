@@ -101,6 +101,50 @@ function outgoingOf(
   });
 }
 
+/** 위키링크 자동완성이 고를 후보 하나 (`CON-EDITOR-002` AC-1). */
+export interface WikiTarget {
+  /** 본문에 적히는 이름 — 확장자가 없다. */
+  target: string;
+  /** 목록에 보이는 이름. */
+  label: string;
+  /** 어느 워크스페이스의 것인지 — 이름이 겹치면 이것이 가른다. */
+  detail: string;
+}
+
+/**
+ * `[[` 를 친 자리에 세울 후보들 (`CON-EDITOR-002` AC-1).
+ *
+ * **본문을 읽지 않는다.** 이름만 필요한데 본문까지 읽으면 `[[` 를 칠 때마다
+ * 워크스페이스 전체를 디스크에서 읽게 된다.
+ *
+ * 거르는 일은 여기서 한다 — 화면이 전부 받아 거르면 볼 수 있는 문서의
+ * 이름 전부가 이미 브라우저에 와 있게 된다.
+ */
+export function wikiTargets(
+  stores: DocumentStores,
+  actor: Actor,
+  query: string,
+): WikiTarget[] {
+  const wanted = query.trim().toLowerCase();
+  const found: WikiTarget[] = [];
+
+  for (const entry of visibleWorkspacesOf(stores, actor)) {
+    for (const node of stores.nodes.allIn(entry.workspace.id)) {
+      if (node.kind !== 'file' || !isVersioned(node.name)) continue;
+
+      const target = stem(node.name);
+      if (wanted !== '' && !target.toLowerCase().includes(wanted)) continue;
+
+      const level = permissionOf(stores, actor, node.id);
+      if (level === null || !permits(level, 'view')) continue;
+
+      found.push({ target, label: node.name, detail: entry.workspace.name });
+    }
+  }
+
+  return found;
+}
+
 /**
  * 요청자가 볼 수 있는 md 문서와 그 본문 전부.
  *

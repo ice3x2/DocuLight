@@ -145,6 +145,12 @@ export interface DocumentLinksBody {
   backlinks: LinkRowView[];
 }
 
+/** 위키링크 자동완성 후보 (`CON-EDITOR-002` AC-1). 거르는 일은 서버가 한다. */
+export const fetchWikiTargets = (query: string) =>
+  call<{ target: string; label: string; detail: string }[]>(
+    `/wiki-targets?q=${encodeURIComponent(query)}`,
+  );
+
 export const fetchLinks = (nodeId: string) =>
   call<DocumentLinksBody>(`/documents/${encodeURIComponent(nodeId)}/links`);
 

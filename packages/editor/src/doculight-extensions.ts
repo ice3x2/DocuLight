@@ -1,10 +1,12 @@
 import type { Extension } from '@codemirror/state';
 
 import { highlightCode, isHighlightable } from './core/code-highlight.js';
+import { codeBlocks } from './core/code-blocks.js';
 import { mathBlocks } from './core/math-decoration.js';
 import { pasteUploadExtension, type AttachUpload } from './core/paste-upload.js';
 import { mermaidBlocks } from './core/mermaid-blocks.js';
 import { tagDecorations, type TagClick } from './core/tag-decoration.js';
+import { wikiLinks, type WikiLinkSuggestion } from './vendor/atomic-editor/wiki-links.js';
 
 /**
  * DocuLight 가 vendor 에디터 위에 얹는 확장 **전부**.
@@ -26,16 +28,33 @@ import { tagDecorations, type TagClick } from './core/tag-decoration.js';
 export const codeHighlight = { highlightCode, isHighlightable };
 
 export function doculightExtensions(
-  options: { onTagClick?: TagClick; onAttach?: AttachUpload } = {},
+  options: {
+    onTagClick?: TagClick;
+    onAttach?: AttachUpload;
+    /** `[[` 뒤의 후보를 어디서 받아 오는가 (`CON-EDITOR-002` AC-1). */
+    suggestWikiLinks?: (query: string) => Promise<WikiLinkSuggestion[]>;
+    /** 위키링크를 눌렀다 — 그 문서를 여는 일은 셸이 한다. */
+    onOpenWikiLink?: (target: string) => void;
+  } = {},
 ): Extension[] {
   return [
+    // mermaid 를 **먼저** 얹는다. 두 확장이 같은 펜스를 대체하지 않도록
+    // 코드 쪽이 mermaid 언어를 걸러 내지만, 순서까지 맞춰 두면 그 거름이
+    // 뚫려도 다이어그램이 이긴다.
     mermaidBlocks(),
+    codeBlocks(),
     mathBlocks(),
     tagDecorations(options.onTagClick),
+    // 후보를 받아 올 곳이 없어도 얹는다 — 입력·데코레이션은 후보와 무관하게
+    // 동작해야 하고, 빼 두면 그 자리에서만 `[[` 가 평범한 글자가 된다.
+    wikiLinks({
+      ...(options.suggestWikiLinks === undefined ? {} : { suggest: options.suggestWikiLinks }),
+      ...(options.onOpenWikiLink === undefined ? {} : { onOpen: options.onOpenWikiLink }),
+    }),
     // 업로드 콜백이 없으면 그 확장을 붙이지 않는다 — 붙여 두고 아무것도
     // 안 하면 붙여넣기가 조용히 삼켜진다.
     ...(options.onAttach === undefined ? [] : [pasteUploadExtension(options.onAttach)]),
   ];
 }
 
-export type { TagClick, AttachUpload };
+export type { TagClick, AttachUpload, WikiLinkSuggestion };
