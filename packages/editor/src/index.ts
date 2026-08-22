@@ -16,7 +16,8 @@ export { findTags, isFrontmatterRange, type TagMatch } from './core/tags';
 export { findMathBlocks, renderMath, type MathBlock } from './core/math-blocks';
 export { mathBlocks, mathField } from './core/math-decoration';
 export { tagDecorations, type TagClick } from './core/tag-decoration';
-export { doculightExtensions } from './doculight-extensions';
+export { doculightExtensions, type AttachUpload } from './doculight-extensions';
+export { pasteUploadExtension } from './core/paste-upload';
 
 export {
   defaultMermaidRenderer,

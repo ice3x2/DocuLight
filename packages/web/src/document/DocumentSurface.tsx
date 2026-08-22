@@ -1,6 +1,8 @@
 import { AtomicCodeMirrorEditor, doculightExtensions } from '@doculight/editor';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { uploadAttachment } from '../api/client.js';
+import { pasteUpload } from '../attachment/upload-contract.js';
 import { urlForNode } from '../routing/deep-link.js';
 import { MergeView } from './MergeView.js';
 import {
@@ -136,13 +138,39 @@ export function DocumentSurface({
 }) {
   const [mode, setMode] = useState<Mode>(initialMode);
   const surface = surfaceOf(file.name);
+  /**
+   * 첨부 업로드 (`FR-ATTACH-004`).
+   *
+   * 권한을 **여기서 먼저 본다**(AC-4) — 받아 놓고 서버가 거절하면
+   * 사용자에게는 파일이 사라진 것으로 보인다. 서버의 판정은 그대로 남는다.
+   */
+  const attach = useCallback(
+    async (file: File): Promise<string | null> => {
+      const allowed = pasteUpload({ nodeId: file.name === '' ? '' : fileRef.current.nodeId, level: fileRef.current.level }, [file]);
+      if (!allowed.ok) return null;
+
+      const done = await uploadAttachment(fileRef.current.nodeId, file).catch(() => null);
+      return done === null ? null : done.link;
+    },
+    [],
+  );
+
   // 확장 묶음을 마운트마다 다시 만들면 그때마다 편집기가 재구성된다.
   const extensions = useMemo(
-    () => doculightExtensions(onTagClick === undefined ? {} : { onTagClick }),
-    [onTagClick],
+    () =>
+      doculightExtensions({
+        ...(onTagClick === undefined ? {} : { onTagClick }),
+        onAttach: attach,
+      }),
+    [onTagClick, attach],
   );
 
   const change = (to: Mode) => setMode((from) => nextMode(from, to, { canEdit: canEditFile(file) }));
+
+  // 업로드 콜백이 파일 정보를 참조하되 그때마다 새로 만들어지지 않게 한다 —
+  // 새로 만들면 확장 묶음이 바뀌어 편집기가 재구성되고 편집이 흔들린다.
+  const fileRef = useRef(file);
+  fileRef.current = file;
 
   const autosave = useAutosave(file.nodeId, baseHash);
   // 편집기 인스턴스에서 본문을 꺼낸다 — 정본이 거기이기 때문이다

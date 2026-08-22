@@ -1,6 +1,7 @@
 import type { Extension } from '@codemirror/state';
 
 import { mathBlocks } from './core/math-decoration.js';
+import { pasteUploadExtension, type AttachUpload } from './core/paste-upload.js';
 import { mermaidBlocks } from './core/mermaid-blocks.js';
 import { tagDecorations, type TagClick } from './core/tag-decoration.js';
 
@@ -15,8 +16,17 @@ import { tagDecorations, type TagClick } from './core/tag-decoration.js';
  * 있게 하기 위해서다. 화면마다 확장을 골라 붙이면 어느 화면에서 무엇이
  * 되는지가 갈리고, 그 갈림은 요구 대비 판정을 무의미하게 만든다.
  */
-export function doculightExtensions(options: { onTagClick?: TagClick } = {}): Extension[] {
-  return [mermaidBlocks(), mathBlocks(), tagDecorations(options.onTagClick)];
+export function doculightExtensions(
+  options: { onTagClick?: TagClick; onAttach?: AttachUpload } = {},
+): Extension[] {
+  return [
+    mermaidBlocks(),
+    mathBlocks(),
+    tagDecorations(options.onTagClick),
+    // 업로드 콜백이 없으면 그 확장을 붙이지 않는다 — 붙여 두고 아무것도
+    // 안 하면 붙여넣기가 조용히 삼켜진다.
+    ...(options.onAttach === undefined ? [] : [pasteUploadExtension(options.onAttach)]),
+  ];
 }
 
-export type { TagClick };
+export type { TagClick, AttachUpload };
