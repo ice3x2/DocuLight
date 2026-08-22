@@ -17,9 +17,21 @@ const DAY_MS = 24 * 60 * 60 * 1000;
  * 시각을 읽지도 않는다.
  */
 export function isPastRetention(at: string, retentionDays: number, now: Date): boolean {
-  if (retentionDays <= UNLIMITED) return false;
+  const cutoff = cutoffOf(retentionDays, now);
+  return cutoff !== null && new Date(at).getTime() <= cutoff.getTime();
+}
 
-  return now.getTime() >= new Date(at).getTime() + retentionDays * DAY_MS;
+/**
+ * 이 기간의 **경계 시각** — 이보다 앞선 것이 만료다. 무제한이면 `null`.
+ *
+ * 낱개를 훑는 쪽(`isPastRetention`)과 집합을 한 번에 지우는 쪽이 각자
+ * `0` 을 판정하면 그 뜻이 한쪽에서만 바뀌는 날이 온다. 두 길이 여기서
+ * 갈라지도록 경계 계산을 이 함수 하나에 둔다.
+ */
+export function cutoffOf(retentionDays: number, now: Date): Date | null {
+  if (retentionDays <= UNLIMITED) return null;
+
+  return new Date(now.getTime() - retentionDays * DAY_MS);
 }
 
 /**

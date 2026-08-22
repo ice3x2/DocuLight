@@ -1,7 +1,7 @@
 import type { Clock } from '../auth/login-service.js';
 import type { AuditRetention } from '../../domain/ports/audit-retention.js';
 import type { SettingStore } from '../../domain/ports/setting-store.js';
-import { UNLIMITED } from '../../domain/retention/retention.js';
+import { cutoffOf } from '../../domain/retention/retention.js';
 import { retentionDaysOf } from '../settings/instance-settings.js';
 
 export interface AuditRetentionStores {
@@ -24,10 +24,11 @@ export function auditRetentionDays(stores: AuditRetentionStores): number {
  * 되는 이유이기도 하다.
  */
 export function sweepExpiredAudit(stores: AuditRetentionStores): { purged: number } {
-  const days = auditRetentionDays(stores);
-  if (days <= UNLIMITED) return { purged: 0 };
+  // 경계 계산은 휴지통과 **같은 함수**가 한다 — 낱개를 훑는 쪽과 집합을
+  // 한 번에 지우는 쪽이 각자 `0` 을 판정하면 그 뜻이 한쪽에서만 바뀐다.
+  const cutoff = cutoffOf(auditRetentionDays(stores), stores.clock());
+  if (cutoff === null) return { purged: 0 };
 
-  const cutoff = new Date(stores.clock().getTime() - days * 24 * 60 * 60 * 1000);
   // `occurred_at` 이 `datetime('now')` 로 쓰인 UTC 문자열이라 같은 모양으로
   // 넘긴다 — ISO 의 `T` 와 밀리초를 그대로 두면 사전순 비교가 어긋난다.
   return { purged: stores.auditRetention.purgeBefore(sqliteTime(cutoff)) };
