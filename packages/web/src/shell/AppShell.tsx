@@ -12,7 +12,7 @@ import type { UploadRequest } from '../attachment/upload-contract.js';
 import { EmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
-import { PrincipalSearch } from '../principal/PrincipalSearch.js';
+import { PrincipalPicker } from '../principal/PrincipalPicker.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
@@ -162,7 +162,7 @@ function SettingsModal({
                   // 두 카테고리가 **같은 부품**을 쓴다 (`CON-ARCH-004` AC-4) —
                   // 권한은 주체에 붙지 종류에 붙지 않으므로 둘을 가를 이유가
                   // 없고, 두 벌로 만들면 한쪽만 고쳐진다.
-                  <PrincipalSearch />
+                  <PrincipalPicker />
                 ) : category.id === 'account' ? (
                   // 계정 카테고리가 담기로 확정된 두 조작 (`IR-SHELL-002` AC-3).
                   <>

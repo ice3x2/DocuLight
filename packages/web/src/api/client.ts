@@ -155,11 +155,21 @@ export interface DocumentLinksBody {
   backlinks: LinkRowView[];
 }
 
+/**
+ * 검색 결과에 실려 오는 계정 상태 (`SEC-PRINCIPAL-002`).
+ *
+ * `rejected` 가 **이 union 에 없다**. 서버가 빼고 주므로 (AC-3) 여기에
+ * 두면 화면이 영영 그리지 않을 갈래를 하나 떠안게 되고, 그 갈래를 채우는
+ * 순간 규칙이 두 곳으로 갈린다.
+ */
+export type PrincipalStatus = 'active' | 'pending' | 'suspended';
+
 /** 사용자 또는 그룹 하나 (`CON-ARCH-004` AC-4). 권한은 주체에 붙지 종류에 붙지 않는다. */
 export interface PrincipalRow {
   id: string;
   name: string;
   kind: 'user' | 'group';
+  status: PrincipalStatus;
 }
 
 export const fetchPrincipals = (query: string) =>

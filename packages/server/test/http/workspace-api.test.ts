@@ -578,10 +578,46 @@ describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
     expect(got.status).toBe(200);
     expect(got.body).toEqual(
       expect.arrayContaining([
-        { id: me.id, name: '한범', kind: 'user' },
+        { id: me.id, name: '한범', kind: 'user', status: 'active' },
         expect.objectContaining({ name: '한범팀', kind: 'group' }),
       ]),
     );
+  });
+
+  it('SEC-PRINCIPAL-003 AC-1: 한 글자 질의는 아무것도 주지 않는다', async () => {
+    const got = await request(app).get('/api/principals').query({ q: '한' });
+
+    expect(got.status).toBe(200);
+    expect(got.body).toEqual([]);
+  });
+
+  it('SEC-PRINCIPAL-003 AC-3: 스물다섯이 걸려도 스무 건까지만 준다', async () => {
+    for (let n = 0; n < 25; n += 1) stores.principals.createUser(`검색대상${n}`);
+
+    const got = await request(app).get('/api/principals').query({ q: '검색대상' });
+
+    expect(got.body).toHaveLength(20);
+  });
+
+  it('SEC-PRINCIPAL-003 AC-4: 질의 문자열로 상한과 최소 길이를 덮을 수 없다', async () => {
+    for (let n = 0; n < 25; n += 1) stores.principals.createUser(`검색대상${n}`);
+
+    // 이 자리가 열려 있으면 화면이 아니라 **아무나** 값을 바꿀 수 있다 —
+    // 화면별 재량을 막는 것보다 먼저 막아야 하는 문이다.
+    const wider = await request(app)
+      .get('/api/principals')
+      .query({ q: '검색대상', limit: '100', max: '100' });
+    const shorter = await request(app).get('/api/principals').query({ q: '한', min: '1' });
+
+    expect(wider.body).toHaveLength(20);
+    expect(shorter.body).toEqual([]);
+  });
+
+  it('SEC-PRINCIPAL-002 AC-3: rejected 계정은 나오지 않는다', async () => {
+    const 거절된 = stores.principals.createUser('검색대상거절');
+    stores.principals.setStatus(거절된.id, 'rejected');
+
+    expect((await request(app).get('/api/principals').query({ q: '검색대상' })).body).toEqual([]);
   });
 
   it('슈퍼유저가 아니면 거절한다 — 주체 목록은 인스턴스 관리 자료다', async () => {

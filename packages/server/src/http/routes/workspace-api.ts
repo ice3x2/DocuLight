@@ -29,6 +29,7 @@ import {
   type FavoriteStores,
 } from '../../app/favorite/favorite-service.js';
 import { createNode } from '../../app/node/node-service.js';
+import { searchPrincipals } from '../../app/principal/principal-search-service.js';
 import { uploadNewVersion, warnsIrreversible } from '../../app/document/new-version.js';
 import { noticeFor } from '../../domain/node/collision-notice.js';
 import { linksOf, wikiTargets } from '../../app/document/link-service.js';
@@ -624,20 +625,10 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       return;
     }
 
-    const wanted = (one(req.query.q) ?? '').trim().toLowerCase();
-    const matches = (record: { name: string }) =>
-      wanted === '' || record.name.toLowerCase().includes(wanted);
-
-    res.json([
-      ...stores.principals
-        .list('user')
-        .filter(matches)
-        .map((record) => ({ id: record.id, name: record.name, kind: 'user' })),
-      ...stores.principals
-        .list('group')
-        .filter(matches)
-        .map((record) => ({ id: record.id, name: record.name, kind: 'group' })),
-    ]);
+    // 질의 **하나만** 넘긴다 — 최소 길이와 상한을 질의 문자열로 받으면
+    // 화면 재량을 막기 전에 아무나 값을 바꿀 수 있는 문이 열린다
+    // (`SEC-PRINCIPAL-003` AC-4).
+    res.json(searchPrincipals(stores.principals, one(req.query.q) ?? ''));
   });
 
   router.get('/wiki-targets', (req, res) => {

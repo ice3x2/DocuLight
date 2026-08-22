@@ -330,19 +330,22 @@ describe('CON-ARCH-004 AC-4 — 사용자·그룹 검색이 cmdk 로 선다', ()
   it('사용자 관리에서 친 글자가 질의로 나가고 결과가 목록에 뜬다', async () => {
     routes.set('/api/principals', () =>
       json([
-        { id: 'p1', name: '한범', kind: 'user' },
-        { id: 'g1', name: '기획팀', kind: 'group' },
+        { id: 'p1', name: '한범', kind: 'user', status: 'active' },
+        { id: 'g1', name: '기획팀', kind: 'group', status: 'active' },
       ]),
     );
     const user = await openCategory('사용자 관리');
 
-    await user.type(await screen.findByRole('combobox', { name: '사용자·그룹 검색' }), '한');
+    // 두 글자를 친다 — 한 글자로는 질의가 나가지 않는다
+    // (`SEC-PRINCIPAL-003` AC-1). 그 규칙은 이 시험이 아니라
+    // `principal-picker.test.tsx` 가 잰다.
+    await user.type(await screen.findByRole('combobox', { name: '사용자·그룹 검색' }), '한범');
 
     await waitFor(() => expect(screen.getByText('한범')).toBeDefined());
   });
 
   it('그룹 관리도 같은 검색을 쓴다 — 두 벌을 만들면 한쪽만 고쳐진다', async () => {
-    routes.set('/api/principals', () => json([{ id: 'g1', name: '기획팀', kind: 'group' }]));
+    routes.set('/api/principals', () => json([{ id: 'g1', name: '기획팀', kind: 'group', status: 'active' }]));
     await openCategory('그룹 관리');
 
     expect(await screen.findByRole('combobox', { name: '사용자·그룹 검색' })).toBeDefined();
