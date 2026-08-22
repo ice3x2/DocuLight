@@ -112,6 +112,33 @@ describe('IR-SHELL-002 AC-3 · AC-7 — 설정 모달이 그 내용을 실제로
     expect(within(modal).getByRole('button', { name: '로그아웃' })).toBeDefined();
   });
 
+  it('FR-SHELL-007 AC-5: 관리 권한이 없는 뷰어의 휴지통에는 범위 토글이 없다', async () => {
+    // 토글이 서는지는 `TrashPanel` 이 정하지만, **무엇을 보고 정하는가**는
+    // 셸이 정한다. 그 배선을 재지 않으면 셸이 언제나 참을 넘겨도 아무도
+    // 알아채지 못한다.
+    const { AppShell } = await import('../src/shell/AppShell.js');
+    const user = userEvent.setup();
+    render(<AppShell viewer={{ superuser: false, workspaceCount: 1, adminWorkspaceCount: 0 }} />);
+
+    await user.click(screen.getByRole('button', { name: '설정' }));
+    const modal = await screen.findByRole('dialog', { name: '설정' });
+    await user.click(within(modal).getByRole('tab', { name: '휴지통' }));
+
+    expect(within(modal).queryByRole('button', { name: /전체 보기|본인분만 보기/ })).toBeNull();
+  });
+
+  it('FR-SHELL-007 AC-5: 관리 권한이 있는 뷰어의 휴지통에는 범위 토글이 있다', async () => {
+    const { AppShell } = await import('../src/shell/AppShell.js');
+    const user = userEvent.setup();
+    render(<AppShell viewer={{ superuser: false, workspaceCount: 1, adminWorkspaceCount: 1 }} />);
+
+    await user.click(screen.getByRole('button', { name: '설정' }));
+    const modal = await screen.findByRole('dialog', { name: '설정' });
+    await user.click(within(modal).getByRole('tab', { name: '휴지통' }));
+
+    expect(within(modal).getByRole('button', { name: /전체 보기|본인분만 보기/ })).toBeDefined();
+  });
+
   it('AC-7: 인스턴스 설정 카테고리가 다섯 설정을 담는다', async () => {
     const { AppShell } = await import('../src/shell/AppShell.js');
     const user = userEvent.setup();

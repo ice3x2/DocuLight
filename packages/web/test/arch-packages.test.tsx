@@ -106,6 +106,21 @@ describe('CON-SHELL-002 · FR-SHELL-007 — 검색과 휴지통이 실제로 선
     expect(screen.getByRole('button', { name: /영구 삭제/ })).toBeDefined();
   });
 
+  it('FR-SHELL-007 AC-5: 관리 권한이 없으면 범위 토글이 서지 않는다', () => {
+    // 서버는 범위를 넓혀 달라고 해도 권한이 없으면 좁은 결과를 준다.
+    // 그래도 토글이 서 있으면 사용자는 눌러 놓고 아무것도 안 바뀌는 것을
+    // 본다 — 열려 보이는 조작이 거절되는 것과 같은 고장이다.
+    render(<TrashPanel canWidenScope={false} rows={[]} />);
+
+    expect(screen.queryByRole('button', { name: /전체 보기|본인분만 보기/ })).toBeNull();
+  });
+
+  it('FR-SHELL-007 AC-5: 관리 권한이 있으면 범위 토글이 선다', () => {
+    render(<TrashPanel canWidenScope rows={[]} />);
+
+    expect(screen.getByRole('button', { name: /전체 보기|본인분만 보기/ })).toBeDefined();
+  });
+
   it('SEC-SHELL-001 AC-1 · AC-3: 권한 없는 행에는 영구 삭제 버튼이 없다', () => {
     render(
       <TrashPanel

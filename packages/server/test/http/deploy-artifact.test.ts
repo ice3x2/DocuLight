@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import { relative, resolve, sep } from 'node:path';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { DEFAULT_WEB_ROOT } from '../../src/http/static-spa.js';
@@ -32,10 +32,15 @@ describe('OPS-ARCH-001 — 정적 산출물의 기본 자리', () => {
     const rootDir = valueOf('rootDir');
     const outDir = valueOf('outDir');
 
-    expect(rootDir).toBe('src');
-    expect(outDir).toBe('dist');
-    // 그 둘이 같은 깊이여야 한다는 사실을 값으로 고정한다.
+    // 리터럴을 못 박은 뒤 그 둘의 깊이를 다시 비교하면 언제나 참이다.
+    // 잴 것은 「둘이 같은 깊이인가」이므로 값 자체가 아니라 관계를 단언한다.
+    expect(rootDir).toBeDefined();
+    expect(outDir).toBeDefined();
     expect(rootDir!.split('/')).toHaveLength(outDir!.split('/').length);
+    // 그리고 그 깊이가 기본값이 가정한 것과 같은지 본다.
+    expect(resolve(REPO, 'packages/server', outDir!, 'http/static-spa.js')).toBe(
+      resolve(REPO, 'packages/server/dist/http/static-spa.js'),
+    );
   });
 
   it('저장소 루트의 build 가 웹 산출물까지 만든다', async () => {
@@ -63,7 +68,8 @@ describe('OPS-ARCH-001 — 정적 산출물의 기본 자리', () => {
     expect(pm2).toContain("join(root, 'packages', 'server', 'dist', 'main.js')");
     expect(pm2).toContain('cwd: root');
 
-    // 기본 웹 루트가 그 `root` 아래에 있다.
-    expect(relative(REPO, DEFAULT_WEB_ROOT).startsWith(`..${sep}`)).toBe(false);
+    // 기본 웹 루트가 서버 패키지의 **형제**다. 「저장소 아래에 있다」로만
+    // 재면 경로가 한 칸 밀려 `packages/server/web/dist` 를 가리켜도 통과한다.
+    expect(resolve(DEFAULT_WEB_ROOT, '../..')).toBe(resolve(REPO, 'packages'));
   });
 });

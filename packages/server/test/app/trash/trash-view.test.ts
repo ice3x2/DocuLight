@@ -92,6 +92,12 @@ describe('FR-SHELL-007 — 휴지통은 접근 가능한 전 워크스페이스�
     // 본인 것이 **남고** 남의 것이 빠지는 두 방향을 함께 잰다 — 빈 목록만
     // 단언하면 목록이 통째로 죽어도 이 시험은 통과한다.
     expect(view(actorFor(stores.principals, me.id)).map((r) => r.nodeId)).toEqual([mine]);
+    // `scope='all'` 로도 같은 답이어야 관리 권한 판정을 실제로 지난다 —
+    // 기본 범위만 재면 「본인 것만」 필터에서 결과가 확정돼 이 조항의
+    // 근거인 워크스페이스 권한 판정을 건드리지 않는다.
+    expect(
+      view(actorFor(stores.principals, me.id), { scope: 'all' }).map((r) => r.nodeId),
+    ).toEqual([mine]);
   });
 
   it('AC-6: 판정은 목록 전체가 아니라 행마다 그 행의 워크스페이스를 기준으로 한다', async () => {

@@ -81,8 +81,11 @@ describe('CON-EDITOR-002 AC-1 — 후보를 고르면 위키링크가 본문에 
 
   it('삽입 뒤 커서가 링크 **밖**에 선다 — 안에 서면 이어 친 글자가 링크로 빨려 든다', async () => {
     const editor = await ready('[[설');
-    acceptCompletion(editor);
 
+    // 삽입이 일어났다는 것을 먼저 못 박는다. 커서 위치만 단언하면 아무것도
+    // 삽입되지 않아도 문서 끝이 그대로라 통과한다.
+    expect(acceptCompletion(editor)).toBe(true);
+    expect(editor.state.doc.toString()).toBe('[[설계|설계.md]]');
     expect(editor.state.selection.main.head).toBe(editor.state.doc.length);
   });
 
