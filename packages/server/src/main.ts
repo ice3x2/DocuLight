@@ -22,6 +22,8 @@ import { FsTrashFiles } from './infra/fs/trash-files.js';
 import { FsWorkspaceFiles } from './infra/fs/workspace-sidecar.js';
 import { SqliteAclRepository } from './infra/sqlite/acl-repository.js';
 import { SqliteAttachmentRepository } from './infra/sqlite/attachment-repository.js';
+import type { FavoriteStores } from './app/favorite/favorite-service.js';
+import { SqliteFavoriteRepository } from './infra/sqlite/favorite-repository.js';
 import { SqliteAuditLog } from './infra/sqlite/audit-log-repository.js';
 import { openDatabase } from './infra/sqlite/database.js';
 import { SqliteFindingQueue } from './infra/sqlite/finding-queue-repository.js';
@@ -87,6 +89,7 @@ export interface ServerRuntime {
 /** 라우트가 필요로 하는 저장소의 합집합. */
 type RuntimeStores = AttachmentStores &
   TrashStores &
+  FavoriteStores &
   Parameters<typeof authRouter>[0] & {
     documents: FsDocumentStore;
     queue: SqliteFindingQueue;
@@ -124,6 +127,7 @@ export async function bootstrap(config: ServerConfig): Promise<ServerRuntime> {
     settings: new SqliteSettingStore(db),
     versions: new SqliteVersionRepository(db),
     attachments: new SqliteAttachmentRepository(db),
+    favorites: new SqliteFavoriteRepository(db),
     trash: new SqliteTrashRepository(db),
     trashFiles: new FsTrashFiles(config.docsRoot),
     files: new FsWorkspaceFiles(config.docsRoot),

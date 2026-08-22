@@ -23,7 +23,14 @@ import {
   uploadLimitBytes,
   type AttachmentStores,
 } from '../../app/attachment/attachment-service.js';
+import {
+  addFavorite,
+  listFavorites,
+  removeFavorite,
+  type FavoriteStores,
+} from '../../app/favorite/favorite-service.js';
 import { createNode } from '../../app/node/node-service.js';
+import { uploadNewVersion, warnsIrreversible } from '../../app/document/new-version.js';
 import { noticeFor } from '../../domain/node/collision-notice.js';
 import { readDocument, saveDocument, workspaceRootOf } from '../../app/document/save-service.js';
 import {
@@ -48,7 +55,7 @@ import { RESOURCE_DIRECTORY } from '../../domain/attachment/resource-layout.js';
  * 저장 충돌은 **409**. 그 밖의 사유를 만들지 않는다.
  */
 export interface WorkspaceApiDeps {
-  stores: AttachmentStores & TrashStores;
+  stores: AttachmentStores & TrashStores & FavoriteStores;
   /**
    * 이 요청을 누구로 볼 것인가. 세울 수 없으면 `undefined`.
    *
@@ -98,6 +105,15 @@ interface TreeNodeBody {
   visibility: 'full' | 'pass-through';
   level: string | null;
   parentLevel: string | null;
+  /**
+   * 새 버전을 올리면 되돌릴 수 없는가 (`FR-SHELL-008` AC-5).
+   *
+   * 서버가 판정해 보내는 이유는 그 판정이 「버전 보관 대상인가」와 같은
+   * 사실이기 때문이다 — 화면이 확장자를 다시 보면 보관 규칙이 바뀔 때
+   * 경고만 옛 규칙을 따르고, 어긋난 경고를 한 번 본 사용자는 다음 경고도
+   * 믿지 않는다. 디렉토리에는 없다 — 올릴 수 없는 자리다.
+   */
+  overwriteIrreversible?: boolean;
   children: TreeNodeBody[];
 }
 
@@ -154,6 +170,9 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
           visibility: child.visibility,
           level,
           parentLevel,
+          ...(child.node.kind === 'file'
+            ? { overwriteIrreversible: warnsIrreversible(child.node.name) }
+            : {}),
           children:
             child.node.kind === 'directory' ? subtree(workspaceId, child.node.id, level) : [],
         };
@@ -545,6 +564,83 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       writeSetting(stores.settings, key as InstanceSettingKey, value as string);
     }
     res.sendStatus(204);
+  });
+
+  /**
+   * 즐겨찾기 (`FR-SHELL-001` AC-3 · AC-4).
+   *
+   * 목록은 **사람마다** 따로다 — 남의 목록이 섞이면 그 문서의 존재가
+   * 새어 나간다. 빼기에는 권한을 걸지 않는다: 자기 목록에서 지우는
+   * 일이고, 볼 수 없게 된 것일수록 오히려 지울 수 있어야 한다.
+   */
+  router.get('/favorites', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    res.json(listFavorites(stores, actor));
+  });
+
+  router.post('/favorites', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const nodeId = one((req.body as { nodeId?: unknown }).nodeId);
+    if (nodeId === undefined) {
+      res.sendStatus(400);
+      return;
+    }
+
+    // 볼 수 없는 노드에는 없는 것과 같은 답을 준다 — 다르면 그 차이가
+    // 그 문서의 존재를 알린다 (`SEC-ACL-006`).
+    res.sendStatus(addFavorite(stores, actor, nodeId).ok ? 204 : 404);
+  });
+
+  router.delete('/favorites/:nodeId', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    removeFavorite(stores, actor, one(req.params.nodeId)!);
+    res.sendStatus(204);
+  });
+
+  /**
+   * 새 버전 올리기 (`FR-SHELL-008` AC-2 ~ AC-4).
+   *
+   * 덮어쓰기의 **유일한 경로**다. 생성·업로드 흐름에는 덮어쓰기 선택지가
+   * 없고(AC-1), 이름이 겹치면 접미사가 붙을 뿐이다(`SEC-SHELL-002`).
+   */
+  router.post('/nodes/:nodeId/new-version', upload.single('file'), async (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const file = req.file;
+    if (file === undefined) {
+      res.sendStatus(400);
+      return;
+    }
+
+    const done = await uploadNewVersion(stores, actor, {
+      nodeId: one(req.params.nodeId)!,
+      bytes: file.buffer,
+    });
+    if (done.ok) {
+      res.sendStatus(204);
+      return;
+    }
+
+    res.sendStatus(done.rule === 'forbidden' ? 403 : done.rule === 'not-a-file' ? 400 : 404);
   });
 
   router.get('/trash', (req, res) => {

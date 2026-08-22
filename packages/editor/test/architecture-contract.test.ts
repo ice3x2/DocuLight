@@ -72,9 +72,14 @@ describe('CON-ARCH-006 — 본문의 정본은 CodeMirror 이고 React state 로
     const offenders: string[] = [];
     for (const path of sources) {
       const text = await readFile(path, 'utf8');
-      // `useState<string>` 에 본문이 올라가는 형태와, 에디터에 `value=` 로
-      // 본문을 주입하는 형태 둘 다 본문의 정본을 둘로 만든다.
-      if (/useState<\s*string\s*>\s*\(/.test(text) && /body|content|본문/i.test(text)) {
+      // `useState` 에 본문이 올라가는 형태와, 에디터에 `value=` 로 본문을
+      // 주입하는 형태 둘 다 본문의 정본을 둘로 만든다.
+      //
+      // **선언된 이름으로 판정한다.** 파일 어딘가에 `본문` 이라는 낱말이
+      // 있는지로 재면 그 낱말을 주석에 쓴 파일이 전부 걸리고, 타입을
+      // 적지 않은 `useState('')` 는 그대로 빠져나간다 — 두 방향으로 다
+      // 틀린다.
+      if (/const\s*\[\s*\w*(body|content|본문)\w*\s*,[^\]]*\]\s*=\s*useState/i.test(text)) {
         offenders.push(path);
       }
       if (/<\s*\w*(Editor|CodeMirror)\b[^>]*\bvalue=/s.test(text)) offenders.push(path);

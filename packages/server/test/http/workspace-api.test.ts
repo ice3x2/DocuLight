@@ -388,3 +388,102 @@ describe('DR-SHELL-001 · IR-SHELL-002 AC-7 — 런타임 설정을 화면에서
     expect(stores.settings.get('retained-version-count')).toBe('3');
   });
 });
+
+describe('즐겨찾기 — 문서와 디렉토리를 한 목록에 담는다 (`FR-SHELL-001` AC-3 · AC-4)', () => {
+  it('더한 문서가 목록에 온다', async () => {
+    expect((await request(app).post('/api/favorites').send({ nodeId: doc })).status).toBe(204);
+
+    const listed = await request(app).get('/api/favorites');
+
+    expect(listed.status).toBe(200);
+    expect(listed.body).toEqual([
+      { nodeId: doc, name: '회의록.md', kind: 'file', workspaceName: '기획팀' },
+    ]);
+  });
+
+  it('더한 디렉토리도 같은 목록에 온다', async () => {
+    const folder = idOf(
+      createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name: '자료' }),
+    );
+
+    await request(app).post('/api/favorites').send({ nodeId: folder });
+
+    expect((await request(app).get('/api/favorites')).body).toMatchObject([
+      { nodeId: folder, kind: 'directory' },
+    ]);
+  });
+
+  it('뺀 것은 목록에서 사라진다', async () => {
+    await request(app).post('/api/favorites').send({ nodeId: doc });
+
+    expect((await request(app).delete(`/api/favorites/${doc}`)).status).toBe(204);
+    expect((await request(app).get('/api/favorites')).body).toEqual([]);
+  });
+
+  it('볼 수 없는 노드는 없는 것과 같은 답을 받는다', async () => {
+    actingAs = actorFor(stores.principals, me.id);
+
+    expect((await request(app).post('/api/favorites').send({ nodeId: doc })).status).toBe(404);
+  });
+
+  it('인증되지 않은 요청은 401 이다', async () => {
+    actingAs = undefined;
+
+    expect((await request(app).get('/api/favorites')).status).toBe(401);
+  });
+});
+
+describe('새 버전 올리기 — 덮어쓰기의 유일한 경로 (`FR-SHELL-008`)', () => {
+  it('AC-2: 파일을 덮어쓴다', async () => {
+    const sent = await request(app)
+      .post(`/api/nodes/${doc}/new-version`)
+      .attach('file', Buffer.from('# 다음\n'), '회의록.md');
+
+    expect(sent.status).toBe(204);
+    expect(await readFile(fileOf(doc), 'utf8')).toBe('# 다음\n');
+  });
+
+  it('AC-4: md 는 이전 본문이 버전으로 남는다', async () => {
+    await request(app)
+      .post(`/api/nodes/${doc}/new-version`)
+      .attach('file', Buffer.from('# 다음\n'), '회의록.md');
+
+    expect((await request(app).get(`/api/documents/${doc}/versions`)).body).toHaveLength(1);
+  });
+
+  it('AC-3: 편집 권한이 없으면 거절한다', async () => {
+    grantPermission(stores, root, { nodeId: ws, principalId: me.id, level: 'view' });
+    actingAs = actorFor(stores.principals, me.id);
+
+    const sent = await request(app)
+      .post(`/api/nodes/${doc}/new-version`)
+      .attach('file', Buffer.from('# 다음\n'), '회의록.md');
+
+    expect(sent.status).toBe(403);
+    expect(await readFile(fileOf(doc), 'utf8')).toBe('# 처음\n');
+  });
+
+  it('볼 수도 없으면 없는 것과 같은 답을 받는다', async () => {
+    actingAs = actorFor(stores.principals, me.id);
+
+    const sent = await request(app)
+      .post(`/api/nodes/${doc}/new-version`)
+      .attach('file', Buffer.from('# 다음\n'), '회의록.md');
+
+    expect(sent.status).toBe(404);
+  });
+
+  it('AC-5: 트리가 되돌릴 수 없는 파일을 알려 준다 — 화면이 .md 를 다시 판정하면 두 판정이 갈린다', async () => {
+    const zip = idOf(
+      createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'file', name: '설계.zip' }),
+    );
+
+    const roots = (await request(app).get('/api/tree')).body[0].roots as {
+      id: string;
+      overwriteIrreversible?: boolean;
+    }[];
+
+    expect(roots.find((node) => node.id === zip)?.overwriteIrreversible).toBe(true);
+    expect(roots.find((node) => node.id === doc)?.overwriteIrreversible).toBe(false);
+  });
+});

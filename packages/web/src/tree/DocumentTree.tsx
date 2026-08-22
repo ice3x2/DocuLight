@@ -184,6 +184,7 @@ export function DocumentTree({
   onOpen,
   onCreateNote,
   onFavorite,
+  onNewVersion,
 }: {
   workspaces: readonly WorkspaceTreeView[];
   onUpload?: (request: UploadRequest) => void;
@@ -191,6 +192,8 @@ export function DocumentTree({
   onCreateNote?: () => void;
   /** 즐겨찾기에 더한다 (`FR-SHELL-001` AC-3 · AC-4). 문서와 디렉토리를 가리지 않는다. */
   onFavorite?: (nodeId: string) => void;
+  /** 그 파일을 덮어쓰겠다 (`FR-SHELL-008` AC-2). 확인과 파일 고르기는 바깥이 한다. */
+  onNewVersion?: (node: TreeNodeView) => void;
 }) {
   const rows = useMemo<Row[]>(
     () =>
@@ -234,6 +237,7 @@ export function DocumentTree({
           renderRow={(props: RowRendererProps<Row>) =>
             TreeRowWrapper(props, onUpload, (itemId, node) => {
               if (itemId === 'favorite') onFavorite?.(node.id);
+              if (itemId === 'new-version') onNewVersion?.(node);
             })
           }
         >

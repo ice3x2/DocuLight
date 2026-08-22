@@ -1,5 +1,4 @@
 import { Command } from 'cmdk';
-import { useState } from 'react';
 
 /**
  * 좌측 검색 탭 (`FR-SHELL-001` · `CON-SHELL-002`).
@@ -22,26 +21,30 @@ export interface SearchHit {
 
 export function SearchPanel({
   hits = [],
+  query = '',
   onQuery,
   onOpen,
 }: {
   hits?: readonly SearchHit[];
+  /**
+   * 지금 질의. **바깥이 든다.**
+   *
+   * 여기서 들면 태그를 눌러 채우는 경로(`FR-EDITOR-007` AC-11)가 이
+   * 컴포넌트 밖에서 들어오지 못한다 — 채우는 자리가 둘이면 둘 중 하나가
+   * 화면에 보이는 값이 되고, 어느 쪽인지는 렌더 순서가 정한다.
+   */
+  query?: string;
   onQuery?: (query: string) => void;
   onOpen?: (nodeId: string) => void;
 }) {
-  const [query, setQuery] = useState('');
-
   return (
     <Command label="검색" shouldFilter={false}>
       <Command.Input
         aria-label="검색"
         value={query}
-        onValueChange={(next) => {
-          setQuery(next);
-          // 거르는 일은 서버가 한다 — 여기서 다시 거르면 두 곳이 같은
-          // 규칙을 갖게 되고 한쪽만 바뀐다.
-          onQuery?.(next);
-        }}
+        // 거르는 일은 서버가 한다 — 여기서 다시 거르면 두 곳이 같은
+        // 규칙을 갖게 되고 한쪽만 바뀐다.
+        onValueChange={(next) => onQuery?.(next)}
         placeholder="문서 제목 · 본문 · 태그 · 첨부파일 이름"
       />
 

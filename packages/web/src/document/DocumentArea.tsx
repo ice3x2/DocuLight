@@ -67,6 +67,7 @@ export function DocumentArea({
   bodies = {},
   hashes = {},
   onSaveState,
+  onTagClick,
 }: {
   initial: TabState;
   /** 노드 ID → 서버에서 받아 온 본문. 아직 안 온 것은 없다. */
@@ -74,6 +75,8 @@ export function DocumentArea({
   /** 노드 ID → 그 본문의 기준 해시. 저장 요청이 이것을 싣는다. */
   hashes?: Readonly<Record<string, string>>;
   onSaveState?: (nodeId: string, state: SaveState) => void;
+  /** 본문 태그를 눌렀다 (`FR-EDITOR-007` AC-11). 받는 쪽은 좌측 검색 탭이다. */
+  onTagClick?: (name: string) => void;
 }) {
   const [state, setState] = useState<TabState>(initial);
   /**
@@ -129,6 +132,7 @@ export function DocumentArea({
               {...(bodies[tab.nodeId] === undefined ? {} : { body: bodies[tab.nodeId] })}
               {...(hashes[tab.nodeId] === undefined ? {} : { baseHash: hashes[tab.nodeId] })}
               onSaveState={(next) => onSaveState?.(tab.nodeId, next)}
+              {...(onTagClick === undefined ? {} : { onTagClick })}
             />
           </Tabs.Content>
         ))}

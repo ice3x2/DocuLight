@@ -2,13 +2,17 @@ import { useCallback, useEffect, useState } from 'react';
 
 import {
   ApiError,
+  addFavorite,
   createNode,
+  fetchFavorites,
   fetchSession,
   fetchTrash,
   fetchTree,
   loadDocument,
   uploadAttachment,
   uploadIntoDirectory,
+  uploadNewVersion,
+  type FavoriteRow,
   type SessionBody,
 } from './api/client.js';
 import type { UploadRequest } from './attachment/upload-contract.js';
@@ -72,6 +76,16 @@ export function App() {
   // 실어야 충돌이 판정되고, 둘이 갈리면 그 판정이 남의 본문을 근거로 한다.
   const [hashes, setHashes] = useState<Readonly<Record<string, string>>>({});
   const [trash, setTrash] = useState<readonly TrashRowView[]>([]);
+  const [favorites, setFavorites] = useState<readonly FavoriteRow[]>([]);
+  /**
+   * 방금 조작에 대한 서버의 안내 (`SEC-SHELL-002` AC-3).
+   *
+   * 서버가 준 문구를 그대로 든다 — 화면이 지으면 보이는 충돌과 보이지 않는
+   * 충돌의 문구가 갈리고, 그 차이가 존재 오라클이 된다.
+   */
+  const [notice, setNotice] = useState<string | undefined>(undefined);
+  /** 좌측 검색 탭의 질의. 태그를 눌러도 이 값이 채워진다. */
+  const [query, setQuery] = useState('');
   /**
    * 확인을 기다리는 열기 (`FR-SHELL-012` AC-3 · AC-4).
    *
@@ -90,6 +104,7 @@ export function App() {
         // (`FR-SHELL-007` AC-3). 실패해도 셸은 서야 한다 — 휴지통 하나가
         // 안 온다고 앱을 못 쓰게 만들 이유가 없다.
         setTrash(await fetchTrash<TrashRowView[]>({ scope: 'mine' }).catch(() => []));
+        setFavorites(await fetchFavorites().catch(() => []));
       } catch (error) {
         // 401 만 익명이다. 다른 실패를 익명으로 접으면 서버가 잠깐 죽은
         // 것과 로그아웃이 구별되지 않아 사용자가 다시 로그인하게 된다.
@@ -166,8 +181,41 @@ export function App() {
     }).catch(() => null);
     if (made === null) return;
 
+    // 접미사가 붙었을 때만 말이 온다 — 늘 말하면 사용자가 그 자리를 읽지
+    // 않게 되고, 정작 이름이 바뀐 때도 지나친다.
+    setNotice(made.notice);
     setWorkspaces(await fetchTree<WorkspaceTreeView[]>().catch(() => workspaces));
   }, [workspaces]);
+
+  /**
+   * 즐겨찾기에 더한다 (`FR-SHELL-001` AC-3 · AC-4).
+   *
+   * 더한 뒤 목록을 **다시 받는다** — 화면에서 지어 넣으면 서버가 무엇을
+   * 담았는지와 갈리고, 볼 수 없게 된 항목이 화면에만 남는다.
+   */
+  const favorite = useCallback(async (nodeId: string) => {
+    await addFavorite(nodeId).catch(() => undefined);
+    setFavorites(await fetchFavorites().catch(() => []));
+  }, []);
+
+  /**
+   * 기존 파일에 새 버전을 올린다 (`FR-SHELL-008` AC-2).
+   *
+   * 올린 뒤 그 문서를 다시 받는다 — 열려 있는 탭이 옛 본문을 들고 있으면
+   * 다음 저장이 방금 올린 것을 덮는다.
+   */
+  const newVersion = useCallback(
+    async (node: TreeNodeView, file: File) => {
+      const done = await uploadNewVersion(node.id, file)
+        .then(() => true)
+        .catch(() => false);
+      if (!done) return;
+
+      fetchBody(node.id);
+      setWorkspaces(await fetchTree<WorkspaceTreeView[]>().catch(() => workspaces));
+    },
+    [fetchBody, workspaces],
+  );
 
   /**
    * 떨군 파일을 올린다 (`FR-ATTACH-001`).
@@ -253,10 +301,16 @@ export function App() {
       bodies={bodies}
       hashes={hashes}
       trash={trash}
+      favorites={favorites}
+      query={query}
+      onQuery={setQuery}
       onOpen={open}
       onUpload={upload}
       onCreateNote={createNote}
+      onFavorite={favorite}
+      onNewVersion={newVersion}
       onSaveState={noteSaveState}
+      {...(notice === undefined ? {} : { notice })}
       {...(pendingOpen === null
         ? {}
         : {

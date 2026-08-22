@@ -9,6 +9,7 @@ import type { SaveState, TabState } from '../document/tab-state.js';
 import { DocumentTree } from '../tree/DocumentTree.js';
 import type { UploadRequest } from '../attachment/upload-contract.js';
 import { EmptyState } from '../tree/EmptyState.js';
+import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { TrashPanel, type TrashRowView } from '../trash/TrashPanel.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
@@ -35,18 +36,33 @@ function Sidebar({
   label,
   tabs,
   side,
+  active,
+  onActivate,
   children,
 }: {
   label: string;
   tabs: readonly ShellTab[];
   side: 'left' | 'right';
+  /**
+   * 지금 열린 탭. 주어지면 **바깥이 소유한다.**
+   *
+   * 좌측이 그렇다 — 본문의 태그를 눌러도 검색 탭이 열려야 하므로
+   * (`FR-EDITOR-007` AC-11), 탭 상태가 이 안에만 있으면 그 경로가 닿지
+   * 못한다. 우측은 아직 밖에서 여는 자리가 없어 안에서 든다.
+   */
+  active?: string;
+  onActivate?: (tabId: string) => void;
   children?: (tab: ShellTab) => React.ReactNode;
 }) {
   const first = tabs[0]!;
 
   return (
     <aside aria-label={label} data-side={side}>
-      <Tabs.Root defaultValue={first.id} orientation="horizontal">
+      <Tabs.Root
+        {...(active === undefined ? { defaultValue: first.id } : { value: active })}
+        onValueChange={onActivate}
+        orientation="horizontal"
+      >
         <Tabs.List aria-label={label}>
           {tabs.map((tab) => (
             <Tabs.Trigger key={tab.id} value={tab.id}>
@@ -144,14 +160,18 @@ export function AppShell({
   workspaces = [],
   documents = { tabs: [], activeId: null },
   favorites = [],
+  notice,
   bodies = {},
   hashes = {},
   hits = [],
   trash = [],
+  query = '',
   onQuery,
   onOpen,
   onUpload,
   onCreateNote,
+  onFavorite,
+  onNewVersion,
   confirmReplace,
   onSaveState,
 }: {
@@ -167,10 +187,23 @@ export function AppShell({
   hits?: readonly SearchHit[];
   /** 휴지통 행. 서버가 행마다 권한을 붙여 준다. */
   trash?: readonly TrashRowView[];
+  /**
+   * 방금 조작에 대한 서버의 안내 (`SEC-SHELL-002` AC-3).
+   *
+   * **문구를 서버가 준다.** 화면이 지으면 보이는 충돌과 보이지 않는 충돌의
+   * 문구가 갈리고, 그 차이 자체가 존재 오라클이 된다.
+   */
+  notice?: string;
+  /** 좌측 검색 탭의 질의. 태그 클릭도 이 값을 채운다. */
+  query?: string;
   onQuery?: (query: string) => void;
   onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
   onUpload?: (request: UploadRequest) => void;
   onCreateNote?: () => void;
+  /** 즐겨찾기에 더한다 (`FR-SHELL-001` AC-3 · AC-4). */
+  onFavorite?: (nodeId: string) => void;
+  /** 그 파일에 새 버전을 올린다 (`FR-SHELL-008` AC-2). */
+  onNewVersion?: (node: TreeNodeView, file: File) => void;
   /**
    * 활성 탭을 교체하기 전에 받아야 할 확인 (`FR-SHELL-012` AC-3 · AC-4).
    *
@@ -180,12 +213,29 @@ export function AppShell({
   confirmReplace?: { name: string; accept: () => void; cancel: () => void };
   onSaveState?: (nodeId: string, state: SaveState) => void;
 }) {
+  /**
+   * 좌측에서 열린 탭.
+   *
+   * 여기서 드는 이유는 이 탭을 여는 자리가 **둘**이기 때문이다 — 탭을
+   * 직접 누르는 것과 본문 태그를 누르는 것(`FR-EDITOR-007` AC-11).
+   */
+  const [leftTab, setLeftTab] = useState<string>(LEFT_TABS[0]!.id);
+  /** 새 버전을 올릴 대상. 골라 둔 뒤 확인과 파일 고르기가 이어진다. */
+  const [overwriting, setOverwriting] = useState<TreeNodeView | null>(null);
+
+  const searchFor = (text: string) => {
+    setLeftTab('search');
+    onQuery?.(text);
+  };
+
   return (
     <div data-shell="root">
       <Sidebar
         label="좌측 사이드바"
         tabs={LEFT_TABS}
         side="left"
+        active={leftTab}
+        onActivate={setLeftTab}
         // 트리만 내용을 갖는다. 검색·즐겨찾기는 그것을 소유한 요구가 서는
         // 자리에서 채워진다 — 여기서 함께 만들면 셸 구조와 그 안의 기능이
         // 한 파일에서 얽힌다.
@@ -203,12 +253,15 @@ export function AppShell({
                 onOpen={onOpen}
                 onUpload={onUpload}
                 onCreateNote={onCreateNote}
+                onFavorite={onFavorite}
+                onNewVersion={setOverwriting}
               />
             );
           if (tab.id === 'search')
             return (
               <SearchPanel
                 hits={hits}
+                query={query}
                 {...(onQuery === undefined ? {} : { onQuery })}
                 onOpen={(nodeId) => {
                   const found = workspaces
@@ -225,15 +278,35 @@ export function AppShell({
 
       <main>
         <SettingsModal viewer={viewer} trash={trash} />
+        {notice !== undefined && (
+          // `status` 인 이유는 이것이 사용자의 조작을 막지 않기 때문이다 —
+          // 알림은 이미 끝난 일을 알리는 것이고, 대화상자로 세우면 확인
+          // 단계가 하나 생겨 `SEC-SHELL-002` AC-4 가 깨진다.
+          <p role="status" aria-label="알림">
+            {notice}
+          </p>
+        )}
         <DocumentArea
           initial={documents}
           bodies={bodies}
           hashes={hashes}
           {...(onSaveState === undefined ? {} : { onSaveState })}
+          onTagClick={searchFor}
         />
       </main>
 
       <Sidebar label="우측 사이드바" tabs={RIGHT_TABS} side="right" />
+
+      {overwriting !== null && (
+        <NewVersionPrompt
+          node={overwriting}
+          onPick={(file) => {
+            onNewVersion?.(overwriting, file);
+            setOverwriting(null);
+          }}
+          onCancel={() => setOverwriting(null)}
+        />
+      )}
 
       {confirmReplace !== undefined && (
         // `alertdialog` 인 이유는 잃을 것이 있다는 사실을 먼저 알려야 하기

@@ -22,6 +22,14 @@ export interface TreeNodeView {
   level: Level;
   /** 부모(또는 워크스페이스)에 대한 유효 권한 — 만들기가 이것을 본다. */
   parentLevel: Level;
+  /**
+   * 새 버전을 올리면 되돌릴 수 없는가 (`FR-SHELL-008` AC-5).
+   *
+   * **서버가 판정해 보낸다.** 화면이 확장자를 다시 보면 버전 보관 규칙이
+   * 바뀔 때 경고만 옛 규칙을 따르고, 어긋난 경고를 한 번 본 사용자는 다음
+   * 경고도 믿지 않는다. 디렉토리에는 오지 않는다 — 올릴 수 없는 자리다.
+   */
+  overwriteIrreversible?: boolean;
   children: TreeNodeView[];
 }
 

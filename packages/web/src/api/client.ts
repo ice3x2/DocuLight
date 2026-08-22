@@ -132,6 +132,39 @@ export function uploadIntoDirectory(parentId: string, file: File) {
   );
 }
 
+/** 즐겨찾기 한 줄 (`FR-SHELL-001` AC-3 · AC-4). 문서와 디렉토리가 같은 목록에 든다. */
+export interface FavoriteRow {
+  nodeId: string;
+  name: string;
+  kind: 'file' | 'directory';
+  workspaceName: string;
+}
+
+export const fetchFavorites = () => call<FavoriteRow[]>('/favorites');
+
+export const addFavorite = (nodeId: string) =>
+  call<void>('/favorites', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ nodeId }),
+  });
+
+/**
+ * 기존 파일을 덮어쓴다 (`FR-SHELL-008` AC-2).
+ *
+ * 올리기와 **다른 자리**다 — 그쪽은 노드를 만들고 이름이 겹치면 접미사를
+ * 붙인다. 덮어쓰기의 경로는 이것 하나여야 그 의도가 명시적으로만 표현된다.
+ */
+export function uploadNewVersion(nodeId: string, file: File) {
+  const form = new FormData();
+  form.append('file', file);
+
+  return call<void>(`/nodes/${encodeURIComponent(nodeId)}/new-version`, {
+    method: 'POST',
+    body: form,
+  });
+}
+
 /** 버전 목록 한 줄 (`IR-STORAGE-001` AC-1). 실체 경로는 오지 않는다. */
 export interface VersionRow {
   seq: number;
