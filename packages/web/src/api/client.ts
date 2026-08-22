@@ -1,3 +1,5 @@
+import type { LinkRowView } from '../links/LinkPanel.js';
+
 /**
  * 서버와의 왕복 (`FR-WORKSPACE-003` · `FR-STORAGE-001` · `FR-SHELL-007` ·
  * `SEC-ATTACH-002`).
@@ -131,6 +133,20 @@ export function uploadIntoDirectory(parentId: string, file: File) {
     { method: 'POST', body: form },
   );
 }
+
+/**
+ * 이 문서의 링크 양쪽 (`CON-EDITOR-002` AC-2 · AC-3).
+ *
+ * 한 번에 받는다 — 나눠 받으면 두 응답 사이에 본문이 바뀌었을 때 두 목록이
+ * 서로 다른 시점을 보인다.
+ */
+export interface DocumentLinksBody {
+  outgoing: LinkRowView[];
+  backlinks: LinkRowView[];
+}
+
+export const fetchLinks = (nodeId: string) =>
+  call<DocumentLinksBody>(`/documents/${encodeURIComponent(nodeId)}/links`);
 
 /** 즐겨찾기 한 줄 (`FR-SHELL-001` AC-3 · AC-4). 문서와 디렉토리가 같은 목록에 든다. */
 export interface FavoriteRow {

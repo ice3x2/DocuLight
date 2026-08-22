@@ -33,12 +33,35 @@ export interface TrashRowView {
 const ROW_HEIGHT = 40;
 const PANEL_HEIGHT = 480;
 
+/** 목록을 어떻게 좁혀 볼 것인가 (`FR-SHELL-007` AC-4 · AC-5). */
+export interface TrashLens {
+  /** 비면 전 워크스페이스. */
+  workspaceId?: string;
+  /** `all` 은 **요청**이지 권한이 아니다 — 넓혀 달라 해도 서버가 행마다 좁힌다. */
+  scope: 'mine' | 'all';
+}
+
 export function TrashPanel({
   rows,
+  workspaces = [],
+  lens = { scope: 'mine' },
+  canWidenScope = false,
+  onLens,
   onPurge,
   onRestore,
 }: {
   rows: readonly TrashRowView[];
+  /** 필터에 세울 워크스페이스들. 접근 가능한 것만 온다. */
+  workspaces?: readonly { id: string; name: string }[];
+  lens?: TrashLens;
+  /**
+   * 범위 토글을 세울 것인가 (`FR-SHELL-007` AC-5).
+   *
+   * 관리 권한이 어디에도 없으면 세우지 않는다 — 눌러도 결과가 그대로인
+   * 조작을 보여 주면 사용자는 목록이 고장 났다고 읽는다.
+   */
+  canWidenScope?: boolean;
+  onLens?: (lens: TrashLens) => void;
   onPurge?: (nodeId: string) => void;
   onRestore?: (nodeId: string) => void;
 }) {
@@ -91,9 +114,47 @@ export function TrashPanel({
   });
 
   return (
-    // 스크롤 컨테이너에 높이를 준다 — 없으면 가상화가 잴 창이 없어
-    // 아무 행도 그리지 않는다.
-    <div ref={scroller} data-panel="trash" style={{ height: PANEL_HEIGHT, overflow: 'auto' }}>
+    <div data-panel="trash">
+      <label>
+        워크스페이스 필터
+        <select
+          aria-label="워크스페이스 필터"
+          value={lens.workspaceId ?? ''}
+          onChange={(event) =>
+            onLens?.(
+              event.target.value === ''
+                ? { scope: lens.scope }
+                : { scope: lens.scope, workspaceId: event.target.value },
+            )
+          }
+        >
+          <option value="">전 워크스페이스</option>
+          {workspaces.map((one) => (
+            <option key={one.id} value={one.id}>
+              {one.name}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      {canWidenScope && (
+        <button
+          type="button"
+          onClick={() =>
+            onLens?.({
+              ...(lens.workspaceId === undefined ? {} : { workspaceId: lens.workspaceId }),
+              scope: lens.scope === 'all' ? 'mine' : 'all',
+            })
+          }
+        >
+          {lens.scope === 'all' ? '본인분만 보기' : '전체 보기'}
+        </button>
+      )}
+
+      {/* 스크롤 컨테이너에 높이를 준다 — 없으면 가상화가 잴 창이 없어
+          아무 행도 그리지 않는다. 필터를 이 안에 넣지 않는 이유는 목록이
+          길어져 스크롤할 때 필터가 함께 밀려 올라가면 안 되기 때문이다. */}
+      <div ref={scroller} style={{ height: PANEL_HEIGHT, overflow: 'auto' }}>
       <table>
         <thead>
           {table.getHeaderGroups().map((group) => (
@@ -119,6 +180,7 @@ export function TrashPanel({
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

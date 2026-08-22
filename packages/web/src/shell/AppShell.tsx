@@ -4,6 +4,7 @@ import { useId, useState } from 'react';
 
 import { DocumentArea } from '../document/DocumentArea.js';
 import { FavoritesView, type Favorite } from '../favorites/FavoritesView.js';
+import { LinkPanel, type LinkRowView } from '../links/LinkPanel.js';
 import { SearchPanel, type SearchHit } from '../search/SearchPanel.js';
 import type { SaveState, TabState } from '../document/tab-state.js';
 import { DocumentTree } from '../tree/DocumentTree.js';
@@ -11,7 +12,7 @@ import type { UploadRequest } from '../attachment/upload-contract.js';
 import { EmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
-import { TrashPanel, type TrashRowView } from '../trash/TrashPanel.js';
+import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
   LEFT_TABS,
@@ -90,7 +91,19 @@ function Sidebar({
  * 따로 두면 그것이 두 번째 진입점이 되고, 두 진입점은 곧 서로 다른 것을
  * 보여 주게 된다.
  */
-function SettingsModal({ viewer, trash = [] }: { viewer: Viewer; trash?: readonly TrashRowView[] }) {
+function SettingsModal({
+  viewer,
+  trash = [],
+  workspaces = [],
+  trashLens,
+  onTrashLens,
+}: {
+  viewer: Viewer;
+  trash?: readonly TrashRowView[];
+  workspaces?: readonly { id: string; name: string }[];
+  trashLens?: TrashLens;
+  onTrashLens?: (lens: TrashLens) => void;
+}) {
   const [open, setOpen] = useState(false);
   const titleId = useId();
   // 보이지 않는 카테고리는 **그리지 않는다.** 트리 컨텍스트 메뉴는 반대로
@@ -127,7 +140,15 @@ function SettingsModal({ viewer, trash = [] }: { viewer: Viewer; trash?: readonl
                 {/* 휴지통만 내용을 갖는다 — 나머지 카테고리는 그것을
                     소유한 요구가 서는 자리에서 채워진다. */}
                 {category.id === 'trash' ? (
-                  <TrashPanel rows={trash} />
+                  <TrashPanel
+                    rows={trash}
+                    workspaces={workspaces}
+                    // 관리 권한이 어디에도 없으면 범위 토글이 서지 않는다
+                    // (`FR-SHELL-007` AC-5) — 눌러도 결과가 그대로다.
+                    canWidenScope={viewer.adminWorkspaceCount > 0}
+                    {...(trashLens === undefined ? {} : { lens: trashLens })}
+                    {...(onTrashLens === undefined ? {} : { onLens: onTrashLens })}
+                  />
                 ) : category.id === 'instance' ? (
                   <InstanceSettings />
                 ) : category.id === 'account' ? (
@@ -160,11 +181,14 @@ export function AppShell({
   workspaces = [],
   documents = { tabs: [], activeId: null },
   favorites = [],
+  links = { outgoing: [], backlinks: [] },
   notice,
   bodies = {},
   hashes = {},
   hits = [],
   trash = [],
+  trashLens,
+  onTrashLens,
   query = '',
   onQuery,
   onOpen,
@@ -185,6 +209,8 @@ export function AppShell({
   hashes?: Readonly<Record<string, string>>;
   /** 검색 결과. 서버가 이미 걸러 준 것이다. */
   hits?: readonly SearchHit[];
+  /** 활성 문서의 링크 양쪽 (`CON-EDITOR-002` AC-2 · AC-3). */
+  links?: { outgoing: readonly LinkRowView[]; backlinks: readonly LinkRowView[] };
   /** 휴지통 행. 서버가 행마다 권한을 붙여 준다. */
   trash?: readonly TrashRowView[];
   /**
@@ -194,6 +220,9 @@ export function AppShell({
    * 문구가 갈리고, 그 차이 자체가 존재 오라클이 된다.
    */
   notice?: string;
+  /** 휴지통 목록을 좁혀 보는 조건 (`FR-SHELL-007` AC-4 · AC-5). */
+  trashLens?: TrashLens;
+  onTrashLens?: (lens: TrashLens) => void;
   /** 좌측 검색 탭의 질의. 태그 클릭도 이 값을 채운다. */
   query?: string;
   onQuery?: (query: string) => void;
@@ -277,7 +306,13 @@ export function AppShell({
       </Sidebar>
 
       <main>
-        <SettingsModal viewer={viewer} trash={trash} />
+        <SettingsModal
+          viewer={viewer}
+          trash={trash}
+          workspaces={workspaces.map((entry) => entry.workspace)}
+          {...(trashLens === undefined ? {} : { trashLens })}
+          {...(onTrashLens === undefined ? {} : { onTrashLens })}
+        />
         {notice !== undefined && (
           // `status` 인 이유는 이것이 사용자의 조작을 막지 않기 때문이다 —
           // 알림은 이미 끝난 일을 알리는 것이고, 대화상자로 세우면 확인
@@ -295,7 +330,24 @@ export function AppShell({
         />
       </main>
 
-      <Sidebar label="우측 사이드바" tabs={RIGHT_TABS} side="right" />
+      <Sidebar label="우측 사이드바" tabs={RIGHT_TABS} side="right">
+        {(tab) => {
+          // 링크 줄을 누르면 그 문서를 연다 — 목록이 열 수 없는 이름의
+          // 나열이면 그 탭은 읽을거리일 뿐 이동 수단이 되지 못한다.
+          const openById = (nodeId: string) => {
+            const found = workspaces
+              .flatMap((entry) => entry.roots)
+              .find((node) => node.id === nodeId);
+            if (found !== undefined) onOpen?.(found, false);
+          };
+
+          if (tab.id === 'backlinks')
+            return <LinkPanel label="백링크" rows={links.backlinks} onOpen={openById} />;
+          if (tab.id === 'outgoing')
+            return <LinkPanel label="아웃고잉 링크" rows={links.outgoing} onOpen={openById} />;
+          return <p>{tab.label}</p>;
+        }}
+      </Sidebar>
 
       {overwriting !== null && (
         <NewVersionPrompt

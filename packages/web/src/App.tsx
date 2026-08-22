@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
   ApiError,
   addFavorite,
   createNode,
   fetchFavorites,
+  fetchLinks,
   fetchSession,
   fetchTrash,
   fetchTree,
@@ -12,6 +13,7 @@ import {
   uploadAttachment,
   uploadIntoDirectory,
   uploadNewVersion,
+  type DocumentLinksBody,
   type FavoriteRow,
   type SessionBody,
 } from './api/client.js';
@@ -28,7 +30,7 @@ import {
 } from './document/tab-state.js';
 import { nodeIdOf, urlForNode } from './routing/deep-link.js';
 import type { SaveState } from './document/tab-state.js';
-import type { TrashRowView } from './trash/TrashPanel.js';
+import type { TrashLens, TrashRowView } from './trash/TrashPanel.js';
 import type { WorkspaceTreeView, TreeNodeView } from './tree/tree-contract.js';
 
 /**
@@ -77,6 +79,15 @@ export function App() {
   const [hashes, setHashes] = useState<Readonly<Record<string, string>>>({});
   const [trash, setTrash] = useState<readonly TrashRowView[]>([]);
   const [favorites, setFavorites] = useState<readonly FavoriteRow[]>([]);
+  /**
+   * 휴지통을 좁혀 보는 조건 (`FR-SHELL-007` AC-4 · AC-5).
+   *
+   * 좁히는 일은 **서버가** 한다 — 받아 놓고 화면에서 거르면 넓힌 범위의
+   * 행이 이미 브라우저에 와 있게 되고, 그것은 권한 판정이 아니다.
+   */
+  const [trashLens, setTrashLens] = useState<TrashLens>({ scope: 'mine' });
+  /** 활성 문서의 링크 양쪽 (`CON-EDITOR-002` AC-2 · AC-3). */
+  const [links, setLinks] = useState<DocumentLinksBody>({ outgoing: [], backlinks: [] });
   /**
    * 방금 조작에 대한 서버의 안내 (`SEC-SHELL-002` AC-3).
    *
@@ -258,6 +269,37 @@ export function App() {
     );
   }, []);
 
+  // 조건이 바뀌면 휴지통을 다시 받는다. 첫 회차는 세션 적재가 이미 받았다.
+  const firstTrash = useRef(true);
+  useEffect(() => {
+    if (firstTrash.current) {
+      firstTrash.current = false;
+      return;
+    }
+    void fetchTrash<TrashRowView[]>(trashLens)
+      .then(setTrash)
+      .catch(() => undefined);
+  }, [trashLens]);
+
+  /**
+   * 활성 문서가 바뀌면 그 문서의 링크를 받는다.
+   *
+   * **연 문서가 없으면 묻지 않는다** — 대상 없는 질의는 서버에서 404 로
+   * 끝나고, 그 404 가 로그를 채워 진짜 문제를 가린다.
+   */
+  const active = documents.activeId;
+  useEffect(() => {
+    if (active === null) {
+      setLinks({ outgoing: [], backlinks: [] });
+      return;
+    }
+    void fetchLinks(active)
+      .then(setLinks)
+      // 못 받으면 빈 목록으로 둔다 — 옛 문서의 링크를 남겨 두면 지금 문서의
+      // 것으로 읽힌다.
+      .catch(() => setLinks({ outgoing: [], backlinks: [] }));
+  }, [active]);
+
   // 주소에 문서가 실려 들어왔으면 그것을 연다 (`FR-SHELL-006` AC-2).
   useEffect(() => {
     const wanted = nodeIdOf(window.location.pathname);
@@ -301,7 +343,10 @@ export function App() {
       bodies={bodies}
       hashes={hashes}
       trash={trash}
+      trashLens={trashLens}
+      onTrashLens={setTrashLens}
       favorites={favorites}
+      links={links}
       query={query}
       onQuery={setQuery}
       onOpen={open}

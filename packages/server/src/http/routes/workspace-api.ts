@@ -32,6 +32,7 @@ import {
 import { createNode } from '../../app/node/node-service.js';
 import { uploadNewVersion, warnsIrreversible } from '../../app/document/new-version.js';
 import { noticeFor } from '../../domain/node/collision-notice.js';
+import { linksOf } from '../../app/document/link-service.js';
 import { readDocument, saveDocument, workspaceRootOf } from '../../app/document/save-service.js';
 import {
   beginEditSession,
@@ -573,6 +574,28 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
    * 새어 나간다. 빼기에는 권한을 걸지 않는다: 자기 목록에서 지우는
    * 일이고, 볼 수 없게 된 것일수록 오히려 지울 수 있어야 한다.
    */
+  /**
+   * 이 문서의 링크 양쪽 (`CON-EDITOR-002` AC-2 · AC-3).
+   *
+   * **한 번에 준다.** 나누면 화면이 두 번 묻게 되고, 두 응답 사이에 본문이
+   * 바뀌면 두 목록이 서로 다른 시점을 보인다.
+   */
+  router.get('/documents/:nodeId/links', async (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const links = await linksOf(stores, actor, one(req.params.nodeId)!);
+    if (links === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(links);
+  });
+
   router.get('/favorites', (req, res) => {
     const actor = actorFor(req);
     if (actor === undefined) {

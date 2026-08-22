@@ -487,3 +487,26 @@ describe('새 버전 올리기 — 덮어쓰기의 유일한 경로 (`FR-SHELL-0
     expect(roots.find((node) => node.id === doc)?.overwriteIrreversible).toBe(false);
   });
 });
+
+describe('링크 — 백링크와 아웃고잉 (`CON-EDITOR-002` AC-2 · AC-3)', () => {
+  it('양쪽을 한 번에 준다', async () => {
+    const other = idOf(
+      createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'file', name: '설계.md' }),
+    );
+    await writeFile(fileOf(other), '지난 [[회의록]] 을 본다\n', 'utf8');
+
+    const got = await request(app).get(`/api/documents/${doc}/links`);
+
+    expect(got.status).toBe(200);
+    expect(got.body).toMatchObject({
+      outgoing: [],
+      backlinks: [{ nodeId: other, name: '설계.md', resolved: true }],
+    });
+  });
+
+  it('볼 수 없는 문서에는 없는 것과 같은 답을 준다', async () => {
+    actingAs = actorFor(stores.principals, me.id);
+
+    expect((await request(app).get(`/api/documents/${doc}/links`)).status).toBe(404);
+  });
+});

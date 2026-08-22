@@ -47,6 +47,9 @@ const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
 
 beforeEach(() => {
+  // 앞 시험이 문서를 열면 그 주소가 창에 남는다 — 창은 파일 하나에 하나뿐이라
+  // 다음 시험의 앱이 그 딥링크를 보고 문서를 연다.
+  window.history.replaceState(null, '', '/');
   routes.clear();
   sent = [];
   routes.set('/api/session', () =>
@@ -197,5 +200,110 @@ describe('FR-EDITOR-007 AC-11 — 태그를 누르면 그 태그로 검색된다
 
     const search = await screen.findByRole('combobox', { name: '검색' });
     expect(search).toHaveProperty('value', '할일');
+  });
+});
+
+describe('FR-SHELL-007 AC-4 · AC-5 — 휴지통의 워크스페이스 필터와 범위 토글', () => {
+  const TRASH = [
+    {
+      nodeId: 't1',
+      workspaceId: 'ws-1',
+      workspaceName: '기획팀',
+      originalPath: '기획팀/회의록.md',
+      deletedAt: '2026-08-20T01:00:00.000Z',
+      deletedBy: '한범',
+      canPurge: true,
+    },
+  ];
+
+  const openTrash = async () => {
+    routes.set('/api/trash', () => json(TRASH));
+    const user = await openTree();
+    await user.click(screen.getByRole('button', { name: '설정' }));
+    await user.click(
+      within(await screen.findByRole('dialog', { name: '설정' })).getByRole('tab', {
+        name: '휴지통',
+      }),
+    );
+    return user;
+  };
+
+  it('AC-4: 워크스페이스를 고르면 그 워크스페이스로 좁혀 다시 받는다', async () => {
+    const user = await openTrash();
+
+    await user.selectOptions(
+      await screen.findByRole('combobox', { name: '워크스페이스 필터' }),
+      'ws-1',
+    );
+
+    await waitFor(() =>
+      expect(
+        (globalThis.fetch as unknown as { mock: { calls: [string][] } }).mock.calls.some((call) =>
+          String(call[0]).includes('workspaceId=ws-1'),
+        ),
+      ).toBe(true),
+    );
+  });
+
+  it('AC-5: 관리 권한이 있으면 전체/본인분 토글이 서고, 누르면 범위가 실려 나간다', async () => {
+    const user = await openTrash();
+
+    await user.click(await screen.findByRole('button', { name: '전체 보기' }));
+
+    await waitFor(() =>
+      expect(
+        (globalThis.fetch as unknown as { mock: { calls: [string][] } }).mock.calls.some((call) =>
+          String(call[0]).includes('scope=all'),
+        ),
+      ).toBe(true),
+    );
+  });
+});
+
+describe('CON-EDITOR-002 AC-2 · AC-3 — 백링크와 아웃고잉 링크 패널', () => {
+  const LINKS = {
+    outgoing: [
+      { nodeId: 'n3', name: '설계.md', workspaceName: '기획팀', resolved: true },
+      { nodeId: null, name: '없는문서', workspaceName: null, resolved: false },
+    ],
+    backlinks: [{ nodeId: 'n4', name: '주간보고.md', workspaceName: '기획팀', resolved: true }],
+  };
+
+  it('AC-2: 열린 문서를 가리키는 문서가 백링크 탭에 온다', async () => {
+    routes.set('/api/documents/n1/links', () => json(LINKS));
+    const user = await openTree();
+
+    await user.click(screen.getByRole('button', { name: '회의록.md' }));
+    const right = screen.getByRole('complementary', { name: '우측 사이드바' });
+    await user.click(within(right).getByRole('tab', { name: '백링크' }));
+
+    const list = await screen.findByRole('list', { name: '백링크' });
+    expect(within(list).getByText('주간보고.md')).toBeDefined();
+  });
+
+  it('AC-3: 열린 문서가 가리키는 문서가 아웃고잉 탭에 온다', async () => {
+    routes.set('/api/documents/n1/links', () => json(LINKS));
+    const user = await openTree();
+
+    await user.click(screen.getByRole('button', { name: '회의록.md' }));
+    const right = screen.getByRole('complementary', { name: '우측 사이드바' });
+    await user.click(within(right).getByRole('tab', { name: '아웃고잉 링크' }));
+
+    const list = await screen.findByRole('list', { name: '아웃고잉 링크' });
+    expect(within(list).getByText('설계.md')).toBeDefined();
+    // 아직 없는 문서도 줄을 갖는다 — 지우면 사용자가 적은 링크가 사라진
+    // 것으로 읽힌다.
+    expect(within(list).getByText('없는문서')).toBeDefined();
+  });
+
+  it('문서를 열지 않았으면 링크를 묻지 않는다 — 물을 대상이 없다', async () => {
+    await openTree();
+
+    await waitFor(() => expect(screen.getByRole('tree', { name: '문서 트리' })).toBeDefined());
+    expect(
+      (globalThis.fetch as unknown as { mock: { calls: [string][] } }).mock.calls.some((call) =>
+        String(call[0]).includes('/links'),
+      ),
+    ).toBe(false);
   });
 });
