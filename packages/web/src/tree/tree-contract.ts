@@ -90,7 +90,11 @@ export function enabledMenuItems(node: TreeNodeView): ContextMenuItem[] {
   return CONTEXT_MENU_ITEMS.filter((item) => {
     if (item.filesOnly === true && node.kind !== 'file') return false;
     if (item.target !== undefined && !permits(node.level, item.target)) return false;
-    if (item.parent !== undefined && !permits(node.level, item.parent)) return false;
+    // 만들기는 **담을 자리**에 쓰는 조작이라 그 자리의 권한을 본다. 노드
+    // 자신의 권한으로 판정하면 서버가 거절할 항목이 열려 보이고, 사용자에게는
+    // 고장으로 보인다 — 그리고 서버가 채워 보내는 `parentLevel` 은 아무도
+    // 읽지 않는 칸이 된다.
+    if (item.parent !== undefined && !permits(node.parentLevel, item.parent)) return false;
     return true;
   });
 }

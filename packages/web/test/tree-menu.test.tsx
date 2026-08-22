@@ -140,3 +140,23 @@ describe('FR-SHELL-003 — 트리 컨텍스트 메뉴와 새 노트 버튼', () 
     expect(items).not.toContain('새 디렉토리');
   });
 });
+
+describe('FR-SHELL-003 AC-3 — 만들기는 부모 권한을 본다', () => {
+  it('그 노드는 고칠 수 있어도 부모를 못 고치면 만들기가 열리지 않는다', () => {
+    // 만들기는 **담을 자리**에 쓰는 조작이다. 노드 자신의 권한으로 판정하면
+    // 서버가 거절할 항목이 열려 보이고, 사용자에게는 고장으로 보인다.
+    const items = enabledMenuItems(node({ level: 'edit', parentLevel: 'view' })).map((i) => i.label);
+
+    expect(items).not.toContain('새 문서');
+    expect(items).not.toContain('새 디렉토리');
+    // 그 노드 자신에 대한 조작은 그대로 열린다 — 축이 다르다.
+    expect(items).toContain('이름 변경');
+  });
+
+  it('부모를 고칠 수 있으면 그 노드를 못 고쳐도 만들기가 열린다', () => {
+    const items = enabledMenuItems(node({ level: 'view', parentLevel: 'edit' })).map((i) => i.label);
+
+    expect(items).toContain('새 문서');
+    expect(items).not.toContain('삭제');
+  });
+});
