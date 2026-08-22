@@ -1,4 +1,5 @@
 import type { SettingStore } from '../../domain/ports/setting-store.js';
+import { covers } from '../../domain/retention/retention.js';
 
 /**
  * 런타임에 바꿀 수 있는 설정들 (`DR-SHELL-001` · `IR-SHELL-002` AC-7).
@@ -38,8 +39,64 @@ export function readSetting(store: SettingStore, key: InstanceSettingKey): strin
   return store.get(key) ?? DEFAULTS[key];
 }
 
-/** DB 에 쓴다 — 런타임 설정의 저장소는 이것 하나다 (`DR-SHELL-001` AC-1). */
+/**
+ * 보존 일수로 읽은 값. 숫자가 아니거나 음수면 그 설정의 기본값.
+ *
+ * 오타가 조용히 `0`(무제한)이나 `NaN` 으로 읽히면 그 인스턴스의 보존 정책이
+ * 아무도 의도하지 않은 값으로 도는데, 두 축 다 되돌릴 수 없는 소멸을 낸다.
+ */
+export function retentionDaysOf(store: SettingStore, key: RetentionKey): number {
+  const stored = Number(readSetting(store, key));
+  return Number.isFinite(stored) && stored >= 0 ? stored : Number(DEFAULTS[key]);
+}
+
+/** 기간이 서로를 덮어야 하는 두 설정 (`R154`). */
+type RetentionKey = 'trash-retention-days' | 'audit-retention-days';
+
+export type SettingsRule = 'unknown-key' | 'retention-inverted';
+export type SettingsOutcome = { ok: true } | { ok: false; rule: SettingsRule };
+
+/**
+ * DB 에 쓴다 — 런타임 설정의 저장소는 이것 하나다 (`DR-SHELL-001` AC-1).
+ *
+ * **여러 키를 한 번에 받는 이유는 판정이 조합에 걸리기 때문이다** (`R154`) —
+ * 한 키씩만 받으면 「감사를 올리고 휴지통을 올린다」를 그 순서로만 할 수
+ * 있게 되고, 관리자가 그 순서를 스스로 알아내야 한다.
+ *
+ * 예외가 아니라 값으로 답한다 — 어긋난 조합은 예외 상황이 아니라 **예상되는
+ * 입력**이고, 그 갈래를 부르는 쪽이 화면 문구로 옮긴다.
+ */
+export function writeSettings(
+  store: SettingStore,
+  patch: Readonly<Record<string, string>>,
+): SettingsOutcome {
+  for (const key of Object.keys(patch)) {
+    if (!(key in DEFAULTS)) return { ok: false, rule: 'unknown-key' };
+  }
+
+  const after = (key: RetentionKey): number => {
+    const proposed = patch[key];
+    if (proposed === undefined) return retentionDaysOf(store, key);
+    const parsed = Number(proposed);
+    return Number.isFinite(parsed) && parsed >= 0 ? parsed : Number(DEFAULTS[key]);
+  };
+
+  // 감사 기록이 휴지통 항목보다 먼저 사라지면, 지워진 문서는 아직 복구할 수
+  // 있는데 누가 지웠는지는 이미 모르는 상태가 된다. 화면이 아니라 여기서
+  // 막는 이유는 화면에만 두면 API 로 그대로 뚫리기 때문이다.
+  if (!covers(after('audit-retention-days'), after('trash-retention-days'))) {
+    return { ok: false, rule: 'retention-inverted' };
+  }
+
+  for (const [key, value] of Object.entries(patch)) store.set(key, value);
+  return { ok: true };
+}
+
+/**
+ * 한 칸만 쓴다. 규칙은 `writeSettings` 와 **같은 것 하나**를 쓴다 — 검사를
+ * 건너뛰는 두 번째 쓰기 경로를 두면 그것이 곧 우회로가 된다.
+ */
 export function writeSetting(store: SettingStore, key: InstanceSettingKey, value: string): void {
-  assertKnown(key);
-  store.set(key, value);
+  const saved = writeSettings(store, { [key]: value });
+  if (!saved.ok) throw new Error(`rejected instance setting ${key}: ${saved.rule}`);
 }

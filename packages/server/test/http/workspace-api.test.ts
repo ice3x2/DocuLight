@@ -387,6 +387,35 @@ describe('DR-SHELL-001 · IR-SHELL-002 AC-7 — 런타임 설정을 화면에서
     // 같은 DB 를 다시 읽는 것이 재기동이 보는 것과 같은 상태다.
     expect(stores.settings.get('retained-version-count')).toBe('3');
   });
+
+  it('OBS-AUDIT-011 AC-1: 감사 로그 보존 기간을 이 화면에서 지정할 수 있다', async () => {
+    // 다섯 값 중 이 키만 오래도록 아무 시험도 건드리지 않았다 — 그 사이에
+    // 이 설정은 저장되기만 하고 읽는 곳이 없었다.
+    const saved = await request(app).put('/api/settings').send({ 'audit-retention-days': '400' });
+
+    expect(saved.status).toBe(204);
+    expect((await request(app).get('/api/settings')).body['audit-retention-days']).toBe('400');
+  });
+
+  it('REL-AUDIT-003 AC-5: 감사 보존을 휴지통 보존 아래로 내리면 400 이다', async () => {
+    // 강제 지점이 화면이 아니라 서비스라는 것이 이 시험의 내용이다 —
+    // 화면에만 두면 이 요청이 그대로 통과한다.
+    const rejected = await request(app).put('/api/settings').send({ 'audit-retention-days': '7' });
+
+    expect(rejected.status).toBe(400);
+    expect((await request(app).get('/api/settings')).body['audit-retention-days']).toBe('365');
+  });
+
+  it('REL-AUDIT-003 AC-5: 둘을 한 요청으로 함께 올리면 통과한다', async () => {
+    // 한 키씩만 받으면 관리자가 올바른 순서를 스스로 알아내야 한다.
+    const saved = await request(app)
+      .put('/api/settings')
+      .send({ 'trash-retention-days': '90', 'audit-retention-days': '120' });
+
+    expect(saved.status).toBe(204);
+    const now = (await request(app).get('/api/settings')).body;
+    expect([now['trash-retention-days'], now['audit-retention-days']]).toEqual(['90', '120']);
+  });
 });
 
 describe('즐겨찾기 — 문서와 디렉토리를 한 목록에 담는다 (`FR-SHELL-001` AC-3 · AC-4)', () => {

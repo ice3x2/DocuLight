@@ -14,8 +14,7 @@ import { isSuperuser } from '../../domain/principal/subject.js';
 import {
   INSTANCE_SETTING_KEYS,
   readSetting,
-  writeSetting,
-  type InstanceSettingKey,
+  writeSettings,
 } from '../../app/settings/instance-settings.js';
 import {
   attachToDocument,
@@ -558,18 +557,16 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     }
 
     const patch = req.body as Record<string, unknown>;
-    const known = new Set<string>(INSTANCE_SETTING_KEYS);
-    // **먼저 전부 검사한 뒤에** 쓴다 — 쓰면서 검사하면 오타 하나가 앞의
-    // 값들만 바꿔 놓은 절반의 상태를 남긴다.
-    if (Object.keys(patch).some((key) => !known.has(key) || typeof patch[key] !== 'string')) {
+    if (Object.values(patch).some((value) => typeof value !== 'string')) {
       res.sendStatus(400);
       return;
     }
 
-    for (const [key, value] of Object.entries(patch)) {
-      writeSetting(stores.settings, key as InstanceSettingKey, value as string);
-    }
-    res.sendStatus(204);
+    // 조합을 **통째로** 넘긴다 — 키마다 따로 쓰면 「감사를 올리고 휴지통을
+    // 올린다」를 그 순서로만 할 수 있게 되고(`R154`), 오타 하나가 앞의
+    // 값들만 바꿔 놓은 절반의 상태를 남긴다.
+    const saved = writeSettings(stores.settings, patch as Record<string, string>);
+    res.sendStatus(saved.ok ? 204 : 400);
   });
 
   /**

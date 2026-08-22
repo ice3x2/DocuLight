@@ -1,4 +1,5 @@
 import type { PrincipalId } from '../principal/principal.js';
+import { isPastRetention } from '../retention/retention.js';
 
 /**
  * 휴지통 항목 하나 (`DR-STORAGE-004` AC-1).
@@ -21,10 +22,10 @@ export interface TrashEntry {
  *
  * `0` 은 무제한이다 — 「기간이 0일」이 아니라 「기간을 두지 않는다」는
  * 뜻이며, 그래서 0 이면 어떤 항목도 기간을 이유로 사라지지 않는다.
+ *
+ * 판정 자체는 감사 로그와 **같은 술어**를 쓴다 (`R154`) — 각자 쓰면 `0` 의
+ * 뜻이 한쪽에서만 바뀌는 날이 온다.
  */
 export function isExpired(entry: TrashEntry, retentionDays: number, now: Date): boolean {
-  if (retentionDays <= 0) return false;
-
-  const deadline = new Date(entry.deletedAt).getTime() + retentionDays * 24 * 60 * 60 * 1000;
-  return now.getTime() >= deadline;
+  return isPastRetention(entry.deletedAt, retentionDays, now);
 }
