@@ -1,16 +1,16 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-08-22T19:02:03.000Z",
+  "generatedAt": "2026-08-22T19:27:26.051Z",
   "source": "speckiwi",
   "specFingerprint": {
     "algorithm": "sha256",
-    "value": "3a1b61ec4b7e5425ad8e34a739c6bdc9f2eb62436ad0b5c4f424f5325640bcbf",
+    "value": "3358c161932b9e3b39c8adef338504eb14d068c2656116bceb4dacc621b75bfb",
     "files": [
       {
         "path": "docs/spec/00.index.md",
-        "sha256": "a1f553e706d377278231efebca223aa37d88a221b11d44732eb5cac45428e113",
+        "sha256": "566f949ff51dca07c9ab57e910c2f9b6225b3ba984826e46dfe5e64e4df5046b",
         "size": 9288,
-        "mtimeMs": 1787425239729.6565
+        "mtimeMs": 1787426820965.834
       },
       {
         "path": "docs/spec/02.product-architecture.srs.md",
@@ -26,9 +26,9 @@
       },
       {
         "path": "docs/spec/08.app-shell.srs.md",
-        "sha256": "4da7468ffed6fcab775eec66c11a9ec7f4f86afbee45aa1a52d37a7b41eee0df",
-        "size": 110365,
-        "mtimeMs": 1787425322979.148
+        "sha256": "3cbf0bb37be142676230c7480763cf6d261c56796338b0bbfa6ae501acda00b0",
+        "size": 110326,
+        "mtimeMs": 1787426846027.749
       },
       {
         "path": "docs/spec/09.auth.srs.md",
@@ -38,9 +38,9 @@
       },
       {
         "path": "docs/spec/10.access-control.srs.md",
-        "sha256": "64d090973f748476118c29394f6ee626e1a6cf5f0585ecba25a97a712fee1b0c",
-        "size": 126311,
-        "mtimeMs": 1787404517184.96
+        "sha256": "a2ba65ac80ac1f45a7a140a4ff2abaee8332f6dcf0fca4c81b6c3ae936d468dc",
+        "size": 126805,
+        "mtimeMs": 1787426705459.6887
       },
       {
         "path": "docs/spec/11.confirmation-grades.srs.md",
