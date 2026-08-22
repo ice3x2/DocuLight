@@ -179,7 +179,28 @@ function visibleMarkdown(stores: DocumentStores, actor: Actor): VisibleDocument[
 
   for (const entry of visibleWorkspacesOf(stores, actor)) {
     const all = stores.nodes.allIn(entry.workspace.id);
-    const candidates = all.filter((node) => node.kind === 'file' && isVersioned(node.name));
+    const byId = new Map(all.map((node) => [node.id, node]));
+
+    // 조상까지 이어 붙인 사슬. `chainOf` 를 부르면 노드마다 질의가 하나씩
+    // 더 붙어 `CON-ACL-001` AC-4 의 예산이 깨지므로 메모리에서 엮는다.
+    const chainOf = (id: NodeId) => {
+      const chain = [];
+      for (let cursor: NodeId | null = id; cursor !== null; ) {
+        const node = byId.get(cursor);
+        if (node === undefined) break;
+        chain.push(node);
+        cursor = node.parentId;
+      }
+      return chain;
+    };
+
+    // **관문이 권한보다 먼저 선다** (`SEC-WORKSPACE-004` AC-2). 「내보내도
+    // 되는가」는 두 질문의 곱인데 여기서 권한만 보면 휴지통에 든 문서와
+    // `.obsidian` 아래 문서가 자동완성 후보와 백링크로 그대로 나간다 —
+    // 그 셋은 이름·상태 축이라 **슈퍼유저에게도** 거부되어야 한다.
+    const candidates = all.filter(
+      (node) => node.kind === 'file' && isVersioned(node.name) && isServable(chainOf(node.id)),
+    );
     if (candidates.length === 0) continue;
 
     const permits_ = permissionBatch(
@@ -189,19 +210,13 @@ function visibleMarkdown(stores: DocumentStores, actor: Actor): VisibleDocument[
       entry.workspace.id,
     );
 
-    // 경로는 메모리에서 엮는다 — 규칙은 `pathOf` 와 같다: 이름을 루트부터
-    // 이어 붙인다.
-    const byId = new Map(all.map((node) => [node.id, node]));
-    const pathOf = (id: NodeId): string => {
-      const names: string[] = [];
-      for (let cursor: NodeId | null = id; cursor !== null; ) {
-        const node = byId.get(cursor);
-        if (node === undefined) break;
-        names.push(node.name);
-        cursor = node.parentId;
-      }
-      return names.reverse().join('/');
-    };
+    // 경로도 같은 사슬에서 나온다 — 규칙은 `pathOf` 와 같다: 이름을
+    // 루트부터 이어 붙인다.
+    const pathOf = (id: NodeId): string =>
+      chainOf(id)
+        .map((node) => node.name)
+        .reverse()
+        .join('/');
 
     for (const node of candidates) {
       const level = permits_(node.id);
