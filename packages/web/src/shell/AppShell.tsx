@@ -4,9 +4,11 @@ import { useId, useState } from 'react';
 
 import { DocumentArea } from '../document/DocumentArea.js';
 import { FavoritesView, type Favorite } from '../favorites/FavoritesView.js';
+import { SearchPanel, type SearchHit } from '../search/SearchPanel.js';
 import type { TabState } from '../document/tab-state.js';
 import { DocumentTree } from '../tree/DocumentTree.js';
 import { EmptyState } from '../tree/EmptyState.js';
+import { TrashPanel, type TrashRowView } from '../trash/TrashPanel.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
   LEFT_TABS,
@@ -70,7 +72,7 @@ function Sidebar({
  * 따로 두면 그것이 두 번째 진입점이 되고, 두 진입점은 곧 서로 다른 것을
  * 보여 주게 된다.
  */
-function SettingsModal({ viewer }: { viewer: Viewer }) {
+function SettingsModal({ viewer, trash = [] }: { viewer: Viewer; trash?: readonly TrashRowView[] }) {
   const [open, setOpen] = useState(false);
   const titleId = useId();
   // 보이지 않는 카테고리는 **그리지 않는다.** 트리 컨텍스트 메뉴는 반대로
@@ -104,7 +106,9 @@ function SettingsModal({ viewer }: { viewer: Viewer }) {
 
             {categories.map((category) => (
               <Tabs.Content key={category.id} value={category.id}>
-                <p>{category.label}</p>
+                {/* 휴지통만 내용을 갖는다 — 나머지 카테고리는 그것을
+                    소유한 요구가 서는 자리에서 채워진다. */}
+                {category.id === 'trash' ? <TrashPanel rows={trash} /> : <p>{category.label}</p>}
               </Tabs.Content>
             ))}
           </Tabs.Root>
@@ -128,6 +132,9 @@ export function AppShell({
   favorites = [],
   bodies = {},
   hashes = {},
+  hits = [],
+  trash = [],
+  onQuery,
   onOpen,
 }: {
   viewer: Viewer;
@@ -138,6 +145,11 @@ export function AppShell({
   bodies?: Readonly<Record<string, string>>;
   /** 노드 ID → 그 본문의 기준 해시. */
   hashes?: Readonly<Record<string, string>>;
+  /** 검색 결과. 서버가 이미 걸러 준 것이다. */
+  hits?: readonly SearchHit[];
+  /** 휴지통 행. 서버가 행마다 권한을 붙여 준다. */
+  trash?: readonly TrashRowView[];
+  onQuery?: (query: string) => void;
   onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
 }) {
   return (
@@ -160,13 +172,26 @@ export function AppShell({
             ) : (
               <DocumentTree workspaces={workspaces} onOpen={onOpen} />
             );
+          if (tab.id === 'search')
+            return (
+              <SearchPanel
+                hits={hits}
+                {...(onQuery === undefined ? {} : { onQuery })}
+                onOpen={(nodeId) => {
+                  const found = workspaces
+                    .flatMap((entry) => entry.roots)
+                    .find((node) => node.id === nodeId);
+                  if (found !== undefined) onOpen?.(found, false);
+                }}
+              />
+            );
           if (tab.id === 'favorites') return <FavoritesView favorites={favorites} />;
           return <p>{tab.label}</p>;
         }}
       </Sidebar>
 
       <main>
-        <SettingsModal viewer={viewer} />
+        <SettingsModal viewer={viewer} trash={trash} />
         <DocumentArea initial={documents} bodies={bodies} hashes={hashes} />
       </main>
 

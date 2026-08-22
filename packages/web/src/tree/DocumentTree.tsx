@@ -1,5 +1,6 @@
 import * as ContextMenu from '@radix-ui/react-context-menu';
-import { useState } from 'react';
+import { useMemo } from 'react';
+import { Tree, type NodeApi, type NodeRendererProps, type RowRendererProps } from 'react-arborist';
 
 import { acceptedDrop, type UploadRequest } from '../attachment/upload-contract.js';
 import {
@@ -8,6 +9,24 @@ import {
   type TreeNodeView,
   type WorkspaceTreeView,
 } from './tree-contract.js';
+
+/**
+ * 트리 한 줄이 담는 값.
+ *
+ * 워크스페이스도 여기 든다 — 트리의 최상위가 워크스페이스이고
+ * (`FR-WORKSPACE-003` AC-1), 하나의 모델로 다루지 않으면 최상위만
+ * 가상화에서 빠져 큰 인스턴스에서 그 줄들이 통째로 렌더된다.
+ */
+interface Row {
+  id: string;
+  name: string;
+  /** 워크스페이스 줄에는 없다 — 컨텍스트 메뉴가 서지 않는 자리다. */
+  node?: TreeNodeView;
+  children?: Row[];
+}
+
+const ROW_HEIGHT = 28;
+const TREE_HEIGHT = 640;
 
 /**
  * 한 노드의 컨텍스트 메뉴 (`FR-SHELL-003` AC-2 · AC-3).
@@ -42,73 +61,90 @@ function NodeMenu({ node, children }: { node: TreeNodeView; children: React.Reac
   );
 }
 
-/** 트리 한 줄. 디렉토리면 펼치기 버튼을 함께 낸다. */
+/**
+ * 트리 한 줄.
+ *
+ * `role="treeitem"` 과 `aria-level`·`aria-expanded` 는 **arborist 가**
+ * 바깥 래퍼에 이미 붙인다. 여기서 또 붙이면 같은 줄에 `treeitem` 이 둘이
+ * 되고, 접근성 트리가 실제 줄 수의 두 배를 보고한다.
+ */
 function TreeRow({
-  node,
-  depth,
+  row,
+  api,
   onUpload,
   onOpen,
 }: {
-  node: TreeNodeView;
-  depth: number;
+  row: Row;
+  api: NodeApi<Row>;
   onUpload?: (request: UploadRequest) => void;
   onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
 }) {
-  const [open, setOpen] = useState(false);
-  const expandable = node.kind === 'directory' && node.children.length > 0;
+  const node = row.node;
+  const expandable = !api.isLeaf;
 
   return (
-    <li role="none">
-      <NodeMenu node={node}>
-        <div
-          role="treeitem"
-          aria-level={depth}
-          aria-expanded={expandable ? open : undefined}
-          // 업로드는 **현재 화면에서 완결된다** (`FR-ATTACH-001` AC-3) —
-          // 별도 업로드 화면·모드로 보내지 않는다.
-          onDragOver={(event) => event.preventDefault()}
-          onDrop={(event) => {
-            event.preventDefault();
-            const accepted = acceptedDrop(node, [...event.dataTransfer.files]);
-            if (accepted.ok) onUpload?.(accepted.request);
-          }}
-        >
-          {expandable && (
-            <button type="button" onClick={() => setOpen((was) => !was)}>
-              {node.name} {open ? '접기' : '펼치기'}
-            </button>
-          )}
-          {node.kind === 'file' ? (
-            // 클릭은 활성 탭을 교체하고 `Ctrl`+클릭이 새 탭이다
-            // (`FR-SHELL-012` AC-1 · AC-2).
-            <button type="button" onClick={(event) => onOpen?.(node, event.ctrlKey || event.metaKey)}>
-              {node.name}
-            </button>
-          ) : (
-            <span>{node.name}</span>
-          )}
-        </div>
-      </NodeMenu>
-
-      {expandable && open && (
-        <ul role="group">
-          {node.children.map((child) => (
-            <TreeRow
-              key={child.id}
-              node={child}
-              depth={depth + 1}
-              onUpload={onUpload}
-              onOpen={onOpen}
-            />
-          ))}
-        </ul>
+    <div
+      // 업로드는 **현재 화면에서 완결된다** (`FR-ATTACH-001` AC-3) —
+      // 별도 업로드 화면·모드로 보내지 않는다.
+      onDragOver={(event) => event.preventDefault()}
+      onDrop={(event) => {
+        event.preventDefault();
+        if (node === undefined) return;
+        const accepted = acceptedDrop(node, [...event.dataTransfer.files]);
+        if (accepted.ok) onUpload?.(accepted.request);
+      }}
+    >
+      {expandable && (
+        <button type="button" onClick={() => api.toggle()}>
+          {row.name} {api.isOpen ? '접기' : '펼치기'}
+        </button>
       )}
-    </li>
+
+      {node?.kind === 'file' ? (
+        // 클릭은 활성 탭을 교체하고 `Ctrl`+클릭이 새 탭이다
+        // (`FR-SHELL-012` AC-1 · AC-2).
+        <button type="button" onClick={(event) => onOpen?.(node, event.ctrlKey || event.metaKey)}>
+          {row.name}
+        </button>
+      ) : (
+        <span>{row.name}</span>
+      )}
+    </div>
   );
 }
 
 /**
- * 좌측 문서 트리 (`FR-WORKSPACE-003`).
+ * 행 래퍼 — 컨텍스트 메뉴가 여기 붙는다.
+ *
+ * 줄 안쪽이 아니라 **행 전체**를 감싸는 이유는 사용자가 줄 어디를 우클릭해도
+ * 메뉴가 열려야 하기 때문이다. 안쪽에 붙이면 이름 글자 위에서만 열리고,
+ * 빈 여백을 눌렀을 때 아무 일도 안 일어난다.
+ *
+ * 워크스페이스 줄에는 서지 않는다 — 그 아홉 항목은 노드에 대한 조작이고,
+ * 워크스페이스는 노드가 아니다.
+ */
+function TreeRowWrapper({ node, innerRef, attrs, children }: RowRendererProps<Row>) {
+  const line = (
+    <div ref={innerRef} {...attrs}>
+      {children}
+    </div>
+  );
+
+  const view = node.data.node;
+  return view === undefined ? line : <NodeMenu node={view}>{line}</NodeMenu>;
+}
+
+const toRow = (node: TreeNodeView): Row => ({
+  id: node.id,
+  name: node.name,
+  node,
+  // 파일은 자식을 갖지 않는다. `undefined` 로 두어야 arborist 가 잎으로
+  // 보고 펼치기 버튼을 만들지 않는다.
+  ...(node.kind === 'directory' ? { children: node.children.map(toRow) } : {}),
+});
+
+/**
+ * 좌측 문서 트리 (`FR-WORKSPACE-003` · `CON-ARCH-004` AC-1).
  *
  * 접근 가능한 워크스페이스가 **동시에** 최상위로 선다(AC-1). 「현재
  * 워크스페이스」를 고르는 자리를 두지 않는다(AC-3) — 그 상태가 생기면
@@ -128,41 +164,52 @@ export function DocumentTree({
   onUpload?: (request: UploadRequest) => void;
   onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
 }) {
-  const [openWorkspaces, setOpenWorkspaces] = useState<ReadonlySet<string>>(
-    () => new Set(workspaces.map((entry) => entry.workspace.id)),
+  const rows = useMemo<Row[]>(
+    () =>
+      workspaces.map((entry) => ({
+        id: entry.workspace.id,
+        name: entry.workspace.name,
+        children: entry.roots.map(toRow),
+      })),
+    [workspaces],
   );
 
-  const toggle = (id: string) =>
-    setOpenWorkspaces((was) => {
-      const next = new Set(was);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
+  // 워크스페이스만 펼친 채로 시작한다 — 접근 가능한 것이 **동시에**
+  // 보여야 하고(`FR-WORKSPACE-003` AC-1), 그 아래까지 전부 펼치면 큰
+  // 인스턴스에서 첫 화면이 수천 줄이 된다.
+  const initialOpenState = useMemo(
+    () => Object.fromEntries(workspaces.map((entry) => [entry.workspace.id, true])),
+    [workspaces],
+  );
 
   return (
     <div>
       <button type="button">새 노트</button>
 
-      <ul role="tree" aria-label="문서 트리">
-        {workspaces.map((entry) => (
-          <li key={entry.workspace.id} role="none">
-            <div role="treeitem" aria-level={1} aria-expanded={openWorkspaces.has(entry.workspace.id)}>
-              <button type="button" onClick={() => toggle(entry.workspace.id)}>
-                {entry.workspace.name}
-              </button>
+      <div role="tree" aria-label="문서 트리">
+        <Tree<Row>
+          data={rows}
+          idAccessor="id"
+          openByDefault={false}
+          initialOpenState={initialOpenState}
+          height={TREE_HEIGHT}
+          rowHeight={ROW_HEIGHT}
+          // 화면 밖 줄을 그리지 않는 것이 이 패키지를 쓰는 이유다. 시험
+          // 환경은 높이를 못 재므로 넉넉히 잡아 전부 그리게 둔다 — 0 으로
+          // 접히면 목록이 통째로 사라지고, 그것은 「비어 있다」와 구별되지
+          // 않는다.
+          overscanCount={rows.length + 64}
+          disableDrag
+          disableDrop
+          renderRow={TreeRowWrapper}
+        >
+          {({ node, style }: NodeRendererProps<Row>) => (
+            <div style={style}>
+              <TreeRow row={node.data} api={node} onUpload={onUpload} onOpen={onOpen} />
             </div>
-
-            {openWorkspaces.has(entry.workspace.id) && (
-              <ul role="group">
-                {entry.roots.map((node) => (
-                  <TreeRow key={node.id} node={node} depth={2} onUpload={onUpload} onOpen={onOpen} />
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
-      </ul>
+          )}
+        </Tree>
+      </div>
     </div>
   );
 }

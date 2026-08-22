@@ -73,7 +73,8 @@ describe('앱 배선 — 화면이 서버에서 값을 받아 그린다', () => 
     const user = userEvent.setup();
     render(<App />);
 
-    await user.click(await screen.findByRole('button', { name: /회의록\.md/ }));
+    const sidebar = await screen.findByRole('complementary', { name: '좌측 사이드바' });
+    await user.click(await within(sidebar).findByRole('button', { name: /회의록\.md/ }));
 
     // 열린다는 것은 탭이 생기고 본문이 온다는 뜻이다.
     expect(await screen.findByRole('tab', { name: /회의록\.md/ })).toBeDefined();
@@ -84,7 +85,8 @@ describe('앱 배선 — 화면이 서버에서 값을 받아 그린다', () => 
     const user = userEvent.setup();
     render(<App />);
 
-    await user.click(await screen.findByRole('button', { name: /회의록\.md/ }));
+    const sidebar = await screen.findByRole('complementary', { name: '좌측 사이드바' });
+    await user.click(await within(sidebar).findByRole('button', { name: /회의록\.md/ }));
 
     await waitFor(() => expect(window.location.pathname).toBe('/d/n1'));
   });

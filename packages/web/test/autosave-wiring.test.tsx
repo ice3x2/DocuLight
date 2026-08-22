@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -49,7 +49,10 @@ afterEach(() => {
 async function openDocument() {
   const user = userEvent.setup();
   render(<App />);
-  await user.click(await screen.findByRole('button', { name: /회의록\.md/ }));
+  // 트리에서 연다 — 같은 이름의 버튼이 탭 스트립에도 생기므로, 사용자가
+  // 하듯 사이드바 안에서 고른다.
+  const sidebar = await screen.findByRole('complementary', { name: '좌측 사이드바' });
+  await user.click(await within(sidebar).findByRole('button', { name: /회의록\.md/ }));
   await waitFor(() => expect(document.querySelector('.cm-content')).not.toBeNull());
   return user;
 }

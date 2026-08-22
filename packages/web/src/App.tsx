@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { ApiError, fetchSession, fetchTree, loadDocument, type SessionBody } from './api/client.js';
+import { ApiError, fetchSession, fetchTree, fetchTrash, loadDocument, type SessionBody } from './api/client.js';
+import type { TrashRowView } from './trash/TrashPanel.js';
 import { PreAuthScreen } from './auth/PreAuthScreen.js';
 import { AppShell } from './shell/AppShell.js';
 import type { Viewer } from './shell/shell-contract.js';
@@ -44,6 +45,7 @@ export function App() {
   // 본문과 그 **기준 해시**를 함께 들고 있는다 — 저장 요청이 해시를
   // 실어야 충돌이 판정되고, 둘이 갈리면 그 판정이 남의 본문을 근거로 한다.
   const [hashes, setHashes] = useState<Readonly<Record<string, string>>>({});
+  const [trash, setTrash] = useState<readonly TrashRowView[]>([]);
 
   useEffect(() => {
     void (async () => {
@@ -51,6 +53,10 @@ export function App() {
         const body: SessionBody = await fetchSession();
         setSession({ state: 'signed-in', viewer: body });
         setWorkspaces(await fetchTree<WorkspaceTreeView[]>());
+        // 휴지통은 전 워크스페이스 통합이라 트리와 별개로 받는다
+        // (`FR-SHELL-007` AC-3). 실패해도 셸은 서야 한다 — 휴지통 하나가
+        // 안 온다고 앱을 못 쓰게 만들 이유가 없다.
+        setTrash(await fetchTrash<TrashRowView[]>({ scope: 'mine' }).catch(() => []));
       } catch (error) {
         // 401 만 익명이다. 다른 실패를 익명으로 접으면 서버가 잠깐 죽은
         // 것과 로그아웃이 구별되지 않아 사용자가 다시 로그인하게 된다.
@@ -108,6 +114,7 @@ export function App() {
       documents={documents}
       bodies={bodies}
       hashes={hashes}
+      trash={trash}
       onOpen={open}
     />
   );

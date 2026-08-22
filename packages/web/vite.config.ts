@@ -54,6 +54,10 @@ export default defineConfig(({ mode }) => {
     environment: 'happy-dom',
     globals: true,
     include: ['test/**/*.test.{ts,tsx}'],
+    // 가상화 부품(`react-arborist` · `@tanstack/react-virtual`)이 창을
+    // 잴 수 있게 한다. happy-dom 은 레이아웃을 하지 않아 크기가 전부 0 이고,
+    // 그러면 두 부품이 아무 줄도 그리지 않아 시험이 제품을 관측하지 못한다.
+    setupFiles: ['./test/setup.ts'],
   },
   };
 });
