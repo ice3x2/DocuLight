@@ -85,9 +85,29 @@ describe('FR-SHELL-007 — 휴지통은 접근 가능한 전 워크스페이스�
 
   it('AC-6: 관리 권한이 없으면 본인이 삭제한 것만 보인다', async () => {
     grantPermission(stores, root, { nodeId: plan, principalId: me.id, level: 'edit' });
+    const mine = await place(plan, '내가지운.md');
     await moveToTrash(stores, root, planDoc); // 남이 지운 것
+    await moveToTrash(stores, actorFor(stores.principals, me.id), mine);
 
-    expect(view(actorFor(stores.principals, me.id))).toEqual([]);
+    // 본인 것이 **남고** 남의 것이 빠지는 두 방향을 함께 잰다 — 빈 목록만
+    // 단언하면 목록이 통째로 죽어도 이 시험은 통과한다.
+    expect(view(actorFor(stores.principals, me.id)).map((r) => r.nodeId)).toEqual([mine]);
+  });
+
+  it('AC-6: 판정은 목록 전체가 아니라 행마다 그 행의 워크스페이스를 기준으로 한다', async () => {
+    // 한 사용자가 A 의 관리자이면서 B 의 편집자다. 사용자 단위로 한 번
+    // 판정해 목록 전체에 적용하면 이 조항이 깨진다 — A 의 남이 지운 것까지
+    // 가려지거나, B 의 남이 지운 것까지 열린다.
+    grantPermission(stores, root, { nodeId: plan, principalId: me.id, level: 'admin' });
+    grantPermission(stores, root, { nodeId: hr, principalId: me.id, level: 'edit' });
+    const hrMine = await place(hr, '내인사.md');
+    await moveToTrash(stores, root, planDoc); // A — 남이 지운 것
+    await moveToTrash(stores, root, hrDoc); // B — 남이 지운 것
+    await moveToTrash(stores, actorFor(stores.principals, me.id), hrMine);
+
+    const rows = view(actorFor(stores.principals, me.id), { scope: 'all' });
+
+    expect(rows.map((r) => r.nodeId).sort()).toEqual([planDoc, hrMine].sort());
   });
 
   it('AC-5: 관리자는 전체 범위로 남이 지운 것까지 본다', async () => {

@@ -148,9 +148,14 @@ describe('FR-EDITOR-007 AC-10 · AC-11 — 본문 태그', () => {
   });
 
   it('AC-12: 프론트매터의 태그는 칩이 되지 않는다', () => {
-    const host = mount('---\ntags: [회의]\n---\n\n본문');
+    // 프론트매터 쪽에는 `#` 을 실제로 넣고 본문 쪽에도 하나 둔다 — `#` 이
+    // 없는 예시로는 프론트매터 제외를 지워도 통과해서 아무것도 재지 못하고,
+    // 본문 태그가 함께 없으면 칩이 0개인 이유가 「제외했다」인지 「태그
+    // 데코레이션이 죽었다」인지 갈리지 않는다.
+    const host = mount('---\ntags: #회의\n---\n\n본문의 #실제태그');
 
-    expect(host.querySelector('.dl-tag')).toBeNull();
+    const chips = [...host.querySelectorAll('.dl-tag')].map((one) => one.textContent);
+    expect(chips).toEqual(['#실제태그']);
   });
 });
 

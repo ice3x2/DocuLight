@@ -59,6 +59,15 @@ describe('FR-EDITOR-007 AC-12 — 프론트매터의 태그는 본문 데코레�
     expect(names(DOC)).toEqual(['실제태그']);
   });
 
+  it('프론트매터에 `#` 이 붙은 태그가 있어도 찾지 않는다', () => {
+    // `tags: [회의]` 처럼 `#` 이 없는 예시로는 이 조항을 잴 수 없다 —
+    // 프론트매터 제외를 통째로 지워도 통과하기 때문이다. `#` 을 실제로
+    // 넣어야 두 판정이 갈린다.
+    const withHash = ['---', 'tags: #회의', '---', '', '본문의 #실제태그'].join('\n');
+
+    expect(names(withHash)).toEqual(['실제태그']);
+  });
+
   it('프론트매터가 없으면 첫 줄도 본문이다', () => {
     expect(isFrontmatterRange('# 제목\n\n#태그', 0)).toBe(false);
     expect(names('# 제목\n\n#태그')).toEqual(['태그']);
