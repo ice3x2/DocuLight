@@ -13,6 +13,7 @@ import { FsTrashFiles } from '../../src/infra/fs/trash-files.js';
 import { SqliteNodeRepository } from '../../src/infra/sqlite/node-repository.js';
 import { SqliteAttachmentRepository } from '../../src/infra/sqlite/attachment-repository.js';
 import { SqliteFavoriteRepository } from '../../src/infra/sqlite/favorite-repository.js';
+import { SqlitePersonalSettingStore } from '../../src/infra/sqlite/personal-setting-store.js';
 import { SqliteTrashRepository } from '../../src/infra/sqlite/trash-repository.js';
 import { SqliteVersionRepository } from '../../src/infra/sqlite/version-repository.js';
 import { SqlitePrincipalRepository } from '../../src/infra/sqlite/principal-repository.js';
@@ -99,12 +100,13 @@ export function attachmentStores(
   db: Database,
   docsRoot: string,
   clock: () => Date = () => new Date(),
-): AttachmentStores & TrashStores & FavoriteStores {
+): AttachmentStores & TrashStores & FavoriteStores & { personalSettings: SqlitePersonalSettingStore } {
   // 휴지통까지 함께 세운다 — 영구 삭제가 첨부를 걷으므로(FR-ATTACH-005)
   // 그 축을 재려면 두 저장소가 같은 자리에 있어야 한다.
   return {
     ...documentStores(db, docsRoot, clock),
     ...trashStores(db, docsRoot, clock),
     favorites: new SqliteFavoriteRepository(db),
+    personalSettings: new SqlitePersonalSettingStore(db),
   };
 }

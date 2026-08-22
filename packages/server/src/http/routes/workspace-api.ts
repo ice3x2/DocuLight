@@ -30,6 +30,12 @@ import {
 } from '../../app/favorite/favorite-service.js';
 import { createNode } from '../../app/node/node-service.js';
 import { searchPrincipals } from '../../app/principal/principal-search-service.js';
+import {
+  PERSONAL_SETTING_KEYS,
+  readPersonalSetting,
+  writePersonalSettings,
+} from '../../app/settings/personal-settings.js';
+import type { PersonalSettingStore } from '../../domain/ports/personal-setting-store.js';
 import { uploadNewVersion, warnsIrreversible } from '../../app/document/new-version.js';
 import { noticeFor } from '../../domain/node/collision-notice.js';
 import { linksOf, wikiTargets } from '../../app/document/link-service.js';
@@ -61,7 +67,7 @@ import { RESOURCE_DIRECTORY } from '../../domain/attachment/resource-layout.js';
  * 저장 충돌은 **409**. 그 밖의 사유를 만들지 않는다.
  */
 export interface WorkspaceApiDeps {
-  stores: AttachmentStores & TrashStores & FavoriteStores;
+  stores: AttachmentStores & TrashStores & FavoriteStores & { personalSettings: PersonalSettingStore };
   /**
    * 이 요청을 누구로 볼 것인가. 세울 수 없으면 `undefined`.
    *
@@ -629,6 +635,45 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     // 화면 재량을 막기 전에 아무나 값을 바꿀 수 있는 문이 열린다
     // (`SEC-PRINCIPAL-003` AC-4).
     res.json(searchPrincipals(stores.principals, one(req.query.q) ?? ''));
+  });
+
+  /**
+   * 이 요청자의 개인 설정 (`DR-SHELL-002` · `IR-SHELL-004`).
+   *
+   * **세 값을 한 번에 준다.** 항목마다 따로 물으면 화면이 세 번 왕복하고,
+   * 그 사이에 하나만 바뀐 상태를 그리게 된다.
+   *
+   * 인증 없이는 없다 — 개인 설정의 키가 (사용자, 항목) 쌍이라 주체가
+   * 없으면 읽을 행 자체가 정해지지 않는다.
+   */
+  router.get('/personal-settings', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    res.json(
+      Object.fromEntries(
+        PERSONAL_SETTING_KEYS.map((key) => [
+          key,
+          readPersonalSetting(stores.personalSettings, actor.id, key),
+        ]),
+      ),
+    );
+  });
+
+  router.patch('/personal-settings', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    // 모르는 키·값은 예외가 아니라 **예상되는 입력**이다 — 오래된 화면이
+    // 그대로 보내고, 그것을 500 으로 답하면 서버 결함처럼 읽힌다.
+    const saved = writePersonalSettings(stores.personalSettings, actor.id, req.body ?? {});
+    res.sendStatus(saved.ok ? 204 : 400);
   });
 
   router.get('/wiki-targets', (req, res) => {

@@ -121,6 +121,67 @@ export const INSTANCE_SETTINGS: readonly string[] = INSTANCE_SETTING_FIELDS.map(
 );
 
 /**
+ * `에디터`·`외모(테마)` 두 카테고리가 담는 개인 설정 (`IR-SHELL-004`).
+ *
+ * **셋이 전량이다.** 넷째를 더하기 전에 `IR-SHELL-004` 와 원장 `R152` 를
+ * 먼저 고쳐라 — 자동 저장 지연은 `R75` 가 제품 상수로 정했고, 글꼴과 글자
+ * 크기는 근거 조항이 없다.
+ *
+ * 저장 소재는 이 목록이 정하지 않는다 — `DR-SHELL-002` 로 (사용자, 항목)
+ * 쌍의 DB 행이며, 서버가 같은 키·같은 허용값을 정본으로 든다. 여기 목록은
+ * **그리기 위한 것**이고 값을 거절하는 자리는 서버다.
+ */
+export interface PersonalSettingField {
+  key: string;
+  label: string;
+  category: 'editor' | 'appearance';
+  options: readonly { value: string; label: string }[];
+  fallback: string;
+}
+
+export const PERSONAL_SETTING_FIELDS: readonly PersonalSettingField[] = [
+  {
+    key: 'default-view-mode',
+    label: '기본 열람 모드',
+    category: 'editor',
+    options: [
+      { value: 'view', label: '보기' },
+      { value: 'edit', label: '편집' },
+    ],
+    // 틀렸을 때 한쪽은 클릭 한 번이고 다른 쪽은 무버튼 자동 저장이 켜진
+    // 화면이라 의도치 않은 쓰기다 — 대가가 비대칭이라 `보기` 가 기본이다.
+    fallback: 'view',
+  },
+  {
+    key: 'default-edit-subview',
+    label: '편집 모드 기본 하위 뷰',
+    category: 'editor',
+    options: [
+      { value: 'live-preview', label: '라이브 프리뷰' },
+      { value: 'source', label: '소스' },
+    ],
+    fallback: 'live-preview',
+  },
+  {
+    key: 'theme',
+    label: '테마',
+    category: 'appearance',
+    options: [
+      { value: 'light', label: '라이트' },
+      { value: 'dark', label: '다크' },
+      { value: 'system', label: '시스템' },
+    ],
+    fallback: 'system',
+  },
+];
+
+/** 그 카테고리가 담는 항목들. 화면이 목록을 다시 손으로 적지 않게 한다. */
+export const personalFieldsOf = (
+  category: PersonalSettingField['category'],
+): PersonalSettingField[] =>
+  PERSONAL_SETTING_FIELDS.filter((field) => field.category === category);
+
+/**
  * 이 요청자에게 보이는 카테고리들.
  *
  * 슈퍼유저 우회를 여기서 넓히지 않는다 — 휴지통의 조건은 「접근 가능한

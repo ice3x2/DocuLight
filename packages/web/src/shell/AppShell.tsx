@@ -12,6 +12,7 @@ import type { UploadRequest } from '../attachment/upload-contract.js';
 import { EmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
+import { PersonalSettings } from '../settings/PersonalSettings.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
@@ -96,17 +97,22 @@ function SettingsModal({
   trash = [],
   workspaces = [],
   trashLens,
+  personalSettings = {},
   onTrashLens,
   onTrashPurge,
   onTrashRestore,
+  onPersonalSetting,
 }: {
   viewer: Viewer;
   trash?: readonly TrashRowView[];
   workspaces?: readonly { id: string; name: string }[];
   trashLens?: TrashLens;
+  /** 이 사용자의 개인 설정 (`DR-SHELL-002`). 없는 항목은 기본값으로 그린다. */
+  personalSettings?: Readonly<Record<string, string>>;
   onTrashLens?: (lens: TrashLens) => void;
   onTrashPurge?: (nodeId: string) => void;
   onTrashRestore?: (nodeId: string) => void;
+  onPersonalSetting?: (key: string, value: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const titleId = useId();
@@ -157,6 +163,15 @@ function SettingsModal({
                   />
                 ) : category.id === 'instance' ? (
                   <InstanceSettings />
+                ) : category.id === 'editor' || category.id === 'appearance' ? (
+                  // 두 카테고리가 담는 것은 `IR-SHELL-004` 가 정한 셋뿐이다.
+                  // 목록을 여기서 손으로 적지 않는 이유는, 적는 순간 계약과
+                  // 화면이 두 벌이 되어 한쪽만 고쳐지기 때문이다.
+                  <PersonalSettings
+                    category={category.id}
+                    values={personalSettings}
+                    {...(onPersonalSetting === undefined ? {} : { onPick: onPersonalSetting })}
+                  />
                 ) : category.id === 'account' ? (
                   // 계정 카테고리가 담기로 확정된 두 조작 (`IR-SHELL-002` AC-3).
                   <>
@@ -202,9 +217,11 @@ export function AppShell({
   hits = [],
   trash = [],
   trashLens,
+  personalSettings = {},
   onTrashLens,
   onTrashPurge,
   onTrashRestore,
+  onPersonalSetting,
   query = '',
   onQuery,
   onOpen,
@@ -246,6 +263,14 @@ export function AppShell({
   onTrashPurge?: (nodeId: string) => void;
   /** 그 항목을 되돌린다 (`FR-SHELL-007`). */
   onTrashRestore?: (nodeId: string) => void;
+  /**
+   * 이 사용자의 개인 설정 (`IR-SHELL-004` · `DR-SHELL-002`).
+   *
+   * 정본은 서버의 (사용자, 항목) 행이다 — 셸이 값을 들고 있으면 화면과
+   * 서버가 갈리고, 갈린 뒤에는 새로고침해야 어느 쪽이 옳은지 알 수 있다.
+   */
+  personalSettings?: Readonly<Record<string, string>>;
+  onPersonalSetting?: (key: string, value: string) => void;
   /** 좌측 검색 탭의 질의. 태그 클릭도 이 값을 채운다. */
   query?: string;
   onQuery?: (query: string) => void;
@@ -366,6 +391,8 @@ export function AppShell({
           {...(onTrashLens === undefined ? {} : { onTrashLens })}
           {...(onTrashPurge === undefined ? {} : { onTrashPurge })}
           {...(onTrashRestore === undefined ? {} : { onTrashRestore })}
+          personalSettings={personalSettings}
+          {...(onPersonalSetting === undefined ? {} : { onPersonalSetting })}
         />
         {notice !== undefined && (
           // `status` 인 이유는 이것이 사용자의 조작을 막지 않기 때문이다 —

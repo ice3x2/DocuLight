@@ -32,6 +32,7 @@ import { SqlitePrincipalRepository } from './infra/sqlite/principal-repository.j
 import { BcryptPasswordHasher } from './infra/crypto/bcrypt-hasher.js';
 import { SqliteSessionRepository } from './infra/sqlite/session-repository.js';
 import { SqliteSettingStore } from './infra/sqlite/setting-store.js';
+import { SqlitePersonalSettingStore } from './infra/sqlite/personal-setting-store.js';
 import { SqliteTrashRepository } from './infra/sqlite/trash-repository.js';
 import { SqliteVersionRepository } from './infra/sqlite/version-repository.js';
 import { SqliteWorkspaceRepository } from './infra/sqlite/workspace-repository.js';
@@ -86,7 +87,7 @@ export interface ServerRuntime {
 }
 
 /** 라우트가 필요로 하는 저장소의 합집합. */
-type RuntimeStores = AttachmentStores &
+type RuntimeStores = { personalSettings: SqlitePersonalSettingStore } & AttachmentStores &
   TrashStores &
   FavoriteStores &
   Parameters<typeof authRouter>[0] & {
@@ -124,6 +125,7 @@ export async function bootstrap(config: ServerConfig): Promise<ServerRuntime> {
     sessions: new SqliteSessionRepository(db),
     passwords: new BcryptPasswordHasher(),
     settings: new SqliteSettingStore(db),
+    personalSettings: new SqlitePersonalSettingStore(db),
     versions: new SqliteVersionRepository(db),
     attachments: new SqliteAttachmentRepository(db),
     favorites: new SqliteFavoriteRepository(db),

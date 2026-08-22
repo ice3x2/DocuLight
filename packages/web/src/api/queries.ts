@@ -3,6 +3,7 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import {
   fetchFavorites,
   fetchLinks,
+  fetchPersonalSettings,
   fetchSession,
   fetchTrash,
   fetchTree,
@@ -32,6 +33,7 @@ export const QUERY_KEYS = {
   favorites: ['favorites'] as const,
   trash: (scope: 'mine' | 'all', workspaceId?: string) => ['trash', scope, workspaceId] as const,
   links: (nodeId: string) => ['links', nodeId] as const,
+  personalSettings: ['personal-settings'] as const,
   document: (nodeId: string) => ['document', nodeId] as const,
 };
 
@@ -46,6 +48,12 @@ export const useSession = (): UseQueryResult<SessionBody> =>
 
 export const useTree = (enabled: boolean): UseQueryResult<WorkspaceTreeView[]> =>
   useQuery({ queryKey: QUERY_KEYS.tree, queryFn: () => fetchTree<WorkspaceTreeView[]>(), enabled });
+
+/** 이 사용자의 개인 설정. 로그인 전에는 읽을 행이 정해지지 않는다. */
+export const usePersonalSettings = (
+  enabled: boolean,
+): UseQueryResult<Record<string, string>> =>
+  useQuery({ queryKey: QUERY_KEYS.personalSettings, queryFn: fetchPersonalSettings, enabled });
 
 export const useFavorites = (enabled: boolean): UseQueryResult<FavoriteRow[]> =>
   useQuery({ queryKey: QUERY_KEYS.favorites, queryFn: fetchFavorites, enabled });

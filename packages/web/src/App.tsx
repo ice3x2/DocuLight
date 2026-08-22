@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   ApiError,
   addFavorite,
+  savePersonalSetting,
   createNode,
   loadDocument,
   uploadAttachment,
@@ -15,6 +16,7 @@ import {
 import {
   QUERY_KEYS,
   useFavorites,
+  usePersonalSettings,
   useLinks,
   useSession,
   useTrash,
@@ -136,6 +138,7 @@ function AppBody() {
   // 온다고 앱을 못 쓰게 만들 이유가 없다.
   const trash = useTrash(trashLens, signedIn);
   const favorites = useFavorites(signedIn);
+  const personal = usePersonalSettings(signedIn);
   const links = useLinks(documents.activeId);
 
   /**
@@ -285,6 +288,20 @@ function AppBody() {
   );
 
   /**
+   * 개인 설정 하나를 바꾼다 (`IR-SHELL-004` · `DR-SHELL-002`).
+   *
+   * 쓴 뒤 다시 받는다 — 화면이 고른 값을 자기 상태로 복사해 두면 서버가
+   * 거절했을 때(모르는 키·값) 화면만 바뀐 채 남는다.
+   */
+  const pickPersonalSetting = useCallback(
+    async (key: string, value: string) => {
+      await savePersonalSetting(key, value).catch(() => undefined);
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.personalSettings });
+    },
+    [queries],
+  );
+
+  /**
    * 기존 파일에 새 버전을 올린다 (`FR-SHELL-008` AC-2).
    *
    * 올린 뒤 그 문서를 무효화한다 — 열려 있는 탭이 옛 본문을 들고 있으면
@@ -404,6 +421,8 @@ function AppBody() {
       onTrashLens={setTrashLens}
       onTrashPurge={purgeTrash}
       onTrashRestore={restoreTrash}
+      personalSettings={personal.data ?? {}}
+      onPersonalSetting={pickPersonalSetting}
       favorites={favorites.data ?? []}
       links={links.data ?? { outgoing: [], backlinks: [] }}
       query={query}

@@ -177,6 +177,22 @@ export interface PrincipalRow {
   status: PrincipalStatus;
 }
 
+/**
+ * 이 사용자의 개인 설정 (`DR-SHELL-002` · `IR-SHELL-004`).
+ *
+ * 세 값을 한 번에 받는다 — 항목마다 왕복하면 그 사이에 하나만 바뀐 상태를
+ * 그리게 된다.
+ */
+export const fetchPersonalSettings = () =>
+  call<Record<string, string>>('/personal-settings');
+
+export const savePersonalSetting = (key: string, value: string) =>
+  call<void>('/personal-settings', {
+    method: 'PATCH',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ [key]: value }),
+  });
+
 export const fetchPrincipals = (query: string) =>
   call<PrincipalRow[]>(`/principals?q=${encodeURIComponent(query)}`);
 

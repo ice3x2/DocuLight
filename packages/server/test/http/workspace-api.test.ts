@@ -613,6 +613,44 @@ describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
     expect(shorter.body).toEqual([]);
   });
 
+  it('DR-SHELL-002 AC-1 · AC-3: 개인 설정을 쓰면 그 사용자에게만 그 값이 나온다', async () => {
+    actingAs = me;
+
+    const wrote = await request(app)
+      .patch('/api/personal-settings')
+      .send({ theme: 'dark', 'default-view-mode': 'edit' });
+    const mine = await request(app).get('/api/personal-settings');
+    actingAs = root;
+    const others = await request(app).get('/api/personal-settings');
+
+    expect(wrote.status).toBe(204);
+    expect(mine.body).toEqual({
+      theme: 'dark',
+      'default-view-mode': 'edit',
+      'default-edit-subview': 'live-preview',
+    });
+    // 다른 사용자에게는 기본값이 그대로다 — 전역 평면 맵이면 여기가 dark 다.
+    expect(others.body).toEqual({
+      theme: 'system',
+      'default-view-mode': 'view',
+      'default-edit-subview': 'live-preview',
+    });
+  });
+
+  it('DR-SHELL-002 AC-6: 열거에 없는 키와 값은 거절된다', async () => {
+    actingAs = me;
+
+    expect((await request(app).patch('/api/personal-settings').send({ 'font-size': '14' })).status).toBe(400);
+    expect((await request(app).patch('/api/personal-settings').send({ theme: 'sepia' })).status).toBe(400);
+  });
+
+  it('DR-SHELL-002: 인증되지 않은 요청에는 개인 설정이 없다', async () => {
+    actingAs = undefined;
+
+    expect((await request(app).get('/api/personal-settings')).status).toBe(401);
+    expect((await request(app).patch('/api/personal-settings').send({ theme: 'dark' })).status).toBe(401);
+  });
+
   it('SEC-PRINCIPAL-002 AC-3: rejected 계정은 나오지 않는다', async () => {
     const 거절된 = stores.principals.createUser('검색대상거절');
     stores.principals.setStatus(거절된.id, 'rejected');
