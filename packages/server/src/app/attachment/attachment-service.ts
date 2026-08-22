@@ -56,6 +56,14 @@ interface IndexEntry {
   ownerNodeId: string;
   /** 소유한 문서 전부 — 같은 바이트를 두 문서에 올릴 수 있다. */
   owners?: readonly string[];
+  /**
+   * 소유 문서마다의 원본 파일명 (`DR-ATTACH-002` AC-5 · `R149-g`).
+   *
+   * **해시 단위가 아니라 문서 단위다** — 같은 바이트를 두 사람이 각자의
+   * 이름으로 올릴 수 있고, 해시 하나에 이름 하나만 두면 볼 수 없는 문서가
+   * 붙인 이름이 볼 수 있는 문서 아래로 샌다.
+   */
+  originalNames?: Readonly<Record<string, string>>;
   extension: string;
   size: number;
   createdAt: string;
@@ -107,6 +115,8 @@ export async function attachToDocument(
     extension,
     size: input.bytes.byteLength,
     createdAt: stores.clock().toISOString(),
+    // 디스크 이름은 해시라(`R50`) 여기서 안 잡으면 되살릴 수 없다.
+    originalName: input.fileName,
   };
 
   await mkdir(dirname(path), { recursive: true });
@@ -120,6 +130,7 @@ export async function attachToDocument(
   index[hash] = {
     ownerNodeId: before?.ownerNodeId ?? record.ownerNodeId,
     owners: [...owners],
+    originalNames: { ...before?.originalNames, [record.ownerNodeId]: record.originalName },
     extension: record.extension,
     size: record.size,
     createdAt: before?.createdAt ?? record.createdAt,
@@ -191,6 +202,9 @@ export async function purgeAttachmentsOf(
       index[record.hash] = {
         ownerNodeId: remaining[0]!.ownerNodeId,
         owners: remaining.map((r) => r.ownerNodeId),
+        originalNames: Object.fromEntries(
+          remaining.map((r) => [r.ownerNodeId, r.originalName]),
+        ),
         extension: remaining[0]!.extension,
         size: remaining[0]!.size,
         createdAt: remaining[0]!.createdAt,
@@ -217,6 +231,9 @@ export async function rebuildAttachmentIndex(
         extension: entry.extension,
         size: entry.size,
         createdAt: entry.createdAt,
+        // 옛 사이드카에는 이름이 없다. 되살릴 수 없으므로 비워 둔다 —
+        // 지어내면 그것이 사실로 읽힌다.
+        originalName: entry.originalNames?.[ownerNodeId] ?? '',
       })),
     ),
   );

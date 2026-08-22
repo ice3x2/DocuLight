@@ -7,6 +7,14 @@ export interface AttachmentRecord {
   extension: string;
   size: number;
   createdAt: string;
+  /**
+   * 올린 사람이 준 이름 (`DR-ATTACH-002` AC-4 · `R149-g`).
+   *
+   * 디스크 이름은 해시라(`R50`) 이 값을 업로드 시점에 잡지 않으면 **되살릴
+   * 수 없다.** 소유 문서마다 다를 수 있다 — 같은 바이트를 두 사람이 각자의
+   * 이름으로 올린 경우다.
+   */
+  originalName: string;
 }
 
 export interface AttachmentRepository {

@@ -11,9 +11,10 @@ interface Row {
   extension: string;
   size: number;
   created_at: string;
+  original_name: string;
 }
 
-const COLUMNS = 'workspace_id, hash, owner_node_id, extension, size, created_at';
+const COLUMNS = 'workspace_id, hash, owner_node_id, extension, size, created_at, original_name';
 
 const toRecord = (row: Row): AttachmentRecord => ({
   workspaceId: row.workspace_id,
@@ -22,6 +23,7 @@ const toRecord = (row: Row): AttachmentRecord => ({
   extension: row.extension,
   size: row.size,
   createdAt: row.created_at,
+  originalName: row.original_name,
 });
 
 /** 첨부 소유의 SQLite 어댑터. 정본이 아니라 `.res/index.json` 의 캐시다. */
@@ -30,11 +32,12 @@ export class SqliteAttachmentRepository implements AttachmentRepository {
 
   add(record: AttachmentRecord): void {
     this.store.run(
-      `INSERT INTO attachment (${COLUMNS}) VALUES (?, ?, ?, ?, ?, ?)
+      `INSERT INTO attachment (${COLUMNS}) VALUES (?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT (workspace_id, hash, owner_node_id) DO UPDATE SET
          extension = excluded.extension,
          size = excluded.size,
-         created_at = excluded.created_at`,
+         created_at = excluded.created_at,
+         original_name = excluded.original_name`,
       [
         record.workspaceId,
         record.hash,
@@ -42,6 +45,7 @@ export class SqliteAttachmentRepository implements AttachmentRepository {
         record.extension,
         record.size,
         record.createdAt,
+        record.originalName,
       ],
     );
   }
