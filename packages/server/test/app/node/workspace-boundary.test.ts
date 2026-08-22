@@ -5,15 +5,15 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { actorFor, permissionOf, type Actor } from '../../../src/app/acl/permission-service.js';
 import { grantPermission } from '../../../src/app/acl/grant-service.js';
-import { copyNode, createNode, moveNode, type NodeStores } from '../../../src/app/node/node-service.js';
+import { copyNode, createNode, moveNode } from '../../../src/app/node/node-service.js';
 import { createWorkspace } from '../../../src/app/workspace/create-workspace.js';
 import { FsWorkspaceFiles } from '../../../src/infra/fs/workspace-sidecar.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
-import { nodeStores, superuserActor } from '../../support/acl-fixture.js';
+import { attachmentStores, superuserActor } from '../../support/acl-fixture.js';
 
 let dir: string;
 let db: Database;
-let stores: NodeStores;
+let stores: ReturnType<typeof attachmentStores>;
 let root: Actor;
 let a: string;
 let b: string;
@@ -28,7 +28,7 @@ beforeEach(async () => {
   const docsRoot = join(dir, 'docs');
   await mkdir(docsRoot, { recursive: true });
   db = openDatabase(join(dir, 'doculight.db'));
-  stores = nodeStores(db);
+  stores = attachmentStores(db, docsRoot);
   root = superuserActor(stores);
   const files = new FsWorkspaceFiles(docsRoot);
   a = (await createWorkspace({ workspaces: stores.workspaces, files }, '기획팀')).id;
@@ -104,11 +104,11 @@ describe('SEC-ACL-006 · SEC-ACL-014 — 거부는 던지지 않고 값으로 �
     expect((outcome as { ok: boolean }).ok).toBe(false);
   });
 
-  it('SEC-ACL-006 AC-4: 세 진입점이 같은 입력에 같은 사유를 쓴다', () => {
+  it('SEC-ACL-006 AC-4: 세 진입점이 같은 입력에 같은 사유를 쓴다', async () => {
     // 실행자 레벨이나 진입점에 따라 응답의 **종류**가 갈리면 그 차이가
     // 존재 여부를 알려준다.
     const moved = moveNode(stores, root, doc, 'no-such-parent');
-    const copied = copyNode(stores, root, doc, 'no-such-parent');
+    const copied = await copyNode(stores, root, doc, { parentId: 'no-such-parent' });
     const created = createNode(stores, root, {
       workspaceId: a,
       parentId: 'no-such-parent',

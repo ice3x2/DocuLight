@@ -11,12 +11,11 @@ import { setAccountStatus } from '../../../src/app/principal/principal-service.j
 import { SqliteSessionRepository } from '../../../src/infra/sqlite/session-repository.js';
 import { FsWorkspaceFiles } from '../../../src/infra/fs/workspace-sidecar.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
-import { nodeStores, superuserActor } from '../../support/acl-fixture.js';
-import type { NodeStores } from '../../../src/app/node/node-service.js';
+import { attachmentStores, superuserActor } from '../../support/acl-fixture.js';
 
 let dir: string;
 let db: Database;
-let stores: NodeStores;
+let stores: ReturnType<typeof attachmentStores>;
 let files: FsWorkspaceFiles;
 let root: Actor;
 let me: Actor;
@@ -31,7 +30,7 @@ beforeEach(async () => {
   const docsRoot = join(dir, 'docs');
   await mkdir(docsRoot, { recursive: true });
   db = openDatabase(join(dir, 'doculight.db'));
-  stores = nodeStores(db);
+  stores = attachmentStores(db, docsRoot);
   files = new FsWorkspaceFiles(docsRoot);
   root = superuserActor(stores);
   me = newActor('한범');
@@ -133,8 +132,8 @@ describe('SEC-ACL-014 — 워크스페이스 경계를 넘는 이동은 차단�
     expect(stores.nodes.findById(doc)?.workspaceId).toBe(a);
   });
 
-  it('AC-2 · AC-3: 다른 워크스페이스로의 복사는 허용된다', () => {
-    const copied = copyNode(stores, me, doc, bRoot);
+  it('AC-2 · AC-3: 다른 워크스페이스로의 복사는 허용된다', async () => {
+    const copied = await copyNode(stores, me, doc, { parentId: bRoot });
 
     expect(copied.ok).toBe(true);
     expect(stores.nodes.findById(idOf(copied))?.workspaceId).toBe(b);
@@ -142,32 +141,32 @@ describe('SEC-ACL-014 — 워크스페이스 경계를 넘는 이동은 차단�
     expect(stores.nodes.findById(doc)).toBeDefined();
   });
 
-  it('AC-3: 복사는 원본의 보기와 대상 디렉토리의 편집을 요구한다', () => {
+  it('AC-3: 복사는 원본의 보기와 대상 디렉토리의 편집을 요구한다', async () => {
     const you = newActor('다른이');
     // 원본만 보기 — 목적지가 비었으므로 거부.
     grantPermission(stores, root, { nodeId: doc, principalId: you.id, level: 'view' });
-    expect(copyNode(stores, you, doc, bRoot).ok).toBe(false);
+    expect((await copyNode(stores, you, doc, { parentId: bRoot })).ok).toBe(false);
 
     grantPermission(stores, root, { nodeId: bRoot, principalId: you.id, level: 'edit' });
-    expect(copyNode(stores, you, doc, bRoot).ok).toBe(true);
+    expect((await copyNode(stores, you, doc, { parentId: bRoot })).ok).toBe(true);
   });
 
-  it('AC-4: 워크스페이스 내부 복사도 같은 권한 규칙을 따른다', () => {
+  it('AC-4: 워크스페이스 내부 복사도 같은 권한 규칙을 따른다', async () => {
     const inner = idOf(createNode(stores, me, { workspaceId: a, parentId: null, kind: 'directory', name: '보관' }));
     const you = newActor('다른이');
 
-    expect(copyNode(stores, you, doc, inner).ok).toBe(false);
+    expect((await copyNode(stores, you, doc, { parentId: inner })).ok).toBe(false);
     grantPermission(stores, root, { nodeId: doc, principalId: you.id, level: 'view' });
     grantPermission(stores, root, { nodeId: inner, principalId: you.id, level: 'edit' });
-    expect(copyNode(stores, you, doc, inner).ok).toBe(true);
+    expect((await copyNode(stores, you, doc, { parentId: inner })).ok).toBe(true);
   });
 
-  it('SEC-ACL-011 AC-5: 복사본의 생성자는 복사를 실행한 사용자다', () => {
+  it('SEC-ACL-011 AC-5: 복사본의 생성자는 복사를 실행한 사용자다', async () => {
     const you = newActor('다른이');
     grantPermission(stores, root, { nodeId: doc, principalId: you.id, level: 'view' });
     grantPermission(stores, root, { nodeId: bRoot, principalId: you.id, level: 'edit' });
 
-    const copied = copyNode(stores, you, doc, bRoot);
+    const copied = await copyNode(stores, you, doc, { parentId: bRoot });
     const entries = stores.acl.entriesOn(idOf(copied));
 
     expect(entries).toHaveLength(1);

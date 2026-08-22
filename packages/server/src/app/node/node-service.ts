@@ -1,3 +1,6 @@
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+
 import {
   requirementFor,
   satisfies,
@@ -13,9 +16,21 @@ import {
   permissionBatch,
   permissionOf,
   resolveNode,
+  visibleChildrenOf,
   type AclStores,
   type Actor,
 } from '../acl/permission-service.js';
+import { replicateAttachments, type AttachmentStores } from '../attachment/attachment-service.js';
+import { workspaceRootOf } from '../document/save-service.js';
+
+/**
+ * 복사가 요구하는 저장소 — 노드보다 넓다.
+ *
+ * 복사는 노드만 세우는 조작이 아니라 본문과 첨부까지 옮겨 심는 조작이라
+ * 파일시스템과 첨부 저장소가 함께 있어야 한다. 좁은 묶음으로 받고 안에서
+ * 캐스팅하면 그 사실이 타입에서 사라진다.
+ */
+export type CopyStores = AttachmentStores;
 
 /**
  * 새 이름이 들어오는 진입점들 — 생성·개명·이동·업로드
@@ -251,48 +266,63 @@ export function moveNode(
   return place(stores, node, parentId, node.name);
 }
 
+/** 복사가 놓일 자리 — **둘 중 하나다.** */
+export type CopyDestination =
+  /** 이 노드 아래. 워크스페이스는 그 노드의 것을 따른다. */
+  | { readonly parentId: NodeId }
+  /** 이 워크스페이스의 루트. */
+  | { readonly workspaceId: string };
+
+/** 복사 결과. `copied` 는 **요청자가 볼 수 있던** 노드의 수다. */
+export type Copied = { ok: true; id: NodeId; name: string; copied: number };
+
 /**
  * 복사한다 — 워크스페이스 경계를 **넘을 수 있는 유일한 조작**이다
  * (`SEC-ACL-014` AC-2).
  *
  * 이동과 갈라 둔 이유가 요구의 전부다. 이동은 원본을 목적지의 권한 경계로
  * 끌고 가므로 두 경계 사이에서 권한이 갈리는데, 복사는 새 노드를 만들 뿐이라
- * 그 문제가 없다 — 그래서 원본에는 **보기**면 족하고(AC-3) 목적지에만
- * 편집이 필요하다.
+ * 그 문제가 없다 — 그래서 원본에는 **보기**면 족하고 목적지에만 편집이 필요하다.
+ *
+ * **목적지를 판별 합집합으로 받는다.** 부모 ID 와 워크스페이스 ID 를 나란히
+ * 받으면 서로 어긋나는 조합을 표현할 수 있게 되고, 그 모순은 복사가 끝난
+ * 뒤에야 드러난다. 「부모 아래」와 「워크스페이스 루트」는 다른 두 요청이다.
+ *
+ * **디렉토리는 요청자에게 보이는 하위만 데려간다** (`SEC-SHELL-003` AC-1).
+ * 전부 복사하면 사본이 목적지 부모에서 상속해 **권한 상승**이 되고, 숨은
+ * 노드가 있다고 거부하면 그 거부 자체가 **존재 오라클**이 된다. 복사가
+ * 원본을 건드리지 않는 비파괴 동작이라 「보이는 것만」이 성립한다.
  *
  * 복사본의 생성자는 복사를 실행한 사용자다 (`SEC-ACL-011` AC-5) — 원본
  * 생성자를 물려주면 복사 한 번으로 남의 편집권이 새 경계 안에 생긴다.
+ * 원본의 ACL 항목은 따라오지 않고 목적지 부모에서 상속한다(`FR-ACL-001` AC-2).
  *
- * 본문 복제는 여기 없다 — 본문의 SSOT 는 파일시스템이고(`DR-STORAGE-001`)
- * 그 복제와 첨부·링크 처리 규칙은 `FR-ACL-001` 이 소유한다(뒤 wave).
- * 여기서 서는 것은 노드와 그 권한이다.
+ * 본문은 **재작성하지 않는다** (AC-5 · AC-7). 첨부 링크는 워크스페이스 기준
+ * 절대경로에 내용 해시 이름이라 같은 문자열이 대상에서 그대로 해석되고,
+ * 문서 간 위키링크는 이름 기반이라 경계를 넘는다.
  */
-export function copyNode(
-  stores: NodeStores,
+export async function copyNode(
+  stores: CopyStores,
   actor: Actor,
   id: NodeId,
-  destinationId: NodeId | null,
-): Created | Rejected {
+  destination: CopyDestination,
+): Promise<Copied | Rejected> {
   const source = resolveNode(stores, actor, id);
   if (source === undefined) {
     return unknownNode(id);
   }
 
-  // 복사는 경계를 넘을 수 있으므로(`SEC-ACL-014` AC-2) 워크스페이스가
-  // 같은지는 묻지 않는다. 실재하는지만 묻는다 — 없는 ID 를 흘리면 이동과
-  // 같은 이유로 예외가 난다.
-  const destination = destinationId === null ? undefined : stores.nodes.findById(destinationId);
-  if (destinationId !== null && destination === undefined) {
-    return unknownNode(destinationId);
+  const parentId = 'parentId' in destination ? destination.parentId : null;
+  const parent = parentId === null ? undefined : stores.nodes.findById(parentId);
+  if (parentId !== null && parent === undefined) {
+    return unknownNode(parentId);
   }
-  // 목적지가 루트면 그 워크스페이스를 알 길이 없다 — 복사는 경계를 넘으므로
-  // 원본의 워크스페이스를 물려받을 수 없기 때문이다.
-  const workspaceId = destination?.workspaceId ?? source.workspaceId;
+  const workspaceId = parent?.workspaceId ?? (destination as { workspaceId: string }).workspaceId;
 
   const held: Held = {
     parent: null,
     target: permissionOf(stores, actor, id),
-    destination: permissionOf(stores, actor, destinationId ?? workspaceId),
+    destination: permissionOf(stores, actor, parentId ?? workspaceId),
     workspace: null,
   };
   if (!satisfies(requirementFor('copy'), held)) {
@@ -301,16 +331,90 @@ export function copyNode(
 
   // 자기 자신이나 자기 하위로 복사하면 사본이 다시 복사 대상이 되어
   // 끝나지 않는다. 이동과 같은 방어를 같은 자리에서 쓴다.
-  if (destinationId !== null && subtreeOf(stores.nodes, source).ids.has(destinationId)) {
+  if (parentId !== null && subtreeOf(stores.nodes, source).ids.has(parentId)) {
     return reject('move-into-descendant', '노드를 자기 자신이나 그 하위로 복사할 수 없습니다.');
   }
 
-  return createNode(stores, actor, {
-    workspaceId,
-    parentId: destinationId,
+  return replicate(stores, actor, source, { parentId, workspaceId });
+}
+
+/**
+ * 한 노드와 그 아래를 옮겨 심는다.
+ *
+ * 세는 것은 **실제로 만든 노드**다 (`SEC-SHELL-003` AC-4) — 원본 하위의
+ * 전체 수가 아니다. 후자를 세거나 둘을 함께 보이면 그 차이가 곧 숨은
+ * 노드의 개수가 되어 이 요구가 무너진다. 그래서 반환값에 「제외됨」을
+ * 실을 자리를 두지 않는다(AC-2).
+ */
+async function replicate(
+  stores: CopyStores,
+  actor: Actor,
+  source: NodeRecord,
+  at: { parentId: NodeId | null; workspaceId: string },
+): Promise<Copied | Rejected> {
+  const made = createNode(stores, actor, {
+    workspaceId: at.workspaceId,
+    parentId: at.parentId,
     kind: source.kind,
     name: source.name,
   });
+  if (!made.ok) return made;
+
+  let copied = 1;
+
+  if (source.kind === 'file') {
+    await copyBody(stores, source, made.id, at.workspaceId);
+    await replicateAttachments(stores, source.id, { nodeId: made.id, workspaceId: at.workspaceId });
+    return { ...made, copied };
+  }
+
+  // 보이는 자식만 데려간다. `visibleChildrenOf` 를 지나므로 관문
+  // (점 이름·휴지통·아카이브·tombstone)도 여기서 함께 걸린다 — 그것은
+  // 권한 축이 아니라 이름·상태 축이라 슈퍼유저에게도 따라오지 않는다.
+  for (const child of visibleChildrenOf(stores, actor, {
+    workspaceId: source.workspaceId,
+    parentId: source.id,
+  })) {
+    const below = await replicate(stores, actor, child.node, {
+      parentId: made.id,
+      workspaceId: at.workspaceId,
+    });
+    // 한 자식이 실패해도 복사 전체를 무르지 않는다 — 이미 만든 것을
+    // 되돌릴 트랜잭션이 파일시스템에 없고, 되돌리려다 반쪽이 남는다.
+    if (below.ok) copied += below.copied;
+  }
+
+  return { ...made, copied };
+}
+
+/**
+ * 본문을 옮겨 적는다 — **한 글자도 고치지 않는다**.
+ *
+ * 실체가 없는 노드는 건너뛴다. 재조정이 아직 안 닿았을 뿐 조작이 잘못된
+ * 것은 아니며, 여기서 던지면 그 한 노드가 복사 전체를 무르게 만든다.
+ */
+async function copyBody(
+  stores: CopyStores,
+  source: NodeRecord,
+  targetId: NodeId,
+  workspaceId: string,
+): Promise<void> {
+  const from = join(workspaceRootOf(stores, source.workspaceId), stores.nodes.pathOf(source.id));
+  const to = join(workspaceRootOf(stores, workspaceId), stores.nodes.pathOf(targetId));
+
+  const body = await readIfPresent(from);
+  if (body === null) return;
+
+  await mkdir(dirname(to), { recursive: true });
+  await writeFile(to, body);
+}
+
+async function readIfPresent(path: string): Promise<Buffer | null> {
+  try {
+    return await readFile(path);
+  } catch {
+    return null;
+  }
 }
 
 /**

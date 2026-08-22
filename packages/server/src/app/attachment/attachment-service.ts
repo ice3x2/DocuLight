@@ -142,6 +142,65 @@ export async function attachToDocument(
 }
 
 /**
+ * 한 문서의 첨부를 다른 문서로 **복제한다** (`FR-ACL-001` AC-4 · AC-6).
+ *
+ * 공유하지 않고 복제하는 이유는 판정 기준이 **소유 문서**이기 때문이다
+ * (`R66`) — 한 실체를 둘이 나눠 가지면 한쪽 문서의 권한 변경이 다른 쪽
+ * 문서의 첨부 접근을 흔든다. 복제하면 원본과 복사본이 각자의 소유 행을
+ * 갖고 각자의 문서로 판정된다.
+ *
+ * **본문은 건드리지 않는다.** 링크는 워크스페이스 기준 절대경로이고
+ * (`DR-ATTACH-003`) 이름이 내용 해시라(`R50`) 같은 바이트가 대상
+ * 워크스페이스의 **같은 상대 경로**에 놓인다 — 재작성할 것이 없다.
+ * 그 재작성 경로를 두는 것은 `DR-ATTACH-003` 이 명시적으로 금지한다.
+ *
+ * 권한은 여기서 묻지 않는다 — 부르는 쪽(복사)이 이미 원본의 보기와
+ * 목적지의 편집을 함께 검사했다. 여기서 다시 물으면 같은 판정이 두 곳에
+ * 생긴다.
+ */
+export async function replicateAttachments(
+  stores: AttachmentStores,
+  from: NodeId,
+  to: { nodeId: NodeId; workspaceId: string },
+): Promise<void> {
+  const records = stores.attachments.listOf(from);
+  if (records.length === 0) return;
+
+  const targetRoot = workspaceRootOf(stores, to.workspaceId);
+  const index = await readIndex(targetRoot);
+
+  for (const record of records) {
+    const sourceRoot = workspaceRootOf(stores, record.workspaceId);
+    const sourcePath = resourcePathOf(sourceRoot, record.hash, record.extension);
+    const targetPath = resourcePathOf(targetRoot, record.hash, record.extension);
+
+    // 같은 워크스페이스 안의 복사면 실체가 이미 그 자리에 있다. 다시
+    // 쓰면 같은 바이트를 덮어쓰는 낭비이자, 읽기 실패가 복사 전체를
+    // 무르게 만드는 자리가 하나 더 생기는 일이다.
+    if (sourcePath !== targetPath) {
+      await mkdir(dirname(targetPath), { recursive: true });
+      await writeFile(targetPath, await readFile(sourcePath));
+    }
+
+    const copied: AttachmentRecord = { ...record, ownerNodeId: to.nodeId, workspaceId: to.workspaceId };
+    const before = index[record.hash];
+    index[record.hash] = {
+      ownerNodeId: before?.ownerNodeId ?? copied.ownerNodeId,
+      owners: [...new Set([...(before?.owners ?? []), copied.ownerNodeId])],
+      originalNames: { ...before?.originalNames, [copied.ownerNodeId]: copied.originalName },
+      extension: copied.extension,
+      size: copied.size,
+      createdAt: before?.createdAt ?? copied.createdAt,
+    };
+    stores.attachments.add(copied);
+  }
+
+  // 사이드카가 정본이므로 한 번에 쓴다 — 항목마다 쓰면 중간에 멈췄을 때
+  // 반쪽 사이드카가 남는다.
+  await writeFile(indexPathOf(targetRoot), JSON.stringify(index, null, 2), 'utf8');
+}
+
+/**
  * 첨부를 연다 (`SEC-ATTACH-002` · `SEC-ATTACH-003`).
  *
  * 판정 기준이 **소유 문서**다 — 첨부의 저장 위치도, 그것을 참조하는
