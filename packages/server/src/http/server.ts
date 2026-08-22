@@ -15,7 +15,8 @@ export { API_PREFIX };
  */
 export interface HttpDeps {
   /** `packages/web` 빌드 산출물이 있는 디렉토리. */
-  webRoot: string;
+  /** 정적 산출물의 자리. 생략하면 빌드 배치가 정한 곳이다. */
+  webRoot?: string;
   /** `/api` 아래에 붙일 라우트. 없으면 API 는 전부 404 다. */
   api?: Router;
 

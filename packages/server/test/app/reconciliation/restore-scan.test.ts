@@ -32,7 +32,6 @@ beforeEach(async () => {
     port: 3400,
     // 이 시험은 기동 절차만 본다 — 리스너를 열지 않으므로 정적 루트는
     // 쓰이지 않는다.
-    webRoot: join(dir, 'web'),
   };
   await mkdir(config.docsRoot, { recursive: true });
 });

@@ -47,9 +47,8 @@ import { SqliteWorkspaceRepository } from './infra/sqlite/workspace-repository.j
  * 준다. 안 주면 `/api/*` 가 전부 404 가 되고, 화면은 세션을 영영 못 받아
  * 로딩 상태에 머문다.
  */
-export function createApp(config: ServerConfig, runtime?: ServerRuntime): Express {
+export function createApp(runtime?: ServerRuntime): Express {
   return createHttpServer({
-    webRoot: config.webRoot,
     ...(runtime === undefined ? {} : { api: apiRouter(runtime) }),
   });
 }
@@ -181,7 +180,7 @@ export function startServer(
   config: ServerConfig,
   runtime: ServerRuntime,
 ): ReturnType<Express['listen']> {
-  return createApp(config, runtime).listen(config.port);
+  return createApp(runtime).listen(config.port);
 }
 
 // `node main.js` 로 직접 실행될 때만 리스너를 연다 — import 시에는 열지 않는다.

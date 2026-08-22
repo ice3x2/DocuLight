@@ -17,7 +17,6 @@ beforeEach(async () => {
     docsRoot: join(dir, 'docs'),
     databaseFile: join(dir, 'doculight.db'),
     port: 0,
-    webRoot: join(dir, 'web'),
   };
   runtime = await bootstrap(config);
 });
@@ -29,7 +28,7 @@ afterEach(async () => {
 
 describe('OPS-ARCH-001 — 한 프로세스가 API 와 정적 산출물을 함께 올린다', () => {
   it('API 가 실제로 마운트된다 — 404 가 아니다', async () => {
-    const app = createApp(config, runtime);
+    const app = createApp(runtime);
 
     const res = await request(app).get('/api/session');
 
@@ -39,26 +38,26 @@ describe('OPS-ARCH-001 — 한 프로세스가 API 와 정적 산출물을 함�
   });
 
   it('인증되지 않은 요청은 401 이다 — 라우터가 붙었다는 증거다', async () => {
-    const app = createApp(config, runtime);
+    const app = createApp(runtime);
 
     expect((await request(app).get('/api/session')).status).toBe(401);
   });
 
   it('트리도 같은 관문을 지난다', async () => {
-    const app = createApp(config, runtime);
+    const app = createApp(runtime);
 
     expect((await request(app).get('/api/tree')).status).toBe(401);
   });
 
   it('없는 API 경로는 여전히 404 다 — 포괄 핸들러가 살아 있다', async () => {
-    const app = createApp(config, runtime);
+    const app = createApp(runtime);
 
     expect((await request(app).get('/api/no-such-thing')).status).toBe(404);
   });
 
   it('런타임 없이도 앱을 만들 수 있다 — 정적 산출물만 올리는 경우가 있다', () => {
     // 만들 수 있어야 정적 서빙만 시험할 수 있다. 다만 그때 API 는 없다.
-    expect(() => createApp(config)).not.toThrow();
+    expect(() => createApp()).not.toThrow();
   });
 });
 

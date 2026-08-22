@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 
 import express, { type Express, type RequestHandler } from 'express';
@@ -32,7 +33,16 @@ function isClientRoute(path: string): boolean {
  * **API 라우트보다 뒤에 붙여야 한다** — fallback 이 먼저 서면 API 요청이
  * 라우트에 닿기 전에 셸을 받는다.
  */
-export function mountStaticSpa(app: Express, webRoot: string): void {
+/**
+ * `packages/web` 빌드 산출물의 자리.
+ *
+ * 이 모듈 기준으로 푼다 — 소스에서 돌든 빌드 산출물에서 돌든 같은 자리다.
+ * 설정 칸으로 두지 않는 이유는 이것이 운영자의 선택이 아니라 빌드 배치의
+ * 사실이기 때문이다 (`DR-SHELL-001` AC-2).
+ */
+export const DEFAULT_WEB_ROOT = fileURLToPath(new URL('../../../web/dist', import.meta.url));
+
+export function mountStaticSpa(app: Express, webRoot: string = DEFAULT_WEB_ROOT): void {
   app.use(express.static(webRoot, { index: 'index.html' }));
 
   const shell: RequestHandler = (req, res, next) => {

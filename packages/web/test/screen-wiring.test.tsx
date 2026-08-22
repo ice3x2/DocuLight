@@ -307,3 +307,35 @@ describe('CON-EDITOR-002 AC-2 · AC-3 — 백링크와 아웃고잉 링크 패�
     ).toBe(false);
   });
 });
+
+describe('CON-ARCH-004 AC-4 — 사용자·그룹 검색이 cmdk 로 선다', () => {
+  const openCategory = async (name: string) => {
+    const user = await openTree();
+    await user.click(screen.getByRole('button', { name: '설정' }));
+    await user.click(
+      within(await screen.findByRole('dialog', { name: '설정' })).getByRole('tab', { name }),
+    );
+    return user;
+  };
+
+  it('사용자 관리에서 친 글자가 질의로 나가고 결과가 목록에 뜬다', async () => {
+    routes.set('/api/principals', () =>
+      json([
+        { id: 'p1', name: '한범', kind: 'user' },
+        { id: 'g1', name: '기획팀', kind: 'group' },
+      ]),
+    );
+    const user = await openCategory('사용자 관리');
+
+    await user.type(await screen.findByRole('combobox', { name: '사용자·그룹 검색' }), '한');
+
+    await waitFor(() => expect(screen.getByText('한범')).toBeDefined());
+  });
+
+  it('그룹 관리도 같은 검색을 쓴다 — 두 벌을 만들면 한쪽만 고쳐진다', async () => {
+    routes.set('/api/principals', () => json([{ id: 'g1', name: '기획팀', kind: 'group' }]));
+    await openCategory('그룹 관리');
+
+    expect(await screen.findByRole('combobox', { name: '사용자·그룹 검색' })).toBeDefined();
+  });
+});

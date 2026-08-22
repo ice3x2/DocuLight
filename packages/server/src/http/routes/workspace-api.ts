@@ -602,6 +602,42 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
    * 거르는 일을 서버가 한다 — 전부 내려 주고 화면에서 고르게 하면 볼 수
    * 있는 문서 이름 전부가 이미 브라우저에 와 있게 된다.
    */
+  /**
+   * 사용자·그룹 검색 (`CON-ARCH-004` AC-4).
+   *
+   * **슈퍼유저만** 묻는다 — 주체 목록은 인스턴스 관리 자료이고, 누구나
+   * 물을 수 있으면 그 자체가 이 인스턴스에 누가 있는지의 명부가 된다.
+   *
+   * 사용자와 그룹을 한 목록으로 주는 이유는 이것을 쓰는 자리가 둘을
+   * 가리지 않기 때문이다 — 권한은 주체에 붙지 종류에 붙지 않는다.
+   */
+  router.get('/principals', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+    if (!isSuperuser(stores.principals.groupsOf(actor.id))) {
+      res.sendStatus(403);
+      return;
+    }
+
+    const wanted = (one(req.query.q) ?? '').trim().toLowerCase();
+    const matches = (record: { name: string }) =>
+      wanted === '' || record.name.toLowerCase().includes(wanted);
+
+    res.json([
+      ...stores.principals
+        .list('user')
+        .filter(matches)
+        .map((record) => ({ id: record.id, name: record.name, kind: 'user' })),
+      ...stores.principals
+        .list('group')
+        .filter(matches)
+        .map((record) => ({ id: record.id, name: record.name, kind: 'group' })),
+    ]);
+  });
+
   router.get('/wiki-targets', (req, res) => {
     const actor = actorFor(req);
     if (actor === undefined) {

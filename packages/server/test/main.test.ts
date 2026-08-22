@@ -13,7 +13,7 @@ describe('server entry point', () => {
 
   it('createApp returns an express request handler', async () => {
     const { createApp } = await import('../src/main.js');
-    const app = createApp(loadConfig({}));
+    const app = createApp();
     expect(typeof app).toBe('function');
   });
 

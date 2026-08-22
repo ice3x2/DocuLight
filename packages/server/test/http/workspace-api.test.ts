@@ -539,3 +539,31 @@ describe('위키링크 대상 제안 (`CON-EDITOR-002` AC-1)', () => {
     expect((await request(app).get('/api/wiki-targets').query({ q: '설계' })).body).toEqual([]);
   });
 });
+
+describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
+  it('이름이 걸리는 사용자와 그룹을 한 목록으로 준다', async () => {
+    stores.principals.createGroup('한범팀');
+
+    const got = await request(app).get('/api/principals').query({ q: '한범' });
+
+    expect(got.status).toBe(200);
+    expect(got.body).toEqual(
+      expect.arrayContaining([
+        { id: me.id, name: '한범', kind: 'user' },
+        expect.objectContaining({ name: '한범팀', kind: 'group' }),
+      ]),
+    );
+  });
+
+  it('슈퍼유저가 아니면 거절한다 — 주체 목록은 인스턴스 관리 자료다', async () => {
+    actingAs = actorFor(stores.principals, me.id);
+
+    expect((await request(app).get('/api/principals').query({ q: '한' })).status).toBe(403);
+  });
+
+  it('인증되지 않은 요청은 401 이다', async () => {
+    actingAs = undefined;
+
+    expect((await request(app).get('/api/principals').query({ q: '한' })).status).toBe(401);
+  });
+});

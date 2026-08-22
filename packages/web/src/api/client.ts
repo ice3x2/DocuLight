@@ -145,6 +145,16 @@ export interface DocumentLinksBody {
   backlinks: LinkRowView[];
 }
 
+/** 사용자 또는 그룹 하나 (`CON-ARCH-004` AC-4). 권한은 주체에 붙지 종류에 붙지 않는다. */
+export interface PrincipalRow {
+  id: string;
+  name: string;
+  kind: 'user' | 'group';
+}
+
+export const fetchPrincipals = (query: string) =>
+  call<PrincipalRow[]>(`/principals?q=${encodeURIComponent(query)}`);
+
 /** 위키링크 자동완성 후보 (`CON-EDITOR-002` AC-1). 거르는 일은 서버가 한다. */
 export const fetchWikiTargets = (query: string) =>
   call<{ target: string; label: string; detail: string }[]>(

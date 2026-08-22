@@ -138,7 +138,6 @@ describe('SEC-ACL-008 — 워크스페이스 관리자는 그 워크스페이스
 
   beforeEach(async () => {
     const app = createHttpServer({
-      webRoot: join(dir, 'web'),
       api: documentsRouter({ stores, documents: new FsDocumentStore(docsRoot), actorOf: () => caller }),
     });
     server = app.listen(0);
