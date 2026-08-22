@@ -219,3 +219,37 @@ describe('FR-SHELL-008 AC-2 — 열려 있는 문서에 새 버전을 올려도 
     expect(saves[0]!.body).toBe('# 새 버전\n');
   });
 });
+
+describe('이미 열린 문서를 다시 눌러도 편집이 사라지지 않는다', () => {
+  it('트리에서 같은 문서를 다시 골라도 치던 글자가 남는다', async () => {
+    const user = await openDocument();
+    await user.click(screen.getByRole('button', { name: '편집' }));
+    await user.click(document.querySelector('.cm-content') as HTMLElement);
+    await user.keyboard('아직 저장 전');
+
+    // 같은 문서를 다시 고른다. 여기서 서버 본문을 다시 받아 들이면
+    // 자동 저장이 아직 나가지 않은 글자가 통째로 밀린다.
+    const sidebar = screen.getByRole('complementary', { name: '좌측 사이드바' });
+    await user.click(within(sidebar).getByRole('button', { name: /회의록\.md/ }));
+
+    expect(document.querySelector('.cm-content')?.textContent).toContain('아직 저장 전');
+  });
+});
+
+describe('이미 열린 문서는 다시 받지 않는다', () => {
+  it('같은 문서를 다시 골라도 본문 요청이 늘지 않는다', async () => {
+    const user = await openDocument();
+    const gets = () =>
+      (globalThis.fetch as unknown as { mock: { calls: [string, RequestInit?][] } }).mock.calls.filter(
+        (call) => String(call[0]) === '/api/documents/n1' && (call[1]?.method ?? 'GET') === 'GET',
+      ).length;
+    const before = gets();
+
+    const sidebar = screen.getByRole('complementary', { name: '좌측 사이드바' });
+    await user.click(within(sidebar).getByRole('button', { name: /회의록\.md/ }));
+
+    // 편집기가 이미 그 문서의 정본을 들고 있다. 다시 받아 봐야 바꿀 것이
+    // 없고, 서버 본문이 그 사이 달라졌다면 그것은 충돌 화면이 다룰 일이다.
+    expect(gets()).toBe(before);
+  });
+});

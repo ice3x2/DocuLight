@@ -176,8 +176,10 @@ function AppBody() {
   const open = useCallback(
     (node: TreeNodeView, inNewTab: boolean) => {
       let blocked = false;
+      let alreadyOpen = false;
 
       setDocuments((was) => {
+        alreadyOpen = was.tabs.some((tab) => tab.nodeId === node.id);
         const current = activeTab(was);
         if (!inNewTab && current !== undefined && needsConfirmBeforeReplace(current)) {
           blocked = true;
@@ -191,10 +193,16 @@ function AppBody() {
         return;
       }
 
-      // **열 때 본문을 낡은 것으로 표시한다.** 저장은 편집기가 자기 해시
-      // 사슬로 이어 가므로 이 캐시가 갱신되지 않는데, 그 값을 그대로 다시
-      // 쓰면 사용자가 방금 저장한 글 대신 저장 전 본문을 보게 된다.
-      void queries.invalidateQueries({ queryKey: QUERY_KEYS.document(node.id) });
+      // **닫혔던 문서를 열 때만** 본문을 낡은 것으로 표시한다. 저장은
+      // 편집기가 자기 해시 사슬로 이어 가므로 이 캐시가 갱신되지 않는데,
+      // 그 값을 그대로 다시 쓰면 사용자가 방금 저장한 글 대신 저장 전
+      // 본문을 보게 된다.
+      //
+      // 이미 열려 있으면 건드리지 않는다 — 그 자리의 정본은 편집기이고,
+      // 다시 받아 밀어 넣으면 아직 저장되지 않은 글자가 사라진다. 그 사이
+      // 서버 본문이 달라졌다면 그것은 충돌 화면이 다룰 일이다.
+      if (!alreadyOpen)
+        void queries.invalidateQueries({ queryKey: QUERY_KEYS.document(node.id) });
       window.history.pushState(null, '', urlForNode(node.id));
     },
     [queries],
