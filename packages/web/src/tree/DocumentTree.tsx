@@ -163,10 +163,12 @@ export function DocumentTree({
   workspaces,
   onUpload,
   onOpen,
+  onCreateNote,
 }: {
   workspaces: readonly WorkspaceTreeView[];
   onUpload?: (request: UploadRequest) => void;
   onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
+  onCreateNote?: () => void;
 }) {
   const rows = useMemo<Row[]>(
     () =>
@@ -188,7 +190,9 @@ export function DocumentTree({
 
   return (
     <div>
-      <button type="button">새 노트</button>
+      <button type="button" onClick={() => onCreateNote?.()}>
+        새 노트
+      </button>
 
       <div role="tree" aria-label="문서 트리">
         <Tree<Row>

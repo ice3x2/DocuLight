@@ -102,3 +102,32 @@ export const moveNodeToTrash = (nodeId: string) =>
 
 export const purgeFromTrash = (nodeId: string) =>
   call<void>(`/trash/${encodeURIComponent(nodeId)}`, { method: 'DELETE' });
+
+/** 새 노드를 만든다 (`FR-SHELL-003` AC-1). */
+export const createNode = (input: {
+  workspaceId: string;
+  parentId: string | null;
+  kind: 'file' | 'directory';
+  name: string;
+}) =>
+  call<{ id: string; name: string; notice?: string }>('/nodes', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+
+/**
+ * 디렉토리에 파일을 올린다 (`FR-ATTACH-001`).
+ *
+ * 문서 첨부와 **다른 조작**이다 — 그쪽은 본문 안에 링크로 들어가는
+ * 자원이고 이쪽은 트리에 서는 노드다.
+ */
+export function uploadIntoDirectory(parentId: string, file: File) {
+  const form = new FormData();
+  form.append('file', file);
+
+  return call<{ id: string; name: string; notice?: string }>(
+    `/nodes/${encodeURIComponent(parentId)}/uploads`,
+    { method: 'POST', body: form },
+  );
+}

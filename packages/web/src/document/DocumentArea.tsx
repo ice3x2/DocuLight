@@ -56,12 +56,14 @@ export function DocumentArea({
   initial,
   bodies = {},
   hashes = {},
+  onSaveState,
 }: {
   initial: TabState;
   /** 노드 ID → 서버에서 받아 온 본문. 아직 안 온 것은 없다. */
   bodies?: Readonly<Record<string, string>>;
   /** 노드 ID → 그 본문의 기준 해시. 저장 요청이 이것을 싣는다. */
   hashes?: Readonly<Record<string, string>>;
+  onSaveState?: (nodeId: string, state: SaveState) => void;
 }) {
   const [state, setState] = useState<TabState>(initial);
   // 탭 목록은 바깥이 소유한다 — 안에서만 들면 트리 클릭으로 연 문서가
@@ -97,6 +99,7 @@ export function DocumentArea({
               serverBody={tab.serverBody ?? null}
               {...(bodies[tab.nodeId] === undefined ? {} : { body: bodies[tab.nodeId] })}
               {...(hashes[tab.nodeId] === undefined ? {} : { baseHash: hashes[tab.nodeId] })}
+              onSaveState={(next) => onSaveState?.(tab.nodeId, next)}
             />
           </Tabs.Content>
         ))}

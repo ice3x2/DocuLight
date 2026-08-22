@@ -5,7 +5,7 @@ import { useId, useState } from 'react';
 import { DocumentArea } from '../document/DocumentArea.js';
 import { FavoritesView, type Favorite } from '../favorites/FavoritesView.js';
 import { SearchPanel, type SearchHit } from '../search/SearchPanel.js';
-import type { TabState } from '../document/tab-state.js';
+import type { SaveState, TabState } from '../document/tab-state.js';
 import { DocumentTree } from '../tree/DocumentTree.js';
 import type { UploadRequest } from '../attachment/upload-contract.js';
 import { EmptyState } from '../tree/EmptyState.js';
@@ -138,6 +138,9 @@ export function AppShell({
   onQuery,
   onOpen,
   onUpload,
+  onCreateNote,
+  confirmReplace,
+  onSaveState,
 }: {
   viewer: Viewer;
   workspaces?: readonly WorkspaceTreeView[];
@@ -154,6 +157,15 @@ export function AppShell({
   onQuery?: (query: string) => void;
   onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
   onUpload?: (request: UploadRequest) => void;
+  onCreateNote?: () => void;
+  /**
+   * 활성 탭을 교체하기 전에 받아야 할 확인 (`FR-SHELL-012` AC-3 · AC-4).
+   *
+   * 값이 있으면 대화상자가 선다 — 없으면 안 선다. 상태를 바깥이 들고
+   * 있는 이유는 무엇을 열려 했는지도 바깥이 알기 때문이다.
+   */
+  confirmReplace?: { name: string; accept: () => void; cancel: () => void };
+  onSaveState?: (nodeId: string, state: SaveState) => void;
 }) {
   return (
     <div data-shell="root">
@@ -173,7 +185,12 @@ export function AppShell({
             return workspaces.length === 0 ? (
               <EmptyState />
             ) : (
-              <DocumentTree workspaces={workspaces} onOpen={onOpen} onUpload={onUpload} />
+              <DocumentTree
+                workspaces={workspaces}
+                onOpen={onOpen}
+                onUpload={onUpload}
+                onCreateNote={onCreateNote}
+              />
             );
           if (tab.id === 'search')
             return (
@@ -195,10 +212,32 @@ export function AppShell({
 
       <main>
         <SettingsModal viewer={viewer} trash={trash} />
-        <DocumentArea initial={documents} bodies={bodies} hashes={hashes} />
+        <DocumentArea
+          initial={documents}
+          bodies={bodies}
+          hashes={hashes}
+          {...(onSaveState === undefined ? {} : { onSaveState })}
+        />
       </main>
 
       <Sidebar label="우측 사이드바" tabs={RIGHT_TABS} side="right" />
+
+      {confirmReplace !== undefined && (
+        // `alertdialog` 인 이유는 잃을 것이 있다는 사실을 먼저 알려야 하기
+        // 때문이다 — 보통 대화상자는 읽지 않고 지나칠 수 있다.
+        <div role="alertdialog" aria-label="편집 중인 문서">
+          <p>
+            지금 문서에 저장되지 않은 편집이 남아 있습니다. {confirmReplace.name} 을(를) 열면
+            그 편집이 사라집니다.
+          </p>
+          <button type="button" onClick={confirmReplace.accept}>
+            그래도 열기
+          </button>
+          <button type="button" onClick={confirmReplace.cancel}>
+            머무르기
+          </button>
+        </div>
+      )}
     </div>
   );
 }

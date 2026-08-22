@@ -1,14 +1,30 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { ApiError, fetchSession, fetchTree, fetchTrash, loadDocument, type SessionBody } from './api/client.js';
-import { uploadAttachment } from './api/client.js';
+import {
+  ApiError,
+  createNode,
+  fetchSession,
+  fetchTrash,
+  fetchTree,
+  loadDocument,
+  uploadAttachment,
+  uploadIntoDirectory,
+  type SessionBody,
+} from './api/client.js';
 import type { UploadRequest } from './attachment/upload-contract.js';
-import type { TrashRowView } from './trash/TrashPanel.js';
 import { PreAuthScreen } from './auth/PreAuthScreen.js';
 import { AppShell } from './shell/AppShell.js';
 import type { Viewer } from './shell/shell-contract.js';
-import { openInActiveTab, openInNewTab, type TabState } from './document/tab-state.js';
+import {
+  activeTab,
+  needsConfirmBeforeReplace,
+  openInActiveTab,
+  openInNewTab,
+  type TabState,
+} from './document/tab-state.js';
 import { nodeIdOf, urlForNode } from './routing/deep-link.js';
+import type { SaveState } from './document/tab-state.js';
+import type { TrashRowView } from './trash/TrashPanel.js';
 import type { WorkspaceTreeView, TreeNodeView } from './tree/tree-contract.js';
 
 /**
@@ -39,6 +55,14 @@ function findNode(workspaces: readonly WorkspaceTreeView[], nodeId: string): Tre
   return undefined;
 }
 
+const toTab = (node: TreeNodeView) => ({
+  nodeId: node.id,
+  name: node.name,
+  breadcrumb: [node.name],
+  save: 'saved' as const,
+  level: node.level,
+});
+
 export function App() {
   const [session, setSession] = useState<Session>({ state: 'loading' });
   const [workspaces, setWorkspaces] = useState<readonly WorkspaceTreeView[]>([]);
@@ -48,6 +72,13 @@ export function App() {
   // 실어야 충돌이 판정되고, 둘이 갈리면 그 판정이 남의 본문을 근거로 한다.
   const [hashes, setHashes] = useState<Readonly<Record<string, string>>>({});
   const [trash, setTrash] = useState<readonly TrashRowView[]>([]);
+  /**
+   * 확인을 기다리는 열기 (`FR-SHELL-012` AC-3 · AC-4).
+   *
+   * 잃을 것이 남은 탭을 교체하려 할 때 그 요청을 여기 세워 둔다 — 버리면
+   * 사용자가 다시 눌러야 하고, 바로 실행하면 그 탭의 편집이 사라진다.
+   */
+  const [pendingOpen, setPendingOpen] = useState<TreeNodeView | null>(null);
 
   useEffect(() => {
     void (async () => {
@@ -62,9 +93,25 @@ export function App() {
       } catch (error) {
         // 401 만 익명이다. 다른 실패를 익명으로 접으면 서버가 잠깐 죽은
         // 것과 로그아웃이 구별되지 않아 사용자가 다시 로그인하게 된다.
-        setSession(error instanceof ApiError && error.status === 401 ? { state: 'anonymous' } : { state: 'loading' });
+        setSession(
+          error instanceof ApiError && error.status === 401
+            ? { state: 'anonymous' }
+            : { state: 'loading' },
+        );
       }
     })();
+  }, []);
+
+  /** 본문과 기준 해시를 받아 둔다. 못 받으면 그 자리를 **비워 둔다**. */
+  const fetchBody = useCallback((nodeId: string) => {
+    void loadDocument(nodeId)
+      .then(({ body, hash }) => {
+        setBodies((was) => ({ ...was, [nodeId]: body }));
+        setHashes((was) => ({ ...was, [nodeId]: hash }));
+      })
+      // 빈 문자열을 넣으면 사용자가 그 위에 쓰기 시작하고, 저장이 남의
+      // 본문을 지운다.
+      .catch(() => undefined);
   }, []);
 
   /**
@@ -72,48 +119,95 @@ export function App() {
    *
    * 주소를 함께 민다 — 그래야 그 문서의 링크가 생기고, 뒤로 가기가 문서
    * 이동 이력을 따른다.
+   *
+   * **잃을 것이 남은 탭은 즉시 교체하지 않는다**(AC-3 · AC-4). 충돌로
+   * 자동 저장이 멈췄거나 저장이 거부된 탭에는 그 탭에만 있는 편집이
+   * 남아 있고, 교체하면 그것이 사라진다.
    */
   const open = useCallback(
     (node: TreeNodeView, inNewTab: boolean) => {
-      const tab = {
-        nodeId: node.id,
-        name: node.name,
-        breadcrumb: [node.name],
-        save: 'saved' as const,
-        level: node.level,
-      };
-      setDocuments((was) => (inNewTab ? openInNewTab(was, tab) : openInActiveTab(was, tab)));
-      window.history.pushState(null, '', urlForNode(node.id));
+      let blocked = false;
 
-      void loadDocument(node.id)
-        .then(({ body, hash }) => {
-          setBodies((was) => ({ ...was, [node.id]: body }));
-          setHashes((was) => ({ ...was, [node.id]: hash }));
-        })
-        // 본문을 못 받으면 그 자리를 비워 둔다 — 빈 문자열을 넣으면
-        // 사용자가 그 위에 쓰기 시작하고, 저장이 남의 본문을 지운다.
-        .catch(() => undefined);
+      setDocuments((was) => {
+        const current = activeTab(was);
+        if (!inNewTab && current !== undefined && needsConfirmBeforeReplace(current)) {
+          blocked = true;
+          return was;
+        }
+        return inNewTab ? openInNewTab(was, toTab(node)) : openInActiveTab(was, toTab(node));
+      });
+
+      if (blocked) {
+        setPendingOpen(node);
+        return;
+      }
+
+      window.history.pushState(null, '', urlForNode(node.id));
+      fetchBody(node.id);
     },
-    [],
+    [fetchBody],
   );
 
   /**
-   * 트리에 떨군 파일을 올린다 (`FR-ATTACH-001`).
+   * 새 문서를 만든다 (`FR-SHELL-003` AC-1).
    *
-   * 올린 뒤 트리를 **다시 받는다**(AC-2) — 새 파일이 그 디렉토리의 자식으로
-   * 나타나야 하고, 안 받으면 사용자는 파일이 안 올라간 것으로 읽는다.
-   * 거부됐으면 다시 받지 않는다: 바뀐 것이 없으므로 헛된 왕복이다.
+   * 첫 워크스페이스의 루트에 만든다 — 어디에 만들지 먼저 고르게 하면 조작이
+   * 하나 더 붙는데, 「새 노트」는 곧바로 쓰기 시작하는 자리다.
+   */
+  const createNote = useCallback(async () => {
+    const first = workspaces[0];
+    if (first === undefined) return;
+
+    const made = await createNode({
+      workspaceId: first.workspace.id,
+      parentId: null,
+      kind: 'file',
+      name: '제목 없음.md',
+    }).catch(() => null);
+    if (made === null) return;
+
+    setWorkspaces(await fetchTree<WorkspaceTreeView[]>().catch(() => workspaces));
+  }, [workspaces]);
+
+  /**
+   * 떨군 파일을 올린다 (`FR-ATTACH-001`).
+   *
+   * 트리 드롭은 **디렉토리에 노드를 만드는** 조작이고, 편집기 붙여넣기는
+   * 본문에 링크로 들어가는 첨부다 — 서버 경로가 다르다.
+   *
+   * 올린 뒤 트리를 다시 받는다(AC-2) — 안 받으면 사용자는 파일이 안
+   * 올라간 것으로 읽는다. 거부됐으면 다시 받지 않는다: 바뀐 것이 없다.
    */
   const upload = useCallback(async (request: UploadRequest) => {
-    const target = request.ownerNodeId ?? request.parentId;
-    if (target === undefined) return;
+    const owner = request.ownerNodeId;
+    const parent = request.parentId;
+
+    const send = (file: File) => {
+      if (parent !== undefined) return uploadIntoDirectory(parent, file);
+      if (owner !== undefined) return uploadAttachment(owner, file);
+      return Promise.reject(new Error('대상이 없다'));
+    };
 
     const done = await Promise.all(
-      request.files.map((file) => uploadAttachment(target, file).then(() => true).catch(() => false)),
+      request.files.map((file) => send(file).then(() => true).catch(() => false)),
     );
     if (!done.some(Boolean)) return;
 
     setWorkspaces(await fetchTree<WorkspaceTreeView[]>().catch(() => []));
+  }, []);
+
+  /**
+   * 본문 표면이 알려 온 저장 상태를 탭에 반영한다.
+   *
+   * 탭이 그것을 알아야 **교체 판정**이 성립한다 (`FR-SHELL-012` AC-3 ·
+   * AC-4) — 모르면 충돌로 멈춘 탭도 그냥 교체된다.
+   */
+  const noteSaveState = useCallback((nodeId: string, state: SaveState) => {
+    setDocuments((was) =>
+      was.tabs.some((tab) => tab.nodeId === nodeId && tab.save !== state)
+        ? { ...was, tabs: was.tabs.map((tab) => (tab.nodeId === nodeId ? { ...tab, save: state } : tab)) }
+        : was,
+    );
   }, []);
 
   // 주소에 문서가 실려 들어왔으면 그것을 연다 (`FR-SHELL-006` AC-2).
@@ -124,6 +218,29 @@ export function App() {
     const node = findNode(workspaces, wanted);
     if (node !== undefined) open(node, false);
   }, [workspaces, open]);
+
+  /**
+   * 뒤로·앞으로 (`FR-SHELL-006` AC-4).
+   *
+   * 주소만 바뀌고 화면이 그대로면 사용자는 뒤로 가기가 고장 났다고 읽는다.
+   */
+  useEffect(() => {
+    const onPop = () => {
+      const wanted = nodeIdOf(window.location.pathname);
+      if (wanted === null) return;
+
+      const node = findNode(workspaces, wanted);
+      if (node === undefined) return;
+
+      // 여기서는 주소를 다시 밀지 않는다 — 브라우저가 이미 옮겨 놓았고,
+      // 또 밀면 이력에 같은 자리가 두 번 쌓여 뒤로 가기가 멈춘 것처럼 된다.
+      setDocuments((was) => openInActiveTab(was, toTab(node)));
+      fetchBody(node.id);
+    };
+
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [workspaces, fetchBody]);
 
   if (session.state === 'loading') return <div data-state="loading" />;
   if (session.state === 'anonymous') return <PreAuthScreen screen="login" />;
@@ -138,6 +255,22 @@ export function App() {
       trash={trash}
       onOpen={open}
       onUpload={upload}
+      onCreateNote={createNote}
+      onSaveState={noteSaveState}
+      {...(pendingOpen === null
+        ? {}
+        : {
+            confirmReplace: {
+              name: pendingOpen.name,
+              accept: () => {
+                setDocuments((was) => openInActiveTab(was, toTab(pendingOpen)));
+                window.history.pushState(null, '', urlForNode(pendingOpen.id));
+                fetchBody(pendingOpen.id);
+                setPendingOpen(null);
+              },
+              cancel: () => setPendingOpen(null),
+            },
+          })}
     />
   );
 }

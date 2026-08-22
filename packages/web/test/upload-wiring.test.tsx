@@ -47,12 +47,12 @@ beforeEach(() => {
       }
       if (path === '/api/trash') return json([]);
       if (path === '/api/documents/n1') return json({ body: '# 회의록\n', hash: 'h1' });
-      if (path.endsWith('/attachments')) {
+      if (path.endsWith('/uploads') || path.endsWith('/attachments')) {
         const form = init?.body as FormData;
         const file = form.get('file') as File;
         uploads.push({ path, fileName: file.name });
         return uploadStatus === 200
-          ? json({ hash: 'abc', link: '/api/attachments/ws-1/abc', limitBytes: 100 })
+          ? json({ id: 'n9', name: file.name })
           : json(null, uploadStatus);
       }
       return json(null, 404);

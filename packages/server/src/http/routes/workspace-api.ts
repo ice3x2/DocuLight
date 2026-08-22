@@ -1,3 +1,6 @@
+import { mkdir, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+
 import { Router, json, type Request } from 'express';
 import multer from 'multer';
 
@@ -14,7 +17,9 @@ import {
   uploadLimitBytes,
   type AttachmentStores,
 } from '../../app/attachment/attachment-service.js';
-import { readDocument, saveDocument } from '../../app/document/save-service.js';
+import { createNode } from '../../app/node/node-service.js';
+import { noticeFor } from '../../domain/node/collision-notice.js';
+import { readDocument, saveDocument, workspaceRootOf } from '../../app/document/save-service.js';
 import { beginEditSession } from '../../app/document/version-service.js';
 import { moveToTrash, purgeFromTrash, type TrashStores } from '../../app/trash/trash-service.js';
 import { trashView, type TrashScope } from '../../app/trash/trash-view.js';
@@ -57,6 +62,23 @@ const attachmentLink = (workspaceId: string, hash: string) =>
  */
 const one = (value: unknown): string | undefined =>
   typeof value === 'string' ? value : Array.isArray(value) ? one(value[0]) : undefined;
+
+/**
+ * multipart 로 온 파일 이름.
+ *
+ * RFC 7578 이 정한 기본 문자셋이 US-ASCII 라 파서가 바이트를 latin-1 로
+ * 읽는다 — 한글 이름이 그대로 깨진다. UTF-8 로 다시 읽어 되살린다.
+ *
+ * 되살릴 수 없으면 받은 그대로 쓴다. 깨진 이름이라도 있는 것이 이름 없이
+ * 저장되는 것보다 낫다 — 사용자가 그것을 고칠 수 있다.
+ */
+function decodedFileName(raw: string): string {
+  try {
+    return Buffer.from(raw, 'latin1').toString('utf8');
+  } catch {
+    return raw;
+  }
+}
 
 /** 화면이 트리 한 줄을 그리는 데 필요한 값. */
 interface TreeNodeBody {
@@ -230,7 +252,7 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
 
     const done = await attachToDocument(stores, actor, {
       nodeId,
-      fileName: req.file.originalname,
+      fileName: decodedFileName(req.file.originalname),
       bytes: req.file.buffer,
     });
 
@@ -267,6 +289,112 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     }
 
     res.type('application/octet-stream').send(opened.bytes);
+  });
+
+  /**
+   * 노드를 만든다 (`FR-SHELL-003` AC-1 · `SEC-SHELL-002`).
+   *
+   * 이름이 겹치면 **접미사를 붙이고 안내를 준다** — 확인을 묻지 않는다.
+   * 묻는 순간 그 물음 자체가 「거기 무언가 있다」를 알리고, 보이지 않는
+   * 파일과의 충돌에서 그것이 곧 존재 오라클이 된다.
+   */
+  router.post('/nodes', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const { workspaceId, parentId, kind, name } = req.body as {
+      workspaceId?: string;
+      parentId?: string | null;
+      kind?: 'file' | 'directory';
+      name?: string;
+    };
+    if (typeof workspaceId !== 'string' || typeof name !== 'string') {
+      res.sendStatus(400);
+      return;
+    }
+
+    const created = createNode(stores, actor, {
+      workspaceId,
+      parentId: parentId ?? null,
+      kind: kind ?? 'file',
+      name,
+    });
+
+    if (!created.ok) {
+      // 거절 사유를 본문에 싣지 않는다 — 사유가 갈리면 그 갈림이
+      // 경로 열거 오라클이 된다(`SEC-ACL-006`).
+      res.sendStatus(created.violations.some((v) => v.rule === 'forbidden') ? 403 : 400);
+      return;
+    }
+
+    res.json({
+      id: created.id,
+      name: created.name,
+      // 이름이 바뀐 사실을 안 알리면 사용자가 그 문서를 못 찾는다.
+      ...(created.name === name ? {} : { notice: noticeFor(created.name) }),
+    });
+  });
+
+  /**
+   * 디렉토리에 파일을 올린다 (`FR-ATTACH-001` · `SEC-ATTACH-001`).
+   *
+   * 문서 첨부(`/documents/:id/attachments`)와 **다른 조작**이다. 그쪽은
+   * 본문 안에 링크로 들어가는 자원이고 이쪽은 트리에 서는 노드다 — 권한
+   * 기준도 다르다: 그쪽은 소유 문서의 편집, 이쪽은 그 디렉토리의 편집.
+   *
+   * 크기 상한은 **같은 값**을 쓴다 (`FR-ATTACH-006` AC-4) — 두 경로가
+   * 각자 판정하면 한쪽에만 제한이 걸린다.
+   */
+  router.post('/nodes/:nodeId/uploads', upload.single('file'), async (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+    if (req.file === undefined) {
+      res.sendStatus(400);
+      return;
+    }
+
+    const parentId = one(req.params.nodeId);
+    const parent = parentId === undefined ? undefined : stores.nodes.findById(parentId);
+    if (parent === undefined || parentId === undefined) {
+      res.sendStatus(404);
+      return;
+    }
+
+    if (req.file.size > uploadLimitBytes(stores)) {
+      res.sendStatus(413);
+      return;
+    }
+
+    const created = createNode(stores, actor, {
+      workspaceId: parent.workspaceId,
+      parentId,
+      kind: 'file',
+      name: decodedFileName(req.file.originalname),
+    });
+    if (!created.ok) {
+      res.sendStatus(created.violations.some((v) => v.rule === 'forbidden') ? 403 : 400);
+      return;
+    }
+
+    // 노드를 만든 **뒤에** 실체를 쓴다 — 먼저 쓰면 이름 충돌 접미사를
+    // 모르는 자리에 파일이 놓인다.
+    const path = join(workspaceRootOf(stores, parent.workspaceId), stores.nodes.pathOf(created.id));
+    await mkdir(dirname(path), { recursive: true });
+    await writeFile(path, req.file.buffer);
+
+    res.json({
+      id: created.id,
+      name: created.name,
+      ...(created.name === decodedFileName(req.file.originalname)
+        ? {}
+        : { notice: noticeFor(created.name) }),
+    });
   });
 
   router.get('/trash', (req, res) => {

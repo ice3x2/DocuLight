@@ -8,6 +8,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { actorFor, type Actor } from '../../src/app/acl/permission-service.js';
 import { grantPermission } from '../../src/app/acl/grant-service.js';
 import { createNode } from '../../src/app/node/node-service.js';
+import { writeSetting } from '../../src/app/settings/instance-settings.js';
 import { createWorkspace } from '../../src/app/workspace/create-workspace.js';
 import { workspaceApiRouter } from '../../src/http/routes/workspace-api.js';
 import { FsWorkspaceFiles } from '../../src/infra/fs/workspace-sidecar.js';
@@ -219,5 +220,76 @@ describe('휴지통 — 전 워크스페이스 통합 목록 (`FR-SHELL-007`)', 
     await request(app).delete(`/api/nodes/${doc}`);
 
     expect((await request(app).get('/api/trash')).body).toHaveLength(1);
+  });
+});
+
+describe('FR-SHELL-003 · FR-ATTACH-001 — 노드 생성과 디렉토리 업로드', () => {
+  it('새 문서를 만들 수 있다', async () => {
+    const res = await request(app)
+      .post('/api/nodes')
+      .send({ workspaceId: ws, parentId: null, kind: 'file', name: '새 노트.md' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.name).toBe('새 노트.md');
+    expect(typeof res.body.id).toBe('string');
+  });
+
+  it('이름이 겹치면 접미사가 붙고 확인을 묻지 않는다 (`SEC-SHELL-002`)', async () => {
+    await request(app).post('/api/nodes').send({ workspaceId: ws, parentId: null, kind: 'file', name: '겹침.md' });
+
+    const again = await request(app)
+      .post('/api/nodes')
+      .send({ workspaceId: ws, parentId: null, kind: 'file', name: '겹침.md' });
+
+    expect(again.status).toBe(200);
+    expect(again.body.name).not.toBe('겹침.md');
+    // 안내 문구를 함께 준다 — 이름이 바뀐 사실을 안 알리면 사용자가 그
+    // 문서를 못 찾는다.
+    expect(again.body.notice).toContain(again.body.name);
+  });
+
+  it('편집 권한이 없으면 403 이다', async () => {
+    grantPermission(stores, root, { nodeId: ws, principalId: me.id, level: 'view' });
+    actingAs = actorFor(stores.principals, me.id);
+
+    const res = await request(app)
+      .post('/api/nodes')
+      .send({ workspaceId: ws, parentId: null, kind: 'file', name: '몰래.md' });
+
+    expect(res.status).toBe(403);
+  });
+
+  it('SEC-ATTACH-001 AC-1: 디렉토리에 파일을 올릴 수 있다', async () => {
+    const dir = idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name: '회의' }));
+
+    const res = await request(app)
+      .post(`/api/nodes/${dir}/uploads`)
+      .attach('file', Buffer.from('binary'), '설계.zip');
+
+    expect(res.status).toBe(200);
+    expect(res.body.name).toBe('설계.zip');
+  });
+
+  it('SEC-ATTACH-001 AC-2: 편집 권한이 없는 디렉토리에는 올릴 수 없다', async () => {
+    const dir = idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name: '회의' }));
+    grantPermission(stores, root, { nodeId: dir, principalId: me.id, level: 'view' });
+    actingAs = actorFor(stores.principals, me.id);
+
+    const res = await request(app)
+      .post(`/api/nodes/${dir}/uploads`)
+      .attach('file', Buffer.from('binary'), '설계.zip');
+
+    expect(res.status).toBe(403);
+  });
+
+  it('FR-ATTACH-006 AC-4: 디렉토리 업로드에도 같은 크기 제한이 걸린다', async () => {
+    writeSetting(stores.settings, 'upload-size-limit-bytes', '3');
+    const dir = idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name: '회의' }));
+
+    const res = await request(app)
+      .post(`/api/nodes/${dir}/uploads`)
+      .attach('file', Buffer.from('너무 큰 바이트'), '큰것.bin');
+
+    expect(res.status).toBe(413);
   });
 });
