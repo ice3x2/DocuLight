@@ -1,7 +1,12 @@
 import { Command } from 'cmdk';
 import { useEffect, useState } from 'react';
 
-import { fetchPrincipals, type PrincipalRow, type PrincipalStatus } from '../api/client.js';
+import {
+  fetchPrincipals,
+  type PrincipalRow,
+  type PrincipalScope,
+  type PrincipalStatus,
+} from '../api/client.js';
 
 /**
  * 주체를 고르는 **하나뿐인 부품** (`CON-PRINCIPAL-006`).
@@ -58,7 +63,17 @@ const BADGE: Record<PrincipalStatus, string> = {
   suspended: '비활성',
 };
 
-export function PrincipalPicker({ onPick }: { onPick?: (row: PrincipalRow) => void }) {
+export function PrincipalPicker({
+  scope,
+  onPick,
+}: {
+  /**
+   * 무엇에 부여하려는가 (`R162`). **필수다** — 기본값을 두면 스코프가
+   * 조용히 사라지고, 그것이 곧 명부를 여는 경로가 된다.
+   */
+  scope: PrincipalScope;
+  onPick?: (row: PrincipalRow) => void;
+}) {
   const [query, setQuery] = useState('');
   const [rows, setRows] = useState<readonly PrincipalRow[]>([]);
 
@@ -71,7 +86,7 @@ export function PrincipalPicker({ onPick }: { onPick?: (row: PrincipalRow) => vo
     }
 
     let live = true;
-    void fetchPrincipals(query)
+    void fetchPrincipals(query, scope)
       .then((found) => {
         // 늦게 온 응답이 새 질의의 결과를 덮지 않게 한다 — 덮이면 사용자가
         // 방금 친 글자와 무관한 목록이 남는다.
@@ -83,7 +98,7 @@ export function PrincipalPicker({ onPick }: { onPick?: (row: PrincipalRow) => vo
     return () => {
       live = false;
     };
-  }, [query]);
+  }, [query, scope]);
 
   return (
     <Command label="사용자·그룹 검색" shouldFilter={false}>

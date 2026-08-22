@@ -573,7 +573,7 @@ describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
   it('이름이 걸리는 사용자와 그룹을 한 목록으로 준다', async () => {
     stores.principals.createGroup('한범팀');
 
-    const got = await request(app).get('/api/principals').query({ q: '한범' });
+    const got = await request(app).get('/api/principals').query({ q: '한범', for: `workspace:${ws}` });
 
     expect(got.status).toBe(200);
     expect(got.body).toEqual(
@@ -585,7 +585,7 @@ describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
   });
 
   it('SEC-PRINCIPAL-003 AC-1: 한 글자 질의는 아무것도 주지 않는다', async () => {
-    const got = await request(app).get('/api/principals').query({ q: '한' });
+    const got = await request(app).get('/api/principals').query({ q: '한', for: `workspace:${ws}` });
 
     expect(got.status).toBe(200);
     expect(got.body).toEqual([]);
@@ -594,7 +594,7 @@ describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
   it('SEC-PRINCIPAL-003 AC-3: 스물다섯이 걸려도 스무 건까지만 준다', async () => {
     for (let n = 0; n < 25; n += 1) stores.principals.createUser(`검색대상${n}`);
 
-    const got = await request(app).get('/api/principals').query({ q: '검색대상' });
+    const got = await request(app).get('/api/principals').query({ q: '검색대상', for: `workspace:${ws}` });
 
     expect(got.body).toHaveLength(20);
   });
@@ -606,8 +606,8 @@ describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
     // 화면별 재량을 막는 것보다 먼저 막아야 하는 문이다.
     const wider = await request(app)
       .get('/api/principals')
-      .query({ q: '검색대상', limit: '100', max: '100' });
-    const shorter = await request(app).get('/api/principals').query({ q: '한', min: '1' });
+      .query({ q: '검색대상', for: `workspace:${ws}`, limit: '100', max: '100' });
+    const shorter = await request(app).get('/api/principals').query({ q: '한', for: `workspace:${ws}`, min: '1' });
 
     expect(wider.body).toHaveLength(20);
     expect(shorter.body).toEqual([]);
@@ -655,19 +655,49 @@ describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
     const 거절된 = stores.principals.createUser('검색대상거절');
     stores.principals.setStatus(거절된.id, 'rejected');
 
-    expect((await request(app).get('/api/principals').query({ q: '검색대상' })).body).toEqual([]);
+    expect((await request(app).get('/api/principals').query({ q: '검색대상', for: `workspace:${ws}` })).body).toEqual([]);
   });
 
-  it('슈퍼유저가 아니면 거절한다 — 주체 목록은 인스턴스 관리 자료다', async () => {
+  it('R162 · R162-a: 그 대상에 부여할 자격이 없으면 없는 대상과 같은 답을 받는다', async () => {
     actingAs = actorFor(stores.principals, me.id);
 
-    expect((await request(app).get('/api/principals').query({ q: '한' })).status).toBe(403);
+    const 자격없음 = await request(app).get('/api/principals').query({ q: '한범', for: `workspace:${ws}` });
+    const 없는대상 = await request(app).get('/api/principals').query({ q: '한범', for: 'workspace:없음' });
+
+    // 갈리면 이 자리가 존재 오라클이 된다 (`R94`).
+    expect(자격없음.status).toBe(404);
+    expect(없는대상.status).toBe(404);
+  });
+
+  it('R162: 스코프가 없으면 요청이 성립하지 않는다', async () => {
+    // 기본값을 전역 검색으로 두면 빠뜨린 호출 하나가 명부를 연다.
+    expect((await request(app).get('/api/principals').query({ q: '한범' })).status).toBe(404);
+  });
+
+  it('R162: 노드 편집 보유자는 그 노드를 대상으로 검색할 수 있다', async () => {
+    grantPermission(stores, root, { nodeId: doc, principalId: me.id, level: 'edit' });
+    actingAs = actorFor(stores.principals, me.id);
+
+    const got = await request(app).get('/api/principals').query({ q: '한범', for: `node:${doc}` });
+
+    // `R70-a` 가 넓히기를 편집에게 열었으므로 검색도 거기서 열린다.
+    expect(got.status).toBe(200);
+    expect(got.body).toEqual(
+      expect.arrayContaining([{ id: me.id, name: '한범', kind: 'user', status: 'active' }]),
+    );
+  });
+
+  it('R162: 보기만 가진 사람은 그 노드를 대상으로 검색할 수 없다', async () => {
+    grantPermission(stores, root, { nodeId: doc, principalId: me.id, level: 'view' });
+    actingAs = actorFor(stores.principals, me.id);
+
+    expect((await request(app).get('/api/principals').query({ q: '한범', for: `node:${doc}` })).status).toBe(404);
   });
 
   it('인증되지 않은 요청은 401 이다', async () => {
     actingAs = undefined;
 
-    expect((await request(app).get('/api/principals').query({ q: '한' })).status).toBe(401);
+    expect((await request(app).get('/api/principals').query({ q: '한', for: `workspace:${ws}` })).status).toBe(401);
   });
 });
 

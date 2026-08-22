@@ -193,8 +193,18 @@ export const savePersonalSetting = (key: string, value: string) =>
     body: JSON.stringify({ [key]: value }),
   });
 
-export const fetchPrincipals = (query: string) =>
-  call<PrincipalRow[]>(`/principals?q=${encodeURIComponent(query)}`);
+/**
+ * 주체 검색의 **부여 대상** (`R162`).
+ *
+ * 선택 인자가 아니다 — 빠뜨린 호출이 명부를 열지 않도록 대상을 반드시
+ * 실어야 한다. 서버는 스코프가 없거나 자격이 없으면 404 로 답한다.
+ */
+export type PrincipalScope = `node:${string}` | `workspace:${string}` | `group:${string}`;
+
+export const fetchPrincipals = (query: string, scope: PrincipalScope) =>
+  call<PrincipalRow[]>(
+    `/principals?q=${encodeURIComponent(query)}&for=${encodeURIComponent(scope)}`,
+  );
 
 /** 위키링크 자동완성 후보 (`CON-EDITOR-002` AC-1). 거르는 일은 서버가 한다. */
 export const fetchWikiTargets = (query: string) =>

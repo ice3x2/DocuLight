@@ -18,6 +18,9 @@ const WEB = existsSync(resolve(process.cwd(), 'src/main.tsx'))
   ? process.cwd()
   : resolve(process.cwd(), 'packages/web');
 
+/** 이 시험이 쓰는 부여 대상. 스코프 없이는 부품이 서지 않는다 (`R162`). */
+const SCOPE = 'node:n1' as const;
+
 const row = (over: Partial<PrincipalRow> = {}): PrincipalRow => ({
   id: 'p1',
   name: '한범',
@@ -47,7 +50,7 @@ const type = async (text: string) => {
 describe('SEC-PRINCIPAL-003 — 최소 질의 길이와 결과 상한이 부품에 박혀 있다', () => {
   it('AC-1: 한 글자만 치면 서버에 묻지 않는다', async () => {
     const asked = serving([row()]);
-    render(<PrincipalPicker />);
+    render(<PrincipalPicker scope={SCOPE} />);
 
     await type('한');
 
@@ -58,7 +61,7 @@ describe('SEC-PRINCIPAL-003 — 최소 질의 길이와 결과 상한이 부품�
 
   it('AC-2: 두 글자를 치면 묻는다', async () => {
     const asked = serving([row()]);
-    render(<PrincipalPicker />);
+    render(<PrincipalPicker scope={SCOPE} />);
 
     await type('한범');
 
@@ -68,7 +71,7 @@ describe('SEC-PRINCIPAL-003 — 최소 질의 길이와 결과 상한이 부품�
 
   it('AC-3: 서버가 스물다섯을 줘도 스무 줄까지만 그린다', async () => {
     serving(Array.from({ length: 25 }, (_, n) => row({ id: `p${n}`, name: `검색대상${n}` })));
-    render(<PrincipalPicker />);
+    render(<PrincipalPicker scope={SCOPE} />);
 
     await type('검색대상');
 
@@ -82,11 +85,24 @@ describe('SEC-PRINCIPAL-003 — 최소 질의 길이와 결과 상한이 부품�
     // 덮는 가장 자연스러운 형태가 그것이다. 넘겨 보고 값이 안 바뀌는
     // 것을 잰다.
     const Forced = PrincipalPicker as unknown as (props: Record<string, unknown>) => JSX.Element;
-    render(<Forced limit={100} min={1} />);
+    render(<Forced scope={SCOPE} limit={100} min={1} />);
 
     await type('검색대상');
 
     await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(20));
+  });
+
+  it('R162: 부여 대상을 요청에 싣는다', async () => {
+    const asked = serving([row()]);
+    render(<PrincipalPicker scope="workspace:ws-1" />);
+
+    await type('한범');
+
+    // 스코프가 빠지면 서버가 404 로 답하지만, 그 전에 화면이 그것을 싣지
+    // 않는다는 사실 자체를 재야 한다 — 안 실으면 이 부품이 아무 화면에도
+    // 쓸모없어지는데 그 사실은 서버를 띄워야 드러난다.
+    await waitFor(() => expect(asked).toHaveBeenCalled());
+    expect(String(asked.mock.calls[0]?.[0])).toContain('for=workspace%3Aws-1');
   });
 
   it('AC-4: 두 값을 바깥에서 집을 경로가 없다', () => {
@@ -97,7 +113,7 @@ describe('SEC-PRINCIPAL-003 — 최소 질의 길이와 결과 상한이 부품�
 
   it('AC-1: 두 글자에서 한 글자로 줄이면 앞의 결과가 남지 않는다', async () => {
     serving([row({ name: '검색대상' })]);
-    render(<PrincipalPicker />);
+    render(<PrincipalPicker scope={SCOPE} />);
 
     await type('검색대상');
     await screen.findByText('검색대상');
@@ -119,7 +135,7 @@ describe('SEC-PRINCIPAL-002 — 상태 배지', () => {
       row({ id: 'b', name: '검색대상대기', status: 'pending' }),
       row({ id: 'c', name: '검색대상비활성', status: 'suspended' }),
     ]);
-    render(<PrincipalPicker />);
+    render(<PrincipalPicker scope={SCOPE} />);
 
     await type('검색대상');
 
@@ -135,7 +151,7 @@ describe('SEC-PRINCIPAL-002 — 상태 배지', () => {
 
   it('AC-5: suspended 의 배지 문구는 비활성 이다', async () => {
     serving([row({ name: '검색대상비활성', status: 'suspended' })]);
-    render(<PrincipalPicker />);
+    render(<PrincipalPicker scope={SCOPE} />);
 
     await type('검색대상');
 
@@ -148,7 +164,7 @@ describe('SEC-PRINCIPAL-002 — 상태 배지', () => {
       row({ id: 'b', name: '검색대상대기', status: 'pending' }),
       row({ id: 'c', name: '검색대상비활성', status: 'suspended' }),
     ]);
-    render(<PrincipalPicker />);
+    render(<PrincipalPicker scope={SCOPE} />);
 
     await type('검색대상');
 

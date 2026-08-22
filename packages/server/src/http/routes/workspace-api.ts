@@ -30,6 +30,7 @@ import {
 } from '../../app/favorite/favorite-service.js';
 import { createNode } from '../../app/node/node-service.js';
 import { searchPrincipals } from '../../app/principal/principal-search-service.js';
+import { maySearchFor, parseScope } from '../../app/principal/search-scope.js';
 import {
   PERSONAL_SETTING_KEYS,
   readPersonalSetting,
@@ -614,8 +615,10 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
   /**
    * 사용자·그룹 검색 (`CON-ARCH-004` AC-4).
    *
-   * **슈퍼유저만** 묻는다 — 주체 목록은 인스턴스 관리 자료이고, 누구나
-   * 물을 수 있으면 그 자체가 이 인스턴스에 누가 있는지의 명부가 된다.
+   * **부여 대상을 함께 싣는다** (`R162`). 검색 자격을 독립 정책으로 세우지
+   * 않고 그 대상에 부여를 실행할 자격에서 파생시키는 이유는, 갈리는 순간
+   * `R70-a` 가 `편집` 에게 연 부여를 실행할 사람이 대상을 찾지 못하게 되기
+   * 때문이다. 그래서 Phase 2 에서 위임이 깊어져도 이 규칙이 바뀌지 않는다.
    *
    * 사용자와 그룹을 한 목록으로 주는 이유는 이것을 쓰는 자리가 둘을
    * 가리지 않기 때문이다 — 권한은 주체에 붙지 종류에 붙지 않는다.
@@ -626,12 +629,18 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       res.sendStatus(401);
       return;
     }
-    if (!isSuperuser(stores.principals.groupsOf(actor.id))) {
-      res.sendStatus(403);
+
+    // 스코프가 없으면 요청 자체가 성립하지 않는다 (`R162`). 없는 대상과
+    // 자격 없는 대상이 **같은 404** 를 받는다 (`R162-a` · `R94`) — 갈리면
+    // 이 자리가 곧 존재 오라클이 된다.
+    const scope = parseScope(one(req.query.for));
+    if (scope === null || !maySearchFor(stores, actor, scope)) {
+      res.sendStatus(404);
       return;
     }
 
-    // 질의 **하나만** 넘긴다 — 최소 길이와 상한을 질의 문자열로 받으면
+    // 검색에 넘기는 것은 질의 **하나뿐**이다 — 스코프는 조작의 대상이지
+    // 규칙 값이 아니며(`R162-b`), 최소 길이와 상한을 질의 문자열로 받으면
     // 화면 재량을 막기 전에 아무나 값을 바꿀 수 있는 문이 열린다
     // (`SEC-PRINCIPAL-003` AC-4).
     res.json(searchPrincipals(stores.principals, one(req.query.q) ?? ''));
