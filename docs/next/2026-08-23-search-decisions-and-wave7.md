@@ -47,7 +47,7 @@ Phase 1 은 **wave 9개**로 분해돼 있고 배정의 정본은 `C:\Work\git\D
 
 | 커밋 | 내용 |
 | --- | --- |
-| `f3dcbbb` | 막힌 것을 주니어용으로 풀어 쓴 보고서(`docs/next/2026-08-22-blockers-for-juniors.md`) · DocuLight 뷰어로 표시 · 검증 서브에이전트가 사실 주장 27건 전건 TRUE |
+| `f3dcbbb` | 막힌 것을 주니어용으로 풀어 쓴 보고서(`docs/next/2026-08-22-blockers-for-juniors.md` — 파일 실존 확인). ⚠️ 미검증 — 「DocuLight 뷰어로 띄웠다」와 「검증 서브에이전트가 27건 전건 TRUE」는 커밋 본문에 적혀 있을 뿐 저장소에 산출물·로그가 없다. 확인할 방법: 없다(세션 밖에서 대조 불가). 그 두 문장을 다른 판단의 근거로 쓰지 마라 |
 | `76a5784` | `IR-ACL-001`·`SEC-ACL-015` — 접근자 지표를 `접근 가능`/`ACL 접근자` 둘로 분리 |
 | `aa736fe` | `FR-ACL-003`·`FR-PRINCIPAL-004`·`FR-PRINCIPAL-010` — 주체 축 일괄 회수 |
 | `3978561` | 적대 검증이 찾은 결함 수정 (아래 「적대 검증이 찾은 것」) |
@@ -243,11 +243,15 @@ Phase 1 은 **wave 9개**로 분해돼 있고 배정의 정본은 `C:\Work\git\D
 
 - [ ] **J-1** `C:\Work\git\DocuLight2.0\packages\web\src\principal\PrincipalSearch.tsx` 디바운스 없음 — **B-2 에서 `PrincipalPicker` 로 흡수될 가능성이 높다**
 - [ ] **J-2** 노드 영구 삭제 후 `favorite` 표에 죽은 행이 남음
-- [ ] **J-3** `C:\Work\git\DocuLight2.0\packages\server\src\http\routes\workspace-api.ts` 의 `one()` 이 깊게 중첩된 JSON 배열에 500
+- [ ] **J-3** `C:\Work\git\DocuLight2.0\packages\server\src\http\routes\workspace-api.ts` 의 `one()` 이 깊게 중첩된 JSON 배열에 500. ⚠️ 미검증 — 그 함수가 85~86행에 재귀 헬퍼로 실재하고 중첩 깊이만큼 재귀하는 것까지는 확인됐으나, 실제로 500 이 나오는지는 재현하지 않았다. 확인할 방법: 서버를 띄우고 깊게 중첩된 배열을 그 엔드포인트에 보낸다
 
 ### J. 배선이 안 된 것 — 다음 세션이 반드시 알아야 한다
 
-이번 세션이 만든 서버 서비스 여섯은 **어떤 HTTP 라우트에도 연결되지 않았다.** `accessorsOf`·`previewRevocation`·`revokeAllFor`·`simulate`·`brokenInheritanceOf`·`movePreview`·`copyPreview` 를 `grep` 하면 소스 쪽 참조가 시험뿐이다. 화면을 세울 때 라우트부터 붙여야 한다.
+이번 세션이 만든 서버 서비스 여섯은 **어떤 HTTP 라우트에도 연결되지 않았다.** `grep -rn "accessor-service|bulk-revoke-service|admin-scope|simulation-service|inheritance-audit-service|relocation-preview-service" packages/server/src/http/` 가 **0건**이고, 라우트 파일은 `auth.ts`·`documents.ts`·`workspace-api.ts` 셋뿐이다.
+
+`previewRevocation`·`revokeAllFor`·`simulate`·`brokenInheritanceOf`·`movePreview`·`copyPreview` 여섯은 **정의 자리 하나뿐**이고 시험 밖에서 부르는 곳이 없다. `accessorsOf` 는 다르다 — 서버 소스 안에서 두 곳이 부른다: `packages\server\src\app\acl\inheritance-audit-service.ts:65`(행마다 `ACL 접근자` 수를 채운다)과 `packages\server\src\app\acl\relocation-preview-service.ts:91`(복사 프리뷰가 그대로 되돌려 준다). 그 둘도 라우트에는 닿지 않는다.
+
+화면을 세울 때 라우트부터 붙여야 한다.
 
 ---
 
@@ -273,12 +277,12 @@ Phase 1 은 **wave 9개**로 분해돼 있고 배정의 정본은 `C:\Work\git\D
 
 ### 이번 세션에 실제로 밟은 함정
 
-- **MCP 인자에 한글 유니코드 이스케이프를 쓰면 오타가 난다.** 이번 세션에 두 번(「체부파일」·「덤는다」), 이전 세션 포함 누적 네 번. **한글을 직접 넣어라.**
+- **MCP 인자에 한글 유니코드 이스케이프를 쓰면 오타가 난다. 한글을 직접 넣어라.** ⚠️ 미검증 — 발생 횟수(이번 세션 2회·누적 4회)는 저장소로 확인되지 않는다. 오타가 같은 턴에 교정돼 어느 커밋 트리에도 남지 않았기 때문이다(`git grep` 으로 최근 30개 커밋을 훑어 0건). **횟수는 못 믿되 함정 자체는 실재한다** — 이스케이프를 쓰지 않으면 이 위험이 없다.
 - **bash heredoc 에 긴 Python 을 넣으면 인용이 깨진다.** 스크래치패드(`C:\Users\beom\AppData\Local\Temp\claude\...\scratchpad\`)에 `.py` 파일로 쓰고 실행하라.
 - **PowerShell here-string(`@'...'@`)을 bash 에 쓰면 커밋 메시지에 `@` 가 섞인다.** 이번 세션에 커밋 셋이 그렇게 오염돼 `git filter-branch` 로 고쳤다. 긴 커밋 메시지는 파일에 쓰고 `git commit -F` 를 쓴다.
 - **`NODE_ENV` 가 이 셸에 `production` 으로 박혀 있다.** `npm install` 이 devDependencies 를 건너뛴다 — 설치가 필요하면 `NODE_ENV=development npm install --include=dev`. 반대로 `vitest` 는 `NODE_ENV=production` 으로 돌려야 한다(`vite.config.ts` 가 `mode==='test'` 일 때 덮는다).
 - **`git checkout -- <path>` 는 untracked 파일을 되돌리지 못한다.** 뮤테이션 탐침 전에 `C:\Users\beom\AppData\Local\Temp\` 로 원본을 복사해 두고 그것으로 복원하라.
-- **서브에이전트가 유휴 알림만 보내고 판정을 주지 않는 일이 잦다.** 이번 세션에 네 연구자 중 셋이 그랬고 하나(`pdf-research`)는 다섯 번 요청해도 답이 없어 직접 조사했다. **결과를 추정해 적지 말고 그 사실을 보고하라.**
+- **서브에이전트가 유휴 알림만 보내고 판정을 주지 않는 일이 잦다. 결과를 추정해 적지 말고 그 사실을 보고하라.** ⚠️ 미검증 — 이번 세션의 발생 건수(연구자 넷 중 셋·`pdf-research` 는 5회 요청 무응답)는 저장소에 산출물이 없어 대조 불가다. 확인할 방법: 없다. **대응책은 횟수와 무관하게 유효하다** — 판정을 못 받았으면 받지 못했다고 쓴다.
 - **서브에이전트 임시 파일은 `C:\Users\beom\AppData\Local\Temp\` 아래에만.** 저장소 안에 프로브 파일을 만들면 소스 스캔 시험이 위반으로 잡는다.
 
 ---
