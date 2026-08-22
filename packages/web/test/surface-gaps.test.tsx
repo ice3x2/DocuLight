@@ -146,3 +146,55 @@ describe('FR-SHELL-012 AC-3 · AC-4 — 잃을 것이 있는 탭은 확인을 �
     expect(await screen.findByRole('alertdialog')).toBeDefined();
   });
 });
+
+describe('FR-EDITOR-008 AC-4 · FR-STORAGE-001 AC-6 — 병합을 해소하면 저장이 재개된다', () => {
+  it('병합 화면이 머지 컴포넌트로 선다', async () => {
+    saveResponse = () => json({ current: '# 남이 고침\n' }, 409);
+    const user = userEvent.setup();
+    render(<DocumentSurface file={md} initialMode="live" body={'# 내 것'} baseHash="h1" />);
+
+    await user.keyboard('{Control>}s{/Control}');
+
+    const merge = await screen.findByRole('region', { name: '병합' });
+    // 읽기 전용 `<pre>` 만 두면 고를 수가 없다 — 대조는 되는데 해소가 안 된다.
+    expect(merge.querySelector('[data-merge]')).not.toBeNull();
+  });
+
+  it('AC-4: 해소하면 그 결과가 저장으로 나간다', async () => {
+    let calls = 0;
+    saveResponse = () => {
+      calls += 1;
+      return calls === 1 ? json({ current: '# 남이 고침\n' }, 409) : json({ hash: 'h3' });
+    };
+    const user = userEvent.setup();
+    render(<DocumentSurface file={md} initialMode="live" body={'# 내 것'} baseHash="h1" />);
+
+    await user.keyboard('{Control>}s{/Control}');
+    await screen.findByRole('region', { name: '병합' });
+
+    await user.click(screen.getByRole('button', { name: '이 내용으로 저장' }));
+
+    // 화면만 닫히면 사용자는 합친 것이 반영됐다고 믿고 그것을 잃는다.
+    await waitFor(() => expect(calls).toBe(2));
+  });
+
+  it('FR-STORAGE-001 AC-6: 해소한 뒤 자동 저장이 재개된다', async () => {
+    let calls = 0;
+    saveResponse = () => {
+      calls += 1;
+      return calls === 1 ? json({ current: '# 남이 고침\n' }, 409) : json({ hash: 'h3' });
+    };
+    const user = userEvent.setup();
+    render(<DocumentSurface file={md} initialMode="live" body={'# 내 것'} baseHash="h1" />);
+
+    await user.keyboard('{Control>}s{/Control}');
+    await screen.findByRole('region', { name: '병합' });
+    await user.click(screen.getByRole('button', { name: '이 내용으로 저장' }));
+    await waitFor(() => expect(calls).toBe(2));
+
+    await user.keyboard('{Control>}s{/Control}');
+
+    // 멈춘 채로 남으면 그 뒤의 모든 편집이 저장되지 않는다.
+    await waitFor(() => expect(calls).toBe(3));
+  });
+});

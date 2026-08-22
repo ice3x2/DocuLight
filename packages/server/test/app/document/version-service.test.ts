@@ -219,3 +219,52 @@ describe('IR-STORAGE-001 — 복원', () => {
     expect(await readFile(fileOf(doc), 'utf8')).toBe('# 새 본문\n');
   });
 });
+
+describe('FR-STORAGE-001 AC-4 — Ctrl+S 는 세션당 1회 규칙과 무관하게 스냅샷을 남긴다', () => {
+  it('같은 세션에서 강제 저장을 두 번 하면 스냅샷이 둘이다', async () => {
+    const session = beginEditSession(stores, root, doc);
+
+    for (const body of ['# 1\n', '# 2\n']) {
+      await saveDocument(stores, root, {
+        nodeId: doc,
+        body,
+        baseHash: await hashOf(doc, root),
+        session,
+        forceSnapshot: true,
+      });
+    }
+
+    // 「여기를 기억해 둬」라고 두 번 말했으면 두 지점이 남아야 한다.
+    expect(listVersions(stores, root, doc)).toHaveLength(2);
+  });
+
+  it('강제 저장 사이의 자동 저장은 스냅샷을 늘리지 않는다', async () => {
+    const session = beginEditSession(stores, root, doc);
+
+    await saveDocument(stores, root, { nodeId: doc, body: '# 1\n', baseHash: await hashOf(doc, root), session, forceSnapshot: true });
+    await saveDocument(stores, root, { nodeId: doc, body: '# 2\n', baseHash: await hashOf(doc, root), session });
+    await saveDocument(stores, root, { nodeId: doc, body: '# 3\n', baseHash: await hashOf(doc, root), session });
+
+    // 세션당 1회 규칙은 그대로다 — 강제만 예외다.
+    expect(listVersions(stores, root, doc)).toHaveLength(1);
+  });
+
+  it('강제 스냅샷도 저장 직전의 본문을 담는다', async () => {
+    const session = beginEditSession(stores, root, doc);
+    await saveDocument(stores, root, { nodeId: doc, body: '# 1\n', baseHash: await hashOf(doc, root), session, forceSnapshot: true });
+    await saveDocument(stores, root, { nodeId: doc, body: '# 2\n', baseHash: await hashOf(doc, root), session, forceSnapshot: true });
+
+    const kept = listVersions(stores, root, doc);
+    expect(await readFile(kept[1]!.path, 'utf8')).toBe('# 1\n');
+  });
+
+  it('md 가 아니면 강제해도 스냅샷이 없다 — 보관 대상이 아니다', async () => {
+    const png = idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'file', name: '그림.png' }));
+    await writeFile(fileOf(png), 'binary', 'utf8');
+    const session = beginEditSession(stores, root, png);
+
+    await saveDocument(stores, root, { nodeId: png, body: 'binary2', baseHash: await hashOf(png, root), session, forceSnapshot: true });
+
+    expect(listVersions(stores, root, png)).toEqual([]);
+  });
+});

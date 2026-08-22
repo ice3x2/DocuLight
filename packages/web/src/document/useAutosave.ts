@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { ApiError, openEditSession, saveBody } from '../api/client.js';
+import { ApiError, loadDocument, openEditSession, saveBody } from '../api/client.js';
 import {
   AUTOSAVE_DEBOUNCE_MS,
   conflictDetected,
@@ -29,8 +29,14 @@ export interface Autosave {
   changed: (body: string) => void;
   /** Ctrl+S. */
   saveNow: (body: string) => void;
-  /** 머지 뷰에서 1회 해소했다. */
-  resolve: (merged: { body: string; hash: string }) => void;
+  /**
+   * 머지 뷰에서 1회 해소했다.
+   *
+   * 합친 본문을 **곧바로 저장까지 보낸다** — 화면만 닫으면 사용자는 합친
+   * 것이 반영됐다고 믿고 그것을 잃는다. 서버의 현재 해시를 기준으로
+   * 보내므로 그 저장은 다시 충돌하지 않는다.
+   */
+  resolve: (body: string) => void;
 }
 
 export function useAutosave(nodeId: string | null, baseHash: string | undefined): Autosave {
@@ -46,7 +52,7 @@ export function useAutosave(nodeId: string | null, baseHash: string | undefined)
   }, [nodeId, baseHash]);
 
   const send = useCallback(
-    async (body: string, current: AutosaveState) => {
+    async (body: string, current: AutosaveState, forceSnapshot = false) => {
       if (nodeId === null) return;
 
       // 세션은 **첫 저장에** 연다. 문서를 열자마자 열면 읽기만 하고 닫은
@@ -60,6 +66,9 @@ export function useAutosave(nodeId: string | null, baseHash: string | undefined)
           body,
           baseHash: current.baseHash,
           ...(session.current === null ? {} : { session: session.current }),
+          // Ctrl+S 만 강제한다 — 자동 저장까지 강제하면 세션당 1회 규칙이
+          // 사라지고 보관 디렉토리가 저장 횟수만큼 늘어난다.
+          ...(forceSnapshot ? { forceSnapshot: true } : {}),
         });
         setState((was) => saveSucceeded(was, hash));
       } catch (error) {
@@ -95,16 +104,30 @@ export function useAutosave(nodeId: string | null, baseHash: string | undefined)
       setState((was) => {
         const next = edited(was, body);
         const intent = forceSave(next);
-        if (intent.save) void send(intent.body, next);
+        if (intent.save) void send(intent.body, next, intent.forceSnapshot);
         return next;
       });
     },
     [send],
   );
 
-  const resolve = useCallback((merged: { body: string; hash: string }) => {
-    setState((was) => resolvedOnce(was, merged));
-  }, []);
+  const resolve = useCallback(
+    (body: string) => {
+      if (nodeId === null) return;
+
+      void (async () => {
+        // 서버의 현재 해시를 다시 받아 그것을 기준으로 보낸다 — 낡은
+        // 기준으로 보내면 해소 직후의 저장이 곧바로 다시 충돌한다.
+        const fresh = await loadDocument(nodeId).catch(() => null);
+        if (fresh === null) return;
+
+        const resumed = resolvedOnce(state, { body, hash: fresh.hash });
+        setState(resumed);
+        await send(body, resumed);
+      })();
+    },
+    [nodeId, send, state],
+  );
 
   useEffect(
     () => () => {

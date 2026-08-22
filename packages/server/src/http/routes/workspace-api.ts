@@ -203,10 +203,11 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       return;
     }
 
-    const { body, baseHash, session } = req.body as {
+    const { body, baseHash, session, forceSnapshot } = req.body as {
       body?: string;
       baseHash?: string;
       session?: string;
+      forceSnapshot?: boolean;
     };
     if (typeof body !== 'string' || typeof baseHash !== 'string') {
       res.sendStatus(400);
@@ -218,6 +219,7 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       body,
       baseHash,
       ...(session === undefined ? {} : { session }),
+      ...(forceSnapshot === true ? { forceSnapshot: true } : {}),
     });
 
     if (saved.ok) {

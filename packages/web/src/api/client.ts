@@ -68,7 +68,7 @@ export const openEditSession = async (nodeId: string) =>
 
 export const saveBody = (
   nodeId: string,
-  input: { body: string; baseHash: string; session?: string },
+  input: { body: string; baseHash: string; session?: string; forceSnapshot?: boolean },
 ) =>
   call<{ hash: string }>(`/documents/${encodeURIComponent(nodeId)}`, {
     method: 'PUT',

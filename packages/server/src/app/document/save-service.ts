@@ -34,6 +34,13 @@ export interface SaveInput {
   baseHash: string;
   /** 편집 세션. 주면 그 세션의 첫 저장에 스냅샷이 하나 생긴다. */
   session?: string;
+  /**
+   * 세션당 1회 규칙과 **무관하게** 스냅샷을 남긴다 (`FR-STORAGE-001` AC-4).
+   *
+   * Ctrl+S 가 이것을 켠다 — 사용자가 명시로 「여기」라고 짚은 지점이라
+   * 자동 저장의 볼륨 규칙에 묶이지 않는다.
+   */
+  forceSnapshot?: boolean;
 }
 
 /** 워크스페이스 루트 기준 실체 경로. `docsRoot` 하나만 있으면 된다. */
@@ -109,6 +116,7 @@ export async function saveDocument(
     workspaceId: found.workspaceId,
     previousBody: current,
     session: input.session,
+    ...(input.forceSnapshot === true ? { force: true } : {}),
   });
 
   await writeFile(found.path, input.body, 'utf8');

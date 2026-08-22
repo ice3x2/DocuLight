@@ -62,6 +62,13 @@ interface SnapshotInput {
   /** 저장 **이전**의 본문 — 되돌릴 대상이 그것이다 (`FR-STORAGE-003` AC-3). */
   previousBody: string;
   session?: string;
+  /**
+   * 세션당 1회 규칙을 **건너뛴다** (`FR-STORAGE-001` AC-4).
+   *
+   * Ctrl+S 는 사용자가 「여기를 기억해 둬」라고 말한 지점이다 — 두 번
+   * 말했으면 두 지점이 남아야 한다.
+   */
+  force?: boolean;
 }
 
 /**
@@ -81,7 +88,9 @@ export async function snapshotIfFirstSave(
   if (node === undefined || !isVersioned(node.name)) return;
 
   const session = stores.versions.findSession(input.session);
-  if (session === undefined || session.snapshotSeq !== null) return;
+  if (session === undefined) return;
+  // 강제가 아니면 그 세션이 이미 찍었는지 본다.
+  if (input.force !== true && session.snapshotSeq !== null) return;
 
   const seq = stores.versions.nextSeq(input.nodeId);
   const root = workspaceRootOf(stores, input.workspaceId);

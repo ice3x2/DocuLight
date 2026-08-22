@@ -2,6 +2,7 @@ import { AtomicCodeMirrorEditor, doculightExtensions } from '@doculight/editor';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { urlForNode } from '../routing/deep-link.js';
+import { MergeView } from './MergeView.js';
 import {
   MODE_LABEL,
   isEditing,
@@ -228,12 +229,22 @@ export function DocumentSurface({
       )}
 
       {shown === 'conflict' && (
-        <div role="region" aria-label="병합">
+        <>
           <div role="alert">저장 중 원본이 바뀌어 병합이 필요합니다.</div>
-          {/* 양쪽을 나란히 둔다 (`FR-EDITOR-008` AC-3) — 서버의 현재 내용이
-              없으면 사용자는 무엇을 고를지 알 수 없다. */}
-          <pre aria-label="서버의 현재 내용">{conflictBody}</pre>
-        </div>
+          {/* 양쪽을 나란히 두고 **고를 수 있게** 한다 (`FR-EDITOR-008`
+              AC-3 · AC-4). 읽기 전용으로 두면 대조는 되는데 해소가 안 되고,
+              해소가 안 되면 자동 저장이 영영 멈춘 채로 남는다. */}
+          <MergeView
+            label="병합"
+            left={conflictBody ?? ''}
+            right={readBody.current()}
+            onResolve={(merged) => {
+              readBody.current = () => merged;
+              lastBody.current = merged;
+              autosave.resolve(merged);
+            }}
+          />
+        </>
       )}
 
       <div role="region" aria-label={MODE_LABEL[mode]} data-node={file.nodeId}>

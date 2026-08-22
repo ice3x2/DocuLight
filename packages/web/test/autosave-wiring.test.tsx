@@ -118,3 +118,29 @@ describe('FR-STORAGE-001 — 자동 저장이 실제로 돈다', () => {
     expect(screen.queryByRole('button', { name: /^저장$|저장하기/ })).toBeNull();
   });
 });
+
+describe('FR-STORAGE-001 AC-4 — Ctrl+S 가 강제 스냅샷을 요청한다', () => {
+  it('강제 표식을 실어 보낸다', async () => {
+    const user = await openDocument();
+    await user.click(screen.getByRole('button', { name: '편집' }));
+
+    await user.keyboard('{Control>}s{/Control}');
+
+    await waitFor(() => expect(saves).toHaveLength(1));
+    // 세션 ID 만 실으면 서버가 「이 세션은 이미 찍었다」로 건너뛴다 —
+    // 두 번째 Ctrl+S 가 아무 지점도 남기지 않는다.
+    expect((saves[0] as { forceSnapshot?: boolean }).forceSnapshot).toBe(true);
+  });
+
+  it('자동 저장은 강제하지 않는다 — 세션당 1회 규칙이 그대로 산다', async () => {
+    const user = await openDocument();
+    await user.click(screen.getByRole('button', { name: '편집' }));
+
+    const content = document.querySelector('.cm-content') as HTMLElement;
+    await user.click(content);
+    await user.keyboard('고침');
+
+    await waitFor(() => expect(saves.length).toBeGreaterThan(0), { timeout: 3000 });
+    expect((saves[0] as { forceSnapshot?: boolean }).forceSnapshot).toBeUndefined();
+  });
+});
