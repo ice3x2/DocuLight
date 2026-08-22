@@ -60,7 +60,13 @@ describe('CON-ARCH-004 — 지정 패키지가 실제로 쓰인다', () => {
 
   it('AC-5: 서버 상태가 @tanstack/react-query 로 관리된다', async () => {
     expect(await src('api/queries.ts')).toContain('@tanstack/react-query');
-    expect(await src('main.tsx')).toContain('QueryClientProvider');
+    // 소유가 `App` 에 있다 — 마운트 지점에서 조립해 넘기면 앱을 세우는
+    // 자리마다 그 조립을 따라 적어야 하고, 하나를 빠뜨리면 그 자리에서만
+    // 캐시 없이 돈다.
+    expect(await src('App.tsx')).toContain('QueryClientProvider');
+    // 훅이 **실제로 불린다.** 파일만 있고 부르는 자리가 없으면 서버 상태는
+    // 여전히 컴포넌트가 든 것이다.
+    expect(await src('App.tsx')).toMatch(/useTree\(|useSession\(/);
   });
 });
 

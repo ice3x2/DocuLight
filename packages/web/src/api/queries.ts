@@ -1,6 +1,17 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
-import { fetchSession, fetchTrash, fetchTree, type SessionBody } from './client.js';
+import {
+  fetchFavorites,
+  fetchLinks,
+  fetchSession,
+  fetchTrash,
+  fetchTree,
+  loadDocument,
+  type DocumentBody,
+  type DocumentLinksBody,
+  type FavoriteRow,
+  type SessionBody,
+} from './client.js';
 import type { TrashRowView } from '../trash/TrashPanel.js';
 import type { WorkspaceTreeView } from '../tree/tree-contract.js';
 
@@ -18,7 +29,10 @@ import type { WorkspaceTreeView } from '../tree/tree-contract.js';
 export const QUERY_KEYS = {
   session: ['session'] as const,
   tree: ['tree'] as const,
+  favorites: ['favorites'] as const,
   trash: (scope: 'mine' | 'all', workspaceId?: string) => ['trash', scope, workspaceId] as const,
+  links: (nodeId: string) => ['links', nodeId] as const,
+  document: (nodeId: string) => ['document', nodeId] as const,
 };
 
 export const useSession = (): UseQueryResult<SessionBody> =>
@@ -33,6 +47,9 @@ export const useSession = (): UseQueryResult<SessionBody> =>
 export const useTree = (enabled: boolean): UseQueryResult<WorkspaceTreeView[]> =>
   useQuery({ queryKey: QUERY_KEYS.tree, queryFn: () => fetchTree<WorkspaceTreeView[]>(), enabled });
 
+export const useFavorites = (enabled: boolean): UseQueryResult<FavoriteRow[]> =>
+  useQuery({ queryKey: QUERY_KEYS.favorites, queryFn: fetchFavorites, enabled });
+
 export const useTrash = (
   where: { scope: 'mine' | 'all'; workspaceId?: string },
   enabled: boolean,
@@ -42,3 +59,25 @@ export const useTrash = (
     queryFn: () => fetchTrash<TrashRowView[]>(where),
     enabled,
   });
+
+/**
+ * 활성 문서의 링크 양쪽 (`CON-EDITOR-002` AC-2 · AC-3).
+ *
+ * **연 문서가 없으면 묻지 않는다** — 대상 없는 질의는 서버에서 404 로
+ * 끝나고, 그 404 가 로그를 채워 진짜 문제를 가린다.
+ */
+export const useLinks = (nodeId: string | null): UseQueryResult<DocumentLinksBody> =>
+  useQuery({
+    queryKey: QUERY_KEYS.links(nodeId ?? ''),
+    queryFn: () => fetchLinks(nodeId!),
+    enabled: nodeId !== null,
+  });
+
+/**
+ * 한 문서의 본문과 기준 해시.
+ *
+ * 둘을 **한 질의**로 든다 — 저장 요청이 해시를 실어야 충돌이 판정되고,
+ * 따로 들면 그 판정이 남의 본문을 근거로 하게 된다.
+ */
+export const useDocument = (nodeId: string): UseQueryResult<DocumentBody> =>
+  useQuery({ queryKey: QUERY_KEYS.document(nodeId), queryFn: () => loadDocument(nodeId) });

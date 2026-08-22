@@ -61,8 +61,14 @@ export const fetchSession = () => call<SessionBody>('/session');
 
 export const fetchTree = <T>() => call<T>('/tree');
 
+/** 문서 본문과 그 **기준 해시**. 저장 요청이 이 해시를 싣는다. */
+export interface DocumentBody {
+  body: string;
+  hash: string;
+}
+
 export const loadDocument = (nodeId: string) =>
-  call<{ body: string; hash: string }>(`/documents/${encodeURIComponent(nodeId)}`);
+  call<DocumentBody>(`/documents/${encodeURIComponent(nodeId)}`);
 
 export const openEditSession = async (nodeId: string) =>
   (await call<{ session: string }>(`/documents/${encodeURIComponent(nodeId)}/session`, { method: 'POST' }))

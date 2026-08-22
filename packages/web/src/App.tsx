@@ -1,26 +1,26 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { QueryClient, QueryClientProvider, useQueries, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useState } from 'react';
 
 import {
   ApiError,
   addFavorite,
   createNode,
-  fetchFavorites,
-  fetchLinks,
-  fetchSession,
-  fetchTrash,
-  fetchTree,
   loadDocument,
   uploadAttachment,
   uploadIntoDirectory,
   uploadNewVersion,
-  type DocumentLinksBody,
-  type FavoriteRow,
-  type SessionBody,
 } from './api/client.js';
+import {
+  QUERY_KEYS,
+  useFavorites,
+  useLinks,
+  useSession,
+  useTrash,
+  useTree,
+} from './api/queries.js';
 import type { UploadRequest } from './attachment/upload-contract.js';
 import { PreAuthScreen } from './auth/PreAuthScreen.js';
 import { AppShell } from './shell/AppShell.js';
-import type { Viewer } from './shell/shell-contract.js';
 import {
   activeTab,
   needsConfirmBeforeReplace,
@@ -30,18 +30,8 @@ import {
 } from './document/tab-state.js';
 import { nodeIdOf, urlForNode } from './routing/deep-link.js';
 import type { SaveState } from './document/tab-state.js';
-import type { TrashLens, TrashRowView } from './trash/TrashPanel.js';
+import type { TrashLens } from './trash/TrashPanel.js';
 import type { WorkspaceTreeView, TreeNodeView } from './tree/tree-contract.js';
-
-/**
- * 앱의 진입 컴포넌트.
- *
- * **인증 상태가 화면 종류를 가른다** (`IR-AUTH-001` AC-4). 세션을 세우지
- * 못하면 셸 자체를 세우지 않는다 — 깔아 두고 그 위에 로그인 화면을 얹으면
- * 사용자가 로그인 전에 트리와 탭의 껍데기를 보게 되고, 그것이 「내용이
- * 없다」로 읽힌다.
- */
-type Session = { state: 'loading' } | { state: 'anonymous' } | { state: 'signed-in'; viewer: Viewer };
 
 /** 트리에서 그 노드를 찾는다 — 문서를 열 때 이름과 권한이 필요하다. */
 function findNode(workspaces: readonly WorkspaceTreeView[], nodeId: string): TreeNodeView | undefined {
@@ -69,25 +59,59 @@ const toTab = (node: TreeNodeView) => ({
   level: node.level,
 });
 
+/**
+ * 서버 상태의 단일 클라이언트 (`CON-ARCH-004` AC-5).
+ *
+ * 창을 다시 볼 때마다 다시 받지 않는다 — 문서를 편집하다 탭을 옮겼다
+ * 돌아오면 트리가 새로 오면서 열린 문서의 자리가 흔들린다.
+ */
+const newQueryClient = () =>
+  new QueryClient({
+    defaultOptions: { queries: { refetchOnWindowFocus: false, staleTime: 30_000 } },
+  });
+
+/**
+ * 앱의 진입 컴포넌트.
+ *
+ * 클라이언트를 **여기서** 만든다. 마운트 지점에서 만들어 넘기면 앱을 세우는
+ * 자리마다 그 조립을 따라 적어야 하고, 하나를 빠뜨리면 그 자리에서만 서버
+ * 상태가 캐시 없이 돈다 — 화면은 도는데 같은 것을 계속 다시 받는다.
+ */
 export function App() {
-  const [session, setSession] = useState<Session>({ state: 'loading' });
-  const [workspaces, setWorkspaces] = useState<readonly WorkspaceTreeView[]>([]);
+  // 마운트마다 새로 만든다 — 앱이 두 번 서는 자리(시험)가 앞의 캐시를
+  // 물려받으면 앞 시험의 응답이 뒤 시험의 첫 화면이 된다.
+  const [client] = useState(newQueryClient);
+
+  return (
+    <QueryClientProvider client={client}>
+      <AppBody />
+    </QueryClientProvider>
+  );
+}
+
+/**
+ * **인증 상태가 화면 종류를 가른다** (`IR-AUTH-001` AC-4). 세션을 세우지
+ * 못하면 셸 자체를 세우지 않는다 — 깔아 두고 그 위에 로그인 화면을 얹으면
+ * 사용자가 로그인 전에 트리와 탭의 껍데기를 보게 되고, 그것이 「내용이
+ * 없다」로 읽힌다.
+ */
+function AppBody() {
+  const queries = useQueryClient();
+  const session = useSession();
+  const signedIn = session.data !== undefined;
+
+  const tree = useTree(signedIn);
+  const workspaces: readonly WorkspaceTreeView[] = tree.data ?? [];
+
   const [documents, setDocuments] = useState<TabState>({ tabs: [], activeId: null });
-  const [bodies, setBodies] = useState<Readonly<Record<string, string>>>({});
-  // 본문과 그 **기준 해시**를 함께 들고 있는다 — 저장 요청이 해시를
-  // 실어야 충돌이 판정되고, 둘이 갈리면 그 판정이 남의 본문을 근거로 한다.
-  const [hashes, setHashes] = useState<Readonly<Record<string, string>>>({});
-  const [trash, setTrash] = useState<readonly TrashRowView[]>([]);
-  const [favorites, setFavorites] = useState<readonly FavoriteRow[]>([]);
   /**
    * 휴지통을 좁혀 보는 조건 (`FR-SHELL-007` AC-4 · AC-5).
    *
    * 좁히는 일은 **서버가** 한다 — 받아 놓고 화면에서 거르면 넓힌 범위의
-   * 행이 이미 브라우저에 와 있게 되고, 그것은 권한 판정이 아니다.
+   * 행이 이미 브라우저에 와 있게 되고, 그것은 권한 판정이 아니다. 이 값이
+   * 질의 키의 일부라, 바뀌면 다시 받는 일이 저절로 일어난다.
    */
   const [trashLens, setTrashLens] = useState<TrashLens>({ scope: 'mine' });
-  /** 활성 문서의 링크 양쪽 (`CON-EDITOR-002` AC-2 · AC-3). */
-  const [links, setLinks] = useState<DocumentLinksBody>({ outgoing: [], backlinks: [] });
   /**
    * 방금 조작에 대한 서버의 안내 (`SEC-SHELL-002` AC-3).
    *
@@ -105,40 +129,39 @@ export function App() {
    */
   const [pendingOpen, setPendingOpen] = useState<TreeNodeView | null>(null);
 
-  useEffect(() => {
-    void (async () => {
-      try {
-        const body: SessionBody = await fetchSession();
-        setSession({ state: 'signed-in', viewer: body });
-        setWorkspaces(await fetchTree<WorkspaceTreeView[]>());
-        // 휴지통은 전 워크스페이스 통합이라 트리와 별개로 받는다
-        // (`FR-SHELL-007` AC-3). 실패해도 셸은 서야 한다 — 휴지통 하나가
-        // 안 온다고 앱을 못 쓰게 만들 이유가 없다.
-        setTrash(await fetchTrash<TrashRowView[]>({ scope: 'mine' }).catch(() => []));
-        setFavorites(await fetchFavorites().catch(() => []));
-      } catch (error) {
-        // 401 만 익명이다. 다른 실패를 익명으로 접으면 서버가 잠깐 죽은
-        // 것과 로그아웃이 구별되지 않아 사용자가 다시 로그인하게 된다.
-        setSession(
-          error instanceof ApiError && error.status === 401
-            ? { state: 'anonymous' }
-            : { state: 'loading' },
-        );
-      }
-    })();
-  }, []);
+  // 휴지통은 전 워크스페이스 통합이라 트리와 별개로 받는다
+  // (`FR-SHELL-007` AC-3). 실패해도 셸은 서야 한다 — 휴지통 하나가 안
+  // 온다고 앱을 못 쓰게 만들 이유가 없다.
+  const trash = useTrash(trashLens, signedIn);
+  const favorites = useFavorites(signedIn);
+  const links = useLinks(documents.activeId);
 
-  /** 본문과 기준 해시를 받아 둔다. 못 받으면 그 자리를 **비워 둔다**. */
-  const fetchBody = useCallback((nodeId: string) => {
-    void loadDocument(nodeId)
-      .then(({ body, hash }) => {
-        setBodies((was) => ({ ...was, [nodeId]: body }));
-        setHashes((was) => ({ ...was, [nodeId]: hash }));
-      })
-      // 빈 문자열을 넣으면 사용자가 그 위에 쓰기 시작하고, 저장이 남의
-      // 본문을 지운다.
-      .catch(() => undefined);
-  }, []);
+  /**
+   * 열린 탭들의 본문.
+   *
+   * 열린 탭 목록이 곧 질의 목록이다 — 「열었으니 받아 와라」를 따로 부르면
+   * 부르는 자리를 하나 빠뜨렸을 때 그 탭만 영영 비어 있는다.
+   *
+   * 받아 온 값을 컴포넌트 상태로 **복사하지 않는다.** 복사하면 같은 사실이
+   * 두 곳에 살고, 무효화가 한쪽만 갱신한다.
+   */
+  const bodyQueries = useQueries({
+    queries: documents.tabs.map((tab) => ({
+      queryKey: QUERY_KEYS.document(tab.nodeId),
+      queryFn: () => loadDocument(tab.nodeId),
+    })),
+  });
+
+  const bodies: Record<string, string> = {};
+  const hashes: Record<string, string> = {};
+  documents.tabs.forEach((tab, index) => {
+    const got = bodyQueries[index]?.data;
+    // 못 받은 자리는 **비워 둔다**. 빈 문자열을 넣으면 사용자가 그 위에
+    // 쓰기 시작하고, 저장이 남의 본문을 지운다.
+    if (got === undefined) return;
+    bodies[tab.nodeId] = got.body;
+    hashes[tab.nodeId] = got.hash;
+  });
 
   /**
    * 문서를 연다 (`FR-SHELL-012` · `FR-SHELL-006` AC-1).
@@ -150,29 +173,25 @@ export function App() {
    * 자동 저장이 멈췄거나 저장이 거부된 탭에는 그 탭에만 있는 편집이
    * 남아 있고, 교체하면 그것이 사라진다.
    */
-  const open = useCallback(
-    (node: TreeNodeView, inNewTab: boolean) => {
-      let blocked = false;
+  const open = useCallback((node: TreeNodeView, inNewTab: boolean) => {
+    let blocked = false;
 
-      setDocuments((was) => {
-        const current = activeTab(was);
-        if (!inNewTab && current !== undefined && needsConfirmBeforeReplace(current)) {
-          blocked = true;
-          return was;
-        }
-        return inNewTab ? openInNewTab(was, toTab(node)) : openInActiveTab(was, toTab(node));
-      });
-
-      if (blocked) {
-        setPendingOpen(node);
-        return;
+    setDocuments((was) => {
+      const current = activeTab(was);
+      if (!inNewTab && current !== undefined && needsConfirmBeforeReplace(current)) {
+        blocked = true;
+        return was;
       }
+      return inNewTab ? openInNewTab(was, toTab(node)) : openInActiveTab(was, toTab(node));
+    });
 
-      window.history.pushState(null, '', urlForNode(node.id));
-      fetchBody(node.id);
-    },
-    [fetchBody],
-  );
+    if (blocked) {
+      setPendingOpen(node);
+      return;
+    }
+
+    window.history.pushState(null, '', urlForNode(node.id));
+  }, []);
 
   /**
    * 새 문서를 만든다 (`FR-SHELL-003` AC-1).
@@ -195,24 +214,27 @@ export function App() {
     // 접미사가 붙었을 때만 말이 온다 — 늘 말하면 사용자가 그 자리를 읽지
     // 않게 되고, 정작 이름이 바뀐 때도 지나친다.
     setNotice(made.notice);
-    setWorkspaces(await fetchTree<WorkspaceTreeView[]>().catch(() => workspaces));
-  }, [workspaces]);
+    await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
+  }, [workspaces, queries]);
 
   /**
    * 즐겨찾기에 더한다 (`FR-SHELL-001` AC-3 · AC-4).
    *
-   * 더한 뒤 목록을 **다시 받는다** — 화면에서 지어 넣으면 서버가 무엇을
+   * 더한 뒤 목록을 **무효화한다** — 화면에서 지어 넣으면 서버가 무엇을
    * 담았는지와 갈리고, 볼 수 없게 된 항목이 화면에만 남는다.
    */
-  const favorite = useCallback(async (nodeId: string) => {
-    await addFavorite(nodeId).catch(() => undefined);
-    setFavorites(await fetchFavorites().catch(() => []));
-  }, []);
+  const favorite = useCallback(
+    async (nodeId: string) => {
+      await addFavorite(nodeId).catch(() => undefined);
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.favorites });
+    },
+    [queries],
+  );
 
   /**
    * 기존 파일에 새 버전을 올린다 (`FR-SHELL-008` AC-2).
    *
-   * 올린 뒤 그 문서를 다시 받는다 — 열려 있는 탭이 옛 본문을 들고 있으면
+   * 올린 뒤 그 문서를 무효화한다 — 열려 있는 탭이 옛 본문을 들고 있으면
    * 다음 저장이 방금 올린 것을 덮는다.
    */
   const newVersion = useCallback(
@@ -222,10 +244,10 @@ export function App() {
         .catch(() => false);
       if (!done) return;
 
-      fetchBody(node.id);
-      setWorkspaces(await fetchTree<WorkspaceTreeView[]>().catch(() => workspaces));
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.document(node.id) });
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
     },
-    [fetchBody, workspaces],
+    [queries],
   );
 
   /**
@@ -234,26 +256,29 @@ export function App() {
    * 트리 드롭은 **디렉토리에 노드를 만드는** 조작이고, 편집기 붙여넣기는
    * 본문에 링크로 들어가는 첨부다 — 서버 경로가 다르다.
    *
-   * 올린 뒤 트리를 다시 받는다(AC-2) — 안 받으면 사용자는 파일이 안
-   * 올라간 것으로 읽는다. 거부됐으면 다시 받지 않는다: 바뀐 것이 없다.
+   * 올린 뒤 트리를 무효화한다(AC-2) — 안 하면 사용자는 파일이 안 올라간
+   * 것으로 읽는다. 거부됐으면 무효화하지 않는다: 바뀐 것이 없다.
    */
-  const upload = useCallback(async (request: UploadRequest) => {
-    const owner = request.ownerNodeId;
-    const parent = request.parentId;
+  const upload = useCallback(
+    async (request: UploadRequest) => {
+      const owner = request.ownerNodeId;
+      const parent = request.parentId;
 
-    const send = (file: File) => {
-      if (parent !== undefined) return uploadIntoDirectory(parent, file);
-      if (owner !== undefined) return uploadAttachment(owner, file);
-      return Promise.reject(new Error('대상이 없다'));
-    };
+      const send = (file: File) => {
+        if (parent !== undefined) return uploadIntoDirectory(parent, file);
+        if (owner !== undefined) return uploadAttachment(owner, file);
+        return Promise.reject(new Error('대상이 없다'));
+      };
 
-    const done = await Promise.all(
-      request.files.map((file) => send(file).then(() => true).catch(() => false)),
-    );
-    if (!done.some(Boolean)) return;
+      const done = await Promise.all(
+        request.files.map((file) => send(file).then(() => true).catch(() => false)),
+      );
+      if (!done.some(Boolean)) return;
 
-    setWorkspaces(await fetchTree<WorkspaceTreeView[]>().catch(() => []));
-  }, []);
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
+    },
+    [queries],
+  );
 
   /**
    * 본문 표면이 알려 온 저장 상태를 탭에 반영한다.
@@ -268,37 +293,6 @@ export function App() {
         : was,
     );
   }, []);
-
-  // 조건이 바뀌면 휴지통을 다시 받는다. 첫 회차는 세션 적재가 이미 받았다.
-  const firstTrash = useRef(true);
-  useEffect(() => {
-    if (firstTrash.current) {
-      firstTrash.current = false;
-      return;
-    }
-    void fetchTrash<TrashRowView[]>(trashLens)
-      .then(setTrash)
-      .catch(() => undefined);
-  }, [trashLens]);
-
-  /**
-   * 활성 문서가 바뀌면 그 문서의 링크를 받는다.
-   *
-   * **연 문서가 없으면 묻지 않는다** — 대상 없는 질의는 서버에서 404 로
-   * 끝나고, 그 404 가 로그를 채워 진짜 문제를 가린다.
-   */
-  const active = documents.activeId;
-  useEffect(() => {
-    if (active === null) {
-      setLinks({ outgoing: [], backlinks: [] });
-      return;
-    }
-    void fetchLinks(active)
-      .then(setLinks)
-      // 못 받으면 빈 목록으로 둔다 — 옛 문서의 링크를 남겨 두면 지금 문서의
-      // 것으로 읽힌다.
-      .catch(() => setLinks({ outgoing: [], backlinks: [] }));
-  }, [active]);
 
   // 주소에 문서가 실려 들어왔으면 그것을 연다 (`FR-SHELL-006` AC-2).
   useEffect(() => {
@@ -325,28 +319,33 @@ export function App() {
       // 여기서는 주소를 다시 밀지 않는다 — 브라우저가 이미 옮겨 놓았고,
       // 또 밀면 이력에 같은 자리가 두 번 쌓여 뒤로 가기가 멈춘 것처럼 된다.
       setDocuments((was) => openInActiveTab(was, toTab(node)));
-      fetchBody(node.id);
     };
 
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
-  }, [workspaces, fetchBody]);
+  }, [workspaces]);
 
-  if (session.state === 'loading') return <div data-state="loading" />;
-  if (session.state === 'anonymous') return <PreAuthScreen screen="login" />;
+  // 401 만 익명이다. 다른 실패를 익명으로 접으면 서버가 잠깐 죽은 것과
+  // 로그아웃이 구별되지 않아 사용자가 다시 로그인하게 된다.
+  if (session.error instanceof ApiError && session.error.status === 401)
+    return <PreAuthScreen screen="login" />;
+  // **트리가 올 때까지 셸을 세우지 않는다.** 빈 트리로 먼저 세우면 아직
+  // 모르는 상태가 「접근 가능한 워크스페이스가 없다」로 그려지고
+  // (`FR-AUTH-005` AC-1), 사용자는 권한을 잃었다고 읽는다.
+  if (session.data === undefined || !tree.isSuccess) return <div data-state="loading" />;
 
   return (
     <AppShell
-      viewer={session.viewer}
+      viewer={session.data}
       workspaces={workspaces}
       documents={documents}
       bodies={bodies}
       hashes={hashes}
-      trash={trash}
+      trash={trash.data ?? []}
       trashLens={trashLens}
       onTrashLens={setTrashLens}
-      favorites={favorites}
-      links={links}
+      favorites={favorites.data ?? []}
+      links={links.data ?? { outgoing: [], backlinks: [] }}
       query={query}
       onQuery={setQuery}
       onOpen={open}
@@ -364,7 +363,6 @@ export function App() {
               accept: () => {
                 setDocuments((was) => openInActiveTab(was, toTab(pendingOpen)));
                 window.history.pushState(null, '', urlForNode(pendingOpen.id));
-                fetchBody(pendingOpen.id);
                 setPendingOpen(null);
               },
               cancel: () => setPendingOpen(null),
