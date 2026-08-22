@@ -160,7 +160,7 @@ describe('IR-ACL-001 — 접근 가능 과 ACL 접근자 는 서로 다른 수�
 });
 
 describe('SEC-ACL-015 — 명단은 관리 전용, 수치는 편집까지', () => {
-  it('AC-1: 관리 보유자는 명단을 받는다', () => {
+  it('관리 보유자는 명단을 받는다 — AC-1~AC-4 의 표면 축은 화면이 선 뒤에 잰다', () => {
     const root = superuser();
     const doc = mk('회의록.md');
     const 한범 = user('한범');
@@ -199,5 +199,19 @@ describe('SEC-ACL-015 — 명단은 관리 전용, 수치는 편집까지', () =
     // 권한이 없어서 못 보는 것과 애초에 없는 것이 **같은 값**이다.
     expect(report(남, doc)).toBeNull();
     expect(report(root, '없는-노드')).toBeNull();
+  });
+
+  it('관문에 걸린 노드는 슈퍼유저에게도 지표를 내지 않는다', () => {
+    // 관문은 권한 축이 아니라 이름·상태 축이라 관리 권한으로 뚫리지
+    // 않는다. 이 관문이 빠지면 실체가 사라진 노드와 예약 자리 아래의
+    // 문서가 접근자 지표로 존재를 드러낸다.
+    const root = superuser();
+    const 유실 = mk('유실문서.md');
+
+    expect(report(root, 유실)?.metrics.reachable).toBeGreaterThan(0);
+
+    stores.nodes.markOrphaned(유실, new Date().toISOString());
+
+    expect(report(root, 유실)).toBeNull();
   });
 });

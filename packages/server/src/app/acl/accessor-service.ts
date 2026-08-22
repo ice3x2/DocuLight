@@ -6,13 +6,7 @@ import type { PrincipalId } from '../../domain/principal/principal.js';
 import type { PrincipalRepository } from '../../domain/ports/principal-repository.js';
 import { isSuperuser, subjectIdsOf } from '../../domain/principal/subject.js';
 import { isServable } from '../../domain/serving/servable.js';
-import {
-  ancestryOf,
-  judgementScope,
-  permissionOf,
-  type AclStores,
-  type Actor,
-} from './permission-service.js';
+import { judgementScope, type AclStores, type Actor } from './permission-service.js';
 
 /**
  * 한 노드의 접근자 인원 — **둘로 나뉜다** (`IR-ACL-001`).
@@ -62,20 +56,28 @@ export function accessorsOf(
 ): AccessorReport | null {
   // 관문이 권한보다 앞선다 — 휴지통·아카이브·점 이름 아래의 노드는
   // 관리자에게도 지표를 내지 않는다.
+  //
+  // 사슬은 **한 번만** 읽고 그것으로 관문과 상속 사슬을 함께 세운다.
+  // `chainOf` 를 관문·판정·사슬에서 각각 부르면 한 호출이 같은 질의를
+  // 세 번 낸다.
   const chain = stores.nodes.chainOf(nodeId);
   if (chain.length === 0 || !isServable(chain)) return null;
 
-  const level = permissionOf(stores, actor, nodeId);
-  if (level === null || !permits(level, 'edit')) return null;
-
-  const ancestry = ancestryOf(stores, nodeId);
-  if (ancestry === undefined) return null;
+  const ancestry: Ancestry = {
+    links: chain.map((node) => ({ id: node.id, inheritsAcl: node.inheritsAcl })),
+    workspaceId: chain[0]!.workspaceId,
+  };
 
   // 주체를 가리지 않고 사슬 위의 항목을 **한 번에** 받는다. 사람마다
   // 질의하면 인원 수만큼 질의가 붙는다.
   const entries = stores.acl.entriesOnAny(judgementScope(ancestry));
-  const withoutGate = entries.filter((entry) => !isUpwardGate(entry, ancestry));
 
+  // 요청자 판정도 같은 항목 집합에서 나온다 — `permissionOf` 를 부르면
+  // 사슬과 항목을 둘 다 다시 읽는다.
+  const level = effectivePermission(ancestry, entries, actor.requester);
+  if (level === null || !permits(level, 'edit')) return null;
+
+  const withoutGate = entries.filter((entry) => !isUpwardGate(entry, ancestry));
   const roster: PrincipalId[] = [];
   let viaAcl = 0;
 

@@ -7,9 +7,11 @@ import { previewRevocation, revokeAllFor } from '../../../src/app/acl/bulk-revok
 import { breakInheritance, grantPermission } from '../../../src/app/acl/grant-service.js';
 import { actorFor, permissionOf, type Actor } from '../../../src/app/acl/permission-service.js';
 import type { NodeStores } from '../../../src/app/node/node-service.js';
+import { setAccountStatus } from '../../../src/app/principal/principal-service.js';
 import type { PrincipalId } from '../../../src/domain/principal/principal.js';
 import { DEFAULT_GROUP_ID, SUPERUSER_GROUP_ID } from '../../../src/domain/principal/system-groups.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
+import { SqliteSessionRepository } from '../../../src/infra/sqlite/session-repository.js';
 import { nodeStores } from '../../support/acl-fixture.js';
 
 /**
@@ -172,20 +174,29 @@ describe('FR-ACL-003 — 주체 앞 항목을 한 번에 걷는다', () => {
     expect(entryCountOf(잔류자.id)).toBe(1);
   });
 
-  it('미리보기가 보인 행과 실제로 걷힌 행이 같다', () => {
+  it('미리보기가 보인 행과 실제로 걷힌 행이 같다 — 순서까지', () => {
     // 갈리면 사용자가 확인한 것과 실행된 것이 달라진다 — 되돌리려면
     // 재부여가 필요한 조작이라 그 차이를 사후에 알아차리기 어렵다.
+    //
+    // 관리자 범위 안에 행을 **셋** 둔다. 하나뿐이면 순서가 뒤집혀도
+    // 같은 배열이라 이 시험이 아무것도 재지 못한다. 비어 있지 않다는
+    // 것도 함께 단언한다 — 양쪽이 다 빈 배열이어도 같기 때문이다.
     const root = superuser();
     const 관리자 = workspaceAdmin('기획팀장', WS, root);
-    const doc = mk('회의록.md');
+    const 본부 = mk('본부', null, 'directory');
+    const 첫째 = mk('가.md', 본부);
+    const 둘째 = mk('나.md', 본부);
     const 남의문서 = mk('급여.md', null, 'file', OTHER);
     const 퇴사자 = user('퇴사자');
-    grantPermission(stores, root, { nodeId: doc, principalId: 퇴사자.id, level: 'view' });
+    grantPermission(stores, root, { nodeId: 본부, principalId: 퇴사자.id, level: 'view' });
+    grantPermission(stores, root, { nodeId: 첫째, principalId: 퇴사자.id, level: 'edit' });
+    grantPermission(stores, root, { nodeId: 둘째, principalId: 퇴사자.id, level: 'edit' });
     grantPermission(stores, root, { nodeId: 남의문서, principalId: 퇴사자.id, level: 'view' });
 
-    const planned = previewRevocation(stores, 관리자, 퇴사자.id)?.rows.map((r) => r.entryId);
-    const actual = revokeAllFor(stores, 관리자, 퇴사자.id)?.rows.map((r) => r.entryId);
+    const planned = previewRevocation(stores, 관리자, 퇴사자.id)?.rows.map((r) => r.path);
+    const actual = revokeAllFor(stores, 관리자, 퇴사자.id)?.rows.map((r) => r.path);
 
+    expect(planned).toEqual(['본부', '본부/가.md', '본부/나.md']);
     expect(actual).toEqual(planned);
   });
 
@@ -248,10 +259,35 @@ describe('FR-PRINCIPAL-004 — 적용 범위는 요청자 레벨이 정한다', 
     expect(previewRevocation(stores, 편집자, root.id)).toBeNull();
     expect(revokeAllFor(stores, 편집자, root.id)).toBeNull();
   });
+
+  it('워크스페이스에 편집을 가진 사람에게도 열리지 않는다 — 관리 전용이다', () => {
+    // 앞 시험은 이 문턱을 재지 못한다. 거기서는 부여 대상이 **문서**라
+    // 워크스페이스에서의 레벨이 애초에 `null` 이고, 그래서 문턱이 `관리`
+    // 든 「권한 있음」이든 똑같이 통과한다. 여기서는 워크스페이스에
+    // 편집을 주므로 문턱을 낮추는 순간 통과해 버린다.
+    //
+    // 통과하면 이 사람이 그 워크스페이스의 **모든 부여**를 주체·경로·
+    // 레벨·부여자까지 읽는다 — 미리보기 행 집합이 사실상 접근자 명단이라
+    // `SEC-ACL-015` 가 관리 전용으로 못박은 것을 우회하는 두 번째 문이 된다.
+    const root = superuser();
+    const 편집자 = user('편집자');
+    grantPermission(stores, root, { nodeId: WS, principalId: 편집자.id, level: 'edit' });
+
+    expect(previewRevocation(stores, 편집자, root.id)).toBeNull();
+    expect(revokeAllFor(stores, 편집자, root.id)).toBeNull();
+  });
+
+  it('워크스페이스에 보기만 가진 사람에게도 열리지 않는다', () => {
+    const root = superuser();
+    const 열람자 = user('열람자');
+    grantPermission(stores, root, { nodeId: WS, principalId: 열람자.id, level: 'view' });
+
+    expect(previewRevocation(stores, 열람자, root.id)).toBeNull();
+  });
 });
 
 describe('FR-PRINCIPAL-010 — 시스템 그룹도 대상이다', () => {
-  it('default 그룹 앞으로 부여된 항목도 걷힌다', () => {
+  it('AC-2: default 그룹 앞으로 부여된 항목도 걷힌다', () => {
     // 제외하면 「모든 사용자에게 열린 워크스페이스」를 되돌릴 수단이 없다.
     const root = superuser();
     const doc = mk('회의록.md');
@@ -261,5 +297,43 @@ describe('FR-PRINCIPAL-010 — 시스템 그룹도 대상이다', () => {
 
     expect(removed?.rows).toHaveLength(1);
     expect(entryCountOf(DEFAULT_GROUP_ID)).toBe(0);
+  });
+
+  it('AC-3: 새 사용자가 들어오거나 계정이 활성화돼도 걷힌 항목이 돌아오지 않는다', () => {
+    // 가입 시 자동 소속과 활성화 시점 소속은 **멤버십** 규정이지 ACL
+    // 재생성 규정이 아니다. 둘이 얽혀 있으면 이 회수는 다음 가입자 한
+    // 명으로 조용히 무효가 된다.
+    const root = superuser();
+    const doc = mk('회의록.md');
+    grantPermission(stores, root, { nodeId: doc, principalId: DEFAULT_GROUP_ID, level: 'view' });
+    revokeAllFor(stores, root, DEFAULT_GROUP_ID);
+
+    const 신입 = stores.principals.createUser('신입');
+    stores.principals.addMember(DEFAULT_GROUP_ID, 신입.id);
+    setAccountStatus(
+      { principals: stores.principals, sessions: new SqliteSessionRepository(db) },
+      신입.id,
+      'active',
+    );
+
+    expect(entryCountOf(DEFAULT_GROUP_ID)).toBe(0);
+    expect(permissionOf(stores, actorFor(stores.principals, 신입.id), doc)).toBeNull();
+  });
+
+  it('슈퍼유저 그룹도 대상에서 빠지지 않는다', () => {
+    // `R119` 는 둘을 함께 지목한다. `default` 만 재고 넘어가면 나머지
+    // 절반은 아무도 확인하지 않은 채 남는다.
+    const root = superuser();
+    const doc = mk('회의록.md');
+    grantPermission(stores, root, {
+      nodeId: doc,
+      principalId: SUPERUSER_GROUP_ID,
+      level: 'view',
+    });
+
+    const removed = revokeAllFor(stores, root, SUPERUSER_GROUP_ID);
+
+    expect(removed?.rows).toHaveLength(1);
+    expect(entryCountOf(SUPERUSER_GROUP_ID)).toBe(0);
   });
 });

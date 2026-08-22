@@ -83,15 +83,19 @@ export function revokeAllFor(
  * `revokePermission` 이 이미 갖고 있고, 주체 축으로 훑는 이 화면은 그것과
  * 다른 조작이다.
  *
- * 노드마다 되묻지 않고 **워크스페이스 단위로 한 번씩** 잰다. 노드 계층에는
- * 관리를 부여할 수 없으므로(`SEC-WORKSPACE-002`) 어떤 노드에서 관리를
- * 갖는다는 것은 곧 그 워크스페이스에서 관리를 갖는다는 뜻이고, 둘은 같은
- * 판정이다. 항목마다 되물으면 질의가 항목 수만큼 붙는다.
+ * 선별에서는 노드마다 되묻지 않고 **워크스페이스 단위로 한 번씩** 잰다.
+ * 노드 계층에는 관리를 부여할 수 없으므로(`SEC-WORKSPACE-002`) 어떤 노드에서
+ * 관리를 갖는다는 것은 곧 그 워크스페이스에서 관리를 갖는다는 뜻이고, 둘은
+ * 같은 판정이다. 항목마다 되물으면 질의가 항목 수만큼 붙는다.
+ *
+ * **실행 경로는 다르다.** `revokeAllFor` 는 항목마다 회수 경로를 지나고 그
+ * 안에서 권한이 한 번 더 재어진다. 감사 행을 남기고 회수 판정을 한 곳에
+ * 두기 위해 치르는 값이며, 그래서 회수 실행의 질의는 항목 수에 비례한다.
  */
 function plan(stores: AclStores, actor: Actor, principalId: PrincipalId): Revocation | null {
+  const workspaces = stores.workspaces.list();
   const managed = new Set(
-    stores.workspaces
-      .list()
+    workspaces
       .filter((workspace) => permissionOf(stores, actor, workspace.id) === 'admin')
       .map((workspace) => workspace.id),
   );
@@ -100,9 +104,7 @@ function plan(stores: AclStores, actor: Actor, principalId: PrincipalId): Revoca
   const entries = stores.acl.entriesOfPrincipal(principalId);
   const chain = stores.nodes.chainsOf(entries.map((entry) => entry.nodeId));
   const byId = new Map(chain.map((node) => [node.id, node]));
-  const workspaceNames = new Map(
-    stores.workspaces.list().map((workspace) => [workspace.id, workspace.name]),
-  );
+  const workspaceNames = new Map(workspaces.map((workspace) => [workspace.id, workspace.name]));
 
   const rows: RevocationRow[] = [];
   for (const entry of entries) {
@@ -115,9 +117,31 @@ function plan(stores: AclStores, actor: Actor, principalId: PrincipalId): Revoca
 
   return {
     scope: actor.requester.superuser ? 'instance' : 'managed-workspaces',
-    rows,
+    rows: rows.sort(byPlace),
   };
 }
+
+/**
+ * 표의 줄 순서 — **결정적이어야 한다.**
+ *
+ * 저장소가 주는 순서는 `granted_at` 이 초 단위라 같은 초에 들어온 항목들이
+ * 불투명 ID 로 갈린다. 사람이 읽는 표에서 그것은 무작위이며, 같은 자료를
+ * 두 번 열면 줄 순서가 달라진다.
+ *
+ * 워크스페이스 → 넓은 자리 → 경로 순이다. 워크스페이스 자체에 걸린 항목이
+ * 먼저 오는 이유는 그것이 가장 넓은 부여여서다 — 회수 범위를 가늠하는
+ * 사람이 제일 먼저 봐야 하는 줄이다.
+ *
+ * 제품 전반의 목록 정렬 규칙은 이 자리가 정하지 않는다. 여기서 필요한
+ * 것은 「같은 자료면 같은 순서」뿐이다.
+ */
+const byPlace = (a: RevocationRow, b: RevocationRow): number => {
+  if (a.workspaceName !== b.workspaceName) return a.workspaceName < b.workspaceName ? -1 : 1;
+  if (a.path === b.path) return a.entryId < b.entryId ? -1 : 1;
+  if (a.path === null) return -1;
+  if (b.path === null) return 1;
+  return a.path < b.path ? -1 : 1;
+};
 
 interface Placement {
   readonly workspaceId: string;
