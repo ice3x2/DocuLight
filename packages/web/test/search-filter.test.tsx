@@ -3,7 +3,15 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { SearchPanel } from '../src/search/SearchPanel.js';
-import { AXIS_LABELS, DEFAULT_AXES, axesFrom, type SearchAxis } from '../src/search/search-axes.js';
+import {
+  AXIS_LABELS,
+  DEFAULT_AXES,
+  axesFrom,
+  axesTo,
+  readAxes,
+  writeAxes,
+  type SearchAxis,
+} from '../src/search/search-axes.js';
 import type { SearchDocumentBody } from '../src/api/client.js';
 
 afterEach(cleanup);
@@ -101,5 +109,24 @@ describe('FR-SHELL-013 AC-7 — 마지막 조합이 되살아난다', () => {
     expect(axesFrom('{}')).toEqual([...DEFAULT_AXES]);
     expect(axesFrom('name,없는축')).toEqual([...DEFAULT_AXES]);
     expect(axesFrom('')).toEqual([...DEFAULT_AXES]);
+  });
+});
+
+describe('FR-SHELL-013 AC-7 — 고른 조합이 브라우저에 남는다', () => {
+  it('쓴 값을 그대로 되살린다', () => {
+    writeAxes(axesTo(['name', 'tag']));
+
+    // 저장과 복원이 짝이 아니면 다음 방문에 다른 조합이 선다.
+    expect(axesFrom(readAxes()).sort()).toEqual(['name', 'tag']);
+  });
+
+  it('저장소가 없어도 던지지 않는다 — 기본값으로 시작할 뿐이다', () => {
+    const 원래 = globalThis.localStorage;
+    Object.defineProperty(globalThis, 'localStorage', { value: undefined, configurable: true });
+
+    expect(() => writeAxes('name')).not.toThrow();
+    expect(axesFrom(readAxes())).toEqual([...DEFAULT_AXES]);
+
+    Object.defineProperty(globalThis, 'localStorage', { value: 원래, configurable: true });
   });
 });

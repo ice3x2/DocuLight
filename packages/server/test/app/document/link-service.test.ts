@@ -259,3 +259,29 @@ describe('FR-STORAGE-009 — 위키링크는 경로가 아니라 이름으로 �
     expect((await linksOf(stores, root, 설계))!.backlinks.map((one) => one.nodeId)).toEqual([회의록]);
   });
 });
+
+describe('SEC-WORKSPACE-004 — 역참조 표면의 개수 힌트', () => {
+  it('AC-7: 권한 없는 역참조가 통째로 빠지고 개수 힌트가 실리지 않는다', async () => {
+    const 남의것 = idOf(
+      createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'file', name: '남의것.md' }),
+    );
+    await write(남의것, '[[설계]] 를 본다\n');
+    grantPermission(stores, root, { nodeId: 설계, principalId: me.id, level: 'view' });
+
+    const 본것 = (await linksOf(stores, me, 설계))!;
+
+    // 「비공개 1건」 같은 값이 실리면 그 수가 곧 볼 수 없는 문서의 개수다.
+    expect(본것.backlinks).toEqual([]);
+    expect(Object.keys(본것).sort()).toEqual(['backlinks', 'outgoing']);
+  });
+
+  it('AC-8: 건수를 셀 값이 필터를 통과한 항목뿐이다', async () => {
+    grantPermission(stores, root, { nodeId: 회의록, principalId: me.id, level: 'view' });
+    grantPermission(stores, root, { nodeId: 설계, principalId: me.id, level: 'view' });
+
+    const 본것 = (await linksOf(stores, me, 설계))!;
+
+    // 목록의 길이가 곧 건수다 — 따로 세는 값이 없으니 갈릴 자리도 없다.
+    expect(본것.backlinks.map((one) => one.nodeId)).toEqual([회의록]);
+  });
+});
