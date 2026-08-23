@@ -5,6 +5,8 @@ import request from 'supertest';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { bootstrap, createApp, type ServerRuntime } from '../../src/main.js';
+import { registerAccount } from '../../src/app/auth/account-service.js';
+import { SUPERUSER_GROUP_ID } from '../../src/domain/principal/system-groups.js';
 import type { ServerConfig } from '../../src/config/config.js';
 
 let dir: string;
@@ -19,6 +21,16 @@ beforeEach(async () => {
     port: 0,
   };
   runtime = await bootstrap(config);
+
+  // **설치를 마친 인스턴스**를 세운다. 설치 관문이 운영 조립에 서므로
+  // (`SEC-AUTH-011`) 슈퍼유저가 없으면 이 시험의 모든 경로가 503 이다 —
+  // 이 시험이 재는 것은 설치 뒤의 조립이지 관문 자체가 아니다.
+  const 설치자 = await registerAccount(runtime.stores, {
+    name: '설치자',
+    password: 'x'.repeat(10),
+    status: 'active',
+  });
+  runtime.stores.principals.addMember(SUPERUSER_GROUP_ID, (설치자 as { ok: true; id: string }).id);
 });
 
 afterEach(async () => {

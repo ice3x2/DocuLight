@@ -1,0 +1,213 @@
+{
+  "run_id": "2026-08-24.doculight2.phase1-wave1",
+  "plan_path": "docs/plans/2026-08-24.doculight2.phase1-wave1.plan.md",
+  "sidecar_path": "docs/plans/2026-08-24.doculight2.phase1-wave1.sidecar.json",
+  "plan_sha256": "fc9367602c642673a0b1439de37fb32fccf4d7b56bc546e9df189e21437087a6",
+  "sidecar_sha256": "0e211500a589dca89d6fef78758525f680b764153446350b5fcd45757e73481e",
+  "target_slug": "phase-1",
+  "started_at": "2026-08-24T00:00:00Z",
+  "pm_version": "0.1",
+  "tasks": [
+    {
+      "task_id": "T-PH001-01",
+      "phase_id": "PH-001",
+      "status": "done",
+      "attempts": 1,
+      "trace_req_ids": [
+        "SEC-AUTH-010",
+        "SEC-AUTH-011"
+      ],
+      "result_summary": "red 확인 — 게이트 미배선·라우트 404 재현"
+    },
+    {
+      "task_id": "T-PH001-02",
+      "phase_id": "PH-001",
+      "status": "done",
+      "attempts": 1,
+      "trace_req_ids": [
+        "SEC-AUTH-010",
+        "SEC-AUTH-011"
+      ],
+      "result_summary": "createApp 이 installGate 를 문다 (판정은 함수)"
+    },
+    {
+      "task_id": "T-PH001-03",
+      "phase_id": "PH-001",
+      "status": "done",
+      "attempts": 1,
+      "trace_req_ids": [
+        "SEC-AUTH-012",
+        "SEC-AUTH-015",
+        "SEC-AUTH-013",
+        "SEC-AUTH-017"
+      ],
+      "result_summary": "red 확인 — 설치 라우트 9건 전부 404"
+    },
+    {
+      "task_id": "T-PH001-04",
+      "phase_id": "PH-001",
+      "status": "done",
+      "attempts": 1,
+      "trace_req_ids": [
+        "SEC-AUTH-012",
+        "SEC-AUTH-015",
+        "SEC-AUTH-013",
+        "SEC-AUTH-017"
+      ],
+      "result_summary": "installRouter 구현 + apiRouter 배선 + announce 를 stores 로"
+    },
+    {
+      "task_id": "T-PH001-05",
+      "phase_id": "PH-001",
+      "status": "done",
+      "attempts": 1,
+      "trace_req_ids": [
+        "SEC-AUTH-012",
+        "SEC-AUTH-013",
+        "SEC-AUTH-014"
+      ],
+      "result_summary": "red 확인 — 기동 콘솔 출력 없음"
+    },
+    {
+      "task_id": "T-PH001-06",
+      "phase_id": "PH-001",
+      "status": "done",
+      "attempts": 1,
+      "trace_req_ids": [
+        "SEC-AUTH-012",
+        "SEC-AUTH-013",
+        "SEC-AUTH-014"
+      ],
+      "result_summary": "bootstrap 이 설치 전이면 토큰을 발행·출력"
+    },
+    {
+      "task_id": "T-PH001-07",
+      "phase_id": "PH-001",
+      "status": "done",
+      "attempts": 1,
+      "trace_req_ids": [
+        "SEC-AUTH-010"
+      ],
+      "result_summary": "설치 뒤 관문 해제 시험 — 구현이 이미 함수형이라 red 미발생"
+    },
+    {
+      "task_id": "T-PH001-08",
+      "phase_id": "PH-001",
+      "status": "done",
+      "attempts": 1,
+      "trace_req_ids": [
+        "SEC-AUTH-010"
+      ],
+      "result_summary": "무동작 — T-PH001-02 가 이미 함수 판정으로 구현"
+    },
+    {
+      "task_id": "T-PH002-01",
+      "phase_id": "PH-002",
+      "status": "pending",
+      "attempts": 0,
+      "trace_req_ids": [
+        "SEC-AUTH-017",
+        "SEC-AUTH-012"
+      ],
+      "result_summary": null
+    },
+    {
+      "task_id": "T-PH002-02",
+      "phase_id": "PH-002",
+      "status": "pending",
+      "attempts": 0,
+      "trace_req_ids": [
+        "SEC-AUTH-017",
+        "SEC-AUTH-012"
+      ],
+      "result_summary": null
+    },
+    {
+      "task_id": "T-PH002-03",
+      "phase_id": "PH-002",
+      "status": "pending",
+      "attempts": 0,
+      "trace_req_ids": [
+        "FR-CONFIRM-019"
+      ],
+      "result_summary": null
+    },
+    {
+      "task_id": "T-PH002-04",
+      "phase_id": "PH-002",
+      "status": "pending",
+      "attempts": 0,
+      "trace_req_ids": [
+        "FR-CONFIRM-019"
+      ],
+      "result_summary": null
+    },
+    {
+      "task_id": "T-PH002-05",
+      "phase_id": "PH-002",
+      "status": "pending",
+      "attempts": 0,
+      "trace_req_ids": [
+        "SEC-AUTH-015"
+      ],
+      "result_summary": null
+    },
+    {
+      "task_id": "T-PH002-06",
+      "phase_id": "PH-002",
+      "status": "pending",
+      "attempts": 0,
+      "trace_req_ids": [
+        "SEC-AUTH-015"
+      ],
+      "result_summary": null
+    },
+    {
+      "task_id": "T-PH003-01",
+      "phase_id": "PH-003",
+      "status": "pending",
+      "attempts": 0,
+      "trace_req_ids": [
+        "SEC-AUTH-010"
+      ],
+      "result_summary": null
+    },
+    {
+      "task_id": "T-PH003-02",
+      "phase_id": "PH-003",
+      "status": "pending",
+      "attempts": 0,
+      "trace_req_ids": [
+        "SEC-AUTH-010"
+      ],
+      "result_summary": null
+    }
+  ],
+  "stats": {
+    "total": 16,
+    "done": 8,
+    "running": 0,
+    "pending": 8,
+    "failed": 0,
+    "blocked": 0,
+    "skipped": 0
+  },
+  "lifecycle_gate_state": {
+    "evaluated_at": "2026-08-24T00:00:00Z",
+    "blocked_req_ids": [],
+    "stability_snapshot": {
+      "SEC-AUTH-010": "stable",
+      "SEC-AUTH-011": "stable",
+      "SEC-AUTH-012": "stable",
+      "SEC-AUTH-013": "evolving",
+      "SEC-AUTH-014": "stable",
+      "SEC-AUTH-015": "stable",
+      "SEC-AUTH-017": "stable",
+      "FR-CONFIRM-019": "stable"
+    }
+  },
+  "req_coverage": {},
+  "final_mutations": [],
+  "pending_mutations": [],
+  "report_path": null
+}
