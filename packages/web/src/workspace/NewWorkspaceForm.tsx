@@ -8,7 +8,8 @@ import type { PrincipalRow } from '../api/client.js';
 /** `default` 그룹의 초기 권한 (`FR-PRINCIPAL-007`). */
 export type DefaultGroupLevel = 'none' | 'view' | 'edit';
 
-const 레벨문구: Record<DefaultGroupLevel, string> = {
+/** 레벨의 화면 문구. **여기 하나다** — 두 곳에 적으면 두 화면이 같은 레벨을 다른 말로 부른다. */
+export const 레벨문구: Record<DefaultGroupLevel, string> = {
   none: '없음',
   view: '보기',
   edit: '편집',

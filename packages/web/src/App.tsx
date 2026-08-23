@@ -519,10 +519,17 @@ function AppBody() {
     return () => window.removeEventListener('popstate', onPop);
   }, [workspaces]);
 
-  // **503 은 설치 전이다** (`SEC-AUTH-010` AC-1 · `SEC-AUTH-011`). 관문이
-  // 그 코드로 답하므로 401 만 보면 새 인스턴스가 영원히 로딩 상태에 머물고,
-  // 설치 화면에 닿는 길이 아예 없다.
-  if (session.error instanceof ApiError && session.error.status === 503)
+  // **설치 전은 503 + 표식으로 판별한다** (`SEC-AUTH-010` AC-1).
+  //
+  // 상태 코드만 보면 안 된다 — 리버스 프록시·드레이닝·과부하도 503 이고,
+  // 그때 설치 화면을 세우면 운영 중인 인스턴스가 잠깐 재시작하는 동안
+  // 로그인한 사용자에게 「설치 토큰을 입력하세요」가 뜬다. 그것은 바로
+  // 아래 주석이 401 에 대해 금지한 접기와 같은 종류다.
+  if (
+    session.error instanceof ApiError &&
+    session.error.status === 503 &&
+    session.error.detail?.state === 'uninstalled'
+  )
     return <PreAuthScreen screen="install" />;
   // 401 만 익명이다. 다른 실패를 익명으로 접으면 서버가 잠깐 죽은 것과
   // 로그아웃이 구별되지 않아 사용자가 다시 로그인하게 된다.

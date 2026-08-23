@@ -3,7 +3,10 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { bootstrap, type ServerRuntime } from '../../../src/main.js';
+import type { AddressInfo } from 'node:net';
+
+import type { ServerConfig } from '../../../src/config/config.js';
+import { bootstrap, startServer, type ServerRuntime } from '../../../src/main.js';
 import { forgetInstallTokenForTest } from '../../../src/app/install/install-service.js';
 import { registerAccount } from '../../../src/app/auth/account-service.js';
 import { SUPERUSER_GROUP_ID } from '../../../src/domain/principal/system-groups.js';
@@ -20,11 +23,18 @@ let dir: string;
 let runtime: ServerRuntime | null;
 let 콘솔: ReturnType<typeof vi.spyOn>;
 
+/** `startServer` 가 요구하는 설정. 포트 0 은 「빈 포트를 골라라」다. */
+const 설정 = (seq: number): ServerConfig => ({
+  docsRoot: join(dir, `docs-${seq}`),
+  databaseFile: join(dir, `db-${seq}`, 'doculight.db'),
+  port: 0,
+  trustProxyHops: 0,
+});
+
 const 기동 = async (seq = 0) => {
   runtime = await bootstrap({
     docsRoot: join(dir, `docs-${seq}`),
     databaseFile: join(dir, `db-${seq}`, 'doculight.db'),
-    port: 0,
   });
   return runtime;
 };
@@ -75,10 +85,46 @@ describe('SEC-AUTH-012 — 설치 토큰이 기동 콘솔에 나온다', () => {
     runtime = await bootstrap({
       docsRoot: join(dir, 'docs-0'),
       databaseFile: join(dir, 'db-0', 'doculight.db'),
-      port: 0,
     });
 
     expect(출력()).not.toMatch(/설치 토큰/);
+  });
+});
+
+describe('SEC-AUTH-012 — 토큰과 함께 **갈 곳**이 나온다', () => {
+  it('설치 전 기동은 설치 화면의 주소를 낸다 — 토큰만으로는 어디에 넣을지 알 수 없다', async () => {
+    const 준비된 = await 기동();
+    const server = startServer(설정(0), 준비된);
+    await new Promise((resolve) => server.once('listening', resolve));
+    const port = (server.address() as AddressInfo).port;
+
+    try {
+      // 토큰만 찍고 주소를 안 내면 운영자는 그 값을 어디에 넣는지 알 수
+      // 없다 — 화면의 자리를 알려 주는 곳이 어디에도 없었다.
+      expect(출력()).toContain(`http://localhost:${port}/install`);
+    } finally {
+      server.close();
+    }
+  });
+
+  it('설치를 마친 인스턴스는 주소를 내지 않는다 — 낼 이유가 없다', async () => {
+    const first = await 기동(9);
+    const 설치자 = await registerAccount(first.stores, {
+      name: '설치자',
+      password: 'x'.repeat(10),
+      status: 'active',
+    });
+    first.stores.principals.addMember(SUPERUSER_GROUP_ID, (설치자 as { ok: true; id: string }).id);
+    콘솔.mockClear();
+
+    const server = startServer(설정(9), first);
+    await new Promise((resolve) => server.once('listening', resolve));
+
+    try {
+      expect(출력()).not.toContain('/install');
+    } finally {
+      server.close();
+    }
   });
 });
 

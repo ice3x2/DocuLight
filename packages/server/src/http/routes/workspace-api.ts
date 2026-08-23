@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
-import { Router, json, type Request } from 'express';
+import { Router, type Request } from 'express';
 import multer from 'multer';
 
 import {
@@ -175,7 +175,10 @@ interface TreeNodeBody {
 
 export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Router {
   const router = Router();
-  router.use(json({ limit: '1mb' }));
+  // 본문 파서를 여기 두지 않는다 — `apiRouter` 가 `/api` 전체에 한 번만
+  // 세운다. 두 곳이 세우면 먼저 선 것이 `req._body` 를 채워 뒤따르는 파서의
+  // 한도가 조용히 죽고, 그 침묵은 한도를 올린 사람이 아무 변화도 못 보는
+  // 형태로 나타난다.
 
   // 업로드는 메모리에 받는다 — 크기 상한이 설정에서 오므로 디스크에 먼저
   // 떨구면 거부된 파일이 임시 자리에 남는다.

@@ -56,6 +56,9 @@ beforeEach(async () => {
   actingAs = root;
   app = express();
   app.use(express.json());
+  // 운영과 같은 순서로 세운다 — `apiRouter` 가 파서를 먼저 세우고 그 뒤에
+  // 이 라우터가 붙는다. 라우터 자신은 파서를 갖지 않는다.
+  app.use(express.json({ limit: '1mb' }));
   app.use('/api', workspaceApiRouter({ stores, actorOf: () => actingAs }));
 });
 

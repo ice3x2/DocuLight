@@ -36,6 +36,7 @@ beforeEach(async () => {
     docsRoot,
     databaseFile: join(dir, 'data', 'doculight.db'),
     port: 3400,
+    trustProxyHops: 0,
   };
 
   db = openDatabase(join(dir, 'doculight.db'));

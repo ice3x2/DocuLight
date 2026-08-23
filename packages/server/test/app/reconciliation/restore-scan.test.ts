@@ -30,6 +30,7 @@ beforeEach(async () => {
     docsRoot: join(dir, 'docs'),
     databaseFile: join(dir, 'data', 'doculight.db'),
     port: 3400,
+    trustProxyHops: 0,
     // 이 시험은 기동 절차만 본다 — 리스너를 열지 않으므로 정적 루트는
     // 쓰이지 않는다.
   };

@@ -1,4 +1,4 @@
-import express, { Router } from 'express';
+import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 
 import {
@@ -9,7 +9,7 @@ import {
   type InstallStores,
 } from '../../app/install/install-service.js';
 import { SIGNUP_MODES } from '../../domain/auth/signup-mode.js';
-import { loginRateKey } from './auth.js';
+import { rateKeyOf, INSTALL_ATTEMPTS_PER_WINDOW, RATE_WINDOW_MS } from '../rate-key.js';
 
 /**
  * 설치 두 경로 (`SEC-AUTH-012` · `SEC-AUTH-015`).
@@ -40,24 +40,21 @@ const GROUP_LEVELS: readonly DefaultGroupLevel[] = ['none', 'view', 'edit'];
 export function installRouter(stores: InstallStores): Router {
   const router = Router();
 
-  // 본문 파서를 이 라우터가 스스로 세운다 — 서버 조립에 두면 정적 서빙
-  // 경로까지 지나고, 다른 라우터에 기대면 그쪽이 빠질 때 조용히 깨진다.
-  router.use(express.json());
+  // 본문 파서를 여기 두지 않는다 — 경로 없이 붙는 라우터의 `use` 는 그
+  // 라우터를 지나는 **모든** 요청에 걸려 `/api/*` 전체를 덮고, 먼저 선
+  // 파서가 `req._body` 를 세우면 뒤따르는 파서의 한도 설정이 죽는다.
+  // 파서는 `apiRouter` 가 한 번만 세운다.
 
   // **토큰 검증에도 같은 제한이 걸린다** (`SEC-AUTH-012` Rationale · `R57`).
   // 256비트 토큰이라 무차별 대입이 위협은 아니지만, 이 경로는 인증 없이
   // 열려 있어 제한이 없으면 그 자체가 증폭 표면이다. 단위는 로그인과 같은
   // 출발지이며 그 판정을 다시 적지 않는다.
   const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    limit: 30,
+    windowMs: RATE_WINDOW_MS,
+    limit: INSTALL_ATTEMPTS_PER_WINDOW,
     standardHeaders: true,
     legacyHeaders: false,
-    keyGenerator: (req) => {
-      const forwarded = req.headers['x-forwarded-for'];
-      const first = Array.isArray(forwarded) ? forwarded[0] : forwarded?.split(',')[0];
-      return loginRateKey(first ?? req.ip ?? req.socket.remoteAddress);
-    },
+    keyGenerator: rateKeyOf,
     validate: { keyGeneratorIpFallback: false },
   });
 
@@ -81,7 +78,7 @@ export function installRouter(stores: InstallStores): Router {
   });
 
   // 설치 커밋 (`SEC-AUTH-015` AC-3 · AC-4).
-  router.post('/install/commit', async (req, res) => {
+  router.post('/install/commit', limiter, async (req, res) => {
     const body = (req.body ?? {}) as Record<string, unknown>;
     const installSession = body['installSession'];
 
@@ -99,10 +96,29 @@ export function installRouter(stores: InstallStores): Router {
       return;
     }
 
+    // **문자열도 검사한다.** `String(...)` 강제 형변환은 객체를
+    // `"[object Object]"` 라는 이름으로, 숫자를 비밀번호로 통과시킨다 —
+    // 400 을 받아야 할 요청이 200 을 받는 것이고, 바로 위 문단이 열거에
+    // 대해 세운 규칙과 어긋난다.
+    const superuserName = body['superuserName'];
+    const password = body['password'];
+    const workspaceName = body['workspaceName'];
+    if (
+      typeof superuserName !== 'string' ||
+      typeof password !== 'string' ||
+      typeof workspaceName !== 'string'
+    ) {
+      // **열거 오류와 갈라 답한다.** 하나로 접으면 `password: 123` 을 보낸
+      // 요청이 「가입 모드를 고치라」는 안내를 받고, 사용자는 맞는 칸을
+      // 고치게 된다 — 사유를 내주기로 한 이유가 바로 그 반대다.
+      res.status(400).json({ rule: 'bad-field' });
+      return;
+    }
+
     const outcome = await commitInstall(stores, installSession, {
-      superuserName: String(body['superuserName'] ?? ''),
-      password: String(body['password'] ?? ''),
-      workspaceName: String(body['workspaceName'] ?? ''),
+      superuserName,
+      password,
+      workspaceName,
       defaultGroupLevel,
       signupMode,
     });
@@ -110,7 +126,10 @@ export function installRouter(stores: InstallStores): Router {
     if (!outcome.ok) {
       // 규칙 이름을 그대로 준다 — 설치 화면은 인증 전이라 숨길 상대가
       // 없고, 오히려 사유가 없으면 사용자가 무엇을 고칠지 모른다.
-      res.status(400).json({ rule: outcome.rule });
+      //
+      // 「아직 돌고 있다」만 409 다. 400 으로 답하면 「입력이 틀렸다」로
+      // 읽히는데 이 요청의 입력에는 아무 문제가 없다 — 다시 보내면 된다.
+      res.status(outcome.rule === 'commit-in-flight' ? 409 : 400).json({ rule: outcome.rule });
       return;
     }
 

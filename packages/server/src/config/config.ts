@@ -16,6 +16,15 @@ export interface ServerConfig {
   databaseFile: string;
   /** API 포트. 운영에서는 이 프로세스가 정적 산출물도 같은 오리진에 올린다 (`R33-a`). */
   port: number;
+  /**
+   * 앞에 선 프록시의 홉 수. 기본은 `0` — 프록시 없음.
+   *
+   * 요청 제한의 출발지 판정이 이 값에 달려 있다 (`R57` · `R72-i`).
+   * 프록시 뒤에 두면서 이 값을 안 세우면 모든 요청이 프록시 주소 하나로
+   * 묶여 한 사람이 전원을 잠글 수 있고, 프록시 없이 세우면 클라이언트가
+   * `x-forwarded-for` 로 제한을 무력화한다. 어느 쪽도 조용하다.
+   */
+  trustProxyHops: number;
 }
 
 // 정적 산출물의 자리는 여기 없다. 그것은 운영자가 고르는 값이 아니라
@@ -36,6 +45,7 @@ const DEFAULT_PORT = 3399;
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): ServerConfig {
   const dataDir = env.DOCULIGHT_DATA_DIR ?? resolve(process.cwd(), '.doculight-data');
   const parsedPort = Number(env.PORT);
+  const parsedHops = Number(env.DOCULIGHT_TRUST_PROXY_HOPS);
 
   return {
     docsRoot: env.DOCULIGHT_DOCS_ROOT ?? resolve(dataDir, 'docs'),
@@ -43,5 +53,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ServerConfig {
     // 사전 검사로 거른다 — 잘못된 값을 파싱 예외로 흘리면 기동 실패 사유가
     // 스택트레이스에 묻힌다.
     port: Number.isInteger(parsedPort) && parsedPort > 0 ? parsedPort : DEFAULT_PORT,
+    // 안전한 쪽이 기본이다 — 프록시 없음. 켜는 것이 명시적 선택이어야
+    // 클라이언트가 정하는 헤더를 실수로 신뢰하는 일이 없다.
+    trustProxyHops: Number.isInteger(parsedHops) && parsedHops >= 0 ? parsedHops : 0,
   };
 }

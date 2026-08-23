@@ -52,15 +52,17 @@ describe('DR-SHELL-001 — 런타임 설정의 단일 저장소는 DB 다', () =
     expect(readSetting(store(), 'upload-size-limit-bytes')).toBe('1048576');
   });
 
-  it('AC-2: config 는 포트·docsRoot·DB 경로 셋만 담는다', () => {
+  it('AC-2: config 는 포트·docsRoot·DB 경로·프록시 홉 수 넷만 담는다', () => {
     // 여기 런타임 설정이 하나라도 들어오면 그 값의 출처가 둘이 되고,
     // 설정 모달에서 바꾼 값이 재기동에서 조용히 되돌아간다.
     //
-    // 목록이 **닫혀 있다**. 「DB 를 열기 전에 필요한가」는 새 칸을 넣기
-    // 위한 시험이 아니라 이 셋이 왜 여기 있는지의 설명이다 — 그것으로
-    // 칸을 늘리기 시작하면 닫힌 목록이 아니게 된다.
+    // 목록이 **닫혀 있다**. 판정 기준은 「DB 에 둘 수 없는 기동 값인가」
+    // 이며(`R166-a`), 그것은 새 칸을 넣기 위한 열쇠가 아니라 이 넷이 왜
+    // 여기 있는지의 설명이다 — 그것으로 칸을 늘리기 시작하면 닫힌 목록이
+    // 아니게 된다. 넷째 칸은 `R166` 판정으로 들어왔고, 그때 요구를 먼저
+    // 고친 뒤 이 줄을 고쳤다.
     expect(Object.keys(loadConfig({})).sort()).toEqual(
-      ['databaseFile', 'docsRoot', 'port'].sort(),
+      ['databaseFile', 'docsRoot', 'port', 'trustProxyHops'].sort(),
     );
   });
 

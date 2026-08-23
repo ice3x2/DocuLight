@@ -145,6 +145,14 @@ export function isInstalled(stores: InstallStores): boolean {
 
 export type InstallRule =
   | 'already-installed'
+  /**
+   * 같은 인스턴스에서 다른 커밋이 **아직 돌고 있다**.
+   *
+   * `already-installed` 로 접지 않는다 — 선행 요청이 뒤에서 실패하면
+   * 인스턴스는 설치되지 않은 채 남는데, 그때 「이미 끝났다」를 받은 사람은
+   * 성공했다고 믿고 창을 닫는다.
+   */
+  | 'commit-in-flight'
   | 'bad-token'
   | 'empty-password'
   | 'workspace-failed';
@@ -176,6 +184,34 @@ export async function commitInstall(
   // 않는 이유는 그 값이 한 번만 쓰이도록 설계됐기 때문이다 — 커밋까지
   // 들고 다니게 하면 상시 자격증명이 된다.
   if (!requireInstallSession(stores, installSession)) return { ok: false, rule: 'bad-token' };
+
+  // **여기서 직렬화한다.** 위 두 검사는 동기이고 바로 아래 해싱이 양보하므로,
+  // 그 틈에 들어온 두 번째 요청이 같은 두 검사를 모두 통과한다 — 아직 아무도
+  // 편입되지 않았고 세션도 살아 있기 때문이다. 결과는 슈퍼유저 둘과
+  // 워크스페이스 둘, 혹은 유일 인덱스 충돌이다. 되돌릴 수 없다고 고지한
+  // 조작에서 더블클릭 한 번의 대가로는 비싸다.
+  if (committing) return { ok: false, rule: 'commit-in-flight' };
+  committing = true;
+  try {
+    return await commit(stores, input);
+  } finally {
+    committing = false;
+  }
+}
+
+/** 지금 커밋이 돌고 있는가. 토큰과 같은 이유로 프로세스 메모리에만 산다. */
+let committing = false;
+
+async function commit(
+  stores: InstallStores,
+  input: {
+    superuserName: string;
+    password: string;
+    workspaceName: string;
+    defaultGroupLevel: DefaultGroupLevel;
+    signupMode: SignupMode;
+  },
+): Promise<InstallOutcome> {
 
   const account = await registerAccount(stores, {
     name: input.superuserName,
@@ -248,4 +284,5 @@ function warningsFor(mode: SignupMode, level: DefaultGroupLevel): string[] {
 export function forgetInstallTokenForTest(): void {
   liveToken = null;
   liveInstallSession = null;
+  committing = false;
 }

@@ -1,0 +1,14 @@
+{
+  "git": true,
+  "mode": "self",
+  "gh": "not required (self mode)",
+  "regression_env": "npm test per package (vitest)",
+  "regression_baseline": { "captured_at_head": "a1aee9b", "server": "1233 pass / 0 fail", "web": "516 pass / 0 fail", "editor": "237 pass / 1 skip / 0 fail", "failing_tests": [] },
+  "scope": { "source": "commits", "commit_range": "c87facf..HEAD", "files": 21, "diff_loc": 1580 },
+  "close_reqs": true,
+  "close_reqs_precheck": {
+    "verified_bar": "SRS-MD Rules 14.4 — 모든 AC 체크 + 증거 1건 이상. update_status 가 MUTATION_DENIED 로 거절한다",
+    "ac_evidence_gap": { "SEC-AUTH-014": ["AC-6", "AC-7"] },
+    "note": "SEC-AUTH-014 는 두 AC 에 증거가 없어 close 대상에서 제외한다. VE-2 가 AC-7 의 배타성을 어느 단언도 확인하지 않는다고 스스로 적고 있다"
+  }
+}

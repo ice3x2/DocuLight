@@ -29,10 +29,26 @@ export interface HttpDeps {
    * 그대로 뜬다.
    */
   gate?: RequestHandler;
+
+  /**
+   * 앞에 선 프록시의 홉 수 (`R57` · `R72-i`).
+   *
+   * **서버가 선언한다.** 선언하지 않으면 `req.ip` 는 소켓 주소이고
+   * `x-forwarded-for` 는 무시된다 — 그 헤더는 클라이언트가 정하는 값이라,
+   * 신뢰 없이 읽으면 요청마다 다른 값을 붙여 요청 제한이 사라진다.
+   *
+   * 기본이 **끔**인 이유가 그것이다: 프록시가 없는 배포에서 켜져 있으면
+   * 제한이 무력화되고, 그 사실은 아무 데도 드러나지 않는다.
+   */
+  trustProxy?: number | string | boolean;
 }
 
 export function createHttpServer(deps: HttpDeps): Express {
   const app = express();
+
+  // 프록시 신뢰는 **선언이 있을 때만** 선다. 없으면 Express 기본값
+  // (`false`) 이 유지되어 `req.ip` 가 소켓 주소를 준다.
+  if (deps.trustProxy !== undefined) app.set('trust proxy', deps.trustProxy);
 
   // 관문이 가장 앞이다. 뒤에 두면 그 사이에 낀 라우트가 열린 채 남는다.
   if (deps.gate !== undefined) {

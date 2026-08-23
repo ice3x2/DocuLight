@@ -1,7 +1,7 @@
 import { mkdir } from 'node:fs/promises';
 import { dirname } from 'node:path';
 
-import { Router, type Express, type Request } from 'express';
+import express, { Router, type Express, type Request } from 'express';
 
 import {
   reconcile,
@@ -15,7 +15,7 @@ import type { AttachmentStores } from './app/attachment/attachment-service.js';
 import type { TrashStores } from './app/trash/trash-service.js';
 import { loadConfig, type ServerConfig } from './config/config.js';
 import { createHttpServer } from './http/server.js';
-import { installGate } from './http/middleware/install-gate.js';
+import { installGate, INSTALL_SCREEN } from './http/middleware/install-gate.js';
 import { isInstalled, mintInstallToken } from './app/install/install-service.js';
 import { authRouter, sessionTokenOf } from './http/routes/auth.js';
 import { installRouter } from './http/routes/install.js';
@@ -55,15 +55,45 @@ import { SqliteWorkspaceRepository } from './infra/sqlite/workspace-repository.j
  * 주입하고 운영이 빠뜨리면, 설치 전 인스턴스에서 모든 경로가 열린 채
  * 남는다 — 그 상태는 아무도 눈치채지 못한다.
  */
-export function createApp(runtime?: ServerRuntime): Express {
+export function createApp(runtime?: ServerRuntime, trustProxyHops = 0): Express {
   if (runtime === undefined) return createHttpServer({});
 
   return createHttpServer({
-    // **함수로 넘긴다** — 기동 시점 값을 굳히면 설치를 마쳐도 관문이 계속
-    // 닫혀 있고, 슈퍼유저가 0명으로 돌아가도 다시 닫히지 않는다.
-    gate: installGate(() => isInstalled(runtime.stores)),
+    // 0 이면 넘기지 않는다 — Express 기본값(끔)을 그대로 둔다.
+    ...(trustProxyHops > 0 ? { trustProxy: trustProxyHops } : {}),
+    // **함수로 넘긴다** — 값으로 넘기면 설치를 마쳐도 관문이 계속 닫혀
+    // 있다. 언제까지 다시 세는지는 `설치여부` 가 정한다.
+    gate: installGate(설치여부(runtime)),
     api: apiRouter(runtime),
   });
+}
+
+/**
+ * 설치 여부를 **참으로 한 번만 굳힌다**.
+ *
+ * 관문은 모든 라우트보다 앞에 서서 번들·아이콘까지 **모든** 요청에 걸린다.
+ * 그 자리에서 매번 다시 세면 요청마다 `membersOf` 한 번과 멤버 수만큼의
+ * `findById` 가 동기로 돌고, better-sqlite3 이라 그것이 이벤트 루프를 막는다
+ * — 설치 전에만이 아니라 **설치 후 영구히** 든다.
+ *
+ * 참으로 굳혀도 되는 이유는 그 값이 단조롭기 때문이다: 설치를 마친
+ * 인스턴스가 설치 전으로 돌아가려면 `active` 인 슈퍼유저가 전부 사라져야
+ * 하는데, `SEC-AUTH-016` 이 **그룹에서 빼는 것과 정지시키는 것 둘 다**
+ * 마지막 한 명에 대해서는 거부한다 — 그것이 세는 것도 `active` 인 멤버다.
+ * 거짓인 동안에는 계속 다시 읽으므로 커밋 직후 같은 프로세스에서 관문이
+ * 열리는 성질(`SEC-AUTH-010` AC-5)은 그대로다.
+ *
+ * **그 바닥이 무너지는 경로가 새로 생기면 이 굳힘도 함께 다시 봐야 한다.**
+ * 예컨대 DB 파일이 프로세스 밖에서 교체되는 복원 절차는 `SEC-AUTH-016` 의
+ * 관할이 아니다.
+ */
+function 설치여부(runtime: ServerRuntime): () => boolean {
+  let 굳음 = false;
+  return () => {
+    if (굳음) return true;
+    굳음 = isInstalled(runtime.stores);
+    return 굳음;
+  };
 }
 
 /**
@@ -75,6 +105,11 @@ export function createApp(runtime?: ServerRuntime): Express {
  */
 function apiRouter(runtime: ServerRuntime): Router {
   const router = Router();
+
+  // **본문 파서는 여기 한 번이다.** 라우터마다 세우면 먼저 선 것이
+  // `req._body` 를 채워 뒤따르는 파서의 한도 설정이 조용히 죽는다 —
+  // 실제로 `workspace-api` 의 `1mb` 가 그렇게 무력화돼 있었다.
+  router.use(express.json({ limit: '1mb' }));
 
   // 설치가 **가장 앞**이다. 관문이 허용목록으로 여는 두 경로이므로 다른
   // 라우터 뒤에 두면 그 앞의 미매칭 처리에 먼저 걸린다.
@@ -133,7 +168,12 @@ type RuntimeStores = { personalSettings: SqlitePersonalSettingStore } & Attachme
  * 복원 직후의 안전망은 새 절차가 아니라 이 기동 재조정 자체다 — 둘로
  * 두면 한쪽만 고쳐진 채로 남는다(`CON-ARCH-008`).
  */
-export async function bootstrap(config: ServerConfig): Promise<ServerRuntime> {
+export async function bootstrap(
+  // **필요한 두 칸만 받는다.** 기동 준비는 HTTP 를 세우지 않으므로 포트나
+  // 프록시 신뢰를 알 이유가 없고, 전체 설정을 요구하면 그 값들이 이 함수의
+  // 계약인 것처럼 읽힌다.
+  config: Pick<ServerConfig, 'docsRoot' | 'databaseFile'>,
+): Promise<ServerRuntime> {
   await mkdir(config.docsRoot, { recursive: true });
   await mkdir(dirname(config.databaseFile), { recursive: true });
 
@@ -219,7 +259,28 @@ export function startServer(
   config: ServerConfig,
   runtime: ServerRuntime,
 ): ReturnType<Express['listen']> {
-  return createApp(runtime).listen(config.port);
+  const server = createApp(runtime, config.trustProxyHops).listen(config.port);
+
+  // **갈 곳을 여기서 낸다.** 토큰은 `bootstrap` 이 내지만 그때는 포트를
+  // 모른다 — 토큰만 받은 운영자는 그 값을 어디에 넣는지 알 수 없고,
+  // 화면의 자리를 알려 주는 곳이 어디에도 없다.
+  //
+  // 실제로 열린 포트를 읽는다. `config.port` 는 `0`(빈 포트를 골라라)일
+  // 수 있고, 그 값을 그대로 내면 안내가 틀린 주소를 가리킨다.
+  if (!isInstalled(runtime.stores))
+    server.once('listening', () => {
+      const bound = server.address();
+      const port = typeof bound === 'object' && bound !== null ? bound.port : config.port;
+      // **호스트를 못박지 않는다.** 컨테이너·원격 서버의 로그를 읽는
+      // 운영자에게 `localhost` 는 자기 노트북을 가리킨다 — 포트를 실측한
+      // 이유가 「안내가 틀린 주소를 가리키지 않게」인데 호스트를 굳히면
+      // 같은 자리에서 그 이유를 잃는다.
+      runtime.stores.announce(
+        `설치를 마치려면 브라우저에서 이 서버의 ${port} 포트로 ${INSTALL_SCREEN} 을 여십시오 (같은 기계라면 http://localhost:${port}${INSTALL_SCREEN}).`,
+      );
+    });
+
+  return server;
 }
 
 // `node main.js` 로 직접 실행될 때만 리스너를 연다 — import 시에는 열지 않는다.

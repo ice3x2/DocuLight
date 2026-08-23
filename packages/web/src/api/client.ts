@@ -24,6 +24,14 @@ export class ApiError extends Error {
     readonly status: number,
     /** 충돌(409) 일 때 서버가 함께 준 현재 본문. */
     readonly current?: string,
+    /**
+     * 서버가 함께 준 거절 사유 (`rule`) 와 상태 표식 (`state`).
+     *
+     * **버리지 않는다.** 서버가 정보 노출을 감수하고 사유를 내주기로 한
+     * 자리에서 클라이언트가 그것을 버리면 그 결정이 아무 효용도 만들지
+     * 못하고, 서로 다른 실패가 화면에서 한 문장으로 접힌다.
+     */
+    readonly detail?: { rule?: string; state?: string },
   ) {
     super(`api ${status}`);
     this.name = 'ApiError';
@@ -49,8 +57,13 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   });
 
   if (!response.ok) {
-    const failure = (await bodyOf(response)) as { current?: string } | undefined;
-    throw new ApiError(response.status, failure?.current);
+    const failure = (await bodyOf(response)) as
+      | { current?: string; rule?: string; state?: string }
+      | undefined;
+    throw new ApiError(response.status, failure?.current, {
+      ...(failure?.rule === undefined ? {} : { rule: failure.rule }),
+      ...(failure?.state === undefined ? {} : { state: failure.state }),
+    });
   }
 
   return (await bodyOf(response)) as T;

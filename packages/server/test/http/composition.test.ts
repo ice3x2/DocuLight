@@ -19,6 +19,7 @@ beforeEach(async () => {
     docsRoot: join(dir, 'docs'),
     databaseFile: join(dir, 'doculight.db'),
     port: 0,
+    trustProxyHops: 0,
   };
   runtime = await bootstrap(config);
 
@@ -75,33 +76,45 @@ describe('OPS-ARCH-001 — 한 프로세스가 API 와 정적 산출물을 함�
 
 describe('SEC-AUTH — 로그인 제한이 IPv6 로 우회되지 않는다', () => {
   it('같은 /64 안의 다른 주소가 같은 열쇠로 묶인다', async () => {
-    const { loginRateKey } = await import('../../src/http/routes/auth.js');
+    const { clientRateKey } = await import('../../src/http/rate-key.js');
 
     // IPv6 는 한 사용자가 /64 를 통째로 쓴다 — 주소마다 열쇠를 나누면
     // 그 안에서 주소를 돌리는 것만으로 제한이 무력화된다.
-    const one = loginRateKey('2001:db8:abcd:1234::1');
-    const other = loginRateKey('2001:db8:abcd:1234:ffff:ffff:ffff:ffff');
+    const one = clientRateKey('2001:db8:abcd:1234::1');
+    const other = clientRateKey('2001:db8:abcd:1234:ffff:ffff:ffff:ffff');
 
     expect(one).toBe(other);
   });
 
   it('다른 /64 는 다른 열쇠다 — 전부 묶으면 한 사람이 모두를 잠근다', async () => {
-    const { loginRateKey } = await import('../../src/http/routes/auth.js');
+    const { clientRateKey } = await import('../../src/http/rate-key.js');
 
-    expect(loginRateKey('2001:db8:abcd:1234::1')).not.toBe(loginRateKey('2001:db8:abcd:9999::1'));
+    expect(clientRateKey('2001:db8:abcd:1234::1')).not.toBe(clientRateKey('2001:db8:abcd:9999::1'));
+  });
+
+  it('**같은 /56 안의 다른 /64** 도 갈린다 — 이 두 주소로 재지 않으면 폭이 넓어져도 통과한다', async () => {
+    const { clientRateKey } = await import('../../src/http/rate-key.js');
+
+    // 앞의 시험은 `1234` 대 `9999` 라 `/48` 부터 다르다. 그래서 묶는 폭이
+    // `/56` 으로 넓어져도 통과하고, 실제로 그 상태였다 — 라이브러리 기본이
+    // `/56` 이다. 이 두 주소는 `/56` 까지 같고 `/64` 에서만 갈리므로,
+    // 폭이 한 칸이라도 넓어지면 여기서 죽는다.
+    expect(clientRateKey('2001:db8:abcd:1200::1')).not.toBe(
+      clientRateKey('2001:db8:abcd:12ff::1'),
+    );
   });
 
   it('IPv4 는 주소 그대로다', async () => {
-    const { loginRateKey } = await import('../../src/http/routes/auth.js');
+    const { clientRateKey } = await import('../../src/http/rate-key.js');
 
-    expect(loginRateKey('203.0.113.7')).toBe('203.0.113.7');
-    expect(loginRateKey('203.0.113.7')).not.toBe(loginRateKey('203.0.113.8'));
+    expect(clientRateKey('203.0.113.7')).toBe('203.0.113.7');
+    expect(clientRateKey('203.0.113.7')).not.toBe(clientRateKey('203.0.113.8'));
   });
 
   it('주소를 못 읽으면 하나로 묶는다 — 못 읽는 것을 무제한으로 두면 그것이 우회로다', async () => {
-    const { loginRateKey } = await import('../../src/http/routes/auth.js');
+    const { clientRateKey } = await import('../../src/http/rate-key.js');
 
-    expect(loginRateKey(undefined)).toBe(loginRateKey(undefined));
-    expect(loginRateKey(undefined)).not.toBe(loginRateKey('203.0.113.7'));
+    expect(clientRateKey(undefined)).toBe(clientRateKey(undefined));
+    expect(clientRateKey(undefined)).not.toBe(clientRateKey('203.0.113.7'));
   });
 });

@@ -28,12 +28,21 @@ const ENTRY = join(SRC, 'main.ts');
  * 어느 작업이 이 줄을 지우는지가 적혀 있어야 그 작업이 실제로 온다.
  */
 const 아직_배선되지_않음: ReadonlyMap<string, string> = new Map([
-  ['app/auth/signup-service.ts', '가입 신청·승인 라우트와 두 화면이 아직 없다'],
-  ['app/auth/password-service.ts', '비밀번호 변경 라우트와 설정 모달의 계정 패널이 아직 없다'],
-  ['app/auth/token-service.ts', 'PAT 라우트와 설정 모달의 액세스 토큰 패널이 아직 없다'],
+  [
+    'app/auth/signup-service.ts',
+    'FR-AUTH-002 · SEC-AUTH-004 의 가입 신청·승인 라우트와 두 화면이 아직 없다. http/routes/signup.ts 가 그 자리다',
+  ],
+  [
+    'app/auth/password-service.ts',
+    'SEC-AUTH-018 의 비밀번호 변경 라우트와 설정 모달 account 패널이 아직 없다',
+  ],
+  [
+    'app/auth/token-service.ts',
+    'SEC-AUTH-005 · SEC-AUTH-007 의 PAT 라우트와 설정 모달 tokens 패널이 아직 없다',
+  ],
   [
     'app/audit/audit-retention.ts',
-    '감사 보존 일소를 도는 자리가 없다. 휴지통 일소도 같은 상태이며 그쪽은 모듈이 다른 export 로 도달해 이 방벽이 못 잡는다 — 두 축을 한 주기 작업으로 함께 세워야 한다',
+    'R84-a 의 감사 보존 일소를 도는 자리가 없다. app/trash/trash-service.ts 의 휴지통 일소도 같은 상태이며 그쪽은 모듈이 다른 export 로 도달해 이 방벽이 못 잡는다 — 두 축을 한 주기 작업으로 함께 세워야 한다',
   ],
   [
     'http/routes/documents.ts',
@@ -45,7 +54,7 @@ const 아직_배선되지_않음: ReadonlyMap<string, string> = new Map([
   ],
   [
     'http/guards/dot-path-guard.ts',
-    'SEC-STORAGE-004 · R64 의 점 경로 거부 가드. 같은 사유로 documents.ts 와 함께 선다',
+    'SEC-STORAGE-004 · R64 의 점 경로 거부 가드. 이것을 부르는 제품 코드가 아직 없다 — documents.ts 배선이 이것을 자동으로 데려오지 않으므로 그 wave 가 호출부를 함께 세워야 한다',
   ],
 ]);
 
@@ -63,8 +72,11 @@ const 아직_배선되지_않음: ReadonlyMap<string, string> = new Map([
  *    도달하지 않는 파일이 있으며 이 방벽은 그것을 세지 않는다 — 그 둘은
  *    조립이 아니라 부품 계층이라 미사용이 곧 결함은 아니기 때문이지만,
  *    「전부 본다」로 읽히면 안 된다.
+ * ④ `import type` 과 값 import 를 구별하지 않는다. 타입으로만 참조되는
+ *    파일이 「조립됐다」로 판정되므로, 그 한 줄로 이 방벽을 만족시킬 수
+ *    있다. 지금은 그렇게 도달하는 파일이 0건이라 실제 오판은 없다.
  *
- * 셋 다 호출 그래프가 있어야 좁힐 수 있고 그것은 이 시험의 범위를 넘는다.
+ * 넷 다 호출 그래프가 있어야 좁힐 수 있고 그것은 이 시험의 범위를 넘는다.
  * 대신 한계를 여기 적어 두어, 이 방벽이 통과한다는 것이 「모든 부품이
  * 돈다」로 읽히지 않게 한다.
  */
@@ -136,9 +148,25 @@ describe('조립 방벽 — 진입점에서 닿지 않는 부품이 늘지 않�
     expect(고아).toEqual([...아직_배선되지_않음.keys()].sort());
   });
 
-  it('허용목록의 모든 항목에 사유가 적혀 있다 — 사유 없는 면제는 영구 면제가 된다', () => {
+  it('허용목록의 사유가 **검증 가능한 참조**를 담는다 — 길이만 재면 틀린 사유가 통과한다', () => {
+    // 실제로 한 사유가 「documents.ts 와 함께 선다」고 적었는데 그 파일은
+    // 그것을 부르지 않았다. 길이 잣대는 그 거짓을 여유롭게 통과시켰고,
+    // 틀린 사유는 없는 사유보다 나쁘다.
+    //
+    // **파일명은 참조로 치지 않는다.** 파일명을 허용하면 바로 그 거짓
+    // 문장(「documents.ts 와 함께 선다」)이 그대로 다시 통과한다 — 실측으로
+    // 확인했다. 파일명은 저장소 안에서만 뜻이 통하고 옮기면 조용히
+    // 무의미해지는 반면, 요구 ID 와 원장 조항은 그 자리에 무엇이 서야
+    // 하는지를 **밖에서 확인할 수 있게** 가리킨다.
+    const 검증가능한참조 = /[A-Z]+-[A-Z]+-\d+|\bR\d+/;
     for (const [모듈, 사유] of 아직_배선되지_않음) {
-      expect([모듈, 사유.length > 10]).toEqual([모듈, true]);
+      expect([모듈, 검증가능한참조.test(사유)]).toEqual([모듈, true]);
+    }
+  });
+
+  it('허용목록의 모듈이 전부 실존한다 — 사라진 파일이 면제로 남으면 그 줄이 영구 통과한다', () => {
+    for (const 모듈 of 아직_배선되지_않음.keys()) {
+      expect([모듈, existsSync(join(SRC, 모듈))]).toEqual([모듈, true]);
     }
   });
 
