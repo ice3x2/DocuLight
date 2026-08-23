@@ -128,13 +128,35 @@ describe('R163 — 두 화면이 서로의 규칙을 쓰지 않는다', () => {
       .filter((line) => !line.trimStart().startsWith('//'))
       .join('\n');
 
-  it('명부 화면이 PrincipalPicker 도 /principals 도 쓰지 않는다', () => {
+  /**
+   * 재는 것은 **명부 목록 데이터흐름**이지 파일이 아니다.
+   *
+   * 초판은 두 파일 전체에서 `PrincipalPicker` 문자열의 부재를 쟀는데, 그
+   * 판정식은 `CON-PRINCIPAL-006` AC-1 이 이름 댄 「그룹 멤버 추가」와
+   * 정면으로 부딪힌다 — 그 조작은 명부 열람이 아니라 `R112-b`(2자·20건)가
+   * 걸리는 주체 검색이다. `R163` 자신이 판정 기준을 「고르는 화면인가」가
+   * 아니라 「`R112-b` 가 걸리는가」로 둔 것이 그 근거다.
+   *
+   * 그래서 두 화면을 갈라 잰다. 명부를 그리는 쪽이 검색 규칙을 **직접**
+   * 다시 구현하지 않는 것이 이 조항의 실질이므로, 두 파일 모두에서
+   * `fetchPrincipals`·`/principals` 의 부재는 그대로 잰다.
+   */
+  it('명부 화면이 검색 규칙을 직접 다시 구현하지 않는다', () => {
     for (const file of ['UserRoster.tsx', 'GroupRoster.tsx']) {
       const code = codeOf(readFileSync(join(WEB, 'src', 'principal', file), 'utf8'));
 
-      expect(code).not.toContain('PrincipalPicker');
       expect(code).not.toContain('fetchPrincipals');
+      expect(code).not.toContain('/principals');
     }
+  });
+
+  it('사용자 관리 화면에는 주체를 고르는 자리 자체가 없다', () => {
+    // 이쪽에는 멤버 추가 같은 하위 상호작용이 없다 — 그래서 부품의 부재를
+    // 그대로 잰다. 이 화면에 그 부품이 서면 `R112-d` 의 네 상태가 세 상태로
+    // 줄고 `rejected` 가 화면에서 사라진다.
+    const code = codeOf(readFileSync(join(WEB, 'src', 'principal', 'UserRoster.tsx'), 'utf8'));
+
+    expect(code).not.toContain('PrincipalPicker');
   });
 
   it('중립어 비활성 이 명부 쪽 문구 매핑에 없다', () => {
@@ -158,5 +180,34 @@ describe('R163 — 두 화면이 서로의 규칙을 쓰지 않는다', () => {
       .map(({ path }) => path);
 
     expect(callers).toEqual([]);
+  });
+});
+
+describe('CON-PRINCIPAL-006 — 그룹 멤버 추가도 공용 부품으로 고른다', () => {
+  it('AC-1: 그룹마다 `PrincipalPicker` 로 멤버를 더한다', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        () =>
+          new Response(JSON.stringify([{ id: 'u9', name: '새사람', kind: 'user', status: 'active' }]), {
+            status: 200,
+            headers: { 'content-type': 'application/json' },
+          }),
+      ),
+    );
+    const 더했다 = vi.fn();
+    const { GroupRoster } = await import('../src/principal/GroupRoster.js');
+    render(<GroupRoster groups={GROUPS} onAddMember={더했다} />);
+
+    const user = userEvent.setup();
+    // 그룹이 여럿이므로 검색칸도 그룹마다 선다 — 하나만 두면 어느 그룹에
+    // 넣는지 화면이 표현할 수 없다.
+    const 검색칸 = screen.getAllByLabelText('사용자·그룹 검색');
+    expect(검색칸).toHaveLength(GROUPS.length);
+    await user.type(검색칸[0]!, '새사람');
+    await screen.findByText('새사람');
+    await user.click(screen.getByText('새사람'));
+
+    expect(더했다).toHaveBeenCalledWith(GROUPS[0]!.id, 'u9');
   });
 });

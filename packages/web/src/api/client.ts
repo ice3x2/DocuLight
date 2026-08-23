@@ -358,3 +358,96 @@ export const saveSettings = (patch: Record<string, string>) =>
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(patch),
   });
+
+/**
+ * 권한 감사 구역이 부르는 것들 (`FR-ACL-003`~`FR-ACL-006` · `IR-ACL-001`).
+ *
+ * **복사 프리뷰의 문이 따로 없다.** 복사본의 접근자는 목적지 상속에서
+ * 파생되므로 목적지의 접근자가 곧 그 답이다 (`FR-ACL-002`) — 문을 따로
+ * 내면 같은 목적지가 화면마다 다른 수를 보인다.
+ */
+export interface AccessorReportBody {
+  metrics: { reachable: number; viaAcl: number };
+  /** `null` 이 「명단을 볼 자격이 없다」다 (`SEC-ACL-015` AC-1). */
+  roster: string[] | null;
+}
+
+export const fetchAccessors = (nodeId: string) =>
+  call<AccessorReportBody>(`/nodes/${encodeURIComponent(nodeId)}/accessors`);
+
+export interface MovePreviewBody {
+  before: number;
+  after: number;
+}
+
+/** 목적지를 비우면 워크스페이스 루트로 옮기는 것이다. */
+export const fetchMovePreview = (nodeId: string, destinationId: string | null) => {
+  const query = destinationId === null ? '' : `?destinationId=${encodeURIComponent(destinationId)}`;
+  return call<MovePreviewBody>(`/nodes/${encodeURIComponent(nodeId)}/move-preview${query}`);
+};
+
+export type RevocationScope = 'instance' | 'managed-workspaces';
+
+export interface RevocationRow {
+  entryId: string;
+  workspaceId: string;
+  workspaceName: string;
+  /** 워크스페이스 자체에 걸린 항목이면 `null` 이다. */
+  path: string | null;
+  level: 'view' | 'edit' | 'admin';
+  grantedBy: string | null;
+  grantedAt: string;
+}
+
+export interface RevocationBody {
+  scope: RevocationScope;
+  rows: RevocationRow[];
+}
+
+export const fetchRevocation = (principalId: string) =>
+  call<RevocationBody>(`/principals/${encodeURIComponent(principalId)}/revocation`);
+
+export const revokeAllFor = (principalId: string) =>
+  call<RevocationBody>(`/principals/${encodeURIComponent(principalId)}/revocation`, { method: 'POST' });
+
+export interface SimulatedNodeBody {
+  nodeId: string;
+  workspaceId: string;
+  workspaceName: string;
+  path: string;
+  level: 'view' | 'edit' | 'admin' | null;
+  source: 'direct' | 'inherited' | null;
+}
+
+export interface SimulationBody {
+  subjectId: string;
+  nodes: SimulatedNodeBody[];
+}
+
+export const fetchSimulation = (subjectId: string) =>
+  call<SimulationBody>(`/simulation?subjectId=${encodeURIComponent(subjectId)}`);
+
+export interface BrokenInheritanceRowBody {
+  nodeId: string;
+  workspaceId: string;
+  workspaceName: string;
+  path: string;
+  /** ACL·상속으로만 닿는 사람 수 — 상방 게이트는 빠진다 (`IR-ACL-001` AC-2). */
+  aclAccessors: number;
+}
+
+export interface BrokenInheritanceBody {
+  rows: BrokenInheritanceRowBody[];
+}
+
+export const fetchBrokenInheritance = () => call<BrokenInheritanceBody>('/broken-inheritance');
+
+export const restoreInheritance = (nodeId: string) =>
+  call<void>(`/nodes/${encodeURIComponent(nodeId)}/restore-inheritance`, { method: 'POST' });
+
+export const addGroupMember = (groupId: string, userId: string) =>
+  call<void>(`/roster/groups/${encodeURIComponent(groupId)}/members`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ userId }),
+  });

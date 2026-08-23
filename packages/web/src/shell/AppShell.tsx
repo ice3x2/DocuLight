@@ -13,6 +13,7 @@ import { EmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { PersonalSettings } from '../settings/PersonalSettings.js';
+import { AclAuditPanel, type AclAuditProps } from '../acl/AclAuditPanel.js';
 import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
@@ -103,11 +104,13 @@ function SettingsModal({
   personalSettings = {},
   userRoster = [],
   groupRoster = [],
+  aclAudit,
   onTrashLens,
   onTrashPurge,
   onTrashRestore,
   onPersonalSetting,
   onGroupRemove,
+  onGroupAddMember,
 }: {
   viewer: Viewer;
   trash?: readonly TrashRowView[];
@@ -118,11 +121,14 @@ function SettingsModal({
   /** 슈퍼유저 전용 명부 (`R163`). 슈퍼유저가 아니면 비어 있다. */
   userRoster?: readonly RosterUser[];
   groupRoster?: readonly RosterGroup[];
+  /** 권한 감사 구역이 그릴 것 (`FR-ACL-003`~`FR-ACL-005`). */
+  aclAudit?: AclAuditProps;
   onTrashLens?: (lens: TrashLens) => void;
   onTrashPurge?: (nodeId: string) => void;
   onTrashRestore?: (nodeId: string) => void;
   onPersonalSetting?: (key: string, value: string) => void;
   onGroupRemove?: (groupId: string) => void;
+  onGroupAddMember?: (groupId: string, userId: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const titleId = useId();
@@ -198,7 +204,12 @@ function SettingsModal({
                   <GroupRoster
                     groups={groupRoster}
                     {...(onGroupRemove === undefined ? {} : { onRemove: onGroupRemove })}
+                    {...(onGroupAddMember === undefined ? {} : { onAddMember: onGroupAddMember })}
                   />
+                ) : category.id === 'acl-audit' ? (
+                  // 셋을 여기 모은다 — 흩어 두면 관리자가 같은 물음을 세
+                  // 곳에서 세 번 묻게 된다.
+                  <AclAuditPanel {...(aclAudit ?? {})} />
                 ) : (
                   <p>{category.label}</p>
                 )}
@@ -233,11 +244,13 @@ export function AppShell({
   personalSettings = {},
   userRoster = [],
   groupRoster = [],
+  aclAudit,
   onTrashLens,
   onTrashPurge,
   onTrashRestore,
   onPersonalSetting,
   onGroupRemove,
+  onGroupAddMember,
   query = '',
   onQuery,
   onOpen,
@@ -291,6 +304,14 @@ export function AppShell({
   userRoster?: readonly RosterUser[];
   groupRoster?: readonly RosterGroup[];
   onGroupRemove?: (groupId: string) => void;
+  onGroupAddMember?: (groupId: string, userId: string) => void;
+  /**
+   * 권한 감사 구역이 그릴 것 (`FR-ACL-003`~`FR-ACL-005`).
+   *
+   * 셸이 데이터를 만들지 않는다 — 이 구역은 관리 범위로 잘린 것을 서버가
+   * 이미 주므로, 여기서 다시 거르면 두 곳이 같은 규칙을 갖게 된다.
+   */
+  aclAudit?: AclAuditProps;
   /** 좌측 검색 탭의 질의. 태그 클릭도 이 값을 채운다. */
   query?: string;
   onQuery?: (query: string) => void;
@@ -415,7 +436,9 @@ export function AppShell({
           {...(onPersonalSetting === undefined ? {} : { onPersonalSetting })}
           userRoster={userRoster}
           groupRoster={groupRoster}
+          {...(aclAudit === undefined ? {} : { aclAudit })}
           {...(onGroupRemove === undefined ? {} : { onGroupRemove })}
+          {...(onGroupAddMember === undefined ? {} : { onGroupAddMember })}
         />
         {notice !== undefined && (
           // `status` 인 이유는 이것이 사용자의 조작을 막지 않기 때문이다 —

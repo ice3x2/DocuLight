@@ -149,6 +149,20 @@ describe('SEC-ACL-015 — 목록은 관리 전용', () => {
     expect(screen.getByTestId('share-metrics').textContent).toContain('3');
   });
 
+  it('`IR-ACL-001` AC-3: 이 화면의 지표는 접근 가능 하나다', async () => {
+    await 열기(관리자에게([직접]));
+
+    const text = screen.getByTestId('share-metrics').textContent ?? '';
+    expect(text).toContain('접근 가능');
+    // `ACL 접근자` 는 상속 끊김 감사 목록의 지표다 (`IR-ACL-001` AC-4).
+    // 한 화면에 둘을 나란히 두면 사용자가 어느 쪽을 읽는지 갈린다.
+    expect(text).not.toContain('ACL 접근자');
+    // 접근 가능 수치가 그 화면의 수치임을 값으로 잰다 — 라벨만 보면
+    // 반대쪽 수를 그리고 이름만 바꾼 구현도 통과한다.
+    expect(text).toContain('3');
+    expect(text).not.toContain('2');
+  });
+
   it('AC-6: 이름 하나도 대신 보이지 않는다', async () => {
     await 열기(편집자에게);
 
