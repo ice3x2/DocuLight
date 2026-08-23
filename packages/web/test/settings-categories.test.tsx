@@ -1,4 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
+import { join, resolve } from 'node:path';
+import { nodeIdOf, urlForNode } from '../src/routing/deep-link.js';
 
 import {
   INSTANCE_SETTINGS,
@@ -15,6 +18,10 @@ const viewer = (over: Partial<Viewer> = {}): Viewer => ({
 });
 
 const labelsFor = (v: Viewer) => visibleCategories(v).map((c) => c.label);
+
+const WEB = existsSync(resolve(process.cwd(), 'src/main.tsx'))
+  ? process.cwd()
+  : resolve(process.cwd(), 'packages/web');
 
 describe('IR-SHELL-002 — 설정 카테고리 전량 목록과 표시 권한', () => {
   it('AC-8: 열거된 것 외의 카테고리가 없다 — 목록이 전량이다', () => {
@@ -122,5 +129,34 @@ describe('IR-SHELL-002 — 설정 카테고리 전량 목록과 표시 권한', 
     // 표시 조건은 「접근 가능한 워크스페이스 1개 이상」이지 권한 등급이
     // 아니다. 슈퍼유저 우회가 여기까지 번지면 빈 휴지통이 열린다.
     expect(labelsFor(viewer({ superuser: true, workspaceCount: 0 }))).not.toContain('휴지통');
+  });
+});
+
+describe('CON-SHELL-001 AC-1 — 관리 전용 화면도 라우트도 없다', () => {
+  const sources = (at: string): string[] =>
+    readdirSync(at).flatMap((name) => {
+      const full = join(at, name);
+      return statSync(full).isDirectory() ? sources(full) : /\.tsx?$/.test(name) ? [full] : [];
+    });
+
+  it('관리 전용 경로를 만드는 자리가 소스에 없다', () => {
+    // API 경로는 화면 라우트가 아니다 — `/settings` 는 서버가 값을 주는
+    // 자리이지 사용자가 이동하는 자리가 아니므로 이 축에서 제외한다.
+    const files = sources(join(WEB, 'src')).filter((file) => !file.includes(join('src', 'api')));
+    expect(files.length).toBeGreaterThan(0);
+
+    for (const file of files) {
+      const code = readFileSync(file, 'utf8');
+      // `/admin` 같은 경로 리터럴이 생기면 그것이 곧 두 번째 진입점이다.
+      const 경로 = code.match(/['"`]\/(admin|manage|console|settings)(\/|['"`])/g) ?? [];
+      expect({ file, 경로 }).toEqual({ file, 경로: [] });
+    }
+  });
+
+  it('주소가 문서 딥링크 하나뿐이다 — 관리 화면이 주소를 갖지 않는다', () => {
+    // 관리 화면이 주소를 가지면 그 주소를 아는 사람에게 두 번째 문이 열린다.
+    expect(urlForNode('n1').startsWith('/')).toBe(true);
+    expect(nodeIdOf(urlForNode('n1'))).toBe('n1');
+    expect(nodeIdOf('/admin/users')).toBeNull();
   });
 });
