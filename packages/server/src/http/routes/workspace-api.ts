@@ -31,6 +31,8 @@ import {
 import { createNode } from '../../app/node/node-service.js';
 import { searchPrincipals } from '../../app/principal/principal-search-service.js';
 import { maySearchFor, parseScope } from '../../app/principal/search-scope.js';
+import { shareView } from '../../app/acl/share-service.js';
+import { grantPermission, revokePermission } from '../../app/acl/grant-service.js';
 import {
   PERSONAL_SETTING_KEYS,
   readPersonalSetting,
@@ -702,6 +704,57 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
    * 검사(`R162`)가 이 라우트로 새지 않도록 fail-closed 를 **독립으로**
    * 박고, 자격이 없으면 없는 자리와 같은 답을 준다 (`R163-a`).
    */
+  /**
+   * 공유 모달이 그리는 것 (`IR-ACL-002` · `IR-ACL-003`).
+   *
+   * 목록은 `관리` 전용이고 수치는 `편집` 까지다 (`SEC-ACL-015`) — 그
+   * 판정은 서비스가 하고 여기서 다시 재지 않는다. 자격이 없으면 없는
+   * 노드와 같은 404 다.
+   */
+  router.get('/nodes/:nodeId/share', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const view = shareView(stores, actor, req.params.nodeId!);
+    if (view === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(view);
+  });
+
+  /** 주체 하나에 레벨을 준다 (`IR-ACL-003` AC-3). 넓히기 문턱은 `편집` 이다. */
+  router.post('/nodes/:nodeId/share', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const granted = grantPermission(stores, actor, {
+      nodeId: req.params.nodeId!,
+      principalId: one(req.body?.principalId) ?? '',
+      level: one(req.body?.level) === 'edit' ? 'edit' : 'view',
+    });
+    res.sendStatus(granted.ok ? 204 : 404);
+  });
+
+  /** 직접 부여 항목을 회수한다 (`IR-ACL-003` AC-4). 상속 항목에는 ID 가 없다. */
+  router.delete('/acl-entries/:entryId', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const revoked = revokePermission(stores, actor, req.params.entryId!);
+    res.sendStatus(revoked.ok ? 204 : 404);
+  });
+
   router.get('/roster/users', (req, res) => {
     const actor = actorFor(req);
     if (actor === undefined) {

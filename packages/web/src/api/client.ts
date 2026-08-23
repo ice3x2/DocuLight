@@ -236,6 +236,41 @@ export const fetchGroupRoster = () => call<RosterGroup[]>('/roster/groups');
 export const removeGroup = (groupId: string) =>
   call<void>(`/roster/groups/${encodeURIComponent(groupId)}`, { method: 'DELETE' });
 
+/**
+ * 공유 모달이 그리는 것 (`IR-ACL-002`).
+ *
+ * `rows` 가 `null` 인 것이 「목록을 볼 자격이 없다」다 (`SEC-ACL-015`
+ * AC-1). 화면이 그것을 부분 목록으로 채우지 않는다 (AC-6).
+ */
+export interface ShareRow {
+  entryId: string | null;
+  principalId: string;
+  principalName: string;
+  principalKind: 'user' | 'group';
+  level: 'view' | 'edit' | 'admin';
+  inherited: boolean;
+  source: string | null;
+}
+
+export interface ShareViewBody {
+  metrics: { reachable: number; viaAcl: number };
+  rows: ShareRow[] | null;
+  level: 'view' | 'edit' | 'admin';
+}
+
+export const fetchShareView = (nodeId: string) =>
+  call<ShareViewBody>(`/nodes/${encodeURIComponent(nodeId)}/share`);
+
+export const grantShare = (nodeId: string, principalId: string, level: 'view' | 'edit') =>
+  call<void>(`/nodes/${encodeURIComponent(nodeId)}/share`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ principalId, level }),
+  });
+
+export const revokeShare = (entryId: string) =>
+  call<void>(`/acl-entries/${encodeURIComponent(entryId)}`, { method: 'DELETE' });
+
 export const fetchWikiTargets = (query: string) =>
   call<{ target: string; label: string; detail: string }[]>(
     `/wiki-targets?q=${encodeURIComponent(query)}`,

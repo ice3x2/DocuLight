@@ -39,6 +39,33 @@ export interface Requester {
   readonly superuser: boolean;
 }
 
+
+/**
+ * 판정에 **실제로 걸리는** 사슬 — 상속을 끊은 노드에서 멈춘다
+ * (`SEC-ACL-003` AC-2 · AC-4).
+ *
+ * 끊은 노드 자신의 항목은 든다. 끊긴 것은 「위에서 내려오는 것」이지
+ * 그 노드에 직접 걸린 것이 아니기 때문이다.
+ *
+ * 이 함수를 따로 둔 이유는 **같은 사슬을 두 곳이 걸으면 갈리기** 때문이다
+ * — 공유 모달이 보여 주는 목록과 판정이 어긋나면 화면이 사실과 다른
+ * 그림을 준다. 그래서 판정도 이것을 쓴다.
+ */
+export function applicableChain(ancestry: Ancestry): {
+  readonly linkIds: readonly string[];
+  /** 워크스페이스까지 닿는가. 끊겼으면 그 계층의 상속분은 오지 않는다. */
+  readonly workspaceReached: boolean;
+} {
+  const linkIds: string[] = [];
+
+  for (const link of ancestry.links) {
+    linkIds.push(link.id);
+    if (!link.inheritsAcl) return { linkIds, workspaceReached: false };
+  }
+
+  return { linkIds, workspaceReached: true };
+}
+
 /**
  * 한 주체의 한 노드에 대한 유효 권한. 없으면 `null`.
  *
@@ -70,12 +97,12 @@ export function effectivePermission(
   const workspaceLevels = mine.filter((e) => e.nodeId === ancestry.workspaceId);
   if (workspaceLevels.some((e) => e.level === 'admin')) return 'admin';
 
-  // 사슬 순회 — 자기 자신부터 위로, 상속을 끊은 노드에서 멈춘다
-  // (`SEC-ACL-003` AC-2 · AC-4).
+  // 사슬 순회 — 걸리는 범위는 `applicableChain` 이 정한다. 여기서 다시
+  // 걸으면 공유 모달이 보는 목록과 판정이 갈린다.
   const applicable: PermissionLevel[] = [];
-  let inherited = true;
+  const { linkIds, workspaceReached } = applicableChain(ancestry);
 
-  for (const link of ancestry.links) {
+  for (const linkId of linkIds) {
     for (const e of mine) {
       // 워크스페이스가 아닌 계층의 `admin` 행은 올려주지 않는다
       // (`SEC-WORKSPACE-002` AC-5). 부여 경계가 이미 막지만, 다른 경로로
@@ -92,16 +119,12 @@ export function effectivePermission(
       // 쓰기 경로로도 닿지 않는다. 그래도 남겨 두는 이유는 그 트리거가
       // 서기 **전에** 들어온 행과 스키마 밖에서 손댄 경우가 남기 때문이다
       // — 판정이 그런 행을 관리로 읽는 것보다 낮춰 읽는 편이 안전하다.
-      if (e.nodeId === link.id) applicable.push(e.level === 'admin' ? 'edit' : e.level);
-    }
-    if (!link.inheritsAcl) {
-      inherited = false;
-      break;
+      if (e.nodeId === linkId) applicable.push(e.level === 'admin' ? 'edit' : e.level);
     }
   }
 
   // 워크스페이스는 사슬의 루트이므로 끊기지 않은 경우에만 닿는다.
-  if (inherited) applicable.push(...workspaceLevels.map((e) => e.level));
+  if (workspaceReached) applicable.push(...workspaceLevels.map((e) => e.level));
 
   return strongest(applicable);
 }
