@@ -553,5 +553,24 @@ export interface ReconciliationQueueBody {
   items: QueueItemBody[];
 }
 
+/** 태그 색인의 한 줄 (`FR-SHELL-009`). 문서 목록은 여기 없다. */
+export interface TagRowBody {
+  name: string;
+  documents: number;
+}
+
+export interface TagIndexBody {
+  tags: TagRowBody[];
+  /** 개수의 기준. 언제나 같은 값이라 화면이 짓지 않는다. */
+  basis: string;
+}
+
+export const fetchTags = (workspaceId?: string) =>
+  call<TagIndexBody>(
+    workspaceId === undefined || workspaceId === ''
+      ? '/tags'
+      : `/tags?workspaceId=${encodeURIComponent(workspaceId)}`,
+  );
+
 export const fetchReconciliationQueue = () =>
   call<ReconciliationQueueBody>('/reconciliation-queue');

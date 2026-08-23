@@ -70,6 +70,7 @@ import { addGroupMember, removeFromGroup } from '../../app/principal/principal-s
 import { uploadNewVersion, warnsIrreversible } from '../../app/document/new-version.js';
 import { noticeFor } from '../../domain/node/collision-notice.js';
 import { linksOf, wikiTargets } from '../../app/document/link-service.js';
+import { tagIndex } from '../../app/document/tag-service.js';
 import { readDocument, saveDocument, workspaceRootOf } from '../../app/document/save-service.js';
 import {
   beginEditSession,
@@ -1210,6 +1211,25 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
 
     const removed = removeFromGroup(stores, req.params.groupId!, req.params.userId!, recording(req));
     res.sendStatus(removed.ok ? 204 : 400);
+  });
+
+  /**
+   * 태그 색인 (`FR-SHELL-009`).
+   *
+   * **문서 목록을 주지 않는다** — 그것은 검색 탭의 것이다(`FR-SHELL-010`).
+   * 필터는 조회 시점에 걸리므로 캐시 헤더를 붙이지 않는다.
+   */
+  router.get('/tags', async (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const workspaceId = one(req.query.workspaceId);
+    res.json(
+      await tagIndex(stores, actor, workspaceId === undefined || workspaceId === '' ? {} : { workspaceId }),
+    );
   });
 
   router.get('/wiki-targets', (req, res) => {

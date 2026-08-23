@@ -22,6 +22,7 @@ import {
   QUERY_KEYS,
   useAuditLog,
   useReconciliationQueue,
+  useTags,
   useBrokenInheritance,
   useFavorites,
   useGroupRoster,
@@ -342,6 +343,9 @@ function AppBody() {
   // 대기열은 감사 로그와 **같은 조건**으로 켠다 (`SEC-AUDIT-007` AC-6) —
   // 자격 판정은 서버가 하나로 들고, 화면이 조건을 따로 적으면 둘이 갈린다.
   const queue = useReconciliationQueue(감사자격);
+  /** 태그 탭의 범위 (`FR-SHELL-009` AC-2). 빈 문자열이 「전체」다. */
+  const [tagScope, setTagScope] = useState('');
+  const tags = useTags(signedIn, tagScope);
   // 지금은 첫 주체의 것만 묻는다 — 다건 조회의 합산 규칙을 정한 요구가
   // 아직 없어, 없는 규칙을 화면이 지어내지 않는다.
   const revocation = useRevocation(회수주체[0]?.id ?? null);
@@ -539,6 +543,9 @@ function AppBody() {
       auditOperation={auditOperation}
       onAuditOperation={setAuditOperation}
       {...(queue.data === undefined ? {} : { queue: queue.data })}
+      {...(tags.data === undefined ? {} : { tags: tags.data })}
+      tagScope={tagScope}
+      onTagScope={setTagScope}
       {...(notice === undefined ? {} : { notice })}
       {...(pendingOpen === null
         ? {}

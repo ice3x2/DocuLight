@@ -6,6 +6,7 @@ import { DocumentArea } from '../document/DocumentArea.js';
 import { FavoritesView, type Favorite } from '../favorites/FavoritesView.js';
 import { LinkPanel, type LinkRowView } from '../links/LinkPanel.js';
 import { SearchPanel, type SearchHit } from '../search/SearchPanel.js';
+import { TagPanel } from '../search/TagPanel.js';
 import type { SaveState, TabState } from '../document/tab-state.js';
 import { DocumentTree } from '../tree/DocumentTree.js';
 import type { UploadRequest } from '../attachment/upload-contract.js';
@@ -15,7 +16,7 @@ import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { PersonalSettings } from '../settings/PersonalSettings.js';
 import { AclAuditPanel, type AclAuditProps } from '../acl/AclAuditPanel.js';
 import { AuditLogPanel } from '../audit/AuditLogPanel.js';
-import type { AuditViewBody, ReconciliationQueueBody } from '../api/client.js';
+import type { AuditViewBody, ReconciliationQueueBody, TagIndexBody } from '../api/client.js';
 import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
@@ -275,6 +276,9 @@ export function AppShell({
   aclAudit,
   auditLog,
   queue,
+  tags,
+  tagScope,
+  onTagScope,
   auditOperation,
   onAuditOperation,
   onTrashLens,
@@ -348,6 +352,11 @@ export function AppShell({
   auditLog?: AuditViewBody;
   /** 재조정 대기열 (`IR-AUDIT-002`). 감사 로그와 같은 자격으로 온다. */
   queue?: ReconciliationQueueBody;
+  /** 태그 색인 (`FR-SHELL-009`). 서버가 이미 거르고 정렬한 것이다. */
+  tags?: TagIndexBody;
+  /** 태그 탭의 범위. 빈 문자열이 「전체」다. */
+  tagScope?: string;
+  onTagScope?: (workspaceId: string) => void;
   /** 감사 로그의 조작 필터 (`IR-AUDIT-001`). */
   auditOperation?: string;
   onAuditOperation?: (operation: string) => void;
@@ -528,6 +537,19 @@ export function AppShell({
             return <LinkPanel label="백링크" rows={links.backlinks} onOpen={openById} />;
           if (tab.id === 'outgoing')
             return <LinkPanel label="아웃고잉 링크" rows={links.outgoing} onOpen={openById} />;
+          if (tab.id === 'tags')
+            return (
+              <TagPanel
+                {...(tags === undefined ? {} : { index: tags })}
+                workspaces={workspaces.map((entry) => entry.workspace)}
+                {...(tagScope === undefined ? {} : { scope: tagScope })}
+                {...(onTagScope === undefined ? {} : { onScope: onTagScope })}
+                // 검색 탭을 여는 자리는 `searchFor` 하나다 — 밖에서 또
+                // 받으면 태그 클릭과 본문 태그 클릭이 서로 다른 경로로
+                // 같은 일을 하게 된다 (`FR-SHELL-010` AC-1 · AC-2).
+                onPick={(tag) => searchFor(`#${tag}`)}
+              />
+            );
           return <p>{tab.label}</p>;
         }}
       </Sidebar>

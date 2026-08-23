@@ -73,7 +73,14 @@ export async function linksOf(
   };
 }
 
-interface VisibleDocument {
+/**
+ * 요청자가 볼 수 있는 md 문서 하나.
+ *
+ * **밖으로 낸다** — 태그 탭도 검색도 같은 「무엇을 볼 수 있는가」를 묻고,
+ * 그 판정이 두 벌이 되면 한쪽만 고쳐졌을 때 두 목록이 조용히 어긋난다
+ * (`SEC-WORKSPACE-004` AC-6 이 그 어긋남을 금지한다).
+ */
+export interface VisibleDocument {
   node: { id: NodeId; name: string; workspaceId: string };
   workspaceName: string;
   /**
@@ -174,7 +181,13 @@ export function wikiTargets(
  * 경로도 함께 받아 둔다 — 뒤에서 `pathOf` 를 다시 부르면 그것이 사슬을
  * 또 읽어 노드마다 질의가 하나씩 더 붙는다.
  */
-function visibleMarkdown(stores: DocumentStores, actor: Actor): VisibleDocument[] {
+/**
+ * 그 요청자가 볼 수 있는 md 문서 전부 (`SEC-WORKSPACE-004`).
+ *
+ * 링크 계열과 태그 탭이 **같은 이 함수**를 쓴다 — 표면마다 각자 거르면
+ * 한쪽에서만 보이는 문서가 생기고, 그 차이가 곧 존재 신호가 된다.
+ */
+export function visibleMarkdown(stores: DocumentStores, actor: Actor): VisibleDocument[] {
   const found: VisibleDocument[] = [];
 
   for (const entry of visibleWorkspacesOf(stores, actor)) {

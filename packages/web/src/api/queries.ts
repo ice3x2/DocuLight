@@ -17,6 +17,8 @@ import {
   loadDocument,
   type AuditViewBody,
   type ReconciliationQueueBody,
+  type TagIndexBody,
+  fetchTags,
   fetchReconciliationQueue,
   type BrokenInheritanceBody,
   type DocumentBody,
@@ -57,6 +59,7 @@ export const QUERY_KEYS = {
   brokenInheritance: ['broken-inheritance'] as const,
   auditLog: (operation: string) => ['audit-log', operation] as const,
   reconciliationQueue: ['reconciliation-queue'] as const,
+  tags: (workspaceId: string) => ['tags', workspaceId] as const,
   revocation: (principalId: string) => ['revocation', principalId] as const,
   simulation: (subjectId: string) => ['simulation', subjectId] as const,
 };
@@ -169,6 +172,20 @@ export const useAuditLog = (
   useQuery({
     queryKey: QUERY_KEYS.auditLog(operation),
     queryFn: () => fetchAuditLog(operation),
+    enabled,
+    retry: false,
+  });
+
+/**
+ * 태그 색인 (`FR-SHELL-009`).
+ *
+ * 범위가 질의 키의 일부라, 바뀌면 다시 받는 일이 저절로 일어난다. 필터는
+ * 서버가 조회 시점에 걸므로(`SEC-WORKSPACE-004` AC-6) 오래 들고 있지 않는다.
+ */
+export const useTags = (enabled: boolean, workspaceId = ''): UseQueryResult<TagIndexBody> =>
+  useQuery({
+    queryKey: QUERY_KEYS.tags(workspaceId),
+    queryFn: () => fetchTags(workspaceId),
     enabled,
     retry: false,
   });
