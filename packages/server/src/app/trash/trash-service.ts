@@ -3,6 +3,16 @@ import { basename } from 'node:path';
 import { permissionBatch, permissionOf, type AclStores, type Actor } from '../acl/permission-service.js';
 import type { Clock } from '../auth/login-service.js';
 import { purgeAttachmentsOf, type AttachmentPurgeStores } from '../attachment/attachment-service.js';
+import { SYSTEM_RETENTION } from '../../domain/principal/system-principals.js';
+
+/**
+ * 영구 삭제의 조작 값 (`OBS-AUDIT-001`).
+ *
+ * 사람이 했는지 보존 만료가 했는지를 **이 값에 섞지 않는다**
+ * (`DR-AUDIT-001` AC-7) — 섞으면 조작 값의 distinct 집합이 하위체계 ×
+ * 조작의 곱집합으로 부풀어 필터가 못 쓰게 된다. 그 구분은 행위자가 갖는다.
+ */
+export const NODE_PURGE = 'node.purge';
 import { readSetting } from '../settings/instance-settings.js';
 import { resolveNameCollision } from '../../domain/naming/collision.js';
 import { permits } from '../../domain/acl/level.js';
@@ -209,7 +219,7 @@ export async function purgeFromTrash(
 
   if (!canPurge(stores, actor, entry)) return { ok: false, rule: 'forbidden' };
 
-  await hardDelete(stores, entry);
+  await hardDelete(stores, entry, actor.id);
   return { ok: true };
 }
 
@@ -230,8 +240,19 @@ export function canPurge(stores: TrashStores, actor: Actor, entry: TrashEntry): 
   });
 }
 
-/** 실체·사이드카·인덱스·노드·ACL 을 함께 걷는다 (`SEC-STORAGE-003` AC-4). */
-async function hardDelete(stores: TrashStores, entry: TrashEntry): Promise<void> {
+/**
+ * 실체·사이드카·인덱스·노드·ACL 을 함께 걷는다 (`SEC-STORAGE-003` AC-4).
+ *
+ * **감사 행을 남긴다** (`OBS-AUDIT-001` AC-2) — 노드의 존재가 바뀌므로
+ * 기준 ① 에 걸린다. 행위자는 호출자가 준다: 사람의 조작이면 그 사람,
+ * 보존 만료면 예약 주체다 (`DR-AUDIT-001` AC-2). 비워 두는 폴백을 두지
+ * 않는다 (AC-9) — 「누가 지웠나」가 사라진 행은 감사가 아니다.
+ *
+ * 워크스페이스를 **지우기 전에** 읽어 함께 적는다. 노드 행이 사라진 뒤에는
+ * 그 값을 다시 구할 수 없고, 못 구하면 그 행은 인스턴스 스코프로 격상돼
+ * 정작 그 워크스페이스의 관리자에게서 숨는다.
+ */
+async function hardDelete(stores: TrashStores, entry: TrashEntry, actor: string): Promise<void> {
   await stores.trashFiles.purge(entry);
   // 첨부를 **여기서** 걷는다 (`FR-ATTACH-005`). 휴지통으로 보내는 경로에는
   // 걸지 않는다(AC-3) — 복구할 수 있는 상태에서 첨부를 지우면 복구된
@@ -241,6 +262,13 @@ async function hardDelete(stores: TrashStores, entry: TrashEntry): Promise<void>
   // 노드 제거가 그 서브트리의 ACL 도 함께 걷는다 — 복구할 수 없다는 것이
   // 이 조작의 내용이다.
   stores.nodes.remove(entry.nodeId);
+
+  stores.audit.append({
+    operation: NODE_PURGE,
+    actor,
+    nodeId: entry.nodeId,
+    workspaceId: entry.workspaceId,
+  });
 }
 
 /** 설정된 보존 일수. 없거나 숫자가 아니면 기본값 (`FR-STORAGE-007` AC-1 · AC-3). */
@@ -262,7 +290,8 @@ export async function sweepExpiredTrash(stores: TrashStores): Promise<{ purged: 
   let purged = 0;
   for (const entry of stores.trash.listAll()) {
     if (!isExpired(entry, days, now)) continue;
-    await hardDelete(stores, entry);
+    // 사람의 조작이 아니다 — 하위체계 이름이 행위자 자리를 채운다.
+    await hardDelete(stores, entry, SYSTEM_RETENTION);
     purged += 1;
   }
   return { purged };

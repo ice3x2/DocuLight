@@ -2,6 +2,7 @@ import { canAuthenticate } from '../../domain/auth/account-gate.js';
 import type { PrincipalRepository } from '../../domain/ports/principal-repository.js';
 import type { SessionRepository } from '../../domain/ports/session-repository.js';
 import type { PrincipalId, PrincipalStatus } from '../../domain/principal/principal.js';
+import { isReservedActor } from '../../domain/principal/system-principals.js';
 import { SUPERUSER_GROUP_ID, isSystemGroup } from '../../domain/principal/system-groups.js';
 
 /** 거절 사유. 예외가 아니라 값이다 — 예측 가능한 분기는 예외로 흘리지 않는다. */
@@ -10,7 +11,9 @@ export type PrincipalRule =
   | 'member-must-be-user'
   | 'unknown-principal'
   | 'not-a-group'
-  | 'last-active-superuser';
+  | 'last-active-superuser'
+  /** 예약 주체는 계정이 아니다 (`DR-AUDIT-001` AC-4 · AC-5). */
+  | 'reserved-principal';
 
 /** 슈퍼유저 바닥을 지키는 가드가 내는 사유 (`SEC-AUTH-016`). */
 export type PrincipalGuardRule = Extract<PrincipalRule, 'last-active-superuser'>;
@@ -161,6 +164,11 @@ export function setAccountStatus(
   userId: PrincipalId,
   status: PrincipalStatus,
 ): PrincipalResult {
+  // 예약 주체는 **명시적으로** 거절한다 (`DR-AUDIT-001` AC-4 · AC-5).
+  // 계정 행이 없어 `unknown-principal` 로 떨어지는 것에 기대면, 그 우연은
+  // 언젠가 같은 ID 의 행이 생기는 순간 사라진다.
+  if (isReservedActor(userId)) return reject('reserved-principal');
+
   const account = stores.principals.findById(userId);
   if (account === undefined) return reject('unknown-principal');
 
