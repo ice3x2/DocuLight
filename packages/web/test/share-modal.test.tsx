@@ -206,3 +206,66 @@ describe('CON-PRINCIPAL-006 — 공유 모달도 그 부품을 쓴다', () => {
     expect(배치.length).toBeGreaterThanOrEqual(1);
   });
 });
+
+describe('CON-ACL-003 — 부여 화면에 적용 범위 선택지가 없다', () => {
+  it('AC-1: 적용 범위를 고르는 자리가 화면에 없다', async () => {
+    await 열기(관리자에게([]));
+
+    // 부여는 언제나 그 노드와 그 아래 전부다 — 고르는 자리가 생기면
+    // 「이 디렉토리만」이 곧 상속과 다른 두 번째 규칙이 된다.
+    expect(screen.queryByLabelText(/적용 범위|하위 포함|이 폴더만|재귀/)).toBeNull();
+    for (const 이름 of [/하위/, /재귀/, /범위/]) {
+      expect(screen.queryByRole('checkbox', { name: 이름 })).toBeNull();
+    }
+  });
+
+  it('AC-2: 비활성·잠금 상태로도 렌더하지 않는다', async () => {
+    await 열기(관리자에게([]));
+    const container = screen.getByRole('dialog', { name: '회의록.md 공유' });
+
+    // 비활성으로 남기면 언젠가 열릴 것처럼 읽히고, 그 기대가 곧 요구가 된다.
+    const 고르개들 = [...container.querySelectorAll('select, input[type="checkbox"], input[type="radio"]')];
+    const 범위축 = 고르개들.filter((one) =>
+      /scope|recursive|cascade|applyTo|하위|범위/i.test(
+        `${one.getAttribute('name') ?? ''} ${one.getAttribute('aria-label') ?? ''} ${one.id}`,
+      ),
+    );
+    expect(범위축).toEqual([]);
+  });
+});
+
+describe('SEC-WORKSPACE-001 · SEC-WORKSPACE-002 — 워크스페이스 권한 화면', () => {
+  const 워크스페이스 = (over: Partial<ShareViewBody> = {}): ShareViewBody => ({
+    ...관리자에게([]),
+    nodeKind: 'workspace',
+    ...over,
+  });
+
+  it('`SEC-WORKSPACE-001` AC-2: 워크스페이스 화면에 상속 항목·상속 플래그가 나타나지 않는다', async () => {
+    // 상속 항목이 그려지려면 그 목록에 출처가 붙는다 — 워크스페이스는
+    // 상속의 시작점이라 그 자리 자체가 없어야 한다.
+    await 열기(워크스페이스({ rows: [] }));
+    const dialog = screen.getByRole('dialog', { name: '회의록.md 공유' });
+
+    expect(within(dialog).queryByText(/상속됨|상속 항목|출처/)).toBeNull();
+  });
+
+  it('`SEC-WORKSPACE-001` AC-3: 워크스페이스 화면에 부모 권한 가져오기가 없다', async () => {
+    await 열기(워크스페이스());
+    const dialog = screen.getByRole('dialog', { name: '회의록.md 공유' });
+
+    // 끊을 상위가 없으므로 가져올 부모도 없다 — 두 버튼 다 성립하지 않는다.
+    expect(within(dialog).queryByRole('button', { name: '부모 권한 가져오기' })).toBeNull();
+    expect(within(dialog).queryByRole('button', { name: '상속 끊기' })).toBeNull();
+  });
+
+  it('`SEC-WORKSPACE-002` AC-3: 디렉토리·문서의 레벨 선택지에 관리가 없다', async () => {
+    for (const nodeKind of ['file', 'directory'] as const) {
+      await 열기({ ...관리자에게([]), nodeKind });
+      const 고르개 = screen.getByLabelText('권한') as HTMLSelectElement;
+
+      expect([...고르개.options].map((option) => option.value)).toEqual(['view', 'edit']);
+      cleanup();
+    }
+  });
+});

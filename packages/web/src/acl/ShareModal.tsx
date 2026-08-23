@@ -115,14 +115,22 @@ export function ShareModal({
               AC-2). 편집자가 열거할 수 없는 집합을 통째로 부여하는
               조작이라, 열면 「누구인지 알 수 없는 11명에게 부여하시겠습니까」
               라는 성립 불가능한 확인이 된다. 상속이 이어져 있으면 가져올
-              것이 없으므로 그때도 서지 않는다. */}
+              것이 없으므로 그때도 서지 않는다.
+
+              워크스페이스에서도 서지 않는다 (`SEC-WORKSPACE-001` AC-3) —
+              상속의 시작점이라 가져올 부모가 아예 없다. 상속 여부만 보고
+              가리면 그 값이 어떤 이유로든 거짓이 되는 순간 워크스페이스
+              화면에 이 버튼이 선다. */}
           {view !== undefined && view.nodeKind !== 'workspace' ? (
             <button type="button" data-testid="break-inheritance" onClick={() => set관문('break')}>
               상속 끊기
             </button>
           ) : null}
 
-          {view !== undefined && !view.inheritsAcl && view.level === 'admin' ? (
+          {view !== undefined &&
+          view.nodeKind !== 'workspace' &&
+          !view.inheritsAcl &&
+          view.level === 'admin' ? (
             <button type="button" data-testid="inherit-from-parent" onClick={() => set관문('inherit')}>
               부모 권한 가져오기
             </button>

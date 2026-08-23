@@ -1,16 +1,16 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-08-23T15:13:55.761Z",
+  "generatedAt": "2026-08-23T15:24:16.943Z",
   "source": "speckiwi",
   "specFingerprint": {
     "algorithm": "sha256",
-    "value": "e313b610c38cbe49900649e8dbc40de26524499de4ae923f3709af56c7cf3f6c",
+    "value": "b171ba1283b34fc9c3bf25f599b6d25c4f977b024243dbfd7e64422a7d440365",
     "files": [
       {
         "path": "docs/spec/00.index.md",
-        "sha256": "5f30843ea5664fd414e50a6191d820352d3a028c55ad95a5e0f3e294f8538212",
-        "size": 9288,
-        "mtimeMs": 1787498035734.9807
+        "sha256": "583b0fa978843af765037c2b37e0ce2ad8e037ce947fac3d7a5d9a754f1da64d",
+        "size": 9287,
+        "mtimeMs": 1787498656919.5068
       },
       {
         "path": "docs/spec/02.product-architecture.srs.md",
@@ -38,9 +38,9 @@
       },
       {
         "path": "docs/spec/10.access-control.srs.md",
-        "sha256": "2c73b3ee7489a7d6e67c0306d3511a854b576b41e931495a52b2df2adef27c22",
-        "size": 141162,
-        "mtimeMs": 1787492040005.4756
+        "sha256": "e8fbd95cc66e775f5b4a5e69a6095c31f9bd916cd5a38e30d9621e62654083dd",
+        "size": 143196,
+        "mtimeMs": 1787498591737.2932
       },
       {
         "path": "docs/spec/11.confirmation-grades.srs.md",
@@ -56,15 +56,15 @@
       },
       {
         "path": "docs/spec/13.workspace.srs.md",
-        "sha256": "aa913c8256e0a851b20986782fc3f36f087fb63a918bfddbbdd0e0b9655e72bc",
-        "size": 79463,
-        "mtimeMs": 1787497571482.1401
+        "sha256": "bbb3f1d31dffdf596e4744dd34d738f093e231770aec6ee3651405a566a1787d",
+        "size": 83144,
+        "mtimeMs": 1787498656892.1233
       },
       {
         "path": "docs/spec/14.storage.srs.md",
-        "sha256": "edf5f7225a4f8a7e49fb2977127e24f04ac184ee8d0229ce5e48ce55a37b7395",
-        "size": 101037,
-        "mtimeMs": 1787497413791.229
+        "sha256": "849e9361277a39c6c9c48ef37b3985ed274f13352a6482162fea1b9be22b83e1",
+        "size": 101650,
+        "mtimeMs": 1787498647992.1946
       },
       {
         "path": "docs/spec/15.attachments.srs.md",
@@ -74,9 +74,9 @@
       },
       {
         "path": "docs/spec/16.principal.srs.md",
-        "sha256": "1ae4f4df30b8c3390245607ae8bd7c7815b23792d0737829cfbbd879aa0e3053",
-        "size": 97939,
-        "mtimeMs": 1787451485292.7559
+        "sha256": "a4b4c06dabf7e5bf8395e36f482553b410f2178e51721a4ed78767d98416d9b4",
+        "size": 99060,
+        "mtimeMs": 1787498609587.074
       },
       {
         "path": "docs/spec/90.appendix.md",
