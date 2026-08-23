@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { OffboardingCard } from '../src/principal/OffboardingCard.js';
 import type { OffboardingCardBody } from '../src/api/client.js';
@@ -101,11 +101,139 @@ describe('CON-PRINCIPAL-004 — 카드는 하나뿐이고 상태를 들지 않�
     expect(그리는것).toEqual([join('principal', 'OffboardingCard.tsx')]);
   });
 
-  it('AC-3 · AC-4: 카드가 진행 상태를 자기 안에 들지 않는다', () => {
+  /**
+   * 재는 것은 **완료 여부의 출처**다.
+   *
+   * 초판은 소스에 `useState` 가 없는지를 쟀는데, 그 판정식은 확인
+   * 다이얼로그가 열렸는지 같은 **일시적 화면 상태**까지 함께 막는다 —
+   * AC-3·AC-4 가 금지하는 것은 진행 상태의 보관이지 화면 상태가 아니다.
+   * 겸해 그 판정식은 `let 완료 = ...` 로 진행 상태를 드는 구현을 그대로
+   * 통과시킨다: 소스 문자열 검사는 재려는 것과 재는 것이 어긋나 있었다.
+   */
+  it('AC-4: 단계별 완료 여부가 오직 받은 값에서만 나온다', async () => {
+    const 진행중 = {
+      principalId: 'u1',
+      principalName: '한범',
+      steps: [
+        { id: 'suspend' as const, done: false },
+        { id: 'tokens' as const, done: false },
+        { id: 'memberships' as const, done: false, groups: ['기획팀원'] },
+        { id: 'acl' as const, done: false, remaining: 2 },
+      ],
+    };
+    const { rerender } = render(<OffboardingCard card={진행중} />);
+    const 완료표시 = () =>
+      screen.getAllByTestId('offboarding-step').map((li) => li.getAttribute('data-done'));
+
+    expect(완료표시()).toEqual(['false', 'false', 'false', 'false']);
+
+    // 조작을 실제로 수행해도 새 값을 받기 전에는 아무것도 완료로 바뀌지
+    // 않는다 — 바뀌면 화면이 서버와 어긋난 자기 진행 상태를 든 것이다.
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: '계정 비활성화' }));
+    await user.click(screen.getByRole('button', { name: /그룹 멤버십 제거/ }));
+
+    // **확인이 열려 있는 동안에도** 아무것도 완료가 아니다 — 닫힌 뒤에만
+    // 재면 열린 동안 완료로 그리는 구현이 통과한다.
+    expect(완료표시()).toEqual(['false', 'false', 'false', 'false']);
+
+    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: '실행' }));
+
+    expect(완료표시()).toEqual(['false', 'false', 'false', 'false']);
+
+    // 새 값이 오면 그대로 따라간다.
+    rerender(
+      <OffboardingCard
+        card={{
+          ...진행중,
+          steps: 진행중.steps.map((step) =>
+            step.id === 'suspend' ? { ...step, done: true } : step,
+          ),
+        }}
+      />,
+    );
+
+    expect(완료표시()).toEqual(['true', 'false', 'false', 'false']);
+  });
+
+  it('AC-3: 진행 상태를 보관하는 저장 호출이 카드에 없다', () => {
     const code = readFileSync(join(WEB, 'src', 'principal', 'OffboardingCard.tsx'), 'utf8');
 
-    // `useState` 가 들어오는 순간 화면이 파생과 어긋난 자기 상태를 갖는다.
-    expect(code).not.toContain('useState');
-    expect(code).not.toContain('useReducer');
+    // 서버에 진행을 적어 두는 경로가 있으면 그것이 곧 AC-3 이 금지한 칸이다.
+    expect(code).not.toContain('localStorage');
+    expect(code).not.toContain('sessionStorage');
+    expect(code).not.toContain('fetch(');
+  });
+});
+
+describe('FR-CONFIRM-009 · FR-CONFIRM-023 — 오프보딩의 확인 단계', () => {
+  const 카드 = (over: Record<string, unknown> = {}) => ({
+    principalId: 'u1',
+    principalName: '한범',
+    steps: [
+      { id: 'suspend' as const, done: false },
+      { id: 'tokens' as const, done: false },
+      { id: 'memberships' as const, done: false, groups: ['기획팀원', '설계팀원'] },
+      { id: 'acl' as const, done: false, remaining: 3 },
+    ],
+    ...over,
+  });
+
+  it('FR-CONFIRM-009 AC-1 · AC-2: 멤버십 제거는 확인을 받고 그룹 이름을 모두 나열한다', async () => {
+    const 뺐다 = vi.fn();
+    render(<OffboardingCard card={카드()} onRemoveMemberships={뺐다} />);
+
+    await userEvent.setup().click(screen.getByRole('button', { name: /그룹 멤버십 제거/ }));
+
+    const gate = screen.getByRole('alertdialog');
+    expect(gate.getAttribute('data-grade')).toBe('L2');
+    expect(gate.textContent ?? '').toContain('기획팀원');
+    expect(gate.textContent ?? '').toContain('설계팀원');
+    expect(뺐다).not.toHaveBeenCalled();
+  });
+
+  it('확인을 통과해야 실행된다', async () => {
+    const 뺐다 = vi.fn();
+    render(<OffboardingCard card={카드()} onRemoveMemberships={뺐다} />);
+
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: /그룹 멤버십 제거/ }));
+    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: '실행' }));
+
+    expect(뺐다).toHaveBeenCalledWith('u1');
+  });
+
+  it('FR-CONFIRM-023 AC-1: 앞 세 단계를 여러 사람에게 한꺼번에 거는 자리가 없다', () => {
+    render(<OffboardingCard card={카드()} />);
+
+    // 카드는 **주체 하나**를 받는다 — 다건 선택칸이 서면 그 자체로 다른
+    // 조작이 되고, 다건은 4단계에만 제공한다.
+    expect(screen.queryByRole('checkbox')).toBeNull();
+    expect(screen.queryByLabelText(/여러 사용자|일괄 비활성화|일괄 멤버십/)).toBeNull();
+  });
+
+  it('FR-CONFIRM-023 AC-4: 2단계는 별도 조작도 확인도 갖지 않는다', () => {
+    render(<OffboardingCard card={카드()} />);
+
+    // 1단계의 자동 결과라 누를 것이 없다 — 버튼을 두면 사용자가 그것을
+    // 눌러야 진행된다고 읽는다.
+    expect(screen.queryByRole('button', { name: /액세스 토큰/ })).toBeNull();
+  });
+
+  it('이미 끝난 단계에는 실행 버튼이 없다', () => {
+    render(
+      <OffboardingCard
+        card={카드({
+          steps: [
+            { id: 'suspend' as const, done: true },
+            { id: 'tokens' as const, done: true },
+            { id: 'memberships' as const, done: true, groups: [] },
+            { id: 'acl' as const, done: true, remaining: 0 },
+          ],
+        })}
+      />,
+    );
+
+    expect(screen.queryByRole('button', { name: /그룹 멤버십 제거/ })).toBeNull();
   });
 });

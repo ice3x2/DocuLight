@@ -166,3 +166,41 @@ describe('FR-PRINCIPAL-011 — 시스템 그룹 일괄 회수의 안내', () => 
     expect(permissionOf(stores, actorFor(stores.principals, 슈퍼.id), ws)).toBe('admin');
   });
 });
+
+describe('FR-CONFIRM-009 — 멤버십 단계는 제거될 그룹 이름을 모두 싣는다', () => {
+  it('AC-2: 이름이 빠짐 없이 온다', () => {
+    const 한범 = stores.principals.createUser('한범');
+    const 기획 = stores.principals.createGroup('기획팀원');
+    const 설계 = stores.principals.createGroup('설계팀원');
+    stores.principals.addMember(기획.id, 한범.id);
+    stores.principals.addMember(설계.id, 한범.id);
+    stores.principals.addMember(DEFAULT_GROUP_ID, 한범.id);
+
+    const step = offboardingCard(stores, 한범.id)!.steps.find((one) => one.id === 'memberships')!;
+
+    // 카드가 진행 상태를 저장하지 않으므로(`R101-d`) 실행취소 토스트가
+    // 사라지면 어느 그룹에 속했는지 복원할 정보가 남지 않는다 — 실행 전에
+    // 보여주는 것이 유일한 기회다. 그래서 개수가 아니라 이름이다.
+    expect(step.groups).toEqual(['기획팀원', '설계팀원']);
+  });
+
+  it('시스템 그룹은 그 목록에 없다 — 제거 대상이 아니다', () => {
+    const 한범 = stores.principals.createUser('한범');
+    stores.principals.addMember(DEFAULT_GROUP_ID, 한범.id);
+
+    const step = offboardingCard(stores, 한범.id)!.steps.find((one) => one.id === 'memberships')!;
+
+    expect(step.groups).toEqual([]);
+    expect(step.done).toBe(true);
+  });
+
+  it('다른 단계에는 그 칸이 없다 — 있으면 화면이 아무 단계에나 이름을 그린다', () => {
+    const 한범 = stores.principals.createUser('한범');
+
+    const steps = offboardingCard(stores, 한범.id)!.steps;
+
+    for (const step of steps.filter((one) => one.id !== 'memberships')) {
+      expect(step.groups).toBeUndefined();
+    }
+  });
+});

@@ -299,6 +299,12 @@ export interface OffboardingStepBody {
   id: 'suspend' | 'tokens' | 'memberships' | 'acl';
   done: boolean;
   remaining?: number;
+  /**
+   * 멤버십 단계에만 있는 값 — 제거될 그룹의 이름 전부 (`FR-CONFIRM-009`
+   * AC-2). 개수가 아니라 이름인 이유는 카드가 진행 상태를 저장하지 않아
+   * 실행 뒤에는 복원할 정보가 남지 않기 때문이다.
+   */
+  groups?: string[];
 }
 
 export interface OffboardingCardBody {

@@ -17,6 +17,17 @@ export interface OffboardingStep {
   readonly done: boolean;
   /** ACL 단계에만 있는 값 — 남은 항목 수. 나머지 단계에는 없다. */
   readonly remaining?: number;
+  /**
+   * 멤버십 단계에만 있는 값 — **제거될 그룹의 이름 전부** (`FR-CONFIRM-009`
+   * AC-2).
+   *
+   * 개수가 아니라 이름인 이유는, 이 카드가 진행 상태를 저장하지 않아
+   * (`R101-d`) 실행취소 토스트가 사라지면 그 사용자가 어느 그룹에 속했는지
+   * 복원할 정보가 남지 않기 때문이다 — 실행 전에 보여주는 것이 유일한
+   * 기회다. 나머지 단계에는 이 칸이 없다: 있으면 화면이 아무 단계에나
+   * 이름을 그린다.
+   */
+  readonly groups?: readonly string[];
 }
 
 export interface OffboardingCard {
@@ -65,7 +76,14 @@ export function offboardingCard(
       { id: 'suspend', done: suspended },
       // 계정이 닫히면 그 계정의 토큰도 함께 닫힌다 — 같은 사실이다.
       { id: 'tokens', done: suspended },
-      { id: 'memberships', done: nonSystemGroupsOf(stores, principalId).length === 0 },
+      {
+        id: 'memberships',
+        done: nonSystemGroupsOf(stores, principalId).length === 0,
+        groups: nonSystemGroupsOf(stores, principalId).flatMap((id) => {
+          const group = stores.principals.findById(id);
+          return group === undefined ? [] : [group.name];
+        }),
+      },
       { id: 'acl', done: remaining === 0, remaining },
     ],
   };
