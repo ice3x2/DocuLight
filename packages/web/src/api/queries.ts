@@ -16,6 +16,8 @@ import {
   fetchTree,
   loadDocument,
   type AuditViewBody,
+  type ReconciliationQueueBody,
+  fetchReconciliationQueue,
   type BrokenInheritanceBody,
   type DocumentBody,
   type DocumentLinksBody,
@@ -54,6 +56,7 @@ export const QUERY_KEYS = {
   workspaces: ['workspaces'] as const,
   brokenInheritance: ['broken-inheritance'] as const,
   auditLog: ['audit-log'] as const,
+  reconciliationQueue: ['reconciliation-queue'] as const,
   revocation: (principalId: string) => ['revocation', principalId] as const,
   simulation: (subjectId: string) => ['simulation', subjectId] as const,
 };
@@ -160,3 +163,19 @@ export const useSimulation = (subjectId: string | null): UseQueryResult<Simulati
 /** 감사 로그 (`SEC-AUDIT-010`). 관리 범위가 없으면 서버가 404 로 답한다. */
 export const useAuditLog = (enabled: boolean): UseQueryResult<AuditViewBody> =>
   useQuery({ queryKey: QUERY_KEYS.auditLog, queryFn: fetchAuditLog, enabled, retry: false });
+
+/**
+ * 재조정 대기열 (`SEC-AUDIT-007` · `IR-AUDIT-002`).
+ *
+ * 감사 로그와 **같은 조건**으로 켠다 — 자격 판정이 서버에서 하나이므로
+ * (`SEC-AUDIT-007` AC-6) 화면에서 조건을 따로 적으면 그 둘이 갈린다.
+ */
+export const useReconciliationQueue = (
+  enabled: boolean,
+): UseQueryResult<ReconciliationQueueBody> =>
+  useQuery({
+    queryKey: QUERY_KEYS.reconciliationQueue,
+    queryFn: fetchReconciliationQueue,
+    enabled,
+    retry: false,
+  });

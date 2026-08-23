@@ -21,6 +21,7 @@ import {
 import {
   QUERY_KEYS,
   useAuditLog,
+  useReconciliationQueue,
   useBrokenInheritance,
   useFavorites,
   useGroupRoster,
@@ -334,7 +335,11 @@ function AppBody() {
   const brokenInheritance = useBrokenInheritance(signedIn && adminScope);
   // 슈퍼유저는 관리 워크스페이스가 없어도 인스턴스 스코프의 행을 읽는다
   // (`SEC-AUDIT-010` AC-5) — `adminScope` 만 보면 그 문이 닫힌다.
-  const auditLog = useAuditLog(signedIn && (adminScope || session.data?.superuser === true));
+  const 감사자격 = signedIn && (adminScope || session.data?.superuser === true);
+  const auditLog = useAuditLog(감사자격);
+  // 대기열은 감사 로그와 **같은 조건**으로 켠다 (`SEC-AUDIT-007` AC-6) —
+  // 자격 판정은 서버가 하나로 들고, 화면이 조건을 따로 적으면 둘이 갈린다.
+  const queue = useReconciliationQueue(감사자격);
   // 지금은 첫 주체의 것만 묻는다 — 다건 조회의 합산 규칙을 정한 요구가
   // 아직 없어, 없는 규칙을 화면이 지어내지 않는다.
   const revocation = useRevocation(회수주체[0]?.id ?? null);
@@ -529,6 +534,7 @@ function AppBody() {
       onSaved={noteSaved}
       onDocuments={setDocuments}
       {...(auditLog.data === undefined ? {} : { auditLog: auditLog.data })}
+      {...(queue.data === undefined ? {} : { queue: queue.data })}
       {...(notice === undefined ? {} : { notice })}
       {...(pendingOpen === null
         ? {}

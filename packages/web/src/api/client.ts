@@ -532,3 +532,21 @@ export interface AuditViewBody {
 }
 
 export const fetchAuditLog = () => call<AuditViewBody>('/audit-log');
+
+/**
+ * 재조정 대기열 한 줄 (`SEC-AUDIT-007`).
+ *
+ * **워크스페이스 칸이 없다** (AC-2) — 스코프는 참조 감사 행에서 파생하며,
+ * 응답에 실으면 그 값이 곧 두 번째 정본이 된다.
+ */
+export interface QueueItemBody {
+  id: string;
+  type: string;
+}
+
+export interface ReconciliationQueueBody {
+  items: QueueItemBody[];
+}
+
+export const fetchReconciliationQueue = () =>
+  call<ReconciliationQueueBody>('/reconciliation-queue');

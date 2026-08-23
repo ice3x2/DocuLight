@@ -88,6 +88,15 @@ export interface AuditQuery {
    * 필터에 나타나야 하고, 고정 목록은 그때마다 갱신을 요구한다.
    */
   operationsInScope(workspaceIds: readonly string[], options?: { includeInstance?: boolean }): string[];
+
+  /**
+   * 그 ID 들의 행. 재조정 대기열이 스코프를 파생할 때 쓴다
+   * (`SEC-AUDIT-007` AC-1).
+   *
+   * 스코프 필터를 걸지 않는다 — 파생의 입력이지 열람이 아니고, 여기서
+   * 거르면 경계를 넘는 항목이 스코프를 잃어 판정 자체가 불가능해진다.
+   */
+  byIds(ids: readonly string[]): AuditRow[];
 }
 
 export interface AuditSink {

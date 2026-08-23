@@ -13,6 +13,7 @@ import { FsTrashFiles } from '../../src/infra/fs/trash-files.js';
 import { SqliteNodeRepository } from '../../src/infra/sqlite/node-repository.js';
 import { SqliteAttachmentRepository } from '../../src/infra/sqlite/attachment-repository.js';
 import { SqliteFavoriteRepository } from '../../src/infra/sqlite/favorite-repository.js';
+import { SqliteFindingQueue } from '../../src/infra/sqlite/finding-queue-repository.js';
 import { SqlitePersonalSettingStore } from '../../src/infra/sqlite/personal-setting-store.js';
 import { SqliteSessionRepository } from '../../src/infra/sqlite/session-repository.js';
 import { SqliteTrashRepository } from '../../src/infra/sqlite/trash-repository.js';
@@ -107,6 +108,7 @@ export function attachmentStores(
 ): AttachmentStores & TrashStores & FavoriteStores & {
   personalSettings: SqlitePersonalSettingStore;
   sessions: SqliteSessionRepository;
+  queue: SqliteFindingQueue;
 } {
   // 휴지통까지 함께 세운다 — 영구 삭제가 첨부를 걷으므로(FR-ATTACH-005)
   // 그 축을 재려면 두 저장소가 같은 자리에 있어야 한다.
@@ -116,5 +118,8 @@ export function attachmentStores(
     favorites: new SqliteFavoriteRepository(db),
     personalSettings: new SqlitePersonalSettingStore(db),
     sessions: new SqliteSessionRepository(db),
+    // 재조정 대기열도 여기서 선다 — 라우터가 그것을 요구하므로, 빠뜨리면
+    // 라우터를 세우는 시험만 다른 조립을 갖게 된다.
+    queue: new SqliteFindingQueue(db),
   };
 }

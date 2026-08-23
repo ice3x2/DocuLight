@@ -52,6 +52,8 @@ import { previewRevocation, revokeAllFor } from '../../app/acl/bulk-revoke-servi
 import { simulate } from '../../app/acl/simulation-service.js';
 import { brokenInheritanceOf } from '../../app/acl/inheritance-audit-service.js';
 import { auditView } from '../../app/audit/audit-view.js';
+import { queueView } from '../../app/reconciliation/queue-view.js';
+import type { FindingQueue } from '../../domain/ports/finding-queue.js';
 import {
   PERSONAL_SETTING_KEYS,
   readPersonalSetting,
@@ -98,7 +100,12 @@ import { RESOURCE_DIRECTORY } from '../../domain/attachment/resource-layout.js';
 export interface WorkspaceApiDeps {
   stores: AttachmentStores &
     TrashStores &
-    FavoriteStores & { personalSettings: PersonalSettingStore; sessions: SessionRepository };
+    FavoriteStores & {
+      personalSettings: PersonalSettingStore;
+      sessions: SessionRepository;
+      /** 재조정 대기열 (`SEC-AUDIT-007`). */
+      queue: FindingQueue;
+    };
   /**
    * 이 요청을 누구로 볼 것인가. 세울 수 없으면 `undefined`.
    *
@@ -933,6 +940,28 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     }
 
     const view = auditView(stores, actor);
+    if (view === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(view);
+  });
+
+  /**
+   * 재조정 대기열 (`SEC-AUDIT-007` · `IR-AUDIT-002`).
+   *
+   * 감사 로그와 **같은 자격**으로 답한다 — 볼 것이 없는 것과 볼 자격이
+   * 없는 것을 404 하나로 접는다 (`SEC-ACL-006`).
+   */
+  router.get('/reconciliation-queue', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const view = queueView(stores, actor);
     if (view === null) {
       res.sendStatus(404);
       return;

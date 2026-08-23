@@ -40,3 +40,19 @@ export const FINDING_TYPE = {
 } as const;
 
 export type FindingType = (typeof FINDING_TYPE)[keyof typeof FINDING_TYPE];
+
+/**
+ * 대기열 항목을 **해소하는** 행위가 감사 로그에 남기는 조작
+ * (`REL-AUDIT-002`).
+ *
+ * 위 `RECONCILE_OPERATION` 과 나눠 둔다 — 그쪽은 재조정이 관측한 **사실**
+ * 이고 이쪽은 사람이 그 사실에 대해 **한 일**이다. 한 열거에 섞으면
+ * 행위자가 언제나 `system:reconciler` 라는 성질이 그 열거에서 사라진다.
+ */
+export const RESOLUTION_OPERATION = {
+  /** 사람이 두 사실을 손으로 이었다 (`R77-a` 수동 연결). */
+  manualLink: 'reconcile.manual-link',
+} as const;
+
+export type ResolutionOperation =
+  (typeof RESOLUTION_OPERATION)[keyof typeof RESOLUTION_OPERATION];

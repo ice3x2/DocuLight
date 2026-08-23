@@ -55,6 +55,17 @@ export class SqliteFindingQueue implements FindingQueue {
       .map((r) => ({ id: r.id, type: r.type, resolutionAuditId: r.resolution_audit_id }));
   }
 
+  find(findingId: string): Finding | undefined {
+    const row = this.store
+      .all<{ id: string; type: string; resolution_audit_id: string | null }>(
+        'SELECT id, type, resolution_audit_id FROM reconciliation_finding WHERE id = ?',
+        [findingId],
+      )
+      .at(0);
+    if (row === undefined) return undefined;
+    return { id: row.id, type: row.type, resolutionAuditId: row.resolution_audit_id };
+  }
+
   auditRefsOf(findingId: string): string[] {
     return this.store
       .all<{ audit_log_id: string }>(

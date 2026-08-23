@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import type { AuditGroupBody, AuditViewBody } from '../api/client.js';
+import type { AuditGroupBody, AuditViewBody, ReconciliationQueueBody } from '../api/client.js';
 
 /**
  * 감사 로그 (`R84`).
@@ -17,49 +17,97 @@ export function AuditLogPanel({
   view,
   onOperation,
   operation,
+  queue,
 }: {
   view?: AuditViewBody;
   /** 조작 필터의 현재 값. 빈 문자열이 「전체」다. */
   operation?: string;
   onOperation?: (operation: string) => void;
+  /** 재조정 대기열 (`IR-AUDIT-002`). 이 패널의 **두 번째 화면**이다. */
+  queue?: ReconciliationQueueBody;
 }) {
+  // 대기열을 이 패널 안에서 전환한다 (`IR-AUDIT-002` AC-1). 카테고리를
+  // 하나 더 만들지 않는 이유는 `R24-a` 의 구역·카테고리 구성이 요구이기
+  // 때문이고(AC-3 · AC-4), 감사 로그 표에 섞지 않는 이유는 한 표에 성질이
+  // 다른 두 줄이 서면 조작 필터가 무엇을 거르는지 흐려지기 때문이다(AC-2).
+  const [대기열보기, set대기열보기] = useState(false);
+  // 두 화면 중 어느 쪽인가. 대기열이 오지 않았으면 전환 자체가 없다.
+  const 대기열 = 대기열보기 ? queue : undefined;
+
   if (view === undefined) return null;
 
   return (
     <section>
       <h2>감사 로그</h2>
 
-      {/* 선택지가 **실제 기록 값**에서 온다 (`IR-AUDIT-001` AC-2) — 고정
-          목록을 여기 적으면 새 조작이 처음 기록돼도 배포 전까지 나타나지
-          않는다.
+      {queue === undefined ? null : (
+        <button type="button" onClick={() => set대기열보기((was) => !was)}>
+          {대기열보기 ? '감사 로그' : '재조정 대기열'}
+        </button>
+      )}
 
-          상대 노드·대상 역할로 거르는 필터를 두지 않는다
-          (`SEC-AUDIT-009` AC-2 · AC-3). 「외부로 나간 것만」 거르는 필터도
-          없다 (`SEC-AUDIT-004` AC-2) — 그 필터의 결과 수가 곧 반출 건수다. */}
-      <label htmlFor="audit-operation">조작</label>
-      <select
-        id="audit-operation"
-        value={operation ?? ''}
-        onChange={(event) => onOperation?.(event.target.value)}
-      >
-        <option value="">전체</option>
-        {view.operations.map((one) => (
-          <option key={one} value={one}>
-            {one}
-          </option>
-        ))}
-      </select>
+      {대기열 === undefined ? (
+        <>
+          {/* 선택지가 **실제 기록 값**에서 온다 (`IR-AUDIT-001` AC-2) — 고정
+              목록을 여기 적으면 새 조작이 처음 기록돼도 배포 전까지 나타나지
+              않는다.
 
-      {view.groups.length === 0 ? (
-        <p data-testid="audit-empty">기록된 감사 행이 없습니다.</p>
+              상대 노드·대상 역할로 거르는 필터를 두지 않는다
+              (`SEC-AUDIT-009` AC-2 · AC-3). 「외부로 나간 것만」 거르는 필터도
+              없다 (`SEC-AUDIT-004` AC-2) — 그 필터의 결과 수가 곧 반출 건수다. */}
+          <label htmlFor="audit-operation">조작</label>
+          <select
+            id="audit-operation"
+            value={operation ?? ''}
+            onChange={(event) => onOperation?.(event.target.value)}
+          >
+            <option value="">전체</option>
+            {view.operations.map((one) => (
+              <option key={one} value={one}>
+                {one}
+              </option>
+            ))}
+          </select>
+
+          {view.groups.length === 0 ? (
+            <p data-testid="audit-empty">기록된 감사 행이 없습니다.</p>
+          ) : (
+            <ul>
+              {view.groups.map((group) => (
+                <AuditGroupRow
+                  key={`${group.operation} ${group.actor} ${group.occurredAt}`}
+                  group={group}
+                />
+              ))}
+            </ul>
+          )}
+        </>
       ) : (
-        <ul>
-          {view.groups.map((group) => (
-            <AuditGroupRow key={`${group.operation} ${group.actor} ${group.occurredAt}`} group={group} />
-          ))}
-        </ul>
+        <ReconciliationQueue queue={대기열} />
       )}
     </section>
+  );
+}
+
+/**
+ * 재조정 대기열 (`IR-AUDIT-002` · `SEC-AUDIT-007`).
+ *
+ * 미해소 항목만 온다 — 해소는 새 감사 행으로 남으므로(`REL-AUDIT-002`)
+ * 해소된 것을 여기 다시 세우면 같은 사실이 두 곳에 서게 된다.
+ */
+function ReconciliationQueue({ queue }: { queue: ReconciliationQueueBody }) {
+  if (queue.items.length === 0) {
+    return <p data-testid="queue-empty">미해소 항목이 없습니다.</p>;
+  }
+
+  return (
+    <ul>
+      {queue.items.map((item) => (
+        <li key={item.id} data-testid="queue-item">
+          {item.type}
+        </li>
+      ))}
+    </ul>
   );
 }
 

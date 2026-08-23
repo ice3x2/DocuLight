@@ -77,6 +77,14 @@ export class SqliteAuditLog implements AuditSink, AuditQuery {
       .map((r) => r.operation);
   }
 
+  byIds(ids: readonly string[]): AuditRow[] {
+    if (ids.length === 0) return [];
+    const holes = ids.map(() => '?').join(', ');
+    return this.store
+      .all<AuditRecord>(`SELECT * FROM audit_log WHERE id IN (${holes})`, [...ids])
+      .map(rowOf);
+  }
+
   /**
    * 스코프 조건 한 벌. 두 질의가 **같은 조건**을 쓴다 — 나눠 적으면
    * 목록에 있는 조작이 필터에 없거나 그 반대가 된다.

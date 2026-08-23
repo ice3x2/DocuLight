@@ -33,6 +33,13 @@ export interface FindingQueue {
   /** 해소 감사 행이 비어 있는 항목들. */
   unresolved(): Finding[];
 
+  /**
+   * 그 항목. 해소된 것도 돌려준다 — 해소 시각·해소자를 읽으려면 해소
+   * 감사 행 ID 를 알아야 하고, 그 ID 를 드는 자리가 여기뿐이다
+   * (`REL-AUDIT-002` AC-5).
+   */
+  find(findingId: string): Finding | undefined;
+
   /** 그 항목이 가리키는 감사 행들을 순서대로. */
   auditRefsOf(findingId: string): string[];
 }

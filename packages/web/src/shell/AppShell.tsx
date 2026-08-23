@@ -15,7 +15,7 @@ import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { PersonalSettings } from '../settings/PersonalSettings.js';
 import { AclAuditPanel, type AclAuditProps } from '../acl/AclAuditPanel.js';
 import { AuditLogPanel } from '../audit/AuditLogPanel.js';
-import type { AuditViewBody } from '../api/client.js';
+import type { AuditViewBody, ReconciliationQueueBody } from '../api/client.js';
 import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
@@ -108,6 +108,7 @@ function SettingsModal({
   groupRoster = [],
   aclAudit,
   auditLog,
+  queue,
   onTrashLens,
   onTrashPurge,
   onTrashRestore,
@@ -128,6 +129,8 @@ function SettingsModal({
   aclAudit?: AclAuditProps;
   /** 감사 로그 (`R84`). 관리 범위가 없으면 안 온다. */
   auditLog?: AuditViewBody;
+  /** 재조정 대기열 (`IR-AUDIT-002`). 감사 로그와 같은 자격으로 온다. */
+  queue?: ReconciliationQueueBody;
   onTrashLens?: (lens: TrashLens) => void;
   onTrashPurge?: (nodeId: string) => void;
   onTrashRestore?: (nodeId: string) => void;
@@ -162,6 +165,13 @@ function SettingsModal({
               {categories.map((category) => (
                 <Tabs.Trigger key={category.id} value={category.id}>
                   {category.label}
+                  {/* 미해소 건수 배지 (`IR-AUDIT-002` AC-5~AC-7). Phase 1 에
+                      알림 체계가 없어(`R110-a`) 이것이 통지 수단이다.
+                      **총계도 분모도 싣지 않는다** — 자기 몫과 총계의 차액이
+                      곧 다른 워크스페이스의 규모를 알린다 (`R141-b`). */}
+                  {category.id === 'audit-log' && queue !== undefined ? (
+                    <span data-testid="queue-badge">{queue.items.length}</span>
+                  ) : null}
                 </Tabs.Trigger>
               ))}
             </Tabs.List>
@@ -213,7 +223,10 @@ function SettingsModal({
                   />
                 ) : category.id === 'audit-log' ? (
                   // 이름을 **감사 로그**로 부른다 (`CON-AUDIT-001` AC-4).
-                  <AuditLogPanel {...(auditLog === undefined ? {} : { view: auditLog })} />
+                  <AuditLogPanel
+                    {...(auditLog === undefined ? {} : { view: auditLog })}
+                    {...(queue === undefined ? {} : { queue })}
+                  />
                 ) : category.id === 'acl-audit' ? (
                   // 셋을 여기 모은다 — 흩어 두면 관리자가 같은 물음을 세
                   // 곳에서 세 번 묻게 된다.
@@ -254,6 +267,7 @@ export function AppShell({
   groupRoster = [],
   aclAudit,
   auditLog,
+  queue,
   onTrashLens,
   onTrashPurge,
   onTrashRestore,
@@ -323,6 +337,8 @@ export function AppShell({
   aclAudit?: AclAuditProps;
   /** 감사 로그 (`R84`). 관리 범위가 없으면 안 온다. */
   auditLog?: AuditViewBody;
+  /** 재조정 대기열 (`IR-AUDIT-002`). 감사 로그와 같은 자격으로 온다. */
+  queue?: ReconciliationQueueBody;
   /** 좌측 검색 탭의 질의. 태그 클릭도 이 값을 채운다. */
   query?: string;
   onQuery?: (query: string) => void;
@@ -449,6 +465,7 @@ export function AppShell({
           groupRoster={groupRoster}
           {...(aclAudit === undefined ? {} : { aclAudit })}
           {...(auditLog === undefined ? {} : { auditLog })}
+          {...(queue === undefined ? {} : { queue })}
           {...(onGroupRemove === undefined ? {} : { onGroupRemove })}
           {...(onGroupAddMember === undefined ? {} : { onGroupAddMember })}
         />
