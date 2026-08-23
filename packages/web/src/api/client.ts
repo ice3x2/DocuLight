@@ -271,6 +271,26 @@ export const grantShare = (nodeId: string, principalId: string, level: 'view' | 
 export const revokeShare = (entryId: string) =>
   call<void>(`/acl-entries/${encodeURIComponent(entryId)}`, { method: 'DELETE' });
 
+/**
+ * 오프보딩 카드 (`FR-PRINCIPAL-003` · `CON-PRINCIPAL-004`).
+ *
+ * 완료 여부는 **서버가 파생한 값**이다 — 저장된 진행 상태가 아니다.
+ */
+export interface OffboardingStepBody {
+  id: 'suspend' | 'tokens' | 'memberships' | 'acl';
+  done: boolean;
+  remaining?: number;
+}
+
+export interface OffboardingCardBody {
+  principalId: string;
+  principalName: string;
+  steps: OffboardingStepBody[];
+}
+
+export const fetchOffboarding = (principalId: string) =>
+  call<OffboardingCardBody>(`/principals/${encodeURIComponent(principalId)}/offboarding`);
+
 export const fetchWikiTargets = (query: string) =>
   call<{ target: string; label: string; detail: string }[]>(
     `/wiki-targets?q=${encodeURIComponent(query)}`,

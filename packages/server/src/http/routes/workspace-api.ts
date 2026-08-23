@@ -32,6 +32,7 @@ import { createNode } from '../../app/node/node-service.js';
 import { searchPrincipals } from '../../app/principal/principal-search-service.js';
 import { maySearchFor, parseScope } from '../../app/principal/search-scope.js';
 import { shareView } from '../../app/acl/share-service.js';
+import { offboardingCard } from '../../app/principal/offboarding-service.js';
 import {
   adminlessWorkspaceIds,
   grantWarnings,
@@ -806,6 +807,30 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
         adminless: adminless.has(entry.workspace.id),
       })),
     );
+  });
+
+  /**
+   * 오프보딩 카드 (`FR-PRINCIPAL-003`). 슈퍼유저 전용이다 — 계정 상태를
+   * 다루는 흐름이라 명부와 같은 문을 쓴다 (`R163-a`).
+   */
+  router.get('/principals/:principalId/offboarding', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+    if (!isSuperuser(stores.principals.groupsOf(actor.id))) {
+      res.sendStatus(404);
+      return;
+    }
+
+    const card = offboardingCard(stores, req.params.principalId!);
+    if (card === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(card);
   });
 
   router.get('/roster/users', (req, res) => {
