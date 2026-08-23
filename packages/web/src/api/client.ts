@@ -490,3 +490,45 @@ export const addGroupMember = (groupId: string, userId: string) =>
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ userId }),
   });
+
+/**
+ * 감사 로그 한 줄 (`R84` · `SEC-AUDIT-008`).
+ *
+ * **원시 노드 ID 가 오지 않는다.** 열람 워크스페이스 안이면 경로로, 밖이면
+ * 고정 문구로 서버가 이미 풀어 준다 — 화면이 가리면 API 를 직접 부르는
+ * 쪽에 그대로 나간다.
+ */
+export interface AuditRowBody {
+  id: string;
+  occurredAt: string;
+  operation: string;
+  actor: string;
+  target: string | null;
+  counterpart: string | null;
+  targetRole?: 'origin' | 'copy';
+  subject?: string;
+  level?: string;
+  beforeValue?: string;
+  afterValue?: string;
+}
+
+/**
+ * 한 번의 조작에서 나온 행들 (`IR-AUDIT-003`).
+ *
+ * 묶음 키가 없다 — 표시 산물이지 기록이 아니므로 응답에 실리지 않고
+ * (AC-6) 그것으로 거르는 필터도 없다 (AC-7).
+ */
+export interface AuditGroupBody {
+  operation: string;
+  actor: string;
+  occurredAt: string;
+  rows: AuditRowBody[];
+}
+
+export interface AuditViewBody {
+  groups: AuditGroupBody[];
+  /** 조작 필터의 선택지. 실제 기록 값의 distinct 집합이다. */
+  operations: string[];
+}
+
+export const fetchAuditLog = () => call<AuditViewBody>('/audit-log');

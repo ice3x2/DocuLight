@@ -3,6 +3,7 @@ import { basename } from 'node:path';
 import { permissionBatch, permissionOf, type AclStores, type Actor } from '../acl/permission-service.js';
 import type { Clock } from '../auth/login-service.js';
 import { purgeAttachmentsOf, type AttachmentPurgeStores } from '../attachment/attachment-service.js';
+import { subtreeIdsOf } from '../node/node-service.js';
 import { SYSTEM_RETENTION } from '../../domain/principal/system-principals.js';
 
 /**
@@ -13,6 +14,12 @@ import { SYSTEM_RETENTION } from '../../domain/principal/system-principals.js';
  * 조작의 곱집합으로 부풀어 필터가 못 쓰게 된다. 그 구분은 행위자가 갖는다.
  */
 export const NODE_PURGE = 'node.purge';
+
+/** 휴지통으로 옮기는 조작 (`OBS-AUDIT-010` AC-1). 노드의 존재가 바뀐다. */
+export const NODE_TRASH = 'node.trash';
+
+/** 휴지통에서 되돌리는 조작. 노드 ID 를 보존하는 1-노드 조작이다. */
+export const NODE_RESTORE = 'node.restore';
 import { readSetting } from '../settings/instance-settings.js';
 import { resolveNameCollision } from '../../domain/naming/collision.js';
 import { permits } from '../../domain/acl/level.js';
@@ -107,6 +114,22 @@ export async function moveToTrash(
 
   await stores.trashFiles.moveIn(entry, node.name);
   stores.trash.add(entry);
+
+  // **하위 노드마다 1행이다** (`OBS-AUDIT-010` AC-1 · AC-6). 1행으로 접으면
+  // 휴지통 행과 사이드카가 사라진 뒤 「그 문서가 언제 누구에 의해
+  // 지워졌나」를 문서 단위로 답할 수 없다.
+  //
+  // 상대 노드를 비운다 — 삭제는 노드 ID 를 보존하는 1-노드 조작이고
+  // (`DR-AUDIT-003` AC-3), 위치 변화는 이전값·이후값이 담는다.
+  for (const id of subtreeIdsOf(stores.nodes, node)) {
+    stores.audit.append({
+      operation: NODE_TRASH,
+      actor: actor.id,
+      nodeId: id,
+      workspaceId: node.workspaceId,
+      beforeValue: stores.nodes.pathOf(id),
+    });
+  }
 
   return { ok: true };
 }

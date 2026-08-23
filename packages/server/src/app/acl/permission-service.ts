@@ -8,7 +8,7 @@ import type { PermissionLevel } from '../../domain/acl/level.js';
 import { passThroughIds, visibilityOf, type Visibility } from '../../domain/acl/visibility.js';
 import type { NodeId } from '../../domain/node/node-id.js';
 import type { AclRepository } from '../../domain/ports/acl-repository.js';
-import type { AuditSink } from '../../domain/ports/audit-sink.js';
+import type { AuditQuery, AuditSink } from '../../domain/ports/audit-sink.js';
 import type { NodeRecord, NodeRepository } from '../../domain/ports/node-repository.js';
 import type { PrincipalRepository } from '../../domain/ports/principal-repository.js';
 import type { SettingStore } from '../../domain/ports/setting-store.js';
@@ -38,6 +38,15 @@ export interface AclStores {
    * 것이 이 모델의 거래이기 때문이다 — 기록이 빠지면 그 거래의 한쪽만 남는다.
    */
   audit: AuditSink;
+
+  /**
+   * 감사 로그를 **읽는** 경계 (`SEC-AUDIT-010`).
+   *
+   * 쓰는 쪽과 나눠 두는 이유는 「추가만 있다」는 성질이 인터페이스에서
+   * 드러나야 하기 때문이다 — 한 타입에 합치면 읽기를 붙이려다 수정
+   * 메서드가 함께 들어오기 쉽다.
+   */
+  auditLog: AuditQuery;
 
   /**
    * 인스턴스 설정. 가입 모드가 여기 산다 (`FR-AUTH-004`).

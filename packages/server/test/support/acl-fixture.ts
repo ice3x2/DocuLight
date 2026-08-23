@@ -33,7 +33,10 @@ export function nodeStores(db: Database): NodeStores {
     workspaces: new SqliteWorkspaceRepository(db),
     acl: new SqliteAclRepository(db),
     principals: new SqlitePrincipalRepository(db),
+    // 쓰는 경계와 읽는 경계가 **같은 객체**다 — 나눠 만들면 한쪽이 다른
+    // 데이터베이스를 보게 되고, 그때 기록은 되는데 조회가 비어 온다.
     audit: new SqliteAuditLog(db),
+    auditLog: new SqliteAuditLog(db),
     settings: new SqliteSettingStore(db),
   };
 }

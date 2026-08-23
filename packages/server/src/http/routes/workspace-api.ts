@@ -51,6 +51,7 @@ import { ASSIGNED_GRADES, moveGrade } from '../../domain/confirm/grade.js';
 import { previewRevocation, revokeAllFor } from '../../app/acl/bulk-revoke-service.js';
 import { simulate } from '../../app/acl/simulation-service.js';
 import { brokenInheritanceOf } from '../../app/acl/inheritance-audit-service.js';
+import { auditView } from '../../app/audit/audit-view.js';
 import {
   PERSONAL_SETTING_KEYS,
   readPersonalSetting,
@@ -584,7 +585,8 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
   });
 
   router.put('/settings', (req, res) => {
-    if (actorFor(req) === undefined) {
+    const actor = actorFor(req);
+    if (actor === undefined) {
       res.sendStatus(401);
       return;
     }
@@ -602,7 +604,12 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     // 조합을 **통째로** 넘긴다 — 키마다 따로 쓰면 「감사를 올리고 휴지통을
     // 올린다」를 그 순서로만 할 수 있게 되고(`R154`), 오타 하나가 앞의
     // 값들만 바꿔 놓은 절반의 상태를 남긴다.
-    const saved = writeSettings(stores.settings, patch as Record<string, string>);
+    // 바뀐 필드마다 감사 행이 남는다 (`OBS-AUDIT-006`). 행위자를 여기서
+    // 넘기지 않으면 그 행들이 「누가 바꿨나」 없이 남는다.
+    const saved = writeSettings(stores.settings, patch as Record<string, string>, {
+      audit: stores.audit,
+      actor: actor.id,
+    });
     res.sendStatus(saved.ok ? 204 : 400);
   });
 
@@ -907,6 +914,31 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     }
 
     res.json(simulation);
+  });
+
+  /**
+   * 감사 로그 (`SEC-AUDIT-010` · `IR-AUDIT-001` · `IR-AUDIT-003`).
+   *
+   * **읽기뿐이다.** 행을 고치거나 지우는 라우트를 두지 않는다
+   * (`OBS-AUDIT-002`) — 스키마는 UPDATE 를 막지 못하므로 경로가 막는다.
+   *
+   * 마스킹이 여기서 이미 걸려 나온다 (`SEC-AUDIT-008` AC-3) — 화면이
+   * 가리면 API 를 직접 부르는 쪽에는 원시 ID 가 그대로 나간다.
+   */
+  router.get('/audit-log', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const view = auditView(stores, actor);
+    if (view === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(view);
   });
 
   /** 상속이 끊긴 노드들 (`FR-ACL-005` AC-1). 관리 전용이다 (AC-7). */

@@ -14,6 +14,8 @@ import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { PersonalSettings } from '../settings/PersonalSettings.js';
 import { AclAuditPanel, type AclAuditProps } from '../acl/AclAuditPanel.js';
+import { AuditLogPanel } from '../audit/AuditLogPanel.js';
+import type { AuditViewBody } from '../api/client.js';
 import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
@@ -105,6 +107,7 @@ function SettingsModal({
   userRoster = [],
   groupRoster = [],
   aclAudit,
+  auditLog,
   onTrashLens,
   onTrashPurge,
   onTrashRestore,
@@ -123,6 +126,8 @@ function SettingsModal({
   groupRoster?: readonly RosterGroup[];
   /** 권한 감사 구역이 그릴 것 (`FR-ACL-003`~`FR-ACL-005`). */
   aclAudit?: AclAuditProps;
+  /** 감사 로그 (`R84`). 관리 범위가 없으면 안 온다. */
+  auditLog?: AuditViewBody;
   onTrashLens?: (lens: TrashLens) => void;
   onTrashPurge?: (nodeId: string) => void;
   onTrashRestore?: (nodeId: string) => void;
@@ -206,6 +211,9 @@ function SettingsModal({
                     {...(onGroupRemove === undefined ? {} : { onRemove: onGroupRemove })}
                     {...(onGroupAddMember === undefined ? {} : { onAddMember: onGroupAddMember })}
                   />
+                ) : category.id === 'audit-log' ? (
+                  // 이름을 **감사 로그**로 부른다 (`CON-AUDIT-001` AC-4).
+                  <AuditLogPanel {...(auditLog === undefined ? {} : { view: auditLog })} />
                 ) : category.id === 'acl-audit' ? (
                   // 셋을 여기 모은다 — 흩어 두면 관리자가 같은 물음을 세
                   // 곳에서 세 번 묻게 된다.
@@ -245,6 +253,7 @@ export function AppShell({
   userRoster = [],
   groupRoster = [],
   aclAudit,
+  auditLog,
   onTrashLens,
   onTrashPurge,
   onTrashRestore,
@@ -312,6 +321,8 @@ export function AppShell({
    * 이미 주므로, 여기서 다시 거르면 두 곳이 같은 규칙을 갖게 된다.
    */
   aclAudit?: AclAuditProps;
+  /** 감사 로그 (`R84`). 관리 범위가 없으면 안 온다. */
+  auditLog?: AuditViewBody;
   /** 좌측 검색 탭의 질의. 태그 클릭도 이 값을 채운다. */
   query?: string;
   onQuery?: (query: string) => void;
@@ -437,6 +448,7 @@ export function AppShell({
           userRoster={userRoster}
           groupRoster={groupRoster}
           {...(aclAudit === undefined ? {} : { aclAudit })}
+          {...(auditLog === undefined ? {} : { auditLog })}
           {...(onGroupRemove === undefined ? {} : { onGroupRemove })}
           {...(onGroupAddMember === undefined ? {} : { onGroupAddMember })}
         />

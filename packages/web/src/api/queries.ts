@@ -1,6 +1,7 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
 import {
+  fetchAuditLog,
   fetchBrokenInheritance,
   fetchFavorites,
   fetchRevocation,
@@ -14,6 +15,7 @@ import {
   fetchTrash,
   fetchTree,
   loadDocument,
+  type AuditViewBody,
   type BrokenInheritanceBody,
   type DocumentBody,
   type DocumentLinksBody,
@@ -51,6 +53,7 @@ export const QUERY_KEYS = {
   document: (nodeId: string) => ['document', nodeId] as const,
   workspaces: ['workspaces'] as const,
   brokenInheritance: ['broken-inheritance'] as const,
+  auditLog: ['audit-log'] as const,
   revocation: (principalId: string) => ['revocation', principalId] as const,
   simulation: (subjectId: string) => ['simulation', subjectId] as const,
 };
@@ -153,3 +156,7 @@ export const useSimulation = (subjectId: string | null): UseQueryResult<Simulati
     enabled: subjectId !== null,
     retry: false,
   });
+
+/** 감사 로그 (`SEC-AUDIT-010`). 관리 범위가 없으면 서버가 404 로 답한다. */
+export const useAuditLog = (enabled: boolean): UseQueryResult<AuditViewBody> =>
+  useQuery({ queryKey: QUERY_KEYS.auditLog, queryFn: fetchAuditLog, enabled, retry: false });

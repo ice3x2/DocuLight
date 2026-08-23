@@ -266,6 +266,16 @@ export function moveNode(
   return place(stores, node, parentId, node.name);
 }
 
+/**
+ * 복사의 조작 값 (`SEC-AUDIT-005`).
+ *
+ * **경계를 넘는지가 이 값에 드러나지 않는다.** 「반출」 같은 별도 이름을
+ * 만들면 그 값이 조작 필터의 distinct 집합에 나타나고, 그 존재 자체가
+ * 경계를 넘은 복사가 있었다는 신호가 된다. 역할도 여기 섞지 않는다
+ * (`SEC-AUDIT-009` AC-1) — 그 축은 `targetRole` 이 갖는다.
+ */
+export const NODE_COPY = 'node.copy';
+
 /** 복사가 놓일 자리 — **둘 중 하나다.** */
 export type CopyDestination =
   /** 이 노드 아래. 워크스페이스는 그 노드의 것을 따른다. */
@@ -359,6 +369,33 @@ async function replicate(
     name: source.name,
   });
   if (!made.ok) return made;
+
+  // **사본 자리 행은 언제나 생긴다** (`OBS-AUDIT-007` AC-1) — 노드가
+  // 새로 생기므로 기록 기준 ① 에 걸린다. 노드마다 1행이라, 서브트리
+  // 복사는 하위 수만큼 행이 생긴다 (`OBS-AUDIT-010` AC-2).
+  stores.audit.append({
+    operation: NODE_COPY,
+    actor: actor.id,
+    nodeId: made.id,
+    workspaceId: at.workspaceId,
+    counterpartNodeId: source.id,
+    targetRole: 'copy',
+  });
+
+  // **원본 자리 행은 경계를 넘을 때만 생긴다** (AC-3 · AC-6). 같은
+  // 워크스페이스에서도 남기면 그 워크스페이스의 열람자가 복사 1건을 2행으로
+  // 본다 — 원본은 아무것도 바뀌지 않았으므로 기록 기준으로도 서지 않고,
+  // 서는 근거는 오직 반출 감사다.
+  if (source.workspaceId !== at.workspaceId) {
+    stores.audit.append({
+      operation: NODE_COPY,
+      actor: actor.id,
+      nodeId: source.id,
+      workspaceId: source.workspaceId,
+      counterpartNodeId: made.id,
+      targetRole: 'origin',
+    });
+  }
 
   let copied = 1;
 
@@ -487,6 +524,17 @@ function place(
 
   nodes.relocate(node.id, { parentId, name: resolved });
   return { ok: true, name: resolved };
+}
+
+/**
+ * 노드와 그 후손의 ID 들 — 서브트리 조작이 **노드마다** 기록하려면 그
+ * 목록이 필요하다 (`OBS-AUDIT-010`).
+ *
+ * 세는 규칙을 부르는 쪽마다 다시 쓰지 않는다 — 다시 쓰면 한쪽이 고리
+ * 방어를 빠뜨리고, 그 순회는 돌아오지 않는다.
+ */
+export function subtreeIdsOf(nodes: NodeRepository, root: NodeRecord): NodeId[] {
+  return [...subtreeOf(nodes, root).ids];
 }
 
 /**

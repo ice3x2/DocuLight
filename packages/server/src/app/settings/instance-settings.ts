@@ -1,3 +1,4 @@
+import type { AuditSink } from '../../domain/ports/audit-sink.js';
 import type { SettingStore } from '../../domain/ports/setting-store.js';
 import { covers } from '../../domain/retention/retention.js';
 
@@ -54,6 +55,24 @@ export function retentionDaysOf(store: SettingStore, key: RetentionKey): number 
 type RetentionKey = 'trash-retention-days' | 'audit-retention-days';
 
 export type SettingsRule = 'unknown-key' | 'retention-inverted';
+
+/**
+ * 설정 변경의 조작 값 (`OBS-AUDIT-006`).
+ *
+ * 어느 설정인지를 이 값에 섞지 않는다 — 섞으면 조작 값의 distinct 집합이
+ * 설정 개수만큼 부풀어 필터가 못 쓰게 된다 (`DR-AUDIT-001` AC-7). 그
+ * 구분은 `subjectId` 가 갖는다.
+ */
+export const SETTINGS_CHANGE = 'settings.change';
+
+/**
+ * 감사를 남길 자리. **선택이다** — 설치 마법사와 시험은 기록기를 세우기
+ * 전에도 설정을 써야 한다.
+ */
+export interface SettingsAudit {
+  readonly audit: AuditSink;
+  readonly actor: string;
+}
 export type SettingsOutcome = { ok: true } | { ok: false; rule: SettingsRule };
 
 /**
@@ -69,6 +88,7 @@ export type SettingsOutcome = { ok: true } | { ok: false; rule: SettingsRule };
 export function writeSettings(
   store: SettingStore,
   patch: Readonly<Record<string, string>>,
+  recording?: SettingsAudit,
 ): SettingsOutcome {
   for (const key of Object.keys(patch)) {
     if (!(key in DEFAULTS)) return { ok: false, rule: 'unknown-key' };
@@ -88,7 +108,27 @@ export function writeSettings(
     return { ok: false, rule: 'retention-inverted' };
   }
 
-  for (const [key, value] of Object.entries(patch)) store.set(key, value);
+  for (const [key, value] of Object.entries(patch)) {
+    const before = readSetting(store, key as InstanceSettingKey);
+    store.set(key, value);
+
+    // **바뀐 필드마다 1행이다** (`OBS-AUDIT-006` AC-4). 묶어서 한 행으로
+    // 남기면 어느 설정이 무엇에서 무엇으로 바뀌었는지를 이전값·이후값 두
+    // 칸에 담을 수 없다.
+    //
+    // 값이 그대로면 남기지 않는다 — 안 바뀐 것이 바뀐 것처럼 쌓이면
+    // 「언제 바뀌었나」를 되짚을 때 그 행들이 전부 후보가 된다.
+    if (recording === undefined || before === value) continue;
+    recording.audit.append({
+      operation: SETTINGS_CHANGE,
+      actor: recording.actor,
+      // 워크스페이스에 귀속되지 않으므로 인스턴스 스코프다 —
+      // 슈퍼유저만 읽는다 (`SEC-AUDIT-010` AC-3).
+      subjectId: key,
+      beforeValue: before,
+      afterValue: value,
+    });
+  }
   return { ok: true };
 }
 

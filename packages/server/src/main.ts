@@ -133,7 +133,10 @@ export async function bootstrap(config: ServerConfig): Promise<ServerRuntime> {
     trashFiles: new FsTrashFiles(config.docsRoot),
     files: new FsWorkspaceFiles(config.docsRoot),
     documents: new FsDocumentStore(config.docsRoot),
+    // 쓰는 경계와 읽는 경계가 **같은 객체**다 — 나눠 만들면 한쪽이 다른
+    // 데이터베이스를 보게 되고, 그때 기록은 되는데 조회가 비어 온다.
     audit: new SqliteAuditLog(db),
+    auditLog: new SqliteAuditLog(db),
     queue: new SqliteFindingQueue(db),
     docsRoot: config.docsRoot,
     clock: () => new Date(),

@@ -20,6 +20,7 @@ import {
 } from './api/client.js';
 import {
   QUERY_KEYS,
+  useAuditLog,
   useBrokenInheritance,
   useFavorites,
   useGroupRoster,
@@ -331,6 +332,9 @@ function AppBody() {
   const adminScope = session.data !== undefined && session.data.adminWorkspaceCount > 0;
   const workspaceList = useWorkspaceList(signedIn && adminScope);
   const brokenInheritance = useBrokenInheritance(signedIn && adminScope);
+  // 슈퍼유저는 관리 워크스페이스가 없어도 인스턴스 스코프의 행을 읽는다
+  // (`SEC-AUDIT-010` AC-5) — `adminScope` 만 보면 그 문이 닫힌다.
+  const auditLog = useAuditLog(signedIn && (adminScope || session.data?.superuser === true));
   // 지금은 첫 주체의 것만 묻는다 — 다건 조회의 합산 규칙을 정한 요구가
   // 아직 없어, 없는 규칙을 화면이 지어내지 않는다.
   const revocation = useRevocation(회수주체[0]?.id ?? null);
@@ -524,6 +528,7 @@ function AppBody() {
       onSaveState={noteSaveState}
       onSaved={noteSaved}
       onDocuments={setDocuments}
+      {...(auditLog.data === undefined ? {} : { auditLog: auditLog.data })}
       {...(notice === undefined ? {} : { notice })}
       {...(pendingOpen === null
         ? {}
