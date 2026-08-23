@@ -35,6 +35,14 @@ export function doculightExtensions(
     suggestWikiLinks?: (query: string) => Promise<WikiLinkSuggestion[]>;
     /** 위키링크를 눌렀다 — 그 문서를 여는 일은 셸이 한다. */
     onOpenWikiLink?: (target: string) => void;
+    /**
+     * 그 이름이 실제 문서인가 (`SEC-WORKSPACE-006`).
+     *
+     * **없는 문서와 권한 없는 문서를 가르지 않는다** — 둘 다 `null` 이다.
+     * 여기서 상태를 하나 더 만들면 편집기가 그 값으로 다른 class 를 붙이고,
+     * 그 class 가 곧 사유를 알린다.
+     */
+    resolveWikiLink?: (target: string) => Promise<{ target: string; label: string } | null>;
   } = {},
 ): Extension[] {
   return [
@@ -50,6 +58,7 @@ export function doculightExtensions(
     wikiLinks({
       ...(options.suggestWikiLinks === undefined ? {} : { suggest: options.suggestWikiLinks }),
       ...(options.onOpenWikiLink === undefined ? {} : { onOpen: options.onOpenWikiLink }),
+      ...(options.resolveWikiLink === undefined ? {} : { resolve: options.resolveWikiLink }),
     }),
     // 업로드 콜백이 없으면 그 확장을 붙이지 않는다 — 붙여 두고 아무것도
     // 안 하면 붙여넣기가 조용히 삼켜진다.

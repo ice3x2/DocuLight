@@ -5,6 +5,7 @@ import { fetchWikiTargets, uploadAttachment } from '../api/client.js';
 import { pasteUpload } from '../attachment/upload-contract.js';
 import { urlForNode } from '../routing/deep-link.js';
 import { MergeView } from './MergeView.js';
+import { resolveWikiLink } from './wiki-link-resolve.js';
 import {
   MODE_LABEL,
   isEditing,
@@ -191,8 +192,11 @@ export function DocumentSurface({
         ...(onOpenWikiLink === undefined ? {} : { onOpenWikiLink }),
         onAttach: attach,
         suggestWikiLinks: suggest,
+        // 푸는 규칙은 `wiki-link-resolve` 한 자리다 — 여기서 감싸면
+        // 없는 문서와 권한 없는 문서를 가르는 자리가 하나 더 생긴다.
+        resolveWikiLink,
       }),
-    [onTagClick, onOpenWikiLink, attach],
+    [onTagClick, onOpenWikiLink, attach, suggest],
   );
 
   const change = (to: Mode) => setMode((from) => nextMode(from, to, { canEdit: canEditFile(file) }));
