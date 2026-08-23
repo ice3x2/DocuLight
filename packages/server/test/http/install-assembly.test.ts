@@ -1,13 +1,18 @@
+import { readFileSync } from 'node:fs';
 import { mkdtemp, rm } from 'node:fs/promises';
 import type { AddressInfo } from 'node:net';
 import type { Server } from 'node:http';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { bootstrap, createApp, type ServerRuntime } from '../../src/main.js';
 import { INSTALL_ALLOWLIST } from '../../src/http/middleware/install-gate.js';
 import { forgetInstallTokenForTest, mintInstallToken } from '../../src/app/install/install-service.js';
+import { SUPERUSER_GROUP_ID } from '../../src/domain/principal/system-groups.js';
+
+/** 빌드 산출물의 진입 HTML. 자산 경로의 정본은 여기다 — 허용목록이 아니다. */
+const WEB_INDEX = resolve(import.meta.dirname, '..', '..', '..', 'web', 'dist', 'index.html');
 
 /**
  * **운영 조립**이 설치 경로를 실제로 세우는가 (`SEC-AUTH-010` · `SEC-AUTH-011`).
@@ -80,14 +85,26 @@ describe('SEC-AUTH-011 — 게이트가 운영 조립에 물려 있다', () => {
     }
   });
 
-  it('AC-1: 허용목록의 화면 두 경로는 게이트에 막히지 않는다', async () => {
-    // 그 자리에 무엇이 서느냐(정적 산출물)는 빌드 배치의 사실이라 이
-    // 요구가 정하지 않는다. 재는 것은 **게이트가 통과시키는가** 하나다.
-    for (const path of INSTALL_ALLOWLIST.filter((one) => !one.startsWith('/api/'))) {
+  it('AC-1: 빌드 산출물이 **실제로 가리키는** 자산 경로가 막히지 않는다', async () => {
+    // **허용목록을 허용목록으로 재지 않는다.** 그렇게 재면 게이트가 자기
+    // 설정값을 통과시킨다는 동어반복이 되고, 그 값이 빌드 산출물의 자리와
+    // 어긋나 있어도 통과한다 — 실제로 그렇게 어긋나 있었고 설치 화면이
+    // 껍데기만 받았다.
+    const html = readFileSync(WEB_INDEX, 'utf8');
+    const 자산 = [...html.matchAll(/(?:src|href)="(\/[^"]+\.(?:js|css))"/g)].map((m) => m[1]!);
+
+    // 산출물이 자산을 하나도 안 가리키면 위 단언이 공짜로 참이 된다.
+    expect(자산.length).toBeGreaterThan(0);
+
+    for (const path of 자산) {
       const response = await fetch(`${origin}${path}`);
 
       expect([path, response.status]).not.toEqual([path, 503]);
     }
+  });
+
+  it('AC-1: 설치 화면 경로 자체도 막히지 않는다', async () => {
+    expect((await fetch(`${origin}/install`)).status).not.toBe(503);
   });
 });
 
@@ -137,11 +154,19 @@ describe('SEC-AUTH-010 — 설치를 마치면 관문이 열리고 화면이 다
     expect((await fetch(`${origin}/api/auth/me`)).status).not.toBe(503);
   });
 
-  it('AC-2 · AC-3 · AC-4: 마법사가 만든 최초 슈퍼유저는 즉시 active 이며 그 편입이 유일한 경로다', async () => {
+  it('AC-3 · AC-4: 마법사가 만든 최초 슈퍼유저는 그룹 멤버이고 즉시 active 다', async () => {
     await 설치한다();
 
-    // 설치가 끝난 뒤 마법사를 다시 부르면 성립하지 않는다 — 그것이
-    // 「마법사 외의 경로로는 만들 수 없다」를 지키는 방법이다.
+    const 멤버 = runtime.stores.principals.membersOf(SUPERUSER_GROUP_ID);
+    expect(멤버).toHaveLength(1);
+
+    // `pending` 으로 태어나면 승인해 줄 사람이 아직 없어 영원히 갇힌다.
+    expect(runtime.stores.principals.findById(멤버[0]!)?.status).toBe('active');
+  });
+
+  it('AC-2: 설치를 마친 뒤에는 마법사가 다시 성립하지 않는다', async () => {
+    await 설치한다();
+
     expect((await 설치한다()).status).toBe(400);
   });
 });

@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { InstallWizard } from '../src/auth/InstallWizard.js';
+import { App } from '../src/App.js';
 
 afterEach(cleanup);
 
@@ -59,17 +60,26 @@ describe('SEC-AUTH-017 — 초기 권한을 마법사에서 고른다', () => {
 });
 
 describe('SEC-AUTH-012 — 토큰 입력 자리가 있고 오타 뒤에도 다시 시도할 수 있다', () => {
-  it('AC-3 · AC-4: 검증이 거절해도 화면이 잠기지 않는다', async () => {
-    const 검증 = vi.fn().mockRejectedValueOnce(new Error('bad-token'));
+  it('AC-3 · AC-4: 거절 사유를 보이고 두 번째 시도가 실제로 나간다', async () => {
+    // **`disabled` 를 재지 않는다.** 이 부품은 어디에도 그 속성을 걸지
+    // 않으므로 그 단언은 구성상 참이라 절대 실패하지 못한다 — 거절 처리를
+    // 통째로 지워도 통과한다. 재야 하는 것은 관측 가능한 둘이다:
+    // 사유가 뜨는가, 그리고 다시 칠 수 있는가.
+    const 검증 = vi.fn().mockRejectedValueOnce(new Error('bad-token')).mockResolvedValue('세션-2');
     render(<InstallWizard onVerifyToken={검증} />);
     const user = userEvent.setup();
 
     await 채운다(user);
     await user.click(screen.getByRole('button', { name: '설치' }));
 
-    // 거절 뒤에도 토큰 칸이 그대로 있고 버튼이 살아 있어야 다시 칠 수 있다.
-    expect((screen.getByLabelText('설치 토큰') as HTMLInputElement).disabled).toBe(false);
-    expect((screen.getByRole('button', { name: '설치' }) as HTMLButtonElement).disabled).toBe(false);
+    expect((await screen.findByTestId('install-error')).textContent).toMatch(/토큰/);
+    expect(screen.queryByRole('alertdialog')).toBeNull();
+
+    // 오타 한 번에 서버를 재기동해야 하는 상태가 되면 안 된다.
+    await user.click(screen.getByRole('button', { name: '설치' }));
+
+    expect(검증).toHaveBeenCalledTimes(2);
+    expect(await screen.findByRole('alertdialog')).toBeDefined();
   });
 
   it('비밀번호 칸이 가려진다', () => {
@@ -120,7 +130,11 @@ describe('FR-CONFIRM-019 AC-6 — 설치의 초기 권한도 확인 다이얼로
     // 갓 만든 워크스페이스에는 하위가 없어 그 수치가 뜻 없는 자리에 서고,
     // 사용자는 0 을 실패로 읽는다.
     expect(관문).not.toMatch(/하위 노드|적용 대상|\d+\s*건/);
-    expect(관문).toMatch(/지금은|아직|나중/);
+
+    // **지연 효과 고지가 붙으면 안 된다** — 설치는 즉시·비가역이라 그
+    // 문구가 거짓이 된다. 대신 그 사실을 그대로 말한다.
+    expect(관문).not.toMatch(/지금은 아무 일도/);
+    expect(screen.getByTestId('install-immediate').textContent).toMatch(/되돌릴 수 없/);
   });
 
   it('확인을 누르면 그때 커밋이 나간다', async () => {
@@ -171,5 +185,46 @@ describe('SEC-AUTH-015 — 설치 세션이 커밋 요청에 실린다', () => {
 
     expect(커밋).not.toHaveBeenCalled();
     expect(screen.queryByRole('alertdialog')).toBeNull();
+  });
+});
+
+describe('SEC-AUTH-010 AC-1 — 설치 전 인스턴스가 설치 화면에 닿는다', () => {
+  /** 세션 조회가 관문의 503 을 받는 상태. 설치 전 새 인스턴스가 그것이다. */
+  const 설치전 = () =>
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => new Response('Service Unavailable', { status: 503 })),
+    );
+
+  it('503 은 로딩이 아니라 설치 화면으로 간다', async () => {
+    설치전();
+    render(<App />);
+
+    // 401 만 보면 새 인스턴스가 영원히 로딩 상태에 머물고, 설치 화면에
+    // 닿는 길이 아예 없다 — 그러면 아무도 로그인할 수 없다.
+    const 화면 = await screen.findByRole('main');
+
+    expect(화면.getAttribute('data-pre-auth')).toBe('install');
+  });
+
+  it('그 화면에 마법사가 실제로 서 있다', async () => {
+    설치전();
+    render(<App />);
+
+    expect(await screen.findByLabelText('설치 토큰')).toBeDefined();
+  });
+});
+
+describe('커밋 실패가 화면에 나온다 — 되돌릴 수 없어 보이는 조작에서 침묵이 가장 나쁘다', () => {
+  it('400 이 처리되지 않은 거절로 사라지지 않는다', async () => {
+    const 커밋 = vi.fn().mockRejectedValue(new Error('unknown-choice'));
+    render(<InstallWizard onVerifyToken={vi.fn().mockResolvedValue('s')} onCommit={커밋} />);
+    const user = userEvent.setup();
+
+    await 채운다(user);
+    await user.click(screen.getByRole('button', { name: '설치' }));
+    await user.click(await screen.findByRole('button', { name: '실행' }));
+
+    expect((await screen.findByTestId('install-error')).textContent).toMatch(/설치를 마치지 못했/);
   });
 });

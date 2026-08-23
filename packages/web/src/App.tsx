@@ -519,6 +519,11 @@ function AppBody() {
     return () => window.removeEventListener('popstate', onPop);
   }, [workspaces]);
 
+  // **503 은 설치 전이다** (`SEC-AUTH-010` AC-1 · `SEC-AUTH-011`). 관문이
+  // 그 코드로 답하므로 401 만 보면 새 인스턴스가 영원히 로딩 상태에 머물고,
+  // 설치 화면에 닿는 길이 아예 없다.
+  if (session.error instanceof ApiError && session.error.status === 503)
+    return <PreAuthScreen screen="install" />;
   // 401 만 익명이다. 다른 실패를 익명으로 접으면 서버가 잠깐 죽은 것과
   // 로그아웃이 구별되지 않아 사용자가 다시 로그인하게 된다.
   if (session.error instanceof ApiError && session.error.status === 401)

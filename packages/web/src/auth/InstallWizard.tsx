@@ -22,6 +22,15 @@ export interface InstallInput {
   signupMode: SignupMode;
 }
 
+/**
+ * 설치가 고르는 초기 권한의 기본값 (`SEC-AUTH-017` AC-2).
+ *
+ * **서버의 `DEFAULT_GROUP_LEVEL` 과 값이 같아야 하는 복제다.** 패키지가
+ * 갈려 있어 import 할 수 없으므로 여기 다시 적는다 — 그 사실을 숨기지 않고
+ * 적어 두어야, 한쪽만 바뀐 날 이 줄이 의심 대상이 된다.
+ */
+export const DEFAULT_GROUP_LEVEL: DefaultGroupLevel = 'edit';
+
 const 레벨문구: Record<DefaultGroupLevel, string> = {
   none: '없음',
   view: '보기',
@@ -60,7 +69,7 @@ export function InstallWizard({
   const [이름, set이름] = useState('');
   const [비밀번호, set비밀번호] = useState('');
   const [워크스페이스, set워크스페이스] = useState('');
-  const [레벨, set레벨] = useState<DefaultGroupLevel>('edit');
+  const [레벨, set레벨] = useState<DefaultGroupLevel>(DEFAULT_GROUP_LEVEL);
   const [가입모드, set가입모드] = useState<SignupMode>('approval');
   const [세션, set세션] = useState<string | null>(null);
   const [사유, set사유] = useState<string | null>(null);
@@ -87,15 +96,25 @@ export function InstallWizard({
 
   const 설치 = () => {
     if (세션 === null) return;
-    void onCommit?.({
-      installSession: 세션,
-      superuserName: 이름,
-      password: 비밀번호,
-      workspaceName: 워크스페이스,
-      defaultGroupLevel: 레벨,
-      signupMode: 가입모드,
-    });
-    set세션(null);
+    // **실패를 삼키지 않는다.** `void` 로 흘려보내면 400 이 처리되지 않은
+    // 거절로 사라지고, 관문만 닫힌 채 사용자는 아무 답도 못 받는다 —
+    // 되돌릴 수 없어 보이는 조작에서 그것이 가장 나쁘다.
+    void (async () => {
+      try {
+        await onCommit?.({
+          installSession: 세션,
+          superuserName: 이름,
+          password: 비밀번호,
+          workspaceName: 워크스페이스,
+          defaultGroupLevel: 레벨,
+          signupMode: 가입모드,
+        });
+        set세션(null);
+      } catch {
+        set사유('설치를 마치지 못했습니다. 입력을 확인하고 다시 시도하십시오.');
+        set세션(null);
+      }
+    })();
   };
 
   return (
@@ -167,10 +186,16 @@ export function InstallWizard({
         open={세션 !== null}
         grade="L2"
         title={`${워크스페이스 || '기본 워크스페이스'} 를 만들고 권한을 부여합니다`}
-        delayedEffect
         onConfirm={설치}
         onCancel={() => set세션(null)}
       >
+        {/* **지연 효과 고지를 붙이지 않는다.** 그 문구는 「지금은 아무 일도
+            일어나지 않는다」인데 설치는 즉시·비가역이다 — 붙이면 관문이
+            거짓을 말한다. `FR-CONFIRM-019` AC-5 는 워크스페이스 생성
+            다이얼로그의 것이며, 그쪽은 부여가 실제로 나중에 발화한다. */}
+        <p data-testid="install-immediate">
+          확인하면 즉시 실행되며 되돌릴 수 없습니다.
+        </p>
         <p data-testid="install-summary">
           슈퍼유저 {이름 || '-'} · 기본 그룹 초기 권한 {레벨문구[레벨]} · 가입 모드{' '}
           {모드문구[가입모드]}

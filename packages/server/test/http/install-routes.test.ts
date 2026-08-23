@@ -125,13 +125,16 @@ describe('SEC-AUTH-012 — 토큰 없이는 설치를 진행할 수 없다', () 
 });
 
 describe('SEC-AUTH-013 — 만료된 토큰은 거부된다', () => {
-  it('AC-1 · AC-2: 30분이 지난 토큰으로는 세션이 나오지 않는다', async () => {
+  it('AC-1: 29분에는 살아 있고 31분에는 죽는다 — 경계가 30분이다', async () => {
     const 지금 = runtime.stores.clock();
     const value = 토큰();
 
-    // 시계를 31분 민다 — 토큰 수명은 30분이다.
-    runtime.stores.clock = () => new Date(지금.getTime() + 31 * 60 * 1000);
+    // **양쪽을 다 잰다.** 만료만 재면 수명을 1분으로 줄여도 통과해,
+    // 30분이라는 값 자체는 아무것도 고정되지 않는다.
+    runtime.stores.clock = () => new Date(지금.getTime() + 29 * 60 * 1000);
+    expect((await 세션(value)).status).toBe(200);
 
+    runtime.stores.clock = () => new Date(지금.getTime() + 31 * 60 * 1000);
     expect((await 세션(value)).status).toBe(401);
   });
 });
@@ -154,5 +157,33 @@ describe('SEC-AUTH-017 — 고른 초기 권한이 실제 ACL 로 적용된다',
     await 설치(열림.body.installSession);
 
     expect(runtime.stores.principals.membersOf(SUPERUSER_GROUP_ID)).toHaveLength(1);
+  });
+});
+
+describe('SEC-WORKSPACE-002 · SEC-AUTH-017 — 라우트가 열거를 경계에서 다시 세운다', () => {
+  it('관리 레벨은 설치로도 부여되지 않는다 — 타입은 런타임에 아무것도 막지 않는다', async () => {
+    const 열림 = await 세션(토큰());
+
+    // `GrantLevel` 이 admin 을 빼는 것은 관리를 워크스페이스에만 두기
+    // 위해서다. HTTP 경계는 그 타입이 사라지는 자리이므로 여기서 다시
+    // 세우지 않으면 인증 없는 요청이 default 그룹에 최상위 권한을 준다.
+    const 결과 = await 설치(열림.body.installSession, { defaultGroupLevel: 'admin' });
+
+    expect(결과.status).toBe(400);
+    expect(runtime.stores.principals.membersOf(SUPERUSER_GROUP_ID)).toHaveLength(0);
+  });
+
+  it('알 수 없는 가입 모드도 거부된다 — 읽는 쪽 폴백이 있어도 저장은 남는다', async () => {
+    const 열림 = await 세션(토큰());
+
+    const 결과 = await 설치(열림.body.installSession, { signupMode: '없는모드' });
+
+    expect(결과.status).toBe(400);
+  });
+
+  it('열거 안의 값은 그대로 통과한다 — 거부만 재면 아무것도 못 받는 검사가 통과한다', async () => {
+    const 열림 = await 세션(토큰());
+
+    expect((await 설치(열림.body.installSession, { defaultGroupLevel: 'none' })).status).toBe(200);
   });
 });

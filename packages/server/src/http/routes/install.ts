@@ -1,4 +1,5 @@
 import express, { Router } from 'express';
+import rateLimit from 'express-rate-limit';
 
 import {
   beginInstallSession,
@@ -7,7 +8,8 @@ import {
   type DefaultGroupLevel,
   type InstallStores,
 } from '../../app/install/install-service.js';
-import type { SignupMode } from '../../domain/auth/signup-mode.js';
+import { SIGNUP_MODES } from '../../domain/auth/signup-mode.js';
+import { loginRateKey } from './auth.js';
 
 /**
  * 설치 두 경로 (`SEC-AUTH-012` · `SEC-AUTH-015`).
@@ -20,6 +22,21 @@ import type { SignupMode } from '../../domain/auth/signup-mode.js';
  * `install-service.ts` 의 것이고 이 라우터는 그것을 HTTP 로 옮기기만 한다 —
  * 두 곳에 적으면 한쪽만 고쳐진다.
  */
+/**
+ * 그 값이 열거 안에 있는가.
+ *
+ * **타입은 런타임에 아무것도 막지 않는다.** HTTP 경계는 타입이 사라지는
+ * 자리이고, 여기서 다시 세우지 않으면 `as` 캐스팅이 아무 문자열이나
+ * 통과시킨다 — 인증 없는 이 경로에서는 그것이 곧 `default` 그룹에 최상위
+ * 권한을 주는 문이 된다 (`GrantLevel` 이 `admin` 을 뺀 이유가
+ * `SEC-WORKSPACE-002` 다).
+ */
+const 열거안에 = <T extends string>(값: unknown, 열거: readonly T[]): 값 is T =>
+  typeof 값 === 'string' && (열거 as readonly string[]).includes(값);
+
+/** 설치가 고를 수 있는 초기 권한. `없음` 은 레벨이 아니라 항목의 부재다. */
+const GROUP_LEVELS: readonly DefaultGroupLevel[] = ['none', 'view', 'edit'];
+
 export function installRouter(stores: InstallStores): Router {
   const router = Router();
 
@@ -27,8 +44,25 @@ export function installRouter(stores: InstallStores): Router {
   // 경로까지 지나고, 다른 라우터에 기대면 그쪽이 빠질 때 조용히 깨진다.
   router.use(express.json());
 
+  // **토큰 검증에도 같은 제한이 걸린다** (`SEC-AUTH-012` Rationale · `R57`).
+  // 256비트 토큰이라 무차별 대입이 위협은 아니지만, 이 경로는 인증 없이
+  // 열려 있어 제한이 없으면 그 자체가 증폭 표면이다. 단위는 로그인과 같은
+  // 출발지이며 그 판정을 다시 적지 않는다.
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 30,
+    standardHeaders: true,
+    legacyHeaders: false,
+    keyGenerator: (req) => {
+      const forwarded = req.headers['x-forwarded-for'];
+      const first = Array.isArray(forwarded) ? forwarded[0] : forwarded?.split(',')[0];
+      return loginRateKey(first ?? req.ip ?? req.socket.remoteAddress);
+    },
+    validate: { keyGeneratorIpFallback: false },
+  });
+
   // 토큰 검증 → 설치 세션 발급 (`SEC-AUTH-015` AC-1).
-  router.post('/install/verify-token', (req, res) => {
+  router.post('/install/verify-token', limiter, (req, res) => {
     const token = (req.body as { token?: unknown } | undefined)?.token;
     if (typeof token !== 'string') {
       res.status(401).json({});
@@ -58,12 +92,19 @@ export function installRouter(stores: InstallStores): Router {
       return;
     }
 
+    const defaultGroupLevel = body['defaultGroupLevel'];
+    const signupMode = body['signupMode'];
+    if (!열거안에(defaultGroupLevel, GROUP_LEVELS) || !열거안에(signupMode, SIGNUP_MODES)) {
+      res.status(400).json({ rule: 'unknown-choice' });
+      return;
+    }
+
     const outcome = await commitInstall(stores, installSession, {
       superuserName: String(body['superuserName'] ?? ''),
       password: String(body['password'] ?? ''),
       workspaceName: String(body['workspaceName'] ?? ''),
-      defaultGroupLevel: body['defaultGroupLevel'] as DefaultGroupLevel,
-      signupMode: body['signupMode'] as SignupMode,
+      defaultGroupLevel,
+      signupMode,
     });
 
     if (!outcome.ok) {

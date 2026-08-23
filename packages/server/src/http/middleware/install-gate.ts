@@ -12,10 +12,16 @@ import { API_PREFIX } from '../static-spa.js';
  * 넷의 정체는 요구가 정한 그대로다: `설치 화면` · `그 정적 자산` ·
  * `토큰 검증` · `설치 커밋`. 정적 자산과 화면은 접두로 받는다 — 번들
  * 파일 이름이 빌드마다 바뀌므로 전체 경로를 미리 적을 수 없다.
+ *
+ * **정적 자산의 접두는 빌드가 정한다.** 여기 적힌 값이 빌드 산출물의
+ * 자리와 어긋나면 화면은 껍데기만 받고 번들은 503 을 받아, 설치 화면이
+ * 뜬 채로 아무것도 하지 못한다 — 그 상태는 「관문이 잘 선다」로 읽힌다.
+ * 그래서 이 값을 허용목록과 대조하는 것으로는 부족하고, 실제 산출물이
+ * 가리키는 경로를 두드려야 한다(`install-assembly.test.ts`).
  */
 export const INSTALL_ALLOWLIST: readonly string[] = [
   '/install',
-  '/install-assets',
+  '/assets',
   `${API_PREFIX}/install/verify-token`,
   `${API_PREFIX}/install/commit`,
 ];

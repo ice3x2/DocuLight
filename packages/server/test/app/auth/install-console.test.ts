@@ -31,6 +31,14 @@ const 기동 = async (seq = 0) => {
 
 const 출력 = () => 콘솔.mock.calls.map((one: unknown[]) => String(one[0])).join('\n');
 
+/**
+ * 출력에서 **토큰 값만** 뽑는다.
+ *
+ * 만료 시각은 기동마다 밀리초가 달라서, 그것까지 포함해 두 출력을 견주면
+ * 토큰이 상수여도 항상 달라 아무것도 재지 못한다.
+ */
+const 토큰값 = () => /설치 토큰: (\S+)/.exec(출력())?.[1] ?? null;
+
 beforeEach(async () => {
   dir = await mkdtemp(join(tmpdir(), 'doculight-install-console-'));
   forgetInstallTokenForTest();
@@ -85,16 +93,19 @@ describe('SEC-AUTH-013 — 만료 시각이 절대시각으로 함께 나온다'
 });
 
 describe('SEC-AUTH-014 — 재기동이 새 토큰을 낸다', () => {
-  it('AC-1: 두 번째 기동의 토큰이 첫 번째와 다르다', async () => {
+  it('AC-1 · AC-3: 두 번째 기동의 토큰 값이 첫 번째와 다르다', async () => {
     await 기동(0);
-    const 첫값 = 출력();
+    const 첫값 = 토큰값();
     await runtime!.close();
     runtime = null;
     콘솔.mockClear();
 
     await 기동(1);
 
-    expect(출력()).toMatch(/설치 토큰/);
-    expect(출력()).not.toBe(첫값);
+    // **토큰 값만** 견준다. 출력 전체를 견주면 만료 시각의 밀리초 차이가
+    // 항상 두 문자열을 다르게 만들어, 토큰이 상수여도 통과한다.
+    expect(첫값).not.toBeNull();
+    expect(토큰값()).not.toBeNull();
+    expect(토큰값()).not.toBe(첫값);
   });
 });
