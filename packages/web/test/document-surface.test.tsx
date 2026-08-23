@@ -181,3 +181,25 @@ describe('모드 전이', () => {
     expect(nextMode('live', 'read', { canEdit: false })).toBe('read');
   });
 });
+
+describe('FR-EDITOR-003 AC-2 — 소스 모드는 원문 그대로이고 고칠 수 있다', () => {
+  const 원문 = ['| 머리 | 값 |', '| --- | --- |', '| 가 | 1 |', '', '각주[^1]', '', '[^1]: 설명'].join('\n');
+
+  it('표 구분선과 각주 정의가 기호 그대로 보인다', () => {
+    render(<DocumentSurface file={md} body={원문} initialMode="source" />);
+
+    // 마크다운 편집기를 쓰면 그 편집기가 기호를 숨겨 소스가 아니게 된다.
+    const 원문칸 = screen.getByLabelText('원문') as HTMLTextAreaElement;
+    expect(원문칸.value).toBe(원문);
+  });
+
+  it('읽기 전용이 아니다 — 표 구분선과 각주 정의를 손보는 유일한 자리다', async () => {
+    render(<DocumentSurface file={md} body={원문} initialMode="source" />);
+
+    const 원문칸 = screen.getByLabelText('원문') as HTMLTextAreaElement;
+    expect(원문칸.readOnly).toBe(false);
+
+    await userEvent.setup().type(원문칸, '!');
+    expect(원문칸.value.endsWith('!')).toBe(true);
+  });
+});
