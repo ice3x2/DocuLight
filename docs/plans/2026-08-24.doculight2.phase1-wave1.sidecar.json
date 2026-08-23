@@ -1,0 +1,2233 @@
+{
+  "schema_version": "1.1.0",
+  "plan_contract": "1.2.0",
+  "run_id": "2026-08-24.doculight2.phase1-wave1",
+  "target": "phase-1",
+  "plan_version": "0.1.0",
+  "generated_at": "2026-08-24T00:00:00Z",
+  "tool_versions": {
+    "speckiwi": "2.12.0",
+    "kiwi_planner": "0.6.0",
+    "validator": "0.6.0"
+  },
+  "tdd_policy": "strict",
+  "md_path": "docs/plans/2026-08-24.doculight2.phase1-wave1.plan.md",
+  "md_sha256": "pending",
+  "phases": [
+    {
+      "id": "PH-001",
+      "title": "설치 경로를 제품에 세운다",
+      "goal": "허용목록 네 경로가 운영 앱에서 실제로 응답하고, 게이트가 운영 경로에 서며, 기동이 설치 토큰을 낸다",
+      "depends_on": [],
+      "task_ids": [
+        "T-PH001-01",
+        "T-PH001-02",
+        "T-PH001-03",
+        "T-PH001-04",
+        "T-PH001-05",
+        "T-PH001-06",
+        "T-PH001-07",
+        "T-PH001-08"
+      ]
+    },
+    {
+      "id": "PH-002",
+      "title": "설치 마법사 화면을 세운다",
+      "goal": "초기 권한을 고르고 확인 다이얼로그를 거쳐 설치를 커밋하는 화면이 선다",
+      "depends_on": [
+        "PH-001"
+      ],
+      "task_ids": [
+        "T-PH002-01",
+        "T-PH002-02",
+        "T-PH002-03",
+        "T-PH002-04",
+        "T-PH002-05",
+        "T-PH002-06"
+      ]
+    },
+    {
+      "id": "PH-003",
+      "title": "조립 누락 회귀 방벽",
+      "goal": "부품이 제품 조립에 들어갔는가를 재는 시험을 두어 같은 결함이 다시 서지 않게 한다",
+      "depends_on": [
+        "PH-001"
+      ],
+      "task_ids": [
+        "T-PH003-01",
+        "T-PH003-02"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T-PH001-01",
+      "phase_id": "PH-001",
+      "title": "운영 앱 조립 시험 — 게이트가 서고 허용목록 네 경로가 응답한다",
+      "type": "code",
+      "req_ids": [
+        "SEC-AUTH-010",
+        "SEC-AUTH-011"
+      ],
+      "files": [
+        {
+          "path": "packages/server/test/http/install-assembly.test.ts"
+        }
+      ],
+      "test_files": [
+        {
+          "path": "packages/server/test/http/install-assembly.test.ts"
+        }
+      ],
+      "action": "createApp(runtime) 이 만든 **운영 앱**을 대상으로, 설치 전 허용목록 밖 경로가 막히고 네 경로가 404 가 아님을 잰다. 기존 install-gate.test.ts 는 게이트를 시험이 직접 주입하므로 조립 여부를 재지 못한다 — 그 구멍이 이 결함을 낳았다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/http/install-assembly.test.ts",
+          "expected_exit": 1
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/server && NODE_ENV=production npx vitest run test/http/install-assembly.test.ts",
+        "windows": "cd packages\\server && set NODE_ENV=production && npx vitest run test/http/install-assembly.test.ts"
+      },
+      "dod": [
+        "시험이 실패한다(red)",
+        "실패 메시지가 「게이트가 서지 않는다」와 「경로가 404」를 각각 지목한다"
+      ],
+      "rollback": "새 시험 파일 삭제",
+      "trace_links": [
+        {
+          "link_id": "TL-001",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-01"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-011"
+          },
+          "relation": "verifies"
+        },
+        {
+          "link_id": "TL-002",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-01"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-010"
+          },
+          "relation": "verifies"
+        }
+      ],
+      "estimated_effort": "M",
+      "covers_ac": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4",
+        "AC-5",
+        "AC-6"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "red",
+        "test_cases": [
+          {
+            "id": "TC-REQ-SEC-AUTH-011-AC1-01",
+            "req_id": "SEC-AUTH-011",
+            "ac_refs": [
+              "AC-1"
+            ],
+            "test_file": "packages/server/test/http/install-assembly.test.ts",
+            "kind": "integration",
+            "expected_failure_signature": "404"
+          },
+          {
+            "id": "TC-REQ-SEC-AUTH-011-AC2-01",
+            "req_id": "SEC-AUTH-011",
+            "ac_refs": [
+              "AC-2",
+              "AC-3",
+              "AC-4",
+              "AC-5",
+              "AC-6"
+            ],
+            "test_file": "packages/server/test/http/install-assembly.test.ts",
+            "kind": "integration"
+          },
+          {
+            "id": "TC-REQ-SEC-AUTH-010-AC1-01",
+            "req_id": "SEC-AUTH-010",
+            "ac_refs": [
+              "AC-1"
+            ],
+            "test_file": "packages/server/test/http/install-assembly.test.ts",
+            "kind": "integration"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    },
+    {
+      "id": "T-PH001-02",
+      "phase_id": "PH-001",
+      "title": "createApp 이 installGate 를 물린다",
+      "type": "code",
+      "req_ids": [
+        "SEC-AUTH-010",
+        "SEC-AUTH-011"
+      ],
+      "files": [
+        {
+          "path": "packages/server/src/main.ts",
+          "line_range": "51-56"
+        }
+      ],
+      "action": "createApp(runtime) 이 createHttpServer 에 gate: installGate(() => isInstalled(runtime.stores)) 를 넘긴다. runtime 이 없으면 게이트도 없다 — 정적 서빙만 시험하는 경로이므로 그때는 판정할 저장소가 없다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/http/install-assembly.test.ts",
+          "expected_exit": 0
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/server && NODE_ENV=production npx vitest run test/http/install-assembly.test.ts",
+        "windows": "cd packages\\server && set NODE_ENV=production && npx vitest run test/http/install-assembly.test.ts"
+      },
+      "dod": [
+        "T-PH001-01 이 통과한다",
+        "게이트를 걷어내는 뮤테이션으로 그 시험이 죽는다"
+      ],
+      "rollback": "main.ts 의 gate 인자 제거",
+      "trace_links": [
+        {
+          "link_id": "TL-003",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-02"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-011"
+          },
+          "relation": "implements"
+        }
+      ],
+      "estimated_effort": "S",
+      "depends_on_task": [
+        "T-PH001-01"
+      ],
+      "covers_ac": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4",
+        "AC-5",
+        "AC-6"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "green",
+        "test_cases": [
+          {
+            "id": "TC-REQ-SEC-AUTH-011-AC1-02",
+            "req_id": "SEC-AUTH-011",
+            "ac_refs": [
+              "AC-1"
+            ],
+            "test_file": "packages/server/test/http/install-assembly.test.ts",
+            "kind": "integration"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    },
+    {
+      "id": "T-PH001-03",
+      "phase_id": "PH-001",
+      "title": "설치 라우트 계약 시험 — 토큰 검증과 커밋",
+      "type": "code",
+      "req_ids": [
+        "SEC-AUTH-012",
+        "SEC-AUTH-015",
+        "SEC-AUTH-013",
+        "SEC-AUTH-017"
+      ],
+      "files": [
+        {
+          "path": "packages/server/test/http/install-routes.test.ts"
+        }
+      ],
+      "test_files": [
+        {
+          "path": "packages/server/test/http/install-routes.test.ts"
+        }
+      ],
+      "action": "POST /api/install/verify-token 과 POST /api/install/commit 의 계약을 HTTP 로 잰다 — 세션 없는 커밋 거부, 잘못된 토큰 뒤 같은 토큰 재시도 성공, 소진된 토큰 재사용 거부, 만료 토큰 거부, 고른 초기 권한이 실제 ACL 로 적용됨.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/http/install-routes.test.ts",
+          "expected_exit": 1
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/server && NODE_ENV=production npx vitest run test/http/install-routes.test.ts",
+        "windows": "cd packages\\server && set NODE_ENV=production && npx vitest run test/http/install-routes.test.ts"
+      },
+      "dod": [
+        "시험이 실패한다(red)",
+        "실패가 404 가 아니라 단언 실패로 나올 때까지는 라우트 부재가 사유임을 메시지가 밝힌다"
+      ],
+      "rollback": "새 시험 파일 삭제",
+      "trace_links": [
+        {
+          "link_id": "TL-004",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-03"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-015"
+          },
+          "relation": "verifies"
+        },
+        {
+          "link_id": "TL-005",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-03"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-012"
+          },
+          "relation": "verifies"
+        },
+        {
+          "link_id": "TL-006",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-03"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-013"
+          },
+          "relation": "verifies"
+        },
+        {
+          "link_id": "TL-007",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-03"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-017"
+          },
+          "relation": "verifies"
+        }
+      ],
+      "estimated_effort": "L",
+      "covers_ac": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4",
+        "AC-5",
+        "AC-6"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "red",
+        "test_cases": [
+          {
+            "id": "TC-REQ-SEC-AUTH-015-AC1-01",
+            "req_id": "SEC-AUTH-015",
+            "ac_refs": [
+              "AC-1",
+              "AC-2"
+            ],
+            "test_file": "packages/server/test/http/install-routes.test.ts",
+            "kind": "integration"
+          },
+          {
+            "id": "TC-REQ-SEC-AUTH-015-AC3-01",
+            "req_id": "SEC-AUTH-015",
+            "ac_refs": [
+              "AC-3",
+              "AC-4"
+            ],
+            "test_file": "packages/server/test/http/install-routes.test.ts",
+            "kind": "integration"
+          },
+          {
+            "id": "TC-REQ-SEC-AUTH-012-AC2-01",
+            "req_id": "SEC-AUTH-012",
+            "ac_refs": [
+              "AC-2",
+              "AC-3",
+              "AC-4",
+              "AC-5",
+              "AC-6"
+            ],
+            "test_file": "packages/server/test/http/install-routes.test.ts",
+            "kind": "integration"
+          },
+          {
+            "id": "TC-REQ-SEC-AUTH-013-AC1-01",
+            "req_id": "SEC-AUTH-013",
+            "ac_refs": [
+              "AC-1",
+              "AC-2"
+            ],
+            "test_file": "packages/server/test/http/install-routes.test.ts",
+            "kind": "integration"
+          },
+          {
+            "id": "TC-REQ-SEC-AUTH-017-AC3-01",
+            "req_id": "SEC-AUTH-017",
+            "ac_refs": [
+              "AC-3"
+            ],
+            "test_file": "packages/server/test/http/install-routes.test.ts",
+            "kind": "integration"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    },
+    {
+      "id": "T-PH001-04",
+      "phase_id": "PH-001",
+      "title": "설치 라우터를 구현하고 apiRouter 에 붙인다",
+      "type": "code",
+      "req_ids": [
+        "SEC-AUTH-012",
+        "SEC-AUTH-015",
+        "SEC-AUTH-013",
+        "SEC-AUTH-017"
+      ],
+      "files": [
+        {
+          "path": "packages/server/src/http/routes/install.ts"
+        },
+        {
+          "path": "packages/server/src/main.ts",
+          "line_range": "63-70"
+        }
+      ],
+      "action": "installRouter(stores) 를 새로 만들고 apiRouter 에 붙인다. verifyInstallToken → beginInstallSession → commitInstall 의 기존 서비스 계약을 그대로 지난다 — 판정 로직을 라우트에 다시 적지 않는다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/http/install-routes.test.ts",
+          "expected_exit": 0
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/server && NODE_ENV=production npx vitest run test/http/install-routes.test.ts",
+        "windows": "cd packages\\server && set NODE_ENV=production && npx vitest run test/http/install-routes.test.ts"
+      },
+      "dod": [
+        "T-PH001-03 이 통과한다",
+        "라우터를 apiRouter 에서 떼는 뮤테이션으로 그 시험이 죽는다"
+      ],
+      "rollback": "install.ts 삭제 + main.ts 의 router.use 한 줄 제거",
+      "trace_links": [
+        {
+          "link_id": "TL-008",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-04"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-015"
+          },
+          "relation": "implements"
+        },
+        {
+          "link_id": "TL-009",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-04"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-012"
+          },
+          "relation": "implements"
+        },
+        {
+          "link_id": "TL-010",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-04"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-013"
+          },
+          "relation": "implements"
+        },
+        {
+          "link_id": "TL-011",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-04"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-017"
+          },
+          "relation": "implements"
+        }
+      ],
+      "estimated_effort": "M",
+      "depends_on_task": [
+        "T-PH001-03"
+      ],
+      "covers_ac": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4",
+        "AC-5",
+        "AC-6"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "green",
+        "test_cases": [
+          {
+            "id": "TC-REQ-SEC-AUTH-015-AC1-02",
+            "req_id": "SEC-AUTH-015",
+            "ac_refs": [
+              "AC-1",
+              "AC-2",
+              "AC-3",
+              "AC-4"
+            ],
+            "test_file": "packages/server/test/http/install-routes.test.ts",
+            "kind": "integration"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    },
+    {
+      "id": "T-PH001-05",
+      "phase_id": "PH-001",
+      "title": "기동 콘솔 출력 시험 — 토큰과 절대 만료시각",
+      "type": "code",
+      "req_ids": [
+        "SEC-AUTH-012",
+        "SEC-AUTH-013",
+        "SEC-AUTH-014"
+      ],
+      "files": [
+        {
+          "path": "packages/server/test/app/auth/install-console.test.ts"
+        }
+      ],
+      "test_files": [
+        {
+          "path": "packages/server/test/app/auth/install-console.test.ts"
+        }
+      ],
+      "action": "bootstrap 이 슈퍼유저 0명일 때 설치 토큰을 발행하고 그 값과 절대 만료시각을 콘솔에 낸다는 것을 잰다. 재기동이 새 값을 낸다는 것도 함께 잰다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/app/auth/install-console.test.ts",
+          "expected_exit": 1
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/server && NODE_ENV=production npx vitest run test/app/auth/install-console.test.ts",
+        "windows": "cd packages\\server && set NODE_ENV=production && npx vitest run test/app/auth/install-console.test.ts"
+      },
+      "dod": [
+        "시험이 실패한다(red)"
+      ],
+      "rollback": "새 시험 파일 삭제",
+      "trace_links": [
+        {
+          "link_id": "TL-012",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-05"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-012"
+          },
+          "relation": "verifies"
+        },
+        {
+          "link_id": "TL-013",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-05"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-013"
+          },
+          "relation": "verifies"
+        },
+        {
+          "link_id": "TL-014",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-05"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-014"
+          },
+          "relation": "verifies"
+        }
+      ],
+      "estimated_effort": "M",
+      "covers_ac": [
+        "AC-1",
+        "AC-3"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "red",
+        "test_cases": [
+          {
+            "id": "TC-REQ-SEC-AUTH-012-AC1-01",
+            "req_id": "SEC-AUTH-012",
+            "ac_refs": [
+              "AC-1"
+            ],
+            "test_file": "packages/server/test/app/auth/install-console.test.ts",
+            "kind": "integration"
+          },
+          {
+            "id": "TC-REQ-SEC-AUTH-013-AC3-01",
+            "req_id": "SEC-AUTH-013",
+            "ac_refs": [
+              "AC-3"
+            ],
+            "test_file": "packages/server/test/app/auth/install-console.test.ts",
+            "kind": "integration"
+          },
+          {
+            "id": "TC-REQ-SEC-AUTH-014-AC1-01",
+            "req_id": "SEC-AUTH-014",
+            "ac_refs": [
+              "AC-1",
+              "AC-2",
+              "AC-3",
+              "AC-4",
+              "AC-5",
+              "AC-6",
+              "AC-7"
+            ],
+            "test_file": "packages/server/test/app/auth/install-console.test.ts",
+            "kind": "integration"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    },
+    {
+      "id": "T-PH001-06",
+      "phase_id": "PH-001",
+      "title": "bootstrap 이 설치 토큰을 발행하고 절대시각과 함께 출력한다",
+      "type": "code",
+      "req_ids": [
+        "SEC-AUTH-012",
+        "SEC-AUTH-013",
+        "SEC-AUTH-014"
+      ],
+      "files": [
+        {
+          "path": "packages/server/src/main.ts",
+          "line_range": "104-160"
+        }
+      ],
+      "action": "bootstrap 끝에서 isInstalled 가 거짓이면 mintInstallToken 을 부르고 토큰과 만료 절대시각을 콘솔에 낸다. 이미 설치됐으면 내지 않는다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/app/auth/install-console.test.ts",
+          "expected_exit": 0
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/server && NODE_ENV=production npx vitest run test/app/auth/install-console.test.ts",
+        "windows": "cd packages\\server && set NODE_ENV=production && npx vitest run test/app/auth/install-console.test.ts"
+      },
+      "dod": [
+        "T-PH001-05 가 통과한다",
+        "출력을 걷어내는 뮤테이션으로 그 시험이 죽는다"
+      ],
+      "rollback": "bootstrap 의 출력 블록 제거",
+      "trace_links": [
+        {
+          "link_id": "TL-015",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-06"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-012"
+          },
+          "relation": "implements"
+        },
+        {
+          "link_id": "TL-016",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-06"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-013"
+          },
+          "relation": "implements"
+        },
+        {
+          "link_id": "TL-017",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-06"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-014"
+          },
+          "relation": "implements"
+        }
+      ],
+      "estimated_effort": "S",
+      "depends_on_task": [
+        "T-PH001-05"
+      ],
+      "covers_ac": [
+        "AC-1",
+        "AC-3"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "green",
+        "test_cases": [
+          {
+            "id": "TC-REQ-SEC-AUTH-012-AC1-02",
+            "req_id": "SEC-AUTH-012",
+            "ac_refs": [
+              "AC-1"
+            ],
+            "test_file": "packages/server/test/app/auth/install-console.test.ts",
+            "kind": "integration"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    },
+    {
+      "id": "T-PH001-07",
+      "phase_id": "PH-001",
+      "title": "설치 완료 뒤 게이트가 열리고 설치 화면이 다시 서지 않는다",
+      "type": "code",
+      "req_ids": [
+        "SEC-AUTH-010"
+      ],
+      "files": [
+        {
+          "path": "packages/server/test/http/install-assembly.test.ts"
+        }
+      ],
+      "test_files": [
+        {
+          "path": "packages/server/test/http/install-assembly.test.ts"
+        }
+      ],
+      "action": "커밋 성공 뒤 허용목록 밖 경로가 열리고, 설치 화면 경로가 더 이상 강제되지 않으며, 마법사 외의 경로로 최초 슈퍼유저를 만들 수 없음을 잰다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/http/install-assembly.test.ts",
+          "expected_exit": 1
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/server && NODE_ENV=production npx vitest run test/http/install-assembly.test.ts",
+        "windows": "cd packages\\server && set NODE_ENV=production && npx vitest run test/http/install-assembly.test.ts"
+      },
+      "dod": [
+        "시험이 실패한다(red)"
+      ],
+      "rollback": "추가한 시험 블록 제거",
+      "trace_links": [
+        {
+          "link_id": "TL-018",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-07"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-010"
+          },
+          "relation": "verifies"
+        }
+      ],
+      "estimated_effort": "S",
+      "depends_on_task": [
+        "T-PH001-04"
+      ],
+      "covers_ac": [
+        "AC-2",
+        "AC-5"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "red",
+        "test_cases": [
+          {
+            "id": "TC-REQ-SEC-AUTH-010-AC5-01",
+            "req_id": "SEC-AUTH-010",
+            "ac_refs": [
+              "AC-2",
+              "AC-3",
+              "AC-4",
+              "AC-5"
+            ],
+            "test_file": "packages/server/test/http/install-assembly.test.ts",
+            "kind": "integration"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    },
+    {
+      "id": "T-PH001-08",
+      "phase_id": "PH-001",
+      "title": "설치 완료 판정을 게이트가 매 요청 다시 읽는다",
+      "type": "code",
+      "req_ids": [
+        "SEC-AUTH-010"
+      ],
+      "files": [
+        {
+          "path": "packages/server/src/main.ts",
+          "line_range": "51-56"
+        }
+      ],
+      "action": "게이트에 넘기는 판정을 함수로 유지해 커밋 직후 같은 프로세스에서 열리게 한다. 기동 시점 값을 굳히면 설치 뒤에도 계속 막힌다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/http/install-assembly.test.ts",
+          "expected_exit": 0
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/server && NODE_ENV=production npx vitest run test/http/install-assembly.test.ts",
+        "windows": "cd packages\\server && set NODE_ENV=production && npx vitest run test/http/install-assembly.test.ts"
+      },
+      "dod": [
+        "T-PH001-07 이 통과한다",
+        "판정을 상수로 굳히는 뮤테이션으로 그 시험이 죽는다"
+      ],
+      "rollback": "판정을 다시 굳힌다",
+      "trace_links": [
+        {
+          "link_id": "TL-019",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-08"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-010"
+          },
+          "relation": "implements"
+        }
+      ],
+      "estimated_effort": "S",
+      "depends_on_task": [
+        "T-PH001-07"
+      ],
+      "covers_ac": [
+        "AC-2",
+        "AC-5"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "green",
+        "test_cases": [
+          {
+            "id": "TC-REQ-SEC-AUTH-010-AC5-02",
+            "req_id": "SEC-AUTH-010",
+            "ac_refs": [
+              "AC-5"
+            ],
+            "test_file": "packages/server/test/http/install-assembly.test.ts",
+            "kind": "integration"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    },
+    {
+      "id": "T-PH002-01",
+      "phase_id": "PH-002",
+      "title": "설치 마법사 화면 시험 — 초기 권한 선택과 경고",
+      "type": "code",
+      "req_ids": [
+        "SEC-AUTH-017",
+        "SEC-AUTH-012"
+      ],
+      "files": [
+        {
+          "path": "packages/web/test/install-wizard.test.tsx"
+        }
+      ],
+      "test_files": [
+        {
+          "path": "packages/web/test/install-wizard.test.tsx"
+        }
+      ],
+      "action": "마법사가 초기 권한 셋을 고르게 하고 기본값이 편집이며 자유 가입 + 편집 조합에 경고가 붙음을 잰다. 토큰 입력 자리와 오타 뒤 재시도도 함께 잰다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/install-wizard.test.tsx",
+          "expected_exit": 1
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/web && NODE_ENV=production npx vitest run test/install-wizard.test.tsx",
+        "windows": "cd packages\\web && set NODE_ENV=production && npx vitest run test/install-wizard.test.tsx"
+      },
+      "dod": [
+        "시험이 실패한다(red)"
+      ],
+      "rollback": "새 시험 파일 삭제",
+      "trace_links": [
+        {
+          "link_id": "TL-020",
+          "source": {
+            "type": "Task",
+            "id": "T-PH002-01"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-017"
+          },
+          "relation": "verifies"
+        },
+        {
+          "link_id": "TL-021",
+          "source": {
+            "type": "Task",
+            "id": "T-PH002-01"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-012"
+          },
+          "relation": "verifies"
+        }
+      ],
+      "estimated_effort": "M",
+      "covers_ac": [
+        "AC-1",
+        "AC-2",
+        "AC-4"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "red",
+        "test_cases": [
+          {
+            "id": "TC-REQ-SEC-AUTH-017-AC1-01",
+            "req_id": "SEC-AUTH-017",
+            "ac_refs": [
+              "AC-1",
+              "AC-2",
+              "AC-4"
+            ],
+            "test_file": "packages/web/test/install-wizard.test.tsx",
+            "kind": "unit"
+          },
+          {
+            "id": "TC-REQ-SEC-AUTH-012-AC3-01",
+            "req_id": "SEC-AUTH-012",
+            "ac_refs": [
+              "AC-3",
+              "AC-4"
+            ],
+            "test_file": "packages/web/test/install-wizard.test.tsx",
+            "kind": "unit"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    },
+    {
+      "id": "T-PH002-02",
+      "phase_id": "PH-002",
+      "title": "InstallWizard 를 구현하고 PreAuthScreen 에 붙인다",
+      "type": "code",
+      "req_ids": [
+        "SEC-AUTH-017",
+        "SEC-AUTH-012"
+      ],
+      "files": [
+        {
+          "path": "packages/web/src/auth/InstallWizard.tsx"
+        },
+        {
+          "path": "packages/web/src/auth/PreAuthScreen.tsx",
+          "line_range": "24-33"
+        }
+      ],
+      "action": "초기 권한 선택은 NewWorkspaceForm 의 레벨 선택과 같은 부품을 쓴다 — 두 자리가 갈리면 기본값이 갈린다. 경고 표시도 GrantWarningList 를 재사용한다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/install-wizard.test.tsx",
+          "expected_exit": 0
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/web && NODE_ENV=production npx vitest run test/install-wizard.test.tsx",
+        "windows": "cd packages\\web && set NODE_ENV=production && npx vitest run test/install-wizard.test.tsx"
+      },
+      "dod": [
+        "T-PH002-01 이 통과한다",
+        "선택 항목을 지우는 뮤테이션으로 그 시험이 죽는다"
+      ],
+      "rollback": "InstallWizard.tsx 삭제 + PreAuthScreen 원복",
+      "trace_links": [
+        {
+          "link_id": "TL-022",
+          "source": {
+            "type": "Task",
+            "id": "T-PH002-02"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-017"
+          },
+          "relation": "implements"
+        },
+        {
+          "link_id": "TL-023",
+          "source": {
+            "type": "Task",
+            "id": "T-PH002-02"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-012"
+          },
+          "relation": "implements"
+        }
+      ],
+      "estimated_effort": "L",
+      "depends_on_task": [
+        "T-PH002-01"
+      ],
+      "covers_ac": [
+        "AC-1",
+        "AC-2",
+        "AC-4"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "green",
+        "test_cases": [
+          {
+            "id": "TC-REQ-SEC-AUTH-017-AC1-02",
+            "req_id": "SEC-AUTH-017",
+            "ac_refs": [
+              "AC-1",
+              "AC-2",
+              "AC-4"
+            ],
+            "test_file": "packages/web/test/install-wizard.test.tsx",
+            "kind": "unit"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    },
+    {
+      "id": "T-PH002-03",
+      "phase_id": "PH-002",
+      "title": "설치의 초기 권한도 확인 다이얼로그를 받는다 — 시험",
+      "type": "code",
+      "req_ids": [
+        "FR-CONFIRM-019"
+      ],
+      "files": [
+        {
+          "path": "packages/web/test/install-wizard.test.tsx"
+        }
+      ],
+      "test_files": [
+        {
+          "path": "packages/web/test/install-wizard.test.tsx"
+        }
+      ],
+      "action": "설치 제출이 곧바로 커밋하지 않고 확인 다이얼로그를 세우며, 그 다이얼로그가 관리자와 초기 권한을 함께 싣고 적용 하위 노드 수는 싣지 않으며 지연 효과 고지를 붙임을 잰다 — 워크스페이스 생성과 같은 규칙이다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/install-wizard.test.tsx",
+          "expected_exit": 1
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/web && NODE_ENV=production npx vitest run test/install-wizard.test.tsx",
+        "windows": "cd packages\\web && set NODE_ENV=production && npx vitest run test/install-wizard.test.tsx"
+      },
+      "dod": [
+        "시험이 실패한다(red)"
+      ],
+      "rollback": "추가한 시험 블록 제거",
+      "trace_links": [
+        {
+          "link_id": "TL-024",
+          "source": {
+            "type": "Task",
+            "id": "T-PH002-03"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "FR-CONFIRM-019"
+          },
+          "relation": "verifies"
+        }
+      ],
+      "estimated_effort": "S",
+      "depends_on_task": [
+        "T-PH002-02"
+      ],
+      "covers_ac": [
+        "AC-6"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "red",
+        "test_cases": [
+          {
+            "id": "TC-REQ-FR-CONFIRM-019-AC6-01",
+            "req_id": "FR-CONFIRM-019",
+            "ac_refs": [
+              "AC-6"
+            ],
+            "test_file": "packages/web/test/install-wizard.test.tsx",
+            "kind": "unit"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    },
+    {
+      "id": "T-PH002-04",
+      "phase_id": "PH-002",
+      "title": "InstallWizard 에 ConfirmGate 를 놓는다",
+      "type": "code",
+      "req_ids": [
+        "FR-CONFIRM-019"
+      ],
+      "files": [
+        {
+          "path": "packages/web/src/auth/InstallWizard.tsx"
+        }
+      ],
+      "action": "ConfirmGate 를 grade=L2 · delayedEffect 로 놓고 관리자와 초기 권한을 한 관문에 함께 싣는다. 적용 하위 노드 수는 싣지 않는다 — 갓 만든 워크스페이스에는 하위가 없어 0 이 실패로 읽힌다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/install-wizard.test.tsx",
+          "expected_exit": 0
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/web && NODE_ENV=production npx vitest run test/install-wizard.test.tsx",
+        "windows": "cd packages\\web && set NODE_ENV=production && npx vitest run test/install-wizard.test.tsx"
+      },
+      "dod": [
+        "T-PH002-03 이 통과한다",
+        "관문을 걷어내는 뮤테이션으로 그 시험이 죽는다"
+      ],
+      "rollback": "ConfirmGate 블록 제거",
+      "trace_links": [
+        {
+          "link_id": "TL-025",
+          "source": {
+            "type": "Task",
+            "id": "T-PH002-04"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "FR-CONFIRM-019"
+          },
+          "relation": "implements"
+        }
+      ],
+      "estimated_effort": "S",
+      "depends_on_task": [
+        "T-PH002-03"
+      ],
+      "covers_ac": [
+        "AC-6"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "green",
+        "test_cases": [
+          {
+            "id": "TC-REQ-FR-CONFIRM-019-AC6-02",
+            "req_id": "FR-CONFIRM-019",
+            "ac_refs": [
+              "AC-6"
+            ],
+            "test_file": "packages/web/test/install-wizard.test.tsx",
+            "kind": "unit"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    },
+    {
+      "id": "T-PH002-05",
+      "phase_id": "PH-002",
+      "title": "설치 API 클라이언트 호출 시험",
+      "type": "code",
+      "req_ids": [
+        "SEC-AUTH-015"
+      ],
+      "files": [
+        {
+          "path": "packages/web/test/install-wizard.test.tsx"
+        }
+      ],
+      "test_files": [
+        {
+          "path": "packages/web/test/install-wizard.test.tsx"
+        }
+      ],
+      "action": "토큰 검증 뒤 받은 설치 세션이 커밋 요청에 실려 나가는 것을 잰다 — 실리지 않으면 단계 전환만 클라이언트에서 일어나고 서버는 거부한다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/install-wizard.test.tsx",
+          "expected_exit": 1
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/web && NODE_ENV=production npx vitest run test/install-wizard.test.tsx",
+        "windows": "cd packages\\web && set NODE_ENV=production && npx vitest run test/install-wizard.test.tsx"
+      },
+      "dod": [
+        "시험이 실패한다(red)"
+      ],
+      "rollback": "추가한 시험 블록 제거",
+      "trace_links": [
+        {
+          "link_id": "TL-026",
+          "source": {
+            "type": "Task",
+            "id": "T-PH002-05"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-015"
+          },
+          "relation": "verifies"
+        }
+      ],
+      "estimated_effort": "S",
+      "depends_on_task": [
+        "T-PH002-04"
+      ],
+      "covers_ac": [
+        "AC-2",
+        "AC-4"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "red",
+        "test_cases": [
+          {
+            "id": "TC-REQ-SEC-AUTH-015-AC4-01",
+            "req_id": "SEC-AUTH-015",
+            "ac_refs": [
+              "AC-2",
+              "AC-4"
+            ],
+            "test_file": "packages/web/test/install-wizard.test.tsx",
+            "kind": "unit"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    },
+    {
+      "id": "T-PH002-06",
+      "phase_id": "PH-002",
+      "title": "api/client 에 설치 두 호출을 더한다",
+      "type": "code",
+      "req_ids": [
+        "SEC-AUTH-015"
+      ],
+      "files": [
+        {
+          "path": "packages/web/src/api/client.ts"
+        }
+      ],
+      "action": "verifyInstallToken 과 commitInstall 두 호출을 더한다. 설치 세션은 응답에서 받아 커밋 요청에 그대로 실어 보낸다 — 클라이언트가 만들어 내지 않는다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/install-wizard.test.tsx",
+          "expected_exit": 0
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/web && NODE_ENV=production npx vitest run test/install-wizard.test.tsx",
+        "windows": "cd packages\\web && set NODE_ENV=production && npx vitest run test/install-wizard.test.tsx"
+      },
+      "dod": [
+        "T-PH002-05 가 통과한다",
+        "세션을 안 싣는 뮤테이션으로 그 시험이 죽는다"
+      ],
+      "rollback": "두 호출 제거",
+      "trace_links": [
+        {
+          "link_id": "TL-027",
+          "source": {
+            "type": "Task",
+            "id": "T-PH002-06"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-015"
+          },
+          "relation": "implements"
+        }
+      ],
+      "estimated_effort": "S",
+      "depends_on_task": [
+        "T-PH002-05"
+      ],
+      "covers_ac": [
+        "AC-2",
+        "AC-4"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "green",
+        "test_cases": [
+          {
+            "id": "TC-REQ-SEC-AUTH-015-AC4-02",
+            "req_id": "SEC-AUTH-015",
+            "ac_refs": [
+              "AC-2",
+              "AC-4"
+            ],
+            "test_file": "packages/web/test/install-wizard.test.tsx",
+            "kind": "unit"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    },
+    {
+      "id": "T-PH003-01",
+      "phase_id": "PH-003",
+      "title": "조립 누락 방벽 시험 — 제품이 부르지 않는 서비스 모듈을 고정한다",
+      "type": "code",
+      "req_ids": [
+        "SEC-AUTH-010"
+      ],
+      "files": [
+        {
+          "path": "packages/server/test/arch/assembly.test.ts"
+        }
+      ],
+      "test_files": [
+        {
+          "path": "packages/server/test/arch/assembly.test.ts"
+        }
+      ],
+      "action": "src 아래 제품 코드(시험 제외)가 import 하지 않는 app 서비스 모듈의 집합을 통째로 단언한다. 허용목록에는 아직 배선되지 않은 셋(가입·비밀번호·PAT)만 사유와 함께 둔다 — 그 목록이 줄어드는 것이 다음 wave 의 정의다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/arch/assembly.test.ts",
+          "expected_exit": 1
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/server && NODE_ENV=production npx vitest run test/arch/assembly.test.ts",
+        "windows": "cd packages\\server && set NODE_ENV=production && npx vitest run test/arch/assembly.test.ts"
+      },
+      "dod": [
+        "시험이 실패한다(red) — install-service 가 아직 목록에 있다"
+      ],
+      "rollback": "새 시험 파일 삭제",
+      "trace_links": [
+        {
+          "link_id": "TL-028",
+          "source": {
+            "type": "Task",
+            "id": "T-PH003-01"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-010"
+          },
+          "relation": "verifies"
+        }
+      ],
+      "estimated_effort": "M",
+      "covers_ac": [
+        "AC-1"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "red",
+        "test_cases": [
+          {
+            "id": "TC-REQ-SEC-AUTH-010-AC1-02",
+            "req_id": "SEC-AUTH-010",
+            "ac_refs": [
+              "AC-1"
+            ],
+            "test_file": "packages/server/test/arch/assembly.test.ts",
+            "kind": "contract"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    },
+    {
+      "id": "T-PH003-02",
+      "phase_id": "PH-003",
+      "title": "허용목록에서 install-service 를 뺀다",
+      "type": "code",
+      "req_ids": [
+        "SEC-AUTH-010"
+      ],
+      "files": [
+        {
+          "path": "packages/server/test/arch/assembly.test.ts"
+        }
+      ],
+      "action": "PH-001 이 install-service 를 배선했으므로 허용목록에서 뺀다. 남는 셋에는 각각 「어느 wave 가 받는가」를 적는다 — 사유 없는 허용목록은 곧 영구 면제가 된다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npx vitest run test/arch/assembly.test.ts",
+          "expected_exit": 0
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/server && NODE_ENV=production npx vitest run test/arch/assembly.test.ts",
+        "windows": "cd packages\\server && set NODE_ENV=production && npx vitest run test/arch/assembly.test.ts"
+      },
+      "dod": [
+        "T-PH003-01 이 통과한다",
+        "main.ts 에서 설치 라우터를 떼는 뮤테이션으로 그 시험이 죽는다"
+      ],
+      "rollback": "허용목록에 install-service 를 되돌린다",
+      "trace_links": [
+        {
+          "link_id": "TL-029",
+          "source": {
+            "type": "Task",
+            "id": "T-PH003-02"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "SEC-AUTH-010"
+          },
+          "relation": "implements"
+        }
+      ],
+      "estimated_effort": "S",
+      "depends_on_task": [
+        "T-PH003-01",
+        "T-PH001-04"
+      ],
+      "covers_ac": [
+        "AC-1"
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "green",
+        "test_cases": [
+          {
+            "id": "TC-REQ-SEC-AUTH-010-AC1-03",
+            "req_id": "SEC-AUTH-010",
+            "ac_refs": [
+              "AC-1"
+            ],
+            "test_file": "packages/server/test/arch/assembly.test.ts",
+            "kind": "contract"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      }
+    }
+  ],
+  "coverage": [
+    {
+      "req_id": "SEC-AUTH-010",
+      "stability": "stable",
+      "ac_total": 5,
+      "ac_covered": 5,
+      "missing_ac_ids": [],
+      "covered_tasks": [
+        "T-PH001-01",
+        "T-PH001-02",
+        "T-PH001-07",
+        "T-PH001-08",
+        "T-PH003-01",
+        "T-PH003-02"
+      ]
+    },
+    {
+      "req_id": "SEC-AUTH-011",
+      "stability": "stable",
+      "ac_total": 6,
+      "ac_covered": 6,
+      "missing_ac_ids": [],
+      "covered_tasks": [
+        "T-PH001-01",
+        "T-PH001-02"
+      ]
+    },
+    {
+      "req_id": "SEC-AUTH-012",
+      "stability": "stable",
+      "ac_total": 6,
+      "ac_covered": 6,
+      "missing_ac_ids": [],
+      "covered_tasks": [
+        "T-PH001-03",
+        "T-PH001-04",
+        "T-PH001-05",
+        "T-PH001-06",
+        "T-PH002-01",
+        "T-PH002-02"
+      ]
+    },
+    {
+      "req_id": "SEC-AUTH-013",
+      "stability": "evolving",
+      "ac_total": 3,
+      "ac_covered": 3,
+      "missing_ac_ids": [],
+      "covered_tasks": [
+        "T-PH001-03",
+        "T-PH001-04",
+        "T-PH001-05",
+        "T-PH001-06"
+      ]
+    },
+    {
+      "req_id": "SEC-AUTH-014",
+      "stability": "stable",
+      "ac_total": 7,
+      "ac_covered": 7,
+      "missing_ac_ids": [],
+      "covered_tasks": [
+        "T-PH001-05",
+        "T-PH001-06"
+      ]
+    },
+    {
+      "req_id": "SEC-AUTH-015",
+      "stability": "stable",
+      "ac_total": 4,
+      "ac_covered": 4,
+      "missing_ac_ids": [],
+      "covered_tasks": [
+        "T-PH001-03",
+        "T-PH001-04",
+        "T-PH002-05",
+        "T-PH002-06"
+      ]
+    },
+    {
+      "req_id": "SEC-AUTH-017",
+      "stability": "stable",
+      "ac_total": 4,
+      "ac_covered": 4,
+      "missing_ac_ids": [],
+      "covered_tasks": [
+        "T-PH001-03",
+        "T-PH001-04",
+        "T-PH002-01",
+        "T-PH002-02"
+      ]
+    },
+    {
+      "req_id": "FR-CONFIRM-019",
+      "stability": "stable",
+      "ac_total": 6,
+      "ac_covered": 6,
+      "missing_ac_ids": [],
+      "covered_tasks": [
+        "T-PH002-03",
+        "T-PH002-04"
+      ]
+    }
+  ],
+  "orphans": [],
+  "unreferenced_reqs": [],
+  "excluded_reqs": [],
+  "deferred_ac": [],
+  "risks": [
+    {
+      "id": "RISK-1",
+      "severity": "high",
+      "description": "게이트를 운영 경로에 물리면 기존 시험 중 설치 전 상태로 도는 것들이 막힐 수 있다",
+      "mitigation": "게이트는 runtime 이 있을 때만 선다. 시험 대부분은 앱을 직접 조립하므로 영향이 없고, 영향받는 시험은 설치 완료 상태를 세워 통과시킨다",
+      "affected_task_ids": [
+        "T-PH001-02"
+      ]
+    },
+    {
+      "id": "RISK-2",
+      "severity": "med",
+      "description": "열두 AUTH 요구의 Status 가 사실과 어긋나 있어, 이 wave 가 닫는 일곱 외 다섯(가입·비밀번호·PAT 축)은 여전히 거짓 상태로 남는다",
+      "mitigation": "PH-003 의 허용목록이 그 사실을 코드로 고정한다. 상태 정정은 그 축을 배선하는 다음 wave 가 함께 한다",
+      "affected_task_ids": [
+        "T-PH003-01",
+        "T-PH003-02"
+      ]
+    },
+    {
+      "id": "RISK-3",
+      "severity": "med",
+      "description": "설치 마법사 화면의 단계 구성을 어느 요구도 정하지 않는다 — 토큰 입력·계정·워크스페이스·권한을 몇 단계로 나눌지가 열려 있다",
+      "mitigation": "단계를 나누지 않고 한 화면에 둔다. SEC-AUTH-015 AC-4 가 「클라이언트가 단계 전환 상태를 조작해도」를 전제하므로 단계 개념 자체는 있으나, 서버가 세션으로 판정하므로 화면 구성은 자유다",
+      "affected_task_ids": [
+        "T-PH002-02"
+      ]
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "OQ-1",
+      "question": "설치 마법사가 signupMode 도 고르게 하는가. commitInstall 은 그것을 인자로 받지만 어느 AC 도 마법사에서 고른다고 말하지 않는다 — FR-AUTH-004 는 슈퍼유저 전용 인스턴스 설정으로 정의한다",
+      "blocks_task_ids": []
+    },
+    {
+      "id": "OQ-2",
+      "question": "add_verification_evidence(type='plan') 를 걸지 않았다. 이 저장소의 Verification Evidence 표는 「이 AC 가 재어졌다」는 뜻으로만 쓰이고 | plan | 타입 선례가 0건이며, 아직 하지 않은 일을 그 표에 올리면 표의 의미가 약해진다. 그 결과 validator C15 의 evidence 축이 error 로 남는다 — 알려진 편차이며 trace_link 축(29건)은 정합한다.",
+      "blocks_task_ids": []
+    }
+  ],
+  "external_module_impact": [],
+  "tdd_decisions": [],
+  "coder_handoff_readiness": [
+    {
+      "phase_id": "PH-001",
+      "ready": true,
+      "blockers": []
+    },
+    {
+      "phase_id": "PH-002",
+      "ready": true,
+      "blockers": []
+    },
+    {
+      "phase_id": "PH-003",
+      "ready": true,
+      "blockers": []
+    }
+  ],
+  "mcp_call_log": [
+    {
+      "seq": 1,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-01"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-011"
+        },
+        "relation": "verifies"
+      },
+      "args_hash": "67d60f49f6e52510c679eda9302128dbc1e63c00",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 2,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-01"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-010"
+        },
+        "relation": "verifies"
+      },
+      "args_hash": "808c5a3c0017a958064f4819a2203afe98ee58cd",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 3,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-02"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-011"
+        },
+        "relation": "implements"
+      },
+      "args_hash": "ec7eabec97d986a72513ac124e7c862ffa8b23cd",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 4,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-03"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-015"
+        },
+        "relation": "verifies"
+      },
+      "args_hash": "dff772ab2b31ed71757bb5b686e485752406d665",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 5,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-03"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-012"
+        },
+        "relation": "verifies"
+      },
+      "args_hash": "9f275939a5a92006a4528f7d05b374bf9ed2b234",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 6,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-03"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-013"
+        },
+        "relation": "verifies"
+      },
+      "args_hash": "4d2b5871d2162365e66d91cf033ead801ba26f69",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 7,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-03"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-017"
+        },
+        "relation": "verifies"
+      },
+      "args_hash": "eb22fb97692fe9a37ceb8a853725150c77d9e68c",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 8,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-04"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-015"
+        },
+        "relation": "implements"
+      },
+      "args_hash": "ad3807a48f0de87ccd1213e92f13fe146b733294",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 9,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-04"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-012"
+        },
+        "relation": "implements"
+      },
+      "args_hash": "7664f4ea8622c4347f071e2954ddf42de810632a",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 10,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-04"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-013"
+        },
+        "relation": "implements"
+      },
+      "args_hash": "a8950d2e49f1cf6e62669ae4f14c694db489174e",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 11,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-04"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-017"
+        },
+        "relation": "implements"
+      },
+      "args_hash": "9f4a5c51816a648411fe6b1c7774b84d626206d8",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 12,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-05"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-012"
+        },
+        "relation": "verifies"
+      },
+      "args_hash": "17f75155257d476ada39fd924aacf5d4a0ff2dd9",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 13,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-05"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-013"
+        },
+        "relation": "verifies"
+      },
+      "args_hash": "740d867688e1a0ad5af569540b121d928302cf47",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 14,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-05"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-014"
+        },
+        "relation": "verifies"
+      },
+      "args_hash": "32ceca81c065765bffc840a8fa5e8fa8e1db1690",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 15,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-06"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-012"
+        },
+        "relation": "implements"
+      },
+      "args_hash": "448c93e578fac3699b2d4572ab2cc559a07f6eb4",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 16,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-06"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-013"
+        },
+        "relation": "implements"
+      },
+      "args_hash": "27e4d724e7fad17a73836202482d25a43718affc",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 17,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-06"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-014"
+        },
+        "relation": "implements"
+      },
+      "args_hash": "567d62e0b451f3d3fb94b51255a6ca07b3d1e53a",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 18,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-07"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-010"
+        },
+        "relation": "verifies"
+      },
+      "args_hash": "77cec9792f647508d907f9ee887a2344a3874b05",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 19,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-08"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-010"
+        },
+        "relation": "implements"
+      },
+      "args_hash": "03397ef4826c42b672522050b62cf7dfe1ddaba5",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 20,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH002-01"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-017"
+        },
+        "relation": "verifies"
+      },
+      "args_hash": "edd3ee79144e6f9c838b9760016d39d99aa36e0e",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 21,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH002-01"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-012"
+        },
+        "relation": "verifies"
+      },
+      "args_hash": "0fa689661c5cbd594429c808bbec189fd9c40e5e",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 22,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH002-02"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-017"
+        },
+        "relation": "implements"
+      },
+      "args_hash": "4f7c337d7d68bd82423e459614676e1dc7570385",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 23,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH002-02"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-012"
+        },
+        "relation": "implements"
+      },
+      "args_hash": "eac7b924672f95c9f6bc231c01c10f5001e8c339",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 24,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH002-03"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "FR-CONFIRM-019"
+        },
+        "relation": "verifies"
+      },
+      "args_hash": "4ffaa81be03fd5cd12efa97db1a0b081d1d5d146",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 25,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH002-04"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "FR-CONFIRM-019"
+        },
+        "relation": "implements"
+      },
+      "args_hash": "bfbbe956c99e18e144d824424a72309519e6e67c",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 26,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH002-05"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-015"
+        },
+        "relation": "verifies"
+      },
+      "args_hash": "2514c8ac4e4b3030f1e131bac6c34a9b60924e45",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 27,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH002-06"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-015"
+        },
+        "relation": "implements"
+      },
+      "args_hash": "4231dbfb8e906563f1050344fafd0447e7efbba2",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 28,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH003-01"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-010"
+        },
+        "relation": "verifies"
+      },
+      "args_hash": "3420921b0e8cc8fed327d45bb14374e599321b27",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    },
+    {
+      "seq": 29,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH003-02"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "SEC-AUTH-010"
+        },
+        "relation": "implements"
+      },
+      "args_hash": "8cd8677815899ac178d79ae04e6b797ae9704f53",
+      "response_hash": null,
+      "timestamp": "2026-08-24T00:00:00Z",
+      "ok": true
+    }
+  ]
+}

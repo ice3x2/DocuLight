@@ -1,0 +1,99 @@
+[
+  {
+    "id": "SEC-AUTH-010",
+    "stability": "stable",
+    "ac_total": 5,
+    "ac_ids": [
+      "AC-1",
+      "AC-2",
+      "AC-3",
+      "AC-4",
+      "AC-5"
+    ]
+  },
+  {
+    "id": "SEC-AUTH-011",
+    "stability": "stable",
+    "ac_total": 6,
+    "ac_ids": [
+      "AC-1",
+      "AC-2",
+      "AC-3",
+      "AC-4",
+      "AC-5",
+      "AC-6"
+    ]
+  },
+  {
+    "id": "SEC-AUTH-012",
+    "stability": "stable",
+    "ac_total": 6,
+    "ac_ids": [
+      "AC-1",
+      "AC-2",
+      "AC-3",
+      "AC-4",
+      "AC-5",
+      "AC-6"
+    ]
+  },
+  {
+    "id": "SEC-AUTH-013",
+    "stability": "evolving",
+    "ac_total": 3,
+    "ac_ids": [
+      "AC-1",
+      "AC-2",
+      "AC-3"
+    ]
+  },
+  {
+    "id": "SEC-AUTH-014",
+    "stability": "stable",
+    "ac_total": 7,
+    "ac_ids": [
+      "AC-1",
+      "AC-2",
+      "AC-3",
+      "AC-4",
+      "AC-5",
+      "AC-6",
+      "AC-7"
+    ]
+  },
+  {
+    "id": "SEC-AUTH-015",
+    "stability": "stable",
+    "ac_total": 4,
+    "ac_ids": [
+      "AC-1",
+      "AC-2",
+      "AC-3",
+      "AC-4"
+    ]
+  },
+  {
+    "id": "SEC-AUTH-017",
+    "stability": "stable",
+    "ac_total": 4,
+    "ac_ids": [
+      "AC-1",
+      "AC-2",
+      "AC-3",
+      "AC-4"
+    ]
+  },
+  {
+    "id": "FR-CONFIRM-019",
+    "stability": "stable",
+    "ac_total": 6,
+    "ac_ids": [
+      "AC-1",
+      "AC-2",
+      "AC-3",
+      "AC-4",
+      "AC-5",
+      "AC-6"
+    ]
+  }
+]
