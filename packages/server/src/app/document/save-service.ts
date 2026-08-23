@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import { permissionOf, type AclStores, type Actor } from '../acl/permission-service.js';
+import { reachedByGateOnly } from '../acl/accessor-service.js';
 import type { Clock } from '../auth/login-service.js';
 import { contentHash } from '../../domain/document/content-hash.js';
 import { permits } from '../../domain/acl/level.js';
@@ -48,6 +49,14 @@ export function workspaceRootOf(stores: { docsRoot: string }, workspaceId: strin
   return join(stores.docsRoot, workspaceId);
 }
 
+/**
+ * 상방 게이트로만 닿은 열람 (`OBS-AUDIT-003` AC-3).
+ *
+ * 어느 게이트인지를 이 값에 섞지 않는다 — 섞으면 조작 값의 distinct 집합이
+ * 게이트 종류만큼 부풀어 필터가 못 쓰게 된다 (`DR-AUDIT-001` AC-7).
+ */
+export const GATED_READ = 'node.gated-read';
+
 function locate(
   stores: DocumentStores,
   nodeId: NodeId,
@@ -81,6 +90,20 @@ export async function readDocument(
   // 닫힌 조작 열거에 항목을 더하면 그 표가 요구가 정한 목록이 아니게 된다.
   const level = permissionOf(stores, actor, nodeId);
   if (level === null || !permits(level, 'view')) return { ok: false, rule: 'unknown-node' };
+
+  // **상방 게이트로만 닿은 열람은 기록한다** (`OBS-AUDIT-003` AC-3).
+  // 순수 읽기는 기록 대상이 아니지만(AC-4), 판정을 우회해 도달한 읽기는
+  // 그 자체가 기준 ③ 이다 — 완전 숨김 아래에서 관리자가 남의 문서를 여는
+  // 유일한 경로이므로, 그 사용을 되짚을 수단이 없으면 게이트가 감사 없는
+  // 만능 키가 된다.
+  if (reachedByGateOnly(stores, actor, nodeId)) {
+    stores.audit.append({
+      operation: GATED_READ,
+      actor: actor.id,
+      nodeId,
+      workspaceId: found.workspaceId,
+    });
+  }
 
   const body = await readFile(found.path, 'utf8');
   return { ok: true, body, hash: contentHash(body) };

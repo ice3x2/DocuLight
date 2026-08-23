@@ -9,7 +9,9 @@ import {
   restoreInheritance,
   revokePermission,
 } from '../../../src/app/acl/grant-service.js';
-import type { Actor } from '../../../src/app/acl/permission-service.js';
+import { actorFor, type Actor } from '../../../src/app/acl/permission-service.js';
+import { GATED_READ } from '../../../src/app/document/save-service.js';
+import { SUPERUSER_GROUP_ID } from '../../../src/domain/principal/system-groups.js';
 import { NODE_CREATE, NODE_MOVE, createNode, moveNode } from '../../../src/app/node/node-service.js';
 import { addGroupMember, removeFromGroup, setAccountStatus } from '../../../src/app/principal/principal-service.js';
 import { NODE_RESTORE, moveToTrash, restoreFromTrash } from '../../../src/app/trash/trash-service.js';
@@ -211,5 +213,42 @@ describe('OBS-AUDIT-009 — 동반 삭제되는 첨부는 행을 만들지 않�
     // 첨부 해시 같은 노드 아닌 값이 대상 칸에 오지 않는다.
     expect(rowsOf('node.purge')[0]!.nodeId).toBe(doc);
     expect(stores.auditLog.operationsInScope([ws]).filter((one) => one.includes('attach'))).toEqual([]);
+  });
+});
+
+describe('OBS-AUDIT-003 AC-3 · AC-4 — 게이트 경유 열람만 기록한다', () => {
+  it('AC-3: 상방 게이트로만 닿은 열람이 행을 남긴다', async () => {
+    const { readDocument } = await import('../../../src/app/document/save-service.js');
+
+    // 슈퍼유저는 ACL 항목이 하나도 없어도 닿는다 — 그것이 게이트다.
+    const 감사자 = stores.principals.createUser('감사자');
+    stores.principals.addMember(SUPERUSER_GROUP_ID, 감사자.id);
+
+    await readDocument(stores, actorFor(stores.principals, 감사자.id), doc);
+
+    const [행] = rowsOf(GATED_READ);
+    expect(행).toMatchObject({ actor: 감사자.id, nodeId: doc, workspaceId: ws });
+  });
+
+  it('AC-4: ACL 로 닿는 사람의 순수 읽기는 기록하지 않는다', async () => {
+    const { readDocument } = await import('../../../src/app/document/save-service.js');
+    const 한범 = stores.principals.createUser('한범');
+    grantPermission(stores, root, { nodeId: doc, principalId: 한범.id, level: 'view' });
+
+    await readDocument(stores, actorFor(stores.principals, 한범.id), doc);
+
+    // 일반 열람까지 기록하면 감사 로그가 열람 로그가 되어 관리 조작이
+    // 그 안에 묻힌다.
+    expect(rowsOf(GATED_READ)).toHaveLength(0);
+  });
+
+  it('볼 수 없는 사람의 시도는 기록하지 않는다 — 시도와 열람이 구별되지 않는다', async () => {
+    const { readDocument } = await import('../../../src/app/document/save-service.js');
+    const 구경꾼 = stores.principals.createUser('구경꾼');
+
+    const 결과 = await readDocument(stores, actorFor(stores.principals, 구경꾼.id), doc);
+
+    expect(결과.ok).toBe(false);
+    expect(rowsOf(GATED_READ)).toHaveLength(0);
   });
 });

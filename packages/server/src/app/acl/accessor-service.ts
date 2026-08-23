@@ -182,3 +182,24 @@ function activeUsers(principals: PrincipalRepository): Candidate[] {
       };
     });
 }
+
+/**
+ * 이 요청자가 **상방 게이트로만** 이 노드에 닿는가 (`OBS-AUDIT-003` AC-3).
+ *
+ * 슈퍼유저 플래그를 내리고 워크스페이스 관리 항목을 뺀 판정과, 그대로 둔
+ * 판정을 견준다 — 그대로는 닿고 내리면 못 닿으면 그것이 게이트 경유다.
+ *
+ * 두 축을 **함께** 끈다. 하나만 끄면 나머지 한쪽으로 닿는 사람이 게이트를
+ * 안 쓴 것으로 잘못 판정된다 — 접근자 지표가 쓰는 것과 같은 규칙이다.
+ */
+export function reachedByGateOnly(stores: AclStores, actor: Actor, nodeId: NodeId): boolean {
+  const ancestry = servableAncestryOf(stores, nodeId);
+  if (ancestry === null) return false;
+
+  const entries = stores.acl.entriesOnAny(judgementScope(ancestry));
+  if (effectivePermission(ancestry, entries, actor.requester) === null) return false;
+
+  const withoutGate = entries.filter((entry) => !isUpwardGate(entry, ancestry));
+  const grounded = { subjectIds: actor.requester.subjectIds, superuser: false };
+  return effectivePermission(ancestry, withoutGate, grounded) === null;
+}
