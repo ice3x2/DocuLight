@@ -103,91 +103,91 @@
     {
       "task_id": "T-PH002-01",
       "phase_id": "PH-002",
-      "status": "pending",
-      "attempts": 0,
+      "status": "done",
+      "attempts": 1,
       "trace_req_ids": [
         "SEC-AUTH-017",
         "SEC-AUTH-012"
       ],
-      "result_summary": null
+      "result_summary": "red 확인 — 부품 부재"
     },
     {
       "task_id": "T-PH002-02",
       "phase_id": "PH-002",
-      "status": "pending",
-      "attempts": 0,
+      "status": "done",
+      "attempts": 1,
       "trace_req_ids": [
         "SEC-AUTH-017",
         "SEC-AUTH-012"
       ],
-      "result_summary": null
+      "result_summary": "InstallWizard 구현 + PreAuthScreen 배선"
     },
     {
       "task_id": "T-PH002-03",
       "phase_id": "PH-002",
-      "status": "pending",
-      "attempts": 0,
+      "status": "done",
+      "attempts": 1,
       "trace_req_ids": [
         "FR-CONFIRM-019"
       ],
-      "result_summary": null
+      "result_summary": "red 확인 — 관문 없음"
     },
     {
       "task_id": "T-PH002-04",
       "phase_id": "PH-002",
-      "status": "pending",
-      "attempts": 0,
+      "status": "done",
+      "attempts": 1,
       "trace_req_ids": [
         "FR-CONFIRM-019"
       ],
-      "result_summary": null
+      "result_summary": "ConfirmGate 를 L2·지연효과로 배치"
     },
     {
       "task_id": "T-PH002-05",
       "phase_id": "PH-002",
-      "status": "pending",
-      "attempts": 0,
+      "status": "done",
+      "attempts": 1,
       "trace_req_ids": [
         "SEC-AUTH-015"
       ],
-      "result_summary": null
+      "result_summary": "red 확인 — 클라이언트 호출 없음"
     },
     {
       "task_id": "T-PH002-06",
       "phase_id": "PH-002",
-      "status": "pending",
-      "attempts": 0,
+      "status": "done",
+      "attempts": 1,
       "trace_req_ids": [
         "SEC-AUTH-015"
       ],
-      "result_summary": null
+      "result_summary": "api/client 에 설치 두 호출"
     },
     {
       "task_id": "T-PH003-01",
       "phase_id": "PH-003",
-      "status": "pending",
-      "attempts": 0,
+      "status": "done",
+      "attempts": 1,
       "trace_req_ids": [
         "SEC-AUTH-010"
       ],
-      "result_summary": null
+      "result_summary": "red 확인 — 참조 기반 판정이 뮤턴트를 놓쳐 도달 기반으로 고침"
     },
     {
       "task_id": "T-PH003-02",
       "phase_id": "PH-003",
-      "status": "pending",
-      "attempts": 0,
+      "status": "done",
+      "attempts": 1,
       "trace_req_ids": [
         "SEC-AUTH-010"
       ],
-      "result_summary": null
+      "result_summary": "허용목록 확정 — 방벽이 미배선 셋을 더 잡아 다섯이 됨"
     }
   ],
   "stats": {
     "total": 16,
-    "done": 8,
+    "done": 16,
     "running": 0,
-    "pending": 8,
+    "pending": 0,
     "failed": 0,
     "blocked": 0,
     "skipped": 0

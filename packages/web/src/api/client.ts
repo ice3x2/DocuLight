@@ -64,6 +64,27 @@ export interface SessionBody {
 
 export const fetchSession = () => call<SessionBody>('/session');
 
+/**
+ * 설치 토큰을 검증하고 **설치 세션**을 받는다 (`SEC-AUTH-015` AC-1).
+ *
+ * 돌려주는 값을 화면이 그대로 커밋 요청에 싣는다 — 화면이 지어내면
+ * 서버가 거부하고(AC-3), 지어낸 값이 통과하면 관문 자체가 무의미해진다.
+ */
+export const verifyInstallToken = async (token: string) =>
+  (await call<{ installSession: string }>('/install/verify-token', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ token }),
+  })).installSession;
+
+/** 설치를 커밋한다. 실패는 `ApiError` 로 던져 화면이 사유를 보인다. */
+export const commitInstall = (input: Record<string, unknown>) =>
+  call<{ superuserId: string; workspaceId: string; warnings: string[] }>('/install/commit', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+
 export const fetchTree = <T>() => call<T>('/tree');
 
 /** 문서 본문과 그 **기준 해시**. 저장 요청이 이 해시를 싣는다. */
