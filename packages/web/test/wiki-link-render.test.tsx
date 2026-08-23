@@ -60,3 +60,27 @@ describe('SEC-WORKSPACE-006 — 본문의 깨진 링크', () => {
     expect(await resolveWikiLink('설계')).toBeNull();
   });
 });
+
+describe('SEC-WORKSPACE-005 AC-6 — 패널과 본문이 같은 집합을 미해결로 본다', () => {
+  it('패널이 미해결로 준 이름을 본문 해석기도 풀지 못한다', async () => {
+    // 두 표면이 각자 판정하면 한쪽에서만 풀린 링크가 생기고, 그 차이가
+    // 곧 「어느 쪽 말이 맞나」를 사용자에게 떠넘긴다.
+    const 패널이준것: readonly { name: string; resolved: boolean }[] = [
+      { name: '설계', resolved: false },
+      { name: '없는것', resolved: false },
+    ];
+
+    for (const row of 패널이준것) {
+      // 패널이 미해결로 본 이름은 후보 목록에도 없다 — 서버가 같은 판정을
+      // 두 표면에 쓰기 때문이다.
+      후보([]);
+      expect(await resolveWikiLink(row.name)).toBeNull();
+    }
+  });
+
+  it('패널이 풀린 것으로 준 이름은 본문에서도 풀린다', async () => {
+    후보([{ target: '설계', label: '설계.md', detail: '기획팀' }]);
+
+    expect(await resolveWikiLink('설계')).not.toBeNull();
+  });
+});

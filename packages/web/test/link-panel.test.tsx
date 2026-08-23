@@ -1,9 +1,15 @@
 import { cleanup, render, screen, within } from '@testing-library/react';
+import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { LinkPanel, type LinkRowView } from '../src/links/LinkPanel.js';
 
 afterEach(cleanup);
+
+const WEB = existsSync(resolve(process.cwd(), 'src/main.tsx'))
+  ? process.cwd()
+  : resolve(process.cwd(), 'packages/web');
 
 const 풀린것: LinkRowView = {
   nodeId: 'n1',
@@ -61,5 +67,35 @@ describe('SEC-WORKSPACE-005 · SEC-WORKSPACE-006 — 미해결 줄의 모양', (
     render(<LinkPanel label="아웃고잉 링크" rows={[풀린것, 권한없음]} />);
 
     expect(screen.getAllByRole('button')).toHaveLength(1);
+  });
+});
+
+describe('SEC-ACL-016 — 존재가 구별되지 않는 표면에 권한 요청 버튼이 없다', () => {
+  const sources = (at: string): string[] =>
+    readdirSync(at).flatMap((name) => {
+      const full = join(at, name);
+      return statSync(full).isDirectory() ? sources(full) : /\.tsx?$/.test(name) ? [full] : [];
+    });
+
+  it('AC-1 · AC-2 · AC-3: 화면 소스 어디에도 권한 요청 자리가 없다', () => {
+    const files = sources(join(WEB, 'src'));
+    expect(files.length).toBeGreaterThan(0);
+
+    for (const file of files) {
+      const code = readFileSync(file, 'utf8');
+      // 요청 버튼은 「거기에 무언가 있다」를 전제한다 — 그 전제가 곧
+      // 존재 오라클이다. 두 표면만 막으면 셋째가 생기므로 전수로 잰다.
+      const 자리 = code.match(/권한 요청|접근 요청|requestAccess|access-request/g) ?? [];
+      expect({ file, 자리 }).toEqual({ file, 자리: [] });
+    }
+  });
+
+  it('AC-4: 그 표면에 문의 링크·연락처도 두지 않는다', () => {
+    // 미해결 줄에 문의 자리를 두면 그 줄이 「물어보면 열릴 수 있는 것」이
+    // 되고, 없는 문서에는 물어볼 것이 없으므로 둘이 갈린다.
+    const { container } = render(<LinkPanel label="아웃고잉 링크" rows={[권한없음]} />);
+
+    expect(container.querySelector('a')).toBeNull();
+    expect(container.textContent ?? '').not.toMatch(/문의|연락|관리자에게/);
   });
 });
