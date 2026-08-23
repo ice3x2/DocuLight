@@ -1,15 +1,17 @@
-# wave-7 완주와 확인 등급 체계 — 세션 핸드오프
+# wave-7 의 planned 소진과 확인 등급 체계 — 세션 핸드오프
 
 | Field | Value |
 | --- | --- |
 | 작성일 | 2026-08-23 |
 | 저장소 / 브랜치 | `C:\Work\git\DocuLight2.0` / `master` |
 | 최종 작업 목표 | Phase 1 의 wave 9개 중 남은 것을 완주해 원장 §4 수용 기준 13개를 전건 통과시킨다 |
-| 현재 상태 | **wave-7 완주.** wave-8 은 33건 중 13건. 이번 세션 커밋 11개(`70170ec`~`f745a42`). 워킹트리 clean |
+| 현재 상태 | **wave-7 의 `planned` 가 0건이 됐다 — 완주가 아니다.** 26건 중 15건 `implemented` · **11건 `in_progress`**. wave-8 은 33건 중 13건. 이번 세션 커밋 12개(`70170ec`~`e548aa9`). 워킹트리 clean |
 | SSOT | `C:\Work\git\DocuLight2.0\docs\spec\00.index.md` 와 원장 `C:\Work\git\DocuLight2.0\docs\spec\00.decision-log.md` |
 | 다음 세션 첫 행동 | 아래 「0. 다음 세션의 첫 행동」 |
 
 > 이 문서는 다음 세션이 **이 문서와 SSOT 만 읽고** 이어갈 수 있도록 쓴 것이다.
+>
+> 검증 서브에이전트가 사실 주장 105건을 판정했다 — TRUE 95 / FALSE 4 / UNVERIFIABLE 6. **FALSE 4건은 이 문서에서 고쳤다**(가장 무거운 것은 「wave-7 완주」였고, 실제로는 11건이 `in_progress` 다). UNVERIFIABLE 은 아래에서 `⚠️ 미검증` 으로 표기했다.
 
 ---
 
@@ -18,8 +20,9 @@
 1. 이 문서를 끝까지 읽는다.
 2. `git -C C:/Work/git/DocuLight2.0 status --porcelain` 로 워킹트리를 확인한다. 「3. 현재 상태」와 어긋나면 사용자에게 한 줄로 알린다.
 3. SpecKiwi MCP `get_active_target` 으로 활성 target 이 `phase-1` 인지 확인한다.
-4. **wave-8 의 남은 확인 등급 요구 20건을 이어서 구현한다.** 착수 지점은 `FR-CONFIRM-005`(입력 폼은 관문이 아니다)와 `SEC-CONFIRM-001`(확인 단계가 존재 오라클이 되지 않는다) 다 — 둘 다 이미 선 `ConfirmGate` 부품에 시험을 붙이는 일이라 새 인프라가 없다.
-5. wave-8 이 끝나면 wave-9(감사·재조정·컷오버 34건) → wave-6(찾기 계열 18건) 순으로 진행한다.
+4. **먼저 wave-7 의 `in_progress` 11건을 닫는다.** 그 11건은 「남은 작업」의 첫 절에 이름과 남은 일이 적혀 있다. 전부 **서버 계층은 서 있고 HTTP 라우트나 화면이 없는 것**이다. 완료 조건: 11건이 `implemented` 가 되고 각각 증거가 적혀 있다.
+5. 그다음 **wave-8 의 남은 확인 등급 요구 20건**을 구현한다. 착수 지점은 `FR-CONFIRM-005`(입력 폼은 관문이 아니다)와 `SEC-CONFIRM-001`(확인 단계가 존재 오라클이 되지 않는다) 다 — 둘 다 이미 선 `ConfirmGate` 부품에 시험을 붙이는 일이라 새 인프라가 없다.
+6. wave-8 이 끝나면 wave-9(감사·재조정·컷오버) → wave-6(찾기 계열) 순으로 진행한다.
 
 ---
 
@@ -32,16 +35,16 @@ Phase 1 은 **wave 9개**로 분해돼 있고 배정의 정본은 `C:\Work\git\D
 | wave | 이름 | 요구 | 상태 |
 | --- | --- | --- | --- |
 | 1~5 | 모노레포·ACL 코어·인증·셸·본문 표면 | 139 | 완료 (`pass-with-carried-residuals`) |
-| **6** | 찾기 계열 — 링크·백링크·태그·전역 검색·MCP | 18 | **미착수 · 차단 없음** |
-| **7** | 권한·주체 관리 화면과 이동·복사 | 26 | **완주** |
-| **8** | 확인 등급 | 33 | **진행 중 — 13건 완료 · 20건 남음** |
-| **9** | 감사·재조정·1.0 컷오버 (Phase 1 종료 관문) | 34 | **미착수** |
+| **6** | 찾기 계열 — 링크·백링크·태그·전역 검색·MCP | 18 | **`FR-SHELL-014` 1건만 `implemented`, 나머지 17건 미착수 · 차단 없음** |
+| **7** | 권한·주체 관리 화면과 이동·복사 | 26 | **`planned` 0건 · `implemented` 15 · `in_progress` 11** |
+| **8** | 확인 등급 | 33 | **`implemented` 13 · `planned` 20** |
+| **9** | 감사·재조정·1.0 컷오버 (Phase 1 종료 관문) | 34 | **`OBS-AUDIT-011` 1건만 `verified`, 나머지 33건 미착수** |
 
 ---
 
 ## 2. 이번 세션에 한 일
 
-커밋 11개. `git -C C:/Work/git/DocuLight2.0 log --oneline f449fe0..f745a42` 로 확인 가능.
+작업 커밋 11개(`f449fe0..f745a42`). 그 뒤 이 핸드오프 문서 커밋이 더해져 HEAD 기준으로는 12개다.
 
 | 커밋 | 내용 |
 | --- | --- |
@@ -66,7 +69,7 @@ Phase 1 은 **wave 9개**로 분해돼 있고 배정의 정본은 `C:\Work\git\D
 | `NODE_ENV=production npx vitest run --root packages/web` | 338 passed |
 | SpecKiwi MCP `validate_spec` | errors 0 / warnings 1 (`SRS-W072` — 기존) |
 
-`packages/editor` 는 이번 세션에 손대지 않았다. 마지막으로 돌린 것은 이 세션 초반이고 237 passed / 1 skipped 였다.
+`packages/editor` 는 이번 세션 커밋 11개에서 한 파일도 바뀌지 않았다(`git diff --name-only f449fe0..f745a42 | grep packages/editor` 가 0건). 그 스위트는 237 passed / 1 skipped 다.
 
 ### 요구 상태 (MCP `get_active_target` 실측, 2026-08-23)
 
@@ -82,7 +85,7 @@ Phase 1 은 **wave 9개**로 분해돼 있고 배정의 정본은 `C:\Work\git\D
 
 ### 적대 검증이 찾은 것 (`bae184c`)
 
-검증 서브에이전트가 `70170ec` 를 적대 검증해 CRITICAL 2 · HIGH 4 · MEDIUM 5 를 찾았고 전부 고쳤다.
+검증 서브에이전트가 `70170ec` 를 적대 검증했고 그 지적을 전부 고쳤다. ⚠️ 미검증 — 등급별 건수(CRITICAL 2 · HIGH 4 · MEDIUM 5)는 보고서가 저장소에 없어 대조할 수 없다. 확인할 방법: 없다. 다만 `bae184c` 의 diff 가 아래 서술과 정합적인 것은 `git show --stat bae184c` 로 확인된다.
 
 - **[CRITICAL] 원장 `R112-d` 위반.** 슈퍼유저 전용 `사용자 관리` 카테고리에 중립어 `PrincipalPicker` 를 배치해 `rejected` 계정이 사라지고 `suspended` 가 `비활성` 으로 읽혔다. 그 화면은 4상태를 그대로 표시해야 한다. 배치를 뺐고, 나중에 `FR-PRINCIPAL-009` 로 별도 명부를 세웠다.
 - **[CRITICAL] `SEC-PRINCIPAL-003` AC-4 를 어느 증거도 재지 않았다.** 「덮어쓸 경로 없음」을 **선언 인자 수**(`Function.length`)로 재고 있었는데, 기본값 인자와 prop 둘 다 그 검사를 그대로 빠져나간다. 값을 실제로 넘겨 보고 결과가 안 바뀌는 것으로 바꿨다.
@@ -95,7 +98,7 @@ Phase 1 은 **wave 9개**로 분해돼 있고 배정의 정본은 `C:\Work\git\D
 ## 3. 현재 상태
 
 - 브랜치 `master`. `git status --porcelain` **비어 있음** — 2026-08-23 확인.
-- 이 핸드오프 문서와 `docs/next/LATEST.md` 는 이 문서를 쓰는 시점에 생기므로 다음 세션의 `git status` 에는 그 둘이 미커밋으로 보인다.
+- 이 핸드오프 문서와 `docs/next/LATEST.md` 는 커밋 `e548aa9` 로 이미 들어갔고, 검증 판정을 반영한 수정이 그 뒤 한 번 더 커밋됐다.
 - 원격(`origin/master`)은 `28f7686` 로 로컬보다 한참 뒤처져 있다. **push 하지 않았다.**
 
 ---
@@ -174,7 +177,7 @@ Phase 1 은 **wave 9개**로 분해돼 있고 배정의 정본은 `C:\Work\git\D
 
 ### 이전 세션에서 확정돼 계속 유효한 것
 
-- 검색 필터 기본값은 `이름` 하나 · 마지막 조합을 브라우저에 캐시 (`R155`)
+- 검색 필터 기본값은 **`문서 제목`** 하나 · 마지막 조합을 브라우저에 캐시 (`R155`). `R161` 이 그 축을 「이름」으로 다시 읽게 했으나 그것은 **비-md 노드를 흡수하는 규칙**이지 필터 기본값의 이름이 아니다
 - 결과 건수는 언제나 「거른 뒤」 (`R156`)
 - 텍스트 색인은 비동기 백그라운드 · 색인 대기열은 설정 모달 열넷째 카테고리 (`R157`·`R157-a`·`R157-b`)
 - Phase 1 은 폴링·푸시를 두지 않는다 — 유예다 (`R158`)
@@ -209,67 +212,85 @@ Phase 1 은 **wave 9개**로 분해돼 있고 배정의 정본은 `C:\Work\git\D
 
 ## 7. 남은 작업
 
-### A. wave-8 — 확인 등급 나머지 20건
+### A. wave-7 의 `in_progress` 11건 — **여기부터**
+
+2026-08-23 실측. 전부 **서버 계층은 서 있고 HTTP 라우트나 화면이 없다.**
+
+| 요구 | 남은 일 |
+| --- | --- |
+| `IR-ACL-001` · `SEC-ACL-015` | 접근자 지표 둘(`accessorsOf`)이 라우트에 닿지 않는다. `packages/server/src/app/acl/accessor-service.ts` |
+| `FR-ACL-002` · `FR-ACL-006` | 이동·복사 프리뷰(`movePreview`·`copyPreview`)가 라우트에 닿지 않는다. `packages/server/src/app/acl/relocation-preview-service.ts` |
+| `FR-ACL-003` · `FR-PRINCIPAL-004` · `FR-PRINCIPAL-010` | 주체 축 일괄 회수(`previewRevocation`·`revokeAllFor`)가 라우트에 닿지 않는다. `packages/server/src/app/acl/bulk-revoke-service.ts` |
+| `FR-ACL-004` | 시뮬레이션(`simulate`)이 라우트에 닿지 않는다. `packages/server/src/app/acl/simulation-service.ts` |
+| `FR-ACL-005` | 상속 끊김 목록(`brokenInheritanceOf`)이 라우트에 닿지 않는다. `packages/server/src/app/acl/inheritance-audit-service.ts` |
+| `CON-PRINCIPAL-006` | AC-1 이 이름 댄 세 화면 중 공유 모달만 섰다. 워크스페이스 관리자 지정·그룹 멤버 추가가 남았다 |
+| `SEC-SHELL-003` | 깊은 복사는 섰으나 복사 조작이 화면에서 실행되는 경로가 없다 |
+
+- [ ] **A-1** 위 여섯 서비스에 HTTP 라우트를 붙인다. 완료 조건: `grep -rn "previewRevocation|revokeAllFor|simulate|brokenInheritanceOf|movePreview|copyPreview" packages/server/src/http/` 가 0건이 아니고, 각 라우트의 인가가 요청으로 재어진다
+- [ ] **A-2** 그 라우트를 쓰는 화면을 세운다 — `권한 감사` 카테고리(시뮬레이션·상속 끊김·일괄 회수)와 트리 컨텍스트 메뉴(이동·복사 프리뷰)
+- [ ] **A-3** 11건을 `implemented` 로 올리고 증거를 적는다
+
+### B. wave-8 — 확인 등급 나머지 20건
 
 `docs/spec/11.confirmation-grades.srs.md` 에서 `Status | planned` 인 것들이다. 2026-08-23 실측 목록:
 
 `FR-CONFIRM-005` · `FR-CONFIRM-009` · `FR-CONFIRM-013` · `FR-CONFIRM-014` · `FR-CONFIRM-015` · `FR-CONFIRM-016` · `FR-CONFIRM-017` · `FR-CONFIRM-018` · `FR-CONFIRM-019` · `FR-CONFIRM-020` · `FR-CONFIRM-021` · `FR-CONFIRM-022` · `FR-CONFIRM-023` · `SEC-CONFIRM-001` · `SEC-CONFIRM-004` · `SEC-CONFIRM-005` · `SEC-CONFIRM-006` · `SEC-CONFIRM-007` · `DR-CONFIRM-001` · `CON-CONFIRM-001`
 
-- [ ] **A-1** `FR-CONFIRM-005`(입력 폼은 관문이 아니다) · `SEC-CONFIRM-001`(확인 단계가 존재 오라클이 되지 않는다) — **여기부터.** 완료 조건: 두 요구의 AC 가 `ConfirmGate` 위의 시험으로 재어진다
-- [ ] **A-2** `FR-CONFIRM-009`(오프보딩 멤버십 제거 L2 + 그룹 이름 전량 나열) · `FR-CONFIRM-013`(컨테이너 공통 상속 고지) — 완료 조건: 둘의 AC 가 재어진다
-- [ ] **A-3** 나머지 16건의 AC 를 읽고 묶어 구현. 완료 조건: 20건이 `implemented` 이상이고 증거가 적혀 있다
+- [ ] **B-1** `FR-CONFIRM-005`(입력 폼은 관문이 아니다) · `SEC-CONFIRM-001`(확인 단계가 존재 오라클이 되지 않는다) — **여기부터.** 완료 조건: 두 요구의 AC 가 `ConfirmGate` 위의 시험으로 재어진다
+- [ ] **B-2** `FR-CONFIRM-009`(오프보딩 멤버십 제거 L2 + 그룹 이름 전량 나열) · `FR-CONFIRM-013`(컨테이너 공통 상속 고지) — 완료 조건: 둘의 AC 가 재어진다
+- [ ] **B-3** 나머지 16건의 AC 를 읽고 묶어 구현. 완료 조건: 20건이 `implemented` 이상이고 증거가 적혀 있다
 
-### B. wave-9 — 감사·재조정·1.0 컷오버 (요구 34건 · **Phase 1 종료 관문**)
+### C. wave-9 — 감사·재조정·1.0 컷오버 (요구 34건 · **Phase 1 종료 관문**)
 
-- [ ] **B-1** 34건 상태 확인 → **B-2** `docs\analysis\kiwi-wave-master-2026-08-20.doculight2.phase1-implementation\design-baseline\wave-9.md` 정독
-- [ ] **B-3** `G37` 판정 — 완료 조건: 만료 처분이 원장에 조항으로 기록됐다
-- [ ] **B-4** TDD 구현 · **B-5** 수용 기준 1번 수동 검증 기록 · **B-6** 수용 기준 13번 자동 검증
+- [ ] **C-1** 34건 상태 확인 → **B-2** `docs\analysis\kiwi-wave-master-2026-08-20.doculight2.phase1-implementation\design-baseline\wave-9.md` 정독
+- [ ] **C-3** `G37` 판정 — 완료 조건: 만료 처분이 원장에 조항으로 기록됐다
+- [ ] **C-4** TDD 구현 · **C-5** 수용 기준 1번 수동 검증 기록 · **B-6** 수용 기준 13번 자동 검증
 
-### C. wave-6 — 찾기 계열 (요구 18건 · 차단 없음)
+### D. wave-6 — 찾기 계열 (요구 18건 · 차단 없음)
 
-- [ ] **C-1** `R160` bigram 파생 색인 — 완료 조건: 한국어 2자 질의가 어절 중간까지 걸리고 `FR-SHELL-014` 의 AC 가 통과한다
-- [ ] **C-2** `R157` 비동기 색인 워커 + `R157-a` 색인 대기열 화면. **`인스턴스 설정` 다섯 값에 섞지 마라**
-- [ ] **C-3** `FR-SHELL-013` 구현(AC 열둘) · `R161` PDF 본문 색인(페이지 번호 포함)
-- [ ] **C-4** MCP 서버 패키지 신설
+- [ ] **D-1** `R160` bigram 파생 색인 — 완료 조건: 한국어 2자 질의가 어절 중간까지 걸린다. **`FR-SHELL-014` 는 이미 `implemented` 다** — 그 AC 를 새로 통과시키는 것이 아니라 기존 시험을 깨지 않는 것이 조건이다
+- [ ] **D-2** `R157` 비동기 색인 워커 + `R157-a` 색인 대기열 화면. **`인스턴스 설정` 다섯 값에 섞지 마라**
+- [ ] **D-3** `FR-SHELL-013` 구현(AC 열둘) · `R161` PDF 본문 색인(페이지 번호 포함)
+- [ ] **D-4** MCP 서버 패키지 신설
 
-### D. 화면 배선이 남은 것
+### E. 화면 배선이 남은 것
 
 이번 세션이 만든 부품 여럿이 **`App.tsx` 에 연결되지 않았다.** `grep -rn "ShareModal\|ConfirmGate\|OffboardingCard\|NewWorkspaceForm\|WorkspaceList" packages/web/src/App.tsx packages/web/src/shell/AppShell.tsx` 로 확인할 것.
 
-- [ ] **D-1** `ShareModal` 을 트리 컨텍스트 메뉴에 잇는다
-- [ ] **D-2** `ConfirmGate` 를 휴지통 영구 삭제·그룹 삭제·PAT 폐기 경로에 잇는다
-- [ ] **D-3** `OffboardingCard` 를 `사용자 관리` 화면과 주체 일괄 회수 화면 양쪽에 잇는다 (`CON-PRINCIPAL-004` AC-2)
-- [ ] **D-4** `NewWorkspaceForm`·`WorkspaceList` 를 `워크스페이스` 카테고리에 잇는다
+- [ ] **E-1** `ShareModal` 을 트리 컨텍스트 메뉴에 잇는다
+- [ ] **E-2** `ConfirmGate` 를 휴지통 영구 삭제·그룹 삭제·PAT 폐기 경로에 잇는다
+- [ ] **E-3** `OffboardingCard` 를 `사용자 관리` 화면과 주체 일괄 회수 화면 양쪽에 잇는다 (`CON-PRINCIPAL-004` AC-2)
+- [ ] **E-4** `NewWorkspaceForm`·`WorkspaceList` 를 `워크스페이스` 카테고리에 잇는다
 
 배선되지 않은 서버 서비스도 남아 있다 — `previewRevocation`·`revokeAllFor`·`simulate`·`brokenInheritanceOf`·`movePreview`·`copyPreview` 여섯은 어떤 HTTP 라우트에도 닿지 않는다(이전 세션에 만든 것들이며 이번 세션에도 배선하지 않았다).
 
-### E. `in_progress` 로 남은 31건
+### F. `in_progress` 로 남은 31건
 
 MCP `list_requirements --status in_progress` 로 목록을 얻는다. 대부분 **서버 계층만 서고 화면·라우트가 없는 것**이다.
 
-### F. 자동 검증이 닿지 않는 자리
+### G. 자동 검증이 닿지 않는 자리
 
-- [ ] **F-1** `FR-EDITOR-007` AC-7 브라우저 확인 — `C:\Work\git\DocuLight2.0\packages\editor\test\live-preview.test.tsx` 에 사유를 적어 `it.skip` 으로 남아 있다
-- [ ] **F-2** 원장 §4 수용 기준 7번(한글 IME) 수동 검증
+- [ ] **G-1** `FR-EDITOR-007` AC-7 브라우저 확인 — `C:\Work\git\DocuLight2.0\packages\editor\test\live-preview.test.tsx` 에 사유를 적어 `it.skip` 으로 남아 있다
+- [ ] **G-2** 원장 §4 수용 기준 7번(한글 IME) 수동 검증
 
-### G. wave 1~5 이월 잔여
+### H. wave 1~5 이월 잔여
 
-- [ ] **G-1** `W5-01` — wave-4·5 가 독립 검증을 받지 못했다
-- [ ] **G-2** `W5-03` — Playwright E2E 미수행
-- [ ] **G-3** `W5-04` — `FR-STORAGE-008` 의 실물 이동 축
+- [ ] **H-1** `W5-01` — wave-4·5 가 독립 검증을 받지 못했다
+- [ ] **H-2** `W5-03` — Playwright E2E 미수행
+- [ ] **H-3** `W5-04` — `FR-STORAGE-008` 의 실물 이동 축
 
-### H. 소소한 잔존
+### I. 소소한 잔존
 
-- [ ] **H-1** `C:\Work\git\DocuLight2.0\packages\web\src\principal\PrincipalPicker.tsx` 디바운스 없음 — 두 글자 이상에서 타건마다 요청이 나간다. 어느 AC 도 요청 빈도를 정하지 않는다
-- [ ] **H-2** 노드 영구 삭제 후 `favorite` 표에 죽은 행이 남음
-- [ ] **H-3** `C:\Work\git\DocuLight2.0\packages\server\src\http\routes\workspace-api.ts` 의 `one()` 이 깊게 중첩된 JSON 배열에 500. ⚠️ 미검증 — 재현하지 않았다. 확인할 방법: 서버를 띄우고 깊게 중첩된 배열을 그 엔드포인트에 보낸다
+- [ ] **I-1** `C:\Work\git\DocuLight2.0\packages\web\src\principal\PrincipalPicker.tsx` 디바운스 없음 — 두 글자 이상에서 타건마다 요청이 나간다. 어느 AC 도 요청 빈도를 정하지 않는다
+- [ ] **I-2** 노드 영구 삭제 후 `favorite` 표에 죽은 행이 남음
+- [ ] **I-3** `C:\Work\git\DocuLight2.0\packages\server\src\http\routes\workspace-api.ts` 의 `one()` 이 깊게 중첩된 JSON 배열에 500. ⚠️ 미검증 — 재현하지 않았다. 확인할 방법: 서버를 띄우고 깊게 중첩된 배열을 그 엔드포인트에 보낸다
 
 ---
 
 ## 8. 다음 세션 지시서
 
-1. **A-1 부터 시작한다** — `FR-CONFIRM-005`·`SEC-CONFIRM-001`. 새 인프라가 없고 이미 선 `ConfirmGate` 에 시험을 붙이는 일이다.
-   → 검증: 두 요구의 AC 가 재어지고 `NODE_ENV=production npx vitest run --root packages/web` 이 통과한다.
+1. **A-1 부터 시작한다** — wave-7 의 `in_progress` 11건에 라우트를 붙인다. 그다음이 wave-8 의 `FR-CONFIRM-005`·`SEC-CONFIRM-001` 이다.
+   → 검증: 11건이 `implemented` 가 되고 `NODE_ENV=production npx vitest run --root packages/server` 이 통과한다.
 2. **각 묶음마다 TDD.** 실패 시험 먼저 → red 확인 → 최소 구현 → 뮤테이션 탐침으로 그 시험이 실제로 재는지 확인.
 3. **묶음이 끝나면 커밋하고 검증 서브에이전트를 띄워 그 커밋 범위를 적대적으로 검증한다.**
 4. wave-8 이 끝나면 wave-9 → wave-6 순으로. wave-6 은 새 인프라(bigram 색인·비동기 워커·MCP 패키지)가 커서 마지막에 둔다.
@@ -287,12 +308,12 @@ MCP `list_requirements --status in_progress` 로 목록을 얻는다. 대부분 
 
 ### 이번 세션에 실제로 밟은 함정
 
-- **MCP 인자에 한글 유니코드 이스케이프를 쓰면 오타가 난다.** 이번 세션에 「댑」(→댄) 오타가 한 번 났고 재전송으로 고쳤다. **한글을 직접 넣어라.**
+- **MCP 인자에 한글 유니코드 이스케이프를 쓰면 오타가 난다. 한글을 직접 넣어라.** ⚠️ 미검증 — 발생 사례(「댑」→「댄」)는 같은 턴에 교정돼 저장소에 남지 않았다. 확인할 방법: 없다. **함정 자체는 이스케이프를 쓰지 않으면 성립하지 않는다.**
 - **`append_section_note` 가 날짜를 자동으로 붙인다.** 본문에 날짜를 또 적으면 `[2026-08-22] [2026-08-23]` 처럼 두 번 찍힌다. 날짜를 적지 마라.
 - **`append_section_note` 의 섹션 이름은 `implementation_notes` 형태다.** `Implementation Notes`·`implementation` 은 `unknown section` 으로 거절된다. `change_notes` 는 **존재하지 않는다** — Change Notes 표를 쓰는 MCP 도구가 없다.
 - **`list_requirements` 의 `projection` 은 `ids`·`compact`·`full` 셋뿐이다.** `summary` 는 거절된다.
 - **`edit_requirement_table_rows` 의 컬럼명은 소문자다** — `notes`·`covers`·`type`·`reference`. `Notes` 는 거절된다.
-- **뮤테이션 탐침의 원본 복사를 작업 **전에** 뜨면 그 사이의 리팩터가 되돌아온다.** 이번 세션에 `roster-service.ts` 를 그렇게 잃고 다시 고쳤다. 복사는 **탐침 직전에** 뜬다.
+- **뮤테이션 탐침의 원본 복사는 탐침 직전에 뜬다.** 작업 전에 떠 두면 그 사이의 리팩터가 복원과 함께 되돌아온다. ⚠️ 미검증 — 이번 세션에 `roster-service.ts` 에서 그것을 겪었다는 서술은 워킹트리 사건이라 커밋 이력에 남지 않는다. 확인할 방법: 없다.
 - **bash heredoc 에 긴 Python 을 넣으면 인용이 깨진다.** 스크래치패드(`C:\Users\beom\AppData\Local\Temp\claude\...\scratchpad\`)에 `.py` 파일로 쓰고 실행하라.
 - **PowerShell here-string(`@'...'@`)을 bash 에 쓰면 커밋 메시지에 `@` 가 섞인다.** 긴 커밋 메시지는 파일에 쓰고 `git commit -F` 를 쓴다.
 - **`NODE_ENV` 가 이 셸에 `production` 으로 박혀 있다.** 설치가 필요하면 `NODE_ENV=development npm install --include=dev`. `vitest` 는 `NODE_ENV=production` 으로 돌린다.
