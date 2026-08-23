@@ -345,3 +345,40 @@ describe('FR-WORKSPACE-002 AC-1 — 자동완성 후보가 경계를 넘는다',
     expect(후보.find((one) => one.target === '급여표')?.detail).toBe('인사팀');
   });
 });
+
+describe('SEC-WORKSPACE-005 — 아웃고잉 패널은 필터의 예외다', () => {
+  it('AC-1 · AC-2: 본문의 위키링크 수와 패널의 항목 수가 같다', async () => {
+    await write(회의록, '[[설계]] 와 [[없는것]] 과 [[또없는것]]\n');
+    grantPermission(stores, root, { nodeId: 회의록, principalId: me.id, level: 'view' });
+
+    const 본것 = (await linksOf(stores, actorFor(stores.principals, me.id), 회의록))!;
+
+    // 하나라도 생략하면 사용자는 자기가 적은 링크가 사라졌다고 읽는다.
+    expect(본것.outgoing).toHaveLength(3);
+  });
+
+  it('AC-3 · AC-5: 없는 문서와 권한 없는 문서의 줄이 값까지 같다', async () => {
+    await write(회의록, '[[설계]] 와 [[없는것]]\n');
+    grantPermission(stores, root, { nodeId: 회의록, principalId: me.id, level: 'view' });
+
+    const 본것 = (await linksOf(stores, actorFor(stores.principals, me.id), 회의록))!;
+    const [권한없음, 없는것] = 본것.outgoing;
+
+    // 사유 코드·플래그가 실리면 그 값이 곧 그 문서의 존재를 알린다.
+    expect({ ...권한없음, name: '' }).toEqual({ ...없는것, name: '' });
+  });
+
+  it('AC-7: 백링크에는 이 예외를 적용하지 않는다', async () => {
+    const 남의것 = idOf(
+      createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'file', name: '남의것.md' }),
+    );
+    await write(남의것, '[[설계]] 를 본다\n');
+    grantPermission(stores, root, { nodeId: 설계, principalId: me.id, level: 'view' });
+
+    const 본것 = (await linksOf(stores, actorFor(stores.principals, me.id), 설계))!;
+
+    // 아웃고잉은 요청자가 적은 것이고 백링크는 남이 적은 것이라 이름조차
+    // 새 정보다 — 그래서 필터가 그대로 남는다.
+    expect(본것.backlinks).toEqual([]);
+  });
+});
