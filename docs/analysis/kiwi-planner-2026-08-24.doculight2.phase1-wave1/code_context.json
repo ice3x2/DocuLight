@@ -1,0 +1,133 @@
+{
+  "req_anchors": [
+    {
+      "req_id": "FR-CONFIRM-019",
+      "files": [
+        {
+          "path": "packages/web/src/workspace/NewWorkspaceForm.tsx",
+          "line_range": "98-110",
+          "signature": "ConfirmGate — AC-1~AC-5 의 정본 구현"
+        },
+        {
+          "path": "packages/web/src/confirm/ConfirmGate.tsx",
+          "line_range": "33-45",
+          "signature": "ConfirmGate({open, grade, title, token, counts, delayedEffect, onRecount, onConfirm, onCancel, children})"
+        },
+        {
+          "path": "packages/web/src/auth/PreAuthScreen.tsx",
+          "line_range": "24-33",
+          "signature": "PreAuthScreen({screen}) — install 은 라벨과 h1 뿐인 자리표"
+        }
+      ]
+    },
+    {
+      "req_id": "OBS-AUDIT-001",
+      "files": [
+        {
+          "path": "packages/server/test/app/audit/recorded-operations.test.ts",
+          "line_range": null,
+          "signature": "AC-1·AC-2 증거. 아카이브·복원만 재지 못한다"
+        },
+        {
+          "path": "packages/server/src/domain/audit/recordable.ts",
+          "line_range": null,
+          "signature": "기록 기준 판정 — 조작 이름이 하나도 없다"
+        }
+      ]
+    }
+  ],
+  "missing_anchors": [
+    "packages/server/src/http/routes/install.ts — 존재하지 않는다",
+    "packages/web/src/auth/InstallWizard.tsx — 존재하지 않는다",
+    "packages/server/src 전역에 archivedAt 칸·아카이브 라우트 없음"
+  ],
+  "external_paths_detected": [],
+  "addition_sites": [
+    "packages/server/src/http/routes/ — 설치 라우트가 들어갈 자리 (auth.ts 와 나란히)",
+    "packages/server/src/main.ts:51-56 createApp — gate 를 넘기는 자리",
+    "packages/web/src/auth/PreAuthScreen.tsx:24 — 화면이 들어갈 자리"
+  ],
+  "critical_findings": [
+    {
+      "id": "CF-0",
+      "severity": "CRITICAL",
+      "summary": "인증 계열 네 축이 통째로 제품 조립에서 빠져 있다 — 설치·가입·비밀번호 변경·PAT. 열두 요구(하나는 verified)가 그 위에 implemented 로 서 있다",
+      "evidence": [
+        "제품 코드(src/**, 시험 제외)가 import 하지 않는 app 모듈 4개: src/app/auth/password-service.ts · src/app/auth/signup-service.ts · src/app/auth/token-service.ts · src/app/install/install-service.ts",
+        "packages/server/src/http/routes/auth.ts 의 라우트는 /auth/login · /auth/logout · /auth/me 셋뿐이다",
+        "packages/server/src/main.ts:63-70 apiRouter 가 authRouter 와 workspaceApiRouter 둘만 붙인다",
+        "packages/server/src/main.ts:51-56 createApp 가 gate 를 넘기지 않아 installGate 가 운영 경로에 서지 않는다"
+      ],
+      "affected_requirements": {
+        "verified": [
+          "FR-AUTH-002 (가입 재심사 — signup-service 가 라우트에 없다)"
+        ],
+        "implemented": [
+          "SEC-AUTH-004",
+          "SEC-AUTH-005",
+          "SEC-AUTH-007",
+          "SEC-AUTH-009",
+          "SEC-AUTH-010",
+          "SEC-AUTH-012",
+          "SEC-AUTH-013",
+          "SEC-AUTH-014",
+          "SEC-AUTH-015",
+          "SEC-AUTH-017",
+          "SEC-AUTH-018"
+        ]
+      },
+      "sample_false_acs": {
+        "SEC-AUTH-018": "AC-1 「설정 모달 개인 구역의 계정 카테고리에서 자기 비밀번호를 변경할 수 있다」 — 그 화면도 라우트도 없다",
+        "SEC-AUTH-007": "AC-1·AC-2 「사용자는 자기 계정의 PAT 를 발급·폐기할 수 있다」 — 표면이 없다",
+        "SEC-AUTH-013": "AC-3 「만료 시각이 절대시각으로 콘솔에 출력된다」 — 기동이 mintInstallToken 을 부르지 않는다"
+      },
+      "impact": "슈퍼유저 0명인 새 인스턴스는 최초 슈퍼유저를 만들 경로가 없어 아무도 로그인하지 못한다. 제품이 첫 기동에서 사용 불가다.",
+      "note": "증거는 전부 서비스 계층 단위 시험이며, 그 부품이 제품 조립에 들어가 있는지를 재는 시험이 어느 요구에도 없다. 2026-08-24 감사 축에서 고친 것과 같은 부류이며 규모가 더 크다."
+    },
+    {
+      "id": "CF-1",
+      "severity": "CRITICAL",
+      "summary": "설치 경로가 제품에 통째로 없다 — 새 인스턴스는 최초 슈퍼유저를 만들 수 없어 아무도 로그인하지 못한다",
+      "evidence": [
+        "packages/server/src/http/middleware/install-gate.ts:16-21 — INSTALL_ALLOWLIST 가 /install · /install-assets · /api/install/verify-token · /api/install/commit 넷을 허용한다",
+        "packages/server/src/http/routes/ 에 install.ts 가 없고, auth.ts 의 라우트는 /auth/login · /auth/logout · /auth/me 셋뿐이다 — 허용목록의 API 둘이 404 다",
+        "packages/server/src/main.ts:51-56 createApp 가 createHttpServer 에 gate 를 넘기지 않는다 — installGate 는 시험에서만 주입된다",
+        "packages/server/src/app/install/install-service.ts 의 mintInstallToken · beginInstallSession · commitInstall 을 부르는 제품 코드가 없다 (전수 grep 0건)",
+        "packages/web/src/auth/PreAuthScreen.tsx:24-33 — install 화면이 h1 하나다"
+      ],
+      "false_acs": {
+        "SEC-AUTH-010": [
+          "AC-1 (설치 화면으로 유도)",
+          "AC-2 (마법사 외 경로로 못 만든다)",
+          "AC-5 (완료 후 다시 안 나타난다)"
+        ],
+        "SEC-AUTH-011": [
+          "AC-1~AC-6 전부 — 게이트가 운영 경로에 서지 않는다"
+        ],
+        "SEC-AUTH-012": [
+          "AC-1 (콘솔 출력)",
+          "AC-2~AC-6 (제품 경로 부재)"
+        ],
+        "SEC-AUTH-015": [
+          "AC-1~AC-4 (제품 경로 부재)"
+        ],
+        "SEC-AUTH-017": [
+          "AC-1 (마법사에서 고른다)",
+          "AC-4 (마법사가 경고를 표시한다)"
+        ]
+      },
+      "note": "다섯 요구 모두 Status=implemented 다. 증거는 전부 서비스 계층·미들웨어 단위 시험이며, 그 부품들이 제품 조립에 들어가 있는지를 재는 시험이 없다."
+    },
+    {
+      "id": "CF-2",
+      "severity": "HIGH",
+      "summary": "OBS-AUDIT-001(phase-1 · stable) AC-2 가 phase-2 · draft 요구의 기능에 의존한다",
+      "evidence": [
+        "docs/spec/12.audit-log.srs.md OBS-AUDIT-001 AC-2 — R84 가 열거한 8개 조작에 아카이브·복원이 든다",
+        "docs/spec/13.workspace.srs.md FR-WORKSPACE-007 · FR-WORKSPACE-008 — Target=phase-2 · Stability=draft · [DRAFT — pending decision]",
+        "docs/spec/13.workspace.srs.md:49 — 아카이브 계열 두 요구는 Phase 2 다"
+      ],
+      "resolution": "3축 시니어 심의 진행 중"
+    }
+  ]
+}

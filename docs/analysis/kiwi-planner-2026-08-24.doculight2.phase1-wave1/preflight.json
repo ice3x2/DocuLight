@@ -1,0 +1,11 @@
+{
+  "mcp": true,
+  "cli": null,
+  "halted": false,
+  "mode": "mcp",
+  "work_mode": "sdd",
+  "tdd_policy_derived": "relaxed",
+  "tdd_policy_explicit": "strict",
+  "tdd_policy_resolved": "strict",
+  "warn": "명시 --tdd-policy=strict 가 work-mode sdd 의 파생 기본 relaxed 를 이긴다"
+}

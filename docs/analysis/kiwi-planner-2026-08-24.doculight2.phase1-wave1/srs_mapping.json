@@ -1,0 +1,212 @@
+{
+  "req_inventory": [
+    {
+      "req_id": "FR-CONFIRM-019",
+      "stability": "stable",
+      "status": "in_progress",
+      "ac_total": 6,
+      "ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4",
+        "AC-5",
+        "AC-6"
+      ],
+      "file": "docs/spec/11.confirmation-grades.srs.md"
+    },
+    {
+      "req_id": "OBS-AUDIT-001",
+      "stability": "stable",
+      "status": "in_progress",
+      "ac_total": 5,
+      "ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4",
+        "AC-5"
+      ],
+      "file": "docs/spec/12.audit-log.srs.md"
+    },
+    {
+      "req_id": "SEC-AUTH-010",
+      "stability": "stable",
+      "status": "implemented",
+      "ac_total": 5,
+      "ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4",
+        "AC-5"
+      ],
+      "file": "docs/spec/09.auth.srs.md"
+    },
+    {
+      "req_id": "SEC-AUTH-011",
+      "stability": "stable",
+      "status": "implemented",
+      "ac_total": 6,
+      "ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4",
+        "AC-5",
+        "AC-6"
+      ],
+      "file": "docs/spec/09.auth.srs.md"
+    },
+    {
+      "req_id": "SEC-AUTH-012",
+      "stability": "stable",
+      "status": "implemented",
+      "ac_total": 6,
+      "ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4",
+        "AC-5",
+        "AC-6"
+      ],
+      "file": "docs/spec/09.auth.srs.md"
+    },
+    {
+      "req_id": "SEC-AUTH-013",
+      "stability": "evolving",
+      "status": "implemented",
+      "ac_total": 3,
+      "ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3"
+      ],
+      "file": "docs/spec/09.auth.srs.md"
+    },
+    {
+      "req_id": "SEC-AUTH-014",
+      "stability": "stable",
+      "status": "implemented",
+      "ac_total": 7,
+      "ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4",
+        "AC-5",
+        "AC-6",
+        "AC-7"
+      ],
+      "file": "docs/spec/09.auth.srs.md"
+    },
+    {
+      "req_id": "SEC-AUTH-015",
+      "stability": "stable",
+      "status": "implemented",
+      "ac_total": 4,
+      "ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4"
+      ],
+      "file": "docs/spec/09.auth.srs.md"
+    },
+    {
+      "req_id": "SEC-AUTH-017",
+      "stability": "stable",
+      "status": "implemented",
+      "ac_total": 4,
+      "ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4"
+      ],
+      "file": "docs/spec/09.auth.srs.md"
+    },
+    {
+      "req_id": "SEC-AUTH-018",
+      "stability": "evolving",
+      "status": "implemented",
+      "ac_total": 4,
+      "ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4"
+      ],
+      "file": "docs/spec/09.auth.srs.md"
+    },
+    {
+      "req_id": "SEC-AUTH-005",
+      "stability": "stable",
+      "status": "implemented",
+      "ac_total": 5,
+      "ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4",
+        "AC-5"
+      ],
+      "file": "docs/spec/09.auth.srs.md"
+    },
+    {
+      "req_id": "SEC-AUTH-007",
+      "stability": "stable",
+      "status": "implemented",
+      "ac_total": 5,
+      "ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4",
+        "AC-5"
+      ],
+      "file": "docs/spec/09.auth.srs.md"
+    },
+    {
+      "req_id": "SEC-AUTH-009",
+      "stability": "evolving",
+      "status": "implemented",
+      "ac_total": 4,
+      "ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4"
+      ],
+      "file": "docs/spec/09.auth.srs.md"
+    },
+    {
+      "req_id": "SEC-AUTH-004",
+      "stability": "stable",
+      "status": "implemented",
+      "ac_total": 4,
+      "ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4"
+      ],
+      "file": "docs/spec/09.auth.srs.md"
+    },
+    {
+      "req_id": "FR-AUTH-002",
+      "stability": "stable",
+      "status": "verified",
+      "ac_total": 4,
+      "ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4"
+      ],
+      "file": "docs/spec/09.auth.srs.md"
+    }
+  ],
+  "dependency_graph": []
+}
