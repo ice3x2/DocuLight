@@ -76,7 +76,9 @@ describe('DR-AUDIT-002 — 감사 행의 칸 구성', () => {
       db.run(
         "INSERT INTO audit_log (id, operation, actor, counterpart_node_id, target_role) VALUES ('x', 'node.copy', 'u1', 'n2', '원본도사본도아님')",
       ),
-    ).toThrow();
+      // 사유를 고정한다 — 맨 `toThrow()` 는 오타 같은 무관한 SQL 오류로도
+      // 통과해 「스키마가 막았다」는 결론을 뒷받침하지 못한다.
+    ).toThrow(/CHECK constraint failed/i);
   });
 
   it('AC-5: 상대 노드가 비면 대상 역할도 함께 빈다 — 어긋난 행이 들어오지 않는다', () => {

@@ -1,6 +1,7 @@
 import { actorFor, type AclStores } from '../acl/permission-service.js';
 import { registerAccount } from '../auth/account-service.js';
 import type { Clock } from '../auth/login-service.js';
+import { addGroupMember } from '../principal/principal-service.js';
 import { createWorkspaceAs } from '../workspace/create-workspace.js';
 import type { GrantLevel } from '../../domain/acl/level.js';
 import { newSecretToken, secretTokenEquals } from '../../domain/auth/secret-token.js';
@@ -9,7 +10,7 @@ import { canAuthenticate } from '../../domain/auth/account-gate.js';
 import type { PasswordHasher } from '../../domain/ports/password-hasher.js';
 import type { WorkspaceFiles } from '../../domain/ports/workspace-files.js';
 import type { PrincipalId } from '../../domain/principal/principal.js';
-import { DEFAULT_GROUP_ID, SUPERUSER_GROUP_ID } from '../../domain/principal/system-groups.js';
+import { SUPERUSER_GROUP_ID } from '../../domain/principal/system-groups.js';
 
 /** 설치 토큰의 수명 (`SEC-AUTH-013` AC-1). */
 export const INSTALL_TOKEN_MINUTES = 30;
@@ -185,26 +186,31 @@ export async function commitInstall(
   });
   if (!account.ok) return { ok: false, rule: 'empty-password' };
 
-  stores.principals.addMember(SUPERUSER_GROUP_ID, account.id);
+  // 편입도 기록한다 (`OBS-AUDIT-003` AC-2). 빠뜨리면 「누가 슈퍼유저가
+  // 됐나」의 **최초** 사건만 이력에서 사라지고 그 뒤의 편입은 전부 남는다.
+  // 행위자는 자기 자신이다 — 설치 시점에 다른 주체가 없다.
+  addGroupMember(stores.principals, SUPERUSER_GROUP_ID, account.id, {
+    audit: stores.audit,
+    actor: account.id,
+  });
 
+  // 배우는 편입 **뒤에** 세운다 — `actorFor` 가 그 시점의 소속을 담으므로
+  // 앞에 세우면 슈퍼유저가 아닌 배우가 워크스페이스를 만들려 든다.
   const installer = actorFor(stores.principals, account.id);
+
+  // default 초기 권한도 **워크스페이스 생성이 부여한다** (`OBS-AUDIT-005`
+  // AC-10). 여기서 저장소를 직접 만지면 같은 책임이 두 곳에 갈리고, 감사
+  // 행을 남기는 쪽은 한 곳뿐이라 이쪽 부여만 조용히 무기록이 된다.
   const workspace = await createWorkspaceAs(
     { ...stores, files: stores.files },
     installer,
-    { name: input.workspaceName, administratorId: account.id },
+    {
+      name: input.workspaceName,
+      administratorId: account.id,
+      ...(input.defaultGroupLevel === 'none' ? {} : { defaultGroupLevel: input.defaultGroupLevel }),
+    },
   );
   if (!workspace.ok) return { ok: false, rule: 'workspace-failed' };
-
-  // default 그룹의 초기 권한 (`SEC-AUTH-017` AC-3). `없음` 은 항목을
-  // **만들지 않는** 것이지 레벨이 아니다 — 「권한 없음」은 값이 아니라 부재다.
-  if (input.defaultGroupLevel !== 'none') {
-    stores.acl.grant({
-      nodeId: workspace.workspace.id,
-      principalId: DEFAULT_GROUP_ID,
-      level: input.defaultGroupLevel,
-      grantedBy: null,
-    });
-  }
 
   stores.settings.set('signup-mode', input.signupMode);
 

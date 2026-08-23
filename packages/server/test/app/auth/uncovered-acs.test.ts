@@ -156,7 +156,10 @@ describe('SEC-AUTH-010 AC-2 — 마법사 밖에서 최초 슈퍼유저를 만�
     const 자리 = sourceFiles(SRC)
       .filter((file) => {
         const code = codeOf(readFileSync(file, 'utf8'));
-        return code.includes('SUPERUSER_GROUP_ID') && /addMember\s*\(/.test(code);
+        // 저장소를 직접 부르는 `addMember` 와 서비스를 지나는
+        // `addGroupMember` 를 함께 본다 — 하나만 보면 다른 하나로 옮기는
+        // 것만으로 이 시험이 조용히 통과한다.
+        return code.includes('SUPERUSER_GROUP_ID') && /add(Group)?Member\s*\(/.test(code);
       })
       .map((file) => file.slice(SRC.length + 1))
       .sort();

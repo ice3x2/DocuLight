@@ -17,6 +17,8 @@ describe('DR-AUDIT-001 — 사람이 아닌 주체는 하위체계별 예약 주
 
   it('AC-6: 판정이 단일 지점이고 열거와 술어가 같은 집합을 본다', () => {
     // 술어를 따로 구현하면 주체가 하나 늘 때 열거만 늘고 술어가 안 는다.
+    // 열거가 비면 이 루프가 0회 돌아 통과하므로 분모를 먼저 고정한다.
+    expect(RESERVED_ACTORS.length).toBeGreaterThan(0);
     for (const actor of RESERVED_ACTORS) expect(isReservedActor(actor)).toBe(true);
     expect(RESERVED_ACTORS.length).toBe(new Set(RESERVED_ACTORS).size);
   });

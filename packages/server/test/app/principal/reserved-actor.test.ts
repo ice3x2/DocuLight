@@ -37,6 +37,8 @@ afterEach(async () => {
 
 describe('DR-AUDIT-001 — 예약 주체는 계정이 아니다', () => {
   it('AC-3: 예약 주체 ID 로는 계정이 서지 않는다', () => {
+    // 열거가 비면 아래 루프가 0회 돌아 통과한다 — 분모를 먼저 고정한다.
+    expect(RESERVED_ACTORS.length).toBeGreaterThan(0);
     for (const actor of RESERVED_ACTORS) expect(principals.findById(actor)).toBeUndefined();
   });
 
@@ -49,7 +51,8 @@ describe('DR-AUDIT-001 — 예약 주체는 계정이 아니다', () => {
         createdAt: new Date().toISOString(),
         expiresAt: new Date(Date.now() + 3_600_000).toISOString(),
       }),
-    ).toThrow();
+      // 사유를 고정한다 — 맨 `toThrow()` 는 무관한 SQL 오류로도 통과한다.
+    ).toThrow(/FOREIGN KEY constraint failed/i);
   });
 
   it('AC-3: 같은 이름의 계정을 만들어도 그 계정의 ID 는 예약 주체가 아니다', async () => {
@@ -74,6 +77,7 @@ describe('DR-AUDIT-001 — 예약 주체는 계정이 아니다', () => {
   it('AC-4 · AC-5: 예약 주체의 상태 전환이 그 사유로 거절된다', () => {
     const stores = { principals, sessions };
 
+    expect(RESERVED_ACTORS.length).toBeGreaterThan(0);
     for (const actor of RESERVED_ACTORS) {
       const 결과 = setAccountStatus(stores, actor, 'suspended', 기록());
 
