@@ -1,6 +1,7 @@
 import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { actorFor, type Actor } from '../../../src/app/acl/permission-service.js';
@@ -170,6 +171,19 @@ describe('DR-ATTACH-003 — 본문 링크는 워크스페이스 기준 절대경
     // 때까지 드러나지 않는다.
     expect(done.link).not.toContain('회의');
     expect(done.link).not.toContain('안.md');
+  });
+
+  it('AC-3: 문서를 옮긴 뒤에도 그 링크로 첨부가 그대로 열린다', async () => {
+    const done = (await attach(root)) as { ok: true; hash: string; link: string };
+    const 옮길곳 = idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name: '보관' }));
+
+    moveNode(stores, root, doc, 옮길곳);
+
+    // 링크가 그대로라는 것만으로는 부족하다 — 그 링크가 **여전히 바이트를
+    // 준다**는 것이 「그대로 표시된다」의 내용이다.
+    const 열린것 = await openAttachment(stores, root, { workspaceId: ws, hash: done.hash });
+    expect(열린것.ok).toBe(true);
+    expect((열린것 as { ok: true; bytes: Buffer }).bytes.equals(PNG)).toBe(true);
   });
 });
 
@@ -490,5 +504,45 @@ describe('SEC-ATTACH-002 — 같은 바이트를 두 문서에 올려도 소유�
     await rebuildAttachmentIndex(stores, ws);
 
     expect(stores.attachments.listOf(doc).map((a) => a.hash)).toEqual([done.hash]);
+  });
+});
+
+describe('CON-ATTACH-001 — 형식 검사 자체가 없다', () => {
+  const SRC = join(process.cwd(), 'src');
+
+  const sources = (at: string): string[] =>
+    readdirSync(at).flatMap((name) => {
+      const full = join(at, name);
+      return statSync(full).isDirectory() ? sources(full) : /\.ts$/.test(name) ? [full] : [];
+    });
+
+  it('AC-2: 업로드 경로에 확장자·MIME 기반의 차단·허용 목록이 없다', () => {
+    // 거절 시험만 두면 「지금은 아무것도 안 막는다」에 그치고, 목록이
+    // 나중에 생겨도 그 시험은 그대로 통과한다. 검사 **자체의 부재**를 잰다.
+    const 업로드경로 = sources(SRC).filter((file) =>
+      /attachment-service|new-version|workspace-api/.test(file),
+    );
+    expect(업로드경로.length).toBeGreaterThan(0);
+
+    for (const file of 업로드경로) {
+      const code = readFileSync(file, 'utf8');
+      const 목록 = code.match(/ALLOWED_(EXTENSIONS|TYPES)|BLOCKED_(EXTENSIONS|TYPES)|mimetype\s*[!=]==/g) ?? [];
+      expect({ file, 목록 }).toEqual({ file, 목록: [] });
+    }
+  });
+
+  it('AC-1: 서로 다른 확장자의 바이너리가 모두 같은 자리로 들어간다', async () => {
+    const 자리들: string[] = [];
+    for (const bytes of [Buffer.from('a'), Buffer.from('bb'), Buffer.from('ccc')]) {
+      const done = (await attach(root, { bytes, name: `파일-${bytes.byteLength}.exe` })) as {
+        ok: true;
+        hash: string;
+      };
+      expect(done.ok).toBe(true);
+      자리들.push(done.hash);
+    }
+
+    // 형식으로 가르면 어느 하나가 다른 자리로 가거나 아예 서지 못한다.
+    expect(new Set(자리들).size).toBe(3);
   });
 });

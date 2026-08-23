@@ -280,6 +280,23 @@ describe('FR-SHELL-003 · FR-ATTACH-001 — 노드 생성과 디렉토리 업로
       .attach('file', Buffer.from('binary'), '설계.zip');
 
     expect(res.status).toBe(403);
+    // 거절만 재면 노드는 안 서고 파일만 놓인 상태가 통과한다.
+    expect(stores.nodes.allIn(ws).filter((node) => node.name === '설계.zip')).toEqual([]);
+    await expect(readFile(join(docsRoot, ws, '회의', '설계.zip'))).rejects.toThrow();
+  });
+
+  it('`CON-ATTACH-001` AC-1: 임의 확장자의 바이너리도 형식을 이유로 거부되지 않는다', async () => {
+    const dir = idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name: '회의' }));
+
+    // 점으로 시작하는 이름은 뺀다 — 그것이 막히는 이유는 형식이 아니라
+    // 숨김 이름 규칙(`SEC-STORAGE-004`)이고, 여기서 재는 축이 아니다.
+    for (const name of ['도구.exe', '보관.tar.gz', '무확장자', '스크립트.sh', '문서.docx']) {
+      const res = await request(app)
+        .post(`/api/nodes/${dir}/uploads`)
+        .attach('file', Buffer.from('binary'), name);
+
+      expect({ name, status: res.status }).toEqual({ name, status: 200 });
+    }
   });
 
   it('FR-ATTACH-006 AC-4: 디렉토리 업로드에도 같은 크기 제한이 걸린다', async () => {
