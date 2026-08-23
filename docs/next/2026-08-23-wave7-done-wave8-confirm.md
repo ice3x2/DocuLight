@@ -5,7 +5,7 @@
 | 작성일 | 2026-08-23 |
 | 저장소 / 브랜치 | `C:\Work\git\DocuLight2.0` / `master` |
 | 최종 작업 목표 | Phase 1 의 wave 9개 중 남은 것을 완주해 원장 §4 수용 기준 13개를 전건 통과시킨다 |
-| 현재 상태 | **wave-7 의 `planned` 가 0건이 됐다 — 완주가 아니다.** 26건 중 15건 `implemented` · **11건 `in_progress`**. wave-8 은 33건 중 13건. 이번 세션 커밋 12개(`70170ec`~`e548aa9`). 워킹트리 clean |
+| 현재 상태 | **wave-7 의 `planned` 가 0건이 됐다 — 완주가 아니다.** 26건 중 15건 `implemented` · **11건 `in_progress`**. wave-8 은 33건 중 13건. **작업 커밋 11개**(`f449fe0..f745a42`) — 그 뒤 핸드오프 문서 커밋이 더 붙는다. 워킹트리 clean |
 | SSOT | `C:\Work\git\DocuLight2.0\docs\spec\00.index.md` 와 원장 `C:\Work\git\DocuLight2.0\docs\spec\00.decision-log.md` |
 | 다음 세션 첫 행동 | 아래 「0. 다음 세션의 첫 행동」 |
 
@@ -44,7 +44,7 @@ Phase 1 은 **wave 9개**로 분해돼 있고 배정의 정본은 `C:\Work\git\D
 
 ## 2. 이번 세션에 한 일
 
-작업 커밋 11개(`f449fe0..f745a42`). 그 뒤 이 핸드오프 문서 커밋이 더해져 HEAD 기준으로는 12개다.
+작업 커밋 11개(`f449fe0..f745a42`). 이 핸드오프 문서 자체의 커밋은 그 뒤에 붙으므로 HEAD 기준 총수는 이 표보다 크다 — 총수를 세지 말고 범위로 읽어라.
 
 | 커밋 | 내용 |
 | --- | --- |
