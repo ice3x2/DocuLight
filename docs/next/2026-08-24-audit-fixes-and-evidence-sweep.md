@@ -8,13 +8,13 @@
    cd C:\Work\git\DocuLight2.0\packages\server && set NODE_ENV=production && npx vitest run
    cd C:\Work\git\DocuLight2.0\packages\web && set NODE_ENV=production && npx vitest run
    ```
-   2026-08-24 실행 결과: typecheck **오류 0**, server **1181 통과**, web **493 통과**, editor **237 통과 1 skip**.
+   2026-08-24 실행 결과: typecheck **오류 0**, server **1186 통과**, web **500 통과**, editor **237 통과 1 skip**.
 2. `§4. 열린 결정` 을 먼저 읽는다 — 그 결정이 나기 전에는 `OBS-AUDIT-008` AC-3 을 닫지 못한다.
 3. `§5. 남은 작업` 에서 하나를 고른다.
 
 ## §1. 이 세션이 한 일 (한 줄)
 
-적대적 검증이 드러낸 「시험은 통과하는데 제품에서는 0행」 결함들을 고치고, `phase-1` target 의 요구 상태를 `implemented 79 → 216` 으로 올렸다.
+적대적 검증이 드러낸 「시험은 통과하는데 제품에서는 0행」 결함들을 고치고, `phase-1` target 의 요구 상태를 `implemented 79 → 217` 으로 올렸다.
 
 ## §2. 고친 결함 (전부 커밋됨)
 
@@ -42,6 +42,7 @@
 | 태그 탭 | `packages/server/src/app/document/tag-service.ts` · `packages/web/src/search/TagPanel.tsx` | `752d739` |
 | 전역 검색 (네 축 · 필터 팝오버) | `packages/server/src/app/document/search-service.ts` · `packages/web/src/search/SearchPanel.tsx` · `packages/web/src/search/search-axes.ts` | `eab72f2` |
 | 위키링크 본문 해석 | `packages/web/src/document/wiki-link-resolve.ts` | `8632b5d` |
+| 슈퍼유저 직접 등록 | `packages/web/src/principal/UserRoster.tsx` · `POST /api/roster/users` | `9592231` |
 
 새 도메인 모듈 둘: `packages/server/src/domain/document/tag.ts`(태그 훑기) · `packages/server/src/domain/naming/name-order.ts`(이름순 비교, 로케일 `ko` 고정).
 
@@ -59,7 +60,7 @@
 
 ## §5. 남은 작업 (`phase-1` target)
 
-2026-08-24 기준: 총 253건 · **implemented 216 · verified 18 · in_progress 7 · planned 12 · blocked 0 · 증거 누락 0**.
+2026-08-24 기준: 총 253건 · **implemented 217 · verified 18 · in_progress 6 · planned 12 · blocked 0 · 증거 누락 0**.
 
 ### 큰 덩어리 (아직 코드가 없다)
 
@@ -80,7 +81,6 @@
 | `OBS-AUDIT-001` | AC-2 일부 | 아카이브·복원 조작이 서지 않았다 |
 | `FR-CONFIRM-019` | AC-6 | 설치 마법사 화면이 자리표다 |
 | `SEC-ACL-006` | AC-5 | MCP 도구 응답 축 — MCP 부재 |
-| `FR-AUTH-003` | 전부 | `사용자 관리` 안의 직접 등록 조작이 없다 |
 | `CON-ARCH-002` | — | 절차 요구이며 코드로 재지 않는다 |
 
 ## §6. 이 저장소에서 일할 때 걸린 함정
