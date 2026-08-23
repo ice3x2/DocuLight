@@ -1,12 +1,12 @@
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, rename, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { grantPermission } from '../../../src/app/acl/grant-service.js';
 import { actorFor, type Actor } from '../../../src/app/acl/permission-service.js';
 import { linksOf } from '../../../src/app/document/link-service.js';
-import { createNode } from '../../../src/app/node/node-service.js';
+import { createNode, moveNode } from '../../../src/app/node/node-service.js';
 import { createWorkspace } from '../../../src/app/workspace/create-workspace.js';
 import { FsWorkspaceFiles } from '../../../src/infra/fs/workspace-sidecar.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
@@ -216,5 +216,46 @@ describe('CON-ACL-001 AC-4 — 질의가 문서 수에 비례해 늘지 않는�
     // 그것이 `CON-ACL-001` AC-4 가 막으려던 것이다. 같아야 한다: 워크스페이스
     // 수에만 비례하고 그 안의 문서 수에는 비례하지 않는다.
     expect(large).toBe(small);
+  });
+});
+
+describe('FR-STORAGE-009 — 위키링크는 경로가 아니라 이름으로 푼다', () => {
+  const 방 = (name: string) =>
+    idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name }));
+
+  /** 그 노드로 옮기고 실체 파일도 그 자리로 옮긴다. */
+  const 옮긴다 = async (nodeId: string, parentId: string) => {
+    const 이전 = join(docsRoot, ws, stores.nodes.pathOf(nodeId));
+    moveNode(stores, root, nodeId, parentId);
+    const 이후 = join(docsRoot, ws, stores.nodes.pathOf(nodeId));
+    await mkdir(dirname(이후), { recursive: true });
+    await rename(이전, 이후);
+  };
+
+  it('AC-1: 본문에 경로가 없어도 이름만으로 대상이 풀린다', async () => {
+    const 깊은곳 = 방('보관');
+    await 옮긴다(설계, 깊은곳);
+
+    // 본문은 `[[설계]]` 그대로다 — 경로를 적을 문법 자체가 없다.
+    const [나간것] = (await linksOf(stores, root, 회의록)).outgoing;
+    expect(나간것).toMatchObject({ nodeId: 설계 });
+  });
+
+  it('AC-2: 대상 문서를 옮겨도 같은 문서로 해석된다', async () => {
+    const 앞 = (await linksOf(stores, root, 회의록)).outgoing.map((one) => one.nodeId);
+
+    await 옮긴다(설계, 방('보관'));
+
+    expect((await linksOf(stores, root, 회의록)).outgoing.map((one) => one.nodeId)).toEqual(앞);
+  });
+
+  it('AC-3: 참조하는 문서를 옮겨도 해석 결과가 그대로다', async () => {
+    const 앞 = (await linksOf(stores, root, 회의록)).outgoing.map((one) => one.nodeId);
+
+    await 옮긴다(회의록, 방('회의'));
+
+    // 상대경로였다면 여기서 대상이 바뀌거나 사라진다.
+    expect((await linksOf(stores, root, 회의록)).outgoing.map((one) => one.nodeId)).toEqual(앞);
+    expect((await linksOf(stores, root, 설계)).backlinks.map((one) => one.nodeId)).toEqual([회의록]);
   });
 });
