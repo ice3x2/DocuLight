@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { previewRevocation, revokeAllFor } from '../../../src/app/acl/bulk-revoke-service.js';
+import { bulkRevokeGrade } from '../../../src/domain/confirm/grade.js';
 import { breakInheritance, grantPermission } from '../../../src/app/acl/grant-service.js';
 import { actorFor, permissionOf, type Actor } from '../../../src/app/acl/permission-service.js';
 import type { NodeStores } from '../../../src/app/node/node-service.js';
@@ -336,5 +337,64 @@ describe('FR-PRINCIPAL-010 — 시스템 그룹도 대상이다', () => {
 
     expect(removed?.rows).toHaveLength(1);
     expect(entryCountOf(SUPERUSER_GROUP_ID)).toBe(0);
+  });
+});
+
+describe('OBS-AUDIT-008 — 다건 회수의 감사 입도', () => {
+  /** 그 주체 앞으로 남은 회수 감사 행들. */
+  const 회수행 = (principalId: PrincipalId) =>
+    db.all<{ node_id: string; level: string; actor: string; occurred_at: string }>(
+      "SELECT node_id, level, actor, occurred_at FROM audit_log WHERE operation = 'acl.revoke' AND subject_id = ?",
+      [principalId],
+    );
+
+  it('AC-2: acl_entry M 건을 걷으면 감사 행이 M 건이다', () => {
+    const root = superuser();
+    const 방 = mk('본부', null, 'directory');
+    const 가 = mk('가.md', 방);
+    const 나 = mk('나.md', 방);
+    const 퇴사자 = user('퇴사자');
+    for (const node of [방, 가, 나]) {
+      grantPermission(stores, root, { nodeId: node, principalId: 퇴사자.id, level: 'view' });
+    }
+
+    revokeAllFor(stores, root, 퇴사자.id);
+
+    // 「1행 + 영향 건수」로 접으면 어느 노드의 무엇이 사라졌는지 되짚을
+    // 수 없고, 그 1행은 어느 워크스페이스에도 귀속되지 않아 인스턴스
+    // 스코프로 올라간다.
+    expect(회수행(퇴사자.id).map((row) => row.node_id).sort()).toEqual([방, 가, 나].sort());
+  });
+
+  it('AC-5: 감사 행 수가 회수 미리보기의 항목 수와 같다', () => {
+    const root = superuser();
+    const 방 = mk('본부', null, 'directory');
+    const 가 = mk('가.md', 방);
+    const 퇴사자 = user('퇴사자');
+    grantPermission(stores, root, { nodeId: 방, principalId: 퇴사자.id, level: 'view' });
+    grantPermission(stores, root, { nodeId: 가, principalId: 퇴사자.id, level: 'edit' });
+
+    // 타이핑 토큰은 회수될 항목 수 그 자체다 (`R142-c`) — 그 수와 감사
+    // 행 수가 어긋나면 사용자가 친 숫자가 실제로 일어난 일과 다르다.
+    const 토큰 = bulkRevokeGrade(previewRevocation(stores, root, 퇴사자.id)!.rows.length);
+    revokeAllFor(stores, root, 퇴사자.id);
+
+    expect(토큰.token).toBe(String(회수행(퇴사자.id).length));
+  });
+
+  it('AC-6: 「언제 누구에 의해 잃었나」가 낱행으로 답해진다', () => {
+    const root = superuser();
+    const 문서 = mk('회의록.md');
+    const 관리자 = workspaceAdmin('기획팀장', WS, root);
+    const 퇴사자 = user('퇴사자');
+    grantPermission(stores, root, { nodeId: 문서, principalId: 퇴사자.id, level: 'view' });
+
+    revokeAllFor(stores, 관리자, 퇴사자.id);
+
+    const [행] = 회수행(퇴사자.id).filter((row) => row.node_id === 문서);
+    // 「언제」와 「누구에 의해」가 그 한 줄 안에 있다 — 집계 행이면 이
+    // 물음에 답할 낱행 자체가 없다.
+    expect(행?.actor).toBe(관리자.id);
+    expect(행?.occurred_at).toMatch(/^\d{4}-\d{2}-\d{2} /);
   });
 });

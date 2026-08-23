@@ -129,10 +129,21 @@ describe('CON-AUDIT-001 — 셋을 각자의 이름으로 부른다', () => {
       return /\.tsx?$/.test(name) ? [full] : [];
     });
 
+  /**
+   * 금지 자체를 적는 자리는 그 낱말을 인용할 수밖에 없다. 두 자리뿐이며
+   * **경로로 못박는다** — 「인용처럼 보이면 넘어간다」로 두면 새 위반이
+   * 인용 흉내로 빠져나간다.
+   */
+  const 인용처 = [join('audit', 'AuditLogPanel.tsx'), join('ports', 'finding-queue.ts')];
+
   it('AC-1: 한정어 없는 「감사 목록」이 화면 라벨과 코드 식별자에 없다', () => {
-    for (const file of sources(join(WEB, 'src'))) {
-      // 금지 자체를 적는 자리는 그 낱말을 인용할 수밖에 없다.
-      if (file.endsWith(join('audit', 'AuditLogPanel.tsx'))) continue;
+    // **서버 소스까지 훑는다.** 화면 패키지만 보면 코드 식별자라는 축의
+    // 절반이 검사 밖에 남고, 그 절반이 이름 충돌이 처음 생긴 자리다.
+    const 훑을것 = [...sources(join(WEB, 'src')), ...sources(join(WEB, '..', 'server', 'src'))];
+    expect(훑을것.length).toBeGreaterThan(sources(join(WEB, 'src')).length);
+
+    for (const file of 훑을것) {
+      if (인용처.some((one) => file.endsWith(one))) continue;
 
       const code = readFileSync(file, 'utf8');
       // 「상속 끊김 노드 감사 목록」은 한정어가 붙은 이름이라 걸리지 않는다.

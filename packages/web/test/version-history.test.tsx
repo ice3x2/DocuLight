@@ -129,3 +129,30 @@ describe('FR-SHELL-002 AC-2 · AC-3 — 문서 헤더 메뉴가 실제로 연다
     expect(share.textContent).toContain('회의록.md');
   });
 });
+
+describe('OBS-AUDIT-004 — 감사 제외의 근거가 되는 재현처', () => {
+  it('AC-4 · AC-5: 버전마다 행위자와 시각이 함께 보인다', async () => {
+    render(<VersionHistory nodeId="n1" currentBody="# 지금 판" />);
+
+    const list = await screen.findByRole('list', { name: '버전 기록' });
+    const 줄 = within(list).getAllByRole('listitem');
+
+    // md 새 버전을 감사에서 빼는 근거가 「이 화면이 행위자와 시각을 영구히
+    // 재현한다」는 것이다 — 둘 중 하나라도 없으면 그 제외가 근거를 잃는다.
+    expect(줄.map((one) => one.textContent)).toEqual([
+      expect.stringContaining('u1'),
+      expect.stringContaining('u2'),
+    ]);
+    expect(줄[0]!.textContent).toContain('2026-08-22T02:00:00.000Z');
+    expect(줄[1]!.textContent).toContain('2026-08-22T01:00:00.000Z');
+  });
+
+  it('AC-3: 그 재현처가 보존 기간으로 지워지지 않는다', async () => {
+    // 기간 한정 재현은 재현이 아니다. 버전 목록에 만료·보존 기간이라는
+    // 개념 자체가 없다는 것이 그 성질이다.
+    render(<VersionHistory nodeId="n1" currentBody="# 지금 판" />);
+
+    const list = await screen.findByRole('list', { name: '버전 기록' });
+    expect(list.textContent ?? '').not.toMatch(/만료|보존 기간|일 후 삭제/);
+  });
+});
