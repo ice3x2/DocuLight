@@ -13,6 +13,7 @@ import {
 } from '../../../src/app/principal/principal-service.js';
 import { BcryptPasswordHasher } from '../../../src/infra/crypto/bcrypt-hasher.js';
 import { SUPERUSER_GROUP_ID } from '../../../src/domain/principal/system-groups.js';
+import type { AuditSink } from '../../../src/domain/ports/audit-sink.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
 import { SqliteSessionRepository } from '../../../src/infra/sqlite/session-repository.js';
 import { nodeStores } from '../../support/acl-fixture.js';
@@ -20,6 +21,8 @@ import { nodeStores } from '../../support/acl-fixture.js';
 let dir: string;
 let db: Database;
 let stores: AuthStores & NodeStores;
+/** 기록기. 이 시험의 관심사는 바닥 가드지만 인자는 필수다. */
+let 기록: { audit: AuditSink; actor: string };
 let onlyOne: string;
 
 const idOf = (r: unknown) => (r as { ok: true; id: string }).id;
@@ -35,6 +38,7 @@ beforeEach(async () => {
   };
   onlyOne = idOf(await registerAccount(stores, { name: '설치자', password: 'x'.repeat(8), status: 'active' }));
   stores.principals.addMember(SUPERUSER_GROUP_ID, onlyOne);
+  기록 = { audit: stores.audit, actor: onlyOne };
 });
 
 afterEach(async () => {
@@ -51,13 +55,13 @@ const activeSuperusers = () =>
 
 describe('SEC-AUTH-016 — active 슈퍼유저를 0명으로 만드는 조작을 거부한다', () => {
   it('AC-1: 마지막 한 명을 그룹에서 빼는 조작이 거부된다', () => {
-    expect(removeFromGroup(stores, SUPERUSER_GROUP_ID, onlyOne)).toEqual(REFUSED);
+    expect(removeFromGroup(stores, SUPERUSER_GROUP_ID, onlyOne, 기록)).toEqual(REFUSED);
     expect(activeSuperusers()).toEqual([onlyOne]);
   });
 
   it('AC-2 · AC-3 · AC-4: 마지막 한 명의 상태를 셋 중 어느 것으로도 바꾸지 못한다', () => {
     for (const status of ['suspended', 'pending', 'rejected'] as const) {
-      expect(setAccountStatus(stores, onlyOne, status), `${status} 전환이 통과한다`).toEqual(REFUSED);
+      expect(setAccountStatus(stores, onlyOne, status, 기록), `${status} 전환이 통과한다`).toEqual(REFUSED);
       expect(stores.principals.findById(onlyOne)?.status).toBe('active');
     }
   });
@@ -69,8 +73,8 @@ describe('SEC-AUTH-016 — active 슈퍼유저를 0명으로 만드는 조작을
     stores.principals.setStatus(second.id, 'active');
     stores.principals.addMember(SUPERUSER_GROUP_ID, second.id);
 
-    expect(removeFromGroup(stores, SUPERUSER_GROUP_ID, second.id)).toEqual({ ok: true });
-    expect(setAccountStatus(stores, onlyOne, 'suspended')).toEqual(REFUSED);
+    expect(removeFromGroup(stores, SUPERUSER_GROUP_ID, second.id, 기록)).toEqual({ ok: true });
+    expect(setAccountStatus(stores, onlyOne, 'suspended', 기록)).toEqual(REFUSED);
   });
 
   it('AC-5: active 가 아닌 멤버는 바닥을 떠받치지 못한다', () => {
@@ -80,7 +84,7 @@ describe('SEC-AUTH-016 — active 슈퍼유저를 0명으로 만드는 조작을
     stores.principals.addMember(SUPERUSER_GROUP_ID, dormant.id);
 
     expect(stores.principals.membersOf(SUPERUSER_GROUP_ID)).toHaveLength(2);
-    expect(setAccountStatus(stores, onlyOne, 'suspended'), 'active 가 아닌 멤버가 바닥으로 세어졌다').toEqual(REFUSED);
+    expect(setAccountStatus(stores, onlyOne, 'suspended', 기록), 'active 가 아닌 멤버가 바닥으로 세어졌다').toEqual(REFUSED);
   });
 
   it('둘 이상이면 한 명을 빼거나 정지시킬 수 있다 — 거부가 전체로 번지지 않는다', () => {
@@ -88,14 +92,14 @@ describe('SEC-AUTH-016 — active 슈퍼유저를 0명으로 만드는 조작을
     stores.principals.setStatus(second.id, 'active');
     stores.principals.addMember(SUPERUSER_GROUP_ID, second.id);
 
-    expect(setAccountStatus(stores, second.id, 'suspended')).toEqual({ ok: true });
+    expect(setAccountStatus(stores, second.id, 'suspended', 기록)).toEqual({ ok: true });
     expect(activeSuperusers()).toEqual([onlyOne]);
   });
 
   it('슈퍼유저가 아닌 계정의 정지는 이 가드와 무관하다', async () => {
     const other = idOf(await registerAccount(stores, { name: '일반', password: 'x'.repeat(8), status: 'active' }));
 
-    expect(setAccountStatus(stores, other, 'suspended')).toEqual({ ok: true });
+    expect(setAccountStatus(stores, other, 'suspended', 기록)).toEqual({ ok: true });
   });
 
   it('AC-6: 주체 ACL 일괄 회수는 그룹 멤버십을 바꾸지 않으므로 걸리지 않는다', () => {
@@ -122,7 +126,7 @@ describe('SEC-AUTH-009 — 계정을 정지하면 그 세션도 함께 끊긴다
       expiresAt: '2026-08-23T09:00:00.000Z',
     });
 
-    setAccountStatus(stores, other, 'suspended');
+    setAccountStatus(stores, other, 'suspended', 기록);
 
     // 인증 단계가 상태를 다시 보므로 판정은 이미 닫혀 있다. 행까지 걷는
     // 이유는 남겨 두면 「살아 있는 세션 목록」이 사실과 어긋나기 때문이다.

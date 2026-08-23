@@ -336,7 +336,9 @@ function AppBody() {
   // 슈퍼유저는 관리 워크스페이스가 없어도 인스턴스 스코프의 행을 읽는다
   // (`SEC-AUDIT-010` AC-5) — `adminScope` 만 보면 그 문이 닫힌다.
   const 감사자격 = signedIn && (adminScope || session.data?.superuser === true);
-  const auditLog = useAuditLog(감사자격);
+  /** 감사 로그의 조작 필터. 빈 문자열이 「전체」다 (`IR-AUDIT-001`). */
+  const [auditOperation, setAuditOperation] = useState('');
+  const auditLog = useAuditLog(감사자격, auditOperation);
   // 대기열은 감사 로그와 **같은 조건**으로 켠다 (`SEC-AUDIT-007` AC-6) —
   // 자격 판정은 서버가 하나로 들고, 화면이 조건을 따로 적으면 둘이 갈린다.
   const queue = useReconciliationQueue(감사자격);
@@ -534,6 +536,8 @@ function AppBody() {
       onSaved={noteSaved}
       onDocuments={setDocuments}
       {...(auditLog.data === undefined ? {} : { auditLog: auditLog.data })}
+      auditOperation={auditOperation}
+      onAuditOperation={setAuditOperation}
       {...(queue.data === undefined ? {} : { queue: queue.data })}
       {...(notice === undefined ? {} : { notice })}
       {...(pendingOpen === null

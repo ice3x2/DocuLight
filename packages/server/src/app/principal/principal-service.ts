@@ -33,8 +33,11 @@ export const MEMBER_REMOVE = 'principal.member-remove';
 export const ACCOUNT_STATUS = 'principal.status';
 
 /**
- * 감사를 남길 자리. **선택이다** — 설치 마법사와 시험은 기록기를 세우기
- * 전에도 주체를 만져야 한다.
+ * 감사를 남길 자리. **필수다** (`OBS-AUDIT-003` AC-2).
+ *
+ * 선택으로 두면 호출자가 빠뜨려도 아무것도 깨지지 않고, 그때 요구는
+ * 통과한 채로 제품 경로에서 0행이 된다 — 실제로 그렇게 됐다. 필수로 두면
+ * 빠뜨림이 컴파일되지 않는다.
  */
 export interface PrincipalAudit {
   readonly audit: AuditSink;
@@ -95,7 +98,7 @@ export function addGroupMember(
   principals: PrincipalRepository,
   groupId: PrincipalId,
   memberId: PrincipalId,
-  recording?: PrincipalAudit,
+  recording: PrincipalAudit,
 ): PrincipalResult {
   const group = principals.findById(groupId);
   if (group === undefined) return reject('unknown-principal');
@@ -106,7 +109,7 @@ export function addGroupMember(
   if (member.kind !== 'user') return reject('member-must-be-user');
 
   principals.addMember(groupId, memberId);
-  recording?.audit.append({
+  recording.audit.append({
     operation: MEMBER_ADD,
     actor: recording.actor,
     subjectId: memberId,
@@ -166,7 +169,7 @@ export function removeFromGroup(
   stores: GuardedStores,
   groupId: PrincipalId,
   userId: PrincipalId,
-  recording?: PrincipalAudit,
+  recording: PrincipalAudit,
 ): PrincipalResult {
   if (
     groupId === SUPERUSER_GROUP_ID &&
@@ -179,7 +182,7 @@ export function removeFromGroup(
   }
 
   stores.principals.removeMember(groupId, userId);
-  recording?.audit.append({
+  recording.audit.append({
     operation: MEMBER_REMOVE,
     actor: recording.actor,
     subjectId: userId,
@@ -198,7 +201,7 @@ export function setAccountStatus(
   stores: GuardedStores,
   userId: PrincipalId,
   status: PrincipalStatus,
-  recording?: PrincipalAudit,
+  recording: PrincipalAudit,
 ): PrincipalResult {
   // 예약 주체는 **명시적으로** 거절한다 (`DR-AUDIT-001` AC-4 · AC-5).
   // 계정 행이 없어 `unknown-principal` 로 떨어지는 것에 기대면, 그 우연은
@@ -220,7 +223,7 @@ export function setAccountStatus(
   stores.principals.setStatus(userId, status);
   // 이전값과 이후값이 함께 남는다 — 「정지됐다」만으로는 무엇에서 무엇으로
   // 바뀐 것인지 되짚을 수 없다.
-  recording?.audit.append({
+  recording.audit.append({
     operation: ACCOUNT_STATUS,
     actor: recording.actor,
     subjectId: userId,

@@ -113,7 +113,10 @@ describe('permissionBatch ↔ permissionOf 동치', () => {
 
     expect(permissionBatch(stores, root, [doc], WS)(doc)).toBe(permissionOf(stores, root, doc));
 
-    setAccountStatus({ ...stores, sessions: new SqliteSessionRepository(db) }, me.id, 'suspended');
+    setAccountStatus({ ...stores, sessions: new SqliteSessionRepository(db) }, me.id, 'suspended', {
+      audit: stores.audit,
+      actor: me.id,
+    });
     const suspended = actorFor(stores.principals, me.id);
     expect(permissionBatch(stores, suspended, [doc], WS)(doc)).toBe(
       permissionOf(stores, suspended, doc),

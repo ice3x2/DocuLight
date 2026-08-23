@@ -531,7 +531,12 @@ export interface AuditViewBody {
   operations: string[];
 }
 
-export const fetchAuditLog = () => call<AuditViewBody>('/audit-log');
+export const fetchAuditLog = (operation?: string) =>
+  call<AuditViewBody>(
+    operation === undefined || operation === ''
+      ? '/audit-log'
+      : `/audit-log?operation=${encodeURIComponent(operation)}`,
+  );
 
 /**
  * 재조정 대기열 한 줄 (`SEC-AUDIT-007`).

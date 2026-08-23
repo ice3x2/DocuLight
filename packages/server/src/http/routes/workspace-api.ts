@@ -939,7 +939,11 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       return;
     }
 
-    const view = auditView(stores, actor);
+    // 조작 필터는 **서버가** 건다 (`IR-AUDIT-001`) — 받아 놓고 화면에서
+    // 거르면 거르기 전의 행이 이미 브라우저에 와 있게 되고, 그것은 스코프
+    // 판정이 아니다.
+    const operation = one(req.query.operation);
+    const view = auditView(stores, actor, operation === undefined || operation === '' ? {} : { operation });
     if (view === null) {
       res.sendStatus(404);
       return;
@@ -1178,6 +1182,9 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     return isSuperuser(stores.principals.groupsOf(actor.id)) ? 'ok' : 'denied';
   };
 
+  /** 그 요청의 기록기. 게이트를 통과했으면 배우가 반드시 있다. */
+  const recording = (req: Request) => ({ audit: stores.audit, actor: actorFor(req)!.id });
+
   router.post('/roster/groups/:groupId/members', (req, res) => {
     const gate = membership(req);
     if (gate !== 'ok') {
@@ -1185,7 +1192,12 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       return;
     }
 
-    const added = addGroupMember(stores.principals, req.params.groupId!, one(req.body?.userId) ?? '');
+    const added = addGroupMember(
+      stores.principals,
+      req.params.groupId!,
+      one(req.body?.userId) ?? '',
+      recording(req),
+    );
     res.sendStatus(added.ok ? 204 : 400);
   });
 
@@ -1196,7 +1208,7 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       return;
     }
 
-    const removed = removeFromGroup(stores, req.params.groupId!, req.params.userId!);
+    const removed = removeFromGroup(stores, req.params.groupId!, req.params.userId!, recording(req));
     res.sendStatus(removed.ok ? 204 : 400);
   });
 

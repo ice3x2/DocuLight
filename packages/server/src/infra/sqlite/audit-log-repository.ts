@@ -55,10 +55,20 @@ export class SqliteAuditLog implements AuditSink, AuditQuery {
     return id;
   }
 
-  inScope(workspaceIds: readonly string[], options: { includeInstance?: boolean } = {}): AuditRow[] {
+  inScope(
+    workspaceIds: readonly string[],
+    options: { includeInstance?: boolean; operation?: string } = {},
+  ): AuditRow[] {
     const { where, params } = this.scope(workspaceIds, options);
+    // 조작 조건은 스코프 조건 **뒤에** 붙는다 — 앞에 두면 조작만 맞는
+    // 스코프 밖 행이 걸릴 여지가 생긴다.
+    const byOperation = options.operation === undefined ? '' : ' AND operation = ?';
+    const all = options.operation === undefined ? params : [...params, options.operation];
     return this.store
-      .all<AuditRecord>(`SELECT * FROM audit_log WHERE ${where} ORDER BY occurred_at DESC, id DESC`, params)
+      .all<AuditRecord>(
+        `SELECT * FROM audit_log WHERE ${where}${byOperation} ORDER BY occurred_at DESC, id DESC`,
+        all,
+      )
       .map(rowOf);
   }
 

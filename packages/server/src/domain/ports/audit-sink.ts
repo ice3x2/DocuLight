@@ -79,7 +79,20 @@ export interface AuditQuery {
    * 워크스페이스에도 귀속되지 않는 행이며 슈퍼유저만 읽는다
    * (`SEC-AUDIT-010` AC-3~AC-5).
    */
-  inScope(workspaceIds: readonly string[], options?: { includeInstance?: boolean }): AuditRow[];
+  inScope(
+    workspaceIds: readonly string[],
+    options?: {
+      includeInstance?: boolean;
+      /**
+       * 그 조작의 행만 (`IR-AUDIT-001`). 없으면 전부다.
+       *
+       * 거르는 자리를 **여기 하나**로 둔다 — 받아 놓고 화면에서 거르면
+       * 거르기 전의 행이 이미 브라우저에 와 있게 되고, 그것은 스코프
+       * 판정이 아니다.
+       */
+      operation?: string;
+    },
+  ): AuditRow[];
 
   /**
    * 실제로 기록된 조작 값의 distinct 집합 (`IR-AUDIT-001`).

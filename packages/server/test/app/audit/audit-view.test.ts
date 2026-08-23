@@ -214,12 +214,14 @@ describe('IR-AUDIT-003 · SEC-AUDIT-011 — 저장은 낱행이고 표시는 묶
     const 묶음 = 본것.groups.find((g) => g.operation === 'acl.grant' && g.actor === root.id)!;
 
     // 남의 워크스페이스 행이 건수에 섞이면 그 차이가 곧 스코프 밖 행의 수다.
-    expect(묶음.rows).toEqual(
-      stores.auditLog
-        .inScope([기획팀])
-        .filter((r) => r.operation === 'acl.grant' && r.actor === root.id && r.occurredAt === 묶음.occurredAt)
-        .map(() => expect.anything()),
-    );
+    //
+    // **ID 로 견준다** — `expect.anything()` 을 늘어놓으면 `toEqual` 이
+    // 길이 비교로 퇴화해, 남의 행이 섞이고 내 행이 그만큼 빠져도 통과한다.
+    const 스코프안 = stores.auditLog
+      .inScope([기획팀])
+      .filter((r) => r.operation === 'acl.grant' && r.actor === root.id && r.occurredAt === 묶음.occurredAt);
+    expect(묶음.rows.map((row) => row.id).sort()).toEqual(스코프안.map((row) => row.id).sort());
+    expect(묶음.rows.length).toBeGreaterThan(0);
   });
 
   it('AC-5 · AC-6 · AC-7: 묶음 키가 응답 어디에도 없다', () => {

@@ -314,6 +314,7 @@ describe('FR-PRINCIPAL-010 — 시스템 그룹도 대상이다', () => {
       { principals: stores.principals, sessions: new SqliteSessionRepository(db) },
       신입.id,
       'active',
+      { audit: stores.audit, actor: root.id },
     );
 
     expect(entryCountOf(DEFAULT_GROUP_ID)).toBe(0);

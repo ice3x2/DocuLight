@@ -60,7 +60,12 @@ describe('FR-PRINCIPAL-003 · CON-PRINCIPAL-004 — 오프보딩 카드는 파�
     const 전 = offboardingCard(stores, 떠나는이.id)!;
     expect(전.steps[0]!.done).toBe(false);
 
-    setAccountStatus({ principals: stores.principals, sessions: stores.sessions }, 떠나는이.id, 'suspended');
+    setAccountStatus(
+      { principals: stores.principals, sessions: stores.sessions },
+      떠나는이.id,
+      'suspended',
+      { audit: stores.audit, actor: root.id },
+    );
 
     // 저장된 진행 상태를 읽는다면 여기서 그대로 `false` 다.
     expect(offboardingCard(stores, 떠나는이.id)!.steps[0]!.done).toBe(true);
@@ -81,7 +86,12 @@ describe('FR-PRINCIPAL-003 · CON-PRINCIPAL-004 — 오프보딩 카드는 파�
     // 완료로 두어도 시험이 살아남는다.
     expect(offboardingCard(stores, 떠나는이.id)!.steps[1]!.done).toBe(false);
 
-    setAccountStatus({ principals: stores.principals, sessions: stores.sessions }, 떠나는이.id, 'suspended');
+    setAccountStatus(
+      { principals: stores.principals, sessions: stores.sessions },
+      떠나는이.id,
+      'suspended',
+      { audit: stores.audit, actor: root.id },
+    );
 
     // 토큰을 하나씩 폐기하지 않았는데도 닫힌다.
     expect(authenticateToken(auth, 평문)).toBeUndefined();
@@ -91,7 +101,12 @@ describe('FR-PRINCIPAL-003 · CON-PRINCIPAL-004 — 오프보딩 카드는 파�
   it('AC-4: 멤버십이 남아 있으면 그 단계만 미완이다', () => {
     const 팀 = stores.principals.createGroup('기획팀원');
     stores.principals.addMember(팀.id, 떠나는이.id);
-    setAccountStatus({ principals: stores.principals, sessions: stores.sessions }, 떠나는이.id, 'suspended');
+    setAccountStatus(
+      { principals: stores.principals, sessions: stores.sessions },
+      떠나는이.id,
+      'suspended',
+      { audit: stores.audit, actor: root.id },
+    );
 
     const 카드 = offboardingCard(stores, 떠나는이.id)!;
 
@@ -104,7 +119,10 @@ describe('FR-PRINCIPAL-003 · CON-PRINCIPAL-004 — 오프보딩 카드는 파�
     const 팀 = stores.principals.createGroup('기획팀원');
     stores.principals.addMember(팀.id, 떠나는이.id);
 
-    removeFromGroup({ principals: stores.principals, sessions: stores.sessions }, 팀.id, 떠나는이.id);
+    removeFromGroup({ principals: stores.principals, sessions: stores.sessions }, 팀.id, 떠나는이.id, {
+      audit: stores.audit,
+      actor: root.id,
+    });
 
     expect(offboardingCard(stores, 떠나는이.id)!.steps[2]!.done).toBe(true);
   });

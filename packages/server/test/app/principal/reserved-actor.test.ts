@@ -9,6 +9,7 @@ import {
   RESERVED_ACTORS,
   SYSTEM_RECONCILER,
 } from '../../../src/domain/principal/system-principals.js';
+import { SqliteAuditLog } from '../../../src/infra/sqlite/audit-log-repository.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
 import { SqlitePrincipalRepository } from '../../../src/infra/sqlite/principal-repository.js';
 import { SqliteSessionRepository } from '../../../src/infra/sqlite/session-repository.js';
@@ -18,12 +19,15 @@ let dir: string;
 let db: Database;
 let principals: SqlitePrincipalRepository;
 let sessions: SqliteSessionRepository;
+/** 기록기. 이 시험의 관심사가 아니어도 인자는 필수다 (`OBS-AUDIT-003`). */
+let 기록: () => { audit: SqliteAuditLog; actor: string };
 
 beforeEach(async () => {
   dir = await mkdtemp(join(tmpdir(), 'doculight-reserved-'));
   db = openDatabase(join(dir, 'doculight.db'));
   principals = new SqlitePrincipalRepository(db);
   sessions = new SqliteSessionRepository(db);
+  기록 = () => ({ audit: new SqliteAuditLog(db), actor: 'test:actor' });
 });
 
 afterEach(async () => {
@@ -71,7 +75,7 @@ describe('DR-AUDIT-001 — 예약 주체는 계정이 아니다', () => {
     const stores = { principals, sessions };
 
     for (const actor of RESERVED_ACTORS) {
-      const 결과 = setAccountStatus(stores, actor, 'suspended');
+      const 결과 = setAccountStatus(stores, actor, 'suspended', 기록());
 
       // `unknown-principal` 로 떨어지면 「계정이 없어서」 막힌 것이고, 그
       // 우연은 언젠가 계정이 생기면 사라진다. 사유를 명시적으로 잰다.
@@ -82,7 +86,7 @@ describe('DR-AUDIT-001 — 예약 주체는 계정이 아니다', () => {
   it('사람 계정의 상태 전환은 그대로 된다 — 거부 시험만 두면 아무도 못 바꾸는 구현이 통과한다', () => {
     const 한범 = principals.createUser('한범');
 
-    expect(setAccountStatus({ principals, sessions }, 한범.id, 'suspended').ok).toBe(true);
+    expect(setAccountStatus({ principals, sessions }, 한범.id, 'suspended', 기록()).ok).toBe(true);
     expect(principals.findById(한범.id)?.status).toBe('suspended');
   });
 });

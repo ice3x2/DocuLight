@@ -1,4 +1,5 @@
 import { allowsSelfSignup, bornStatus, type SignupMode } from '../../domain/auth/signup-mode.js';
+import type { AuditSink } from '../../domain/ports/audit-sink.js';
 import type { PasswordHasher } from '../../domain/ports/password-hasher.js';
 import type { PrincipalRepository } from '../../domain/ports/principal-repository.js';
 import type { SessionRepository } from '../../domain/ports/session-repository.js';
@@ -21,6 +22,8 @@ const FALLBACK_MODE: SignupMode = 'approval';
 
 export interface SignupStores {
   principals: PrincipalRepository;
+  /** 상태 전환이 감사 행을 남긴다 (`OBS-AUDIT-003` AC-2). */
+  audit: AuditSink;
   passwords: PasswordHasher;
   sessions: SessionRepository;
   settings: SettingStore;
@@ -88,7 +91,7 @@ export function approveAccount(
   }
 
   // 상태 변경은 슈퍼유저 바닥 가드를 지나는 하나의 진입점을 쓴다.
-  const changed = setAccountStatus(stores, target, 'active');
+  const changed = setAccountStatus(stores, target, 'active', { audit: stores.audit, actor });
   return changed.ok ? { ok: true } : { ok: false, rule: 'unknown-account' };
 }
 
@@ -109,6 +112,6 @@ export function reopenRejected(
   if (account === undefined) return { ok: false, rule: 'unknown-account' };
   if (account.status !== 'rejected') return { ok: false, rule: 'not-rejected' };
 
-  const changed = setAccountStatus(stores, target, 'pending');
+  const changed = setAccountStatus(stores, target, 'pending', { audit: stores.audit, actor });
   return changed.ok ? { ok: true } : { ok: false, rule: 'unknown-account' };
 }

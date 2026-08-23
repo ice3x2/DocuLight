@@ -55,7 +55,7 @@ export const QUERY_KEYS = {
   document: (nodeId: string) => ['document', nodeId] as const,
   workspaces: ['workspaces'] as const,
   brokenInheritance: ['broken-inheritance'] as const,
-  auditLog: ['audit-log'] as const,
+  auditLog: (operation: string) => ['audit-log', operation] as const,
   reconciliationQueue: ['reconciliation-queue'] as const,
   revocation: (principalId: string) => ['revocation', principalId] as const,
   simulation: (subjectId: string) => ['simulation', subjectId] as const,
@@ -161,8 +161,17 @@ export const useSimulation = (subjectId: string | null): UseQueryResult<Simulati
   });
 
 /** 감사 로그 (`SEC-AUDIT-010`). 관리 범위가 없으면 서버가 404 로 답한다. */
-export const useAuditLog = (enabled: boolean): UseQueryResult<AuditViewBody> =>
-  useQuery({ queryKey: QUERY_KEYS.auditLog, queryFn: fetchAuditLog, enabled, retry: false });
+export const useAuditLog = (
+  enabled: boolean,
+  /** 조작 필터. 빈 문자열이 「전체」다 — 질의 키의 일부라 바뀌면 다시 받는다. */
+  operation = '',
+): UseQueryResult<AuditViewBody> =>
+  useQuery({
+    queryKey: QUERY_KEYS.auditLog(operation),
+    queryFn: () => fetchAuditLog(operation),
+    enabled,
+    retry: false,
+  });
 
 /**
  * 재조정 대기열 (`SEC-AUDIT-007` · `IR-AUDIT-002`).

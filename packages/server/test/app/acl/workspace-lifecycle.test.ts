@@ -188,7 +188,10 @@ describe('CON-ACL-002 — 계정 정지는 ACL 이 아니라 주체 레벨 게�
     grantPermission(stores, root, { nodeId: doc, principalId: you.id, level: 'edit' });
     expect(permissionOf(stores, you, doc)).toBe('edit');
 
-    setAccountStatus({ ...stores, sessions: new SqliteSessionRepository(db) }, you.id, 'suspended');
+    setAccountStatus({ ...stores, sessions: new SqliteSessionRepository(db) }, you.id, 'suspended', {
+      audit: stores.audit,
+      actor: root.id,
+    });
 
     // 항목은 남는다 — 정지를 거부 항목으로 만들면 합집합 모델이 깨진다.
     expect(stores.acl.entriesOn(doc).some((e) => e.principalId === you.id)).toBe(true);
@@ -204,7 +207,10 @@ describe('CON-ACL-002 — 계정 정지는 ACL 이 아니라 주체 레벨 게�
     expect(spare.requester.superuser).toBe(true);
 
     expect(
-      setAccountStatus({ ...stores, sessions: new SqliteSessionRepository(db) }, root.id, 'suspended'),
+      setAccountStatus({ ...stores, sessions: new SqliteSessionRepository(db) }, root.id, 'suspended', {
+        audit: stores.audit,
+        actor: root.id,
+      }),
     ).toEqual({ ok: true });
 
     expect(actorFor(stores.principals, root.id).requester.superuser).toBe(false);

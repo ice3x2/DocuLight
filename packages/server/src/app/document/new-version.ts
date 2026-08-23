@@ -12,6 +12,14 @@ import { workspaceRootOf, type DocumentStores } from './save-service.js';
 
 export type NewVersionRule = 'unknown-node' | 'forbidden' | 'not-a-file' | 'too-large';
 
+/**
+ * 바이너리 새 버전의 조작명 (`OBS-AUDIT-005` AC-7).
+ *
+ * md 새 버전에는 붙지 않는다 — 버전 이력이 행위자와 시각을 영구히
+ * 재현하므로 `OBS-AUDIT-004` 의 제외축에 걸린다.
+ */
+export const NEW_VERSION = 'node.new-version';
+
 export type NewVersionOutcome = { ok: true } | { ok: false; rule: NewVersionRule };
 
 /**
@@ -80,6 +88,18 @@ export async function uploadNewVersion(
   }
 
   await writeFile(path, input.bytes);
+
+  // **재현처가 없는 것만** 남긴다 (`OBS-AUDIT-004`). 위에서 스냅샷이
+  // 생겼다면 그 이력이 행위자와 시각을 영구히 들고, 같은 사실을 두 곳에
+  // 적는 것은 `R124` 가 막는다.
+  if (!isVersioned(node.name)) {
+    stores.audit.append({
+      operation: NEW_VERSION,
+      actor: actor.id,
+      nodeId: input.nodeId,
+      workspaceId: node.workspaceId,
+    });
+  }
   return { ok: true };
 }
 

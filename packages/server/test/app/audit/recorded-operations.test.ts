@@ -174,7 +174,10 @@ describe('OBS-AUDIT-005 — 기준으로 재도출된 조작들', () => {
     expect(복구!.counterpartNodeId).toBeUndefined();
   });
 
-  it('AC-6: 업로드가 생성에 흡수되고 별도 조작명이 없다', () => {
+  it('AC-6: 별도의 업로드 조작명이 없다', () => {
+    // **부재만 재는 시험이다.** 올린 뒤에 생성 행이 실제로 느는지는 업로드
+    // 라우트를 지나야 알 수 있으므로 `production-path-audit` 이 잰다 —
+    // 여기서만 닫으면 업로드 기능이 아예 없어도 통과한다.
     const 값들 = stores.auditLog.operationsInScope([ws], { includeInstance: true });
 
     expect(값들.filter((one) => one.includes('upload'))).toEqual([]);

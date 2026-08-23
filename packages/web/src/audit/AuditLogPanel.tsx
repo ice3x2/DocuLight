@@ -136,6 +136,14 @@ function AuditGroupRow({ group }: { group: AuditGroupBody }) {
                   직접 부르는 쪽에 원시 ID 가 그대로 나간다
                   (`SEC-AUDIT-008` AC-3). */}
               {row.counterpart === null ? null : <span data-testid="audit-counterpart">{row.counterpart}</span>}
+              {/* 대상 역할을 **보인다** (`SEC-AUDIT-001` AC-1 · AC-2) —
+                  경계를 넘는 복사는 두 행이 모두 조작=복사라, 역할이 없으면
+                  「나갔다」와 「들어왔다」가 화면에서 같아진다.
+                  보이는 것과 축이 되는 것은 다르다 — 거르거나 정렬하거나
+                  세는 자리는 두지 않는다 (`SEC-AUDIT-009` AC-3~AC-5). */}
+              {row.targetRole === undefined ? null : (
+                <span data-testid="audit-role">{row.targetRole === 'origin' ? '원본' : '사본'}</span>
+              )}
               {row.beforeValue === undefined ? null : (
                 <span>
                   {row.beforeValue} → {row.afterValue ?? '-'}

@@ -109,6 +109,8 @@ function SettingsModal({
   aclAudit,
   auditLog,
   queue,
+  auditOperation,
+  onAuditOperation,
   onTrashLens,
   onTrashPurge,
   onTrashRestore,
@@ -131,6 +133,9 @@ function SettingsModal({
   auditLog?: AuditViewBody;
   /** 재조정 대기열 (`IR-AUDIT-002`). 감사 로그와 같은 자격으로 온다. */
   queue?: ReconciliationQueueBody;
+  /** 감사 로그의 조작 필터 (`IR-AUDIT-001`). 빈 문자열이 「전체」다. */
+  auditOperation?: string;
+  onAuditOperation?: (operation: string) => void;
   onTrashLens?: (lens: TrashLens) => void;
   onTrashPurge?: (nodeId: string) => void;
   onTrashRestore?: (nodeId: string) => void;
@@ -226,6 +231,8 @@ function SettingsModal({
                   <AuditLogPanel
                     {...(auditLog === undefined ? {} : { view: auditLog })}
                     {...(queue === undefined ? {} : { queue })}
+                    {...(auditOperation === undefined ? {} : { operation: auditOperation })}
+                    {...(onAuditOperation === undefined ? {} : { onOperation: onAuditOperation })}
                   />
                 ) : category.id === 'acl-audit' ? (
                   // 셋을 여기 모은다 — 흩어 두면 관리자가 같은 물음을 세
@@ -268,6 +275,8 @@ export function AppShell({
   aclAudit,
   auditLog,
   queue,
+  auditOperation,
+  onAuditOperation,
   onTrashLens,
   onTrashPurge,
   onTrashRestore,
@@ -339,6 +348,9 @@ export function AppShell({
   auditLog?: AuditViewBody;
   /** 재조정 대기열 (`IR-AUDIT-002`). 감사 로그와 같은 자격으로 온다. */
   queue?: ReconciliationQueueBody;
+  /** 감사 로그의 조작 필터 (`IR-AUDIT-001`). */
+  auditOperation?: string;
+  onAuditOperation?: (operation: string) => void;
   /** 좌측 검색 탭의 질의. 태그 클릭도 이 값을 채운다. */
   query?: string;
   onQuery?: (query: string) => void;
@@ -466,6 +478,8 @@ export function AppShell({
           {...(aclAudit === undefined ? {} : { aclAudit })}
           {...(auditLog === undefined ? {} : { auditLog })}
           {...(queue === undefined ? {} : { queue })}
+          {...(auditOperation === undefined ? {} : { auditOperation })}
+          {...(onAuditOperation === undefined ? {} : { onAuditOperation })}
           {...(onGroupRemove === undefined ? {} : { onGroupRemove })}
           {...(onGroupAddMember === undefined ? {} : { onGroupAddMember })}
         />

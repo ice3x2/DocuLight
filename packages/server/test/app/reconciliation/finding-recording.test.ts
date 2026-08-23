@@ -75,8 +75,8 @@ describe('REL-AUDIT-001 · DR-WORKSPACE-002 — 발견은 감사 1행 + 대기�
     await reconcile(stores);
 
     const added = auditRows().slice(before);
-    const created = added.filter((r) => r.operation === 'create');
-    const orphaned = added.filter((r) => r.operation === 'orphan');
+    const created = added.filter((r) => r.operation === RECONCILE_OPERATION.create);
+    const orphaned = added.filter((r) => r.operation === RECONCILE_OPERATION.orphan);
 
     // 신규 노드 하나에 생성 1행. 중간 디렉토리 `보관` 도 하나 서므로
     // 생성 행은 둘이고, 그중 파일 노드를 가리키는 것이 1행이다.

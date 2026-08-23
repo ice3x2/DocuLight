@@ -62,8 +62,11 @@ describe('OBS-AUDIT-001 AC-2 — 영구 삭제가 감사 행을 남긴다', () =
     const 구경꾼 = actorFor(stores.principals, stores.principals.createUser('구경꾼').id);
     await moveToTrash(stores, root, doc);
 
-    await purgeFromTrash(stores, 구경꾼, doc);
+    const 결과 = await purgeFromTrash(stores, 구경꾼, doc);
 
+    // 거절 자체를 먼저 잰다 — 반환값을 버리면 「거절되어 행이 없다」와
+    // 「삭제에는 성공했는데 기록만 빠졌다」가 같은 결과로 읽힌다.
+    expect(결과.ok).toBe(false);
     expect(purgeRows()).toHaveLength(0);
   });
 });

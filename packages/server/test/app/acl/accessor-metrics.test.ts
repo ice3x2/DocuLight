@@ -153,6 +153,7 @@ describe('IR-ACL-001 — 접근 가능 과 ACL 접근자 는 서로 다른 수�
       { principals: stores.principals, sessions: new SqliteSessionRepository(db) },
       퇴사예정.id,
       'suspended',
+      { audit: stores.audit, actor: root.id },
     );
 
     expect(report(root, doc)?.metrics.viaAcl).toBe(0);

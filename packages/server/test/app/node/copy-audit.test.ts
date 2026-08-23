@@ -80,6 +80,10 @@ describe('OBS-AUDIT-007 — 복사의 감사 행 수는 내부 1행 경계 2행�
 
     await copyNode(stores, root, 원본, { parentId: 상자 });
 
+    // **먼저 남는다는 것부터 잰다** — 부재만 재면 `copyNode` 가 아무 행도
+    // 남기지 않아도 통과한다.
+    expect(copyRows(기획팀)).toHaveLength(1);
+    expect(copyRows(기획팀)[0]).toMatchObject({ targetRole: 'copy' });
     // 원본 자리 행까지 만들면 같은 워크스페이스의 열람자가 복사 1건을
     // 2행으로 본다.
     expect(copyRows(기획팀).filter((row) => row.targetRole === 'origin')).toHaveLength(0);

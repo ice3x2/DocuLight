@@ -17,6 +17,7 @@ import {
 import { isSuperuser, subjectIdsOf } from '../../../src/domain/principal/subject.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
 import { SqliteSessionRepository } from '../../../src/infra/sqlite/session-repository.js';
+import { SqliteAuditLog } from '../../../src/infra/sqlite/audit-log-repository.js';
 import { SqlitePrincipalRepository } from '../../../src/infra/sqlite/principal-repository.js';
 
 let dir: string;
@@ -25,6 +26,8 @@ let principals: SqlitePrincipalRepository;
 
 /** 상태 변경은 슈퍼유저 바닥 가드를 지나야 한다 — 우회 진입점을 두지 않는다. */
 const guarded = () => ({ principals, sessions: new SqliteSessionRepository(db) });
+/** 기록기. 이 시험의 관심사가 아니어도 인자는 필수다 (`OBS-AUDIT-003`). */
+const 기록 = () => ({ audit: new SqliteAuditLog(db), actor: 'test:actor' });
 
 beforeEach(async () => {
   dir = await mkdtemp(join(tmpdir(), 'doculight-principal-'));
@@ -78,7 +81,7 @@ describe('DR-PRINCIPAL-002 — 그룹은 사용자만을 멤버로 가지며 중
     const outer = principals.createGroup('기획팀');
     const inner = principals.createGroup('기획팀-리드');
 
-    expect(addGroupMember(principals, outer.id, inner.id)).toEqual({
+    expect(addGroupMember(principals, outer.id, inner.id, 기록())).toEqual({
       ok: false,
       rule: 'member-must-be-user',
     });
@@ -223,7 +226,7 @@ describe('CON-PRINCIPAL-003 — 계정은 삭제하지 않고 suspended 로만 �
 
   it('AC-2: 비활성화는 suspended 전환이며 레코드를 지우지 않는다', () => {
     const u = principals.createUser('한범');
-    expect(setAccountStatus(guarded(), u.id, 'suspended')).toEqual({ ok: true });
+    expect(setAccountStatus(guarded(), u.id, 'suspended', 기록())).toEqual({ ok: true });
 
     const after = principals.findById(u.id);
     expect(after?.status).toBe('suspended');
@@ -236,7 +239,7 @@ describe('CON-PRINCIPAL-003 — 계정은 삭제하지 않고 suspended 로만 �
       u.id,
     ]);
 
-    setAccountStatus(guarded(), u.id, 'suspended');
+    setAccountStatus(guarded(), u.id, 'suspended', 기록());
 
     const rows = db.all<{ actor: string }>('SELECT actor FROM audit_log WHERE id = ?', ['a1']);
     expect(rows).toHaveLength(1);
@@ -250,7 +253,7 @@ describe('CON-PRINCIPAL-003 — 계정은 삭제하지 않고 suspended 로만 �
       [u.id],
     );
 
-    setAccountStatus(guarded(), u.id, 'suspended');
+    setAccountStatus(guarded(), u.id, 'suspended', 기록());
 
     const entries = db.all<{ principal_id: string }>('SELECT principal_id FROM acl_entry');
     expect(entries).toHaveLength(1);
