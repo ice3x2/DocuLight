@@ -1,6 +1,8 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { useId, useState } from 'react';
 
+import { ConfirmGate } from '../confirm/ConfirmGate.js';
+
 import { PrincipalPicker } from '../principal/PrincipalPicker.js';
 import {
   BROKEN_INHERITANCE_NOTICE,
@@ -27,6 +29,8 @@ export function ShareModal({
   view,
   onGrant,
   onRevoke,
+  onBreakInheritance,
+  onInheritFromParent,
 }: {
   nodeId: string;
   nodeName: string;
@@ -39,8 +43,12 @@ export function ShareModal({
   view?: ShareViewBody;
   onGrant?: (principalId: string, level: 'view' | 'edit') => void;
   onRevoke?: (entryId: string) => void;
+  onBreakInheritance?: () => void;
+  onInheritFromParent?: () => void;
 }) {
   const titleId = useId();
+  /** 지금 열려 있는 확인. 둘을 한 상태로 두어야 겹쳐 뜨지 않는다. */
+  const [관문, set관문] = useState<'break' | 'inherit' | null>(null);
   const [고른주체, set고른주체] = useState<PrincipalRow | null>(null);
   const [레벨, set레벨] = useState<'view' | 'edit'>('view');
 
@@ -96,6 +104,56 @@ export function ShareModal({
           >
             추가
           </button>
+
+          {/* 상속 조작 둘.
+
+              워크스페이스에는 **토글 자체를 렌더하지 않는다**
+              (`FR-CONFIRM-015` AC-5) — 상속의 시작점이라 끊을 상위가 없고,
+              비활성으로 두면 언젠가 열릴 것처럼 읽힌다.
+
+              부모 권한 가져오기는 **관리 전용**이다 (`SEC-CONFIRM-007`
+              AC-2). 편집자가 열거할 수 없는 집합을 통째로 부여하는
+              조작이라, 열면 「누구인지 알 수 없는 11명에게 부여하시겠습니까」
+              라는 성립 불가능한 확인이 된다. 상속이 이어져 있으면 가져올
+              것이 없으므로 그때도 서지 않는다. */}
+          {view !== undefined && view.nodeKind !== 'workspace' ? (
+            <button type="button" data-testid="break-inheritance" onClick={() => set관문('break')}>
+              상속 끊기
+            </button>
+          ) : null}
+
+          {view !== undefined && !view.inheritsAcl && view.level === 'admin' ? (
+            <button type="button" data-testid="inherit-from-parent" onClick={() => set관문('inherit')}>
+              부모 권한 가져오기
+            </button>
+          ) : null}
+
+          {/* 상속 끊기의 등급은 대상 노드 유형으로 갈린다 (`FR-CONFIRM-015`).
+              디렉토리는 본문 유실이 서브트리 규모로 확대되므로 `L3` 이고
+              토큰은 영향 건수 그 자체다 — 임의 문구를 치게 하면 그 수를
+              읽지 않고 칠 수 있는데, 확인해야 하는 것이 정확히 그 수다. */}
+          <ConfirmGate
+            open={관문 === 'break'}
+            grade={view?.nodeKind === 'directory' ? 'L3' : 'L2'}
+            title={`${nodeName} 의 상속을 끊습니다`}
+            {...(view?.nodeKind === 'directory' ? { token: String(view.reached) } : {})}
+            onConfirm={() => {
+              set관문(null);
+              onBreakInheritance?.();
+            }}
+            onCancel={() => set관문(null)}
+          />
+
+          <ConfirmGate
+            open={관문 === 'inherit'}
+            grade="L2"
+            title={`${nodeName} 에 부모의 권한을 가져옵니다`}
+            onConfirm={() => {
+              set관문(null);
+              onInheritFromParent?.();
+            }}
+            onCancel={() => set관문(null)}
+          />
 
           {/* 목록은 관리 전용이라 `null` 로 온다 (`SEC-ACL-015` AC-1).
               부분 목록으로 대신하지 않는다 (AC-6) — 아예 그리지 않는다. */}

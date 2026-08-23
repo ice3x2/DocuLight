@@ -18,6 +18,27 @@ const 문구: Record<GrantWarning, string> = {
   'last-administrator': '이 워크스페이스의 마지막 관리 권한자입니다. 회수하면 관리자가 없는 워크스페이스가 됩니다.',
 };
 
+/**
+ * 사유 목록만 그리는 조각.
+ *
+ * 관문 **안**에 얹어야 하는 자리가 있어서 다이얼로그와 나눠 둔다
+ * (`FR-CONFIRM-019` AC-2 — 확인은 하나여야 한다). 문구를 두 곳에 적으면
+ * 한쪽만 고쳐지므로 목록은 여기 하나다.
+ */
+export function GrantWarningList({ warnings }: { warnings: readonly GrantWarning[] }) {
+  if (warnings.length === 0) return null;
+
+  return (
+    <ul>
+      {warnings.map((warning) => (
+        <li key={warning} data-testid="grant-warning">
+          {문구[warning]}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function GrantConfirm({
   warnings,
   onConfirm,
@@ -34,13 +55,7 @@ export function GrantConfirm({
     // `alertdialog` 인 이유는 결과가 실행자의 의도와 다를 수 있다는 사실을
     // 먼저 알려야 하기 때문이다.
     <div role="alertdialog" aria-label="확인">
-      <ul>
-        {warnings.map((warning) => (
-          <li key={warning} data-testid="grant-warning">
-            {문구[warning]}
-          </li>
-        ))}
-      </ul>
+      <GrantWarningList warnings={warnings} />
 
       {/* 그만둘 수 있어야 한다 — 없으면 잘못 연 사용자가 진행하게 된다
           (`FR-PRINCIPAL-005` AC-3 · `FR-PRINCIPAL-008` AC-2). */}

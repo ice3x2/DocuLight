@@ -1,7 +1,8 @@
 import { useId, useState } from 'react';
 
 import { PrincipalPicker } from '../principal/PrincipalPicker.js';
-import { GrantConfirm, type GrantWarning } from '../acl/GrantConfirm.js';
+import { GrantWarningList, type GrantWarning } from '../acl/GrantConfirm.js';
+import { ConfirmGate } from '../confirm/ConfirmGate.js';
 import type { PrincipalRow } from '../api/client.js';
 
 /** `default` 그룹의 초기 권한 (`FR-PRINCIPAL-007`). */
@@ -54,11 +55,11 @@ export function NewWorkspaceForm({
       aria-label="새 워크스페이스"
       onSubmit={(event) => {
         event.preventDefault();
-        if (경고.length > 0) {
-          set확인대기(true);
-          return;
-        }
-        만들기();
+        // **생성 버튼은 관문이 아니다** (`FR-CONFIRM-019` AC-3). 경고가
+        // 있을 때만 확인을 받으면 그 확인의 등장 여부가 곧 경고의 유무를
+        // 알리고, 겸해 폼의 제출 버튼이 관문을 대신한다는 해석이 생긴다 —
+        // 그 해석을 인정하면 규칙 전체가 무력화된다 (`FR-CONFIRM-005`).
+        set확인대기(true);
       }}
     >
       <label htmlFor={`${formId}-name`}>이름</label>
@@ -87,9 +88,26 @@ export function NewWorkspaceForm({
         만들기
       </button>
 
-      {확인대기 ? (
-        <GrantConfirm warnings={경고} onConfirm={만들기} onCancel={() => set확인대기(false)} />
-      ) : null}
+      {/* 관리자 지정과 기본 그룹 초기 권한을 **한 관문**에 함께 싣는다
+          (AC-2) — 둘로 나누면 사용자가 첫 확인만 읽고 둘째를 기계적으로
+          넘긴다. 경고도 그 안에 든다.
+
+          적용 하위 노드 수를 싣지 않는다 (AC-4) — 갓 만든 워크스페이스에는
+          하위가 없어 그 수치가 뜻 없는 자리에 서고, 사용자는 0 을 실패로
+          읽는다. 대신 지연 효과 고지로 대체한다 (AC-5). */}
+      <ConfirmGate
+        open={확인대기}
+        grade="L2"
+        title={`${이름 || '새 워크스페이스'} 를 만들고 권한을 부여합니다`}
+        delayedEffect
+        onConfirm={만들기}
+        onCancel={() => set확인대기(false)}
+      >
+        <p data-testid="grant-summary">
+          관리자 {관리자?.name ?? '-'} · 기본 그룹 초기 권한 {레벨문구[레벨]}
+        </p>
+        <GrantWarningList warnings={경고} />
+      </ConfirmGate>
     </form>
   );
 }

@@ -1,3 +1,4 @@
+import { isSystemGroup } from '../../domain/principal/system-groups.js';
 import type { PrincipalRepository } from '../../domain/ports/principal-repository.js';
 import type {
   PrincipalKind,
@@ -25,6 +26,14 @@ export interface PrincipalHit {
    * 주지 않는다. 여기서 좁혀 두면 거르기를 빼는 순간 컴파일이 깨진다.
    */
   readonly status: VisibleStatus;
+  /**
+   * 시스템 그룹인가 (`FR-PRINCIPAL-010` AC-1 · `CON-PRINCIPAL-002`).
+   *
+   * 후보에서 빼지 않되 그 사실은 알린다 — 화면이 ID 로 판정하면 시스템
+   * 그룹의 정의가 두 곳에 살게 되고, 그룹이 하나 늘 때 한쪽만 바뀐다.
+   * 사용자에게는 언제나 거짓이다: 시스템 사용자라는 개념이 없다.
+   */
+  readonly system: boolean;
 }
 
 /** `rejected` 를 걸러 내면서 그 사실을 타입으로 옮긴다. */
@@ -77,6 +86,8 @@ export function searchPrincipals(principals: PrincipalRepository, query: string)
         name: record.name,
         kind,
         status: record.status,
+        // 후보에서 빼지 않되 그 사실은 알린다 (`FR-PRINCIPAL-010` AC-1).
+        system: kind === 'group' && isSystemGroup(record.id),
       }));
 
   // 종류마다 자르지 않고 **합친 뒤에** 자른다 — 종류마다 상한을 걸면 한

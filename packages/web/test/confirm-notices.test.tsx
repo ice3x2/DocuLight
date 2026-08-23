@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -16,6 +16,9 @@ const view = (over: Partial<ShareViewBody> = {}): ShareViewBody => ({
   metrics: { reachable: 3, viaAcl: 2 },
   rows: [],
   level: 'admin',
+  nodeKind: 'file',
+  inheritsAcl: true,
+  reached: 0,
   ...over,
 });
 
@@ -154,5 +157,86 @@ describe('SEC-CONFIRM-006 — 컨테이너 회수의 첨부 영향은 개수 대
     render(<RevokeConfirm open targetKind="file" subjectName="한범" />);
 
     expect(screen.queryByTestId('attachment-notice')).toBeNull();
+  });
+});
+
+describe('FR-CONFIRM-015 · SEC-CONFIRM-007 — 상속 조작의 자리와 문턱', () => {
+  const 모달 = async (over: Partial<ShareViewBody>, kind: 'file' | 'directory' | 'workspace') => {
+    cleanup();
+    render(<ShareModal nodeId="n1" nodeName="설계" nodeKind={kind} view={view(over)} />);
+    await userEvent.setup().click(screen.getByRole('button', { name: '설계 공유' }));
+    return screen.getByRole('dialog');
+  };
+
+  it('FR-CONFIRM-015 AC-5: 워크스페이스에는 상속 끊기 토글이 렌더되지 않는다', async () => {
+    const 워크스페이스 = await 모달({ nodeKind: 'workspace' }, 'workspace');
+    expect(워크스페이스.querySelector('[data-testid="break-inheritance"]')).toBeNull();
+
+    // 디렉토리에는 선다 — 부재 시험만 두면 아무 데도 안 그리는 구현이 통과한다.
+    const 디렉토리 = await 모달({ nodeKind: 'directory' }, 'directory');
+    expect(디렉토리.querySelector('[data-testid="break-inheritance"]')).toBeDefined();
+  });
+
+  it('FR-CONFIRM-015 AC-1 · AC-2: 디렉토리 상속 끊기는 영향 건수를 치는 L3 다', async () => {
+    await 모달({ nodeKind: 'directory', reached: 24 }, 'directory');
+
+    await userEvent.setup().click(screen.getByTestId('break-inheritance'));
+
+    const gate = screen.getByRole('alertdialog');
+    expect(gate.getAttribute('data-grade')).toBe('L3');
+    // 토큰이 영향 건수 그 자체다 — 임의 문구를 치게 하면 그 수를 읽지 않고
+    // 칠 수 있는데, 이 조작에서 확인해야 하는 것이 정확히 그 수다.
+    expect(gate.textContent ?? '').toContain('24');
+    expect(gate.textContent ?? '').not.toContain('24 /');
+  });
+
+  it('FR-CONFIRM-015 AC-4: 문서 상속 끊기는 L2 다', async () => {
+    await 모달({ nodeKind: 'file', reached: 0 }, 'file');
+
+    await userEvent.setup().click(screen.getByTestId('break-inheritance'));
+
+    expect(screen.getByRole('alertdialog').getAttribute('data-grade')).toBe('L2');
+  });
+
+  it('SEC-CONFIRM-007 AC-1 · AC-2: 부모 권한 가져오기는 관리 레벨에만 보인다', async () => {
+    const 끊김 = { nodeKind: 'directory' as const, inheritsAcl: false };
+
+    const 관리자 = await 모달({ ...끊김, level: 'admin' }, 'directory');
+    expect(관리자.querySelector('[data-testid="inherit-from-parent"]')).toBeDefined();
+
+    const 편집자 = await 모달({ ...끊김, level: 'edit', rows: null }, 'directory');
+    // 편집자가 열거할 수 없는 집합을 통째로 부여하는 조작이라, 열면
+    // 「누구인지 알 수 없는 11명에게 부여하시겠습니까」라는 성립 불가능한
+    // 확인이 된다.
+    expect(편집자.querySelector('[data-testid="inherit-from-parent"]')).toBeNull();
+  });
+
+  it('상속이 이어져 있으면 가져올 것이 없으므로 버튼도 없다', async () => {
+    const 이어짐 = await 모달({ nodeKind: 'directory', inheritsAcl: true, level: 'admin' }, 'directory');
+
+    expect(이어짐.querySelector('[data-testid="inherit-from-parent"]')).toBeNull();
+  });
+
+  it('SEC-CONFIRM-007 AC-4: 가져오기는 확인 다이얼로그를 받는다', async () => {
+    const 가져온다 = vi.fn();
+    cleanup();
+    render(
+      <ShareModal
+        nodeId="n1"
+        nodeName="설계"
+        nodeKind="directory"
+        view={view({ nodeKind: 'directory', inheritsAcl: false, level: 'admin' })}
+        onInheritFromParent={가져온다}
+      />,
+    );
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: '설계 공유' }));
+    await user.click(screen.getByTestId('inherit-from-parent'));
+
+    expect(screen.getByRole('alertdialog').getAttribute('data-grade')).toBe('L2');
+    expect(가져온다).not.toHaveBeenCalled();
+
+    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: '실행' }));
+    expect(가져온다).toHaveBeenCalledTimes(1);
   });
 });

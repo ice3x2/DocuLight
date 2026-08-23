@@ -479,3 +479,70 @@ describe('이동 프리뷰의 목적지도 인가를 지난다 (`SEC-ACL-006` ·
     expect(res.body.after).toBeGreaterThan(0);
   });
 });
+
+describe('공유 응답이 상속 조작의 재료를 함께 준다 (`FR-CONFIRM-015` · `SEC-CONFIRM-007`)', () => {
+  it('노드 유형·상속 여부·영향 건수를 싣는다', async () => {
+    const res = await request(app).get(`/api/nodes/${열린방}/share`);
+
+    expect(res.body).toMatchObject({ nodeKind: 'directory', inheritsAcl: true });
+    // 하위 하나(`회의록.md`)가 이 부여의 도달 범위다.
+    expect(res.body.reached).toBe(1);
+  });
+
+  it('워크스페이스는 상속의 시작점이라 끊을 수 없음을 유형으로 알린다 (`FR-CONFIRM-015` AC-5)', async () => {
+    const res = await request(app).get(`/api/nodes/${ws}/share`);
+
+    expect(res.body.nodeKind).toBe('workspace');
+  });
+
+  it('상속을 끊으면 그 사실이 응답에 나타난다 (`SEC-CONFIRM-007` AC-1 의 전제)', async () => {
+    breakInheritance(stores, root, 열린방);
+
+    expect((await request(app).get(`/api/nodes/${열린방}/share`)).body.inheritsAcl).toBe(false);
+  });
+
+  it('문서는 하위가 없으므로 영향 건수가 0 이다', async () => {
+    expect((await request(app).get(`/api/nodes/${doc}/share`)).body.reached).toBe(0);
+  });
+});
+
+describe('상속 끊기와 부모 권한 가져오기가 라우트 위에 선다 (`SEC-ACL-003` · `SEC-CONFIRM-007`)', () => {
+  it('관리 보유자는 상속을 끊고 부모 권한을 가져온다', async () => {
+    const 한범 = 사용자('한범');
+    grantPermission(stores, root, { nodeId: ws, principalId: 한범.id, level: 'view' });
+
+    expect((await request(app).post(`/api/nodes/${열린방}/break-inheritance`)).status).toBe(204);
+    expect(permissionOf(stores, actorFor(stores.principals, 한범.id), 열린방)).toBeNull();
+
+    expect((await request(app).post(`/api/nodes/${열린방}/inherit-from-parent`)).status).toBe(204);
+    expect(permissionOf(stores, actorFor(stores.principals, 한범.id), 열린방)).toBe('view');
+  });
+
+  it('SEC-CONFIRM-007 AC-3: 편집 레벨이 가져오기를 직접 호출하면 거부된다', async () => {
+    const 편집자 = 사용자('편집자');
+    grantPermission(stores, root, { nodeId: ws, principalId: 편집자.id, level: 'edit' });
+    breakInheritance(stores, root, 열린방);
+    const 전 = stores.acl.entriesOnAny([열린방]).length;
+    actingAs = actorFor(stores.principals, 편집자.id);
+
+    expect((await request(app).post(`/api/nodes/${열린방}/inherit-from-parent`)).status).toBe(404);
+    // 거부가 실제로 아무것도 만들지 않았는지 함께 잰다.
+    expect(stores.acl.entriesOnAny([열린방])).toHaveLength(전);
+  });
+
+  it('편집 레벨은 상속도 끊지 못한다 — 좁히기는 관리에 유보돼 있다', async () => {
+    const 편집자 = 사용자('편집자');
+    grantPermission(stores, root, { nodeId: ws, principalId: 편집자.id, level: 'edit' });
+    actingAs = actorFor(stores.principals, 편집자.id);
+
+    expect((await request(app).post(`/api/nodes/${열린방}/break-inheritance`)).status).toBe(404);
+    expect(stores.nodes.findById(열린방)?.inheritsAcl).toBe(true);
+  });
+
+  it('인증되지 않은 요청은 401 이다', async () => {
+    actingAs = undefined;
+
+    expect((await request(app).post(`/api/nodes/${열린방}/break-inheritance`)).status).toBe(401);
+    expect((await request(app).post(`/api/nodes/${열린방}/inherit-from-parent`)).status).toBe(401);
+  });
+});

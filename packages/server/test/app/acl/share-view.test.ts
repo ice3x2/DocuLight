@@ -161,7 +161,19 @@ describe('SEC-ACL-015 — 목록은 관리 전용이고 수치는 편집까지',
     const 본 = shareView(stores, actorFor(stores.principals, 편집자.id), 문서)!;
 
     // 이니셜·아바타·상위 몇 건 같은 대체 표시를 실을 칸 자체를 두지 않는다.
-    expect(Object.keys(본).sort()).toEqual(['level', 'metrics', 'rows']);
+    //
+    // 키 집합을 **통째로** 단언한다 — 「roster 라는 이름의 칸이 없다」로
+    // 재면 `initials`·`preview` 같은 다른 이름의 칸이 그대로 통과한다.
+    // 목록이 늘어난 것은 상속 조작의 재료가 들어왔기 때문이고
+    // (`FR-CONFIRM-015`), 셋 다 사람이 아니라 노드의 성질이다.
+    expect(Object.keys(본).sort()).toEqual([
+      'inheritsAcl',
+      'level',
+      'metrics',
+      'nodeKind',
+      'reached',
+      'rows',
+    ]);
   });
 
   it('보기만 가진 사람에게는 모달 자체가 없는 것과 같다', () => {
@@ -180,6 +192,13 @@ describe('IR-ACL-003 AC-5 — 같은 지정 방식을 문서와 디렉토리 양
   it('디렉토리에도 같은 모양이 온다', () => {
     const 본 = shareView(stores, 관리자('보는이'), 폴더)!;
 
-    expect(Object.keys(본).sort()).toEqual(['level', 'metrics', 'rows']);
+    expect(Object.keys(본).sort()).toEqual([
+      'inheritsAcl',
+      'level',
+      'metrics',
+      'nodeKind',
+      'reached',
+      'rows',
+    ]);
   });
 });

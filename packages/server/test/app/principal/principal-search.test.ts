@@ -9,6 +9,7 @@ import {
   searchPrincipals,
   type PrincipalHit,
 } from '../../../src/app/principal/principal-search-service.js';
+import { DEFAULT_GROUP_ID } from '../../../src/domain/principal/system-groups.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
 import { SqlitePrincipalRepository } from '../../../src/infra/sqlite/principal-repository.js';
 
@@ -73,7 +74,7 @@ describe('SEC-PRINCIPAL-003 — 최소 질의 길이 2자와 결과 상한 20건
     const found = named('한범');
 
     expect(searchPrincipals(principals, '한범')).toEqual([
-      { id: found.id, name: '한범', kind: 'user', status: 'active' },
+      { id: found.id, name: '한범', kind: 'user', status: 'active', system: false },
     ]);
   });
 
@@ -168,5 +169,24 @@ describe('SEC-PRINCIPAL-002 — 검색 결과의 계정 노출 범위', () => {
 
     expect(found).toHaveLength(3);
     expect(found.every((row) => row.status !== undefined)).toBe(true);
+  });
+});
+
+describe('FR-PRINCIPAL-010 — 시스템 그룹은 후보에 들되 그 사실이 표시된다', () => {
+  it('그룹 결과에 시스템 그룹 여부가 실린다', () => {
+    const 일반 = principals.createGroup('기획팀원');
+
+    const 시스템 = searchPrincipals(principals, 'de').find((hit) => hit.id === DEFAULT_GROUP_ID);
+    const 보통 = searchPrincipals(principals, '기획').find((hit) => hit.id === 일반.id);
+
+    // 화면이 ID 로 판정하면 시스템 그룹의 정의가 두 곳에 살게 된다.
+    expect(시스템?.system).toBe(true);
+    expect(보통?.system).toBe(false);
+  });
+
+  it('사용자에게는 그 칸이 언제나 거짓이다 — 시스템 사용자라는 개념이 없다', () => {
+    principals.createUser('한범');
+
+    expect(searchPrincipals(principals, '한범')[0]?.system).toBe(false);
   });
 });

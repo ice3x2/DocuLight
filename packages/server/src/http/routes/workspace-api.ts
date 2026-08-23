@@ -38,7 +38,13 @@ import {
   grantWarnings,
   isLastAdministrator,
 } from '../../app/workspace/admin-presence.js';
-import { grantPermission, restoreInheritance, revokePermission } from '../../app/acl/grant-service.js';
+import {
+  breakInheritance,
+  grantPermission,
+  inheritFromParent,
+  restoreInheritance,
+  revokePermission,
+} from '../../app/acl/grant-service.js';
 import { accessorsOf } from '../../app/acl/accessor-service.js';
 import { copyPreview, movePreview } from '../../app/acl/relocation-preview-service.js';
 import { ASSIGNED_GRADES, moveGrade } from '../../domain/confirm/grade.js';
@@ -918,6 +924,40 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     }
 
     res.json(audit);
+  });
+
+  /**
+   * 상속을 끊는다 (`SEC-ACL-003`). 좁히기라 `관리` 를 요구한다.
+   *
+   * 확인 등급은 대상 노드 유형으로 갈리는데(`FR-CONFIRM-015`) 그 판정은
+   * 화면이 한다 — 여기서 또 재면 같은 규칙이 두 곳에 산다.
+   */
+  router.post('/nodes/:nodeId/break-inheritance', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    res.sendStatus(breakInheritance(stores, actor, req.params.nodeId!).ok ? 204 : 404);
+  });
+
+  /**
+   * 부모 권한 가져오기 (`SEC-CONFIRM-007`). **관리 전용이다** (AC-3).
+   *
+   * 넓히기지만 편집에 열지 않는다 — 요청자가 열거할 수 없는 집합을 통째로
+   * 실행하는 조작이라, 편집에 열면 「누구인지 알 수 없는 11명에게
+   * 부여하시겠습니까」라는 성립 불가능한 확인이 된다. 문턱은 서비스가
+   * 소유하고 여기서 다시 재지 않는다.
+   */
+  router.post('/nodes/:nodeId/inherit-from-parent', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    res.sendStatus(inheritFromParent(stores, actor, req.params.nodeId!).ok ? 204 : 404);
   });
 
   /** 상속으로 되돌린다 (`FR-ACL-005` AC-2). 부모 항목을 복사해 오지 않는다. */

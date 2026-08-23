@@ -578,7 +578,7 @@ describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
     expect(got.status).toBe(200);
     expect(got.body).toEqual(
       expect.arrayContaining([
-        { id: me.id, name: '한범', kind: 'user', status: 'active' },
+        { id: me.id, name: '한범', kind: 'user', status: 'active', system: false },
         expect.objectContaining({ name: '한범팀', kind: 'group' }),
       ]),
     );
@@ -757,7 +757,7 @@ describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
     // `R70-a` 가 넓히기를 편집에게 열었으므로 검색도 거기서 열린다.
     expect(got.status).toBe(200);
     expect(got.body).toEqual(
-      expect.arrayContaining([{ id: me.id, name: '한범', kind: 'user', status: 'active' }]),
+      expect.arrayContaining([{ id: me.id, name: '한범', kind: 'user', status: 'active', system: false }]),
     );
   });
 

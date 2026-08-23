@@ -141,7 +141,7 @@ describe('주체 축 일괄 회수 (`FR-ACL-003` · `FR-PRINCIPAL-004` · `FR-PR
   });
 
   it('주체는 공용 부품으로 고른다 (`CON-PRINCIPAL-006` AC-1)', async () => {
-    serving([{ id: 'g-default', name: 'default', kind: 'group', status: 'active' }]);
+    serving([{ id: 'g-default', name: 'default', kind: 'group', status: 'active', system: true }]);
     const 골랐다 = vi.fn();
     render(<BulkRevokePanel workspaceId="ws1" onPick={골랐다} />);
 
@@ -155,7 +155,7 @@ describe('주체 축 일괄 회수 (`FR-ACL-003` · `FR-PRINCIPAL-004` · `FR-PR
     render(
       <BulkRevokePanel
         workspaceId="ws1"
-        subject={{ id: 'g-default', name: 'default', kind: 'group', status: 'active' }}
+        subjects={[{ id: 'g-default', name: 'default', kind: 'group', status: 'active', system: true }]}
         revocation={{ scope: 'instance', rows: [행] }}
         onRevoke={걷는다}
       />,
@@ -164,13 +164,16 @@ describe('주체 축 일괄 회수 (`FR-ACL-003` · `FR-PRINCIPAL-004` · `FR-PR
     const 버튼 = screen.getByRole('button', { name: /회수/ });
     expect((버튼 as HTMLButtonElement).disabled).toBe(false);
     expect(screen.queryByText(/시스템 그룹은 회수할 수 없/)).toBeNull();
+    // 막지 않되 그 사실은 알린다 — 걷은 항목은 가입·활성화 절차로
+    // 되살아나지 않는다.
+    expect(screen.getByTestId('system-group-notice')).toBeDefined();
   });
 
   it('걷을 것이 없으면 실행할 수 없다 — 빈 실행은 감사 행만 남긴다', () => {
     render(
       <BulkRevokePanel
         workspaceId="ws1"
-        subject={{ id: 'u1', name: '한범', kind: 'user', status: 'active' }}
+        subjects={[{ id: 'u1', name: '한범', kind: 'user', status: 'active', system: false }]}
         revocation={{ scope: 'instance', rows: [] }}
       />,
     );
@@ -219,7 +222,7 @@ describe('유효 권한 시뮬레이션 (`FR-ACL-004`)', () => {
   });
 
   it('주체는 공용 부품으로 고른다 (`CON-PRINCIPAL-006` AC-1)', async () => {
-    serving([{ id: 'u1', name: '한범', kind: 'user', status: 'active' }]);
+    serving([{ id: 'u1', name: '한범', kind: 'user', status: 'active', system: false }]);
     const 골랐다 = vi.fn();
     render(<SimulationPanel workspaceId="ws1" onPick={골랐다} />);
 

@@ -326,18 +326,24 @@ function AppBody() {
    * 목록의 첫 항목을 쓴다: 주체 검색의 자격 근거일 뿐이라 어느 것이어도
    * 같은 인가를 지난다 (`R162`).
    */
-  const [회수주체, set회수주체] = useState<PrincipalRow | null>(null);
+  const [회수주체, set회수주체] = useState<readonly PrincipalRow[]>([]);
   const [시뮬주체, set시뮬주체] = useState<string | null>(null);
   const adminScope = session.data !== undefined && session.data.adminWorkspaceCount > 0;
   const workspaceList = useWorkspaceList(signedIn && adminScope);
   const brokenInheritance = useBrokenInheritance(signedIn && adminScope);
-  const revocation = useRevocation(회수주체?.id ?? null);
+  // 지금은 첫 주체의 것만 묻는다 — 다건 조회의 합산 규칙을 정한 요구가
+  // 아직 없어, 없는 규칙을 화면이 지어내지 않는다.
+  const revocation = useRevocation(회수주체[0]?.id ?? null);
   const simulation = useSimulation(시뮬주체);
 
   const revokeAllForSubject = useCallback(
-    async (principalId: string) => {
-      await revokeAllFor(principalId).catch(() => undefined);
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.revocation(principalId) });
+    async (principalIds: readonly string[]) => {
+      // 주체마다 한 번씩 지난다 — 확인은 묶음 1회였고(`FR-CONFIRM-021`)
+      // 실행은 항목마다 감사 행을 남겨야 한다(`SEC-ACL-010`).
+      for (const principalId of principalIds) {
+        await revokeAllFor(principalId).catch(() => undefined);
+        await queries.invalidateQueries({ queryKey: QUERY_KEYS.revocation(principalId) });
+      }
       await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
     },
     [queries],
@@ -496,11 +502,11 @@ function AppBody() {
       onGroupAddMember={addMember}
       aclAudit={{
         ...(workspaceList.data?.[0] === undefined ? {} : { workspaceId: workspaceList.data[0].id }),
-        ...(회수주체 === null ? {} : { subject: 회수주체 }),
+        subjects: 회수주체,
         ...(revocation.data === undefined ? {} : { revocation: revocation.data }),
         ...(simulation.data === undefined ? {} : { simulation: simulation.data }),
         ...(brokenInheritance.data === undefined ? {} : { audit: brokenInheritance.data }),
-        onRevokePick: set회수주체,
+        onRevokePick: (row) => set회수주체((was) => (was.some((one) => one.id === row.id) ? was : [...was, row])),
         onSimulatePick: (row) => set시뮬주체(row.id),
         onRevoke: revokeAllForSubject,
         onRestore: restoreNodeInheritance,

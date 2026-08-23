@@ -4,6 +4,7 @@ import type { NodeId } from '../../domain/node/node-id.js';
 import type { PrincipalId, PrincipalKind } from '../../domain/principal/principal.js';
 import { accessorsOf, servableAncestryOf, type AccessorMetrics } from './accessor-service.js';
 import { judgementScope, type AclStores, type Actor } from './permission-service.js';
+import { reachedDescendants } from '../confirm/reach-service.js';
 
 /**
  * 공유 모달의 한 줄 (`IR-ACL-002`).
@@ -43,6 +44,24 @@ export interface ShareView {
   readonly rows: readonly ShareRow[] | null;
   /** 요청자가 이 노드에 가진 유효 권한. 화면이 부여 폼을 열지 판정한다. */
   readonly level: PermissionLevel;
+  /**
+   * 이 자리가 무엇인가 (`FR-CONFIRM-015` AC-5).
+   *
+   * 워크스페이스는 상속의 **시작점**이라 끊을 상위가 없다 — 화면이 그
+   * 토글 자체를 렌더하지 않으려면 유형을 알아야 한다. 화면이 ID 모양으로
+   * 추측하면 그 추측이 곧 두 번째 판정이 된다.
+   */
+  readonly nodeKind: 'file' | 'directory' | 'workspace';
+  /** 지금 조상의 항목을 받고 있는가. 부모 권한 가져오기가 이 값 위에 선다. */
+  readonly inheritsAcl: boolean;
+  /**
+   * 여기서 준 부여가 상속으로 닿는 하위 노드 수 (`FR-CONFIRM-012`).
+   *
+   * **요청자에게 보이는 것만 센다** — 도달 집합이 가시 집합의 부분집합이라
+   * 이 수치는 존재 오라클이 아니다. 디렉토리 상속 끊기의 타이핑 토큰도
+   * 이 수를 쓴다 (`FR-CONFIRM-015` AC-2).
+   */
+  readonly reached: number;
 }
 
 /**
@@ -64,10 +83,18 @@ export function shareView(stores: AclStores, actor: Actor, nodeId: NodeId): Shar
   const level = effectivePermission(ancestry, stores.acl.entriesOnAny(judgementScope(ancestry)), actor.requester);
   if (level === null) return null;
 
+  const node = stores.nodes.findById(nodeId);
+
   return {
     metrics: report.metrics,
     rows: permits(level, 'admin') ? rowsOf(stores, nodeId, ancestry) : null,
     level,
+    // 노드로 찾히지 않으면 워크스페이스다 — `servableAncestryOf` 가 이미
+    // 그 둘을 함께 받으므로 여기서 다시 묻지 않는다.
+    nodeKind: node === undefined ? 'workspace' : node.kind,
+    // 워크스페이스는 상속의 시작점이라 언제나 참이다.
+    inheritsAcl: node === undefined ? true : node.inheritsAcl,
+    reached: reachedDescendants(stores, actor, nodeId),
   };
 }
 

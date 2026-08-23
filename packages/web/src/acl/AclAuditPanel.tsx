@@ -27,11 +27,12 @@ export interface AclAuditProps {
    */
   workspaceId?: string;
   revocation?: RevocationBody;
-  subject?: PrincipalRow;
+  /** 고른 주체들 — 다건이다 (`FR-CONFIRM-020`). */
+  subjects?: readonly PrincipalRow[];
   simulation?: SimulationBody;
   audit?: BrokenInheritanceBody;
   onRevokePick?: (row: PrincipalRow) => void;
-  onRevoke?: (principalId: string) => void;
+  onRevoke?: (principalIds: readonly string[]) => void;
   onSimulatePick?: (row: PrincipalRow) => void;
   onRestore?: (nodeId: string) => void;
 }
@@ -39,7 +40,7 @@ export interface AclAuditProps {
 export function AclAuditPanel({
   workspaceId,
   revocation,
-  subject,
+  subjects,
   simulation,
   audit,
   onRevokePick,
@@ -61,7 +62,7 @@ export function AclAuditPanel({
         ) : (
           <BulkRevokePanel
             workspaceId={workspaceId}
-            {...(subject === undefined ? {} : { subject })}
+            {...(subjects === undefined ? {} : { subjects })}
             {...(revocation === undefined ? {} : { revocation })}
             {...(onRevokePick === undefined ? {} : { onPick: onRevokePick })}
             {...(onRevoke === undefined ? {} : { onRevoke })}

@@ -175,6 +175,14 @@ export interface PrincipalRow {
   name: string;
   kind: 'user' | 'group';
   status: PrincipalStatus;
+  /**
+   * 시스템 그룹인가 (`FR-PRINCIPAL-010` AC-1 · `FR-CONFIRM-020` AC-3).
+   *
+   * **서버가 판정해 보낸다** — 화면이 ID 로 가리면 시스템 그룹의 정의가 두
+   * 곳에 살게 되고, 그룹이 하나 늘 때 한쪽만 바뀐다. 후보에서 빼는 값이
+   * 아니라 안내를 붙이는 값이다.
+   */
+  system: boolean;
 }
 
 /**
@@ -256,7 +264,18 @@ export interface ShareViewBody {
   metrics: { reachable: number; viaAcl: number };
   rows: ShareRow[] | null;
   level: 'view' | 'edit' | 'admin';
+  /** 워크스페이스는 상속의 시작점이라 끊을 상위가 없다 (`FR-CONFIRM-015` AC-5). */
+  nodeKind: 'file' | 'directory' | 'workspace';
+  inheritsAcl: boolean;
+  /** 여기서 준 부여가 닿는 하위 노드 수. 상속 끊기의 타이핑 토큰이기도 하다. */
+  reached: number;
 }
+
+export const breakInheritance = (nodeId: string) =>
+  call<void>(`/nodes/${encodeURIComponent(nodeId)}/break-inheritance`, { method: 'POST' });
+
+export const inheritFromParent = (nodeId: string) =>
+  call<void>(`/nodes/${encodeURIComponent(nodeId)}/inherit-from-parent`, { method: 'POST' });
 
 export const fetchShareView = (nodeId: string) =>
   call<ShareViewBody>(`/nodes/${encodeURIComponent(nodeId)}/share`);
