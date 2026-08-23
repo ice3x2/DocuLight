@@ -553,6 +553,30 @@ export interface ReconciliationQueueBody {
   items: QueueItemBody[];
 }
 
+/** 검색 결과의 일치 지점 하나 (`FR-SHELL-013` AC-9). */
+export interface SearchExcerptBody {
+  axis: 'name' | 'body' | 'tag' | 'attachment';
+  text: string;
+}
+
+/** 결과의 한 문서 — 머리행 하나에 발췌가 쌓인다 (AC-10). */
+export interface SearchDocumentBody {
+  nodeId: string;
+  name: string;
+  workspaceName: string;
+  excerpts: SearchExcerptBody[];
+}
+
+/** 거르기 전 개수나 분모가 없다 (AC-11). */
+export interface SearchResultBody {
+  documents: SearchDocumentBody[];
+}
+
+export const fetchSearch = (query: string, axes: readonly string[]) =>
+  call<SearchResultBody>(
+    `/search?q=${encodeURIComponent(query)}&axes=${encodeURIComponent(axes.join(','))}`,
+  );
+
 /** 태그 색인의 한 줄 (`FR-SHELL-009`). 문서 목록은 여기 없다. */
 export interface TagRowBody {
   name: string;

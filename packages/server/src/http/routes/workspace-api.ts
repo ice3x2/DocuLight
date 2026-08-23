@@ -71,6 +71,7 @@ import { uploadNewVersion, warnsIrreversible } from '../../app/document/new-vers
 import { noticeFor } from '../../domain/node/collision-notice.js';
 import { linksOf, wikiTargets } from '../../app/document/link-service.js';
 import { tagIndex } from '../../app/document/tag-service.js';
+import { SEARCH_AXES, search, type SearchAxis } from '../../app/document/search-service.js';
 import { readDocument, saveDocument, workspaceRootOf } from '../../app/document/save-service.js';
 import {
   beginEditSession,
@@ -1230,6 +1231,27 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     res.json(
       await tagIndex(stores, actor, workspaceId === undefined || workspaceId === '' ? {} : { workspaceId }),
     );
+  });
+
+  /**
+   * 전역 검색 (`FR-SHELL-013`).
+   *
+   * 축은 요청이 실어 보낸다 — 기본값을 서버가 정하면 화면의 체크박스와
+   * 서버의 기본이 두 벌이 되고, 사용자가 끈 축이 조용히 켜진다.
+   */
+  router.get('/search', async (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    // 모르는 축은 버린다. 받아 주면 그 이름이 곧 다섯 번째 축이 된다.
+    const asked = (one(req.query.axes) ?? '').split(',').filter((axis): axis is SearchAxis =>
+      (SEARCH_AXES as readonly string[]).includes(axis),
+    );
+
+    res.json(await search(stores, actor, { query: one(req.query.q) ?? '', axes: asked }));
   });
 
   router.get('/wiki-targets', (req, res) => {

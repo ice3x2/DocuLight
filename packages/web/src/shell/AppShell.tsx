@@ -5,7 +5,8 @@ import { useCallback, useId, useState } from 'react';
 import { DocumentArea } from '../document/DocumentArea.js';
 import { FavoritesView, type Favorite } from '../favorites/FavoritesView.js';
 import { LinkPanel, type LinkRowView } from '../links/LinkPanel.js';
-import { SearchPanel, type SearchHit } from '../search/SearchPanel.js';
+import { SearchPanel } from '../search/SearchPanel.js';
+import type { SearchAxis } from '../search/search-axes.js';
 import { TagPanel } from '../search/TagPanel.js';
 import type { SaveState, TabState } from '../document/tab-state.js';
 import { DocumentTree } from '../tree/DocumentTree.js';
@@ -16,7 +17,12 @@ import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { PersonalSettings } from '../settings/PersonalSettings.js';
 import { AclAuditPanel, type AclAuditProps } from '../acl/AclAuditPanel.js';
 import { AuditLogPanel } from '../audit/AuditLogPanel.js';
-import type { AuditViewBody, ReconciliationQueueBody, TagIndexBody } from '../api/client.js';
+import type {
+  AuditViewBody,
+  ReconciliationQueueBody,
+  SearchDocumentBody,
+  TagIndexBody,
+} from '../api/client.js';
 import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
@@ -267,7 +273,9 @@ export function AppShell({
   notice,
   bodies = {},
   hashes = {},
-  hits = [],
+  searchResults = [],
+  searchAxes,
+  onSearchAxes,
   trash = [],
   trashLens,
   personalSettings = {},
@@ -308,8 +316,11 @@ export function AppShell({
   bodies?: Readonly<Record<string, string>>;
   /** 노드 ID → 그 본문의 기준 해시. */
   hashes?: Readonly<Record<string, string>>;
-  /** 검색 결과. 서버가 이미 걸러 준 것이다. */
-  hits?: readonly SearchHit[];
+  /** 검색 결과. 서버가 이미 거르고 발췌까지 만든 것이다 (`FR-SHELL-013`). */
+  searchResults?: readonly SearchDocumentBody[];
+  /** 켜진 검색 대상 (`FR-SHELL-013` AC-6 · AC-7). 되살리는 일은 바깥의 것이다. */
+  searchAxes?: readonly SearchAxis[];
+  onSearchAxes?: (axes: readonly SearchAxis[]) => void;
   /** 활성 문서의 링크 양쪽 (`CON-EDITOR-002` AC-2 · AC-3). */
   links?: { outgoing: readonly LinkRowView[]; backlinks: readonly LinkRowView[] };
   /** 휴지통 행. 서버가 행마다 권한을 붙여 준다. */
@@ -455,8 +466,10 @@ export function AppShell({
           if (tab.id === 'search')
             return (
               <SearchPanel
-                hits={hits}
+                documents={searchResults}
                 query={query}
+                {...(searchAxes === undefined ? {} : { axes: searchAxes })}
+                {...(onSearchAxes === undefined ? {} : { onAxes: onSearchAxes })}
                 {...(onQuery === undefined ? {} : { onQuery })}
                 onOpen={(nodeId) => {
                   const found = workspaces

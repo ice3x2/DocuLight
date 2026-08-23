@@ -23,6 +23,7 @@ import {
   useAuditLog,
   useReconciliationQueue,
   useTags,
+  useSearch,
   useBrokenInheritance,
   useFavorites,
   useGroupRoster,
@@ -36,6 +37,7 @@ import {
   useTree,
   useWorkspaceList,
 } from './api/queries.js';
+import { axesFrom, axesTo, readAxes, writeAxes, type SearchAxis } from './search/search-axes.js';
 import type { UploadRequest } from './attachment/upload-contract.js';
 import { PreAuthScreen } from './auth/PreAuthScreen.js';
 import { AppShell } from './shell/AppShell.js';
@@ -139,6 +141,19 @@ function AppBody() {
   const [notice, setNotice] = useState<string | undefined>(undefined);
   /** 좌측 검색 탭의 질의. 태그를 눌러도 이 값이 채워진다. */
   const [query, setQuery] = useState('');
+  /**
+   * 켜진 검색 대상 (`FR-SHELL-013` AC-6 · AC-7).
+   *
+   * 마지막 조합을 브라우저에 남긴다 — 되살리는 규칙(깨졌으면 기본값)은
+   * `axesFrom` 한 자리에 있고, 여기서 다시 판정하지 않는다.
+   */
+  const [searchAxes, setSearchAxes] = useState<readonly SearchAxis[]>(() =>
+    axesFrom(readAxes()),
+  );
+  const pickAxes = useCallback((axes: readonly SearchAxis[]) => {
+    setSearchAxes(axes);
+    writeAxes(axesTo(axes));
+  }, []);
   /**
    * 확인을 기다리는 열기 (`FR-SHELL-012` AC-3 · AC-4).
    *
@@ -346,6 +361,7 @@ function AppBody() {
   /** 태그 탭의 범위 (`FR-SHELL-009` AC-2). 빈 문자열이 「전체」다. */
   const [tagScope, setTagScope] = useState('');
   const tags = useTags(signedIn, tagScope);
+  const searchResults = useSearch(signedIn ? query : '', searchAxes);
   // 지금은 첫 주체의 것만 묻는다 — 다건 조회의 합산 규칙을 정한 요구가
   // 아직 없어, 없는 규칙을 화면이 지어내지 않는다.
   const revocation = useRevocation(회수주체[0]?.id ?? null);
@@ -546,6 +562,9 @@ function AppBody() {
       {...(tags.data === undefined ? {} : { tags: tags.data })}
       tagScope={tagScope}
       onTagScope={setTagScope}
+      searchResults={searchResults.data?.documents ?? []}
+      searchAxes={searchAxes}
+      onSearchAxes={pickAxes}
       {...(notice === undefined ? {} : { notice })}
       {...(pendingOpen === null
         ? {}

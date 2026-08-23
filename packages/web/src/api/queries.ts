@@ -18,7 +18,9 @@ import {
   type AuditViewBody,
   type ReconciliationQueueBody,
   type TagIndexBody,
+  type SearchResultBody,
   fetchTags,
+  fetchSearch,
   fetchReconciliationQueue,
   type BrokenInheritanceBody,
   type DocumentBody,
@@ -60,6 +62,7 @@ export const QUERY_KEYS = {
   auditLog: (operation: string) => ['audit-log', operation] as const,
   reconciliationQueue: ['reconciliation-queue'] as const,
   tags: (workspaceId: string) => ['tags', workspaceId] as const,
+  search: (query: string, axes: string) => ['search', query, axes] as const,
   revocation: (principalId: string) => ['revocation', principalId] as const,
   simulation: (subjectId: string) => ['simulation', subjectId] as const,
 };
@@ -173,6 +176,24 @@ export const useAuditLog = (
     queryKey: QUERY_KEYS.auditLog(operation),
     queryFn: () => fetchAuditLog(operation),
     enabled,
+    retry: false,
+  });
+
+/**
+ * 전역 검색 (`FR-SHELL-013`).
+ *
+ * 질의와 축이 **둘 다** 질의 키의 일부다 — 축만 바꿔도 결과가 달라지므로
+ * 한쪽만 키에 두면 끈 축의 결과가 그대로 남는다. 빈 질의는 부르지 않는다:
+ * 전 문서 나열은 검색이 아니라 목록이고 그것은 트리가 소유한다.
+ */
+export const useSearch = (
+  query: string,
+  axes: readonly string[],
+): UseQueryResult<SearchResultBody> =>
+  useQuery({
+    queryKey: QUERY_KEYS.search(query, axes.join(',')),
+    queryFn: () => fetchSearch(query, axes),
+    enabled: query.trim() !== '' && axes.length > 0,
     retry: false,
   });
 
