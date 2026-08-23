@@ -613,6 +613,38 @@ describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
     expect(shorter.body).toEqual([]);
   });
 
+  it('FR-PRINCIPAL-006: 관리 권한자가 없는 워크스페이스가 지목된다', async () => {
+    const 없는곳 = await request(app).get('/api/workspaces');
+    expect(없는곳.body).toEqual([{ id: ws, name: '기획팀', adminless: true }]);
+
+    grantPermission(stores, root, { nodeId: ws, principalId: me.id, level: 'admin' });
+
+    // 슈퍼유저는 어느 워크스페이스에도 닿지만 그것은 지정된 관리자가 아니다.
+    expect((await request(app).get('/api/workspaces')).body).toEqual([
+      { id: ws, name: '기획팀', adminless: false },
+    ]);
+  });
+
+  it('FR-PRINCIPAL-008 AC-1 · AC-3: 정지 계정에만 확인 사유가 붙는다', async () => {
+    const 정지된 = stores.principals.createUser('정지된이');
+    stores.principals.setStatus(정지된.id, 'suspended');
+
+    const 정지 = await request(app).get('/api/grant-warnings').query({ principalId: 정지된.id });
+    const 멀쩡 = await request(app).get('/api/grant-warnings').query({ principalId: me.id });
+
+    expect(정지.body).toEqual(['suspended-subject']);
+    expect(멀쩡.body).toEqual([]);
+  });
+
+  it('FR-PRINCIPAL-005 AC-2: 마지막 관리 권한자 회수에 사유가 붙는다', async () => {
+    grantPermission(stores, root, { nodeId: ws, principalId: me.id, level: 'admin' });
+    const 항목 = stores.acl.entriesOn(ws).find((e) => e.principalId === me.id)!;
+
+    const got = await request(app).get('/api/grant-warnings').query({ entryId: 항목.id });
+
+    expect(got.body).toEqual(['last-administrator']);
+  });
+
   it('R163 · FR-PRINCIPAL-009: 명부는 rejected 를 담고 상한이 없다', async () => {
     for (let n = 0; n < 25; n += 1) stores.principals.createUser(`사람${n}`);
     const 거절된 = stores.principals.createUser('거절자');

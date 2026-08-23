@@ -32,6 +32,11 @@ import { createNode } from '../../app/node/node-service.js';
 import { searchPrincipals } from '../../app/principal/principal-search-service.js';
 import { maySearchFor, parseScope } from '../../app/principal/search-scope.js';
 import { shareView } from '../../app/acl/share-service.js';
+import {
+  adminlessWorkspaceIds,
+  grantWarnings,
+  isLastAdministrator,
+} from '../../app/workspace/admin-presence.js';
 import { grantPermission, revokePermission } from '../../app/acl/grant-service.js';
 import {
   PERSONAL_SETTING_KEYS,
@@ -753,6 +758,54 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
 
     const revoked = revokePermission(stores, actor, req.params.entryId!);
     res.sendStatus(revoked.ok ? 204 : 404);
+  });
+
+  /**
+   * 실행 전에 물어야 할 것 (`FR-PRINCIPAL-005` AC-2 · `FR-PRINCIPAL-008` AC-1).
+   *
+   * **차단이 아니라 사유 목록이다.** 둘 다 실행할 수 있는 조작이고,
+   * 다만 결과가 실행자의 의도와 다를 가능성이 높은 자리다. 화면이 스스로
+   * 세면 서버가 아는 것과 갈리므로 여기서 판정한다.
+   */
+  router.get('/grant-warnings', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const entryId = one(req.query.entryId);
+    const warnings = [
+      ...grantWarnings(stores, {
+        ...(one(req.query.principalId) === undefined ? {} : { principalId: one(req.query.principalId)! }),
+      }),
+      ...(entryId !== undefined && isLastAdministrator(stores, entryId) ? ['last-administrator'] : []),
+    ];
+
+    res.json(warnings);
+  });
+
+  /**
+   * 볼 수 있는 워크스페이스와 그 관리 상태 (`FR-PRINCIPAL-006` AC-1 · AC-2).
+   *
+   * `adminless` 를 서버가 판정해 보내는 이유는, 화면이 접근자를 세면
+   * 슈퍼유저의 상방 게이트가 「관리자 있음」으로 잘못 세어지기 때문이다.
+   */
+  router.get('/workspaces', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const adminless = new Set(adminlessWorkspaceIds(stores));
+    res.json(
+      visibleWorkspacesOf(stores, actor).map((entry) => ({
+        id: entry.workspace.id,
+        name: entry.workspace.name,
+        adminless: adminless.has(entry.workspace.id),
+      })),
+    );
   });
 
   router.get('/roster/users', (req, res) => {

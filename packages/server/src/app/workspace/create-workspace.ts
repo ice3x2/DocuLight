@@ -1,4 +1,5 @@
 import type { PrincipalId } from '../../domain/principal/principal.js';
+import { DEFAULT_GROUP_ID } from '../../domain/principal/system-groups.js';
 import type { Workspace } from '../../domain/workspace/workspace.js';
 import type { AclStores, Actor } from '../acl/permission-service.js';
 import type { WorkspaceStores } from './restore-from-sidecar.js';
@@ -49,7 +50,18 @@ export type WorkspaceCreated =
 export async function createWorkspaceAs(
   stores: AclStores & WorkspaceStores,
   actor: Actor,
-  input: { name: string; administratorId: PrincipalId },
+  input: {
+    name: string;
+    administratorId: PrincipalId;
+    /**
+     * `default` 그룹의 초기 권한 (`FR-PRINCIPAL-007` AC-2).
+     *
+     * **기본값이 `없음` 이다.** 빠뜨린 호출이 전원에게 권한을 주지
+     * 않도록 안전한 쪽을 기본으로 둔다 — 반대로 두면 「깜빡한 것」과
+     * 「전원 공개로 정한 것」이 같은 코드가 된다.
+     */
+    defaultGroupLevel?: 'none' | 'view' | 'edit';
+  },
 ): Promise<WorkspaceCreated> {
   if (!actor.requester.superuser) {
     return { ok: false, rule: 'needs-superuser' };
@@ -70,6 +82,19 @@ export async function createWorkspaceAs(
     level: 'admin',
     grantedBy: null,
   });
+
+  // `없음` 이면 항목 자체를 만들지 않는다 (`FR-PRINCIPAL-007` AC-3).
+  // 레벨 없는 항목을 두면 그것이 「부여됐으나 아무것도 못 한다」는 네
+  // 번째 레벨이 되어 `DR-ACL-001` 의 세 값과 어긋난다.
+  const level = input.defaultGroupLevel ?? 'none';
+  if (level !== 'none') {
+    stores.acl.grant({
+      nodeId: workspace.id,
+      principalId: DEFAULT_GROUP_ID,
+      level,
+      grantedBy: null,
+    });
+  }
 
   return { ok: true, workspace };
 }
