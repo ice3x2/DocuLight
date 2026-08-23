@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { grantPermission } from '../../../src/app/acl/grant-service.js';
 import { actorFor, type Actor } from '../../../src/app/acl/permission-service.js';
-import { linksOf } from '../../../src/app/document/link-service.js';
+import { linksOf, wikiTargets } from '../../../src/app/document/link-service.js';
 import { createNode, moveNode } from '../../../src/app/node/node-service.js';
 import { createWorkspace } from '../../../src/app/workspace/create-workspace.js';
 import { FsWorkspaceFiles } from '../../../src/infra/fs/workspace-sidecar.js';
@@ -283,5 +283,65 @@ describe('SEC-WORKSPACE-004 — 역참조 표면의 개수 힌트', () => {
 
     // 목록의 길이가 곧 건수다 — 따로 세는 값이 없으니 갈릴 자리도 없다.
     expect(본것.backlinks.map((one) => one.nodeId)).toEqual([회의록]);
+  });
+});
+
+describe('FR-WORKSPACE-002 — 링크·검색은 워크스페이스 경계를 넘는다', () => {
+  const 다른곳 = async () =>
+    (await createWorkspace({ workspaces: stores.workspaces, files: new FsWorkspaceFiles(docsRoot) }, '인사팀'))
+      .id;
+
+  it('AC-2: 다른 워크스페이스의 문서가 가리키면 백링크에 그것이 온다', async () => {
+    const other = await 다른곳();
+    const 남의것 = idOf(
+      createNode(stores, root, { workspaceId: other, parentId: null, kind: 'file', name: '주간.md' }),
+    );
+    await writeFile(join(docsRoot, other, stores.nodes.pathOf(남의것)), '[[설계]] 를 본다\n', 'utf8');
+
+    const 본것 = (await linksOf(stores, root, 설계))!;
+
+    expect(본것.backlinks.map((one) => one.nodeId)).toContain(남의것);
+  });
+
+  it('AC-6: 링크 줄이 어느 워크스페이스의 것인지 부기한다', async () => {
+    const other = await 다른곳();
+    const 남의것 = idOf(
+      createNode(stores, root, { workspaceId: other, parentId: null, kind: 'file', name: '주간.md' }),
+    );
+    await writeFile(join(docsRoot, other, stores.nodes.pathOf(남의것)), '[[설계]] 를 본다\n', 'utf8');
+
+    const 백링크 = (await linksOf(stores, root, 설계))!.backlinks;
+
+    // 이름만 주면 같은 이름의 두 문서를 사용자가 가를 수 없다. 두
+    // 워크스페이스가 함께 오므로 부기가 없으면 둘이 구별되지 않는다.
+    expect(백링크.find((one) => one.nodeId === 남의것)?.workspaceName).toBe('인사팀');
+    expect(백링크.find((one) => one.nodeId === 회의록)?.workspaceName).toBe('기획팀');
+  });
+
+  it('AC-5: 워크스페이스별로 분리된 색인 테이블이 없다', () => {
+    const 테이블 = db
+      .all<{ name: string }>("SELECT name FROM sqlite_master WHERE type = 'table'")
+      .map((one) => one.name);
+
+    // 색인을 워크스페이스마다 두면 그 수만큼 테이블이 생기고, 경계를 넘는
+    // 조회가 그 목록을 손으로 합치게 된다.
+    expect(테이블.filter((name) => /link_index|search_index|tag_index/.test(name))).toEqual([]);
+    expect(테이블.length).toBeGreaterThan(0);
+  });
+});
+
+describe('FR-WORKSPACE-002 AC-1 — 자동완성 후보가 경계를 넘는다', () => {
+  it('다른 워크스페이스의 문서가 `[[` 후보로 나온다', async () => {
+    const other = (
+      await createWorkspace({ workspaces: stores.workspaces, files: new FsWorkspaceFiles(docsRoot) }, '인사팀')
+    ).id;
+    idOf(createNode(stores, root, { workspaceId: other, parentId: null, kind: 'file', name: '급여표.md' }));
+
+    const 후보 = wikiTargets(stores, root, '급여');
+
+    // 워크스페이스마다 자동완성을 가르면 사용자는 볼 수 있는 문서를
+    // 가리키지 못하고, 그 링크는 「없는 문서」로 렌더된다.
+    expect(후보.map((one) => one.target)).toContain('급여표');
+    expect(후보.find((one) => one.target === '급여표')?.detail).toBe('인사팀');
   });
 });
