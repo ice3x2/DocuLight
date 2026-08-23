@@ -38,7 +38,12 @@ import {
   grantWarnings,
   isLastAdministrator,
 } from '../../app/workspace/admin-presence.js';
-import { grantPermission, revokePermission } from '../../app/acl/grant-service.js';
+import { grantPermission, restoreInheritance, revokePermission } from '../../app/acl/grant-service.js';
+import { accessorsOf } from '../../app/acl/accessor-service.js';
+import { movePreview } from '../../app/acl/relocation-preview-service.js';
+import { previewRevocation, revokeAllFor } from '../../app/acl/bulk-revoke-service.js';
+import { simulate } from '../../app/acl/simulation-service.js';
+import { brokenInheritanceOf } from '../../app/acl/inheritance-audit-service.js';
 import {
   PERSONAL_SETTING_KEYS,
   readPersonalSetting,
@@ -747,6 +752,158 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       level: one(req.body?.level) === 'edit' ? 'edit' : 'view',
     });
     res.sendStatus(granted.ok ? 204 : 404);
+  });
+
+  /**
+   * 이 노드의 접근자 (`IR-ACL-001` · `SEC-ACL-015`).
+   *
+   * 지표와 명단이 **한 응답**으로 온다 — 서비스가 그 둘을 같은 계산에서
+   * 내므로 여기서 갈라 두 번 부르면 문턱이 비대칭해진다. 복사 프리뷰도
+   * 이 문을 쓴다 (`FR-ACL-002`): 복사본의 접근자는 목적지 상속에서
+   * 파생되므로 목적지의 접근자가 곧 그 답이고, 따로 문을 내면 같은 목적지가
+   * 화면마다 다른 수를 보인다.
+   */
+  router.get('/nodes/:nodeId/accessors', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const report = accessorsOf(stores, actor, req.params.nodeId!);
+    if (report === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(report);
+  });
+
+  /**
+   * 옮기면 몇 명이 되는가 (`FR-ACL-006`).
+   *
+   * 목적지를 비우면 워크스페이스 루트다 — 트리의 최상위로 옮기는 것이
+   * 실제 조작이므로 그 자리를 표현할 수 있어야 한다.
+   *
+   * 명단을 실을 칸이 없다 (AC-3). 명단이 필요한 관리자는 시뮬레이션으로
+   * 간다 (AC-4).
+   */
+  router.get('/nodes/:nodeId/move-preview', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const preview = movePreview(stores, actor, req.params.nodeId!, one(req.query.destinationId) ?? null);
+    if (preview === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(preview);
+  });
+
+  /**
+   * 주체 축으로 걷을 것들 (`FR-ACL-003` AC-4 · `FR-PRINCIPAL-004`).
+   *
+   * 미리보기와 실행이 **같은 경로 위의 두 동사**다 — 다른 자리에 두면 그
+   * 사이에 선별 규칙이 갈릴 여지가 생기고, 회수는 되돌리려면 재부여가
+   * 필요해 그 차이를 사후에 알아차리기 어렵다.
+   *
+   * `scope` 를 실어 보내는 이유는 적용 범위 문구가 요청자 레벨에 따라
+   * 달라지기 때문이다 — 화면이 스스로 판정하면 서버가 실제로 걷는 범위와
+   * 갈린다.
+   */
+  router.get('/principals/:principalId/revocation', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const preview = previewRevocation(stores, actor, req.params.principalId!);
+    if (preview === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(preview);
+  });
+
+  /** 실제로 걷는다 (`FR-ACL-003` AC-1). 돌려주는 것은 **걷힌 것**이다. */
+  router.post('/principals/:principalId/revocation', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const revoked = revokeAllFor(stores, actor, req.params.principalId!);
+    if (revoked === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(revoked);
+  });
+
+  /**
+   * 저 사람 관점의 유효 권한 (`FR-ACL-004`).
+   *
+   * 주체가 빠진 요청은 400 이다 — 빈 결과로 답하면 화면이 그것을 「관리
+   * 권한 없음」으로 읽고, 정작 필요한 자리에서 사용자에게 잘못된 사유를
+   * 보여준다.
+   */
+  router.get('/simulation', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const subjectId = one(req.query.subjectId);
+    if (subjectId === undefined) {
+      res.sendStatus(400);
+      return;
+    }
+
+    const simulation = simulate(stores, actor, subjectId);
+    if (simulation === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(simulation);
+  });
+
+  /** 상속이 끊긴 노드들 (`FR-ACL-005` AC-1). 관리 전용이다 (AC-7). */
+  router.get('/broken-inheritance', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const audit = brokenInheritanceOf(stores, actor);
+    if (audit === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(audit);
+  });
+
+  /** 상속으로 되돌린다 (`FR-ACL-005` AC-2). 부모 항목을 복사해 오지 않는다. */
+  router.post('/nodes/:nodeId/restore-inheritance', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const restored = restoreInheritance(stores, actor, req.params.nodeId!);
+    res.sendStatus(restored.ok ? 204 : 404);
   });
 
   /** 직접 부여 항목을 회수한다 (`IR-ACL-003` AC-4). 상속 항목에는 ID 가 없다. */
