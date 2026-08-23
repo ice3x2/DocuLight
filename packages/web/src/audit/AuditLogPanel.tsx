@@ -74,10 +74,15 @@ export function AuditLogPanel({
           ) : (
             <ul>
               {view.groups.map((group) => (
-                <AuditGroupRow
-                  key={`${group.operation} ${group.actor} ${group.occurredAt}`}
-                  group={group}
-                />
+                // 조작·행위자·시각으로 식별하지 않는다 — 묶음 경계가 상관
+                // 키로 옮겨진 뒤(`IR-AUDIT-003` AC-8) 그 셋이 똑같은 두 묶음이
+                // 정상적으로 생기고, 그러면 펼친 줄의 자리에 다른 조작의
+                // 낱행이 그려진다.
+                //
+                // 상관 키를 쓰지 않는 것은 그 값이 응답에 오지 않기 때문이며
+                // (AC-6), 첫 낱행의 id 로 충분하다 — 낱행은 묶음 하나에만
+                // 속하므로 그 값이 곧 묶음의 유일한 이름이다.
+                <AuditGroupRow key={group.rows[0]!.id} group={group} />
               ))}
             </ul>
           )}

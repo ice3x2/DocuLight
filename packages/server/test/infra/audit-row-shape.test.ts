@@ -27,27 +27,55 @@ const columns = () =>
     .map((c) => c.name)
     .sort();
 
+/**
+ * 정본이 세지 않는 기반 칸 (`DR-AUDIT-002` AC-7 · 원장 `R164`).
+ *
+ * `id` 는 행의 식별자이며 `reconciliation_finding` 계열 두 테이블이
+ * 외래키로 참조하므로 없앨 수 없다. `correlation_id` 는 묶음 경계이며
+ * 조회 응답에 실리지 않는다 (`IR-AUDIT-003` AC-6).
+ */
+const 기반칸 = ['id', 'correlation_id'];
+
 describe('DR-AUDIT-002 — 감사 행의 칸 구성', () => {
-  it('AC-7: 정본이 정한 열한 칸이 전부이고 그 밖의 칸이 없다', () => {
+  it('AC-7: 의미 칸이 정본의 열하나이고 그 밖의 의미 칸이 없다', () => {
     // 개수만 재면 이름이 바뀐 칸을 못 잡고, 이름만 재면 몰래 붙은 칸을
-    // 못 잡는다. 집합을 통째로 단언한다. `id` 는 행의 식별자이지 정본이
-    // 열거한 의미 칸이 아니다.
-    expect(columns()).toEqual(
-      [
-        'id',
-        'occurred_at',
-        'actor',
-        'node_id',
-        'operation',
-        'before_value',
-        'after_value',
-        'counterpart_node_id',
-        'target_role',
-        'workspace_id',
-        'subject_id',
-        'level',
-      ].sort(),
-    );
+    // 못 잡는다. 집합을 통째로 단언한다.
+    const 의미칸 = [
+      'occurred_at',
+      'actor',
+      'node_id',
+      'operation',
+      'before_value',
+      'after_value',
+      'counterpart_node_id',
+      'target_role',
+      'workspace_id',
+      'subject_id',
+      'level',
+    ];
+
+    expect(의미칸).toHaveLength(11);
+    expect(columns().filter((name) => !기반칸.includes(name))).toEqual(의미칸.sort());
+  });
+
+  it('AC-7: 기반 칸은 이 둘뿐이고 둘 다 모든 행에 붙는다', () => {
+    // 「의미 칸이 아니다」는 판정을 시험이 마음대로 넓히지 못하게 목록을
+    // 통째로 고정한다 — 고정하지 않으면 새 칸을 기반 칸이라 부르는 것만으로
+    // 정본을 우회할 수 있다.
+    expect(columns().filter((name) => 기반칸.includes(name)).sort()).toEqual([...기반칸].sort());
+
+    audit.append({ operation: 'node.create', actor: 'u1', nodeId: 'n1', workspaceId: 'ws1' });
+    const [row] = audit.inScope(['ws1'], {});
+
+    // 둘 다 조작마다 빠질 수 있는 값이 아니라 **모든 행이 갖는** 값이다 —
+    // 그래서 「이 조작이 무엇을 했는가」를 담지 않고, 정본의 열하나에 세지
+    // 않는 근거도 그것이다.
+    expect(Object.keys(row!)).toContain('id');
+    expect(row!.correlationId).toBeTypeOf('string');
+
+    // **노출 여부는 여기서 재지 않는다.** 행 식별자는 실제로 조회 응답에
+    // 실리고(화면이 낱행을 그 값으로 식별한다), 상관 키만 실리지 않는다 —
+    // 그 사실은 `IR-AUDIT-003` AC-6 의 것이고 audit-grouping 시험이 잰다.
   });
 
   it('AC-2 · AC-3: 상대 노드와 대상 역할이 값을 담고 비어 있을 수도 있다', () => {
@@ -123,7 +151,7 @@ describe('SEC-AUDIT-010 — 스코프는 대상에서 파생한다', () => {
   });
 
   it('AC-3 · AC-4 · AC-5: 귀속 없는 행은 인스턴스 스코프다', () => {
-    audit.append({ operation: 'settings.change', actor: 'u1' });
+    audit.append({ operation: 'settings.audit-retention-days', actor: 'u1' });
 
     // 워크스페이스 관리자에게는 보이지 않는다.
     expect(audit.inScope(['ws1'])).toHaveLength(0);

@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { SETTINGS_CHANGE, writeSettings } from '../../../src/app/settings/instance-settings.js';
+import { SETTINGS_OPERATIONS, writeSettings } from '../../../src/app/settings/instance-settings.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
 import { SqliteAuditLog } from '../../../src/infra/sqlite/audit-log-repository.js';
 import { SqliteSettingStore } from '../../../src/infra/sqlite/setting-store.js';
@@ -27,7 +27,12 @@ afterEach(async () => {
 
 /** 설정 변경은 워크스페이스에 귀속되지 않으므로 인스턴스 스코프다. */
 const rows = () =>
-  audit.inScope([], { includeInstance: true }).filter((row) => row.operation === SETTINGS_CHANGE);
+  audit
+    .inScope([], { includeInstance: true })
+    .filter((row) => SETTINGS_OPERATIONS.includes(row.operation));
+
+/** 그 행이 가리키는 설정. 조작 값이 그 축을 갖는다 (`DR-AUDIT-002` AC-8). */
+const 설정 = (row: { operation: string }) => row.operation.replace('settings.', '');
 
 describe('OBS-AUDIT-006 — 인스턴스 설정 변경을 기록한다', () => {
   it('AC-1: 이전값과 이후값이 함께 남는다', () => {
@@ -41,7 +46,8 @@ describe('OBS-AUDIT-006 — 인스턴스 설정 변경을 기록한다', () => {
       beforeValue: '30',
       afterValue: '7',
       // 어느 설정인지가 없으면 「무언가 30 에서 7 로 바뀌었다」만 남는다.
-      subjectId: 'trash-retention-days',
+      // 그 축은 조작 값이 갖는다 — `subjectId` 는 principal ID 만 담는다.
+      operation: 'settings.trash-retention-days',
     });
   });
 
@@ -55,7 +61,7 @@ describe('OBS-AUDIT-006 — 인스턴스 설정 변경을 기록한다', () => {
     );
 
     const 줄인것 = rows().filter((row) => row.beforeValue === '365' || row.beforeValue === '90');
-    expect(줄인것.map((row) => row.subjectId).sort()).toEqual([
+    expect(줄인것.map(설정).sort()).toEqual([
       'audit-retention-days',
       'trash-retention-days',
     ]);
@@ -73,7 +79,7 @@ describe('OBS-AUDIT-006 — 인스턴스 설정 변경을 기록한다', () => {
     // 묶어서 1행으로 남기면 어느 설정이 무엇으로 바뀌었는지 이전값·이후값
     // 두 칸에 담을 수 없다.
     expect(rows()).toHaveLength(3);
-    expect(rows().map((row) => row.subjectId).sort()).toEqual([
+    expect(rows().map(설정).sort()).toEqual([
       'audit-retention-days',
       'signup-mode',
       'trash-retention-days',

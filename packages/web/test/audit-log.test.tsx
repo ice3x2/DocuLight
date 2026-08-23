@@ -188,3 +188,61 @@ describe('앱 배선 — 감사 로그가 서버에서 온다', () => {
     expect(await within(modal).findByTestId('audit-group')).toBeDefined();
   });
 });
+
+describe('IR-AUDIT-003 AC-8 — 같은 초의 두 묶음이 화면에서 서로 섞이지 않는다', () => {
+  /**
+   * 묶음 경계가 시각에서 상관 키로 옮겨진 뒤(`R164-c`), **조작·행위자·시각이
+   * 똑같은 두 묶음**이 정상적으로 생긴다 — 한 사람이 같은 초에 문서를 둘
+   * 만든 경우가 그것이다. 화면이 그 셋으로 줄을 식별하면 두 줄이 같은
+   * 것으로 취급되어, 펼친 줄의 자리에 **다른 조작의 낱행**이 그려진다.
+   */
+  const 두묶음 = (): AuditViewBody => ({
+    groups: [
+      {
+        operation: 'node.create',
+        actor: '한범',
+        occurredAt: '2026-08-23 01:02:03',
+        rows: [행('b1', { operation: 'node.create', target: '나중.md' })],
+      },
+      {
+        operation: 'node.create',
+        actor: '한범',
+        occurredAt: '2026-08-23 01:02:03',
+        rows: [행('b2', { operation: 'node.create', target: '먼저.md' })],
+      },
+    ],
+    operations: ['node.create'],
+  });
+
+  it('한 줄을 펼친 뒤 앞에 새 줄이 붙어도 펼쳐진 낱행이 그대로다', async () => {
+    const 처음 = 두묶음();
+    const { rerender } = render(<AuditLogPanel view={처음} />);
+    const user = userEvent.setup();
+
+    // 두 번째 줄을 펼친다.
+    await user.click(screen.getAllByTestId('audit-group')[1]!.querySelector('button')!);
+    expect(screen.getAllByTestId('audit-row').map((row) => row.textContent)).toEqual(['먼저.md']);
+
+    // 감사 로그는 최신순이라 새 행은 **앞에** 붙는다.
+    rerender(
+      <AuditLogPanel
+        view={{
+          ...처음,
+          groups: [
+            {
+              operation: 'node.create',
+              actor: '한범',
+              occurredAt: '2026-08-23 01:02:09',
+              rows: [행('b0', { operation: 'node.create', target: '새것.md' })],
+            },
+            ...처음.groups,
+          ],
+        }}
+      />,
+    );
+
+    // 펼침 상태가 줄을 따라가지 않으면 감사자가 연 것과 다른 조작의 낱행이
+    // 그 자리에 그려진다 — 사실이 잘못된 조작에 귀속된다.
+    expect(screen.getAllByTestId('audit-row').map((row) => row.textContent)).toEqual(['먼저.md']);
+  });
+});

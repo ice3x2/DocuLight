@@ -61,7 +61,7 @@ const 관리자 = (name: string, workspaceId: string): Actor => {
 
 describe('SEC-AUDIT-010 — 열람 스코프', () => {
   it('AC-4: 인스턴스 스코프 행이 워크스페이스 관리자에게 보이지 않는다', () => {
-    stores.auditLog.append({ operation: 'settings.change', actor: root.id });
+    stores.auditLog.append({ operation: 'settings.audit-retention-days', actor: root.id });
     stores.auditLog.append({ operation: 'acl.grant', actor: root.id, nodeId: 회의록, workspaceId: 기획팀 });
 
     const 본것 = auditView(stores, 관리자('기획관리자', 기획팀))!;
@@ -71,16 +71,16 @@ describe('SEC-AUDIT-010 — 열람 스코프', () => {
     const 이시험것 = 본것.groups
       .flatMap((g) => g.rows)
       .map((r) => r.operation)
-      .filter((one) => one === 'settings.change' || one === 'node.trash');
+      .filter((one) => one === 'settings.audit-retention-days' || one === 'node.trash');
     expect(이시험것).toEqual([]);
   });
 
   it('AC-5: 슈퍼유저는 인스턴스 스코프까지 읽는다', () => {
-    stores.auditLog.append({ operation: 'settings.change', actor: root.id });
+    stores.auditLog.append({ operation: 'settings.audit-retention-days', actor: root.id });
 
     const 본것 = auditView(stores, root)!;
 
-    expect(본것.groups.flatMap((g) => g.rows).map((r) => r.operation)).toContain('settings.change');
+    expect(본것.groups.flatMap((g) => g.rows).map((r) => r.operation)).toContain('settings.audit-retention-days');
   });
 
   it('관리 워크스페이스가 없고 슈퍼유저도 아니면 볼 자격 자체가 없다', () => {
@@ -177,6 +177,10 @@ describe('SEC-AUDIT-002 · SEC-AUDIT-003 · SEC-AUDIT-008 — 노드 참조의 �
 
 describe('IR-AUDIT-003 · SEC-AUDIT-011 — 저장은 낱행이고 표시는 묶음이다', () => {
   const 세줄 = () => {
+    // **한 번의 조작**이 낸 세 행이다 — 상관 키를 함께 실어야 그 사실이
+    // 기록에 남는다 (`IR-AUDIT-003` AC-9). 시각으로 접던 시절에는 세 번의
+    // 별개 조작도 같은 초면 접혔고, 그것이 이 요구가 막으려던 것이다.
+    const correlationId = stores.auditLog.newCorrelation();
     for (const node of [회의록, 회의록, 회의록]) {
       stores.auditLog.append({
         operation: 'acl.grant',
@@ -184,8 +188,10 @@ describe('IR-AUDIT-003 · SEC-AUDIT-011 — 저장은 낱행이고 표시는 묶
         nodeId: node,
         workspaceId: 기획팀,
         subjectId: `p-${Math.random()}`,
+        correlationId,
       });
     }
+    return correlationId;
   };
 
   it('AC-1 · AC-2 · AC-3: 낱행으로 저장되고 한 줄로 접히며 펼치면 다 보인다', () => {
@@ -204,10 +210,18 @@ describe('IR-AUDIT-003 · SEC-AUDIT-011 — 저장은 낱행이고 표시는 묶
   });
 
   it('`SEC-AUDIT-011` AC-1: 묶음 건수가 열람자 스코프의 낱행 수와 같다', () => {
-    세줄();
+    const 한조작 = 세줄();
     const 남의것 = 5;
+    // 같은 조작이 두 워크스페이스에 걸친 상황이다 — 그래야 「묶음 건수가
+    // 스코프 밖 행까지 세는가」를 잴 수 있다.
     for (let i = 0; i < 남의것; i += 1) {
-      stores.auditLog.append({ operation: 'acl.grant', actor: root.id, nodeId: 남의문서, workspaceId: 영업팀 });
+      stores.auditLog.append({
+        operation: 'acl.grant',
+        actor: root.id,
+        nodeId: 남의문서,
+        workspaceId: 영업팀,
+        correlationId: 한조작,
+      });
     }
 
     const 본것 = auditView(stores, 관리자('기획관리자', 기획팀))!;
@@ -219,7 +233,7 @@ describe('IR-AUDIT-003 · SEC-AUDIT-011 — 저장은 낱행이고 표시는 묶
     // 길이 비교로 퇴화해, 남의 행이 섞이고 내 행이 그만큼 빠져도 통과한다.
     const 스코프안 = stores.auditLog
       .inScope([기획팀])
-      .filter((r) => r.operation === 'acl.grant' && r.actor === root.id && r.occurredAt === 묶음.occurredAt);
+      .filter((r) => r.operation === 'acl.grant' && r.correlationId === 한조작);
     expect(묶음.rows.map((row) => row.id).sort()).toEqual(스코프안.map((row) => row.id).sort());
     expect(묶음.rows.length).toBeGreaterThan(0);
   });

@@ -68,7 +68,15 @@ export function issueToken(
     expiresAt: new Date(now.getTime() + input.expiresInDays * 24 * 60 * 60 * 1000).toISOString(),
   });
 
-  stores.audit.append({ operation: PAT_ISSUE, actor, subjectId: input.owner, level: input.scope });
+  // 스코프는 **이후값**이다 — `level` 칸은 ACL 레벨만 담는다
+  // (`DR-AUDIT-002` AC-8 · 원장 `R164-b`). 발급은 없던 것이 생기는
+  // 조작이라 이전값이 비고, 회수가 그 반대 방향으로 같은 값을 남긴다.
+  stores.audit.append({
+    operation: PAT_ISSUE,
+    actor,
+    subjectId: input.owner,
+    afterValue: input.scope,
+  });
 
   return { ok: true, id, token: plain };
 }
@@ -83,7 +91,12 @@ export function revokeToken(
   if (!isSelf(actor, token.userId)) return { ok: false, rule: 'self-only' };
 
   stores.tokens.revoke(tokenId, stores.clock().toISOString());
-  stores.audit.append({ operation: PAT_REVOKE, actor, subjectId: token.userId, level: token.scope });
+  stores.audit.append({
+    operation: PAT_REVOKE,
+    actor,
+    subjectId: token.userId,
+    beforeValue: token.scope,
+  });
 
   return { ok: true };
 }

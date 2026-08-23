@@ -82,6 +82,11 @@ export function revokePermission(
   stores: AclStores,
   actor: Actor,
   entryId: string,
+  /**
+   * 이 회수가 **더 큰 조작의 일부**일 때 그 조작의 상관 키
+   * (`IR-AUDIT-003` AC-9). 오프보딩 일괄 회수가 낸 행들을 한 줄로 접는다.
+   */
+  options: { correlationId?: string } = {},
 ): PlainOutcome {
   // 회수 대상 항목을 먼저 찾는다 — 어느 노드의 것인지 알아야 실행자의
   // 레벨을 그 노드에서 잴 수 있다.
@@ -102,6 +107,18 @@ export function revokePermission(
     nodeId: entry.nodeId,
     subjectId: entry.principalId,
     level: entry.level,
+    // **부여자를 옮겨 적는다** (`OBS-AUDIT-008` AC-3). 그 값은 항목에만
+    // 살고 이 줄 바로 위에서 항목과 함께 사라지므로, 여기서 적지 않으면
+    // 「누가 준 권한이 없어졌나」를 그 뒤로는 되짚을 수 없다.
+    //
+    // 이전값 칸인 이유는 남은 자리가 그것뿐이기 때문만이 아니다 — 회수로
+    // 사라지는 것이 그 항목이고, 그 항목이 갖고 있던 사실이 부여자다.
+    // 받은 쪽은 `subjectId`, 회수한 쪽은 `actor` 로 이미 갈려 있다.
+    //
+    // 시스템이 준 항목은 `null` 이라 칸이 빈다 (`SEC-ACL-011` AC-3) —
+    // 없는 사람을 지어내지 않는다.
+    ...(entry.grantedBy === null ? {} : { beforeValue: entry.grantedBy }),
+    ...(options.correlationId === undefined ? {} : { correlationId: options.correlationId }),
   });
   return { ok: true };
 }
@@ -181,6 +198,8 @@ export function inheritFromParent(
   const ancestry = ancestryOf(stores, nodeId);
   if (ancestry === undefined) return { ok: false, rule: 'unknown-target' };
 
+  // 한 조작이 낸 행들이므로 상관 키를 함께 싣는다 (`IR-AUDIT-003` AC-9).
+  const correlationId = stores.audit.newCorrelation();
   for (const entry of stores.acl.entriesOnAny(inheritedSources(ancestry))) {
     // 관리는 워크스페이스에만 산다 (`SEC-WORKSPACE-002`) — 내려 붙이면
     // 문서에 관리 항목이 생긴다. 편집으로 낮춰 옮긴다.
@@ -197,6 +216,7 @@ export function inheritFromParent(
       nodeId,
       subjectId: entry.principalId,
       level,
+      correlationId,
     });
   }
   return { ok: true };

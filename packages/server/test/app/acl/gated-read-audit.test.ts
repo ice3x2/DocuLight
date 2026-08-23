@@ -127,8 +127,10 @@ describe('OBS-ACL-001 — 관리 권한에 의한 열람을 남긴다', () => {
 
     const [행] = 열람행();
     // 공통 스키마의 칸으로만 이뤄진다 — 이 요구만의 칸이 붙지 않는다.
+    // `id` 와 `correlationId` 는 모든 행이 갖는 기반 칸이며 조회 응답으로는
+    // 나가지 않는다 (`DR-AUDIT-002` AC-7).
     expect(Object.keys(행!).sort()).toEqual(
-      ['actor', 'id', 'nodeId', 'occurredAt', 'operation', 'workspaceId'].sort(),
+      ['actor', 'correlationId', 'id', 'nodeId', 'occurredAt', 'operation', 'workspaceId'].sort(),
     );
   });
 

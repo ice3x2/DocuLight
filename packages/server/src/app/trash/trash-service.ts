@@ -121,6 +121,9 @@ export async function moveToTrash(
   //
   // 상대 노드를 비운다 — 삭제는 노드 ID 를 보존하는 1-노드 조작이고
   // (`DR-AUDIT-003` AC-3), 위치 변화는 이전값·이후값이 담는다.
+  // 한 조작이 낸 행들이므로 상관 키를 함께 싣는다 (`IR-AUDIT-003` AC-9) —
+  // 없으면 서브트리 하나가 뷰어에서 하위 수만큼의 줄로 갈린다.
+  const correlationId = stores.audit.newCorrelation();
   for (const id of subtreeIdsOf(stores.nodes, node)) {
     stores.audit.append({
       operation: NODE_TRASH,
@@ -128,6 +131,7 @@ export async function moveToTrash(
       nodeId: id,
       workspaceId: node.workspaceId,
       beforeValue: stores.nodes.pathOf(id),
+      correlationId,
     });
   }
 
@@ -286,7 +290,13 @@ export function canPurge(stores: TrashStores, actor: Actor, entry: TrashEntry): 
  * 그 값을 다시 구할 수 없고, 못 구하면 그 행은 인스턴스 스코프로 격상돼
  * 정작 그 워크스페이스의 관리자에게서 숨는다.
  */
-async function hardDelete(stores: TrashStores, entry: TrashEntry, actor: string): Promise<void> {
+async function hardDelete(
+  stores: TrashStores,
+  entry: TrashEntry,
+  actor: string,
+  /** 회차 단위 일소가 낸 행들을 한 줄로 접는 값 (`IR-AUDIT-003` AC-9). */
+  options: { correlationId?: string } = {},
+): Promise<void> {
   await stores.trashFiles.purge(entry);
   // 첨부를 **여기서** 걷는다 (`FR-ATTACH-005`). 휴지통으로 보내는 경로에는
   // 걸지 않는다(AC-3) — 복구할 수 있는 상태에서 첨부를 지우면 복구된
@@ -302,6 +312,7 @@ async function hardDelete(stores: TrashStores, entry: TrashEntry, actor: string)
     actor,
     nodeId: entry.nodeId,
     workspaceId: entry.workspaceId,
+    ...(options.correlationId === undefined ? {} : { correlationId: options.correlationId }),
   });
 }
 
@@ -321,11 +332,14 @@ export async function sweepExpiredTrash(stores: TrashStores): Promise<{ purged: 
   const days = retentionDays(stores);
   const now = stores.clock();
 
+  // 한 회차가 낸 행들을 한 줄로 접는다 (`IR-AUDIT-003` AC-9) — 재조정
+  // 회차와 같은 처리다. 두 시스템 스윕이 갈리면 한쪽만 뷰어를 뒤덮는다.
+  const correlationId = stores.audit.newCorrelation();
   let purged = 0;
   for (const entry of stores.trash.listAll()) {
     if (!isExpired(entry, days, now)) continue;
     // 사람의 조작이 아니다 — 하위체계 이름이 행위자 자리를 채운다.
-    await hardDelete(stores, entry, SYSTEM_RETENTION);
+    await hardDelete(stores, entry, SYSTEM_RETENTION, { correlationId });
     purged += 1;
   }
   return { purged };

@@ -71,8 +71,12 @@ export function revokeAllFor(
   // 항목마다 `revokePermission` 을 지난다. 저장소를 직접 지우면 감사 행이
   // 빠지고(한 번의 조작이 여러 항목을 걷어도 기록은 항목마다 하나다),
   // 회수 판정도 이 화면에서만 다른 규칙을 갖게 된다.
+  // 한 번의 조작이므로 행들이 한 상관 키를 나눠 갖는다 (`IR-AUDIT-003`
+  // AC-9). 없으면 128 건을 걷은 일이 뷰어에서 128 줄로 갈리고, 그 화면이
+  // 곧 `OBS-AUDIT-008` AC-5 가 타이핑 토큰으로 세던 바로 그 수다.
+  const correlationId = stores.audit.newCorrelation();
   const removed = planned.rows.filter(
-    (row) => revokePermission(stores, actor, row.entryId).ok,
+    (row) => revokePermission(stores, actor, row.entryId, { correlationId }).ok,
   );
 
   return { scope: planned.scope, rows: removed };

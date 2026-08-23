@@ -100,12 +100,17 @@ export async function createWorkspaceAs(
   });
   // 생성 시점의 두 부여가 **각각** 행을 남긴다 (`OBS-AUDIT-005` AC-9).
   // 묶어서 1행으로 남기면 어느 주체가 무엇을 받았는지 담을 수 없다.
+  //
+  // 저장은 낱행이되 **표시는 한 줄**이다 — 한 번의 생성이 낸 두 행이므로
+  // 상관 키를 함께 싣는다 (`IR-AUDIT-003` AC-9).
+  const correlationId = stores.audit.newCorrelation();
   stores.audit.append({
     operation: ACL_GRANT,
     actor: actor.id,
     workspaceId: workspace.id,
     subjectId: administrator.id,
     level: 'admin',
+    correlationId,
   });
 
   // `없음` 이면 항목 자체를 만들지 않는다 (`FR-PRINCIPAL-007` AC-3).
@@ -125,6 +130,7 @@ export async function createWorkspaceAs(
       workspaceId: workspace.id,
       subjectId: DEFAULT_GROUP_ID,
       level,
+      correlationId,
     });
   }
 

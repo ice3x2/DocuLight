@@ -92,6 +92,10 @@ async function reconcileWorkspace(
 
   const known = new Map(nodes.allIn(workspaceId).map((node) => [nodes.pathOf(node.id), node]));
 
+  // 한 회차가 낸 행들을 한 줄로 접는 상관 키 (`IR-AUDIT-003` AC-9) — 회차
+  // 하나가 수십 건을 발견해도 뷰어에서는 조작 종류마다 한 줄이다.
+  const correlationId = stores.audit.newCorrelation();
+
   for (const path of onDisk) {
     const existing = known.get(path);
     if (existing !== undefined) {
@@ -103,12 +107,13 @@ async function reconcileWorkspace(
           operation: RECONCILE_OPERATION.restore,
           actor: SYSTEM_RECONCILER,
           nodeId: existing.id,
+          correlationId,
         });
         result.revived.push(existing.id);
       }
       continue;
     }
-    const id = ensurePath(stores, workspaceId, path, known);
+    const id = ensurePath(stores, workspaceId, path, known, correlationId);
     result.created.push(id);
   }
 
@@ -121,7 +126,7 @@ async function reconcileWorkspace(
     }
     const at = new Date().toISOString();
     nodes.markOrphaned(node.id, at);
-    record(stores, RECONCILE_OPERATION.orphan, node.id, FINDING_TYPE.missingFile);
+    record(stores, RECONCILE_OPERATION.orphan, node.id, FINDING_TYPE.missingFile, correlationId);
     result.orphaned.push(node.id);
   }
 }
@@ -137,6 +142,7 @@ function ensurePath(
   workspaceId: string,
   path: string,
   known: Map<string, NodeRecord>,
+  correlationId: string,
 ): NodeId {
   const segments = path.split('/');
   let parentId: NodeId | null = null;
@@ -170,7 +176,7 @@ function ensurePath(
     });
     // 발견은 **사실**이므로 감사 로그가 먼저다. 대기열은 그 행을 참조한다
     // (`R139` — 같은 사실을 두 곳에 적지 않는다).
-    record(stores, RECONCILE_OPERATION.create, id, FINDING_TYPE.unregisteredFile);
+    record(stores, RECONCILE_OPERATION.create, id, FINDING_TYPE.unregisteredFile, correlationId);
     parentId = id;
   });
 
@@ -182,8 +188,9 @@ function record(
   operation: ReconcileOperation,
   nodeId: NodeId,
   type: FindingType,
+  correlationId: string,
 ): void {
-  const auditId = stores.audit.append({ operation, actor: SYSTEM_RECONCILER, nodeId });
+  const auditId = stores.audit.append({ operation, actor: SYSTEM_RECONCILER, nodeId, correlationId });
   stores.queue.open({ type, auditRefs: [auditId] });
 }
 

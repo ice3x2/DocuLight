@@ -122,6 +122,14 @@ export function createNode(
   stores: NodeStores,
   actor: Actor,
   input: NewNode,
+  /**
+   * 이 생성이 **더 큰 조작의 일부**일 때 그 조작의 상관 키
+   * (`IR-AUDIT-003` AC-9). 서브트리 복사가 낸 생성 행들을 한 줄로 접는다.
+   *
+   * 안 주는 것이 기본이며 그때는 이 생성만의 값이 붙는다 — 손으로 만든 두
+   * 노드가 같은 초에 만들어졌다고 해서 한 조작이 되지는 않는다.
+   */
+  options: { correlationId?: string } = {},
 ): Created | Rejected {
   const { nodes, workspaces, acl } = stores;
 
@@ -199,6 +207,7 @@ export function createNode(
     nodeId: id,
     workspaceId: input.workspaceId,
     afterValue: stores.nodes.pathOf(id),
+    ...(options.correlationId === undefined ? {} : { correlationId: options.correlationId }),
   });
 
   return { ok: true, id, name };
@@ -377,7 +386,9 @@ export async function copyNode(
     return reject('move-into-descendant', '노드를 자기 자신이나 그 하위로 복사할 수 없습니다.');
   }
 
-  return replicate(stores, actor, source, { parentId, workspaceId });
+  // 이 한 자리가 복사 조작의 시작이다 — 재귀 아래의 모든 행이 이 값을
+  // 함께 싣는다 (`IR-AUDIT-003` AC-9).
+  return replicate(stores, actor, source, { parentId, workspaceId }, stores.audit.newCorrelation());
 }
 
 /**
@@ -393,13 +404,26 @@ async function replicate(
   actor: Actor,
   source: NodeRecord,
   at: { parentId: NodeId | null; workspaceId: string },
+  /**
+   * 이 복사 전체를 잇는 상관 키. 재귀 아래까지 같은 값이 내려간다.
+   *
+   * **기본값을 두지 않는다** — 기본 인자에 두면 「새 조작이 여기서
+   * 시작된다」는 결정이 서명 안에 숨고, 인자를 하나 더하는 것만으로
+   * 조용히 갈린다. 시작하는 자리는 `copyNode` 하나뿐이다.
+   */
+  correlationId: string,
 ): Promise<Copied | Rejected> {
-  const made = createNode(stores, actor, {
-    workspaceId: at.workspaceId,
-    parentId: at.parentId,
-    kind: source.kind,
-    name: source.name,
-  });
+  const made = createNode(
+    stores,
+    actor,
+    {
+      workspaceId: at.workspaceId,
+      parentId: at.parentId,
+      kind: source.kind,
+      name: source.name,
+    },
+    { correlationId },
+  );
   if (!made.ok) return made;
 
   // **사본 자리 행은 언제나 생긴다** (`OBS-AUDIT-007` AC-1) — 노드가
@@ -412,6 +436,7 @@ async function replicate(
     workspaceId: at.workspaceId,
     counterpartNodeId: source.id,
     targetRole: 'copy',
+    correlationId,
   });
 
   // **원본 자리 행은 경계를 넘을 때만 생긴다** (AC-3 · AC-6). 같은
@@ -426,6 +451,7 @@ async function replicate(
       workspaceId: source.workspaceId,
       counterpartNodeId: made.id,
       targetRole: 'origin',
+      correlationId,
     });
   }
 
@@ -444,10 +470,13 @@ async function replicate(
     workspaceId: source.workspaceId,
     parentId: source.id,
   })) {
-    const below = await replicate(stores, actor, child.node, {
-      parentId: made.id,
-      workspaceId: at.workspaceId,
-    });
+    const below = await replicate(
+      stores,
+      actor,
+      child.node,
+      { parentId: made.id, workspaceId: at.workspaceId },
+      correlationId,
+    );
     // 한 자식이 실패해도 복사 전체를 무르지 않는다 — 이미 만든 것을
     // 되돌릴 트랜잭션이 파일시스템에 없고, 되돌리려다 반쪽이 남는다.
     if (below.ok) copied += below.copied;

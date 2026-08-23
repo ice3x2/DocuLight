@@ -57,13 +57,20 @@ type RetentionKey = 'trash-retention-days' | 'audit-retention-days';
 export type SettingsRule = 'unknown-key' | 'retention-inverted';
 
 /**
- * 설정 변경의 조작 값 (`OBS-AUDIT-006`).
+ * 그 설정을 바꾼 조작의 값 (`OBS-AUDIT-006` · 원장 `R164-a`).
  *
- * 어느 설정인지를 이 값에 섞지 않는다 — 섞으면 조작 값의 distinct 집합이
- * 설정 개수만큼 부풀어 필터가 못 쓰게 된다 (`DR-AUDIT-001` AC-7). 그
- * 구분은 `subjectId` 가 갖는다.
+ * **설정마다 조작이 하나다.** 하나로 묶으면 어느 설정이 바뀌었는지가
+ * 조작에서 사라지는데, 담을 다른 칸이 없다 — 이전값·이후값은 이미 값이
+ * 차 있고, `subjectId` 는 principal ID 만 담는다 (`DR-AUDIT-002` AC-8).
+ *
+ * `DR-AUDIT-001` AC-7 이 막는 것은 **하위체계 × 조작의 곱집합**이다.
+ * 여기서 느는 것은 `DEFAULTS` 가 정한 유계 열거뿐이고, 「그 설정을
+ * 바꿨다」는 실제로 서로 다른 조작이다.
  */
-export const SETTINGS_CHANGE = 'settings.change';
+export const settingsOperation = (key: InstanceSettingKey): string => `settings.${key}`;
+
+/** 설정 변경이 낼 수 있는 조작 값 전부. 화면·시험이 목록을 손으로 적지 않게 한다. */
+export const SETTINGS_OPERATIONS: readonly string[] = INSTANCE_SETTING_KEYS.map(settingsOperation);
 
 /**
  * 감사를 남길 자리. **선택이다** — 설치 마법사와 시험은 기록기를 세우기
@@ -120,11 +127,10 @@ export function writeSettings(
     // 「언제 바뀌었나」를 되짚을 때 그 행들이 전부 후보가 된다.
     if (recording === undefined || before === value) continue;
     recording.audit.append({
-      operation: SETTINGS_CHANGE,
-      actor: recording.actor,
       // 워크스페이스에 귀속되지 않으므로 인스턴스 스코프다 —
       // 슈퍼유저만 읽는다 (`SEC-AUDIT-010` AC-3).
-      subjectId: key,
+      operation: settingsOperation(key as InstanceSettingKey),
+      actor: recording.actor,
       beforeValue: before,
       afterValue: value,
     });

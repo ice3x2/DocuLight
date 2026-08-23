@@ -17,6 +17,7 @@ interface AuditRecord {
   after_value: string | null;
   counterpart_node_id: string | null;
   target_role: string | null;
+  correlation_id: string | null;
 }
 
 /**
@@ -29,13 +30,17 @@ interface AuditRecord {
 export class SqliteAuditLog implements AuditSink, AuditQuery {
   constructor(private readonly store: MetadataStore) {}
 
+  newCorrelation(): string {
+    return randomUUID();
+  }
+
   append(entry: AuditEntry): string {
     const id = randomUUID();
     this.store.run(
       `INSERT INTO audit_log
          (id, operation, actor, node_id, workspace_id, subject_id, level,
-          before_value, after_value, counterpart_node_id, target_role)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          before_value, after_value, counterpart_node_id, target_role, correlation_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         id,
         entry.operation,
@@ -50,6 +55,11 @@ export class SqliteAuditLog implements AuditSink, AuditQuery {
         // 상대 노드가 비면 역할도 함께 빈다 (`DR-AUDIT-002` AC-5) — 여기서
         // 강제해야 두 칸이 어긋난 행이 저장소에 들어오지 않는다.
         entry.counterpartNodeId === undefined ? null : (entry.targetRole ?? null),
+        // 안 주면 **자기 자신과 상관한다** — 낱행 하나짜리 묶음이 되어
+        // 덜 접힐 뿐이고, 서로 다른 조작이 잘못 합쳐지지는 않는다. 뷰어의
+        // 옛-행 폴백(`row.correlationId ?? row.id`)과 **같은 규칙**이라
+        // 두 계층이 「명시 없으면 자기 자신」 하나로 설명된다.
+        entry.correlationId ?? id,
       ],
     );
     return id;
@@ -130,4 +140,5 @@ const rowOf = (record: AuditRecord): AuditRow => ({
   ...(record.after_value === null ? {} : { afterValue: record.after_value }),
   ...(record.counterpart_node_id === null ? {} : { counterpartNodeId: record.counterpart_node_id }),
   ...(record.target_role === null ? {} : { targetRole: record.target_role as 'origin' | 'copy' }),
+  ...(record.correlation_id === null ? {} : { correlationId: record.correlation_id }),
 });
