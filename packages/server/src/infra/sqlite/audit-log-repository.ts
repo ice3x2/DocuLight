@@ -63,10 +63,13 @@ export class SqliteAuditLog implements AuditSink, AuditQuery {
     // 조작 조건은 스코프 조건 **뒤에** 붙는다 — 앞에 두면 조작만 맞는
     // 스코프 밖 행이 걸릴 여지가 생긴다.
     const byOperation = options.operation === undefined ? '' : ' AND operation = ?';
+    // 같은 초의 행은 `rowid` 로 가른다. `id` 로 가르면 그것이 무작위
+    // UUID 라 같은 자료를 두 번 열 때 줄 순서가 달라지고, 두 사람이 본
+    // 감사가 서로 다른 목록이 된다.
     const all = options.operation === undefined ? params : [...params, options.operation];
     return this.store
       .all<AuditRecord>(
-        `SELECT * FROM audit_log WHERE ${where}${byOperation} ORDER BY occurred_at DESC, id DESC`,
+        `SELECT * FROM audit_log WHERE ${where}${byOperation} ORDER BY occurred_at DESC, rowid DESC`,
         all,
       )
       .map(rowOf);

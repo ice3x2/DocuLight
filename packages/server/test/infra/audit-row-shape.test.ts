@@ -155,3 +155,38 @@ describe('IR-AUDIT-001 — 조작 필터는 실제 기록 값에서 파생한다
     expect(audit.operationsInScope(['ws1'])).toEqual([]);
   });
 });
+
+describe('DR-AUDIT-002 AC-5 · IR-AUDIT-003 — 스키마와 순서가 저장 계층에서 닫힌다', () => {
+  it('AC-5: 상대 노드 없이 대상 역할만 담는 행을 스키마가 거부한다', () => {
+    // 응용 계층만 막으면 저장소를 직접 만지는 경로가 남는다 — AC-3 에
+    // 이미 댄 잣대를 AC-5 에도 그대로 댄다.
+    expect(() =>
+      db.run(
+        "INSERT INTO audit_log (id, operation, actor, target_role) VALUES ('x1', 'node.copy', 'u1', 'origin')",
+      ),
+    ).toThrow(/counterpart/i);
+  });
+
+  it('AC-5: 상대 노드가 있으면 대상 역할을 받는다', () => {
+    // 거부 시험만 두면 아무것도 못 넣는 트리거가 통과한다.
+    expect(() =>
+      db.run(
+        "INSERT INTO audit_log (id, operation, actor, counterpart_node_id, target_role) VALUES ('x2', 'node.copy', 'u1', 'n9', 'origin')",
+      ),
+    ).not.toThrow();
+  });
+
+  it('같은 초의 행들이 열 때마다 같은 순서로 온다', () => {
+    const log = new SqliteAuditLog(db);
+    const ids = ['a', 'b', 'c', 'd', 'e'].map((name) =>
+      log.append({ operation: 'node.create', actor: 'u1', workspaceId: 'w1', nodeId: name }),
+    );
+
+    // 같은 자료를 두 번 열어 줄 순서가 달라지면 두 사람이 본 감사가
+    // 서로 다른 목록이 된다 — id 가 무작위 UUID 라 그것으로 가르면
+    // 삽입 순서와 무관한 순서가 나온다.
+    const 한번 = log.inScope(['w1']).map((row) => row.id);
+    expect(한번).toEqual([...ids].reverse());
+    expect(log.inScope(['w1']).map((row) => row.id)).toEqual(한번);
+  });
+});
