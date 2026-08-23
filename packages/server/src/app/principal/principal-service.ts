@@ -1,4 +1,5 @@
 import { canAuthenticate } from '../../domain/auth/account-gate.js';
+import type { AuditSink } from '../../domain/ports/audit-sink.js';
 import type { PrincipalRepository } from '../../domain/ports/principal-repository.js';
 import type { SessionRepository } from '../../domain/ports/session-repository.js';
 import type { PrincipalId, PrincipalStatus } from '../../domain/principal/principal.js';
@@ -19,6 +20,26 @@ export type PrincipalRule =
 export type PrincipalGuardRule = Extract<PrincipalRule, 'last-active-superuser'>;
 
 export type PrincipalResult = { ok: true } | { ok: false; rule: PrincipalRule };
+
+/**
+ * 주체 조작의 감사 조작 값 (`OBS-AUDIT-001` AC-2).
+ *
+ * 셋 다 「누가 그 노드에 도달하는가」를 바꾼다 — 멤버십은 그룹 앞 부여가
+ * 닿는 사람을 바꾸고, 계정 상태는 그 사람이 아무 데도 닿지 못하게 한다.
+ * 어느 워크스페이스에도 귀속되지 않으므로 인스턴스 스코프다.
+ */
+export const MEMBER_ADD = 'principal.member-add';
+export const MEMBER_REMOVE = 'principal.member-remove';
+export const ACCOUNT_STATUS = 'principal.status';
+
+/**
+ * 감사를 남길 자리. **선택이다** — 설치 마법사와 시험은 기록기를 세우기
+ * 전에도 주체를 만져야 한다.
+ */
+export interface PrincipalAudit {
+  readonly audit: AuditSink;
+  readonly actor: PrincipalId;
+}
 
 const ok: PrincipalResult = { ok: true };
 const reject = (rule: PrincipalRule): PrincipalResult => ({ ok: false, rule });
@@ -74,6 +95,7 @@ export function addGroupMember(
   principals: PrincipalRepository,
   groupId: PrincipalId,
   memberId: PrincipalId,
+  recording?: PrincipalAudit,
 ): PrincipalResult {
   const group = principals.findById(groupId);
   if (group === undefined) return reject('unknown-principal');
@@ -84,6 +106,12 @@ export function addGroupMember(
   if (member.kind !== 'user') return reject('member-must-be-user');
 
   principals.addMember(groupId, memberId);
+  recording?.audit.append({
+    operation: MEMBER_ADD,
+    actor: recording.actor,
+    subjectId: memberId,
+    afterValue: groupId,
+  });
   return ok;
 }
 
@@ -138,6 +166,7 @@ export function removeFromGroup(
   stores: GuardedStores,
   groupId: PrincipalId,
   userId: PrincipalId,
+  recording?: PrincipalAudit,
 ): PrincipalResult {
   if (
     groupId === SUPERUSER_GROUP_ID &&
@@ -150,6 +179,12 @@ export function removeFromGroup(
   }
 
   stores.principals.removeMember(groupId, userId);
+  recording?.audit.append({
+    operation: MEMBER_REMOVE,
+    actor: recording.actor,
+    subjectId: userId,
+    beforeValue: groupId,
+  });
   return ok;
 }
 
@@ -163,6 +198,7 @@ export function setAccountStatus(
   stores: GuardedStores,
   userId: PrincipalId,
   status: PrincipalStatus,
+  recording?: PrincipalAudit,
 ): PrincipalResult {
   // 예약 주체는 **명시적으로** 거절한다 (`DR-AUDIT-001` AC-4 · AC-5).
   // 계정 행이 없어 `unknown-principal` 로 떨어지는 것에 기대면, 그 우연은
@@ -182,6 +218,15 @@ export function setAccountStatus(
   }
 
   stores.principals.setStatus(userId, status);
+  // 이전값과 이후값이 함께 남는다 — 「정지됐다」만으로는 무엇에서 무엇으로
+  // 바뀐 것인지 되짚을 수 없다.
+  recording?.audit.append({
+    operation: ACCOUNT_STATUS,
+    actor: recording.actor,
+    subjectId: userId,
+    beforeValue: account.status,
+    afterValue: status,
+  });
 
   // 열린 상태가 아니게 됐으면 그 계정의 세션을 함께 끊는다.
   // 인증 단계가 상태를 다시 보므로 판정은 이미 닫혀 있지만, 행을 남기면

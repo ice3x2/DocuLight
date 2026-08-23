@@ -66,7 +66,13 @@ describe('SEC-AUDIT-010 — 열람 스코프', () => {
 
     const 본것 = auditView(stores, 관리자('기획관리자', 기획팀))!;
 
-    expect(본것.groups.flatMap((g) => g.rows).map((r) => r.operation)).toEqual(['acl.grant']);
+    // 준비가 남긴 행(생성·부여)이 함께 있으므로 이 시험이 넣은 두 조작만
+    // 골라 본다 — 절댓값으로 재면 준비가 하나 바뀔 때마다 깨진다.
+    const 이시험것 = 본것.groups
+      .flatMap((g) => g.rows)
+      .map((r) => r.operation)
+      .filter((one) => one === 'settings.change' || one === 'node.trash');
+    expect(이시험것).toEqual([]);
   });
 
   it('AC-5: 슈퍼유저는 인스턴스 스코프까지 읽는다', () => {
@@ -84,9 +90,12 @@ describe('SEC-AUDIT-010 — 열람 스코프', () => {
   });
 
   it('남의 워크스페이스 행은 오지 않는다', () => {
-    stores.auditLog.append({ operation: 'acl.grant', actor: root.id, nodeId: 남의문서, workspaceId: 영업팀 });
+    stores.auditLog.append({ operation: '남의조작', actor: root.id, nodeId: 남의문서, workspaceId: 영업팀 });
 
-    expect(auditView(stores, 관리자('기획관리자', 기획팀))!.groups).toEqual([]);
+    const 본것 = auditView(stores, 관리자('기획관리자', 기획팀))!;
+
+    expect(본것.operations).not.toContain('남의조작');
+    expect(본것.groups.flatMap((g) => g.rows).map((r) => r.operation)).not.toContain('남의조작');
   });
 });
 
@@ -119,6 +128,7 @@ describe('SEC-AUDIT-002 · SEC-AUDIT-003 · SEC-AUDIT-008 — 노드 참조의 �
 
     const 상대들 = auditView(stores, 관리자('기획관리자', 기획팀))!
       .groups.flatMap((g) => g.rows)
+      .filter((r) => r.operation === 'node.copy')
       .map((r) => r.counterpart);
 
     // 두 목적지가 **완전히 같은 문자열**을 받는다 — 갈리면 그 차이가 곧
@@ -151,12 +161,17 @@ describe('SEC-AUDIT-002 · SEC-AUDIT-003 · SEC-AUDIT-008 — 노드 참조의 �
       targetRole: 'origin',
     });
     const 사람 = 관리자('두곳관리자', 기획팀);
-    expect(auditView(stores, 사람)!.groups[0]!.rows[0]!.counterpart).toBe(EXTERNAL_NODE);
+    const 복사행 = (who: Actor) =>
+      auditView(stores, who)!
+        .groups.flatMap((g) => g.rows)
+        .find((r) => r.operation === 'node.copy')!;
+
+    expect(복사행(사람).counterpart).toBe(EXTERNAL_NODE);
 
     grantPermission(stores, root, { nodeId: 영업팀, principalId: 사람.id, level: 'admin' });
 
     // 저장된 값은 온전하다 — 가리는 것은 표시일 뿐이다.
-    expect(auditView(stores, 사람)!.groups[0]!.rows[0]!.counterpart).toBe('견적.md');
+    expect(복사행(사람).counterpart).toBe('견적.md');
   });
 });
 
@@ -178,19 +193,33 @@ describe('IR-AUDIT-003 · SEC-AUDIT-011 — 저장은 낱행이고 표시는 묶
 
     const 본것 = auditView(stores, 관리자('기획관리자', 기획팀))!;
 
-    expect(stores.auditLog.inScope([기획팀])).toHaveLength(3);
-    expect(본것.groups).toHaveLength(1);
-    expect(본것.groups[0]!.rows).toHaveLength(3);
+    // 저장은 **낱행**이다 — 세 번 부른 것이 세 행으로 남는다.
+    const 낱행 = stores.auditLog.inScope([기획팀]).filter((r) => r.operation === 'acl.grant');
+    expect(낱행).toHaveLength(3);
+
+    // 표시는 그 셋을 한 줄로 접는다.
+    const 부여묶음 = 본것.groups.filter((g) => g.operation === 'acl.grant' && g.actor === root.id);
+    expect(부여묶음).toHaveLength(1);
+    expect(부여묶음[0]!.rows).toHaveLength(3);
   });
 
   it('`SEC-AUDIT-011` AC-1: 묶음 건수가 열람자 스코프의 낱행 수와 같다', () => {
     세줄();
-    stores.auditLog.append({ operation: 'acl.grant', actor: root.id, nodeId: 남의문서, workspaceId: 영업팀 });
+    const 남의것 = 5;
+    for (let i = 0; i < 남의것; i += 1) {
+      stores.auditLog.append({ operation: 'acl.grant', actor: root.id, nodeId: 남의문서, workspaceId: 영업팀 });
+    }
 
     const 본것 = auditView(stores, 관리자('기획관리자', 기획팀))!;
+    const 묶음 = 본것.groups.find((g) => g.operation === 'acl.grant' && g.actor === root.id)!;
 
     // 남의 워크스페이스 행이 건수에 섞이면 그 차이가 곧 스코프 밖 행의 수다.
-    expect(본것.groups[0]!.rows).toHaveLength(3);
+    expect(묶음.rows).toEqual(
+      stores.auditLog
+        .inScope([기획팀])
+        .filter((r) => r.operation === 'acl.grant' && r.actor === root.id && r.occurredAt === 묶음.occurredAt)
+        .map(() => expect.anything()),
+    );
   });
 
   it('AC-5 · AC-6 · AC-7: 묶음 키가 응답 어디에도 없다', () => {
@@ -212,7 +241,8 @@ describe('IR-AUDIT-003 · SEC-AUDIT-011 — 저장은 낱행이고 표시는 묶
 
     const 본것 = auditView(stores, 관리자('기획관리자', 기획팀))!;
 
-    expect(본것.operations).toEqual(['a.op', 'n.op', 'z.op']);
+    const 이시험것 = 본것.operations.filter((one) => one.endsWith('.op'));
+    expect(이시험것).toEqual(['a.op', 'n.op', 'z.op']);
   });
 
   it('AC-4: 필터의 원천이 묶음이 아니라 저장소의 distinct 질의다', () => {

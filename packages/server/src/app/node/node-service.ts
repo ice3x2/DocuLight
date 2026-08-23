@@ -192,6 +192,15 @@ export function createNode(
   // 아무 편집자나 걷어내지 못하고 워크스페이스 관리 권한자만 회수한다(AC-3).
   acl.grant({ nodeId: id, principalId: actor.id, level: 'edit', grantedBy: null });
 
+  // 노드의 존재가 바뀌었다 — 기록 기준 ① 이다.
+  stores.audit.append({
+    operation: NODE_CREATE,
+    actor: actor.id,
+    nodeId: id,
+    workspaceId: input.workspaceId,
+    afterValue: stores.nodes.pathOf(id),
+  });
+
   return { ok: true, id, name };
 }
 
@@ -263,7 +272,21 @@ export function moveNode(
     return reject('forbidden', '이 노드를 옮길 권한이 없습니다.');
   }
 
-  return place(stores, node, parentId, node.name);
+  const before = stores.nodes.pathOf(id);
+  const moved = place(stores, node, parentId, node.name);
+  if (!moved.ok) return moved;
+
+  // 위치 변화를 이전값·이후값으로 담는다 — 노드 ID 가 보존되므로 상대
+  // 노드 칸은 비운다 (`DR-AUDIT-003` AC-2).
+  stores.audit.append({
+    operation: NODE_MOVE,
+    actor: actor.id,
+    nodeId: id,
+    workspaceId: node.workspaceId,
+    beforeValue: before,
+    afterValue: stores.nodes.pathOf(id),
+  });
+  return moved;
 }
 
 /**
@@ -275,6 +298,15 @@ export function moveNode(
  * (`SEC-AUDIT-009` AC-1) — 그 축은 `targetRole` 이 갖는다.
  */
 export const NODE_COPY = 'node.copy';
+
+/**
+ * 노드가 새로 생겼다 (`OBS-AUDIT-005` AC-1). 업로드도 이 값을 쓴다 (AC-6) —
+ * 별도 조작명을 만들면 「생성」 필터가 업로드로 만든 노드를 놓친다.
+ */
+export const NODE_CREATE = 'node.create';
+
+/** 노드가 자리를 옮겼다 (AC-3). 위치 변화는 이전값·이후값이 담는다. */
+export const NODE_MOVE = 'node.move';
 
 /** 복사가 놓일 자리 — **둘 중 하나다.** */
 export type CopyDestination =

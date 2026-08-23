@@ -17,6 +17,14 @@ import {
 export const ACL_GRANT = 'acl.grant';
 export const ACL_REVOKE = 'acl.revoke';
 
+/**
+ * 상속을 끊고 되돌리는 두 조작 (`OBS-AUDIT-001` AC-2).
+ *
+ * 둘 다 「누가 그 노드에 도달하는가」를 바꾸므로 기록 기준 ② 에 걸린다.
+ */
+export const ACL_BREAK_INHERITANCE = 'acl.break-inheritance';
+export const ACL_RESTORE_INHERITANCE = 'acl.restore-inheritance';
+
 export type GrantFailure = GrantRule | 'unknown-target' | 'unknown-entry';
 
 export type GrantOutcome = { ok: true; entryId: string } | { ok: false; rule: GrantFailure };
@@ -113,6 +121,12 @@ export function breakInheritance(stores: AclStores, actor: Actor, nodeId: NodeId
   if (!decision.allowed) return { ok: false, rule: decision.rule };
 
   stores.nodes.setInheritance(nodeId, false);
+  stores.audit.append({
+    operation: ACL_BREAK_INHERITANCE,
+    actor: actor.id,
+    nodeId,
+    ...(node.workspaceId === undefined ? {} : { workspaceId: node.workspaceId }),
+  });
   return { ok: true };
 }
 
@@ -135,6 +149,12 @@ export function restoreInheritance(stores: AclStores, actor: Actor, nodeId: Node
   if (!decision.allowed) return { ok: false, rule: decision.rule };
 
   stores.nodes.setInheritance(nodeId, true);
+  stores.audit.append({
+    operation: ACL_RESTORE_INHERITANCE,
+    actor: actor.id,
+    nodeId,
+    ...(node.workspaceId === undefined ? {} : { workspaceId: node.workspaceId }),
+  });
   return { ok: true };
 }
 

@@ -219,6 +219,17 @@ export async function restoreFromTrash(
   await stores.trashFiles.moveOut(entry, basename(entry.originalPath), stores.nodes.pathOf(nodeId));
   stores.trash.remove(nodeId);
 
+  // 복구도 노드 ID 를 보존하는 1-노드 조작이다 (`DR-AUDIT-003` AC-4) —
+  // 상대 노드 칸은 비우고 자리 변화는 이전값·이후값이 담는다.
+  stores.audit.append({
+    operation: NODE_RESTORE,
+    actor: actor.id,
+    nodeId,
+    workspaceId: entry.workspaceId,
+    beforeValue: entry.originalPath,
+    afterValue: stores.nodes.pathOf(nodeId),
+  });
+
   return { ok: true, name };
 }
 

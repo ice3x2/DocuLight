@@ -1,5 +1,6 @@
 import type { PrincipalId } from '../../domain/principal/principal.js';
 import { DEFAULT_GROUP_ID } from '../../domain/principal/system-groups.js';
+import { ACL_GRANT } from '../acl/grant-service.js';
 import type { Workspace } from '../../domain/workspace/workspace.js';
 import type { AclStores, Actor } from '../acl/permission-service.js';
 import type { WorkspaceStores } from './restore-from-sidecar.js';
@@ -29,6 +30,14 @@ export async function createWorkspace(
 }
 
 export type WorkspaceRule = 'needs-superuser' | 'unknown-administrator';
+
+/**
+ * 워크스페이스가 생겼다 (`OBS-AUDIT-005` AC-8).
+ *
+ * 어느 워크스페이스에도 귀속되지 않는 사건이 아니다 — **그 자신**에
+ * 귀속되므로 그 워크스페이스의 관리자가 자기 로그에서 생성 사실을 본다.
+ */
+export const WORKSPACE_CREATE = 'workspace.create';
 
 export type WorkspaceCreated =
   | { ok: true; workspace: Workspace }
@@ -76,11 +85,27 @@ export async function createWorkspaceAs(
 
   // `grantedBy` 를 `null` 로 두는 것이 이 항목을 시스템의 것으로 만든다 —
   // 생성자 자동 부여와 같은 이유다.
+  stores.audit.append({
+    operation: WORKSPACE_CREATE,
+    actor: actor.id,
+    workspaceId: workspace.id,
+    afterValue: workspace.name,
+  });
+
   stores.acl.grant({
     nodeId: workspace.id,
     principalId: administrator.id,
     level: 'admin',
     grantedBy: null,
+  });
+  // 생성 시점의 두 부여가 **각각** 행을 남긴다 (`OBS-AUDIT-005` AC-9).
+  // 묶어서 1행으로 남기면 어느 주체가 무엇을 받았는지 담을 수 없다.
+  stores.audit.append({
+    operation: ACL_GRANT,
+    actor: actor.id,
+    workspaceId: workspace.id,
+    subjectId: administrator.id,
+    level: 'admin',
   });
 
   // `없음` 이면 항목 자체를 만들지 않는다 (`FR-PRINCIPAL-007` AC-3).
@@ -93,6 +118,13 @@ export async function createWorkspaceAs(
       principalId: DEFAULT_GROUP_ID,
       level,
       grantedBy: null,
+    });
+    stores.audit.append({
+      operation: ACL_GRANT,
+      actor: actor.id,
+      workspaceId: workspace.id,
+      subjectId: DEFAULT_GROUP_ID,
+      level,
     });
   }
 
