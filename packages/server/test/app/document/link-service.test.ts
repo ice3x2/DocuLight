@@ -237,25 +237,25 @@ describe('FR-STORAGE-009 — 위키링크는 경로가 아니라 이름으로 �
     await 옮긴다(설계, 깊은곳);
 
     // 본문은 `[[설계]]` 그대로다 — 경로를 적을 문법 자체가 없다.
-    const [나간것] = (await linksOf(stores, root, 회의록)).outgoing;
+    const [나간것] = (await linksOf(stores, root, 회의록))!.outgoing;
     expect(나간것).toMatchObject({ nodeId: 설계 });
   });
 
   it('AC-2: 대상 문서를 옮겨도 같은 문서로 해석된다', async () => {
-    const 앞 = (await linksOf(stores, root, 회의록)).outgoing.map((one) => one.nodeId);
+    const 앞 = (await linksOf(stores, root, 회의록))!.outgoing.map((one) => one.nodeId);
 
     await 옮긴다(설계, 방('보관'));
 
-    expect((await linksOf(stores, root, 회의록)).outgoing.map((one) => one.nodeId)).toEqual(앞);
+    expect((await linksOf(stores, root, 회의록))!.outgoing.map((one) => one.nodeId)).toEqual(앞);
   });
 
   it('AC-3: 참조하는 문서를 옮겨도 해석 결과가 그대로다', async () => {
-    const 앞 = (await linksOf(stores, root, 회의록)).outgoing.map((one) => one.nodeId);
+    const 앞 = (await linksOf(stores, root, 회의록))!.outgoing.map((one) => one.nodeId);
 
     await 옮긴다(회의록, 방('회의'));
 
     // 상대경로였다면 여기서 대상이 바뀌거나 사라진다.
-    expect((await linksOf(stores, root, 회의록)).outgoing.map((one) => one.nodeId)).toEqual(앞);
-    expect((await linksOf(stores, root, 설계)).backlinks.map((one) => one.nodeId)).toEqual([회의록]);
+    expect((await linksOf(stores, root, 회의록))!.outgoing.map((one) => one.nodeId)).toEqual(앞);
+    expect((await linksOf(stores, root, 설계))!.backlinks.map((one) => one.nodeId)).toEqual([회의록]);
   });
 });
