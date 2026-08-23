@@ -15,6 +15,22 @@ import {
 
 const fresh = (): AutosaveState => initialAutosave('hash-0');
 
+describe('FR-STORAGE-001 AC-1 — 디바운스는 원장이 정한 제품 상수다', () => {
+  it('원장 `R75` 의 ~2초를 그 값으로 든다', () => {
+    // 이 값을 상수로만 견주는 시험은 값이 0 이 돼도 통과한다 — 그러면
+    // 「입력이 멈추면」이 「타건마다」가 되고, 세션당 1회 규칙(`R75-a`)이
+    // 막으려던 저장 볼륨이 그대로 돌아온다.
+    expect(AUTOSAVE_DEBOUNCE_MS).toBe(2000);
+  });
+
+  it('그 값보다 조금이라도 이르면 저장하지 않는다', () => {
+    const typed = edited(fresh(), '# 고침');
+
+    expect(idleAutosave(typed, 1999).save).toBe(false);
+    expect(idleAutosave(typed, 2000).save).toBe(true);
+  });
+});
+
 describe('FR-STORAGE-001 — 버튼 없는 자동 저장', () => {
   it('AC-1: 입력이 멈추면 디바운스 뒤에 저장을 낸다', () => {
     const typed = edited(fresh(), '# 고침');
