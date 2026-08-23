@@ -142,18 +142,54 @@ describe('접근자 지표 — 두 축을 서로 다른 이름으로 내보낸�
   });
 });
 
-describe('이동 프리뷰 — 전후 인원 수만 준다 (`FR-ACL-006`)', () => {
+describe('이동·복사 프리뷰 — 전후 인원 수와 등급을 준다 (`FR-ACL-006` · `FR-CONFIRM-016`)', () => {
   it('이동 전과 이동 후를 함께 준다', async () => {
     const 한범 = 사용자('한범');
     grantPermission(stores, root, { nodeId: 열린방, principalId: 한범.id, level: 'view' });
 
-    const res = await request(app).get(`/api/nodes/${doc}/move-preview`).query({ destinationId: 닫힌방 });
+    const res = await request(app).get(`/api/nodes/${doc}/relocation-preview`).query({ destinationId: 닫힌방 });
 
     expect(res.status).toBe(200);
     // 명단을 실을 칸이 응답에 없다 (AC-3).
-    expect(Object.keys(res.body).sort()).toEqual(['after', 'before']);
+    expect(Object.keys(res.body).sort()).toEqual(['after', 'before', 'grade', 'kind']);
     expect(res.body.before).toBe(2);
     expect(res.body.after).toBe(1);
+  });
+
+  it('수치가 변하는 이동은 L2 이고 변하지 않는 이동은 L1 이다 (`FR-CONFIRM-016`)', async () => {
+    const 한범 = 사용자('한범');
+    grantPermission(stores, root, { nodeId: 열린방, principalId: 한범.id, level: 'view' });
+
+    const 좁아짐 = await request(app)
+      .get(`/api/nodes/${doc}/relocation-preview`)
+      .query({ destinationId: 닫힌방 });
+    const 그대로 = await request(app)
+      .get(`/api/nodes/${doc}/relocation-preview`)
+      .query({ destinationId: 열린방 });
+
+    expect(좁아짐.body.grade).toBe('L2');
+    expect(그대로.body).toMatchObject({ before: 2, after: 2, grade: 'L1' });
+  });
+
+  it('복사는 목적지 기준 수치 하나와 언제나 L2 를 준다 (`FR-ACL-002` · `FR-CONFIRM-017`)', async () => {
+    const 한범 = 사용자('한범');
+    grantPermission(stores, root, { nodeId: 열린방, principalId: 한범.id, level: 'view' });
+
+    const 넓은쪽 = await request(app)
+      .get(`/api/nodes/${doc}/relocation-preview`)
+      .query({ kind: 'copy', destinationId: 열린방 });
+    const 좁은쪽 = await request(app)
+      .get(`/api/nodes/${doc}/relocation-preview`)
+      .query({ kind: 'copy', destinationId: 닫힌방 });
+
+    // 전후 두 칸이 아니라 목적지 하나다 — 복사본의 접근자는 목적지 상속에서
+    // 파생되므로 「복사 전」 이라는 자리가 성립하지 않는다.
+    expect(Object.keys(넓은쪽.body).sort()).toEqual(['grade', 'kind', 'reachable']);
+    expect(넓은쪽.body.reachable).toBe(2);
+    expect(좁은쪽.body.reachable).toBe(1);
+    // 수치가 갈려도 등급은 갈리지 않는다 (`FR-CONFIRM-017` AC-3).
+    expect(넓은쪽.body.grade).toBe('L2');
+    expect(좁은쪽.body.grade).toBe('L2');
   });
 
   it('목적지를 바꾸면 이동 후 수치가 그 목적지 기준으로 갈린다 (AC-2)', async () => {
@@ -164,15 +200,15 @@ describe('이동 프리뷰 — 전후 인원 수만 준다 (`FR-ACL-006`)', () =
     );
     grantPermission(stores, root, { nodeId: 또다른방, principalId: 한범.id, level: 'view' });
 
-    const 닫힌쪽 = await request(app).get(`/api/nodes/${doc}/move-preview`).query({ destinationId: 닫힌방 });
-    const 열린쪽 = await request(app).get(`/api/nodes/${doc}/move-preview`).query({ destinationId: 또다른방 });
+    const 닫힌쪽 = await request(app).get(`/api/nodes/${doc}/relocation-preview`).query({ destinationId: 닫힌방 });
+    const 열린쪽 = await request(app).get(`/api/nodes/${doc}/relocation-preview`).query({ destinationId: 또다른방 });
 
     expect(닫힌쪽.body.after).toBe(1);
     expect(열린쪽.body.after).toBe(2);
   });
 
   it('목적지를 비우면 워크스페이스 루트로 옮기는 것이다', async () => {
-    const res = await request(app).get(`/api/nodes/${doc}/move-preview`);
+    const res = await request(app).get(`/api/nodes/${doc}/relocation-preview`);
 
     expect(res.status).toBe(200);
     expect(res.body.after).toBeGreaterThan(0);
@@ -183,13 +219,13 @@ describe('이동 프리뷰 — 전후 인원 수만 준다 (`FR-ACL-006`)', () =
     grantPermission(stores, root, { nodeId: ws, principalId: 구경꾼.id, level: 'view' });
     actingAs = actorFor(stores.principals, 구경꾼.id);
 
-    expect((await request(app).get(`/api/nodes/${doc}/move-preview`)).status).toBe(404);
+    expect((await request(app).get(`/api/nodes/${doc}/relocation-preview`)).status).toBe(404);
   });
 
   it('인증되지 않은 요청은 401 이다', async () => {
     actingAs = undefined;
 
-    expect((await request(app).get(`/api/nodes/${doc}/move-preview`)).status).toBe(401);
+    expect((await request(app).get(`/api/nodes/${doc}/relocation-preview`)).status).toBe(401);
   });
 });
 
@@ -251,13 +287,24 @@ describe('일괄 회수 — 미리보기와 실행이 같은 문을 쓴다 (`FR-
     expect(permissionOf(stores, actorFor(stores.principals, 한범.id), 열린방)).toBeNull();
   });
 
-  it('시스템 그룹도 대상이다 (`FR-PRINCIPAL-010`)', async () => {
+  it('시스템 그룹 둘 다 대상이고 실행까지 간다 (`FR-PRINCIPAL-010` AC-2)', async () => {
     const { DEFAULT_GROUP_ID } = await import('../../src/domain/principal/system-groups.js');
-    grantPermission(stores, root, { nodeId: doc, principalId: DEFAULT_GROUP_ID, level: 'view' });
+    // 조항이 이름 댄 것은 **둘**이다 — `default` 만 재면 슈퍼유저 그룹을
+    // 거르는 구현이 통과한다.
+    for (const 그룹 of [DEFAULT_GROUP_ID, SUPERUSER_GROUP_ID]) {
+      grantPermission(stores, root, { nodeId: doc, principalId: 그룹, level: 'view' });
 
-    const res = await request(app).get(`/api/principals/${DEFAULT_GROUP_ID}/revocation`);
+      expect((await request(app).get(`/api/principals/${그룹}/revocation`)).body.rows).toHaveLength(1);
 
-    expect(res.body.rows).toHaveLength(1);
+      // 미리보기에서 멈추지 않는다 — AC-2 가 요구하는 것은 **실행하면
+      // 항목이 제거된다**이고, 조회만 재면 그 절반이 빈다.
+      const 실행 = await request(app).post(`/api/principals/${그룹}/revocation`);
+      expect(실행.status).toBe(200);
+      expect(실행.body.rows).toHaveLength(1);
+      expect(
+        stores.acl.entriesOnAny([doc]).filter((entry) => entry.principalId === 그룹),
+      ).toHaveLength(0);
+    }
   });
 
   it('관리 레벨이 없으면 미리보기도 실행도 404 다', async () => {
@@ -369,5 +416,66 @@ describe('상속 끊김 감사 (`FR-ACL-005`)', () => {
 
     expect((await request(app).get('/api/broken-inheritance')).status).toBe(401);
     expect((await request(app).post(`/api/nodes/${닫힌방}/restore-inheritance`)).status).toBe(401);
+  });
+});
+
+describe('이동 프리뷰의 목적지도 인가를 지난다 (`SEC-ACL-006` · `SEC-ACL-014`)', () => {
+  it('목적지에 권한이 없으면 그 목적지의 접근자 수가 새지 않는다', async () => {
+    const 침입자 = 사용자('침입자');
+    // 출발 노드에만 편집을 준다 — 목적지에는 아무 권한이 없다.
+    grantPermission(stores, root, { nodeId: 열린방, principalId: 침입자.id, level: 'edit' });
+    // 목적지 쪽을 넓혀 두 수치가 달라지게 만든다.
+    for (const name of ['갑', '을', '병']) {
+      const 사람 = 사용자(name);
+      grantPermission(stores, root, { nodeId: 닫힌방, principalId: 사람.id, level: 'view' });
+    }
+    actingAs = actorFor(stores.principals, 침입자.id);
+
+    const 권한없는목적지 = await request(app)
+      .get(`/api/nodes/${doc}/relocation-preview`)
+      .query({ destinationId: 닫힌방 });
+    const 없는목적지 = await request(app)
+      .get(`/api/nodes/${doc}/relocation-preview`)
+      .query({ destinationId: 'nope' });
+
+    // 볼 수 없는 목적지와 없는 목적지가 **같은 답**이다 — 다르면 그 차이가
+    // 곧 그 노드의 존재를 알린다.
+    expect(권한없는목적지.status).toBe(404);
+    expect(권한없는목적지.status).toBe(없는목적지.status);
+    expect(권한없는목적지.body).toEqual(없는목적지.body);
+  });
+
+  it('워크스페이스 경계를 넘는 목적지도 같은 404 다 (`SEC-ACL-014`)', async () => {
+    const 다른곳 = (
+      await createWorkspace({ workspaces: stores.workspaces, files: new FsWorkspaceFiles(docsRoot) }, '영업팀')
+    ).id;
+    const 저쪽방 = idOf(
+      createNode(stores, root, { workspaceId: 다른곳, parentId: null, kind: 'directory', name: '저쪽방' }),
+    );
+    const 관리자 = 사용자('관리자');
+    grantPermission(stores, root, { nodeId: ws, principalId: 관리자.id, level: 'admin' });
+    grantPermission(stores, root, { nodeId: 다른곳, principalId: 관리자.id, level: 'admin' });
+    actingAs = actorFor(stores.principals, 관리자.id);
+
+    // 양쪽 다 관리 권한이 있어도 경계는 넘지 못한다 — 인가가 아니라 이동
+    // 규칙의 제약이다.
+    const res = await request(app)
+      .get(`/api/nodes/${doc}/relocation-preview`)
+      .query({ destinationId: 저쪽방 });
+
+    expect(res.status).toBe(404);
+  });
+
+  it('목적지에 편집이 있으면 그대로 답한다 — 거부 시험만 두면 아무도 못 쓰는 구현이 통과한다', async () => {
+    const 편집자 = 사용자('편집자');
+    grantPermission(stores, root, { nodeId: ws, principalId: 편집자.id, level: 'edit' });
+    actingAs = actorFor(stores.principals, 편집자.id);
+
+    const res = await request(app)
+      .get(`/api/nodes/${doc}/relocation-preview`)
+      .query({ destinationId: 닫힌방 });
+
+    expect(res.status).toBe(200);
+    expect(res.body.after).toBeGreaterThan(0);
   });
 });

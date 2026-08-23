@@ -54,7 +54,13 @@ describe('이동·복사 프리뷰 (`FR-ACL-006` · `FR-ACL-002` · `IR-ACL-001`
   it('복사는 목적지 기준 수치 하나를 보인다 (`FR-ACL-002` AC-1)', () => {
     render(<RelocationPreview relocation={{ kind: 'copy', reachable: 7 }} />);
 
-    expect(screen.getByTestId('relocation-preview').textContent ?? '').toContain('7명');
+    const text = screen.getByTestId('relocation-preview').textContent ?? '';
+    expect(text).toContain('7명');
+    // 라벨 단언을 이동 렌더에만 걸면 「한 부품이라 같다」가 구조 논증으로만
+    // 남는다 — 복사 경로에서도 직접 잰다 (`FR-ACL-002` AC-5).
+    expect(text).toContain('접근 가능');
+    expect(text).not.toContain('접근 가능자');
+    expect(text).not.toContain('ACL 접근자');
   });
 
   it('지표명은 접근 가능 이고 다른 라벨을 쓰지 않는다 (`FR-ACL-006` AC-5 · `FR-ACL-002` AC-5)', () => {
@@ -78,6 +84,9 @@ describe('이동·복사 프리뷰 (`FR-ACL-006` · `FR-ACL-002` · `IR-ACL-001`
       />,
     );
 
+    // 부재만 재면 부품이 아무것도 안 그려도 통과한다 — 그릴 것은 그리고
+    // 명단만 안 그린다는 것이 이 AC 다.
+    expect(screen.getByTestId('relocation-preview').textContent ?? '').toContain('2명');
     expect(screen.queryByText('한범')).toBeNull();
     expect(screen.queryByText('지원')).toBeNull();
   });

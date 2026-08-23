@@ -1,7 +1,11 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
 import {
+  fetchBrokenInheritance,
   fetchFavorites,
+  fetchRevocation,
+  fetchSimulation,
+  fetchWorkspaceList,
   fetchLinks,
   fetchGroupRoster,
   fetchPersonalSettings,
@@ -10,12 +14,16 @@ import {
   fetchTrash,
   fetchTree,
   loadDocument,
+  type BrokenInheritanceBody,
   type DocumentBody,
   type DocumentLinksBody,
+  type RevocationBody,
+  type SimulationBody,
   type FavoriteRow,
   type RosterGroup,
   type RosterUser,
   type SessionBody,
+  type WorkspaceListRow,
 } from './client.js';
 import type { TrashRowView } from '../trash/TrashPanel.js';
 import type { WorkspaceTreeView } from '../tree/tree-contract.js';
@@ -41,6 +49,10 @@ export const QUERY_KEYS = {
   userRoster: ['roster', 'users'] as const,
   groupRoster: ['roster', 'groups'] as const,
   document: (nodeId: string) => ['document', nodeId] as const,
+  workspaces: ['workspaces'] as const,
+  brokenInheritance: ['broken-inheritance'] as const,
+  revocation: (principalId: string) => ['revocation', principalId] as const,
+  simulation: (subjectId: string) => ['simulation', subjectId] as const,
 };
 
 export const useSession = (): UseQueryResult<SessionBody> =>
@@ -104,4 +116,40 @@ export const useDocument = (nodeId: string): UseQueryResult<DocumentBody> =>
   useQuery({
     queryKey: QUERY_KEYS.document(nodeId),
     queryFn: () => loadDocument(nodeId),
+  });
+
+/**
+ * 권한 감사 구역이 쓰는 질의들 (`FR-ACL-003`~`FR-ACL-005`).
+ *
+ * 셋 다 **관리 범위로 잘린 것을 서버가 준다** — 화면이 다시 거르지
+ * 않는다. `enabled` 로 막는 것은 인가가 아니라 헛질의를 줄이는 것뿐이다.
+ */
+export const useWorkspaceList = (
+  enabled: boolean,
+): UseQueryResult<WorkspaceListRow[]> =>
+  useQuery({ queryKey: QUERY_KEYS.workspaces, queryFn: fetchWorkspaceList, enabled, retry: false });
+
+export const useBrokenInheritance = (enabled: boolean): UseQueryResult<BrokenInheritanceBody> =>
+  useQuery({
+    queryKey: QUERY_KEYS.brokenInheritance,
+    queryFn: fetchBrokenInheritance,
+    enabled,
+    retry: false,
+  });
+
+/** 주체를 고르기 전에는 물을 것이 없다 — 그래서 `null` 이면 서지 않는다. */
+export const useRevocation = (principalId: string | null): UseQueryResult<RevocationBody> =>
+  useQuery({
+    queryKey: QUERY_KEYS.revocation(principalId ?? ''),
+    queryFn: () => fetchRevocation(principalId!),
+    enabled: principalId !== null,
+    retry: false,
+  });
+
+export const useSimulation = (subjectId: string | null): UseQueryResult<SimulationBody> =>
+  useQuery({
+    queryKey: QUERY_KEYS.simulation(subjectId ?? ''),
+    queryFn: () => fetchSimulation(subjectId!),
+    enabled: subjectId !== null,
+    retry: false,
   });

@@ -40,7 +40,8 @@ import {
 } from '../../app/workspace/admin-presence.js';
 import { grantPermission, restoreInheritance, revokePermission } from '../../app/acl/grant-service.js';
 import { accessorsOf } from '../../app/acl/accessor-service.js';
-import { movePreview } from '../../app/acl/relocation-preview-service.js';
+import { copyPreview, movePreview } from '../../app/acl/relocation-preview-service.js';
+import { ASSIGNED_GRADES, moveGrade } from '../../domain/confirm/grade.js';
 import { previewRevocation, revokeAllFor } from '../../app/acl/bulk-revoke-service.js';
 import { simulate } from '../../app/acl/simulation-service.js';
 import { brokenInheritanceOf } from '../../app/acl/inheritance-audit-service.js';
@@ -780,28 +781,53 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
   });
 
   /**
-   * 옮기면 몇 명이 되는가 (`FR-ACL-006`).
+   * 옮기거나 복사하면 몇 명이 되는가 (`FR-ACL-006` · `FR-ACL-002`).
+   *
+   * **두 조작이 한 문이다.** 프리뷰와 확인 등급이 같은 응답으로 와야
+   * 화면이 그 둘을 따로 물어 서로 어긋난 값을 쥐는 일이 없다.
+   *
+   * 등급을 **서버가 실어 보낸다** (`FR-CONFIRM-016` · `FR-CONFIRM-017`).
+   * 화면이 수치를 보고 스스로 판정하면 등급 규칙이 두 곳에 살게 되고,
+   * 그때 한쪽만 바뀐다.
    *
    * 목적지를 비우면 워크스페이스 루트다 — 트리의 최상위로 옮기는 것이
    * 실제 조작이므로 그 자리를 표현할 수 있어야 한다.
    *
-   * 명단을 실을 칸이 없다 (AC-3). 명단이 필요한 관리자는 시뮬레이션으로
-   * 간다 (AC-4).
+   * 명단을 실을 칸이 없다 (`FR-ACL-006` AC-3). 명단이 필요한 관리자는
+   * 시뮬레이션으로 간다 (AC-4).
    */
-  router.get('/nodes/:nodeId/move-preview', (req, res) => {
+  router.get('/nodes/:nodeId/relocation-preview', (req, res) => {
     const actor = actorFor(req);
     if (actor === undefined) {
       res.sendStatus(401);
       return;
     }
 
-    const preview = movePreview(stores, actor, req.params.nodeId!, one(req.query.destinationId) ?? null);
+    const nodeId = req.params.nodeId!;
+    const destinationId = one(req.query.destinationId) ?? null;
+
+    if (one(req.query.kind) === 'copy') {
+      // 복사본의 접근자는 목적지 상속에서 파생되므로 목적지를 묻는다.
+      // 목적지를 비우면 워크스페이스 루트다.
+      const destination = destinationId ?? stores.nodes.findById(nodeId)?.workspaceId;
+      const report = destination === undefined ? null : copyPreview(stores, actor, destination);
+      if (report === null) {
+        res.sendStatus(404);
+        return;
+      }
+
+      // 복사는 대상 유형과 무관하게 언제나 `L2` 다 (`FR-CONFIRM-017`).
+      res.json({ kind: 'copy', reachable: report.metrics.reachable, grade: ASSIGNED_GRADES.copy });
+      return;
+    }
+
+    const preview = movePreview(stores, actor, nodeId, destinationId);
     if (preview === null) {
       res.sendStatus(404);
       return;
     }
 
-    res.json(preview);
+    res.json({ kind: 'move', ...preview, grade: moveGrade(preview) });
   });
 
   /**

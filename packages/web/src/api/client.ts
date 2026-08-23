@@ -372,6 +372,20 @@ export interface AccessorReportBody {
   roster: string[] | null;
 }
 
+/**
+ * 볼 수 있는 워크스페이스와 그 관리 상태 (`FR-PRINCIPAL-006`).
+ *
+ * `adminless` 를 서버가 판정해 보낸다 — 화면이 접근자를 세면 슈퍼유저의
+ * 상방 게이트가 「관리자 있음」으로 잘못 세어진다.
+ */
+export interface WorkspaceListRow {
+  id: string;
+  name: string;
+  adminless: boolean;
+}
+
+export const fetchWorkspaceList = () => call<WorkspaceListRow[]>('/workspaces');
+
 export const fetchAccessors = (nodeId: string) =>
   call<AccessorReportBody>(`/nodes/${encodeURIComponent(nodeId)}/accessors`);
 

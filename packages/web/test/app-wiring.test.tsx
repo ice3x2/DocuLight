@@ -117,3 +117,72 @@ describe('앱 배선 — 화면이 서버에서 값을 받아 그린다', () => 
     expect(screen.queryByRole('button', { name: '설정' })).toBeNull();
   });
 });
+
+describe('권한 감사 구역이 실제로 서버에서 값을 받아 그린다', () => {
+  const 감사구역 = async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await waitFor(() => expect(screen.getByRole('button', { name: '설정' })).toBeDefined());
+    await user.click(screen.getByRole('button', { name: '설정' }));
+    const modal = await screen.findByRole('dialog', { name: '설정' });
+    await user.click(within(modal).getByRole('tab', { name: '권한 감사' }));
+    return { user, modal };
+  };
+
+  it('FR-ACL-005: 상속 끊김 목록이 서버 응답으로 그려진다', async () => {
+    routes.set('/api/broken-inheritance', () =>
+      json({
+        rows: [
+          { nodeId: 'n9', workspaceId: 'ws-1', workspaceName: '기획팀', path: '닫힌방', aclAccessors: 0 },
+        ],
+      }),
+    );
+
+    const { user, modal } = await 감사구역();
+    await user.click(within(modal).getByRole('tab', { name: '상속 끊김' }));
+
+    // 배선이 없으면 이 자리는 `null` 이거나 「워크스페이스가 없습니다」다.
+    const row = await screen.findByTestId('broken-row-n9');
+    expect(row.textContent ?? '').toContain('ACL 접근자 0명');
+    expect(row.textContent ?? '').toContain('권한으로 접근할 수 있는 사람이 없습니다');
+  });
+
+  it('FR-ACL-003 · FR-ACL-004: 관리 워크스페이스가 있으면 주체를 고를 자리가 선다', async () => {
+    routes.set('/api/workspaces', () => json([{ id: 'ws-1', name: '기획팀', adminless: false }]));
+
+    const { modal } = await 감사구역();
+
+    // 스코프 근거가 없으면 검색칸 자체가 서지 않으므로(`R162`), 검색칸이
+    // 섰다는 것은 워크스페이스가 실제로 배선됐다는 뜻이다.
+    await waitFor(() =>
+      expect(within(modal).getAllByLabelText('사용자·그룹 검색').length).toBeGreaterThan(0),
+    );
+    expect(within(modal).queryByTestId('audit-no-workspace')).toBeNull();
+  });
+
+  it('CON-PRINCIPAL-006: 그룹 멤버 추가가 서버로 나간다', async () => {
+    routes.set('/api/roster/groups', () =>
+      json([{ id: 'g1', name: '기획팀원', system: false, members: [] }]),
+    );
+    routes.set('/api/principals', () =>
+      json([{ id: 'u9', name: '새사람', kind: 'user', status: 'active' }]),
+    );
+    const 보냈다: string[] = [];
+    routes.set('/api/roster/groups/g1/members', () => {
+      보냈다.push('g1');
+      return json(null, 204);
+    });
+
+    const user = userEvent.setup();
+    render(<App />);
+    await waitFor(() => expect(screen.getByRole('button', { name: '설정' })).toBeDefined());
+    await user.click(screen.getByRole('button', { name: '설정' }));
+    const modal = await screen.findByRole('dialog', { name: '설정' });
+    await user.click(within(modal).getByRole('tab', { name: '그룹 관리' }));
+
+    await user.type(await within(modal).findByLabelText('사용자·그룹 검색'), '새사람');
+    await user.click(await within(modal).findByText('새사람'));
+
+    await waitFor(() => expect(보냈다).toEqual(['g1']));
+  });
+});

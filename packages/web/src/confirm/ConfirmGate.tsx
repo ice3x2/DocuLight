@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useState, type ReactNode } from 'react';
 
 /** 확인 등급 (`FR-CONFIRM-001`). 체계는 이 셋 하나뿐이다. */
 export type Grade = 'L1' | 'L2' | 'L3';
@@ -40,6 +40,7 @@ export function ConfirmGate({
   onRecount,
   onConfirm,
   onCancel,
+  children,
 }: {
   open: boolean;
   grade: Grade;
@@ -58,6 +59,13 @@ export function ConfirmGate({
   onRecount?: () => void;
   onConfirm: () => void;
   onCancel: () => void;
+  /**
+   * 그 조작만의 고지 (`SEC-CONFIRM-006` 등).
+   *
+   * 관문 자체가 조작별 문구를 알지 않게 한다 — 알기 시작하면 조작 목록이
+   * 이 부품 안으로 들어오고, 그때 새 조작마다 이 파일을 고치게 된다.
+   */
+  children?: ReactNode;
 }) {
   const titleId = useId();
   const [typed, setTyped] = useState('');
@@ -99,6 +107,8 @@ export function ConfirmGate({
       {counts?.affected === undefined ? null : (
         <p data-testid="affected-count">영향 {counts.affected}건</p>
       )}
+
+      {children}
 
       {delayedEffect ? (
         <p data-testid="delayed-notice">

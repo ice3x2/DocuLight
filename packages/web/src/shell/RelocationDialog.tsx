@@ -1,6 +1,7 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
 
 import { RelocationPreview, type Relocation } from '../acl/RelocationPreview.js';
+import { ConfirmGate, type Grade } from '../confirm/ConfirmGate.js';
 
 /**
  * 복사 다이얼로그의 안내 문구 (`SEC-SHELL-003` AC-3 · 원장 `R105-a`).
@@ -32,6 +33,7 @@ export function RelocationDialog({
   destinations = [],
   destinationId,
   relocation,
+  grade = 'L2',
   level,
   result,
   onDestination,
@@ -44,6 +46,14 @@ export function RelocationDialog({
   destinations?: readonly { id: string; path: string }[];
   destinationId?: string;
   relocation?: Relocation;
+  /**
+   * 이 조작의 확인 등급 (`FR-CONFIRM-016` · `FR-CONFIRM-017`).
+   *
+   * **서버가 준 값이다.** 화면이 프리뷰 수치를 보고 스스로 판정하면 등급
+   * 규칙이 두 곳에 살게 되고, 그때 한쪽만 바뀐다. 기본값을 `L2` 로 두는
+   * 것이 안전한 쪽이다 — 모르면 더 묻는다.
+   */
+  grade?: Grade;
   level?: 'view' | 'edit' | 'admin';
   /**
    * 실행 결과 (`SEC-SHELL-003` AC-4). **복사된 항목 수 하나뿐이다** —
@@ -56,6 +66,19 @@ export function RelocationDialog({
 }) {
   const titleId = useId();
   const selectId = useId();
+  const [관문열림, set관문열림] = useState(false);
+
+  /**
+   * 실행 버튼은 **관문이 아니다** (`FR-CONFIRM-005`).
+   *
+   * 목적지를 고르고 입력을 마친 **뒤에** 등급이 요구하는 확인을 한 번 더
+   * 받는다 — 드래그앤드롭으로 목적지가 미리 채워져 있어도 마찬가지다.
+   * 폼의 실행 버튼이 관문을 대신한다고 인정하면 워크스페이스 생성 폼의
+   * 생성 버튼도 관문이 되어 규칙 전체가 무력화된다.
+   *
+   * `L1` 은 확인 다이얼로그가 없는 등급이므로 곧바로 실행한다.
+   */
+  const 실행누름 = () => (grade === 'L1' ? onConfirm?.() : set관문열림(true));
 
   if (!open) return null;
 
@@ -91,10 +114,23 @@ export function RelocationDialog({
         <p role="status">{result.copied}개 항목을 {kind === 'copy' ? '복사' : '이동'}했습니다.</p>
       )}
 
+      <ConfirmGate
+        open={관문열림}
+        grade={grade}
+        title={`${sourceName} ${kind === 'copy' ? '복사' : '이동'}`}
+        onConfirm={() => {
+          set관문열림(false);
+          onConfirm?.();
+        }}
+        onCancel={() => set관문열림(false)}
+      />
+
       <button type="button" onClick={onCancel}>
         취소
       </button>
-      <button type="button" disabled={destinationId === undefined} onClick={onConfirm}>
+      {/* 빈 문자열도 「고르지 않음」이다 — 선택칸의 빈 옵션을 다시 고르면
+          `''` 가 올라오는데, `undefined` 만 보면 그 자리에서 실행이 열린다. */}
+      <button type="button" disabled={!destinationId} onClick={실행누름}>
         실행
       </button>
     </div>

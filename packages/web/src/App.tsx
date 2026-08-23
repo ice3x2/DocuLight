@@ -13,17 +13,25 @@ import {
   purgeFromTrash,
   restoreFromTrash,
   uploadNewVersion,
+  addGroupMember,
+  restoreInheritance,
+  revokeAllFor,
+  type PrincipalRow,
 } from './api/client.js';
 import {
   QUERY_KEYS,
+  useBrokenInheritance,
   useFavorites,
   useGroupRoster,
   usePersonalSettings,
+  useRevocation,
+  useSimulation,
   useUserRoster,
   useLinks,
   useSession,
   useTrash,
   useTree,
+  useWorkspaceList,
 } from './api/queries.js';
 import type { UploadRequest } from './attachment/upload-contract.js';
 import { PreAuthScreen } from './auth/PreAuthScreen.js';
@@ -310,6 +318,48 @@ function AppBody() {
     [queries],
   );
 
+  /**
+   * 권한 감사 구역 (`FR-ACL-003`~`FR-ACL-005`).
+   *
+   * 고른 주체를 여기서 든다 — 두 탭이 각자 들면 같은 사람을 두 번 고르게
+   * 되고, 한쪽만 갱신되는 자리가 생긴다. 관리 워크스페이스는 서버가 준
+   * 목록의 첫 항목을 쓴다: 주체 검색의 자격 근거일 뿐이라 어느 것이어도
+   * 같은 인가를 지난다 (`R162`).
+   */
+  const [회수주체, set회수주체] = useState<PrincipalRow | null>(null);
+  const [시뮬주체, set시뮬주체] = useState<string | null>(null);
+  const adminScope = session.data !== undefined && session.data.adminWorkspaceCount > 0;
+  const workspaceList = useWorkspaceList(signedIn && adminScope);
+  const brokenInheritance = useBrokenInheritance(signedIn && adminScope);
+  const revocation = useRevocation(회수주체?.id ?? null);
+  const simulation = useSimulation(시뮬주체);
+
+  const revokeAllForSubject = useCallback(
+    async (principalId: string) => {
+      await revokeAllFor(principalId).catch(() => undefined);
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.revocation(principalId) });
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
+    },
+    [queries],
+  );
+
+  const restoreNodeInheritance = useCallback(
+    async (nodeId: string) => {
+      await restoreInheritance(nodeId).catch(() => undefined);
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.brokenInheritance });
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
+    },
+    [queries],
+  );
+
+  const addMember = useCallback(
+    async (groupId: string, userId: string) => {
+      await addGroupMember(groupId, userId).catch(() => undefined);
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.groupRoster });
+    },
+    [queries],
+  );
+
   const pickPersonalSetting = useCallback(
     async (key: string, value: string) => {
       await savePersonalSetting(key, value).catch(() => undefined);
@@ -443,6 +493,18 @@ function AppBody() {
       userRoster={users.data ?? []}
       groupRoster={groups.data ?? []}
       onGroupRemove={dropGroup}
+      onGroupAddMember={addMember}
+      aclAudit={{
+        ...(workspaceList.data?.[0] === undefined ? {} : { workspaceId: workspaceList.data[0].id }),
+        ...(회수주체 === null ? {} : { subject: 회수주체 }),
+        ...(revocation.data === undefined ? {} : { revocation: revocation.data }),
+        ...(simulation.data === undefined ? {} : { simulation: simulation.data }),
+        ...(brokenInheritance.data === undefined ? {} : { audit: brokenInheritance.data }),
+        onRevokePick: set회수주체,
+        onSimulatePick: (row) => set시뮬주체(row.id),
+        onRevoke: revokeAllForSubject,
+        onRestore: restoreNodeInheritance,
+      }}
       favorites={favorites.data ?? []}
       links={links.data ?? { outgoing: [], backlinks: [] }}
       query={query}

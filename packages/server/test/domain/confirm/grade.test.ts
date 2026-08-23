@@ -55,8 +55,27 @@ describe('FR-CONFIRM-006 — 배정표가 그 조작들의 정본이다', () => 
     expect(gradeFor(operation)).toBe(grade);
   });
 
-  it('열거가 그 열 조작 전량이다', () => {
-    expect(Object.keys(ASSIGNED_GRADES).sort()).toEqual(표.map(([op]) => op).sort());
+  /**
+   * 이 요구가 소유하는 것은 **자기가 열거한 조작의 등급값**이지 표의
+   * 크기가 아니다.
+   *
+   * 초판은 표의 키 집합이 이 열 개와 **정확히 같다**고 쟀는데, 그 판정식은
+   * `FR-CONFIRM-003` AC-3(직접 지정 사례의 열거 개수를 근거로 다른
+   * 요구사항의 직접 지정을 거부하지 않는다)과 정면으로 부딪힌다 — 새
+   * 요구가 등급을 직접 지정할 때마다 이 시험이 빨개지고, 그것을 통과시키려
+   * 이 목록을 고치는 순간 「닫힌 열거」가 사실상 규범이 된다.
+   */
+  it('이 열 조작의 값이 표에 그대로 있다', () => {
+    for (const [operation, grade] of 표) {
+      expect(ASSIGNED_GRADES[operation]).toBe(grade);
+    }
+  });
+
+  it('표에 조작이 더 들어와도 이 열 개의 값은 흔들리지 않는다', () => {
+    // 표가 자라는 것 자체는 요구가 허용하는 일이다. 재는 것은 그 성장이
+    // 기존 값을 덮어쓰지 않는지다.
+    expect(Object.keys(ASSIGNED_GRADES).length).toBeGreaterThanOrEqual(표.length);
+    expect(표.every(([op, grade]) => gradeFor(op) === grade)).toBe(true);
   });
 });
 

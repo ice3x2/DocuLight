@@ -2,6 +2,11 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useId, useState } from 'react';
 
 import { PrincipalPicker } from '../principal/PrincipalPicker.js';
+import {
+  BROKEN_INHERITANCE_NOTICE,
+  inheritanceNotice,
+  type ContainerKind,
+} from '../confirm/notices.js';
 import type { PrincipalRow, ShareRow, ShareViewBody } from '../api/client.js';
 
 /**
@@ -18,12 +23,18 @@ import type { PrincipalRow, ShareRow, ShareViewBody } from '../api/client.js';
 export function ShareModal({
   nodeId,
   nodeName,
+  nodeKind = 'file',
   view,
   onGrant,
   onRevoke,
 }: {
   nodeId: string;
   nodeName: string;
+  /**
+   * 컨테이너인가 (`FR-CONFIRM-013`). 상속 고지는 하위가 있는 자리에만
+   * 붙는다 — 문서에 붙이면 문구 자체가 거짓이 된다.
+   */
+  nodeKind?: 'file' | ContainerKind;
   /** 서버가 준 것. 아직 안 왔으면 `undefined`. */
   view?: ShareViewBody;
   onGrant?: (principalId: string, level: 'view' | 'edit') => void;
@@ -50,6 +61,18 @@ export function ShareModal({
           <p data-testid="share-metrics">
             접근 가능 {view?.metrics.reachable ?? 0}명
           </p>
+
+          {/* 컨테이너면 **언제나** 두 고지가 함께 선다.
+
+              상속 끊김 고지를 끊긴 하위가 있을 때만 띄우면 문구의 등장
+              여부가 곧 그 존재를 알린다 (`SEC-CONFIRM-004`) — 그래서 이
+              화면은 끊긴 하위의 유무를 받지 않는다. */}
+          {nodeKind === 'file' ? null : (
+            <>
+              <p data-testid="inheritance-notice">{inheritanceNotice(nodeKind)}</p>
+              <p data-testid="broken-inheritance-notice">{BROKEN_INHERITANCE_NOTICE}</p>
+            </>
+          )}
 
           <PrincipalPicker scope={`node:${nodeId}`} onPick={set고른주체} />
 

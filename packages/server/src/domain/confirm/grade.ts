@@ -62,6 +62,28 @@ export const ASSIGNED_GRADES = {
   'revoke-node-entry': 'L1',
   'remove-group-member': 'L1',
   'reject-signup': 'L1',
+  /**
+   * 복사 — **조건 없이 언제나 `L2`** (`FR-CONFIRM-017`).
+   *
+   * 함수가 아니라 표의 한 줄인 것이 이 요구의 이행이다. 인자를 받는 순간
+   * 그 인자로 가르는 구현이 생기는데, 조건부 판정을 두지 않는다는 것이
+   * 이 조작이 이동과 갈리는 지점이다 — 워크스페이스 경계를 넘는 유일한
+   * 수단의 관문을 계산 결과에 의존시키지 않는다.
+   */
+  copy: 'L2',
+  /**
+   * 오프보딩의 그룹 멤버십 제거 (`FR-CONFIRM-009`).
+   *
+   * 그룹 상세의 단건 제거(`remove-group-member`)와 갈리는 기준은 **복원
+   * 정보가 화면에 남는가**다. 오프보딩 카드는 진행 상태를 저장하지 않아
+   * 토스트가 사라지면 그 사용자가 어느 그룹에 속했는지 복원할 정보가
+   * 남지 않는다 — 실질 비가역이다.
+   */
+  'offboard-memberships': 'L2',
+  /** 부모 권한 가져오기 (`SEC-CONFIRM-007` AC-4). 관리 전용이다. */
+  'inherit-from-parent': 'L2',
+  /** 워크스페이스 생성 시점의 부여 (`FR-CONFIRM-019`). 생성 버튼은 관문이 아니다. */
+  'create-workspace-grant': 'L2',
 } as const satisfies Record<string, Grade>;
 
 export type Operation = keyof typeof ASSIGNED_GRADES;
@@ -118,4 +140,72 @@ export function retentionGrade(affected: number): { grade: Grade; token: string 
  */
 export function newVersionGrade(fileName: string): Grade {
   return isVersioned(fileName) ? 'L1' : 'L2';
+}
+
+/**
+ * 상속 끊기의 등급 (`FR-CONFIRM-015`).
+ *
+ * 상속 플래그 자체는 가역·즉시라 두 축만 보면 `L1` 이지만, 끊긴 동안
+ * 편집 중이던 사용자의 저장이 거부되어 본문이 유실될 수 있다 — 그 부수
+ * 효과가 비가역이라 `L2` 가 된다. 디렉토리에서는 그 유실이 서브트리
+ * 규모로 확대되므로 `L3` 조건을 정직하게 충족한다.
+ *
+ * **등급은 건수로 갈리지 않는다.** 0 건일 때 확인이 가벼워지면 그 가벼움
+ * 자체가 「그 아래에 아무것도 없다」는 신호가 된다. 건수가 정하는 것은
+ * 토큰의 값뿐이다.
+ */
+export function breakInheritanceGrade(input: {
+  readonly kind: 'directory' | 'file';
+  readonly affected: number;
+}): { grade: Grade; token: string | null } {
+  return input.kind === 'directory'
+    ? { grade: 'L3', token: String(input.affected) }
+    : { grade: 'L2', token: null };
+}
+
+/**
+ * 이동의 등급 (`FR-CONFIRM-016`).
+ *
+ * 넓어지면 노출의 비가역성이, 좁아지면 상속 끊기와 같은 부작용(권한을
+ * 잃은 사용자의 저장이 거부되어 본문 유실)이 걸린다 — 양방향 모두 확인이
+ * 필요하다. 변화가 없는 이동은 가장 흔한 파일 조작이므로 마찰을 남기지
+ * 않는다.
+ */
+export function moveGrade(preview: { readonly before: number; readonly after: number }): Grade {
+  return preview.before === preview.after ? 'L1' : 'L2';
+}
+
+/**
+ * 권한 항목 회수의 등급 (`FR-CONFIRM-018`).
+ *
+ * 컨테이너 회수는 서브트리 전체에서 접근이 사라지므로 본문 유실의 부작용이
+ * 가장 크다 — 같은 부작용으로 상속 끊기와 좁아지는 이동을 이미 `L2` 로
+ * 올려 두었고, 세 번째 경로만 `L1` 로 남길 근거가 없다.
+ *
+ * 문서 쪽 값은 배정표의 그 줄을 그대로 읽는다 — 여기 다시 적으면 한쪽만
+ * 바뀐다.
+ */
+export function revokeEntryGrade(targetKind: 'file' | 'directory' | 'workspace'): Grade {
+  return targetKind === 'file' ? ASSIGNED_GRADES['revoke-node-entry'] : 'L2';
+}
+
+/**
+ * 일괄 회수의 등급과 토큰 (`FR-CONFIRM-022`).
+ *
+ * **0 건은 강등이 아니라 차단이다** (AC-5). 강등하면 「확인만 하고 아무
+ * 일도 일어나지 않는」 경로가 생기고, 그 무해한 통과가 곧 0 건이라는
+ * 신호가 된다.
+ *
+ * 다건 선택은 **총합으로 판정한다** (AC-6). 주체별로 판정하면 0 건인
+ * 주체가 조용히 빠지고, 어느 주체가 빠졌는지가 곧 그 주체에게 항목이
+ * 없다는 신호다.
+ */
+export function bulkRevokeGrade(affected: number): {
+  grade: Grade;
+  token: string | null;
+  blocked: boolean;
+} {
+  return affected > 0
+    ? { grade: 'L3', token: String(affected), blocked: false }
+    : { grade: 'L3', token: null, blocked: true };
 }

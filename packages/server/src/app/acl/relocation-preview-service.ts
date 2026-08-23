@@ -47,11 +47,24 @@ export function movePreview(
   const now = servableAncestryOf(stores, nodeId);
   if (now === null) return null;
 
-  // 이동은 워크스페이스 경계를 넘지 못하므로(`SEC-ACL-014`) 목적지의
-  // 워크스페이스를 따로 묻지 않는다 — 같은 곳이다.
+  // 목적지도 **인가를 지난다.** 출발에만 문턱을 두면 아무 노드 하나에
+  // 편집만 가진 사람이 임의의 ID 를 목적지로 찔러 (a) 200·404 로 존재를
+  // 읽고 (b) 그 목적지의 접근 가능 인원 수를 받아 간다 — 후자는 볼 수
+  // 없는 자리의 지표이므로 문턱을 통째로 우회한 것이다.
+  //
+  // 워크스페이스 루트(목적지 없음)는 이미 통과한 출발지의 것이라 다시
+  // 묻지 않는다.
+  if (destinationId !== null) {
+    const destinationLevel = permissionOf(stores, actor, destinationId);
+    if (destinationLevel === null || !permits(destinationLevel, 'edit')) return null;
+  }
+
+  // 이동은 워크스페이스 경계를 넘지 못한다 (`SEC-ACL-014`) — 그 제약을
+  // 여기서 **강제한다.** 가정만 하면 경계를 넘는 목적지에 대해 성립하지
+  // 않는 사슬을 만들어 답하게 된다.
   const destination =
     destinationId === null ? { links: [], workspaceId: now.workspaceId } : servableAncestryOf(stores, destinationId);
-  if (destination === null) return null;
+  if (destination === null || destination.workspaceId !== now.workspaceId) return null;
 
   // 「목적지 아래에 있었다면」의 사슬. **자기 자신은 그대로 맨 앞에 둔다** —
   // 옮겨도 자기 항목과 자기 상속 플래그는 따라가기 때문이다. 상속을 끊은
