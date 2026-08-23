@@ -124,6 +124,7 @@ function SettingsModal({
   onPersonalSetting,
   onGroupRemove,
   onGroupAddMember,
+  onRegisterUser,
 }: {
   viewer: Viewer;
   trash?: readonly TrashRowView[];
@@ -149,6 +150,8 @@ function SettingsModal({
   onPersonalSetting?: (key: string, value: string) => void;
   onGroupRemove?: (groupId: string) => void;
   onGroupAddMember?: (groupId: string, userId: string) => void;
+  /** 슈퍼유저 직접 등록 (`FR-AUTH-003`). */
+  onRegisterUser?: (input: { name: string; password: string }) => void;
 }) {
   const [open, setOpen] = useState(false);
   const titleId = useId();
@@ -226,7 +229,10 @@ function SettingsModal({
                   // 부품은 `rejected` 를 아예 받지 않고 `suspended` 를
                   // 중립어로 적는데, 이 화면은 원장 `R112-d` 로 네 상태를
                   // 그대로 표시해야 한다.
-                  <UserRoster users={userRoster} />
+                  <UserRoster
+                    users={userRoster}
+                    {...(onRegisterUser === undefined ? {} : { onRegister: onRegisterUser })}
+                  />
                 ) : category.id === 'groups' ? (
                   <GroupRoster
                     groups={groupRoster}
@@ -295,6 +301,7 @@ export function AppShell({
   onPersonalSetting,
   onGroupRemove,
   onGroupAddMember,
+  onRegisterUser,
   query = '',
   onQuery,
   onOpen,
@@ -352,6 +359,8 @@ export function AppShell({
   groupRoster?: readonly RosterGroup[];
   onGroupRemove?: (groupId: string) => void;
   onGroupAddMember?: (groupId: string, userId: string) => void;
+  /** 슈퍼유저 직접 등록 (`FR-AUTH-003`). */
+  onRegisterUser?: (input: { name: string; password: string }) => void;
   /**
    * 권한 감사 구역이 그릴 것 (`FR-ACL-003`~`FR-ACL-005`).
    *
@@ -504,6 +513,7 @@ export function AppShell({
           {...(onAuditOperation === undefined ? {} : { onAuditOperation })}
           {...(onGroupRemove === undefined ? {} : { onGroupRemove })}
           {...(onGroupAddMember === undefined ? {} : { onGroupAddMember })}
+          {...(onRegisterUser === undefined ? {} : { onRegisterUser })}
         />
         {notice !== undefined && (
           // `status` 인 이유는 이것이 사용자의 조작을 막지 않기 때문이다 —

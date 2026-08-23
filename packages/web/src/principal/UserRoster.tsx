@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import type { RosterUser, RosterUserStatus } from '../api/client.js';
 
 /**
@@ -19,8 +21,26 @@ const LABEL: Record<RosterUserStatus, string> = {
   rejected: '거절',
 };
 
-export function UserRoster({ users = [] }: { users?: readonly RosterUser[] }) {
+export function UserRoster({
+  users = [],
+  onRegister,
+}: {
+  users?: readonly RosterUser[];
+  /**
+   * 슈퍼유저 직접 등록 (`FR-AUTH-003`).
+   *
+   * **명부와 같은 부품이 담는다** — 자리를 가르면 그것이 곧 두 번째
+   * 화면이고, `CON-SHELL-001` 이 진입점을 하나로 묶어 둔 이유가 무너진다.
+   * 슈퍼유저 판정은 카테고리 관문이 이미 했으므로 여기서 다시 하지 않는다.
+   */
+  onRegister?: (input: { name: string; password: string }) => void;
+}) {
+  const [이름, set이름] = useState('');
+  const [비밀번호, set비밀번호] = useState('');
+  const 보낼수있다 = 이름 !== '' && 비밀번호 !== '';
+
   return (
+    <>
     <table>
       <caption>사용자 관리</caption>
       <thead>
@@ -40,5 +60,35 @@ export function UserRoster({ users = [] }: { users?: readonly RosterUser[] }) {
         ))}
       </tbody>
     </table>
+
+      {/* 등록 자리는 명부가 비어 있어도 선다 — 첫 사용자를 넣을 자리가
+          없으면 그 인스턴스는 설치 마법사 밖에서 사람을 못 늘린다. */}
+      <label htmlFor="roster-new-name">새 사용자 이름</label>
+      <input id="roster-new-name" value={이름} onChange={(event) => set이름(event.target.value)} />
+
+      {/* 가린다 — 어깨너머로 읽히면 그 계정이 그대로 열린다. */}
+      <label htmlFor="roster-new-password">임시 비밀번호</label>
+      <input
+        id="roster-new-password"
+        type="password"
+        value={비밀번호}
+        onChange={(event) => set비밀번호(event.target.value)}
+      />
+
+      <button
+        type="button"
+        // 서버가 거절할 요청을 보내지 않는다 — 거절을 눌러 보고 아는 것과
+        // 누를 수 없는 것은 사용자에게 다른 일이다.
+        disabled={!보낼수있다}
+        onClick={() => {
+          if (!보낼수있다) return;
+          onRegister?.({ name: 이름, password: 비밀번호 });
+          set이름('');
+          set비밀번호('');
+        }}
+      >
+        등록
+      </button>
+    </>
   );
 }

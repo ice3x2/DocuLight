@@ -14,6 +14,7 @@ import {
   restoreFromTrash,
   uploadNewVersion,
   addGroupMember,
+  registerUser,
   restoreInheritance,
   revokeAllFor,
   type PrincipalRow,
@@ -253,6 +254,20 @@ function AppBody() {
    * 나타나야 하고 목록에서는 사라져야 하는데, 한쪽만 갱신하면 사용자는
    * 그것이 어디로 갔는지 알 수 없다.
    */
+  /**
+   * 슈퍼유저 직접 등록 (`FR-AUTH-003`).
+   *
+   * 끝나면 명부를 다시 받는다 — 방금 만든 계정이 목록에 없으면 사용자는
+   * 등록이 안 된 줄 안다.
+   */
+  const makeUser = useCallback(
+    async (input: { name: string; password: string }) => {
+      await registerUser(input).catch(() => undefined);
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.userRoster });
+    },
+    [queries],
+  );
+
   const afterTrashAction = useCallback(async () => {
     await queries.invalidateQueries({ queryKey: ['trash'] });
     await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
@@ -531,6 +546,7 @@ function AppBody() {
       groupRoster={groups.data ?? []}
       onGroupRemove={dropGroup}
       onGroupAddMember={addMember}
+      onRegisterUser={makeUser}
       aclAudit={{
         ...(workspaceList.data?.[0] === undefined ? {} : { workspaceId: workspaceList.data[0].id }),
         subjects: 회수주체,

@@ -9,6 +9,7 @@ import { SqliteAclRepository } from '../../src/infra/sqlite/acl-repository.js';
 import { SqliteAuditLog } from '../../src/infra/sqlite/audit-log-repository.js';
 import { SqliteSettingStore } from '../../src/infra/sqlite/setting-store.js';
 import type { Database } from '../../src/infra/sqlite/database.js';
+import { BcryptPasswordHasher } from '../../src/infra/crypto/bcrypt-hasher.js';
 import { FsTrashFiles } from '../../src/infra/fs/trash-files.js';
 import { SqliteNodeRepository } from '../../src/infra/sqlite/node-repository.js';
 import { SqliteAttachmentRepository } from '../../src/infra/sqlite/attachment-repository.js';
@@ -109,6 +110,7 @@ export function attachmentStores(
   personalSettings: SqlitePersonalSettingStore;
   sessions: SqliteSessionRepository;
   queue: SqliteFindingQueue;
+  passwords: BcryptPasswordHasher;
 } {
   // 휴지통까지 함께 세운다 — 영구 삭제가 첨부를 걷으므로(FR-ATTACH-005)
   // 그 축을 재려면 두 저장소가 같은 자리에 있어야 한다.
@@ -121,5 +123,8 @@ export function attachmentStores(
     // 재조정 대기열도 여기서 선다 — 라우터가 그것을 요구하므로, 빠뜨리면
     // 라우터를 세우는 시험만 다른 조립을 갖게 된다.
     queue: new SqliteFindingQueue(db),
+    // 슈퍼유저 직접 등록이 계정 규칙을 가입 경로와 함께 쓰므로(FR-AUTH-003)
+    // 라우터를 세우는 시험이 이 경계를 요구한다.
+    passwords: new BcryptPasswordHasher(),
   };
 }

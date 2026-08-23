@@ -589,6 +589,18 @@ export interface TagIndexBody {
   basis: string;
 }
 
+/**
+ * 슈퍼유저 직접 등록 (`FR-AUTH-003`).
+ *
+ * 계정 규칙은 서버가 가입 경로와 함께 든다 — 화면이 다시 재면 두 벌이 된다.
+ */
+export const registerUser = (input: { name: string; password: string }) =>
+  call<{ id: string }>('/roster/users', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+
 export const fetchTags = (workspaceId?: string) =>
   call<TagIndexBody>(
     workspaceId === undefined || workspaceId === ''

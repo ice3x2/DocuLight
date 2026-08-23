@@ -59,6 +59,7 @@ import {
   readPersonalSetting,
   writePersonalSettings,
 } from '../../app/settings/personal-settings.js';
+import type { PasswordHasher } from '../../domain/ports/password-hasher.js';
 import type { PersonalSettingStore } from '../../domain/ports/personal-setting-store.js';
 import type { SessionRepository } from '../../domain/ports/session-repository.js';
 import {
@@ -67,6 +68,7 @@ import {
   userRoster,
 } from '../../app/principal/roster-service.js';
 import { addGroupMember, removeFromGroup } from '../../app/principal/principal-service.js';
+import { registerAccount } from '../../app/auth/account-service.js';
 import { uploadNewVersion, warnsIrreversible } from '../../app/document/new-version.js';
 import { noticeFor } from '../../domain/node/collision-notice.js';
 import { linksOf, wikiTargets } from '../../app/document/link-service.js';
@@ -107,6 +109,8 @@ export interface WorkspaceApiDeps {
       sessions: SessionRepository;
       /** 재조정 대기열 (`SEC-AUDIT-007`). */
       queue: FindingQueue;
+      /** 슈퍼유저 직접 등록이 계정 규칙을 가입 경로와 함께 쓴다 (`FR-AUTH-003`). */
+      passwords: PasswordHasher;
     };
   /**
    * 이 요청을 누구로 볼 것인가. 세울 수 없으면 `undefined`.
@@ -1121,6 +1125,42 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     }
 
     res.json(card);
+  });
+
+  /**
+   * 슈퍼유저 직접 등록 (`FR-AUTH-003`).
+   *
+   * **별도 화면·별도 라우트를 만들지 않는다** (AC-2·AC-3) — 목록과 같은
+   * 자리에 붙는다. 자격이 없으면 목록 조회와 **같은 404** 다: 다르면 그
+   * 차이가 이 자리의 존재를 알린다.
+   *
+   * 계정 규칙은 가입 경로와 같은 `registerAccount` 하나를 쓴다 — 여기서
+   * 따로 만들면 빈 비밀번호·중복 이름 판정이 두 벌이 된다.
+   */
+  router.post('/roster/users', async (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+    if (userRoster(stores, actor) === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    // 승인해 줄 사람이 이미 있으므로 `active` 로 태어난다 — `pending` 으로
+    // 두면 슈퍼유저가 방금 만든 계정을 다시 승인해야 한다.
+    const made = await registerAccount(stores, {
+      name: one(req.body?.name) ?? '',
+      password: one(req.body?.password) ?? '',
+      status: 'active',
+    });
+    if (!made.ok) {
+      res.sendStatus(400);
+      return;
+    }
+
+    res.status(201).json({ id: made.id });
   });
 
   router.get('/roster/users', (req, res) => {

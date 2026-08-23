@@ -165,3 +165,51 @@ describe('OBS-AUDIT-003 — 계정 상태 전환이 제품 경로에서 남는�
     expect(행('principal.status')[0]?.actor).toBe(다른보스.id);
   });
 });
+
+describe('FR-AUTH-003 — 슈퍼유저 직접 등록은 사용자 관리 안의 조작이다', () => {
+  it('AC-1: 사용자 관리 라우트 아래에서 계정이 선다', async () => {
+    const res = await request(app)
+      .post('/api/roster/users')
+      .send({ name: '새사람', password: 'x'.repeat(10) })
+      .expect(201);
+
+    // 별도 화면·별도 라우트를 만들지 않는다 (AC-2·AC-3) — 경로가
+    // `사용자 관리` 목록과 같은 자리에 붙는다.
+    expect(stores.principals.findById(res.body.id)?.name).toBe('새사람');
+  });
+
+  it('직접 등록한 계정은 즉시 `active` 다 — 승인해 줄 사람이 이미 있다', async () => {
+    const res = await request(app)
+      .post('/api/roster/users')
+      .send({ name: '새사람', password: 'x'.repeat(10) })
+      .expect(201);
+
+    expect(stores.principals.findById(res.body.id)?.status).toBe('active');
+  });
+
+  it('AC-4: 슈퍼유저가 아니면 없는 자리와 같은 답이다', async () => {
+    actingAs = actorFor(stores.principals, stores.principals.createUser('구경꾼').id);
+
+    const 이전 = stores.principals.membersOf(SUPERUSER_GROUP_ID).length;
+    await request(app)
+      .post('/api/roster/users')
+      .send({ name: '몰래', password: 'x'.repeat(10) })
+      .expect(404);
+
+    // 목록 조회와 같은 404 다 — 다르면 그 차이가 자리의 존재를 알린다.
+    expect(stores.principals.membersOf(SUPERUSER_GROUP_ID).length).toBe(이전);
+  });
+
+  it('AC-5: 인증되지 않으면 401 이다', async () => {
+    actingAs = undefined;
+
+    await request(app)
+      .post('/api/roster/users')
+      .send({ name: '몰래', password: 'x'.repeat(10) })
+      .expect(401);
+  });
+
+  it('빈 비밀번호는 거절된다 — 계정 규칙은 가입 경로와 같은 것을 쓴다', async () => {
+    await request(app).post('/api/roster/users').send({ name: '새사람', password: '' }).expect(400);
+  });
+});
