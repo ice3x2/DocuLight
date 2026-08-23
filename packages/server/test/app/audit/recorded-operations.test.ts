@@ -22,6 +22,7 @@ import { openDatabase, type Database } from '../../../src/infra/sqlite/database.
 import { SqliteAuditLog } from '../../../src/infra/sqlite/audit-log-repository.js';
 import { SqliteSessionRepository } from '../../../src/infra/sqlite/session-repository.js';
 import { SqliteTokenRepository } from '../../../src/infra/sqlite/token-repository.js';
+import { SqliteVersionRepository } from '../../../src/infra/sqlite/version-repository.js';
 import { trashStores, superuserActor } from '../../support/acl-fixture.js';
 
 let dir: string;
@@ -32,6 +33,7 @@ let stores: ReturnType<typeof trashStores> & {
   tokens: SqliteTokenRepository;
   sessions: SqliteSessionRepository;
   files: FsWorkspaceFiles;
+  versions: SqliteVersionRepository;
 };
 let root: Actor;
 let ws: string;
@@ -56,6 +58,7 @@ beforeEach(async () => {
     tokens: new SqliteTokenRepository(db),
     sessions: new SqliteSessionRepository(db),
     files: new FsWorkspaceFiles(docsRoot),
+    versions: new SqliteVersionRepository(db),
   };
   root = superuserActor(stores);
   ws = wsIdOf(await createWorkspaceAs(stores, root, { name: '기획팀', administratorId: root.id }));
