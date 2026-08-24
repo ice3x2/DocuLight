@@ -9,19 +9,18 @@
 | Active Target | `phase-1` (2026-08-24 MCP `get_active_target` 실측) |
 | work-mode | `sdd` (2026-08-24 MCP `get_work_mode` 실측) |
 | SSOT | `C:\Work\git\DocuLight2.0\docs\plans\2026-08-24.remaining-work-order.md` (실행 순서) + `C:\Work\git\DocuLight2.0\docs\spec\` (요구 정본) |
-| 다음 세션 첫 행동 | 아래 「착수 전 사용자에게 물을 것」 셋을 먼저 묻는다 |
+| 다음 세션 첫 행동 | 「착수 전 사용자에게 물을 것」 둘을 먼저 묻고, 「무인 완주 조건」대로 진행한다 |
 
 > 이 문서는 다음 세션이 **이 문서와 위 SSOT 만 읽고** 자율적으로 작업을 이어갈 수 있도록 정리한 것이다. 대화 히스토리에 의존하지 말 것.
 
 ---
 
-## 0-. 착수 전 사용자에게 물을 것 (셋)
+## 0-. 착수 전 사용자에게 물을 것 (둘)
 
 콜드 스타트 시뮬레이션에서 **첫 실제 행동이 이것들 때문에 막혔다.** 저장소 안에 답이 없으므로 추측하지 말고 물어라.
 
-1. **실제 옵시디언 볼트의 절대경로.** `FR-EDITOR-001` AC-1 이 "실제 옵시디언 볼트를 기본 워크스페이스에 그대로 넣었을 때" 를 요구하는데, 그 볼트는 사용자 데이터라 저장소에 없다. 함께 물을 것 — 그 볼트를 어느 워크스페이스 디렉터리로 복사할지.
+1. **실제 옵시디언 볼트의 절대경로.** `FR-EDITOR-001` AC-1 이 "실제 옵시디언 볼트를 기본 워크스페이스에 그대로 넣었을 때" 를 요구하는데, 그 볼트는 사용자 데이터라 저장소에 없다. 함께 물을 것 — 그 볼트를 어느 워크스페이스 디렉터리로 복사할지. **이 답 없이는 무인 완주도 성립하지 않는다** (아래 「무인 완주 조건」).
 2. **커밋을 푸시할지.** `git rev-list --count origin/master..HEAD` 로 실측해 그 수를 제시하고 묻는다.
-3. **`--drive` 를 줄지.** 사용자가 "끝까지 진행해줘" 라고 말해도 **자동으로 주지 마라** — 이 문서의 미결정 항목들이 사용자 결정을 요구한다. 물어서 답을 받아라.
 
 ---
 
@@ -167,7 +166,7 @@
 
 - **미푸시 커밋을 올릴지** — 푸시 지시를 받은 적이 없다. 건수는 `git rev-list --count origin/master..HEAD` 로 실측한다. 결정 방법: 사용자 확인.
 - **`SEC-AUTH-014` 를 어떻게 닫을 것인가** — AC-6·AC-7 에 증거가 없고, 그 요구 자신의 VE-2 가 AC-7 의 배타성을 미검증으로 적어 두었다. 결정 방법: `packages/server/src/app/install/install-service.ts` 의 모듈 전역 상태 셋(`liveToken` · `liveInstallSession` · `committing`)의 수명 규약을 함께 판정.
-- **`--auto-integration` · `--auto-cost-warning` 을 줄지** — 첫 코딩 wave 에서 게이트가 뜬 뒤 사용자에게 물어 정한다. **허용받으면 같은 `--run-id` 로 호출 문자열에 그 둘을 덧붙여 재호출한다** — 스킬 §6 의 재개가 첫 미완료 wave 부터 이어받는다. 스킬 §7.4 상 이 둘은 「사용자가 **명시**한 입력일 때만」 흐르므로, 도는 run 에 끼워 넣는 경로는 없다. 거절하면 그 게이트마다 사람이 답한다.
+- **1.0 이행 wave 의 동결 수단** — 확정된 결정 5번의 삼지선다. **무인 완주의 전제 조건이므로 착수 시점에 미리 받아 두는 것이 낫다** (「무인 완주 조건」).
 
 ---
 
@@ -225,7 +224,7 @@ wave-5 의 `scope` 는 저널에 `본문 표면 — 에디터·자동 저장·�
 ### 8.2 호출 문자열 (그대로 쓸 것)
 
 ```
-/kiwi-wave-master --auto --max
+/kiwi-wave-master --drive --max
   --run-id 2026-08-24.doculight2.phase1-remaining
   C:\Work\git\DocuLight2.0\docs\plans\2026-08-24.remaining-work-order.md
   --constraint "wave-N target 을 새로 만들지 않는다. /kiwi-pipeline 에 --target phase-1 과 --req-filter 로 범위를 좁히고, 상호검증 분모는 그 wave 의 요구 ID 목록으로 대체한다"
@@ -240,8 +239,8 @@ wave-5 의 `scope` 는 저널에 `본문 표면 — 에디터·자동 저장·�
 
 - `--run-id` 값은 `kiwi/waves.jsonl` 에 아직 없다. §6 의 "재개 스캔은 현재 run 의 `run_id` 와 일치하는 이벤트만 읽는다" 에 따라 **일치하는 이벤트가 0건이므로 새 분해로 시작한다.** ⚠️ 신규 run 개시를 명시하는 별도 플래그는 스킬에 없다 — 이 도출은 그 문장에 근거한 것이며, 스킬이 낡은 run(`2026-08-20.doculight2.phase1-implementation`)의 wave 를 하나라도 읽으면 **즉시 중단하고 사용자에게 알린다.**
 - **제약 전달은 선택이 아니다.** `wave-decomposition.md` §3 은 제약을 "사용자 프롬프트 · 대화 로그 · `--constraint` 인자" 에서 수집하는데, **다음 세션에는 대화 로그가 없다.** 넘기지 않으면 검증의 제약 계층이 공집합이 되어 위 결정들이 어느 계층에도 걸리지 않는다.
-- `--drive` 는 **주지 않는다** — 미결정 항목들이 사용자 결정을 요구한다. **사용자가 "끝까지 진행해줘" 라고 말해도 그것을 `--drive` 로 번역하지 마라.** 물어서 명시 허락을 받은 경우에만 붙인다.
-- `--auto` 만으로는 첫 코딩 wave 의 kiwi-coder 게이트(`integration-test-user-consent` · `cost-warning-large-task`)에서 멈추는 것이 **정상**이다(스킬 §7.1). 그때 사용자에게 물어 `--auto-integration` · `--auto-cost-warning` 추가 여부를 정한다.
+- `--drive` 는 **준다** — 사용자가 무인 완주를 지시했다(2026-08-24). 전제 조건과 그래도 멈추는 지점은 아래 「무인 완주 조건」에 적었다. `--drive` 는 `--auto` · `--auto-integration` · `--auto-cost-warning` 셋을 함께 켜므로 그 셋을 따로 적지 않는다(스킬 §7.5).
+- 첫 코딩 wave 의 kiwi-coder 게이트 둘은 `--drive` 가 덮는다(스킬 §0.G) — `integration-test-user-consent` 는 「`--auto-integration` 이나 `--drive` 가 명시되지 않으면 멈춘다」, `cost-warning-large-task` 는 「`--auto-cost-warning` 이나 `--drive` 가 명시되지 않으면 멈춘다」로 각각 규정돼 있다.
 
 ### 8.3 분해 커버리지 게이트 사전 지정
 
@@ -285,6 +284,57 @@ wave-5 의 `scope` 는 저널에 `본문 표면 — 에디터·자동 저장·�
 ### 8.5 회귀 기준선
 
 스킬 §2.1 의 preflight 회귀 기준선 캡처 명령을 **`cd /c/Work/git/DocuLight2.0 && NODE_ENV=production npm test` 로 고정**한다. 이 셸에는 `NODE_ENV` 가 이미 `production` 으로 있어, 다른 값으로 캡처하면 이후 모든 wave 검증이 유령 신규 실패를 보고 중단한다. 캡처 결과가 **실패 0**(= `baseline_failing_tests` 빈 배열)임을 확인한 뒤 진행하고, 실패가 나오면 진행하지 말고 사용자에게 보고한다.
+
+---
+
+## 8.6 무인 완주 조건
+
+사용자가 무인 완주를 지시했다(2026-08-24). `--drive` 를 붙인다. **다만 「무인」이 「멈추지 않는다」는 뜻은 아니다** — 스킬이 `--drive` 로도 열지 않는 게이트를 닫힌 목록으로 규정하고 있고, 그 목록을 여는 것은 목표를 향해 가는 것이 아니라 **목표를 낮추는 것**이다.
+
+### 8.6.1 전제 조건 (넷 — 하나라도 어긋나면 무인으로 들어가지 않는다)
+
+1. **볼트 절대경로를 받았다.** 「착수 전 사용자에게 물을 것」 1번. 이 답이 없으면 `FR-EDITOR-001` AC-1·AC-2 를 닫을 수 없고, 그러면 완주해도 완료 조건 1번(`planned` 과 `in_progress` 가 둘 다 0)이 참이 되지 않는다.
+2. **브라우저 수동 검증 셋을 먼저 끝냈다.** 「wave-master 밖에서 먼저 할 일」. 이 셋은 코드 변경이 0이라 wave 로 성립하지 않으므로 무인 구간 밖이다.
+3. **회귀 기준선이 실패 0 이다.** 실패가 있으면 `baseline_failing_tests` 가 비지 않아 이후 모든 wave 검증이 그 실패를 안고 돈다 — 무인으로 밤새 돌린 뒤 아침에 원인을 되짚을 수 없다.
+4. **1.0 이행 wave 의 동결 수단을 미리 정했다.** 확정된 결정 5번의 삼지선다. 정하지 않으면 그 wave 에서 반드시 멈춘다.
+
+### 8.6.2 `--drive` 가 켜는 것
+
+`--auto` · `--auto-integration` · `--auto-cost-warning` 셋 + **자가 복구 권한**. 자가 복구는 네 조건을 **모두** 만족할 때만 승인된다(스킬 §7.5) — ① 되돌릴 수 있을 것 ② run root 안일 것 ③ 기존 공개 계약과 기존 테스트를 바꾸지 않을 것 ④ 진단이 독립적으로 재현됐을 것. 하나라도 어긋나면 고치지 않고 중단한다.
+
+### 8.6.3 `--drive` 로도 멈추는 지점 (닫힌 목록 — 사실이다, 희망이 아니다)
+
+스킬 §7.5.1·§7.5.2 가 규정한다. 여기 닿으면 **사람이 답해야 한다.**
+
+| 게이트 | 왜 열지 않나 |
+| --- | --- |
+| `out-of-scope-user-consent` | 설계 항목이 모든 계층의 분모에서 빠진다 — 범위가 조용히 줄어든다. **이 run 은 배제 표(§8.3)를 제시하므로 여기 반드시 한 번 닿는다** |
+| `existing-test-weakened-or-deleted` | 테스트를 약화시켜 green 을 만드는 길이 열린다 |
+| `existing-public-contract-change` | 기존 소비자를 조용히 깨뜨린다 |
+| `existing-file-deleted-or-moved` | 삭제는 자가 복구가 아니다 |
+| `mock-detection` | 구현 대신 mock 으로 통과한다 |
+| `tdd-bypass-attempt` | 테스트 선행을 건너뛴다 |
+| `external-module-impact` | 실행 루트 바깥을 바꾼다 — 되돌릴 책임이 이 run 밖에 있다. **확정된 결정 4번(1.0 저장소 수정 금지)이 여기 걸린다** |
+| `unsafe-option-refused` | 회귀와 리뷰가 꺼진 채 wave 가 누적된다 |
+| `wave-append-cap-exhausted` | 무인 실행의 종료를 보장하는 유일한 경계가 사라진다 |
+| `wave-verify-residual-critical` · `final-verify-residual-critical` · `wave-verify-fail-residual` | 여기 닿았다는 것은 자동 수정 루프가 **이미 실패했다**는 뜻이다. 그 상태로 다음 wave 를 쌓으면 결함이 남은 wave 수에 비례해 커진다 |
+
+**여기에 이 문서가 더하는 중단 둘** — 둘 다 되돌리기 어려운 사고를 막는다.
+
+- 스킬이 낡은 run(`2026-08-20.doculight2.phase1-implementation`)의 wave 를 하나라도 읽으면 중단한다.
+- `/kiwi-pipeline` 을 `--from=feasibility` 로 부르려 하면 중단한다 — `phase-1` 253건 전수에 `update_stability` 가 적용된다.
+
+### 8.6.4 중단했을 때
+
+`waves.jsonl` 의 **`abort_gate` 필드에 그 게이트 id 를 지명**한다(스킬 §7.5.3). 산문으로 "critical 게이트에서 중단했다"고만 적으면 다음 세션이 어떤 게이트였는지 알 수 없다 — **무인으로 밤새 돌린 뒤 아침에 읽을 수 없는 기록은 없는 기록과 같다.**
+
+자식 스킬이 소유한 게이트(`existing-test-weakened-or-deleted` · `existing-public-contract-change` · `existing-file-deleted-or-moved` · `mock-detection` · `tdd-bypass-attempt`)는 자기 이름으로 적지 않고 **`child-pipeline-needs-user-or-failed`** 로 버블업해 적는다 — 자식 게이트 이름을 그대로 쓰면 `abort-gate-outside-vocabulary` 오류가 난다.
+
+자동으로 해소한 게이트에는 그것을 지명하는 `decision` 객체를 1건 기록한다.
+
+### 8.6.5 무인 완주가 성립하지 않는다고 판단되면
+
+전제 조건 넷 중 하나라도 못 갖췄으면 **`--drive` 를 빼고 `--auto --max` 로 시작하라.** 그 편이 밤새 돈 뒤 「성공처럼 보이는 축소」를 받는 것보다 낫다.
 
 ---
 
