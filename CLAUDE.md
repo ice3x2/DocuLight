@@ -79,7 +79,13 @@ The Completed Work Log — inline in `docs/spec/00.index.md` §7 and its split h
 
 <!-- /SpecKiwi SRS workflow -->
 
+## Session handoff
+
+Before starting work in a fresh session, read `docs/next/LATEST.md`. It points at the current handoff document, which carries the work order, the confirmed decisions, and the traps this repository has already hit. Read that document before invoking `/kiwi-wave-master`, `/kiwi-pipeline`, or any other orchestrator — those skills auto-detect prior runs from `kiwi/waves.jsonl`, and the handoff records which of those runs must not be resumed.
+
 ## Development conventions
 
 - Default dev-server port is **3399** (`packages/editor` and any later frontend package). Do not use another port without saying why.
+- Start the app for manual verification with `npm run dev` from the repository root (the dev server listens on 3399).
+- A real-browser check already exists as a precedent: `packages/editor/test/browser-check.mjs`, run via `npm run test:browser` or `npm run test:browser:headed` from `packages/editor` once the dev server is up. It drives Playwright's chromium against `http://localhost:3399/` and currently checks Mermaid live preview only — reuse its shape for other browser-only checks rather than inventing a new one. Note that `playwright` is declared in `packages/editor/package.json` but is **not** present in `node_modules`; installing it is an explicit decision, not a given.
 
