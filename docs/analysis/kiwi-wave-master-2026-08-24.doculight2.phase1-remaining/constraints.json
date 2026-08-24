@@ -1,0 +1,76 @@
+{
+  "run_id": "2026-08-24.doculight2.phase1-remaining",
+  "generated_at": "2026-08-25",
+  "constraints": [
+    {
+      "id": "C-01",
+      "statement": "wave-N target 을 새로 만들지 않는다. /kiwi-pipeline 에 --target phase-1 과 --req-filter 로 범위를 좁히고, 상호검증 분모는 그 wave 의 요구 ID 목록으로 대체한다",
+      "source": "--constraint"
+    },
+    {
+      "id": "C-02",
+      "statement": "C:/Work/git/DocuLight/DocLight (1.0 저장소) 는 읽기 전용이며 수정 금지",
+      "source": "--constraint"
+    },
+    {
+      "id": "C-03",
+      "statement": "1.0 동결은 운영 절차 문서로 선언한다 (2026-08-25 사용자 결정 3-A). 1.0 서비스 기동 중단과 리버스 프록시 차단은 쓰지 않는다",
+      "source": "--constraint"
+    },
+    {
+      "id": "C-04",
+      "statement": "아카이브·복원은 phase-2 다. phase-1 에서 아카이브 기능을 만들지 않는다 (원장 R165)",
+      "source": "--constraint"
+    },
+    {
+      "id": "C-05",
+      "statement": "프록시 홉 수는 config 에 두고 기본은 끔이다. DB 인스턴스 설정으로 옮기지 않는다 (원장 R166)",
+      "source": "--constraint"
+    },
+    {
+      "id": "C-06",
+      "statement": "요구 변경은 speckiwi MCP 로만 한다. docs/spec/*.srs.md 를 손으로 고치지 않는다",
+      "source": "--constraint"
+    },
+    {
+      "id": "C-07",
+      "statement": "그 wave 에 배정되지 않은 요구를 손으로 건드리지 않는다. implemented 221건의 verified 일괄 승급 훑기는 최종 검증 통과 후 별도 세션에서 한다. 파이프라인 자식(kiwi-coder/kiwi-pm/review-fix-loop)이 배정된 요구에 하는 status 전이는 정상이다",
+      "source": "--constraint"
+    },
+    {
+      "id": "C-08",
+      "statement": "/kiwi-pipeline 은 --from=planner 로 진입한다. --from=feasibility 는 phase-1 전수에 update_stability 를 적용하므로 금지",
+      "source": "--constraint"
+    },
+    {
+      "id": "C-09",
+      "statement": "커밋 메시지에 AI 시그니처를 넣지 않는다. 제목에 Phase n / Step n 같은 단계 표식도 금지",
+      "source": "--constraint"
+    },
+    {
+      "id": "C-10",
+      "statement": "Wave 2 는 2026-08-25 에 부분 종결됐다. FR-EDITOR-001 과 한글 IME 는 닫혔고 FR-EDITOR-007 AC-7 은 Wave 2-a 의 구현 작업으로 남아 있다",
+      "source": "--constraint"
+    },
+    {
+      "id": "C-11",
+      "statement": "동작 변경은 TDD 로 한다 — 실패하는 시험을 먼저 쓰고 red 를 확인한 뒤 최소 구현으로 green 을 만든다 (저장소 CLAUDE.md)",
+      "source": "프롬프트"
+    },
+    {
+      "id": "C-12",
+      "statement": "요구 없이 코드를 고치지 않는다 — SRS 요구가 덮지 않는 동작을 구현하지 않는다 (저장소 CLAUDE.md)",
+      "source": "프롬프트"
+    },
+    {
+      "id": "C-13",
+      "statement": "개발 서버 포트는 web 3399 · server dev API 3400 이다. 다른 포트를 쓰려면 사유를 밝힌다 (저장소 CLAUDE.md)",
+      "source": "프롬프트"
+    },
+    {
+      "id": "C-14",
+      "statement": "새 시험을 쓰면 대상 소스를 고의로 망가뜨려 그 시험이 죽는지 확인한다 (뮤테이션 탐침)",
+      "source": "프롬프트"
+    }
+  ]
+}

@@ -1,0 +1,490 @@
+{
+  "run_id": "2026-08-24.doculight2.phase1-remaining",
+  "source_file": "docs/plans/2026-08-24.remaining-work-order.md",
+  "generated_at": "2026-08-25",
+  "target": "phase-1",
+  "target_deviation_note": "이 run 은 wave-{n} target 을 새로 만들지 않고 기존 phase-1 target 위에서 돈다 (사용자 제약 C-01). 저널의 target 필드에는 phase-1 을 쓴다",
+  "waves": [
+    {
+      "wave": "wave-1",
+      "order": 1,
+      "ssot_section": "Wave 2-a — 표 라이브 프리뷰의 「드러나는 절반」 구현",
+      "scope": "표 라이브 프리뷰의 원문 노출 (요구 1건)",
+      "req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "heading_path": "Wave 2 > Wave 2-a",
+      "line_start": 45,
+      "line_end": 55,
+      "existing_modules": [
+        "packages/editor/src/vendor/atomic-editor/table-widget.ts",
+        "packages/editor/src/core/code-blocks.ts",
+        "packages/editor/src/doculight-extensions.ts",
+        "packages/editor/test/live-preview.test.tsx"
+      ],
+      "design_items": [
+        {
+          "id": "DI-W1-01",
+          "heading_path": "Wave 2 > Wave 2-a",
+          "line_start": 53,
+          "line_end": 53,
+          "statement": "표에도 selectionTouches 노출 규칙을 세워 커서가 닿으면 표의 마크다운 원문이 드러나게 한다 (FR-EDITOR-007 AC-7)"
+        },
+        {
+          "id": "DI-W1-02",
+          "heading_path": "Wave 2 > Wave 2-a",
+          "line_start": 53,
+          "line_end": 53,
+          "statement": "착수 전에 커서가 표에 닿았을 때 원문 노출과 기존 칸 편집 중 어느 쪽이 우선인지 먼저 정한다"
+        },
+        {
+          "id": "DI-W1-03",
+          "heading_path": "Wave 2 > Wave 2-a",
+          "line_start": 53,
+          "line_end": 53,
+          "statement": "벤더 위젯(atomic-editor)을 고치는 일이므로 벤더 코드와 DocuLight 코드의 경계를 함께 판정한다"
+        },
+        {
+          "id": "DI-W1-04",
+          "heading_path": "Wave 2 > Wave 2-a",
+          "line_start": 47,
+          "line_end": 47,
+          "statement": "숨는 절반은 이미 동작하므로 회귀시키지 않는다 — 커서가 없을 때 표가 렌더되고 구분선이 숨는 상태를 유지한다"
+        }
+      ]
+    },
+    {
+      "wave": "wave-2",
+      "order": 2,
+      "ssot_section": "Wave 3 — 저장소 기반 (MCP 의 선행)",
+      "scope": "저장소 기반 — 파일 감시·벡터 인덱스·PDF 색인·문서 서빙 라우터 (요구 3건 + 배선 3파일)",
+      "req_ids": [
+        "REL-STORAGE-002",
+        "SEC-STORAGE-007",
+        "FR-SHELL-013"
+      ],
+      "heading_path": "Wave 3",
+      "line_start": 57,
+      "line_end": 63,
+      "existing_modules": [
+        "packages/server/src/app/reconciliation/reconcile.ts",
+        "packages/server/src/infra/fs/document-store.ts",
+        "packages/server/src/http/routes/documents.ts",
+        "packages/server/src/http/guards/fail-closed.ts",
+        "packages/server/src/http/guards/dot-path-guard.ts",
+        "packages/server/test/arch/assembly.test.ts"
+      ],
+      "design_items": [
+        {
+          "id": "DI-W2-01",
+          "heading_path": "Wave 3",
+          "line_start": 61,
+          "line_end": 61,
+          "statement": "REL-STORAGE-002 — chokidar 파일 감시를 세우고 unlink+add 를 이동으로 상관 판정한다"
+        },
+        {
+          "id": "DI-W2-02",
+          "heading_path": "Wave 3",
+          "line_start": 61,
+          "line_end": 61,
+          "statement": "그 판정은 fail-closed 다 — 해시 동일 + 짧은 시간 창만 이동으로 인정하고, 아니면 신규 노드와 tombstone 을 만들고 재조정 대기열에 기재한다"
+        },
+        {
+          "id": "DI-W2-03",
+          "heading_path": "Wave 3",
+          "line_start": 62,
+          "line_end": 62,
+          "statement": "SEC-STORAGE-007 — 벡터 인덱스를 삭제·이동·아카이브와 같은 처리 안에서 동기 갱신한다"
+        },
+        {
+          "id": "DI-W2-04",
+          "heading_path": "Wave 3",
+          "line_start": 62,
+          "line_end": 62,
+          "statement": "없는 노드의 벡터 엔트리는 조회 시점에 무조건 제외한다"
+        },
+        {
+          "id": "DI-W2-05",
+          "heading_path": "Wave 3",
+          "line_start": 63,
+          "line_end": 63,
+          "statement": "FR-SHELL-013 AC-4 — PDF 본문을 추출하고 페이지 번호를 실은 색인 항목을 만든다"
+        },
+        {
+          "id": "DI-W2-06",
+          "heading_path": "Wave 1 이 남긴 것",
+          "line_start": 33,
+          "line_end": 33,
+          "statement": "http/routes/documents.ts 와 그 가드 둘(fail-closed.ts · dot-path-guard.ts)을 apiRouter 에 배선하고 SEC-STORAGE-006 서빙 가드와 함께 판정한다"
+        },
+        {
+          "id": "DI-W2-07",
+          "heading_path": "Wave 1 이 남긴 것",
+          "line_start": 25,
+          "line_end": 25,
+          "statement": "배선한 세 항목을 조립 방벽 허용목록에서 빼도 test/arch/assembly.test.ts 가 통과한다"
+        }
+      ]
+    },
+    {
+      "wave": "wave-3",
+      "order": 3,
+      "ssot_section": "Wave 4 — MCP 서버 패키지 (여섯이 한 덩어리)",
+      "scope": "MCP 서버 패키지와 인증·인가 (요구 12건 + 인증 배선 3파일)",
+      "req_ids": [
+        "SEC-ARCH-001",
+        "IR-AUTH-002",
+        "SEC-ARCH-002",
+        "SEC-ARCH-003",
+        "FR-ARCH-001",
+        "CON-SHELL-002",
+        "SEC-ACL-006",
+        "SEC-AUTH-005",
+        "SEC-AUTH-007",
+        "FR-AUTH-002",
+        "SEC-AUTH-004",
+        "SEC-AUTH-018"
+      ],
+      "heading_path": "Wave 4",
+      "line_start": 65,
+      "line_end": 72,
+      "existing_modules": [
+        "packages/server/src/app/auth/token-service.ts",
+        "packages/server/src/app/auth/signup-service.ts",
+        "packages/server/src/app/auth/password-service.ts",
+        "packages/server/src/domain/auth/token-scope.ts",
+        "packages/server/test/arch/assembly.test.ts",
+        "packages/web/src/settings"
+      ],
+      "design_items": [
+        {
+          "id": "DI-W3-01",
+          "heading_path": "Wave 1 이 남긴 것",
+          "line_start": 31,
+          "line_end": 31,
+          "statement": "app/auth/token-service.ts 를 PAT 라우트와 설정 모달 tokens 패널로 배선한다 (SEC-AUTH-005 · SEC-AUTH-007) — 이 wave 의 나머지보다 먼저다"
+        },
+        {
+          "id": "DI-W3-02",
+          "heading_path": "Wave 1 이 남긴 것",
+          "line_start": 29,
+          "line_end": 29,
+          "statement": "app/auth/signup-service.ts 를 가입 신청·승인 라우트와 두 화면으로 배선한다 (FR-AUTH-002 · SEC-AUTH-004)"
+        },
+        {
+          "id": "DI-W3-03",
+          "heading_path": "Wave 1 이 남긴 것",
+          "line_start": 30,
+          "line_end": 30,
+          "statement": "app/auth/password-service.ts 를 비밀번호 변경 라우트와 설정 모달 account 패널로 배선한다 (SEC-AUTH-018)"
+        },
+        {
+          "id": "DI-W3-04",
+          "heading_path": "Wave 4",
+          "line_start": 69,
+          "line_end": 69,
+          "statement": "SEC-ARCH-001 · IR-AUTH-002 — MCP 서버 패키지 골격과 인증을 세운다"
+        },
+        {
+          "id": "DI-W3-05",
+          "heading_path": "Wave 4",
+          "line_start": 69,
+          "line_end": 69,
+          "statement": "Authorization: Bearer <PAT> 가 유일한 인증 경로이고 무인증 도구가 목록에 존재하지 않는다"
+        },
+        {
+          "id": "DI-W3-06",
+          "heading_path": "Wave 4",
+          "line_start": 70,
+          "line_end": 70,
+          "statement": "SEC-ARCH-002 · SEC-ARCH-003 — 읽기와 벡터검색은 호출자 ACL 로 거른다"
+        },
+        {
+          "id": "DI-W3-07",
+          "heading_path": "Wave 4",
+          "line_start": 70,
+          "line_end": 70,
+          "statement": "걸러진 사실을 건수·순번·자리표시 어느 형태로도 노출하지 않는다"
+        },
+        {
+          "id": "DI-W3-08",
+          "heading_path": "Wave 4",
+          "line_start": 70,
+          "line_end": 70,
+          "statement": "쓰기는 결과 필터가 아니라 실행 자체를 막는다"
+        },
+        {
+          "id": "DI-W3-09",
+          "heading_path": "Wave 4",
+          "line_start": 71,
+          "line_end": 71,
+          "statement": "FR-ARCH-001 — 1.0 의 도구 이름·인자·출력 포맷·에러 코드를 계약으로 물려받되 소스는 이식하지 않는다"
+        },
+        {
+          "id": "DI-W3-10",
+          "heading_path": "Wave 4",
+          "line_start": 71,
+          "line_end": 71,
+          "statement": "A-RAG 는 신규 작성한다"
+        },
+        {
+          "id": "DI-W3-11",
+          "heading_path": "Wave 4",
+          "line_start": 72,
+          "line_end": 72,
+          "statement": "CON-SHELL-002 AC-3 와 SEC-ACL-006 AC-5 를 위 구현의 파생으로 닫는다"
+        },
+        {
+          "id": "DI-W3-12",
+          "heading_path": "Wave 1 이 남긴 것",
+          "line_start": 25,
+          "line_end": 25,
+          "statement": "배선한 세 인증 모듈을 조립 방벽 허용목록에서 빼도 test/arch/assembly.test.ts 가 통과한다"
+        }
+      ]
+    },
+    {
+      "wave": "wave-4",
+      "order": 4,
+      "ssot_section": "Wave 5 — 1.0 이행",
+      "scope": "1.0 이행 — 계정·콘텐츠 이관과 동결 (요구 3건)",
+      "req_ids": [
+        "MIG-AUTH-002",
+        "MIG-AUTH-001",
+        "CON-ARCH-002"
+      ],
+      "heading_path": "Wave 5",
+      "line_start": 74,
+      "line_end": 82,
+      "existing_modules": [
+        "packages/server/src/app/auth/login-service.ts",
+        "packages/server/src/app/workspace",
+        "packages/server/src/infra/fs/document-store.ts"
+      ],
+      "design_items": [
+        {
+          "id": "DI-W4-01",
+          "heading_path": "Wave 5",
+          "line_start": 78,
+          "line_end": 78,
+          "statement": "MIG-AUTH-002 — 이관한 계정을 전원 active 로 두고 default 그룹에 넣는다"
+        },
+        {
+          "id": "DI-W4-02",
+          "heading_path": "Wave 5",
+          "line_start": 78,
+          "line_end": 78,
+          "statement": "1.0 의 bcrypt 해시를 그대로 재사용한다"
+        },
+        {
+          "id": "DI-W4-03",
+          "heading_path": "Wave 5",
+          "line_start": 78,
+          "line_end": 78,
+          "statement": "전역 API Key 를 무효화하고 PAT 재발급을 안내한다"
+        },
+        {
+          "id": "DI-W4-04",
+          "heading_path": "Wave 5",
+          "line_start": 79,
+          "line_end": 79,
+          "statement": "MIG-AUTH-001 — 1.0 을 읽기 전용으로 동결한다. 수단은 운영 절차 문서 선언이다 (사용자 결정 3-A)"
+        },
+        {
+          "id": "DI-W4-05",
+          "heading_path": "Wave 5",
+          "line_start": 79,
+          "line_end": 79,
+          "statement": "1.0 의 docsRoot 전체를 비-md 포함해 기본 워크스페이스로 복사한다"
+        },
+        {
+          "id": "DI-W4-06",
+          "heading_path": "Wave 5",
+          "line_start": 79,
+          "line_end": 79,
+          "statement": "벡터 인덱스는 옮기지 않고 재구축한다"
+        },
+        {
+          "id": "DI-W4-07",
+          "heading_path": "Wave 5",
+          "line_start": 80,
+          "line_end": 80,
+          "statement": "CON-ARCH-002 AC-8 — 1.0 리포가 동결된 상태로 운영 가능한지 절차로 판정하며 코드로 재지 않는다"
+        },
+        {
+          "id": "DI-W4-08",
+          "heading_path": "Wave 5",
+          "line_start": 82,
+          "line_end": 82,
+          "statement": "1.0 저장소(C:/Work/git/DocuLight/DocLight)는 읽기 전용이며 수정하지 않는다"
+        }
+      ]
+    },
+    {
+      "wave": "wave-5",
+      "order": 5,
+      "ssot_section": "Wave 6 — 요구 밖 품질 후속",
+      "scope": "품질 후속 일곱 — 요구를 먼저 신설한 뒤 고친다 (감사 다섯 + 브라우저 확인이 잡은 둘) + 감사 보존 일소 배선",
+      "req_ids": [],
+      "req_ids_note": "이 wave 는 /kiwi-srs 로 phase-1 에 요구 일곱 건을 먼저 신설하고, 반환된 ID 를 --req-filter 로 쓴다",
+      "heading_path": "Wave 6",
+      "line_start": 84,
+      "line_end": 98,
+      "existing_modules": [
+        "packages/server/src/app/audit",
+        "packages/server/src/app/audit/audit-retention.ts",
+        "packages/server/src/app/trash/trash-service.ts",
+        "packages/server/src/app/node/node-service.ts",
+        "packages/web/src/audit",
+        "packages/web/src/document/DocumentSurface.tsx",
+        "packages/web/src/App.tsx",
+        "packages/server/test/arch/assembly.test.ts"
+      ],
+      "design_items": [
+        {
+          "id": "DI-W5-01",
+          "heading_path": "Wave 6",
+          "line_start": 88,
+          "line_end": 88,
+          "statement": "/kiwi-srs 로 일곱 건의 요구를 phase-1 에 먼저 신설하고 그 요구를 이 wave 의 범위로 삼는다"
+        },
+        {
+          "id": "DI-W5-02",
+          "heading_path": "Wave 6",
+          "line_start": 92,
+          "line_end": 92,
+          "statement": "감사 패널이 원시 principal ID 를 그대로 노출하지 않게 한다 — 서버 마스킹 규칙(SEC-AUDIT-002 · SEC-AUDIT-008)과 함께 판정한다"
+        },
+        {
+          "id": "DI-W5-03",
+          "heading_path": "Wave 6",
+          "line_start": 93,
+          "line_end": 93,
+          "statement": "settings.change 를 다섯으로 가르며 잃은 「설정 변경 전체」 필터 값을 접두 묶음 선택지로 되찾는다 (R164-a)"
+        },
+        {
+          "id": "DI-W5-04",
+          "heading_path": "Wave 6",
+          "line_start": 94,
+          "line_end": 94,
+          "statement": "감사 패널이 beforeValue 가 없는 PAT 발급 행도 그려 그 스코프가 보이게 한다"
+        },
+        {
+          "id": "DI-W5-05",
+          "heading_path": "Wave 6",
+          "line_start": 95,
+          "line_end": 95,
+          "statement": "auditView 의 이중 질의를 없앤다 — inScope 를 두 번 부르고 두 배열을 인덱스로 맞추는 구조가 ORDER BY 한 줄에 깨진다"
+        },
+        {
+          "id": "DI-W5-06",
+          "heading_path": "Wave 6",
+          "line_start": 96,
+          "line_end": 96,
+          "statement": "correlationId 를 branded 타입으로 바꿔 런타임 비용 0 으로 약속을 참으로 만든다"
+        },
+        {
+          "id": "DI-W5-07",
+          "heading_path": "Wave 6",
+          "line_start": 97,
+          "line_end": 97,
+          "statement": "자동 저장이 성공한 뒤에도 편집기가 포커스를 유지해 이어 친 글자가 유실되지 않게 한다 (CON-ARCH-006 · 원장 R33-d 축과 함께 판정)"
+        },
+        {
+          "id": "DI-W5-08",
+          "heading_path": "Wave 6",
+          "line_start": 98,
+          "line_end": 98,
+          "statement": "새 노트를 만들면 그 문서를 열 수 있게 한다 — POST /api/nodes 가 DB 노드만 만들고 파일을 만들지 않아 ENOENT 500 이 난다"
+        },
+        {
+          "id": "DI-W5-09",
+          "heading_path": "Wave 1 이 남긴 것",
+          "line_start": 32,
+          "line_end": 32,
+          "statement": "app/audit/audit-retention.ts 를 감사 보존 일소가 도는 자리에 배선한다 (R84-a)"
+        },
+        {
+          "id": "DI-W5-10",
+          "heading_path": "Wave 1 이 남긴 것",
+          "line_start": 32,
+          "line_end": 32,
+          "statement": "휴지통 일소도 같은 상태이므로 한 주기 작업으로 함께 세운다"
+        },
+        {
+          "id": "DI-W5-11",
+          "heading_path": "Wave 1 이 남긴 것",
+          "line_start": 25,
+          "line_end": 25,
+          "statement": "배선한 audit-retention.ts 를 조립 방벽 허용목록에서 빼도 test/arch/assembly.test.ts 가 통과한다"
+        }
+      ]
+    }
+  ],
+  "integration_items": [
+    {
+      "id": "II-01",
+      "heading_path": "순서를 정한 두 제약",
+      "line_start": 15,
+      "line_end": 15,
+      "statement": "SEC-ARCH-002 의 ACL 필터가 SEC-STORAGE-007 이 세운 벡터 인덱스 위에서 실제로 동작한다 — 저장소 wave 와 MCP wave 를 가로지른다"
+    },
+    {
+      "id": "II-02",
+      "heading_path": "순서를 정한 두 제약",
+      "line_start": 16,
+      "line_end": 16,
+      "statement": "MIG-AUTH-002 가 전역 API Key 를 끊는 시점에 대체 경로인 PAT 와 MCP 가 이미 서 있다 — MCP wave 와 이행 wave 를 가로지른다"
+    },
+    {
+      "id": "II-03",
+      "heading_path": "Wave 1 이 남긴 것",
+      "line_start": 25,
+      "line_end": 25,
+      "statement": "모든 배선이 끝난 뒤 조립 방벽 허용목록이 전량 비고 test/arch/assembly.test.ts 가 통과한다 — 배선을 나눠 가진 세 wave 를 가로지른다"
+    }
+  ],
+  "out_of_scope": [
+    {
+      "heading": "(문서 머리말 — 제목·집계표·SSOT 주석)",
+      "line_start": 1,
+      "line_end": 11,
+      "reason": "문서 자신의 메타데이터와 집계다. 최상위 섹션 헤딩이 없고 규범 문장을 담지 않는다",
+      "exclusion_class": "non-normative"
+    },
+    {
+      "heading": "~~Wave 1~~ — 종결 (2026-08-24)",
+      "line_start": 18,
+      "line_end": 33,
+      "reason": "커밋 d901d9a 로 닫혔다. 다만 그 안의 「Wave 1 이 남긴 것」 표가 정한 배선 7건은 배제하지 않고 wave-2·wave-3·wave-5 의 design_items 로 배정했다",
+      "exclusion_class": "already-implemented"
+    },
+    {
+      "heading": "Wave 2 — 브라우저 확인 회차 (2026-08-25 실행) — 부분 종결",
+      "line_start": 35,
+      "line_end": 43,
+      "reason": "FR-EDITOR-001 AC-1·AC-2 와 원장 §4 수용 기준 7(한글 IME)은 2026-08-25 브라우저 확인으로 닫혔다. 남은 FR-EDITOR-007 AC-7 은 배제하지 않고 하위 절 Wave 2-a 로 wave-1 에 배정했다",
+      "exclusion_class": "already-implemented"
+    },
+    {
+      "heading": "별도 축 — 상태 승급 (어느 Wave 에도 속하지 않는다)",
+      "line_start": 100,
+      "line_end": 102,
+      "reason": "implemented 221건의 verified 일괄 승급은 사용자 제약으로 wave 실행 중 금지다. 최종 검증 통과 후 별도 세션에서 수행한다",
+      "exclusion_class": "user-excluded"
+    },
+    {
+      "heading": "운영",
+      "line_start": 104,
+      "line_end": 107,
+      "reason": "푸시 여부와 validate_spec 기존 경고에 대한 기록이며 작업 항목이 아니다. 푸시는 2026-08-25 에 이미 수행했다",
+      "exclusion_class": "non-normative"
+    }
+  ],
+  "totals": {
+    "waves": 5,
+    "design_items": 42,
+    "integration_items": 3,
+    "out_of_scope": 5
+  }
+}

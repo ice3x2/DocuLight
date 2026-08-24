@@ -87,5 +87,17 @@ Before starting work in a fresh session, read `docs/next/LATEST.md`. It points a
 
 - Default dev-server port is **3399** (`packages/editor` and any later frontend package). Do not use another port without saying why.
 - Start the app for manual verification with `npm run dev` from the repository root (the dev server listens on 3399).
-- A real-browser check already exists as a precedent: `packages/editor/test/browser-check.mjs`, run via `npm run test:browser` or `npm run test:browser:headed` from `packages/editor` once the dev server is up. It drives Playwright's chromium against `http://localhost:3399/` and currently checks Mermaid live preview only — reuse its shape for other browser-only checks rather than inventing a new one. Note that `playwright` is declared in `packages/editor/package.json` but is **not** present in `node_modules`; installing it is an explicit decision, not a given.
+- A real-browser check already exists as a precedent: `packages/editor/test/browser-check.mjs`, run via `npm run test:browser` or `npm run test:browser:headed` from `packages/editor` once the dev server is up. It drives Playwright's chromium against `http://localhost:3399/` and currently checks Mermaid live preview only — reuse its shape for other browser-only checks rather than inventing a new one. `playwright` 1.62.1 and its chromium binary **are** installed, in `packages/editor/node_modules` (not the repository-root `node_modules`). Import it by absolute path from scripts that live outside that workspace. Measured 2026-08-25.
+
+
+## Gate decisions (2026-08-25, standing user instruction)
+
+When an orchestrator — `/kiwi-wave-master`, `/kiwi-pipeline`, or any skill they spawn — reaches a gate that would normally ask the user for confirmation, approve it and continue instead of asking. This includes `out-of-scope-user-consent`, exclusion tables, wave decompositions, integration-test consent, and cost warnings.
+
+- On a gate that offers choices, pick the option the agent recommended. When no recommendation exists, pick the most conservative option — the one that is easiest to reverse.
+- Record every auto-approved gate where that skill keeps its decisions (`waves.jsonl` `decision` objects, or the skill's own journal), naming the gate id and the reason, and summarize it to the user afterwards. Auto-approval removes the question, not the record.
+- Three situations still stop and ask, because approving them would lower the goal rather than reach it:
+  1. An irreversible action that reaches outside the run root — editing the 1.0 repository, stopping an external service, force-pushing.
+  2. Passing a gate only by weakening or deleting an existing test, or by breaking an existing public contract.
+  3. A fact that is not in the repository — user data such as a real vault path. There is nothing to auto-approve when the answer cannot be derived.
 
