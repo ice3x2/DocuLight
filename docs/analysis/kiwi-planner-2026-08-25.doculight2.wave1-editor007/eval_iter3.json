@@ -1,0 +1,79 @@
+{
+  "round": 3,
+  "prior_findings_status": [
+    {
+      "axis": "A5",
+      "prior_severity": "HIGH",
+      "status": "closed",
+      "why": "「ignoreEvent 는 그대로 두고 selection 만 dispatch 하면 족하다」가 삭제되고 정반대 지시로 바뀌었다. §1.4 는 그 길을 ⚠️ 로 명시 금지하고(초점이 칸의 contenteditable 로 가 view.hasFocus 가 거짓이 된다는 근거와 함께) R-06 으로 위험 등록했으며, T-PH001-02 ④ 가 mermaid-blocks.ts:139-142 선례대로 '편집 모드에서 ignoreEvent 를 연다' 로 바뀌었다. 그 수단이 실제로 성립하는지 설치본(@codemirror/view 6.43.9)으로 확인했다 — (1) ignoreEvent 가 false 를 돌리면 eventBelongsToEditor(dist/index.js:4867-4877)가 true 를 돌려 InputState.handleEvent(4552-4561)가 통과시킨다. (2) handlers.mousedown(4967-4998)이 돌면서 mustFocus = !view.hasFocus 로 focusPreventScroll(view.contentDOM)(4984)를 불러 초점을 contentDOM 에 올리고, 바로 뒤 active.contains(view.contentDOM) 검사 때문에 되돌려 blur 하지 않는다. (3) 그 핸들러가 true 를 돌리므로 runHandlers(4562-4575)가 event.preventDefault() 를 부르고, 그것이 브라우저 기본 동작인 '칸 contenteditable 로의 초점 이동'을 막는다. 즉 초점은 contentDOM 에 남아 §1.4 의 초점 게이팅과 함께 선다. (4) 커서가 놓이는 자리는 block-replace 범위의 경계(table-widget.ts:1245-1250 의 startLine.from / endLine.to)이며, 겹침 판정이 code-blocks.ts:66-67 의 range.from <= to && range.to >= from 로 경계를 포함하므로 노출 조건이 참이 된다. (5) 실증 선례도 있다 — browser-check.mjs:59-67 이 .dl-mermaid 를 click() 해 원문 노출을 PASS 로 잰다. 다만 그 지시가 '모든 이벤트 종류'를 여는 것이라는 부작용은 별건으로 아래 F-01 에 올린다."
+    },
+    {
+      "axis": "A3",
+      "prior_severity": "HIGH",
+      "status": "closed",
+      "why": "데모 기동 주체가 계획에 고정됐다. §1.4 가 '3399 에 뜨는 것이 둘이다' 를 ⚠️ 로 적고 루트 package.json:14 의 dev 가 @doculight/web 을 띄운다는 사실(실측 일치)과 packages/web/vite.config.ts:44 의 port 3399 를 지목한 뒤, 터미널 둘짜리 명령 블록(npm run dev --workspace @doculight/editor + cd packages/editor && npm run test:browser:table)으로 기동 명령을 고정했다. R-07 로 위험 등록도 됐다. 시험이 화면 정체를 스스로 확인하는 수단도 들어왔다 — T-PH001-01 action 이 '.demo-toggle 이 없으면 판정을 내리지 않고 안내와 함께 종료' 를 지시한다. 그 표식이 실제로 데모에만 있는지 확인했다: .demo-toggle 은 packages/editor/demo/App.tsx:139 와 packages/editor/demo/demo.css:61 두 곳뿐이고 packages/web/src 전수에 없다."
+    },
+    {
+      "axis": "A10",
+      "prior_severity": "MEDIUM",
+      "status": "closed",
+      "why": "데모 문구 판정이 변경 전에는 실패하도록 바뀌었다. 판정 어구가 「원문」에서 「올리면 원문」으로 좁혀졌고, 계획이 그 이유(「원문」 한 낱말은 demo/App.tsx:8 에 이미 있다)를 문면에 적었다. 실측이 일치한다 — 지금 grep -n '올리면 원문' packages/editor/demo/App.tsx 는 종료 코드 1 이고, 옛 문구 '클릭해 보세요' 는 demo/App.tsx:100 에 있어 종료 코드 0 이다. 윈도우 판정도 if (Select-String ... -Quiet) { npm run build } else { exit 1 } 로 바뀌어 불일치가 종료 코드로 드러난다."
+    },
+    {
+      "axis": "A6",
+      "prior_severity": "MEDIUM",
+      "status": "partially-closed",
+      "why": "고쳐진 것: '자연히 드러난다' 는 단정이 사라졌다. T-PH001-02 ⑤ 가 '화살표 진입은 단정하지 말고 실측한다' 로 바뀌었고, FR-EDITOR-007 Implementation Notes [2026-08-24] 의 반대 기록(「위젯이 원자적이라 화살표 키도 표를 건너뛴다」)을 계획이 스스로 인용했다. 근거로 든 'EditorView.atomicRanges 를 쓰지 않는다' 도 실측과 일치한다(packages/editor/src 전수 grep 0건). 남은 것: 2라운드 how_to_fix 가 요구한 '위험 등록 + 완화책' 이 들어오지 않았다 — plan.md §5.1 과 sidecar.risks 는 R-01·R-02·R-06·R-07·R-03·R-04·R-05 뿐이고 화살표 진입 행이 없으며, §5.2 / sidecar.open_questions 는 여전히 비어 있다. 아래 F-03."
+    },
+    {
+      "axis": "A9",
+      "prior_severity": "LOW",
+      "status": "closed",
+      "why": "매달린 참조가 문면으로 바뀌었다. C-06 은 plan.md · sidecar.json 어디에도 남아 있지 않고(docs 전수 grep 결과 eval_iter2.json 과 무관한 kiwi-wave-master 회차의 constraints.json 에만 나온다), T-PH002-04 action 은 이제 '이 wave 에 선언된 제약이며 저장소 CLAUDE.md 의 SRS workflow 절이 같은 것을 규정한다' 로 실재하는 근거를 지목한다."
+    }
+  ],
+  "findings": [
+    {
+      "axis": "A5",
+      "severity": "HIGH",
+      "req_id": "FR-EDITOR-007",
+      "task_id": "T-PH001-02",
+      "evidence_path": "node_modules/@codemirror/view/dist/index.js:4552-4561 · packages/editor/src/vendor/atomic-editor/table-widget.ts:867-876",
+      "summary": "④ 는 편집 모드에서 ignoreEvent 를 모든 이벤트 종류에 대해 열라고 지시하는데, 표 위젯은 mermaid 와 달리 안에 contenteditable 편집 서브시스템을 갖고 있다. 그 서브시스템(makeCell 713-786 · attachCellEditing 786-903 · 이미지 pointerdown 580-596)은 손대지 않고 files[] 에서도 빠져 있어, 칸에 초점이 남은 상태의 키 입력이 CM6 키맵으로 새어 문서를 건드린다.",
+      "what_is_wrong": "④ 의 문면은 「mermaid-blocks.ts:139-142 의 선례를 그대로 따라 ignoreEvent(event) 가 편집 모드에서는 false, 읽기 전용에서는 mousedown·click 에 대해 true」다. 선례를 그대로 옮기면 편집 모드에서 이벤트 종류를 가리지 않고 false 가 된다. mermaid 위젯은 안에 포커스 가능한 것도 편집 가능한 것도 없어 그것이 안전하지만, 표 위젯은 각 칸이 contenteditable 이고(table-widget.ts:726-729) 타이핑·IME·붙여넣기·Tab/Enter 이동·컨텍스트 메뉴가 전부 그 안에서 돈다. (1) 모든 이벤트가 CM6 로 샌다 — InputState.handleEvent(dist/index.js:4552-4561)가 keydown·beforeinput·paste·cut 을 포함한 모든 DOM 핸들러를 eventBelongsToEditor 로만 게이팅하고, eventBelongsToEditor(4867-4877)의 유일한 위젯 차단 조건이 widget.ignoreEvent(event) 다. 지금은 그것이 무조건 true 라 칸 안의 이벤트가 CM6 에 닿지 않지만, ④ 를 그대로 구현하면 닿는다. attachCellEditing 의 keydown 리스너(867-876)는 Tab·Enter 에만 stopPropagation 을 걸므로 나머지 키는 contentDOM 까지 버블한다 → keymap 이 돌아 Backspace 는 deleteCharBackward 를, 화살표는 커서 이동을 문서 선택에 대해 실행한다. 칸 DOM 편집과 문서 편집이 동시에 일어나는 상태다. (2) 칸에 초점이 남는 경로가 실재한다 — 노출이 일어나지 않아 위젯이 그대로 서 있는 상태에서. 결정적인 것은 컨텍스트 메뉴 경로다: 칸에서 우클릭(cell contextmenu 핸들러 878-882 가 preventDefault + stopPropagation) → 메뉴에서 행 추가 → appendRow 가 재조정 뒤 firstSource.focus(); placeCaretAtEnd(firstSource); (1163-1169) 를 부른다. 이 경로에는 CM6 mousedown 이 개입하지 않으므로(우클릭은 button 2 라 handlers.mousedown 이 style 을 만들지 않는다) 문서 선택은 표 밖에 그대로 있고 위젯도 그대로다. 그 상태에서 키를 치면 (1) 이 발동한다. moveCellFocus(1096-1123)의 source.focus() 도 같은 성질이다. (3) §1.4 결정이 절반만 적용된다 — cell pointerdown 핸들러(891-903)와 이미지 pointerdown 핸들러(589-596)는 source 바깥 히트에 대해 event.preventDefault() + source.focus() 를 부른다. Pointer Events 명세상 pointerdown 취소는 호환 mousedown 을 억제하므로 칸 여백·이미지 클릭은 CM6 mousedown 에 닿지 않아 노출이 일어나지 않고 종전대로 칸 편집으로 들어간다(브라우저에서 직접 재보지는 못했다 — 명세와 코드 문면에 근거한 판정이다). 즉 「원문 노출이 칸 직접 편집보다 우선한다」는 §1.4 결정이 칸 글자 히트에만 적용되고 여백·이미지 히트에는 적용되지 않는다. 계획의 어느 게이트도 이것을 잡지 못한다 — T-PH001-02 files[] 는 705-711 · 1223-1256 · 1298-1319 셋뿐이라 713-903 이 통째로 빠져 있고, dod 의 vitest 회귀는 실제 포인터·키 이벤트를 CM6 를 통해 흘리지 않으며(read-only.test.tsx 는 contentEditable 속성과 링크 click 만 본다, table-widget.test.ts 는 파서·직렬화 순수 단위 시험이라 위젯 이벤트를 아예 건드리지 않는다), T-PH001-03 의 탐침 넷도 노출 축만 잰다. 원장도 이 축을 미리 짚어 두었다 — Implementation Notes [2026-08-24] 가 「구현할 때는 … 기존 칸 편집 기능과 어느 쪽이 우선인지를 먼저 정해야 한다」고 적었고, 계획은 우선순위는 정했으나 진 쪽(칸 편집)을 어떻게 처리할지를 정하지 않았다.",
+      "how_to_fix": "④ 의 '편집 모드에서는 false' 를 포인터 이벤트로 한정하라 — 예: ignoreEvent(event) 가 event.type 이 mousedown 또는 click 일 때만 this.readOnly 를 돌리고 그 밖의 모든 이벤트에는 true 를 돌린다. 이러면 편집 모드의 클릭만 CM6 에 넘어가 커서 진입이 성립하고(HIGH ① 로 확인한 경로 그대로), keydown·beforeinput·paste 는 종전대로 위젯 안에 갇혀 (1) 이 생기지 않는다. mermaid 선례를 '그대로 따른다' 는 문구는 '선례와 같은 뜻이되 표는 안에 편집 서브시스템이 있으므로 포인터 이벤트로 한정한다' 로 고치라. 그리고 T-PH001-02 files[] 에 table-widget.ts:713-786 · 786-903 · 580-596 을 더해, (a) 칸 여백·이미지 pointerdown 의 focus 라우팅을 §1.4 결정에 맞게 처리하거나 (b) 그 경로를 이번 범위 밖으로 남긴다는 것을 사유와 함께 §5.4 에 명시하라. T-PH001-03 탐침에 'ignoreEvent 를 모든 이벤트에 열어도 칸 안 keydown 이 문서를 건드리지 않는다' 를 재는 항을 더하고, T-PH001-02 dod 에 '칸에 초점이 있는 상태에서 Backspace 를 눌러도 문서가 바뀌지 않는다' 를 더하라."
+    },
+    {
+      "axis": "A10",
+      "severity": "MEDIUM",
+      "req_id": "FR-EDITOR-007",
+      "task_id": "T-PH001-02",
+      "evidence_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md:144",
+      "summary": "T-PH001-02 의 윈도우 verification_cmd 가 세미콜론으로 이어져 있어, AC-7 본 판정이 실패해도 최종 종료 코드가 vitest 것으로 덮인다 — 이 저장소의 기본 셸이 PowerShell 이다.",
+      "what_is_wrong": "posix 쪽은 node test/table-reveal-check.mjs && NODE_ENV=production npx vitest run 로 && 를 써 E2E 실패가 그대로 실패로 남는다. 그런데 windows 쪽은 cd packages/editor; node test/table-reveal-check.mjs; $env:NODE_ENV='production'; npx vitest run 로 세미콜론 이어붙이기라, table-reveal-check.mjs 가 종료 코드 1 로 끝나도 다음 명령이 그대로 실행되고 최종 종료 코드는 vitest 의 것이다. 즉 이 Task 의 유일한 AC-7 판정이 실패한 채로도 윈도우 검증은 통과로 읽힌다. 2라운드가 T-PH002-02 의 PowerShell 판정에 대해 지적한 것과 같은 결함이 이 Task 에 남았고, T-PH002-02 쪽만 고쳐졌다. 환경은 win32 · PowerShell 이 기본이므로 실제로 이 경로가 쓰인다.",
+      "how_to_fix": "windows 를 종료 코드가 전파되는 형태로 고치라 — 예: node test/table-reveal-check.mjs 뒤에 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } 를 끼워 넣고 그 뒤에 vitest 를 잇는다. T-PH001-01 · T-PH002-03 의 windows 도 같은 기준으로 훑으라."
+    },
+    {
+      "axis": "A6",
+      "severity": "MEDIUM",
+      "req_id": "FR-EDITOR-007",
+      "task_id": "T-PH001-02",
+      "evidence_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.sidecar.json (risks[] · open_questions[])",
+      "summary": "화살표 진입이 서지 않을 가능성이 위험으로 등록되지 않았다 — 그것이 T-PH001-02 의 통과 조건을 막는 항인데 §5.1 에 행이 없고 §5.2 는 '없음' 이며 완화책도 '그 축까지 함께 푼다' 로 무한정이다.",
+      "what_is_wrong": "T-PH001-02 ⑤ 는 화살표 진입을 실측 대상으로 돌려 2라운드의 '단정' 은 해소했으나, 그 실측이 부정으로 나왔을 때의 처리가 계획에 없다. 판정 ③ 은 T-PH001-01 · T-PH001-02 의 acceptance_tests(전건 PASS · expected_exit 0)를 막는 항이므로 부정이면 Task 가 통째로 막힌다. 그런데 plan.md §5.1 과 sidecar.risks 는 R-01 · R-02 · R-06 · R-07 · R-03 · R-04 · R-05 일곱 행뿐으로 이 축의 행이 없고, §5.2 Open Questions 와 sidecar.open_questions 는 비어 있으며, coder_handoff_readiness 는 두 Phase 모두 blockers 0 으로 ready:true 다. 완화책도 '건너뛰면 그 축까지 함께 푼다' 한 줄뿐이라 수단(keymap 추가인지, atomicRanges 도입인지, 판정 ③ 을 §5.4 로 내리는 것인지)도 노력 상한도 정해지지 않았다. 코더는 막혔을 때 계획 밖에서 스스로 정해야 한다.",
+      "how_to_fix": "§5.1(과 sidecar.risks)에 'R-08 med — 블록 대체 범위로 화살표가 진입하지 못하면 판정 ③ 이 서지 않아 T-PH001-02 가 막힌다' 를 더하고 완화책을 둘 중 하나로 고정하라 — (a) 진입 위치가 표 범위의 경계에 떨어져도 경계 포함 겹침 판정(code-blocks.ts:66-67)으로 노출이 성립하는지 먼저 재고, 성립하면 그것으로 족하다고 적는다. (b) 성립하지 않으면 keymap 으로 진입을 만드는 것을 별도 Task 로 세우거나 판정 ③ 을 본 판정에서 내리고 그 사유를 §5.4 deferred_ac 에 적는다. 어느 쪽을 택하는지의 분기 조건을 계획이 미리 적어야 코더가 판단하지 않는다."
+    },
+    {
+      "axis": "A10",
+      "severity": "MEDIUM",
+      "req_id": "FR-EDITOR-007",
+      "task_id": "T-PH002-03",
+      "evidence_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md:217-219",
+      "summary": "T-PH002-03 의 acceptance_tests 가 변경 전에도 참이다 — 주석 한 줄을 더하는 Task 인데 판정이 npx vitest run test/live-preview.test.tsx 종료 코드 0 뿐이라 주석을 안 써도 통과한다.",
+      "what_is_wrong": "이 Task 의 실질은 live-preview.test.tsx:251-268 앞 주석에 '새 시험 파일이 이 항을 잰다' 를 적는 것이고, 계획 스스로 '주석 없이 두면 다음 사람이 이 항을 미검증으로 읽는다' 고 그 목적을 적는다. 그런데 acceptance_tests 는 그 파일의 vitest 가 green 인지만 보는데, 그것은 지금도 green 이므로 주석을 쓰든 말든 참이다. dod 의 '주석이 새 시험 파일을 지목한다' 는 기계 판정으로 옮겨지지 않았고 verification_cmd 도 vitest 뿐이다. 2라운드가 T-PH002-02 에 대해 잡은 '변경 전에도 참이라 아무것도 재지 않는다' 와 같은 형태가 이 Task 에 남았다(T-PH002-02 쪽만 고쳐졌다).",
+      "how_to_fix": "acceptance_tests 를 checklist 로 바꾸고 파일명 문자열 판정을 더하라 — grep -q 'table-reveal-check.mjs' test/live-preview.test.tsx 가 종료 코드 0(고치기 전에는 1), 그리고 it.skip 이 여전히 남아 있다는 판정, 마지막으로 지금의 vitest 판정. verification_cmd 도 같은 순서로 이어 붙이라."
+    }
+  ],
+  "summary": { "critical": 0, "high": 1, "medium": 3, "low": 0 },
+  "pass": false
+}

@@ -1,0 +1,73 @@
+{
+  "round": 4,
+  "prior_findings_status": [
+    {
+      "axis": "A5",
+      "prior_severity": "HIGH",
+      "status": "closed",
+      "why": "① 개방이 포인터로 한정됐다 — §1.4(69행)와 T-PH001-02 ④(146행)가 「event.type 이 mousedown 또는 click 일 때만 this.readOnly 를 돌려주고 그 밖의 모든 이벤트에는 true」로 구현 문면을 확정했고, mermaid 선례를 「그대로 따라」가 아니라 「같은 뜻이되 포인터 이벤트로 한정해」로 고쳤다. 그 한정의 사유(표 위젯은 안에 contenteditable 편집 서브시스템이 있어 keydown 이 CM6 키맵으로 샌다)도 §1.4 ⚠️ 로 적혔다. ② 그 한정이 실제로 커서 진입을 성립시키는지 설치본으로 확인했다 — node_modules/@codemirror/view/dist/index.js 에서 handlers.mousedown(4967-4998)이 basicMouseSelection 으로 style 을 만들고 new MouseSelection(...).start(event)(4756-4761)를 부르며, start 가 dragging===false 일 때 곧바로 select(event)(4825-4828)로 view.dispatch({selection}) 를 낸다. 즉 mousedown 하나만 열려도 커서가 문서에 놓인다. mouseup·mousemove 는 MouseSelection 이 document 에 직접 붙이므로(4750-4751) ignoreEvent 게이팅을 타지 않는다. 초점도 mustFocus=!view.hasFocus 경로(4981-4989)로 contentDOM 에 올라가고, 핸들러가 true 를 돌려 runHandlers(4562-4575)가 preventDefault 를 불러 칸 contenteditable 로의 기본 초점 이동을 막는다 — §1.4 의 초점 게이팅과 함께 선다. ③ files[] 에 편집 서브시스템 구간이 들어왔다 — plan.md:145 와 sidecar 의 T-PH001-02.files 가 table-widget.ts 의 580-596 · 705-711 · 713-786 · 786-903 · 1223-1256 · 1298-1319 여섯 구간이다(직전 라운드는 셋뿐이었다). ④ 칸 여백·이미지 pointerdown 경로의 분기 조건이 정해졌다 — T-PH001-02 ④ 가 「가로막으면 편집 모드에 한해 그 취소를 걷는다, 걷을 수 없으면 §5.4 에 사유와 함께 남긴다」로 적고 §5.4 표(293행)가 남길 조건을 「걷었을 때 이미지 처리나 칸 편집이 깨지면 남긴다. 그때도 칸 본문(.cm-atomic-table-cell-source) 클릭 경로는 반드시 서야 한다」로 하한까지 못박았다. 코드 실측이 그 분기의 전제와 일치한다 — cell pointerdown 핸들러(table-widget.ts:891-903)는 target 이 source 안이면 preventDefault 없이 return 하므로 칸 본문 클릭은 CM6 mousedown 에 그대로 닿고, 여백·이미지 히트(580-596)만 취소된다. ⑤ 새 개방이 다른 축을 깨지 않는지도 확인했다 — 칸의 링크 열기 click 리스너(768-780)가 stopPropagation() 을 부르므로 새로 열린 click 이 contentDOM 의 inline-preview click 핸들러(inline-preview.ts:1095)로 이중 전파되지 않고, 우클릭은 button!=0 이라 handlers.mousedown 이 style 을 만들지 않아 컨텍스트 메뉴 경로의 칸 편집은 종전대로 남는다. 직전 라운드가 요구한 T-PH001-02 dod 의 「칸 초점 상태 Backspace」 항은 들어오지 않았으나, 포인터 한정 자체가 그 누출 경로를 차단하고 T-PH001-03 탐침 ⑤ 가 그 축을 확인하므로 결함으로 보지 않는다."
+    },
+    {
+      "axis": "A10",
+      "prior_severity": "MEDIUM",
+      "status": "closed",
+      "why": "T-PH001-02 의 windows 가 「cd packages/editor; node test/table-reveal-check.mjs; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; $env:NODE_ENV='production'; npx vitest run」로 바뀌어 AC-7 본 판정의 실패가 종료 코드로 전파된다(plan.md:148 · sidecar 동일). 나머지 다섯도 같은 기준으로 훑었다 — T-PH001-01(cd packages/editor; node test/table-reveal-check.mjs) · T-PH002-01(cd packages/editor; npm run test:browser:table) · T-PH002-02(if (Select-String ... -Quiet) { npm run build } else { exit 1 }) · T-PH002-03(if (-not (Select-String ...)) { exit 1 }; ...; npx vitest run)은 모두 판정 명령이 마지막이거나 exit 로 분기해 마스킹이 없다. T-PH001-03 의 windows 는 git diff --stat 뒤에 세미콜론이 오지만 그 명령은 정보성이고 acceptance_tests 가 checklist 이며 판정 명령인 npm test 가 마지막이라 마스킹이 아니다. 남은 것은 마스킹이 아니라 posix/windows 판정 항목 수의 불일치 하나뿐이며 아래 F-01 에 LOW 로 남긴다."
+    },
+    {
+      "axis": "A6",
+      "prior_severity": "MEDIUM",
+      "status": "closed",
+      "why": "R-08 이 plan.md §5.1(270행)과 sidecar.risks 양쪽에 med 로 등록됐다. 완화책이 분기 조건을 미리 고정한다 — ⓐ 경계를 포함하는 겹침 판정(code-blocks.ts:66-67 의 range.from <= to && range.to >= from, 실측 일치)으로 노출이 서는지 먼저 재고 서면 더 하지 않는다, ⓑ 서지 않으면 keymap 을 새로 만들지 않고 판정 ③ 을 AC-7 본 판정에서 내려 §5.4 에 사유와 함께 남긴 뒤 판정 ②(칸 클릭)로 AC-7 을 닫는다. 「어느 쪽인지는 코더가 아니라 이 조건이 정한다」고 명시했고, §5.4 의 둘째 표(294행)에도 같은 조건이 「R-08 의 분기 ⓑ 에 해당하면 남긴다」로 대응 등록됐다. 수단(keymap 금지)과 노력 상한(더 하지 않는다)이 함께 닫혔다. 다만 ⓑ 를 택했을 때 T-PH001-01 의 dod 와 T-PH001-02 의 acceptance_test 를 어떻게 맞추는지는 적히지 않아 아래 F-02 에 LOW 로 남긴다."
+    },
+    {
+      "axis": "A10",
+      "prior_severity": "MEDIUM",
+      "status": "closed",
+      "why": "T-PH002-03 의 acceptance_tests 가 shell 단일 판정에서 checklist 셋으로 바뀌었다(plan.md:221 · sidecar 동일) — 「grep -q table-reveal-check.mjs test/live-preview.test.tsx 가 종료 코드 0 (고치기 전에는 1)」·「grep -q it.skip 가 종료 코드 0」·「vitest 종료 코드 0」. 그 첫 항이 변경 전에는 실패하는지 직접 확인했다: 지금 cd packages/editor && grep -q table-reveal-check.mjs test/live-preview.test.tsx 는 종료 코드 1 이고, grep -q it.skip test/live-preview.test.tsx 는 종료 코드 0 이다. 즉 판정이 변경 전에는 red 이고 변경 후에만 green 이 된다. posix verification_cmd 도 세 판정을 && 로 이어 붙여 같은 순서를 그대로 잰다."
+    }
+  ],
+  "findings": [
+    {
+      "axis": "A10",
+      "severity": "LOW",
+      "req_id": "FR-EDITOR-007",
+      "task_id": "T-PH002-03",
+      "evidence_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md:222",
+      "summary": "T-PH002-03 의 windows verification_cmd 가 posix 에 있는 grep -q it.skip 판정을 빠뜨렸다 — 이 저장소의 기본 셸이 PowerShell 이라 실제로 덜 재는 쪽이 쓰인다.",
+      "what_is_wrong": "posix 는 grep -q table-reveal-check.mjs ... && grep -q it.skip ... && vitest 로 checklist 세 항을 모두 기계 판정으로 옮겼는데, windows 는 if (-not (Select-String -Pattern table-reveal-check.mjs -Quiet)) { exit 1 }; $env:NODE_ENV='production'; npx vitest run test/live-preview.test.tsx 로 둘째 항(it.skip 이 여전히 skip 이다)이 빠졌다. 환경은 win32 · PowerShell 이므로 이 경로가 실제로 쓰인다. 영향이 작은 이유는 스킵을 되살리면 그 시험이 happy-dom 재진입으로 실패해 마지막 vitest 판정이 어차피 red 가 되기 때문이다.",
+      "how_to_fix": "windows 에 if (-not (Select-String -Path test/live-preview.test.tsx -Pattern 'it\\.skip' -Quiet)) { exit 1 }; 를 첫 판정 뒤에 끼워 posix 와 같은 세 판정을 잰다."
+    },
+    {
+      "axis": "A6",
+      "severity": "LOW",
+      "req_id": "FR-EDITOR-007",
+      "task_id": "T-PH001-02",
+      "evidence_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md:131 · 147 · 270",
+      "summary": "R-08 의 분기 ⓑ 를 택하면 T-PH001-01 의 dod(판정 ③ 이 FAIL 로 나온다)와 T-PH001-02 의 acceptance_test(판정 전건 종료 코드 0)가 서로 어긋나는데, 그때 시험 파일을 누가 어떻게 고치는지가 적혀 있지 않다.",
+      "what_is_wrong": "ⓑ 는 「판정 ③ 을 AC-7 본 판정에서 내려」라고만 적는다. 판정 ③ 은 T-PH001-01 이 만든 table-reveal-check.mjs 안에 있고 그 Task 의 dod 는 ③ 이 FAIL 로 나오는 것을 red 증거로 요구하므로, ⓑ 를 택하면 T-PH001-02 안에서 남의 Task 산출물을 고쳐야 판정 전건 exit 0 이 성립한다. 그 절차(판정을 지우는지, 보조 판정으로 이름을 옮기는지, red 증거를 어떻게 갱신하는지)가 계획에 없다. 분기 자체는 닫혔고 발생 조건부라 LOW 다.",
+      "how_to_fix": "R-08 ⓑ 에 한 줄을 더하라 — 예: 「판정 ③ 은 지우지 말고 이름 앞에 「보조(후속)」를 붙여 종료 코드 집계에서 제외하고, T-PH001-01 의 red 증거는 그대로 둔다」. 그러면 두 Task 의 판정이 어긋나지 않는다."
+    },
+    {
+      "axis": "A5",
+      "severity": "LOW",
+      "req_id": "FR-EDITOR-007",
+      "task_id": "T-PH001-02",
+      "evidence_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md:267 (R-02 mitigation)",
+      "summary": "R-02 의 완화책 문면이 아직 「수단을 mermaid-blocks.ts 선례(편집 모드에서 ignoreEvent 를 연다)로 못박았다」로 남아 포인터 한정이 빠져 있다 — 같은 계획 안에 두 서술이 공존한다.",
+      "what_is_wrong": "§1.4 와 T-PH001-02 ④ 는 「mousedown·click 에만 연다」로 확정했는데 R-02 행만 옛 문면(선례 그대로)이다. 위험표만 읽고 구현하면 직전 라운드가 HIGH 로 잡은 「모든 이벤트 개방」으로 되돌아갈 수 있다. 지시의 SSOT 는 Task action 이고 그쪽이 정확하므로 LOW 다.",
+      "how_to_fix": "R-02 mitigation 을 「수단을 mermaid-blocks.ts 선례와 같은 뜻이되 mousedown·click 으로 한정해 못박았다」로 고쳐 §1.4·T-PH001-02 와 문면을 맞춘다."
+    },
+    {
+      "axis": "A10",
+      "severity": "LOW",
+      "req_id": "FR-EDITOR-007",
+      "task_id": "T-PH001-03",
+      "evidence_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md:164-165",
+      "summary": "새로 들어온 탐침 ⑤(모든 이벤트를 열면 칸 초점 상태의 키 입력이 문서를 건드리는지)에 재는 수단이 지목되지 않았다.",
+      "what_is_wrong": "탐침 ①~④ 는 죽어야 할 시험(E2E 판정 ②③⑤ · read-only.test.tsx)을 각각 지목하는데, ⑤ 만 「확인한다」로 끝나고 어느 제스처로 칸에 초점을 남긴 뒤 어느 키를 눌러 무엇을 보는지가 없다. 코드 실측상 그 상태를 만드는 경로는 존재한다(우클릭 → openCellMenu → 행 추가 → firstSource.focus(); table-widget.ts:878-882 · moveCellFocus). 탐침은 checklist 판정이고 결과가 계획 조항을 되돌리는 데만 쓰이므로 LOW 다.",
+      "how_to_fix": "탐침 ⑤ 에 절차를 한 줄로 적으라 — 예: 「칸에서 우클릭해 행을 더해 초점이 칸에 남게 한 뒤 Backspace 를 눌러 문서 텍스트가 바뀌는지 본다」."
+    }
+  ],
+  "summary": { "critical": 0, "high": 0, "medium": 0, "low": 4 },
+  "pass": true
+}

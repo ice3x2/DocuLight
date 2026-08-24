@@ -1,0 +1,1070 @@
+{
+  "schema_version": "1.1.0",
+  "plan_contract": "1.2.0",
+  "run_id": "2026-08-25.doculight2.wave1-editor007",
+  "target": "phase-1",
+  "plan_version": "0.4.1",
+  "generated_at": "2026-08-25T00:00:00Z",
+  "tool_versions": {
+    "speckiwi": "2.13.1",
+    "kiwi_planner": "0.6.0",
+    "validator": "0.6.0"
+  },
+  "tdd_policy": "relaxed",
+  "md_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md",
+  "md_sha256": "pending",
+  "phases": [
+    {
+      "id": "PH-001",
+      "title": "표 원문 노출 구현",
+      "goal": "선택·초점 판정과 커서 진입 경로를 함께 세우고, 그 시험이 실제로 무언가를 잰다는 것까지 확인한다",
+      "depends_on": [],
+      "task_ids": [
+        "T-PH001-01",
+        "T-PH001-02",
+        "T-PH001-03"
+      ]
+    },
+    {
+      "id": "PH-002",
+      "title": "회귀 등록과 사실 정합",
+      "goal": "새 시험을 회귀 진입점에 등록하고 데모·주석·SRS 를 바뀐 사실에 맞춘다",
+      "depends_on": [
+        "PH-001"
+      ],
+      "task_ids": [
+        "T-PH002-01",
+        "T-PH002-02",
+        "T-PH002-03",
+        "T-PH002-04"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T-PH001-01",
+      "phase_id": "PH-001",
+      "title": "표 원문 노출을 실제 제스처로 재는 브라우저 E2E 시험을 세우고 red 를 확인한다",
+      "type": "code",
+      "req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "files": [
+        {
+          "path": "packages/editor/test/table-reveal-check.mjs"
+        }
+      ],
+      "action": "packages/editor/test/browser-check.mjs 의 모양을 그대로 따라 table-reveal-check.mjs 를 신설한다. 서버를 띄우지 않고 EDITOR_URL ?? 'http://localhost:3399/' 에 붙는다 — 3399 는 packages/editor/vite.config.ts:28 이 정한 이 데모의 포트이고 선례가 같은 구조다. 판정에 앞서 붙은 화면이 editor 데모인지 확인한다 — .demo-toggle 이 없으면 판정을 내리지 않고 「editor 데모가 3399 에 떠 있지 않다. npm run dev --workspace @doculight/editor 로 띄우라」는 안내와 함께 종료한다. 루트의 npm run dev 는 web 앱을 같은 포트에 띄우므로 이 확인이 없으면 오독한다. 데모의 표 fixture 는 demo/App.tsx:98-100 에 이미 있다. 판정 다섯: (1) 숨는 절반 — 커서가 표 밖일 때 .cm-atomic-table 위젯이 서고 보이는 텍스트에 --- 가 없다. (2) AC-7 본 판정(칸 클릭) — 표의 한 칸을 click() 으로 누르면 --- 가 나타난다. (3) AC-7 본 판정(화살표 이동) — 표 위 문단에서 ArrowDown 으로 표 줄까지 내려가면 --- 가 나타난다. (4) 복귀 — 커서를 표 밖으로 빼면 위젯이 다시 서고 --- 가 사라진다. (5) 보조(데코레이션 규칙) — view.focus() 뒤 dispatch({selection}) 으로 표 안에 커서를 놓아도 --- 가 나타난다. 이 항은 AC-7 판정이 아니며 이름에 「보조」를 적는다. 지금 상태에서 (2)(3)(5) 가 모두 실패해야 한다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "node test/table-reveal-check.mjs",
+          "expected_exit": 1,
+          "stdout_regex": "FAIL"
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/editor && node test/table-reveal-check.mjs",
+        "windows": "cd packages/editor; node test/table-reveal-check.mjs"
+      },
+      "dod": [
+        "새 파일이 존재한다",
+        "editor 데모가 아닌 화면에 붙으면 판정 없이 안내하고 종료한다",
+        "판정 (2)(3)(5) 가 FAIL 로 나온다",
+        "판정 (1)(4) 는 PASS 로 나온다",
+        "red 증거(명령·종료코드·실패 메시지)를 사이드카에 남긴다"
+      ],
+      "rollback": "새 파일 하나를 지우면 원상복구된다",
+      "estimated_effort": "M",
+      "depends_on_task": [],
+      "covers_ac": [
+        "AC-7"
+      ],
+      "test_files": [
+        {
+          "path": "packages/editor/test/table-reveal-check.mjs"
+        }
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "red",
+        "test_cases": [
+          {
+            "id": "TC-REQ-FR-EDITOR-007-AC7-01",
+            "req_id": "FR-EDITOR-007",
+            "ac_refs": [
+              "AC-7"
+            ],
+            "test_file": "packages/editor/test/table-reveal-check.mjs",
+            "test_symbol": "AC-7 본 판정 — 칸을 클릭하면 구분선 원문이 드러난다",
+            "kind": "e2e",
+            "expected_failure_signature": "구분선 드러나지 않음"
+          },
+          {
+            "id": "TC-REQ-FR-EDITOR-007-AC7-02",
+            "req_id": "FR-EDITOR-007",
+            "ac_refs": [
+              "AC-7"
+            ],
+            "test_file": "packages/editor/test/table-reveal-check.mjs",
+            "test_symbol": "AC-7 본 판정 — 화살표로 표 줄에 내려가면 구분선 원문이 드러난다",
+            "kind": "e2e",
+            "expected_failure_signature": "구분선 드러나지 않음"
+          },
+          {
+            "id": "TC-REQ-FR-EDITOR-007-AC7-03",
+            "req_id": "FR-EDITOR-007",
+            "ac_refs": [
+              "AC-7"
+            ],
+            "test_file": "packages/editor/test/table-reveal-check.mjs",
+            "test_symbol": "보조 — dispatch({selection}) 으로 커서를 놓아도 드러난다 (데코레이션 규칙)",
+            "kind": "e2e",
+            "expected_failure_signature": "구분선 드러나지 않음"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      },
+      "trace_links": [
+        {
+          "link_id": "TL-01",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-01"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "FR-EDITOR-007"
+          },
+          "relation": "depends_on"
+        }
+      ]
+    },
+    {
+      "id": "T-PH001-02",
+      "phase_id": "PH-001",
+      "title": "선택·초점 판정과 커서 진입 경로를 함께 세워 원문이 드러나게 한다",
+      "type": "code",
+      "req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "files": [
+        {
+          "path": "packages/editor/src/vendor/atomic-editor/table-widget.ts",
+          "line_range": "580-596"
+        },
+        {
+          "path": "packages/editor/src/vendor/atomic-editor/table-widget.ts",
+          "line_range": "705-711"
+        },
+        {
+          "path": "packages/editor/src/vendor/atomic-editor/table-widget.ts",
+          "line_range": "713-786"
+        },
+        {
+          "path": "packages/editor/src/vendor/atomic-editor/table-widget.ts",
+          "line_range": "786-903"
+        },
+        {
+          "path": "packages/editor/src/vendor/atomic-editor/table-widget.ts",
+          "line_range": "1223-1256"
+        },
+        {
+          "path": "packages/editor/src/vendor/atomic-editor/table-widget.ts",
+          "line_range": "1298-1319"
+        }
+      ],
+      "action": "넷을 함께 세운다. (1) 초점을 상태로 들여온다 — EditorView.focusChangeEffect 로 초점 변화를 StateEffect 로 dispatch 하고 그 값을 StateField 가 들고 있게 한다. (2) 선택 겹침 분기 — buildTableWidgets 의 tree.iterate enter 콜백에서, 초점이 있고 읽기 전용이 아니며 그 표의 줄 범위가 현재 선택과 겹치면 Decoration.replace 를 만들지 않고 원문 줄을 그대로 남긴다. code-blocks.ts:105 의 selectionTouches continue 패턴과 같은 모양이며 revealable 게이팅도 !readOnly 로 같다. (3) 재구성 조건 확대 — tableField.update 가 선택이 움직였을 때와 초점이 바뀌었을 때도 다시 그리게 한다. 지금은 1313행 if (!tr.docChanged) return deco; 가 순수 선택 이동을 버린다. (4) 커서 진입 경로 — ignoreEvent() 가 지금은 무조건 true 라 CM6 가 위젯 안 클릭에 관여하지 않는다. mermaid-blocks.ts:139-142 와 같은 뜻이되 포인터 이벤트로 한정해 바꾼다: ignoreEvent(event) 가 event.type 이 mousedown 또는 click 일 때만 this.readOnly 를 돌려주고 그 밖의 모든 이벤트에는 true 를 돌려준다. 모든 이벤트에 열면 안 된다 — 표 위젯은 mermaid 와 달리 안에 contenteditable 편집 서브시스템(makeCell 713-786 · attachCellEditing 786-903)을 갖고 있어 칸에 초점이 남은 상태의 keydown 이 CM6 키맵으로 새어 문서를 건드린다. 포인터만 열면 클릭이 CM6 로 넘어가 커서가 놓이고 초점도 contentDOM 에 남아 (1) 의 초점 게이팅과 함께 성립하며 키 입력은 종전대로 위젯 안에 갇힌다. 아울러 칸 여백과 이미지의 pointerdown 취소(580-596 와 makeCell 이 다는 핸들러)가 CM6 의 mousedown 을 가로막지 않는지 확인하고 가로막으면 편집 모드에 한해 그 취소를 걷는다 — 걷을 수 없으면 그 경로를 계획 5.4 에 사유와 함께 남긴다. 칸 안에서 손으로 selection 을 dispatch 하는 길을 쓰지 마라 — 그렇게 하면 초점이 칸 안쪽 contenteditable 로 가서 view.hasFocus 가 거짓이 되고 판정이 영영 참이 되지 않는다. (5) 화살표 진입은 단정하지 말고 실측한다 — 이 저장소는 EditorView.atomicRanges 를 쓰지 않으므로 (3) 이 서면 화살표가 표 범위에 들어갈 가능성이 높지만 FR-EDITOR-007 의 Implementation Notes 는 위젯이 원자적이라 화살표 키도 표를 건너뛴다고 반대로 적어 두었다. E2E 판정 (3) 으로 확인하고 건너뛰면 그 축까지 함께 푼다. TableWidget.eq() 는 구조만 비교하므로 그대로 둔다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "node test/table-reveal-check.mjs",
+          "expected_exit": 0
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/editor && node test/table-reveal-check.mjs && NODE_ENV=production npx vitest run",
+        "windows": "cd packages/editor; node test/table-reveal-check.mjs; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; $env:NODE_ENV='production'; npx vitest run"
+      },
+      "dod": [
+        "table-reveal-check.mjs 가 판정 다섯 전건 PASS",
+        "packages/editor vitest 가 실패 0 — 특히 __tests__/read-only.test.tsx 와 __tests__/table-widget.test.ts 와 test/live-preview.test.tsx 가 그대로 green",
+        "읽기 전용에서는 칸을 눌러도 드러나지 않는다",
+        "green 증거를 사이드카에 남긴다"
+      ],
+      "rollback": "table-widget.ts 의 변경을 되돌리면 종전 동작으로 돌아간다. 새 파일을 만들지 않으므로 삭제할 것이 없다",
+      "estimated_effort": "L",
+      "depends_on_task": [
+        "T-PH001-01"
+      ],
+      "covers_ac": [
+        "AC-7"
+      ],
+      "test_files": [
+        {
+          "path": "packages/editor/test/table-reveal-check.mjs"
+        }
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "green",
+        "test_cases": [
+          {
+            "id": "TC-REQ-FR-EDITOR-007-AC7-04",
+            "req_id": "FR-EDITOR-007",
+            "ac_refs": [
+              "AC-7"
+            ],
+            "test_file": "packages/editor/test/table-reveal-check.mjs",
+            "test_symbol": "AC-7 본 판정 — 칸을 클릭하면 구분선 원문이 드러난다",
+            "kind": "e2e",
+            "expected_failure_signature": "구분선 드러나지 않음"
+          },
+          {
+            "id": "TC-REQ-FR-EDITOR-007-AC7-05",
+            "req_id": "FR-EDITOR-007",
+            "ac_refs": [
+              "AC-7"
+            ],
+            "test_file": "packages/editor/test/table-reveal-check.mjs",
+            "test_symbol": "AC-7 본 판정 — 화살표로 표 줄에 내려가면 구분선 원문이 드러난다",
+            "kind": "e2e",
+            "expected_failure_signature": "구분선 드러나지 않음"
+          },
+          {
+            "id": "TC-REQ-FR-EDITOR-007-AC7-06",
+            "req_id": "FR-EDITOR-007",
+            "ac_refs": [
+              "AC-7"
+            ],
+            "test_file": "packages/editor/test/table-reveal-check.mjs",
+            "test_symbol": "보조 — dispatch({selection}) 으로 커서를 놓아도 드러난다 (데코레이션 규칙)",
+            "kind": "e2e",
+            "expected_failure_signature": "구분선 드러나지 않음"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      },
+      "trace_links": [
+        {
+          "link_id": "TL-02",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-02"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "FR-EDITOR-007"
+          },
+          "relation": "depends_on"
+        }
+      ]
+    },
+    {
+      "id": "T-PH001-03",
+      "phase_id": "PH-001",
+      "title": "뮤테이션 탐침으로 새 시험이 실제로 무언가를 재는지 확인한다",
+      "type": "code",
+      "req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "files": [
+        {
+          "path": "packages/editor/src/vendor/atomic-editor/table-widget.ts"
+        },
+        {
+          "path": "packages/editor/test/table-reveal-check.mjs"
+        }
+      ],
+      "action": "저장소 관례대로 새 시험의 실효성을 확인한다. T-PH001-02 가 세운 판정 넷을 하나씩 고의로 되돌려 그때마다 어떤 시험이 죽는지 본다 — (1) 선택 겹침 분기를 지운다 → E2E 판정 (2)(3)(5) 가 죽어야 한다. (2) tr.selection 재구성 조건을 되돌린다 → 같은 항이 죽어야 한다. (3) 초점 게이팅을 항상 참으로 바꾼다 → __tests__/read-only.test.tsx 가 죽어야 한다. (4) ignoreEvent() 를 무조건 true 로 되돌린다 → E2E 판정 (2) 만 죽고 (5) 는 살아 있어야 한다. (5) ignoreEvent() 를 편집 모드에서 모든 이벤트에 열어 본다 → 칸에 초점이 남은 상태의 키 입력이 문서를 건드리는지 확인한다. 건드리면 포인터 한정이 실제로 필요한 것이고 안 건드리면 그 한정의 근거가 없는 것이므로 계획의 그 조항을 고친다. 이것이 본 판정과 보조 판정이 서로 다른 축을 잰다는 증거다. 어느 되돌림이 아무 시험도 죽이지 못하면 그 축은 재어지지 않는 것이므로 시험을 고친다. 확인이 끝나면 모든 되돌림을 취소해 구현을 원상복구한다. 탐침 결과를 분석 로그에 남긴다.",
+      "acceptance_tests": [
+        {
+          "kind": "checklist",
+          "items": [
+            "선택 겹침 분기 제거 시 E2E 판정 (2)(3)(5) 가 FAIL 한다",
+            "tr.selection 재구성 조건 되돌림 시 같은 항이 FAIL 한다",
+            "초점 게이팅을 항상 참으로 바꾸면 read-only 시험이 FAIL 한다",
+            "ignoreEvent 를 무조건 true 로 되돌리면 판정 (2) 만 FAIL 하고 (5) 는 PASS 로 남는다",
+            "ignoreEvent 를 편집 모드에서 모든 이벤트에 열면 칸 초점 상태의 키 입력이 문서를 건드린다 — 건드리지 않으면 포인터 한정 조항을 고친다",
+            "탐침 후 git diff 가 T-PH001-02 종료 시점과 같다"
+          ]
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd /c/Work/git/DocuLight2.0 && git diff --stat && NODE_ENV=production npm test",
+        "windows": "Set-Location C:\\Work\\git\\DocuLight2.0; git diff --stat; $env:NODE_ENV='production'; npm test"
+      },
+      "dod": [
+        "다섯 탐침이 각자 예상한 결과를 낸다",
+        "탐침 후 워킹트리가 탐침 전과 동일하다",
+        "전 패키지 회귀가 실패 0"
+      ],
+      "rollback": "탐침은 되돌리는 것이 절차의 일부다. 되돌림이 실패하면 git checkout -- packages/editor 로 복구한다",
+      "estimated_effort": "M",
+      "depends_on_task": [
+        "T-PH001-02"
+      ],
+      "covers_ac": [
+        "AC-7"
+      ],
+      "test_files": [
+        {
+          "path": "packages/editor/test/table-reveal-check.mjs"
+        }
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "refactor",
+        "test_cases": [
+          {
+            "id": "TC-REQ-FR-EDITOR-007-AC7-07",
+            "req_id": "FR-EDITOR-007",
+            "ac_refs": [
+              "AC-7"
+            ],
+            "test_file": "packages/editor/test/table-reveal-check.mjs",
+            "test_symbol": "AC-7 본 판정 — 칸을 클릭하면 구분선 원문이 드러난다",
+            "kind": "e2e",
+            "expected_failure_signature": "구분선 드러나지 않음"
+          },
+          {
+            "id": "TC-REQ-FR-EDITOR-007-AC7-08",
+            "req_id": "FR-EDITOR-007",
+            "ac_refs": [
+              "AC-7"
+            ],
+            "test_file": "packages/editor/test/table-reveal-check.mjs",
+            "test_symbol": "AC-7 본 판정 — 화살표로 표 줄에 내려가면 구분선 원문이 드러난다",
+            "kind": "e2e",
+            "expected_failure_signature": "구분선 드러나지 않음"
+          },
+          {
+            "id": "TC-REQ-FR-EDITOR-007-AC7-09",
+            "req_id": "FR-EDITOR-007",
+            "ac_refs": [
+              "AC-7"
+            ],
+            "test_file": "packages/editor/test/table-reveal-check.mjs",
+            "test_symbol": "보조 — dispatch({selection}) 으로 커서를 놓아도 드러난다 (데코레이션 규칙)",
+            "kind": "e2e",
+            "expected_failure_signature": "구분선 드러나지 않음"
+          }
+        ],
+        "red_evidence": null,
+        "green_evidence": null
+      },
+      "trace_links": [
+        {
+          "link_id": "TL-03",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-03"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "FR-EDITOR-007"
+          },
+          "relation": "depends_on"
+        }
+      ]
+    },
+    {
+      "id": "T-PH002-01",
+      "phase_id": "PH-002",
+      "title": "새 E2E 시험을 회귀 진입점에 등록한다",
+      "type": "code",
+      "req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "files": [
+        {
+          "path": "packages/editor/package.json",
+          "line_range": "13-20"
+        }
+      ],
+      "action": "npm test 는 vitest run 이라 .mjs 를 수집하지 않는다. 등록하지 않으면 AC-7 의 유일한 증거가 어떤 회귀 경로에도 들어가지 않는다. 기존 test:browser · test:browser:headed 와 나란히 test:browser:table · test:browser:table:headed 를 더한다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "npm run test:browser:table",
+          "expected_exit": 0
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/editor && npm run test:browser:table",
+        "windows": "cd packages/editor; npm run test:browser:table"
+      },
+      "dod": [
+        "두 스크립트가 package.json 에 있다",
+        "npm run test:browser:table 이 종료 코드 0 으로 끝난다"
+      ],
+      "rollback": "스크립트 두 줄을 지운다",
+      "estimated_effort": "S",
+      "depends_on_task": [
+        "T-PH001-02"
+      ],
+      "covers_ac": [],
+      "tdd": {
+        "applicable": false,
+        "phase": "n/a",
+        "test_cases": [],
+        "exempt_reason": "package.json 의 스크립트 등록 두 줄이며 제품 실행 동작을 바꾸지 않는다. 등록의 실효는 그 스크립트가 실제로 도는 것으로 확인하며 별도 자동 시험을 세울 대상이 아니다",
+        "red_evidence": null,
+        "green_evidence": null
+      },
+      "trace_links": [
+        {
+          "link_id": "TL-04",
+          "source": {
+            "type": "Task",
+            "id": "T-PH002-01"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "FR-EDITOR-007"
+          },
+          "relation": "depends_on"
+        }
+      ]
+    },
+    {
+      "id": "T-PH002-02",
+      "phase_id": "PH-002",
+      "title": "데모 문구를 바뀐 동작에 맞춘다",
+      "type": "doc",
+      "req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "files": [
+        {
+          "path": "packages/editor/demo/App.tsx",
+          "line_range": "98-100"
+        }
+      ],
+      "action": "데모의 표 fixture 가 「셀을 | 클릭해 보세요」로 칸 클릭 편집을 안내하고 있다. 이제 칸을 누르면 원문이 드러나므로 그 문구를 사실에 맞게 고친다. 표의 데이터 행을 「| 커서를 | 올리면 원문 |」 으로 바꾼다 — 판정이 「올리면 원문」이라는 어구를 찾는다. 「원문」 한 낱말만으로는 판정이 서지 않는다: 그 낱말은 demo/App.tsx 에 이미 한 번 나오므로 고치기 전에도 통과한다.",
+      "acceptance_tests": [
+        {
+          "kind": "checklist",
+          "items": [
+            "demo/App.tsx 의 표 데이터 행이 「올리면 원문」을 담는다",
+            "grep -q '올리면 원문' demo/App.tsx 가 종료 코드 0 (고치기 전에는 1)",
+            "grep -q '클릭해 보세요' demo/App.tsx 가 종료 코드 1",
+            "npm run build 가 종료 코드 0"
+          ]
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/editor && grep -q '올리면 원문' demo/App.tsx && npm run build",
+        "windows": "cd packages/editor; if (Select-String -Path demo/App.tsx -Pattern '올리면 원문' -Quiet) { npm run build } else { exit 1 }"
+      },
+      "dod": [
+        "데모의 표 데이터 행이 「올리면 원문」을 담는다",
+        "옛 문구 「클릭해 보세요」가 남아 있지 않다",
+        "npm run build 가 종료 코드 0 으로 끝난다"
+      ],
+      "rollback": "문자열 한 줄을 되돌린다",
+      "estimated_effort": "S",
+      "depends_on_task": [
+        "T-PH001-02"
+      ],
+      "covers_ac": [],
+      "tdd": {
+        "applicable": false,
+        "phase": "n/a",
+        "test_cases": [],
+        "exempt_reason": "type=doc 이며 데모 안내 문구 한 줄을 사실에 맞추는 작업이다. 문구가 들어갔는지는 checklist 판정과 grep 이 잰다",
+        "red_evidence": null,
+        "green_evidence": null
+      },
+      "trace_links": [
+        {
+          "link_id": "TL-05",
+          "source": {
+            "type": "Task",
+            "id": "T-PH002-02"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "FR-EDITOR-007"
+          },
+          "relation": "depends_on"
+        }
+      ]
+    },
+    {
+      "id": "T-PH002-03",
+      "phase_id": "PH-002",
+      "title": "건너뛴 시험의 주석을 새 검증 경로로 갱신한다",
+      "type": "code",
+      "req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "files": [
+        {
+          "path": "packages/editor/test/live-preview.test.tsx",
+          "line_range": "251-268"
+        }
+      ],
+      "action": "it.skip('AC-7: 표에 커서를 올리면 구분선이 드러난다 …') 는 그대로 둔다 — happy-dom 재진입 문제는 이 작업으로 해소되지 않고 그 주석이 「통과시키려 손대면 재는 대상이 바뀐다」고 경고한 그대로다. 다만 그 앞 주석에 어디서 재고 있는지를 한 줄 더한다: packages/editor/test/table-reveal-check.mjs 가 실제 브라우저에서 이 항을 잰다. 주석 없이 두면 다음 사람이 이 항을 미검증으로 읽는다.",
+      "acceptance_tests": [
+        {
+          "kind": "checklist",
+          "items": [
+            "grep -q table-reveal-check.mjs test/live-preview.test.tsx 가 종료 코드 0 (고치기 전에는 1)",
+            "grep -q it.skip test/live-preview.test.tsx 가 종료 코드 0 — 스킵을 살리지 않았다",
+            "npx vitest run test/live-preview.test.tsx 가 종료 코드 0"
+          ]
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/editor && grep -q table-reveal-check.mjs test/live-preview.test.tsx && grep -q it.skip test/live-preview.test.tsx && NODE_ENV=production npx vitest run test/live-preview.test.tsx",
+        "windows": "cd packages/editor; if (-not (Select-String -Path test/live-preview.test.tsx -Pattern table-reveal-check.mjs -Quiet)) { exit 1 }; $env:NODE_ENV='production'; npx vitest run test/live-preview.test.tsx"
+      },
+      "dod": [
+        "주석이 table-reveal-check.mjs 를 지목한다",
+        "it.skip 이 여전히 skip 이다",
+        "live-preview 시험이 실패 0"
+      ],
+      "rollback": "주석 한 줄을 되돌린다",
+      "estimated_effort": "S",
+      "depends_on_task": [
+        "T-PH001-02"
+      ],
+      "covers_ac": [],
+      "tdd": {
+        "applicable": false,
+        "phase": "n/a",
+        "test_cases": [],
+        "exempt_reason": "시험 파일의 주석만 고친다. 실행 동작을 바꾸지 않으므로 그 변경을 재는 시험을 새로 쓸 수 없고 기존 live-preview 시험이 green 을 유지하는 것으로 충분하다",
+        "red_evidence": null,
+        "green_evidence": null
+      },
+      "trace_links": [
+        {
+          "link_id": "TL-06",
+          "source": {
+            "type": "Task",
+            "id": "T-PH002-03"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "FR-EDITOR-007"
+          },
+          "relation": "depends_on"
+        }
+      ]
+    },
+    {
+      "id": "T-PH002-04",
+      "phase_id": "PH-002",
+      "title": "SRS 를 구현 결과에 정합시킨다",
+      "type": "doc",
+      "req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "files": [
+        {
+          "path": "docs/spec/02.feature-request-live-preview.md"
+        }
+      ],
+      "action": "구현이 끝난 사실을 요구 쪽에 반영한다. docs/spec/*.srs.md 는 손으로 고치지 않고 speckiwi MCP 로만 한다 — 이 wave 에 선언된 제약이며 저장소 CLAUDE.md 의 SRS workflow 절이 같은 것을 규정한다. (1) add_verification_evidence 로 packages/editor/test/table-reveal-check.mjs 를 AC-7 의 증거로 등록한다. (2) check_acceptance_criteria 로 AC-7 을 체크한다. (3) edit_requirement_table_rows 로 VE-4 의 notes 를 갱신한다 — 그 행은 AC-7 이 미구현이라고 적혀 있어 그대로 두면 거짓이 된다. (4) append_section_note 로 Implementation Notes 의 [2026-08-24] 항이 미구현으로 적어 둔 사실을 해소했음을 더한다. (5) docs/spec/02.feature-request-live-preview.md 3.1 의 대상 목록 사본이 이 판정과 어긋나지 않는지 확인하고 어긋나면 고친다 — 이 파일은 scope SRS 가 아니므로 손으로 고쳐도 된다. status 전이(implemented)는 여기서 하지 않는다 — kiwi-pm 의 종료 절차가 소유한다.",
+      "acceptance_tests": [
+        {
+          "kind": "checklist",
+          "items": [
+            "get_requirement('FR-EDITOR-007') 의 AC-7 이 체크됐다",
+            "AC-7 을 covers 하는 Verification Evidence 가 존재한다",
+            "VE-4 의 notes 가 더 이상 AC-7 을 미구현으로 적지 않는다",
+            "validate_spec 오류 0"
+          ]
+        }
+      ],
+      "verification_cmd": null,
+      "dod": [
+        "AC 12개가 전부 체크됐다",
+        "AC-7 의 증거가 새 E2E 파일을 지목한다",
+        "validate_spec 오류 0",
+        "SRS 파일을 손으로 고친 흔적이 없다"
+      ],
+      "rollback": "MCP mutation 은 되돌리기 어렵다. 잘못 쓰면 같은 도구로 값을 바로잡되 새 Change Note 가 남는 것을 감수한다",
+      "estimated_effort": "S",
+      "depends_on_task": [
+        "T-PH001-03"
+      ],
+      "covers_ac": [],
+      "tdd": {
+        "applicable": false,
+        "phase": "n/a",
+        "test_cases": [],
+        "exempt_reason": "speckiwi MCP mutation 으로 요구 문서를 정합시키는 작업이며 제품 코드를 바꾸지 않는다. 결과는 validate_spec 과 get_requirement 로 확인한다",
+        "red_evidence": null,
+        "green_evidence": null
+      },
+      "trace_links": [
+        {
+          "link_id": "TL-07",
+          "source": {
+            "type": "Task",
+            "id": "T-PH002-04"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "FR-EDITOR-007"
+          },
+          "relation": "depends_on"
+        }
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "req_id": "FR-EDITOR-007",
+      "stability": "evolving",
+      "ac_total": 12,
+      "ac_covered": 1,
+      "missing_ac_ids": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-4",
+        "AC-5",
+        "AC-6",
+        "AC-8",
+        "AC-9",
+        "AC-10",
+        "AC-11",
+        "AC-12"
+      ],
+      "covered_tasks": [
+        "T-PH001-01",
+        "T-PH001-02",
+        "T-PH001-03",
+        "T-PH002-01",
+        "T-PH002-02",
+        "T-PH002-03",
+        "T-PH002-04"
+      ],
+      "ac_test_map": [
+        {
+          "ac_id": "AC-7",
+          "test_case_ids": [
+            "TC-REQ-FR-EDITOR-007-AC7-01",
+            "TC-REQ-FR-EDITOR-007-AC7-02",
+            "TC-REQ-FR-EDITOR-007-AC7-03",
+            "TC-REQ-FR-EDITOR-007-AC7-04",
+            "TC-REQ-FR-EDITOR-007-AC7-05",
+            "TC-REQ-FR-EDITOR-007-AC7-06",
+            "TC-REQ-FR-EDITOR-007-AC7-07",
+            "TC-REQ-FR-EDITOR-007-AC7-08",
+            "TC-REQ-FR-EDITOR-007-AC7-09"
+          ]
+        },
+        {
+          "ac_id": "AC-1",
+          "test_case_ids": []
+        },
+        {
+          "ac_id": "AC-2",
+          "test_case_ids": []
+        },
+        {
+          "ac_id": "AC-3",
+          "test_case_ids": []
+        },
+        {
+          "ac_id": "AC-4",
+          "test_case_ids": []
+        },
+        {
+          "ac_id": "AC-5",
+          "test_case_ids": []
+        },
+        {
+          "ac_id": "AC-6",
+          "test_case_ids": []
+        },
+        {
+          "ac_id": "AC-8",
+          "test_case_ids": []
+        },
+        {
+          "ac_id": "AC-9",
+          "test_case_ids": []
+        },
+        {
+          "ac_id": "AC-10",
+          "test_case_ids": []
+        },
+        {
+          "ac_id": "AC-11",
+          "test_case_ids": []
+        },
+        {
+          "ac_id": "AC-12",
+          "test_case_ids": []
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "unreferenced_reqs": [],
+  "excluded_reqs": [],
+  "deferred_ac": [
+    {
+      "req_id": "FR-EDITOR-007",
+      "ac_id": "AC-1",
+      "reason": "이 계획의 범위 밖이다. VE-1 · VE-2 · VE-3 으로 이미 덮여 체크됐으며 미커버가 아니라 이미 커버된 것이다. 이 계획은 그것을 회귀시키지 않는 책임만 진다",
+      "user_decision_id": "planner-auto-2026-08-25"
+    },
+    {
+      "req_id": "FR-EDITOR-007",
+      "ac_id": "AC-2",
+      "reason": "이 계획의 범위 밖이다. VE-1 · VE-2 · VE-3 으로 이미 덮여 체크됐으며 미커버가 아니라 이미 커버된 것이다. 이 계획은 그것을 회귀시키지 않는 책임만 진다",
+      "user_decision_id": "planner-auto-2026-08-25"
+    },
+    {
+      "req_id": "FR-EDITOR-007",
+      "ac_id": "AC-3",
+      "reason": "이 계획의 범위 밖이다. VE-1 · VE-2 · VE-3 으로 이미 덮여 체크됐으며 미커버가 아니라 이미 커버된 것이다. 이 계획은 그것을 회귀시키지 않는 책임만 진다",
+      "user_decision_id": "planner-auto-2026-08-25"
+    },
+    {
+      "req_id": "FR-EDITOR-007",
+      "ac_id": "AC-4",
+      "reason": "이 계획의 범위 밖이다. VE-1 · VE-2 · VE-3 으로 이미 덮여 체크됐으며 미커버가 아니라 이미 커버된 것이다. 이 계획은 그것을 회귀시키지 않는 책임만 진다",
+      "user_decision_id": "planner-auto-2026-08-25"
+    },
+    {
+      "req_id": "FR-EDITOR-007",
+      "ac_id": "AC-5",
+      "reason": "이 계획의 범위 밖이다. VE-1 · VE-2 · VE-3 으로 이미 덮여 체크됐으며 미커버가 아니라 이미 커버된 것이다. 이 계획은 그것을 회귀시키지 않는 책임만 진다",
+      "user_decision_id": "planner-auto-2026-08-25"
+    },
+    {
+      "req_id": "FR-EDITOR-007",
+      "ac_id": "AC-6",
+      "reason": "이 계획의 범위 밖이다. VE-1 · VE-2 · VE-3 으로 이미 덮여 체크됐으며 미커버가 아니라 이미 커버된 것이다. 이 계획은 그것을 회귀시키지 않는 책임만 진다",
+      "user_decision_id": "planner-auto-2026-08-25"
+    },
+    {
+      "req_id": "FR-EDITOR-007",
+      "ac_id": "AC-8",
+      "reason": "이 계획의 범위 밖이다. VE-1 · VE-2 · VE-3 으로 이미 덮여 체크됐으며 미커버가 아니라 이미 커버된 것이다. 이 계획은 그것을 회귀시키지 않는 책임만 진다",
+      "user_decision_id": "planner-auto-2026-08-25"
+    },
+    {
+      "req_id": "FR-EDITOR-007",
+      "ac_id": "AC-9",
+      "reason": "이 계획의 범위 밖이다. VE-1 · VE-2 · VE-3 으로 이미 덮여 체크됐으며 미커버가 아니라 이미 커버된 것이다. 이 계획은 그것을 회귀시키지 않는 책임만 진다",
+      "user_decision_id": "planner-auto-2026-08-25"
+    },
+    {
+      "req_id": "FR-EDITOR-007",
+      "ac_id": "AC-10",
+      "reason": "이 계획의 범위 밖이다. VE-1 · VE-2 · VE-3 으로 이미 덮여 체크됐으며 미커버가 아니라 이미 커버된 것이다. 이 계획은 그것을 회귀시키지 않는 책임만 진다",
+      "user_decision_id": "planner-auto-2026-08-25"
+    },
+    {
+      "req_id": "FR-EDITOR-007",
+      "ac_id": "AC-11",
+      "reason": "이 계획의 범위 밖이다. VE-1 · VE-2 · VE-3 으로 이미 덮여 체크됐으며 미커버가 아니라 이미 커버된 것이다. 이 계획은 그것을 회귀시키지 않는 책임만 진다",
+      "user_decision_id": "planner-auto-2026-08-25"
+    },
+    {
+      "req_id": "FR-EDITOR-007",
+      "ac_id": "AC-12",
+      "reason": "이 계획의 범위 밖이다. VE-1 · VE-2 · VE-3 으로 이미 덮여 체크됐으며 미커버가 아니라 이미 커버된 것이다. 이 계획은 그것을 회귀시키지 않는 책임만 진다",
+      "user_decision_id": "planner-auto-2026-08-25"
+    }
+  ],
+  "risks": [
+    {
+      "id": "R-01",
+      "severity": "high",
+      "description": "순수 선택 판정으로 구현하면 __tests__/read-only.test.tsx 가 죽는다 — 그 fixture 는 문서 전체가 표라 기본 선택 위치 0 이 곧 표 안이다",
+      "mitigation": "초점 게이팅(view.hasFocus && !readOnly)을 필수 제약으로 못박았다. T-PH001-03 의 탐침 (3) 이 이 축을 직접 확인한다",
+      "affected_task_ids": [
+        "T-PH001-02",
+        "T-PH001-03"
+      ]
+    },
+    {
+      "id": "R-02",
+      "severity": "high",
+      "description": "데코레이션만 고치고 커서 진입 경로를 세우지 않으면 AC-7 이 성립하지 않는다 — ignoreEvent() 가 무조건 참이라 칸을 눌러도 커서가 표 밖에 남는다",
+      "mitigation": "커서 진입을 T-PH001-02 의 넷째 항으로 세우되 수단을 못박았다 — mermaid-blocks.ts 선례와 같은 뜻이되 mousedown·click 으로 한정해 연다(표는 안에 편집 서브시스템이 있어 모든 이벤트를 열면 칸 초점 상태의 키 입력이 문서로 샌다). E2E 본 판정을 실제 제스처로 잡았고 T-PH001-03 의 탐침 (4) 가 두 판정이 서로 다른 축을 잰다는 것을 확인한다",
+      "affected_task_ids": [
+        "T-PH001-01",
+        "T-PH001-02",
+        "T-PH001-03"
+      ]
+    },
+    {
+      "id": "R-06",
+      "severity": "high",
+      "description": "칸 안에서 손으로 selection 을 dispatch 하면 초점이 칸의 contenteditable 로 가 view.hasFocus 가 거짓이 되고, 초점 게이팅이 노출을 막아 판정이 영영 green 이 되지 않는다",
+      "mitigation": "그 길을 계획 1.4 와 T-PH001-02 에서 명시적으로 금지하고 ignoreEvent 를 여는 선례를 지목했다",
+      "affected_task_ids": [
+        "T-PH001-02"
+      ]
+    },
+    {
+      "id": "R-08",
+      "severity": "med",
+      "description": "블록 대체 범위로 화살표가 진입하지 못하면 E2E 판정 (3) 이 서지 않아 T-PH001-02 가 막힌다. FR-EDITOR-007 의 Implementation Notes 가 위젯이 원자적이라 화살표 키도 표를 건너뛴다고 적어 두었다",
+      "mitigation": "분기 조건을 미리 고정한다. (a) 화살표가 표 범위의 경계에 떨어져도 경계를 포함하는 겹침 판정(code-blocks.ts:66-67 의 range.from <= to && range.to >= from)으로 노출이 서는지 먼저 잰다 — 서면 그것으로 족하다. (b) 서지 않으면 keymap 을 새로 만들지 않고 판정 (3) 을 AC-7 본 판정에서 내려 계획 5.4 에 사유와 함께 남긴 뒤 판정 (2)(칸 클릭)로 AC-7 을 닫는다. 어느 쪽인지는 코더가 아니라 이 조건이 정한다",
+      "affected_task_ids": [
+        "T-PH001-01",
+        "T-PH001-02"
+      ]
+    },
+    {
+      "id": "R-07",
+      "severity": "med",
+      "description": "3399 에 뜨는 것이 둘이라(루트 npm run dev 는 web 앱) 시험이 엉뚱한 화면에 붙어 실패를 AC-7 실패로 오독할 수 있다",
+      "mitigation": "기동 명령을 npm run dev --workspace @doculight/editor 로 고정하고, 시험이 .demo-toggle 로 화면 정체를 스스로 확인한 뒤에만 판정하게 했다",
+      "affected_task_ids": [
+        "T-PH001-01",
+        "T-PH002-01"
+      ]
+    },
+    {
+      "id": "R-03",
+      "severity": "med",
+      "description": "새 E2E 시험이 아무것도 재지 않을 수 있다. 2026-08-24 회차에 실제로 그런 시험 둘이 나왔다",
+      "mitigation": "T-PH001-03 이 뮤테이션 탐침을 전용 Task 로 세웠다",
+      "affected_task_ids": [
+        "T-PH001-01",
+        "T-PH001-03"
+      ]
+    },
+    {
+      "id": "R-04",
+      "severity": "med",
+      "description": "새 E2E 가 회귀에 등록되지 않으면 AC-7 의 유일한 증거가 어느 회귀 경로에도 들어가지 않는다 — npm test 는 vitest run 이라 .mjs 를 수집하지 않는다",
+      "mitigation": "T-PH002-01 이 package.json 스크립트 등록을 전용 Task 로 세웠다",
+      "affected_task_ids": [
+        "T-PH002-01"
+      ]
+    },
+    {
+      "id": "R-05",
+      "severity": "low",
+      "description": "표는 doculight-extensions.ts 가 아니라 vendor 의 AtomicCodeMirrorEditor.tsx 가 직접 조립한다 — 벤더 경계가 다른 요소와 다르게 그어져 있다",
+      "mitigation": "vendor 파일을 고치는 것이 이 작업의 전제임을 계획 1.4 에 적었다. tables() 가 Extension 을 돌려주므로 조립 지점은 바꾸지 않는다",
+      "affected_task_ids": [
+        "T-PH001-02"
+      ]
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "OQ-01",
+      "question": "T-PH002-03 의 windows 명령에 it.skip 존치 판정이 빠져 있다 — posix 쪽에는 있다",
+      "blocks_task_ids": []
+    },
+    {
+      "id": "OQ-02",
+      "question": "R-08 의 분기 (b) 를 택하면 T-PH001-01 의 dod 와 T-PH001-02 의 acceptance 를 어떻게 조정하는지 절차가 없다",
+      "blocks_task_ids": []
+    },
+    {
+      "id": "OQ-03",
+      "question": "T-PH001-03 탐침 (5) 의 키 입력이 문서를 건드리는지를 무엇으로 재는지 지정하지 않았다",
+      "blocks_task_ids": []
+    }
+  ],
+  "external_module_impact": [],
+  "tdd_decisions": [
+    {
+      "task_id": "T-PH002-01",
+      "decision": "accept-as-exempt",
+      "reason": "package.json 의 스크립트 등록 두 줄이며 제품 실행 동작을 바꾸지 않는다. 등록의 실효는 그 스크립트가 실제로 도는 것으로 확인하며 별도 자동 시험을 세울 대상이 아니다",
+      "user_decision_id": "planner-auto-2026-08-25",
+      "decided_at": "2026-08-25T00:00:00Z"
+    },
+    {
+      "task_id": "T-PH002-02",
+      "decision": "accept-as-exempt",
+      "reason": "type=doc 이며 데모 안내 문구 한 줄을 사실에 맞추는 작업이다. 문구가 들어갔는지는 checklist 판정과 grep 이 잰다",
+      "user_decision_id": "planner-auto-2026-08-25",
+      "decided_at": "2026-08-25T00:00:00Z"
+    },
+    {
+      "task_id": "T-PH002-03",
+      "decision": "accept-as-exempt",
+      "reason": "시험 파일의 주석만 고친다. 실행 동작을 바꾸지 않으므로 그 변경을 재는 시험을 새로 쓸 수 없고 기존 live-preview 시험이 green 을 유지하는 것으로 충분하다",
+      "user_decision_id": "planner-auto-2026-08-25",
+      "decided_at": "2026-08-25T00:00:00Z"
+    },
+    {
+      "task_id": "T-PH002-04",
+      "decision": "accept-as-exempt",
+      "reason": "speckiwi MCP mutation 으로 요구 문서를 정합시키는 작업이며 제품 코드를 바꾸지 않는다. 결과는 validate_spec 과 get_requirement 로 확인한다",
+      "user_decision_id": "planner-auto-2026-08-25",
+      "decided_at": "2026-08-25T00:00:00Z"
+    }
+  ],
+  "coder_handoff_readiness": [
+    {
+      "phase_id": "PH-001",
+      "ready": true,
+      "blockers": []
+    },
+    {
+      "phase_id": "PH-002",
+      "ready": true,
+      "blockers": []
+    }
+  ],
+  "mcp_call_log": [
+    {
+      "seq": 1,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-01"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "FR-EDITOR-007"
+        },
+        "relation": "depends_on"
+      },
+      "args_hash": "2f871e9e54f7c05ef593c0c351a8753049b6636d",
+      "response_hash": null,
+      "timestamp": "2026-08-25T00:00:00Z",
+      "ok": null
+    },
+    {
+      "seq": 2,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-02"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "FR-EDITOR-007"
+        },
+        "relation": "depends_on"
+      },
+      "args_hash": "0e22cb6ef7227f7dba146d92b173a6fc53af975a",
+      "response_hash": null,
+      "timestamp": "2026-08-25T00:00:00Z",
+      "ok": null
+    },
+    {
+      "seq": 3,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-03"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "FR-EDITOR-007"
+        },
+        "relation": "depends_on"
+      },
+      "args_hash": "2f78fbc1a8dd8dd4f03ffa6de8270144119ab827",
+      "response_hash": null,
+      "timestamp": "2026-08-25T00:00:00Z",
+      "ok": null
+    },
+    {
+      "seq": 4,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH002-01"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "FR-EDITOR-007"
+        },
+        "relation": "depends_on"
+      },
+      "args_hash": "8298f2f66b32938c611259947be733ddceabc6bf",
+      "response_hash": null,
+      "timestamp": "2026-08-25T00:00:00Z",
+      "ok": null
+    },
+    {
+      "seq": 5,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH002-02"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "FR-EDITOR-007"
+        },
+        "relation": "depends_on"
+      },
+      "args_hash": "c8112498c26cb6790e63133b639617605fbffaf5",
+      "response_hash": null,
+      "timestamp": "2026-08-25T00:00:00Z",
+      "ok": null
+    },
+    {
+      "seq": 6,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH002-03"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "FR-EDITOR-007"
+        },
+        "relation": "depends_on"
+      },
+      "args_hash": "9673c818bc5b5b0747468377c2749a7be3e6cb81",
+      "response_hash": null,
+      "timestamp": "2026-08-25T00:00:00Z",
+      "ok": null
+    },
+    {
+      "seq": 7,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH002-04"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "FR-EDITOR-007"
+        },
+        "relation": "depends_on"
+      },
+      "args_hash": "f156c57acd57055e738ecd3316c0ce25e731dda9",
+      "response_hash": null,
+      "timestamp": "2026-08-25T00:00:00Z",
+      "ok": null
+    },
+    {
+      "seq": 8,
+      "call": "add_verification_evidence",
+      "args": {
+        "id": "FR-EDITOR-007",
+        "type": "plan",
+        "reference": "docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md#T-PH001-02"
+      },
+      "args_hash": "1a5dd6ceca52e59cf81a8c7f9fc1d406309029fb",
+      "response_hash": null,
+      "timestamp": "2026-08-25T00:00:00Z",
+      "ok": null
+    }
+  ]
+}

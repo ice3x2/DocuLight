@@ -1,0 +1,6 @@
+{
+  "mcp": true,
+  "cli": null,
+  "halted": false,
+  "note": "MCP get_active_target 성공 — CLI 폴백 불필요"
+}

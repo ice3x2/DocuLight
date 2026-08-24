@@ -1,0 +1,64 @@
+{
+  "req_inventory": [
+    {
+      "req_id": "FR-EDITOR-007",
+      "stability": "evolving",
+      "status": "in_progress",
+      "ac_total": 12,
+      "ac_ids": ["AC-1", "AC-2", "AC-3", "AC-4", "AC-5", "AC-6", "AC-7", "AC-8", "AC-9", "AC-10", "AC-11", "AC-12"],
+      "ac_checked": ["AC-1", "AC-2", "AC-3", "AC-4", "AC-5", "AC-6", "AC-8", "AC-9", "AC-10", "AC-11", "AC-12"],
+      "ac_unchecked": ["AC-7"],
+      "files_from_trace": [
+        "packages/editor/test/live-preview.test.tsx",
+        "packages/editor/test/tags.test.ts",
+        "packages/editor/test/math-blocks.test.ts",
+        "docs/analysis/2026-08-25.browser-manual-verification/README.md",
+        "vendor/atomic-editor/table-widget.ts",
+        "packages/editor/(code-blocks.ts, math-blocks.ts as reference patterns)"
+      ],
+      "depends_on": ["CON-EDITOR-002"],
+      "feasibility_hint": "medium"
+    },
+    {
+      "req_id": "FR-EDITOR-003",
+      "stability": "stable",
+      "status": "implemented",
+      "ac_total": 3,
+      "ac_ids": ["AC-1", "AC-2", "AC-3"],
+      "ac_checked": [],
+      "ac_unchecked": ["AC-1", "AC-2", "AC-3"],
+      "files_from_trace": [
+        "packages/web/test/document-surface.test.tsx",
+        "packages/web/test/surface-gaps.test.tsx"
+      ],
+      "depends_on": ["FR-EDITOR-002"],
+      "feasibility_hint": "unknown"
+    },
+    {
+      "req_id": "CON-EDITOR-002",
+      "stability": "evolving",
+      "status": "implemented",
+      "ac_total": 4,
+      "ac_ids": ["AC-1", "AC-2", "AC-3", "AC-4"],
+      "ac_checked": [],
+      "ac_unchecked": ["AC-1", "AC-2", "AC-3", "AC-4"],
+      "files_from_trace": [
+        "packages/server/test/app/document/link-service.test.ts",
+        "packages/editor/test/wiki-link-insert.test.ts",
+        "packages/editor/test/phase1-scope.test.ts"
+      ],
+      "depends_on": [],
+      "feasibility_hint": "unknown"
+    }
+  ],
+  "dependency_graph": [
+    { "from": "FR-EDITOR-007", "to": "CON-EDITOR-002" }
+  ],
+  "neighbors_at_risk": [
+    {
+      "req_id": "FR-EDITOR-003",
+      "why": "FR-EDITOR-003 AC-2는 '소스 모드에서 표 구분선과 각주 정의가 원문 그대로 보이고 편집할 수 있다'를 요구하며, 그 VE-1 노트는 이 AC를 뮤테이션 시험 둘로 지킨다 — 칸을 읽기 전용으로 만들거나 표 기호를 지우면 시험이 죽는다. FR-EDITOR-007 AC-7 구현 노트는 code-blocks.ts의 selectionTouches 패턴을 vendor/atomic-editor/table-widget.ts(현재 각 칸을 contenteditable로 만드는 원자적 WYSIWYG 위젯)에 세우되 '기존 칸 편집 기능과 어느 쪽이 우선인지를 먼저 정해야 한다'고 명시한다. table-widget.ts가 라이브 프리뷰와 소스 모드에서 공유되는 구현이라면, 라이브 프리뷰용 데코레이션 노출 로직을 추가하다가 소스 모드의 칸 편집 가능성(contenteditable) 또는 표 기호 노출을 훼손할 위험이 있다."
+    }
+  ],
+  "notes": "FR-EDITOR-007은 열 가지 라이브 프리뷰 대상 중 AC-7(표)만 미체크 상태다. VE-4(2026-08-25 브라우저 수동 검증)가 원인을 명확히 진단했다: 다른 아홉 요소(code-blocks.ts, math-blocks.ts 등)는 selectionTouches로 커서 접촉 시 데코레이션을 걷는 경로를 쓰지만, 표는 vendor/atomic-editor/table-widget.ts의 원자적 WYSIWYG 위젯(칸마다 contenteditable)이라 그 경로가 없다. Implementation Notes는 이 구현 시 '기존 칸 편집 기능과 어느 쪽이 우선인지를 먼저 정해야 한다'고 명시적으로 경고했다 — 이는 FR-EDITOR-003 AC-2(소스 모드 표 칸 편집 가능성)와 직접 충돌 가능한 지점이다. CON-EDITOR-002는 Phase 1 범위를 '편집·렌더링 경험과 링크 계열'로 고정하는 상위 제약이며 FR-EDITOR-007이 이를 refines하지만, CON-EDITOR-002 자신의 AC(위키링크·백링크·아웃고잉·태그)는 표 칸 편집과 무관해 직접적 파손 위험은 낮다. EDITOR scope 13건 전수(list_requirements)를 훑었을 때 표 위젯을 별도로 다루는 다른 요구는 없었다 — table-widget.ts는 SRS상 FR-EDITOR-007 AC-7에만 귀속된 구현물로 보이며, 위험은 오직 FR-EDITOR-003 AC-2와의 공유 구현 경계에서 발생한다."
+}

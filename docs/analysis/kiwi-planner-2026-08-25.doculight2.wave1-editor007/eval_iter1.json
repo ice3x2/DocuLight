@@ -1,0 +1,56 @@
+{
+  "findings": [
+    {
+      "axis": "A4",
+      "severity": "CRITICAL",
+      "req_id": "FR-EDITOR-007",
+      "task_id": "T-PH001-02",
+      "evidence_path": "packages/editor/src/vendor/atomic-editor/table-widget.ts:708",
+      "summary": "T-PH001-02 는 데코레이션을 걷는 절반만 세우고 커서가 표 범위로 들어가는 경로를 세우지 않아 covers_ac:[AC-7] 이 과장이다.",
+      "what_is_wrong": "AC-7 이 성립하려면 (a) 선택이 표 줄 범위와 겹칠 때 Decoration.replace 를 만들지 않는 것과 (b) 사용자가 실제로 그 표 줄에 커서를 놓을 수 있는 것, 둘 다 필요하다. T-PH001-02 의 action 은 (a) 만 다룬다. 실측으로 (b) 는 현재 성립하지 않는다 — TableWidget.ignoreEvent() 가 table-widget.ts:708 에서 무조건 true 를 돌려주며 주석이 그 이유를 'tell CM6 to stay out of events within the widget so its own selection/click logic doesn't compete with contenteditable' 라고 적고 있다. 즉 칸을 클릭해도 CM6 의 state.selection 은 표 밖에 그대로 있다. 칸 편집 경로의 dispatch 세 자리(table-widget.ts:936 · 1087 · 1132)는 모두 changes: 만 보내고 selection 을 옮기지 않는다. 화살표 키에 대해서도 SRS 의 VE-4 가 '커서를 표 안으로 넣는 수단 셋(셀 클릭 · 아래 화살표 · 위 화살표)을 모두 시도했으나 어느 것도 구분선을 드러내지 않았다', Implementation Notes 가 '위젯이 원자적이라 화살표 키도 표를 건너뛴다' 고 적어 두었다. 계획은 이 축을 files[] 에도 action 에도 §5 위험에도 올리지 않았다. 더 나아가 계획 §1.4 가 스스로 확정한 결정('라이브 프리뷰에서는 원문 노출이 칸 직접 편집보다 우선한다')은 바로 이 클릭 경로를 바꾸라는 뜻인데, T-PH001-02 는 ignoreEvent 와 칸 contenteditable 을 그대로 둔다 — 계획이 자기 결정을 구현 Task 로 옮기지 않았다.",
+      "how_to_fix": "T-PH001-02 의 files[] 에 table-widget.ts 의 TableWidget.ignoreEvent()(708행 부근)와 makeCell/attachCellEditing 의 pointerdown 경로를 추가하고, action 에 '칸을 클릭하면 그 칸에 해당하는 문서 위치로 state.selection 을 dispatch 한다(또는 위젯을 CM6 의 선택 처리에 넘긴다)' 를 넷째 항으로 명시하라. 화살표 키로도 표 범위에 들어갈 수 있는지 실측해 안 되면 그 축도 Task 로 세우라. 그럴 수 없다면 covers_ac 를 낮추고 AC-7 의 미달 절반을 §5.4 deferred_ac 로 정직하게 옮기라."
+    },
+    {
+      "axis": "A12",
+      "severity": "CRITICAL",
+      "req_id": "FR-EDITOR-007",
+      "task_id": "T-PH001-01",
+      "evidence_path": "packages/editor/test/browser-check.mjs:60",
+      "summary": "AC-7 의 유일한 test_case 가 사용자 제스처가 아니라 dispatch({selection}) 로 커서를 넣어, AC-7 의 '커서를 올리면' 을 재지 못한다.",
+      "what_is_wrong": "AC-7 의 문면은 '그 줄에 커서를 올리면 원문이 드러난다' 이고 요구의 Verification Method 는 'Playwright E2E' 다. 그런데 T-PH001-01 의 action 은 '커서를 옮기는 수단은 클릭이 아니라 EditorView 의 dispatch({selection}) 로 한다' 로 못박았고, 사이드카의 TC-REQ-FR-EDITOR-007-AC7-01/02/03 이 모두 그 파일 하나만 가리킨다. 이 수단은 위 A4 finding 이 지목한 '커서가 표에 들어갈 수 없다' 는 결함을 구조적으로 우회하므로, 시험 셋이 전건 green 이 되어도 사용자는 여전히 표의 원문을 볼 수 없다 — 즉 AC-7 은 미달인 채 체크될 수 있다. 저장소 선례는 반대로 되어 있다: 같은 모양의 항(SDS-AC-2)을 재는 browser-check.mjs:60 은 page.locator('.dl-mermaid').first().click() 이라는 실제 제스처로 커서를 넣고 원문 노출을 잰다. 계획은 이 선례를 '모양을 그대로 따라' 라고 인용하면서 정작 판정의 핵심인 제스처만 바꿨다. T-PH001-03 의 뮤테이션 탐침 셋도 모두 데코레이션 로직만 되돌리므로 이 구멍을 잡지 못한다.",
+      "how_to_fix": "table-reveal-check.mjs 의 판정 ② 를 사용자 제스처(칸 클릭 또는 표 위/아래 줄에서의 화살표 이동)로 커서를 넣는 것으로 바꾸고, dispatch({selection}) 판정은 유지하되 '데코레이션 규칙' 을 재는 보조 판정으로 분리해 이름을 구분하라. 제스처판이 지금 상태에서 FAIL 하는 것이 이 계획의 진짜 red 다."
+    },
+    {
+      "axis": "A8",
+      "severity": "MEDIUM",
+      "req_id": "FR-EDITOR-007",
+      "task_id": "T-PH001-01",
+      "evidence_path": "packages/editor/vite.config.ts:44",
+      "summary": "'3399 는 web 앱의 것' 이라는 포트 근거가 사실과 다르다 — 3399 는 editor 데모 자신의 vite 포트다.",
+      "what_is_wrong": "T-PH001-01 의 action 은 '3399 는 web 앱의 것이고 이 시험은 editor 데모를 띄우므로 다른 포트를 쓴다(그 사유를 파일 머리에 적는다)' 라고 적었다. 실측은 반대다. packages/editor/vite.config.ts 의 server.port 가 3399 이고, 저장소의 기존 브라우저 시험 browser-check.mjs 는 http://localhost:3399/ 를 열어 graph TD · sequenceDiagram · pie showData · classDiagram · const notMermaid = true; 를 찾는데, 이 문자열들은 저장소 전체에서 packages/editor/demo/App.tsx 에만 있다. 즉 3399 에 뜨는 것은 editor 데모다(packages/web/vite.config.ts 도 우연히 같은 3399 를 쓰지만 둘을 동시에 띄우지 않는다). 프로젝트 CLAUDE.md 는 '기본 dev-server 포트는 3399 (packages/editor …). 사유 없이 다른 포트를 쓰지 말라' 고 규정하는데, 계획이 댄 사유가 거짓이므로 규약 이탈의 근거가 서지 않는다. 또한 'browser-check.mjs 의 모양을 그대로 따라' 라고 하면서 자체 vite 기동/종료를 넣는 것은 선례와 다른 구조다 — browser-check.mjs 는 서버를 띄우지 않고 이미 떠 있는 것에 붙는다.",
+      "how_to_fix": "포트 근거를 사실로 교체하라. 자체 서버 기동을 유지하려면 사유를 '이미 뜬 3399 와 충돌하지 않게 임의 포트로 격리한다' 처럼 실제 이유로 바꾸고, 아니면 browser-check.mjs 와 같이 EDITOR_URL 기본 3399 에 붙는 형태로 맞추라."
+    },
+    {
+      "axis": "A10",
+      "severity": "MEDIUM",
+      "req_id": "FR-EDITOR-007",
+      "task_id": "T-PH002-01",
+      "evidence_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.sidecar.json",
+      "summary": "T-PH002-01 의 acceptance_test 는 변경 전에도 참이라 아무것도 재지 않고, dod 의 'npm run build 가 통과한다' 는 실행할 명령이 없다.",
+      "what_is_wrong": "acceptance_tests 가 {kind: file_state, path: packages/editor/demo/App.tsx, exists: true} 하나뿐이다. 그 파일은 이 Task 를 하지 않아도 이미 존재하므로(162행 실존) 이 판정은 실패할 수 없고, 문구를 고쳤는지 여부와 무관하게 통과한다. 동시에 dod 는 'npm run build 가 통과한다' 를 요구하는데 verification_cmd 가 null 이라 그것을 확인할 명령이 계획 어디에도 없다. dod '데모 문구가 새 동작을 안내한다' 도 검증 가능한 명제가 아니다 — 어떤 문자열이 들어가야 참인지 계획이 말하지 않는다.",
+      "how_to_fix": "acceptance_test 를 file_state 의 content_regex(예: 새 안내 문구의 핵심 어구) 또는 shell 판정으로 바꾸어 변경 전에는 실패하게 하고, verification_cmd 에 npm run build(또는 packages/editor 의 build) 를 채워라."
+    },
+    {
+      "axis": "A9",
+      "severity": "LOW",
+      "req_id": "FR-EDITOR-007",
+      "task_id": null,
+      "evidence_path": "packages/editor/package.json:13",
+      "summary": "새 E2E 를 회귀 진입점에 등록하는 Task 와 SRS 사후 정합(AC-7 체크 · VE 추가 · VE-4 주석 갱신) Task 가 둘 다 없다.",
+      "what_is_wrong": "① packages/editor/package.json 은 browser-check.mjs 를 test:browser / test:browser:headed 스크립트로 등록해 두었는데, 계획은 table-reveal-check.mjs 에 대해 그런 등록 Task 를 두지 않았다. npm test 는 vitest run 이라 .mjs 를 수집하지 않으므로, T-PH001-03 의 verification_cmd(npm test) 를 포함한 어떤 회귀 경로도 이 새 시험을 돌리지 않는다 — AC-7 의 유일한 증거가 회귀에서 빠진다. ② FR-EDITOR-007 의 AC-7 체크박스, 새 브라우저 시험을 가리키는 Verification Evidence 추가, 그리고 'AC-7 은 미구현' 이라고 적힌 VE-4 와 Implementation Notes [2026-08-24] 항의 사후 정합을 맡는 Task 가 없다. Implementation Notes ④ 가 지목한 docs/spec/02.feature-request-live-preview.md §3.1 사본 갱신도 계획에 없다.",
+      "how_to_fix": "PH-002 에 (a) package.json 에 test:browser:table 류 스크립트를 등록하는 Task 와 (b) 구현 종료 후 speckiwi MCP 로 AC-7 체크 · VE 추가 · VE-4/Implementation Notes 정합을 수행하는 Task 를 추가하라. (b) 를 kiwi-pm 종료 절차가 대신한다면 계획 본문에 그 사실을 명시하라."
+    }
+  ],
+  "summary": { "critical": 2, "high": 0, "medium": 2, "low": 1 },
+  "pass": false
+}
