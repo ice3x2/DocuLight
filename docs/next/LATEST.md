@@ -1,3 +1,3 @@
 # 최신 핸드오프
 
-`C:\Work\git\DocuLight2.0\docs\next\2026-08-24-audit-fixes-and-evidence-sweep.md` — 2026-08-24 작성 · 목표: 적대 검증이 드러낸 무기록·죽은 컨트롤 결함을 고치고 phase-1 요구를 implemented 217 까지 올린다
+`C:\Work\git\DocuLight2.0\docs\next\2026-08-24-wave-master-remaining-phase1.md` — 2026-08-24 작성 · 목표: phase-1 의 남은 요구 15건을 wave-master 로 완주해 원장 §4 Phase 1 수용 기준 13개를 전건 통과시킨다
