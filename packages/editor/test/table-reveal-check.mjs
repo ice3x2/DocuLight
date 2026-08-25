@@ -16,13 +16,13 @@
 // include 는 `.mjs` 를 잡지 않고, 이 저장소에는 CI 가 없다(`.github/` 자체가
 // 없다). 그러니 표·라이브 프리뷰·위젯 높이에 닿는 변경을 낸 사람이 커밋 전에
 // 데브 서버를 띄운 채 저장소 루트에서 `npm run test:browser:all` 로 브라우저
-// 시험 셋(mermaid·이 시험·heightmap 어긋남)을 한 번에 돌린다. 앞 시험이
+// 시험 넷(mermaid·이 시험·heightmap 어긋남·태그 칩)을 한 번에 돌린다. 앞 시험이
 // 실패하면 뒤가 돌지 않고 종료 코드가 그대로 전파된다.
 //
 // 브라우저를 띄우고 데모에 붙고 판정을 집계하는 기계장치는
 // `_browser-harness.mjs` 에 있다. 이 파일에는 무엇을 재는지만 남는다.
 
-import { VIEW, openDemo, runBrowserChecks, unmeasurable } from './_browser-harness.mjs';
+import { VIEW, openDemo, runBrowserChecks, unmeasurable, waitUntil } from './_browser-harness.mjs';
 
 // 표의 구분선 원문. 문서 전체에서 이 토막은 표 구분선 한 줄에만 있고,
 // 위젯이 선 동안에는 위젯 DOM 어디에도 나타나지 않는다(칸은 `data-raw` 와
@@ -104,16 +104,11 @@ await runBrowserChecks(async ({ page, check, note, beginMeasuring }) => {
   }
 
   // 조건이 설 때까지 짧게 기다린다. 서면 즉시 돌아오고, 서지 않으면 상한까지만
-  // 기다린다 — 통과는 빠르고 실패는 일정하다.
-  async function waitForRevealed(timeoutMs = 1500) {
-    const deadline = Date.now() + timeoutMs;
-    for (;;) {
-      const s = await snapshot();
-      if (s.revealed) return s;
-      if (Date.now() >= deadline) return s;
-      await page.waitForTimeout(100);
-    }
-  }
+  // 기다린다 — 통과는 빠르고 실패는 일정하다. (폴링 자체는 하네스의
+  // `waitUntil` 이 한다. 이 시험이 먼저 쓰던 손수 만든 루프를 그리로 합쳤다 —
+  // 같은 것이 두 벌이면 한쪽만 고쳐진다.)
+  const waitForRevealed = (timeout = 1500) =>
+    waitUntil(snapshot, (s) => s.revealed, { timeout });
 
   // 커서를 표 밖으로 빼는 실제 제스처. 표 위의 인용문을 누른다.
   async function clickAboveTable() {
@@ -131,7 +126,21 @@ await runBrowserChecks(async ({ page, check, note, beginMeasuring }) => {
   await bringTableIntoView();
   await clickAboveTable();
   await bringTableIntoView();
-  const idle = await snapshot();
+  // 초점이 실제로 붙고 표 위젯이 마운트될 때까지 기다린 뒤에 읽는다.
+  //
+  // 둘 다 비동기로 선다. 초점은 CM6 가 `setTimeout(..., 10)` 뒤에 트랜잭션으로
+  // 발행하고(`updateForFocusChange`), 위젯은 스크롤 뒤 가상화가 다시 돌아야
+  // 선다. 고정 대기로 재면 그 사이에 걸린다 — 무변경 트리 8회 중 1회가 이
+  // 자리에서 「초점 false, 위젯 0개」로 실패했다.
+  //
+  // **`revealed` 는 기다리지 않는다.** 그것이 이 항이 재는 성질이므로, 그것이
+  // 설 때까지 기다리면 잠깐 드러났다 사라지는 상태도 통과가 된다. 기다리는
+  // 것은 판정의 **전제**뿐이다 — 초점이 없으면 표는 애초에 드러나지 않아
+  // 이 항이 공허해지고(아래 주석), 위젯이 없으면 잴 것이 없다.
+  //
+  // 두 전제는 아래 단언에 그대로 남아 있다. 끝내 서지 않으면 상한만큼 늦게,
+  // 그러나 똑같이 실패한다.
+  const idle = await waitUntil(snapshot, (s) => s.focused && s.widgets >= 1);
   check(
     '① 숨는 절반 — 초점이 있고 커서가 표 밖이면 위젯이 서고 구분선 원문이 보이지 않는다',
     idle.focused && idle.widgets >= 1 && !idle.revealed,

@@ -29,7 +29,7 @@
 // 명시적으로 `unmeasurable()` 을 부르는 자리(줄이 화면 밖이다, fixture 가 문서에
 // 없다). 그 밖의 예상 못 한 예외는 전부 1 로 나간다 — 그 자리에서 2 를 돌려주면
 // 회귀가 「환경 탓」으로 조용히 묻힌다. 그 경계를 긋는 것이 `beginMeasuring()`
-// 이고, 이 시험은 나머지 두 시험과 같은 자리에서 — 화면에 붙기 전에 — 긋는다.
+// 이고, 이 시험은 나머지 세 시험과 같은 자리에서 — 화면에 붙기 전에 — 긋는다.
 //
 // 사용: npm run dev --workspace @doculight/editor 로 데모를 띄운 뒤
 //       node test/heightmap-drift-check.mjs [--headed]
@@ -37,7 +37,7 @@
 // 브라우저를 띄우고 데모에 붙고 판정을 집계하는 기계장치는
 // `_browser-harness.mjs` 에 있다. 이 파일에는 무엇을 재는지만 남는다.
 
-import { VIEW, openDemo, runBrowserChecks, unmeasurable } from './_browser-harness.mjs';
+import { VIEW, openDemo, runBrowserChecks, unmeasurable, waitUntil } from './_browser-harness.mjs';
 
 // heightmap 과 DOM 좌표의 허용 차. 반올림 한 픽셀까지만 봐준다 — 이 시험이
 // 잡은 재발이 38px 이었고, 되돌아오는 여백은 언제나 이보다 훨씬 크다.
@@ -60,9 +60,9 @@ await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
   // 그 밖의 예외는 여기서부터 전부 실패다. 위젯이 서지 않아 mermaid 를
   // 기다리다 시간이 다하거나 CM 의 뷰를 DOM 에서 되찾지 못하는 것은 환경
   // 사고가 아니라 회귀이고, 그것을 2 로 돌려주면 회귀가 「데브 서버 탓」으로
-  // 조용히 묻힌다. 나머지 두 시험(`browser-check` · `table-reveal-check`)이
-  // 긋는 경계도 같은 자리다 — 갈라 두면 같은 조건이 파일마다 다른 종료
-  // 코드로 끝난다.
+  // 조용히 묻힌다. 나머지 세 시험(`browser-check` · `table-reveal-check` ·
+  // `tag-chip-check`)이 긋는 경계도 같은 자리다 — 갈라 두면 같은 조건이
+  // 파일마다 다른 종료 코드로 끝난다.
   beginMeasuring();
 
   // --- 붙은 화면이 editor 데모인지 먼저 확인한다. 아니면 판정을 내리지 않는다.
@@ -312,7 +312,16 @@ await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
   // 폰트 크기가 바뀌면 기준도 함께 움직이고, 안쪽 여백이 새는 순간에만 깨진다.
   await bringLineIntoView(codeLine);
   const spacingLabel = `④ 코드블록(${codeLine}행)의 세로 간격이 위젯이 선언한 여백과 같다`;
-  const spacing = await codeBlockSpacing();
+  // 위젯이 서고 shiki 가 안쪽 `<pre>` 를 낼 때까지 기다린다.
+  //
+  // `CodeWidget.toDOM` 은 원문 텍스트만 얹은 채 돌아오고 하이라이팅은
+  // `highlightCode(...).then(...)` 으로 **나중에** 온다. 고정 대기로 재면 그
+  // 사이에 걸린다 — 무변경 트리 8회 중 2회가 정확히 이 자리에서
+  // 「`.dl-code > pre` 부재」로 실패했다.
+  //
+  // 기다리는 대상은 판정이 아니라 **잴 축이 섰는가**다. 아래 `null` 분기는
+  // 그대로 실패로 남으므로, 위젯이 끝내 서지 않으면 여전히 실패한다.
+  const spacing = await waitUntil(codeBlockSpacing, (s) => s !== null);
   if (spacing === null) {
     // **「재지 못했다」가 아니라 실패다.** ③ 의 칸 0개와 같은 이유다 — 바로
     // 위에서 이 블록을 화면에 들였고 커서도 이 블록 밖(③ 이 누른 표 안)에

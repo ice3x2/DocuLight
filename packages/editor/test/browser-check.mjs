@@ -8,7 +8,7 @@
 // 브라우저를 띄우고 데모에 붙고 판정을 집계하는 기계장치는
 // `_browser-harness.mjs` 에 있다. 이 파일에는 무엇을 재는지만 남는다.
 
-import { openDemo, runBrowserChecks } from './_browser-harness.mjs';
+import { openDemo, runBrowserChecks, waitUntil } from './_browser-harness.mjs';
 
 const SHOT = 'test/browser-check.png';
 
@@ -20,7 +20,7 @@ await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
   // 붙지 못한 것과 회귀는 다르다. 데브 서버가 없거나 붙은 화면이 editor 데모가
   // 아니면 `openDemo` 가 스택 트레이스가 아니라 안내로 끝낸다(종료 코드 2) —
   // 집계 실행(`npm run test:browser:all`)에서 이 시험이 맨 앞이라, 여기서
-  // 트레이스만 남기면 뒤의 두 시험이 왜 돌지 않았는지 사람이 읽어낼 수 없다.
+  // 트레이스만 남기면 뒤의 세 시험이 왜 돌지 않았는지 사람이 읽어낼 수 없다.
   //
   // 그 뒤로는 전부 실패다. 이 시험에는 따로 찾아야 할 fixture 가 없으므로
   // 화면에 붙은 순간이 곧 재기 시작하는 순간이다 — 화면은 떴는데 편집기가
@@ -208,9 +208,35 @@ await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
   // 남는 것이 rect 없는 pie 와 렌더 실패 블록뿐이 되어, 색을 못 찾은 것이 「테마가
   // 어긋났다」로 읽혔다. 위 SDS-AC-4 가 landmark 로 자리를 옮긴 것과 같은 이유이고
   // 같은 처방이다. 단언은 그대로다 — 자를 옳은 곳에 댈 뿐이다.
+  //
+  // **그때의 처방이 문서 top 이었는데, 그것으로는 모자랐다.** top 에 마운트되는
+  // 다이어그램은 flowchart 와 sequence 둘이고 그 둘이 `fill` **속성**으로 내는
+  // 색은 정확히 2종이다(나머지는 클래스로 칠해져 속성에 잡히지 않는다). 즉 이
+  // 자리에서 아래 판정은 통과할 수가 없고, 그동안 통과한 것은 가상화가 색 있는
+  // 다이어그램을 우연히 마운트한 채로 남겨 뒀을 때뿐이었다 — 무변경 트리 8회 중
+  // 1회가 「fill 2종」으로 실패했다. **기다림의 문제가 아니다.** top 에서 4.6초를
+  // 재 봐도 2종에서 움직이지 않으므로 대기를 늘려도 달라지지 않는다.
+  //
+  // 그래서 자리를 한 번 더 옮긴다. 데모는 이 판정을 위해 소제목을 붙여 뒀고
+  // 그 아래가 pie 와 classDiagram 이다 — 거기서는 fill 이 9종이다. 단언은
+  // 그대로 3종 이상이다.
+  //
+  // top 으로 먼저 돌아가는 것은 `centerLineContaining` 이 아래로만 훑기
+  // 때문이다 — 바로 위에서 `Control+End` 로 문서 끝에 가 있으므로, top 으로
+  // 되돌리지 않으면 landmark 를 지나친 채 찾지 못한다.
   await scrollToTop();
+  await centerLineContaining('색이 여럿인 다이어그램');
   await page.waitForSelector('.dl-mermaid svg', { timeout: 20_000 });
-  await page.waitForTimeout(600);
+  // 마운트된 다이어그램이 **전부** 그려질 때까지 기다린다. 반쯤 그려진 것을
+  // 세면 색의 수가 실제보다 적게 나온다.
+  await waitUntil(
+    () =>
+      page.evaluate(() => {
+        const hosts = [...document.querySelectorAll('.dl-mermaid')];
+        return hosts.length > 0 && hosts.every((host) => host.querySelector('svg'));
+      }),
+    (done) => done,
+  );
 
   // --- 기본 테마가 라이트다 (배경과 다이어그램이 같은 방향이어야 한다)
   //

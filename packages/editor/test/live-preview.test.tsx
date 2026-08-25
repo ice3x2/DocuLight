@@ -69,12 +69,24 @@ describe('FR-EDITOR-007 — 커서가 없는 줄에서 마크다운 기호가 �
   }
 
   it('AC-6: 코드블록은 원문이 보이되 울타리가 코드로 읽히지 않는다', () => {
-    const host = mount('```ts\nconst a = 1;\n```\n');
+    // 커서는 문서 첫 자리에서 시작하므로 코드블록을 그 뒤에 둔다 — 첫 줄에
+    // 두면 커서가 울타리에 닿아 원문이 드러나고, 그것은 이 항의 반대다.
+    // (아래 `AC-6: 코드블록에 커서를 올리면 울타리가 드러난다` 가 그 반대편을
+    // 잰다. 둘이 **같은 원문을 자리만 바꿔** 재므로, 둘이 같은 결과를 내면
+    // 라이브 프리뷰가 아니라 그냥 렌더링이라는 뜻이다.)
+    const host = mount('앞 문단\n\n```ts\nconst a = 1;\n```\n');
+    const shown = visibleText(host);
 
     // 코드는 **내용을 그대로 보여 주는 것**이 목적이라 숨기는 대상이 다르다 —
     // 안쪽 글자는 남고 울타리만 자기 자리를 잃는다.
-    expect(visibleText(host)).toContain('const a = 1;');
-    expect(host.querySelector('.cm-content')).not.toBeNull();
+    expect(shown, '코드블록의 내용이 사라졌다').toContain('const a = 1;');
+    expect(shown, '코드블록의 울타리가 그대로 보인다').not.toContain('```');
+    // 울타리를 숨기는 기구가 둘이다 — 코드블록 위젯(`code-blocks.ts`)이 블록을
+    // 통째로 대체하는 길과, 벤더의 `HIDEABLE_SYNTAX` 가 `CodeMark`·`CodeInfo`
+    // 를 걷는 길이다. 위의 글자 단언만으로는 한쪽이 죽어도 다른 쪽이 가려 준다.
+    // 위젯이 실제로 섰는지를 함께 재야 두 길 중 어느 쪽이 무너져도 이 항이
+    // 죽는다 (뮤테이션 탐침으로 양쪽을 각각 무력화해 확인했다).
+    expect(host.querySelector('pre.dl-code'), '코드블록 위젯이 서지 않았다').not.toBeNull();
   });
 
   it('AC-7: 표가 구분선 없이 렌더된다', () => {

@@ -1,10 +1,10 @@
-// 브라우저 시험 셋이 함께 쓰는 기계장치.
+// 브라우저 시험 넷이 함께 쓰는 기계장치.
 //
 // `browser-check.mjs` · `table-reveal-check.mjs` · `heightmap-drift-check.mjs` ·
 // `tag-chip-check.mjs`
 // 는 무엇을 재는지가 서로 다르지만, 재기까지의 절차는 같다 — 브라우저를 띄우고,
 // 3399 에 뜬 화면이 editor 데모인지 확인하고, 판정을 모아 마지막에 집계하고,
-// 종료 코드로 결과를 내보낸다. 그 절차가 세 벌로 갈라져 있으면 한쪽만 고쳐지고
+// 종료 코드로 결과를 내보낸다. 그 절차가 네 벌로 갈라져 있으면 한쪽만 고쳐지고
 // 다른 쪽은 조용히 어긋난다 (실제로 접속 실패 처리가 그렇게 갈라져 있었다).
 //
 // 앞의 밑줄은 이 파일이 시험이 아니라 시험의 도구라는 표시다.
@@ -36,6 +36,41 @@ export class Unmeasurable extends Error {}
 /** 재지 못했음을 선언한다. 종료 코드 2 로 나간다. */
 export function unmeasurable(message) {
   throw new Unmeasurable(message);
+}
+
+/**
+ * 재려는 상태가 실제로 설 때까지 폴링한다.
+ *
+ * 이 시험들이 재는 것은 거의 다 **비동기로 서는 상태**다 — shiki 의 하이라이팅,
+ * mermaid 의 렌더, CM6 의 가상화(스크롤 뒤 위젯 마운트)와 초점 변화
+ * (`updateForFocusChange` 가 `setTimeout(..., 10)` 뒤에 트랜잭션을 발행한다).
+ * 그것들을 고정 대기로 기다리면 판정이 기계 상태에 딸려 흔들린다. 실제로
+ * 무변경 트리에서 8회 중 4회가 그렇게 실패했다.
+ *
+ * **대기를 늘리는 것은 처방이 아니다.** 흔들림이 줄 뿐 사라지지 않고 매 실행이
+ * 그만큼 느려진다. 상태가 섰는지를 직접 물어야 한다.
+ *
+ * `probe` 는 지금 상태를 읽어 오는 함수이고, `isReady` 는 그 값이 「섰다」인지를
+ * 판정한다. 서면 즉시 그 값을 돌려주므로 통과는 빨라진다.
+ *
+ * **상한에 닿아도 마지막에 읽은 값을 그대로 돌려준다.** 던지지도, 판정을
+ * 대신하지도 않는다 — 부르는 쪽의 단언이 그 값을 받아 원래대로 판정한다.
+ * 그래서 이 헬퍼는 실패를 통과로 바꾸지 못한다. 상태가 끝내 서지 않으면
+ * 부르는 쪽의 판정이 상한만큼 늦게, 그러나 똑같이 실패한다.
+ *
+ * @template T
+ * @param {() => Promise<T>} probe 지금 상태를 읽어 온다.
+ * @param {(value: T) => boolean} isReady 그 값이 「섰다」인가.
+ * @returns {Promise<T>} 선 값, 또는 상한에 닿았을 때 마지막으로 읽은 값.
+ */
+export async function waitUntil(probe, isReady, { timeout = 10_000, interval = 100 } = {}) {
+  const deadline = Date.now() + timeout;
+  for (;;) {
+    const value = await probe();
+    if (isReady(value)) return value;
+    if (Date.now() >= deadline) return value;
+    await new Promise((resolve) => setTimeout(resolve, interval));
+  }
 }
 
 // CM6 의 EditorView 를 DOM 에서 되찾는다. `EditorView.findFromDOM` 이 하는
