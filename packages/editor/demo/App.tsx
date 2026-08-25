@@ -1,6 +1,6 @@
 import { useMemo, useState, type CSSProperties } from 'react';
 
-import { AtomicCodeMirrorEditor, mermaidBlocks } from '../src/index';
+import { AtomicCodeMirrorEditor, codeBlocks, mathBlocks, mermaidBlocks } from '../src/index';
 
 const SAMPLE = `# DocuLight 에디터 — Mermaid 라이브 프리뷰
 
@@ -93,6 +93,18 @@ classDiagram
 - [ ] 태스크
 - [x] 완료된 태스크
 
+## 코드블록
+
+\`\`\`ts
+const answer: number = 42;
+\`\`\`
+
+## 수식
+
+$$
+E = mc^2
+$$
+
 > 인용문입니다.
 
 | 표 | 편집 |
@@ -116,14 +128,23 @@ export default function App() {
   const [measure, setMeasure] = useState('70ch');
 
   // 참조가 바뀌면 에디터가 remount 된다 — 반드시 안정적으로 유지한다.
-  const extensions = useMemo(() => [mermaidBlocks()], []);
+  //
+  // **제품이 얹는 것과 같은 블록 위젯을 얹는다** (`doculightExtensions` 의
+  // mermaid · 코드 · 수식). mermaid 만 얹으면 브라우저 판정이 코드블록과 수식
+  // 위젯을 한 번도 보지 못하고, 그 둘에만 있는 결함이 제품에 그대로 남는다 —
+  // 실제로 `pre.dl-code` 의 UA 기본 margin 이 그렇게 살아 있었다.
+  //
+  // 태그·위키링크·붙여넣기 업로드는 얹지 않는다. 이 데모가 재는 것은 블록
+  // 위젯의 레이아웃이고, 콜백을 받는 확장은 그 축과 무관하게 이 화면에
+  // 셸이 없는 상태로 들어온다.
+  const extensions = useMemo(() => [mermaidBlocks(), codeBlocks(), mathBlocks()], []);
 
   return (
     <div className="demo-shell">
       <header className="demo-bar">
         <strong>DocuLight 에디터 데모</strong>
         <span className="demo-hint">
-          vendor 무수정 · <code>extensions</code> 주입만으로 Mermaid 추가
+          vendor 무수정 · <code>extensions</code> 주입만으로 Mermaid · 코드블록 · 수식 추가
         </span>
         <label className="demo-width">
           문서 폭

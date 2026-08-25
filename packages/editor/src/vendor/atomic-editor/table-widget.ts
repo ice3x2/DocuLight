@@ -703,17 +703,42 @@ class TableWidget extends WidgetType {
     return wrap;
   }
 
-  // Pointer events go to CM6 in edit mode; everything else stays inside
+  // `mousedown` in edit mode goes to CM6; every other event stays inside
   // the widget.
   //
-  // A click has to reach CM6 or the caret can never land on a table line,
-  // and without the caret there the source is never revealed — live
-  // preview's whole point (`FR-EDITOR-007` AC-7). Read-only keeps the old
+  // The caret has to be able to land on a table line or the source is
+  // never revealed — live preview's whole point (`FR-EDITOR-007` AC-7).
+  // CM6 places the caret in `handlers.mousedown`, and its core registers
+  // no `click` handler at all (`@codemirror/view`'s `handlers.*` are
+  // keydown, mousedown, dragstart / dragend / drop, paste, copy / cut and
+  // beforeinput). Releasing `click` would therefore buy the caret nothing
+  // while re-exposing every click inside this widget to the contentDOM
+  // handlers other extensions register (`inline-preview` and `wiki-links`
+  // both listen for `click`), so it stays closed. Read-only keeps the old
   // behaviour: there is nothing to edit, so the caret has no business
   // inside the block.
   //
-  // The opening stops at pointer events on purpose: release only what the
-  // caret needs, nothing more.
+  // The opening stops there on purpose: release only what the caret
+  // needs, nothing more.
+  //
+  // What the opening costs, and what it does **not** cost. A click that
+  // lands on `.cm-atomic-table-cell-source` — the cell's own text — now
+  // reaches CM6, which focuses `contentDOM` and drops the selection on
+  // the table's line, so the widget is replaced by the markdown source
+  // instead of putting a caret in that cell. That priority is the decided
+  // one (`FR-EDITOR-007` AC-7: revealing the source wins over editing a
+  // cell in place).
+  //
+  // `attachCellEditing` is **not** dead code under that priority. A click
+  // that lands anywhere else inside a cell — its padding, or an image
+  // preview — hits a `pointerdown` handler that calls `preventDefault`,
+  // and that suppresses the compatibility `mousedown` this method
+  // releases. CM6 never sees it, focus is routed into the cell's source
+  // element, and typing / paste / IME / Tab / Enter all keep running
+  // through `attachCellEditing`. Measured in Chromium against the demo:
+  // clicking a cell's padding left DOM focus on
+  // `.cm-atomic-table-cell-source`, kept the widget standing, and the
+  // next keystroke rewrote that cell in the document.
   //
   // This comment used to justify the limit differently — it claimed that
   // handing `keydown` / `beforeinput` / `paste` to CM6 would let a
@@ -736,16 +761,14 @@ class TableWidget extends WidgetType {
   // Releasing only the events the caret actually needs never builds that
   // dependency in the first place.
   //
-  // Note the three handlers that must keep the caret out of the document
-  // (the link icon, the image preview, and the cell-padding focus
-  // routing) cancel on `pointerdown`, which suppresses the compatibility
-  // `mousedown` this method releases. Moving any of them to `mousedown`
-  // or `click` would hand their gesture to CM6 as well.
+  // The three handlers that must keep the caret out of the document (the
+  // link icon, the image preview, and the cell-padding focus routing) are
+  // the `pointerdown` cancels described above. Moving any of them to
+  // `mousedown` or `click` would hand their gesture to CM6 as well.
   //
   // (Returning `true` means "the editor keeps its hands off this event".)
   ignoreEvent(event: Event): boolean {
-    if (event.type === 'mousedown' || event.type === 'click') return this.readOnly;
-    return true;
+    return event.type === 'mousedown' ? this.readOnly : true;
   }
 }
 
@@ -1278,18 +1301,79 @@ const tableFocusField = StateField.define<boolean>({
 // table's first or last position counts as touching it. That matters
 // because a click on a block widget resolves to one of its two ends, so
 // an exclusive test would drop exactly the positions clicks produce.
+//
+// DocuLight keeps one shared copy of this predicate in
+// `src/core/selection-touches.ts`, and this file deliberately does not
+// import it: `src/vendor/` is upstream code we re-take, and a vendor file
+// reaching into `src/core/` inverts that dependency — the next drop would
+// either lose the import or drag our module in with it. The two copies
+// must stay identical; change one and change the other.
 const selectionTouches = (state: EditorState, from: number, to: number) =>
   state.selection.ranges.some((range) => range.from <= to && range.to >= from);
+
+// Can a caret reveal the markdown source at all in this state?
+//
+// Read-only has nothing to reveal for (no editing), and without the focus
+// half a mounted-but-unfocused editor whose document starts with a table
+// would render that table as raw pipes: selection defaults to position 0,
+// which is inside it.
+//
+// **This gate is the table's alone.** The other eight live-preview
+// elements gate on `!state.readOnly` only (`core/code-blocks.ts`,
+// `core/mermaid-blocks.ts`, `core/math-decoration.ts`), so blurring the
+// editor folds the table back up while a code fence or a diagram stays
+// revealed. The asymmetry is deliberate for now: those three live on the
+// DocuLight side of the vendor boundary and carry no focus signal, so
+// unifying means publishing a shared focus field across that boundary and
+// flipping the resting behaviour of eight elements at once — a change with
+// its own acceptance criteria, not a side effect of this one. The table
+// needs the gate first because it is the only one of the nine whose
+// revealed form (raw pipe rows) reads as a broken render rather than as
+// source.
+const canRevealSource = (state: EditorState): boolean =>
+  state.field(tableFocusField) && !state.facet(readOnlyFacet);
+
+// Which tables the current selection reveals, as a comparable string.
+//
+// Only the lines the selection sits on are walked — `tree.iterate({from,
+// to})` visits just the nodes overlapping that window — so this costs the
+// same whether the document holds one table or a thousand lines of prose.
+// The window is an optimization only; the test applied to each node is
+// `selectionTouches`, the same predicate `buildTableWidgets` uses, so the
+// two can never disagree about a table they both see.
+//
+// `syntaxTree` and not `ensureSyntaxTree`: forcing a parse here would put
+// the 200ms budget back on the caret-movement path, which is the cost this
+// function exists to remove. The caret sits in the viewport and CM6 parses
+// the viewport, so the window is parsed in practice; if it somehow is not,
+// the reveal repaints when `treeGrowthEffect` fires.
+function revealedTableSignature(state: EditorState): string {
+  if (!canRevealSource(state)) return '';
+  const tree = syntaxTree(state);
+  const doc = state.doc;
+  const found: string[] = [];
+
+  for (const range of state.selection.ranges) {
+    tree.iterate({
+      from: doc.lineAt(range.from).from,
+      to: doc.lineAt(range.to).to,
+      enter: (node) => {
+        if (node.name !== 'Table') return;
+        const from = doc.lineAt(node.from).from;
+        const to = doc.lineAt(node.to).to;
+        if (selectionTouches(state, from, to)) found.push(`${from}:${to}`);
+        return false; // don't descend
+      },
+    });
+  }
+
+  return [...new Set(found)].sort().join(',');
+}
 
 function buildTableWidgets(state: EditorState): DecorationSet {
   const ranges: Range<Decoration>[] = [];
   const readOnly = state.facet(readOnlyFacet);
-  // Reveal the source only when the user is actually in the editor.
-  // Read-only has nothing to reveal for (no editing), and without the
-  // focus half a mounted-but-unfocused editor whose document starts with
-  // a table would render that table as raw pipes: selection defaults to
-  // position 0, which is inside it.
-  const revealable = state.field(tableFocusField) && !readOnly;
+  const revealable = canRevealSource(state);
   // Force full-doc parse so tables past the initial parsed region
   // also get the widget treatment. Building from a partial tree leaves
   // orphaned `| col |` raw lines below it until something retriggers
@@ -1303,17 +1387,21 @@ function buildTableWidgets(state: EditorState): DecorationSet {
   tree.iterate({
     enter: (node) => {
       if (node.name !== 'Table') return;
-      const model = parseTable(state, node.node);
-      if (!model) return;
 
       // Block-replace needs whole-line coverage.
       const startLine = doc.lineAt(node.from);
       const endLine = doc.lineAt(node.to);
       // Caret on the table: leave the markdown source standing instead
       // of covering it with the widget. Same shape as `code-blocks.ts`.
+      // Decided before `parseTable` runs — a table that is about to show
+      // its source has no model worth building.
       if (revealable && selectionTouches(state, startLine.from, endLine.to)) {
         return false; // don't descend
       }
+
+      const model = parseTable(state, node.node);
+      if (!model) return;
+
       ranges.push(
         Decoration.replace({
           widget: new TableWidget(model, readOnly),
@@ -1382,29 +1470,36 @@ const tableField = StateField.define<DecorationSet>({
     ) {
       return buildTableWidgets(tr.state);
     }
+    // Moving the caret, or focusing / blurring the editor, changes which
+    // tables reveal their source. Rebuilding on every such transaction
+    // would put a full-document `tree.iterate` — and `ensureSyntaxTree`'s
+    // 200ms budget — behind every arrow key, in documents with no table at
+    // all. So ask first whether the answer can even have changed: compare
+    // which tables the selection reveals before and after, which costs one
+    // walk of the caret's own lines and nothing more.
+    //
+    // Comparing raw positions across a doc change can report a difference
+    // that is only a shift. That costs an extra rebuild, never a missed
+    // one — and a change that shifts a revealed table is a change inside
+    // or above it, which `changeAffectsTables` already catches.
+    const revealChanged =
+      (tr.startState.field(tableFocusField) !== tr.state.field(tableFocusField) ||
+        !tr.startState.selection.eq(tr.state.selection)) &&
+      revealedTableSignature(tr.startState) !== revealedTableSignature(tr.state);
+
     if (!tr.docChanged) {
-      // Moving the caret or focusing / blurring the editor changes which
-      // tables reveal their source without touching the doc. Returning
-      // `deco` here — as this field used to for every non-doc change —
-      // would mean the reveal never repaints.
-      //
-      // This check belongs inside the no-doc-change arm, not ahead of it:
-      // typing moves the selection too, so hoisting it would rebuild on
-      // every keystroke in the document and make the `changeAffectsTables`
-      // fast path below unreachable.
-      const focusChanged =
-        tr.startState.field(tableFocusField) !== tr.state.field(tableFocusField);
-      if (!focusChanged && tr.startState.selection.eq(tr.state.selection)) {
-        return deco;
-      }
-      // Reading mode never reveals, so no caret move can change the
-      // output. (A mode toggle already returned above.)
-      if (tr.state.facet(readOnlyFacet)) return deco;
-      return buildTableWidgets(tr.state);
+      return revealChanged ? buildTableWidgets(tr.state) : deco;
     }
-    const mapped = deco.map(tr.changes);
-    if (!changeAffectsTables(tr, deco)) return mapped;
-    return buildTableWidgets(tr.state);
+    // The doc-change arm has to ask the same question. A transaction
+    // carrying both `changes` and `selection` can walk the caret out of a
+    // revealed table (undo / redo, or a programmatic `dispatch`), and
+    // `changeAffectsTables` cannot see that: a revealed table has no
+    // decoration for the overlap signal to hit, leaving only the
+    // pipe-on-a-changed-line signal, and the change need not touch a pipe.
+    // Without this the source stays exposed until some later
+    // selection-only transaction happens to arrive.
+    if (changeAffectsTables(tr, deco) || revealChanged) return buildTableWidgets(tr.state);
+    return deco.map(tr.changes);
   },
   provide: (f) => EditorView.decorations.from(f),
 });

@@ -26,6 +26,37 @@
   height: auto;
 }
 
+/* 코드블록 위젯 (`core/code-blocks.ts` 의 `CodeWidget`).
+ *
+ * `<pre>` 의 UA 기본값은 `margin: 1em 0` 인데, 그 여백은 블록 위젯의
+ * `getBoundingClientRect` 에 들어가지 않는다 — heightmap 이 DOM 보다 그만큼
+ * 짧아지고 이 블록 아래의 모든 줄에서 클릭이 눌린 줄보다 아래로 라우팅된다.
+ * mermaid 가 `.dl-mermaid-block` 으로 고친 것과 같은 결함이고 같은 처방이다.
+ *
+ * 여기서는 컨테이너를 덧대지 않는다. 이 상자에는 테두리도 배경도 없으므로
+ * `padding` 이 `margin` 과 겉보기가 같고, 위젯의 바깥 상자가 곧 이 `<pre>` 다.
+ *
+ * 다만 바깥 `padding` 만으로는 겉보기가 종전과 같아지지 않는다. `CodeWidget`
+ * 이 `highlightCode` 의 결과를 넣으면 그 안에 shiki 가 낸 또 하나의 `<pre>` 가
+ * 서고 그것도 UA `margin: 1em 0` 을 갖는데, 바깥이 `margin` 만 쓰던 동안은 둘이
+ * collapse 해 여백이 1em 하나였지만 바깥에 `padding` 이 생기는 순간 collapse 가
+ * 끊겨 1em + 1em 이 된다. 그래서 안쪽 여백을 함께 죽인다.
+ *
+ * 실측(데모 1280×900, 이 상자의 `1em` = 17px): 앞뒤 줄과의 세로 간격이 UA
+ * 기본만 있던 종전 17px → 바깥 `padding` 만 세웠을 때 34px → 안쪽 `margin` 까지
+ * 죽인 지금 다시 17px. 하이라이팅이 비동기라 나던 레이아웃 튐도 함께 사라진다
+ * — 이 위젯의 바깥 상자 높이가 원문 텍스트만 있는 첫 프레임과 shiki 가 돌아온
+ * 뒤 모두 63px 로 같다(안쪽 `margin` 이 살아 있을 때는 63px → 97px 이었다).
+ * 이 값은 `test/heightmap-drift-check.mjs` 의 ④ 가 지킨다. */
+.dl-code {
+  margin: 0;
+  padding: 1em 0;
+}
+
+.dl-code > pre {
+  margin: 0;
+}
+
 .dl-mermaid-error {
   display: block;
   justify-content: unset;

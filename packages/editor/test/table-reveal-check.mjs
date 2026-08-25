@@ -142,13 +142,21 @@ async function clickAboveTable() {
   await page.waitForTimeout(300);
 }
 
-// --- ① 숨는 절반 — 커서가 표 밖이면 위젯이 서고 원문이 보이지 않는다 (회귀 방지)
+// --- ① 숨는 절반 — 초점이 있고 커서가 표 밖이면 위젯이 서고 원문이 보이지 않는다
+//
+// **먼저 표 밖을 클릭해 초점을 준다.** 로드 직후 그대로 재면 편집기가 한 번도
+// 초점을 받지 않은 상태이고, 그때는 노출 판정 자체가 꺼져 있어(표는 초점이
+// 있을 때만 드러난다) 노출 로직을 통째로 지워도 이 항이 통과한다 — 그러면 이
+// 항이 재는 것은 「위젯이 마운트된다」뿐이고 이름이 말하는 숨는 절반이 아니다.
+// 초점을 준 뒤에 재야 「커서가 표 밖이면 숨는다」를 실제로 문다.
+await bringTableIntoView();
+await clickAboveTable();
 await bringTableIntoView();
 const idle = await snapshot();
 check(
-  '① 숨는 절반 — 커서가 표 밖이면 위젯이 서고 구분선 원문이 보이지 않는다',
-  idle.widgets >= 1 && !idle.revealed,
-  `위젯 ${idle.widgets}개, 원문 ${idle.revealed ? '보임' : '숨음'}`,
+  '① 숨는 절반 — 초점이 있고 커서가 표 밖이면 위젯이 서고 구분선 원문이 보이지 않는다',
+  idle.focused && idle.widgets >= 1 && !idle.revealed,
+  `초점 ${idle.focused}, 위젯 ${idle.widgets}개, 원문 ${idle.revealed ? '보임' : '숨음'}, 커서 ${idle.cursorLine}행`,
 );
 
 // --- ② AC-7 본 판정 (칸 클릭) — 칸을 누르면 구분선 원문이 드러난다

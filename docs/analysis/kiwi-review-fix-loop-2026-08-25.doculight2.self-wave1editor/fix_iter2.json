@@ -1,0 +1,91 @@
+{
+  "iter": 2,
+  "role": "senior-fixer",
+  "scope": "FND-102 하나만. 나머지 넷(FND-101 · FND-103 · FND-104 · FND-105)은 상위가 후속으로 넘겼다.",
+  "fixed": [
+    {
+      "id": "FND-102",
+      "severity": "MEDIUM",
+      "verdict": "confirmed",
+      "measurement": {
+        "how": "이미 떠 있는 데모(http://localhost:3399/, 1280×900, chromium)에서 `.dl-code` 의 앞뒤 `.cm-line` 과 보이는 상자(shiki 가 낸 안쪽 `<pre>`) 사이의 세로 거리를 `getBoundingClientRect` 로 쟀다. 수정 전 상태는 `.dl-code { margin: 1em 0 !important; padding: 0 !important }` 를 주입해 UA 기본과 동등하게 되돌려 재현했다.",
+        "em_px": 17,
+        "gap_above_below_px": {
+          "before_change_ua_default": [
+            17,
+            17
+          ],
+          "after_padding_only_regression": [
+            34,
+            34
+          ],
+          "after_this_fix": [
+            17,
+            17
+          ]
+        },
+        "widget_outer_height_px": {
+          "before_change_ua_default": 29,
+          "after_padding_only_regression": 97,
+          "after_this_fix": 63
+        },
+        "async_layout_jump": {
+          "note": "`CodeWidget.toDOM` 은 첫 프레임에 원문 텍스트만 넣고 shiki 결과는 나중에 들어온다. 두 상태의 위젯 바깥 상자 높이를 견줬다.",
+          "after_padding_only_regression": "63px → 97px (튄다)",
+          "after_this_fix": "63px → 63px (튀지 않는다)"
+        },
+        "conclusion": "지적이 맞다. 간격이 정확히 두 배가 됐고 비동기 레이아웃 튐도 실재했다."
+      },
+      "root_cause": "`CodeWidget.toDOM` 이 만드는 바깥 `pre.dl-code` 안에 shiki 의 `codeToHtml` 이 낸 또 하나의 `<pre>` 가 서고 그것도 UA `margin: 1em 0` 을 갖는다. 바깥이 `margin` 만 쓰던 동안은 안팎이 collapse 해 여백이 1em 하나였는데, heightmap 수정으로 바깥에 `padding` 이 생기면서 collapse 가 끊겨 padding 1em + 안쪽 margin 1em = 2em 이 됐다.",
+      "change": [
+        {
+          "file": "packages/editor/src/styles/editor.css",
+          "what": "`.dl-code > pre { margin: 0 }` 를 새로 세워 shiki 산출물의 UA margin 을 죽였다. `.dl-code { margin: 0; padding: 1em 0 }` 는 그대로 둔다."
+        },
+        {
+          "file": "packages/editor/src/styles/editor.css",
+          "what": "주석의 「값은 UA 기본과 같은 `1em` 이라 간격도 종전 그대로다」를 지우고, collapse 가 끊기는 이유와 실측값(17px → 34px → 17px, 바깥 상자 높이 63px → 97px → 63px)을 적었다."
+        },
+        {
+          "file": "packages/editor/test/heightmap-drift-check.mjs",
+          "what": "④ 판정을 더했다 — 코드블록 위젯의 겉보기 세로 간격이 그 위젯이 스스로 선언한 `padding` 과 같은지 본다. 절대 픽셀을 적지 않고 `getComputedStyle(outer).padding{Top,Bottom}` 을 기준으로 삼는다. `CODE_MARKER` fixture 와 `bringLineIntoView(n)` 헬퍼를 함께 더했다. 파일 머리의 종료 코드 서술도 새 축을 포함하도록 고쳤다."
+        }
+      ],
+      "two_conditions": {
+        "겉보기": "위·아래 간격이 각각 17px 로 수정 전(UA 기본만 있던 상태)과 같다.",
+        "heightmap 어긋남": "0px 유지. 안쪽 `<pre>` 의 margin 이 사라진 만큼 바깥 상자 높이가 97px → 63px 로 줄었을 뿐, 여백이 여전히 바깥 `padding` 으로 바깥 상자의 `getBoundingClientRect` 안에 들어 있어 CM6 heightmap 이 DOM 과 어긋나지 않는다.",
+        "왜 함께 성립하나": "`margin` 은 위젯 상자 밖으로 새어 heightmap 에서 빠지지만 `padding` 은 상자 안이다. 여백을 전부 바깥 `padding` 하나로 몰고 안쪽 `margin` 을 0 으로 만들면, 총 여백이 1em 으로 종전과 같으면서(겉보기) 그 1em 이 전부 측정되는 상자 안에 있다(어긋남 0)."
+      },
+      "test_evidence": {
+        "red": "`.dl-code > pre { margin: 0 }` 를 잠시 지우고 돌리면 ④ 만 FAIL 하고(위 34px / 아래 34px, 위젯 padding 17/17px) 종료 0 → 1 로 바뀐다. ⓪ ① ② ③ 은 그 상태에서도 모두 PASS — 이 결함이 기존 축을 전부 빠져나갔다는 것을 그대로 보여준다.",
+        "green": "규칙을 되돌리면 ④ 가 PASS(위 17px / 아래 17px) 하고 7/7 통과, 종료 0."
+      }
+    }
+  ],
+  "deferred": [
+    "FND-101",
+    "FND-103",
+    "FND-104",
+    "FND-105"
+  ],
+  "verification": {
+    "heightmap-drift-check.mjs": "exit 0 · 7/7 통과 · 어긋남 표 첫 줄 0px / 문단 0px / 인용 0px · ④ 위 17px 아래 17px",
+    "table-reveal-check.mjs": "exit 0",
+    "browser-check.mjs": "exit 0",
+    "npm test (NODE_ENV=production)": "editor 20파일 243통과·1스킵 / server 115파일 1248통과 / web 48파일 521통과 · 실패 0 (기준선과 동일)",
+    "npm run typecheck": "exit 0 · 오류 0 (editor · server · web 전부 tsc --noEmit 무출력)"
+  },
+  "constraints_honored": {
+    "기존 시험 약화·삭제": "없음. 판정을 더하기만 했다.",
+    "public 심볼 시그니처·파일 삭제/이동": "없음.",
+    "docs/spec/*.srs.md": "손대지 않음. speckiwi mutation 도구도 부르지 않음.",
+    "packages/web": "손대지 않음 (git status 에 변경 0건).",
+    "커밋": "하지 않음.",
+    "임시 탐색 스크립트": "scratchpad 에 4개를 만들어 쓰고 전부 지웠다."
+  },
+  "files_changed": [
+    "packages/editor/src/styles/editor.css",
+    "packages/editor/test/heightmap-drift-check.mjs"
+  ],
+  "status": "TASK_DONE"
+}

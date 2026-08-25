@@ -11,6 +11,7 @@ import { EditorState, StateField, type Extension, type Range } from '@codemirror
 import { Decoration, EditorView, WidgetType, type DecorationSet } from '@codemirror/view';
 
 import { highlightCode, isHighlightable } from './code-highlight.js';
+import { selectionTouches } from './selection-touches.js';
 
 export interface CodeBlock {
   /** 펜스를 포함한 블록 시작 */
@@ -62,9 +63,6 @@ export function findCodeBlocks(state: EditorState): CodeBlock[] {
 
   return blocks;
 }
-
-const selectionTouches = (state: EditorState, from: number, to: number) =>
-  state.selection.ranges.some((range) => range.from <= to && range.to >= from);
 
 class CodeWidget extends WidgetType {
   constructor(

@@ -1,0 +1,8 @@
+{
+  "git": true,
+  "gh": null,
+  "regression_cmd": "NODE_ENV=production npm test",
+  "regression_baseline_source": "parent-pinned",
+  "regression_baseline": "editor 237 passed 1 skipped / server 1248 passed / web 521 passed / 실패 0",
+  "note": "부모가 pin 한 기준선이 자기 시점 캡처보다 우선한다 (6.0). 자체 캡처를 수행하지 않았다."
+}

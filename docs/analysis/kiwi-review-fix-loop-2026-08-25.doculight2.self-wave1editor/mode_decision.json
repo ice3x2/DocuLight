@@ -1,0 +1,11 @@
+{
+  "mode": "self",
+  "pr_url": null,
+  "pr_number": null,
+  "self_scope": {
+    "source": "base-head",
+    "files": null,
+    "commit_range": "b73f70c..HEAD",
+    "diff_loc": 4792
+  }
+}

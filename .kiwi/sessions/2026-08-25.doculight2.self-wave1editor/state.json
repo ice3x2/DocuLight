@@ -1,0 +1,23 @@
+{
+  "run_id": "2026-08-25.doculight2.self-wave1editor",
+  "skill": "kiwi-review-fix-loop",
+  "schema_version": "1.0.0",
+  "started_at": "2026-08-25T03:17:00Z",
+  "mode": "self",
+  "mode_flags": [
+    "--base",
+    "--head",
+    "--close-reqs",
+    "--auto",
+    "--drive",
+    "--regression-baseline"
+  ],
+  "phase": "1",
+  "finding_queue": [],
+  "fix_iter": 0,
+  "recheck_iter": 0,
+  "regression_baseline": "editor 237 passed 1 skipped / server 1248 passed / web 521 passed / 실패 0",
+  "regression_pass": false,
+  "pr_responded": false,
+  "failed": false
+}

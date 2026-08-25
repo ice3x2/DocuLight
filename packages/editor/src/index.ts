@@ -12,6 +12,7 @@ export {
   type MermaidBlocksConfig,
 } from './core/mermaid-blocks';
 
+export { codeBlockField, codeBlocks, findCodeBlocks, type CodeBlock } from './core/code-blocks';
 export { findTags, isFrontmatterRange, type TagMatch } from './core/tags';
 export { findMathBlocks, renderMath, type MathBlock } from './core/math-blocks';
 export { mathBlocks, mathField } from './core/math-decoration';

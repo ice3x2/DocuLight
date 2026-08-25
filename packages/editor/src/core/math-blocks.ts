@@ -1,6 +1,7 @@
 import type { EditorState } from '@codemirror/state';
 import katex from 'katex';
 
+import { selectionTouches } from './selection-touches.js';
 import { maskVerbatim } from './verbatim.js';
 
 /**
@@ -34,9 +35,6 @@ export interface MathBlock {
 const DIGITS_ONLY = /^[\d\s.,]*$/;
 
 const isMeaningful = (tex: string) => tex.trim() !== '' && !DIGITS_ONLY.test(tex);
-
-const touchesSelection = (state: EditorState, from: number, to: number) =>
-  state.selection.ranges.some((range) => range.from <= to && range.to >= from);
 
 /**
  * 문서의 수식들.
@@ -79,7 +77,7 @@ export function findMathBlocks(state: EditorState): MathBlock[] {
         to,
         tex: doc.slice(from + (display ? 2 : 1), to - (display ? 2 : 1)),
         display,
-        revealed: touchesSelection(state, from, to),
+        revealed: selectionTouches(state, from, to),
       });
     }
   }

@@ -1,0 +1,191 @@
+{
+  "iter": 1,
+  "prior_findings_status": [
+    {
+      "id": "FND-001",
+      "prior_severity": "HIGH",
+      "status": "resolved",
+      "why": "tableField.update 는 더 이상 선택 이동마다 buildTableWidgets 를 부르지 않는다. revealedTableSignature (table-widget.ts:1350-1381) 가 선택이 놓인 줄만 tree.iterate({from,to}) 로 훑고 그 서명이 달라진 트랜잭션에서만 재구축한다. 그 안에서 syntaxTree 만 쓰므로 캐럿 경로에서 ensureSyntaxTree 의 200ms 예산이 사라졌다. parseTable 호출도 1394-1401 에서 노출 판정 뒤로 옮겨졌다. 좁힌 창이 판정을 놓치지 않는지 따로 검증했다 — selectionTouches(state, tableFrom, tableTo) 가 참이면 표 구간과 선택 구간이 (경계 포함) 겹치므로 lineAt(range.from).from..lineAt(range.to).to 창은 언제나 그 표를 덮는다. @lezer/common 의 Tree.iterate 겹침 조건도 c.from <= to && c.to >= from 로 경계 포함이라 다중 커서·표 경계·빈 줄·문서 끝 모두에서 두 판정이 일치한다. 새 vitest 가 같은 사실을 객체 동일성으로 문다."
+    },
+    {
+      "id": "FND-002",
+      "prior_severity": "HIGH",
+      "status": "resolved",
+      "why": "「칸 편집 경로가 마우스로 도달 불가」라는 전제가 반증됐고 그 반증이 코드에 적혔다. makeCell 이 다는 cell.addEventListener('pointerdown', ...) (table-widget.ts:953-965) 이 source 밖(칸 padding·이미지 미리보기)의 눌림에서 preventDefault() 를 부르고, Pointer Events 규약상 그것이 호환 mousedown 을 억제하므로 CM6 가 그 제스처를 보지 못한다. 칸에는 실제로 padding 이 있다 (inline-preview.css:473-479 의 .cm-atomic-table th, td { padding: 0.35em 0.6em }). 따라서 attachCellEditing 의 input/paste/IME/Tab·Enter 경로는 살아 있고 read-only.test.tsx 의 isContentEditable 단언도 헛단언이 아니다. ignoreEvent 주석 724-741 이 「칸 글자 클릭은 원문 노출이 이긴다 / 그 밖은 칸 편집이 이긴다」는 갈림을 명시한다."
+    },
+    {
+      "id": "FND-003",
+      "prior_severity": "HIGH",
+      "status": "partially-resolved",
+      "why": "세 갈래 중 둘만 닫혔다. (a) .dl-code 규칙이 생겼고 (src/styles/editor.css:39-42), (b) 데모가 codeBlocks()·mathBlocks() 를 얹어 (demo/App.tsx:137) 브라우저 판정이 코드 위젯을 보게 됐으며 heightmap-drift-check 의 새 ⓪ 판정이 코드블록 아래의 세 줄(인용 108행·표 110행·문단 114행)에서 어긋남을 재므로 재발을 실제로 문다. (c) 그러나 이 결함이 「제품 조립에만 있다」던 바로 그 제품 — packages/web — 은 editor.css 를 한 번도 import 하지 않는다 (packages/web/src/main.tsx:5 가 ./styles/shell.css 하나뿐이고 shell.css 에 @import 도 없다). 빌드 산출물 packages/web/dist/assets/index-4wtiOQg5.css 에 dl-code · dl-mermaid-block · cm-atomic-table 이 각 0건이다. 즉 새 규칙은 제품에서 적용되지 않고 <pre> 의 UA margin: 1em 0 이 그대로 산다. FND-101 참조."
+    },
+    {
+      "id": "FND-004",
+      "prior_severity": "MEDIUM",
+      "status": "resolved",
+      "why": "docChanged 팔이 changeAffectsTables(tr, deco) || revealChanged 로 넓어졌다 (table-widget.ts:1499). revealChanged 는 초점 변화 또는 선택 변화가 있을 때만 서명을 견주므로 타이핑 빠른 경로도 유지된다. 새 vitest 「표를 떠나는 변경+선택 트랜잭션이 원문을 드러난 채 남기지 않는다」가 이 경로를 정확히 잰다(파이프 없는 줄을 고치며 커서를 표 밖으로 옮긴다)."
+    },
+    {
+      "id": "FND-005",
+      "prior_severity": "MEDIUM",
+      "status": "resolved",
+      "why": "drift 가 이제 check() 에 들어간다 (heightmap-drift-check.mjs:222-237) — 표 첫 줄·문단·인용 세 자리에서 Math.abs(drift) <= 1. 재는 방법도 coordsAtPos(글자 상자, leading 이 섞임)에서 domAtPos → 줄/위젯의 바깥 상자(171-187)로 바뀌어 ±1px 단언이 성립하는 축이 됐다. 부분 재발(0.2em)도 이제 잡힌다."
+    },
+    {
+      "id": "FND-006",
+      "prior_severity": "MEDIUM",
+      "status": "resolved",
+      "why": "cellCount === 0 이 unmeasurable 에서 check(label, false, ...) 로 내려왔다 (265-271). catch 도 셋으로 갈렸다 (286-300): 스스로 선언한 Unmeasurable 만 exit 2, fixture 확인 뒤(measuring === true)의 예상 못 한 예외는 exit 1, 그 전은 exit 2. 「재지 못한 것」과 회귀가 더 이상 같은 코드로 흐르지 않는다."
+    },
+    {
+      "id": "FND-007",
+      "prior_severity": "MEDIUM",
+      "status": "resolved",
+      "why": "ignoreEvent 가 event.type === 'mousedown' ? this.readOnly : true 로 좁혀져 click 이 닫혔다 (table-widget.ts:770-772). 닫아도 깨지는 경로가 없음을 확인했다 — 칸 안의 링크 열기는 위젯 자신의 source.addEventListener('click', ...) (834-843) 가 처리하고, CM6 코어에는 click 핸들러가 없으며, inline-preview.ts:1096 의 makeLinkClickHandler 는 원래도 read-only 에서 이미 차단돼 있었다(옛 코드가 read-only 에 true 를 돌려줬다). 주석의 근거도 재작성됐고 반증된 탐침 서술은 FND-002 의 새 문단이 재현 가능한 배치로 다시 세웠다."
+    },
+    {
+      "id": "FND-008",
+      "prior_severity": "MEDIUM",
+      "status": "resolved",
+      "why": "src/core/selection-touches.ts 가 생기고 code-blocks.ts·mermaid-blocks.ts·math-blocks.ts 셋이 그것을 import 한다. math-blocks 의 touchesSelection 이름도 selectionTouches 로 통일돼 검색으로 사본이 잡힌다. vendor 사본은 남되 그 사유(경계 역전)가 table-widget.ts:1298-1304 에 적혔고 공용 모듈 쪽에도 상호 참조가 적혔다. tag-decoration.ts:60-63 의 revealed 는 (ranges, TagMatch) 라 서명이 다르므로 이번 통합 대상이 아니다."
+    },
+    {
+      "id": "FND-009",
+      "prior_severity": "MEDIUM",
+      "status": "partially-resolved",
+      "why": "코드 쪽은 닫혔다 — canRevealSource 위 주석(table-widget.ts:1313-1331)이 「이 게이트는 표만의 것」이라는 사실과 나머지 여덟이 !readOnly 뿐이라는 것, 그리고 통합을 미루는 사유를 명시한다. 그러나 지적된 다른 절반인 SRS 는 손대지 않았다 — git status 에 docs/spec 변경이 없고 be66168..HEAD 도 비어 있다. FR-EDITOR-007 의 AC 문면은 여전히 아홉 요소를 같은 규칙으로 규정한 채이고 표만 다른 사실이 어디에도 적혀 있지 않다."
+    },
+    {
+      "id": "FND-010",
+      "prior_severity": "MEDIUM",
+      "status": "resolved",
+      "why": "src/vendor/atomic-editor/__tests__/table-reveal-state.test.ts 6건이 새로 생겼고 실행해 6건 통과를 확인했다(전체 20파일 243통과·1스킵, tsc --noEmit 무출력). 초점 주입 경로가 mock 이 아니다 — withFocus 는 state.facet(EditorView.focusChangeEffect) 에 실제로 등록된 함수(table-widget.ts:1541)를 그대로 불러 그 효과를 트랜잭션에 싣는다. CM6 의 updateForFocusChange 가 하는 일과 같은 API 이고 setTimeout 만 비껴간다. live-preview.test.tsx:262-276 의 skip 주석도 두 번째 차단 사유(초점 효과가 비동기)를 적었다."
+    },
+    {
+      "id": "FND-011",
+      "prior_severity": "LOW",
+      "status": "resolved",
+      "why": "① 이 재기 전에 clickAboveTable() 로 초점을 주고 단언에 idle.focused 를 더했다 (table-reveal-check.mjs:145-161). snapshot() 이 focused: view.hasFocus 와 cursorLine 을 함께 돌려주므로 실패 시 원인도 읽힌다. 이제 노출 로직을 지우면 ① 이 깨진다."
+    },
+    {
+      "id": "FND-012",
+      "prior_severity": "LOW",
+      "status": "open",
+      "why": "거절 타당. .gitignore:26-28 의 .serena/ 는 그대로 있다. 이미 이전 커밋에 들어간 무해하고 정확한 무시 규칙이며 되돌리는 것이 오히려 새 diff 를 만든다. §3 의 관심사는 diff 위생이지 규칙의 옳고 그름이 아니다."
+    },
+    {
+      "id": "FND-013",
+      "prior_severity": "LOW",
+      "status": "open",
+      "why": "거절 타당하되 아슬아슬하다. live-preview.test.tsx:203-210 의 중복 문단은 그대로 있다. 선재 결함이고 직전 finding 자신이 suggested_fix: null 로 「지목만」을 권했으므로 §3 상 거절이 성립한다. 다만 이번 회차가 같은 파일의 60줄 아래를 실제로 고쳤으므로 함께 지우는 것이 위험보다 이득이 컸다는 반론도 성립한다."
+    },
+    {
+      "id": "FND-014",
+      "prior_severity": "LOW",
+      "status": "open",
+      "why": "거절 자체는 성립한다 — docs/spec/07.editor.srs.md:733 의 [2026-08-25] [2026-08-25] 중복 접두는 speckiwi 가 붙인 note 본문이라 손편집이 금지돼 있고 고치려면 별도 mutation 이 필요하다. 다만 같은 줄이 이번 수정으로 내용까지 틀리게 됐다(FND-103) — 그 줄을 한 번은 다시 써야 하므로 그때 접두도 함께 정리되는 것이 자연스럽다."
+    }
+  ],
+  "resolved_findings": [
+    "FND-001",
+    "FND-002",
+    "FND-004",
+    "FND-005",
+    "FND-006",
+    "FND-007",
+    "FND-008",
+    "FND-010",
+    "FND-011"
+  ],
+  "findings": [
+    {
+      "id": "FND-101",
+      "axis": "P1",
+      "severity": "MEDIUM",
+      "title": "새 .dl-code 규칙이 제품(packages/web)에 배달되지 않는다 — 그 패키지는 편집기 CSS 를 한 장도 import 하지 않는다",
+      "location": {
+        "file": "packages/web/src/main.tsx",
+        "line_range": "1-5"
+      },
+      "description": "FND-003 이 지목한 것은 「이 결함은 제품 조립에만 있다」였고 처방은 packages/editor/src/styles/editor.css:39-42 에 .dl-code { margin: 0; padding: 1em 0 } 를 세우는 것이었다. 그런데 그 스타일시트를 import 하는 자리는 packages/editor/demo/main.tsx:5 하나뿐이다. packages/web/src/main.tsx:5 는 ./styles/shell.css 만 가져오고, packages/web/src/styles/shell.css 에는 @import 가 없으며, packages/web/index.html 에도 <link rel=stylesheet> 가 없다. 실제 빌드 산출물로도 확인했다 — packages/web/dist/assets/index-4wtiOQg5.css 에서 dl-code · dl-mermaid-block · cm-atomic-table 이 각 0건이다. 따라서 제품 화면에서 pre.dl-code 는 여전히 UA 기본 margin: 1em 0 을 갖고, FND-003 이 재현한 heightmap 어긋남(코드블록 아래 모든 줄에서 클릭이 아래 줄로 라우팅)이 그대로 남는다. 같은 이유로 .dl-mermaid-block { padding: 0.6em 0 } (직전 회차의 mermaid 처방)과 inline-preview.css 의 .cm-atomic-table { padding: 0.5em 0 } 도 제품에서 적용되지 않는다. CSS 배달 누락 자체는 이번 diff 가 만든 것이 아니라 선재 결함이지만, 그것 때문에 이번 수정이 원래 대상으로 삼은 조립에는 닿지 못한다. package.json 이 ./styles.css 서브패스를 이미 export 하고 있으므로 배달 경로는 열려 있다.",
+      "suggested_fix": "packages/web 쪽(main.tsx 또는 DocumentSurface.tsx)에서 @doculight/editor/styles.css 와 vendor 의 inline-preview.css 를 import 하고 제품 조립에서 어긋남이 0 인지 한 번 재라. 배달이 아직 미결이라면 그 사실을 .dl-code 주석과 완료 로그에 적어 「제품에서 고쳐졌다」로 읽히지 않게 하라.",
+      "is_behavioral": true,
+      "tags": ["incomplete-fix", "pre-existing", "bug"]
+    },
+    {
+      "id": "FND-102",
+      "axis": "P1",
+      "severity": "MEDIUM",
+      "title": ".dl-code 의 margin→padding 교체가 코드블록의 세로 간격을 1em 에서 2em 으로 두 배로 만든다 — 주석은 「간격도 종전 그대로」라고 적는다",
+      "location": {
+        "file": "packages/editor/src/styles/editor.css",
+        "line_range": "29-42"
+      },
+      "description": "주석 36-38 이 「이 상자에는 테두리도 배경도 없으므로 padding 이 margin 과 겉보기가 같고 … 값은 UA 기본과 같은 1em 이라 간격도 종전 그대로다」라고 단언하는데 그 전제가 성립하지 않는다. CodeWidget.toDOM (core/code-blocks.ts:80-88) 은 pre.dl-code 를 만든 뒤 highlightCode 의 결과를 innerHTML 로 넣고, 그 결과는 shiki 의 codeToHtml 이 내는 또 하나의 <pre> 다 — 이 저장소의 shiki 로 직접 확인했다: <pre class=\"shiki github-light\" style=\"background-color:#fff;color:#24292e\" tabindex=\"0\"><code>… . 이 안쪽 <pre> 는 UA margin: 1em 0 을 그대로 갖는다. 변경 전에는 바깥 pre.dl-code 에 padding·border 가 없었으므로 안쪽 margin 이 바깥 margin 과 collapse 해 전체 여백이 1em 이었다. 변경 후에는 바깥에 padding: 1em 0 이 생겨 collapse 가 막히고 여백이 padding 1em + 안쪽 margin 1em = 2em 이 된다(위아래 각각). 게다가 하이라이팅이 비동기라 textContent 만 있는 첫 프레임은 1em, shiki 가 돌아온 뒤는 2em 이라 레이아웃이 한 번 튄다. heightmap 어긋남 자체는 고쳐진다(안쪽 margin 이 바깥 padding 상자 안에 들어가 getBoundingClientRect 에 포함된다) — 문제는 겉보기가 바뀌었는데 바뀌지 않았다고 적힌 것이고, 이 축을 재는 단언이 아무 데도 없다는 점이다.",
+      "suggested_fix": ".dl-code > pre { margin: 0 } 처럼 shiki 산출물만 겨냥한 자식 선택자를 함께 세워 안쪽 여백을 죽이고, 주석의 「간격도 종전 그대로다」를 실제 값으로 다시 적으라.",
+      "is_behavioral": true,
+      "tags": ["comment-mismatch", "regression", "layout"]
+    },
+    {
+      "id": "FND-103",
+      "axis": "P8",
+      "severity": "MEDIUM",
+      "title": "SRS Implementation Note 가 「ignoreEvent 를 mousedown 과 click 에 한정해 열어」 라고 적는데 이번 수정이 click 을 닫았다",
+      "location": {
+        "file": "docs/spec/07.editor.srs.md",
+        "line_range": "733"
+      },
+      "description": "733 행의 [2026-08-25] 항목은 구현 사실로 「계획 wave1-editor007 이 표 데코레이션에 선택·초점 판정을 세우고 ignoreEvent 를 mousedown 과 click 에 한정해 열어 커서 진입 경로를 함께 세웠다」를 적는다. 그러나 이번 수정이 FND-007 을 받아 click 을 닫아 ignoreEvent 는 event.type === 'mousedown' ? this.readOnly : true (table-widget.ts:770-772) 가 됐다 — click 은 이제 열리지 않는다. 저장소 규약상 docs/spec/ 이 요구의 SSOT 이고 이 항목은 그 문서 안의 구현 사실 진술이므로 지금 그 진술이 코드와 어긋난다. 코드 변경이 spec 갱신 없이 들어갔다는 것이 관측 사실이다(git status 에 docs/spec 변경 0건).",
+      "suggested_fix": "speckiwi mutation 으로 그 note 를 갱신해 mousedown 하나만 연다는 사실과 그 사유(CM6 코어에 click 핸들러가 없어 캐럿에 필요하지 않다)를 적으라. 같은 손질에서 FND-014 의 중복 날짜 접두도 함께 정리된다.",
+      "is_behavioral": false,
+      "tags": ["spec-mismatch", "docs"]
+    },
+    {
+      "id": "FND-104",
+      "axis": "P4",
+      "severity": "LOW",
+      "title": "빠른 판정은 syntaxTree 로, 재구축은 ensureSyntaxTree 로 트리를 읽어 파서가 앞서간 한 트랜잭션 동안 노출 판정을 놓칠 수 있다",
+      "location": {
+        "file": "packages/editor/src/vendor/atomic-editor/table-widget.ts",
+        "line_range": "1350-1384"
+      },
+      "description": "revealedTableSignature 는 syntaxTree(state) (1352) 를, buildTableWidgets 는 ensureSyntaxTree(state, state.doc.length, 200) ?? syntaxTree(state) (1383-1384) 를 읽는다. 둘은 언제나 같지 않다. @codemirror/language 에서 syntaxTree 는 LanguageState.tree 를 돌려주는데(dist/index.js:186-189) 그 값은 LanguageState 생성 시점의 context.tree 사본이다(:519-526). ensureSyntaxTree 는 그 context 를 제자리에서 전진시킬 뿐(:195-205) 필드 값을 새로 만들지 않는다. 따라서 buildTableWidgets 가 전체 파스를 강제한 직후의 한 트랜잭션 동안 tr.startState 의 syntaxTree 는 그 표를 모른 채 남을 수 있다. 그 창에서 캐럿이 그 표에 들어갔다 나오면 서명이 양쪽 모두 빈 문자열이 되어 revealChanged 가 false 가 되고 위젯이 걷힌 채(또는 선 채) 남는다. 다음 트랜잭션에서 LanguageState.apply 가 this.tree != this.context.tree 를 보고 필드를 새로 만들므로 스스로 낫는다 — 그래서 LOW 다. 주석 1344-1348 이 「if it somehow is not, the reveal repaints when treeGrowthEffect fires」로 이 자리를 덮으려 하지만 treeGrowthEffect 는 파서가 자라날 때 나는 신호이지 필드 트리가 컨텍스트를 따라잡는 신호가 아니다.",
+      "suggested_fix": null,
+      "is_behavioral": true,
+      "tags": ["edge-case", "comment-mismatch"]
+    },
+    {
+      "id": "FND-105",
+      "axis": "P6",
+      "severity": "LOW",
+      "title": "새 ⓪ 판정은 재는 줄이 렌더 범위 밖이면 「재지 못했다」가 아니라 거대한 어긋남으로 실패한다 — 파일 머리가 선언한 규칙과 반대다",
+      "location": {
+        "file": "packages/editor/test/heightmap-drift-check.mjs",
+        "line_range": "171-237"
+      },
+      "description": "파일 머리 22-26 은 「판정 불가가 확실한 자리(줄이 화면 밖이다 등)만 명시적으로 unmeasurable() 을 부른다」고 선언하고 ⓪ 루프의 229-231 도 drift === null 을 그 자리로 잡는다. 그런데 CM6 는 렌더 범위 밖 구간을 block gap 위젯으로 채우므로 view.domAtPos(line.from) 은 던지지 않고 그 gap 요소를 돌려준다. closest('.cm-line, .cm-content > *') 는 gap 요소를 그대로 잡고(그것도 .cm-content 의 직계 자식이다) drift 는 null 이 아니라 gap 구간 높이만큼의 값이 된다 → Math.abs(drift) <= 1 이 깨져 exit 1(회귀)로 나간다. clickLineAndReadCursor 쪽은 coordsAtPos 가 null 을 돌려주므로 이 함정이 없다 — 새로 들어온 ⓪ 만 다르다. 지금의 데모 문서에서는 세 자리(인용 108·표 110·문단 114행)가 모두 마지막 화면에 있어 발현하지 않지만, 이 파일이 줄번호 대신 marker 를 쓰는 이유가 「데모 문서가 자란다」이므로 그 전제 아래에서는 언젠가 밟는다.",
+      "suggested_fix": "driftAtLine 안에서 잡은 요소가 gap 위젯인지(또는 line.from 이 view.visibleRanges 안에 있는지) 먼저 보고, 렌더 범위 밖이면 null 을 돌려 unmeasurable 로 흐르게 하라.",
+      "is_behavioral": false,
+      "tags": ["test-quality", "edge-case"]
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "by_severity": {
+      "CRITICAL": 0,
+      "HIGH": 0,
+      "MEDIUM": 3,
+      "LOW": 2
+    },
+    "by_axis": {
+      "P1": 2,
+      "P2": 0,
+      "P3": 0,
+      "P4": 1,
+      "P5": 0,
+      "P6": 1,
+      "P7": 0,
+      "P8": 1
+    }
+  }
+}

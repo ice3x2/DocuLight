@@ -259,9 +259,21 @@ describe('FR-EDITOR-007 — 아홉 요소 모두 커서를 올리면 원문이 �
    * 드러나는 절반은 실제 브라우저에서 확인해야 하며, 그것을 자동으로 잴
    * 자리는 Playwright E2E 다 — 거기서는 이 재진입이 일어나지 않는다.
    *
+   * **막는 사유가 둘이다.** 위의 재진입에 더해, 표는 편집기가 초점을 쥐고
+   * 있을 때만 원문을 드러내는데(`table-widget.ts` 의 `canRevealSource`) CM6 는
+   * 초점 변화를 `setTimeout(..., 10)` 뒤에 트랜잭션으로 발행한다
+   * (`@codemirror/view` 의 `updateForFocusChange`). 그래서 위 `reveal()` 의
+   * `view.focus()` 는 동기 시험 본문이 끝날 때까지 상태에 반영되지 않고,
+   * 재진입을 푼다 해도 이 항은 그대로 통과하지 못한다. 다른 여덟 요소는 초점을
+   * 보지 않으므로 이 사유를 타지 않는다.
+   *
    * **그 자리는 이제 있다.** `packages/editor/test/table-reveal-check.mjs`
    * 가 실제 브라우저에서 이 항을 잰다 (`npm run test:browser:table`).
-   * 여기가 skip 이라고 해서 이 항이 미검증인 것이 아니다.
+   * 그리고 초점을 타지 않는 절반 — 노출을 정하는 데코레이션 규칙 자체 — 는
+   * `src/vendor/atomic-editor/__tests__/table-reveal-state.test.ts` 가 상태
+   * 단위로 잰다(초점 효과를 `EditorView.focusChangeEffect` 로 직접 실어
+   * 뷰 없이 재므로 위 두 사유를 모두 비껴간다). 여기가 skip 이라고 해서 이
+   * 항이 미검증인 것이 아니다.
    *
    * **통과로 세지 않으려고 남겨 둔다.** 지우면 이 구멍이 목록에서 사라지고,
    * 통과시키려 손대면 재는 대상이 바뀐다.

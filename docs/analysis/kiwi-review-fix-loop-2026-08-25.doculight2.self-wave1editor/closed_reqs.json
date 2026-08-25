@@ -1,0 +1,28 @@
+{
+  "run_id": "2026-08-25.doculight2.self-wave1editor",
+  "trigger": "--close-reqs",
+  "scope_mode": "self",
+  "candidates_total": 1,
+  "verified_transitioned": 0,
+  "candidates": [
+    {
+      "req_id": "FR-EDITOR-007",
+      "match_source": "trace",
+      "match_confidence": "high",
+      "current_status": "implemented",
+      "stability": "evolving"
+    }
+  ],
+  "skipped": [
+    {
+      "req_id": "FR-EDITOR-007",
+      "reason": "제품 화면에서 AC-7 의 클릭 경로가 아직 보장되지 않는다 — FND-101 로 packages/web 이 editor.css 를 import 하지 않아 빌드 산출물 CSS 에 해당 클래스가 0건이고, pre 의 UA margin 은 스타일시트와 무관하므로 코드블록 heightmap 어긋남이 제품에 그대로 남는다. AC-7 의 증거 VE-6 은 editor 데모에서 잰 것이며 제품에서 잰 것이 아니다. verified 는 그 배달 결함이 닫힌 뒤에 준다."
+    }
+  ],
+  "failed": [],
+  "evidence_refs": [
+    "packages/editor/test/table-reveal-check.mjs"
+  ],
+  "gate_notes": "0.G7 의 차단 조건(회귀 fail · CRITICAL/HIGH 잔존 · draft · status 불일치)에는 걸리지 않았다. 이 skip 은 게이트가 아니라 증거 범위에 대한 판정이다.",
+  "decided_at": "2026-08-25T04:37:26Z"
+}

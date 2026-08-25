@@ -1,0 +1,259 @@
+{
+  "iteration": 1,
+  "run": "kiwi-review-fix-loop-2026-08-25.doculight2.self-wave1editor",
+  "requirement_ids": ["FR-EDITOR-007", "CON-ARCH-005"],
+  "base": "b73f70c..be66168",
+  "mode": "--auto (severity guardrail: HIGH + MEDIUM all, LOW-1 only)",
+  "totals": { "input": 14, "fixed": 11, "rejected": 3 },
+  "fixed": [
+    {
+      "id": "FND-001",
+      "severity": "HIGH",
+      "axis": "P4",
+      "title": "커서 이동마다 문서 전체 구문 트리를 훑고 ensureSyntaxTree 를 200ms 예산으로 강제한다",
+      "approach": "선택/초점 트랜잭션에서 '노출 결과가 달라질 수 있는가'를 먼저 싸게 판정하고, 달라질 때만 재구축한다.",
+      "detail": [
+        "`revealedTableSignature(state)` 를 새로 세웠다. 선택이 놓인 줄만 `tree.iterate({from, to})` 로 훑어 그 선택이 드러내는 표들의 줄 범위를 문자열로 만든다. 문서 길이와 무관하다.",
+        "그 안의 판정은 `selectionTouches` — `buildTableWidgets` 가 쓰는 바로 그 술어다. 창(window)은 최적화일 뿐이고 규칙은 하나만 둔다.",
+        "`ensureSyntaxTree` 가 아니라 `syntaxTree` 를 쓴다. 캐럿 이동 경로에서 200ms 예산을 완전히 뺐다. (캐럿은 뷰포트 안에 있고 CM6 는 뷰포트를 파싱하며, 그래도 못 미친 자리는 기존 `treeGrowthEffect` 가 덮는다.)",
+        "`revealable` 계산을 `canRevealSource(state)` 로 뽑아 build 와 update 가 같은 정의를 쓰게 했다.",
+        "`parseTable` 호출을 노출 판정 **뒤**로 옮겼다 — 원문이 드러나 폐기될 표는 이제 파싱하지 않는다."
+      ],
+      "files": ["packages/editor/src/vendor/atomic-editor/table-widget.ts"],
+      "tests_first": true,
+      "tests": [
+        "packages/editor/src/vendor/atomic-editor/__tests__/table-reveal-state.test.ts — '표에 닿지 않는 커서 이동은 데코레이션 집합을 다시 만들지 않는다' / '초점이 없으면 커서를 표에 올려도 다시 만들지 않는다' (둘 다 구현 전 RED 확인)"
+      ],
+      "measurement": {
+        "how": "동일 시험 하네스에서 수정 전(git HEAD 사본)과 수정 후 모듈을 나란히 세우고, 캐럿 전용 트랜잭션 200회를 걸어 재구축 횟수와 소요를 쟀다. (A/B 탐침은 측정 후 삭제)",
+        "doc_2000_paragraphs_no_table": {
+          "before": "200회 이동 / 49.9ms (0.25ms per move)",
+          "after": "200회 이동 / 2.5ms (0.01ms per move)",
+          "note": "표가 0개라 재구축 횟수로는 갈리지 않는다(빈 RangeSet 은 싱글턴). 20배 차이는 전수 `tree.iterate` 와 `ensureSyntaxTree` 를 뺀 값이다."
+        },
+        "doc_2000_paragraphs_one_table_caret_outside": {
+          "before": "200회 이동 / 재구축 200회 / 49.5ms",
+          "after": "200회 이동 / 재구축 0회 / 1.4ms"
+        },
+        "caveat": "happy-dom + 완전 파싱된 트리에서 잰 값이다. 실제 브라우저에서 뒤쪽이 아직 파싱되지 않은 큰 문서라면 `ensureSyntaxTree` 의 200ms 예산이 캐럿 이동 한 번당 붙으므로 차이는 이보다 훨씬 크다."
+      }
+    },
+    {
+      "id": "FND-003",
+      "severity": "HIGH",
+      "axis": "P1",
+      "title": "코드블록 위젯(.dl-code pre)에 UA 기본 margin 이 남아 있고 새 E2E 가 그것을 볼 수 없다",
+      "approach": "여백을 위젯 바깥 상자의 padding 으로 옮기고, 데모가 제품과 같은 블록 위젯을 조립하게 해 E2E 가 실제로 그것을 보게 했다.",
+      "detail": [
+        "`packages/editor/src/styles/editor.css` 에 `.dl-code { margin: 0; padding: 1em 0; }` 를 세웠다. mermaid 처럼 바깥 컨테이너를 덧대지 않은 이유는 이 상자에 테두리도 배경도 없어 padding 이 곧 같은 겉보기이고, 위젯의 바깥 상자가 곧 그 `<pre>` 이기 때문이다. 값이 UA 기본과 같은 `1em` 이라 간격도 종전 그대로다(겉보기 무변경).",
+        "데모(`demo/App.tsx`)가 `[mermaidBlocks(), codeBlocks(), mathBlocks()]` 를 조립한다 — 제품 `doculightExtensions()` 의 블록 위젯 셋과 같다. 안내 문구도 사실에 맞췄다.",
+        "데모 문서에 **재는 자리 위쪽**으로 코드 펜스와 수식 블록을 하나씩 넣었다. 문서 top 의 js 펜스는 뷰포트 밖이라 `.cm-gap` 이 어긋남을 흡수해 재지 못한다 — 재는 줄(인용·표·문단)과 같은 렌더 구간에 있어야 보인다.",
+        "`codeBlocks` 를 `src/index.ts` 에서 재수출했다(기존에 mermaid·math 만 나와 있었다). 기존 심볼은 건드리지 않았다."
+      ],
+      "files": [
+        "packages/editor/src/styles/editor.css",
+        "packages/editor/demo/App.tsx",
+        "packages/editor/src/index.ts"
+      ],
+      "tests_first": true,
+      "evidence": {
+        "red": "`.dl-code` 규칙 이름만 바꿔 무력화한 뮤테이션에서 `heightmap-drift-check` 가 0/6 통과, 어긋남 34px, 클릭 판정 셋 모두 한 줄 아래로 밀림 (exit 1)",
+        "green": "규칙 복구 후 6/6 통과, 세 자리 모두 0px (exit 0)"
+      },
+      "math_verdict": {
+        "question": "수식(mathBlocks)에도 같은 결함이 있는가",
+        "answer": "없다 — 측정으로 확인",
+        "evidence": [
+          "브라우저에서 `.dl-math` / `.dl-math-block` 의 computed margin·padding 모두 `0px` (`div`, UA 기본 여백 없음).",
+          "`.dl-math`·`.dl-math-block`·`.katex-display` 에 대응하는 CSS 규칙이 저장소 어디에도 없고 katex 스타일시트도 어디서도 import 되지 않는다.",
+          "데모 문서에 수식 블록을 넣은 뒤 그 **아래** 줄(인용 104행)의 어긋남이 0px 이다."
+        ]
+      }
+    },
+    {
+      "id": "FND-002",
+      "severity": "HIGH",
+      "axis": "P2",
+      "title": "칸 편집 경로가 마우스로 도달 불가가 됐다 (지적의 전제가 반증됨)",
+      "approach": "벤더 코드를 지우지 않았다. 실제 브라우저 탐침으로 도달 가능성을 먼저 재고, 그 사실을 주석에 적었다.",
+      "measured": {
+        "probe": "이미 떠 있는 데모에 Chromium 을 붙여 칸의 두 자리를 각각 눌렀다",
+        "cell_padding_click": "activeElement=`.cm-atomic-table-cell-source`, 위젯 유지(1개), 원문 숨음, `view.hasFocus=false`. 이어서 'X' 를 치자 문서가 `| 커서를X | 올리면 원문 |` 로 바뀌었다 — `attachCellEditing` 의 쓰기 경로가 **살아 있다**.",
+        "cell_text_click": "activeElement=`.cm-content`, 위젯 0개, 원문 드러남 — 우선순위대로 노출이 이긴다."
+      },
+      "conclusion": "「쓰기 경로 전체가 마우스로 도달 불가」는 성립하지 않는다. 칸 여백·이미지 미리보기의 `pointerdown` 이 `preventDefault` 하여 호환 `mousedown` 을 억제하므로 CM6 가 그 제스처를 보지 못하고 초점이 칸으로 라우팅된다. 죽은 코드가 아니므로 제거 대상도 아니다.",
+      "detail": [
+        "`TableWidget.ignoreEvent` 주석을 사실에 맞게 다시 썼다: 어느 자리를 누르면 무엇이 일어나는지(칸 텍스트→노출, 칸 여백/이미지→칸 편집), 그 우선순위가 `FR-EDITOR-007` AC-7 의 결정이라는 것, 그리고 측정 결과를 함께 적었다."
+      ],
+      "files": ["packages/editor/src/vendor/atomic-editor/table-widget.ts"],
+      "tests_first": "면제 — 주석만 바꾼다 (동작 변경 없음). 도달 가능성은 위 브라우저 탐침으로 검증했다.",
+      "note_to_reviewer": "`read-only.test.tsx:52-60` 의 단언은 그대로 두었다. 그 시험이 재는 것(`isContentEditable`)은 이제도 참이고, 칸 편집이 실제로 도달 가능하므로 「반대 인상을 준다」는 전제도 함께 무너진다."
+    },
+    {
+      "id": "FND-004",
+      "severity": "MEDIUM",
+      "axis": "P1",
+      "title": "문서 변경 팔이 선택 이동을 보지 않아 원문이 드러난 채 남을 수 있다",
+      "reproduced": true,
+      "detail": [
+        "재현 확인: 커서를 표에 둔 상태(원문 드러남)에서 `{changes: 표에서 먼 파이프 없는 줄, selection: 그 줄}` 를 한 트랜잭션으로 걸면 표가 드러난 채 남았다 (시험이 RED).",
+        "`docChanged` 팔에서도 `revealChanged` 를 함께 본다. `changeAffectsTables` 의 빠른 경로는 그대로 살아 있다(타이핑은 여전히 전수 순회로 떨어지지 않는다)."
+      ],
+      "files": ["packages/editor/src/vendor/atomic-editor/table-widget.ts"],
+      "tests_first": true,
+      "tests": [
+        "table-reveal-state.test.ts — '표를 떠나는 변경+선택 트랜잭션이 원문을 드러난 채 남기지 않는다' (RED: 0 != 1 → GREEN)"
+      ]
+    },
+    {
+      "id": "FND-005",
+      "severity": "MEDIUM",
+      "axis": "P6",
+      "title": "heightmap-drift-check 가 어긋남을 재고도 단언하지 않는다",
+      "detail": [
+        "⓪ 판정 셋을 세웠다 — 표 첫 줄·문단·인용에서 `|drift| <= 1px`. 클릭 판정(①~③)은 사용자 관점 회귀로 남기고, ⓪ 이 원인 축 회귀를 잡는다.",
+        "**`driftAtLine` 자체를 고쳤다.** 종전은 `coordsAtPos` 로 글자 상자를 재서 줄 높이와 글자 높이의 차(leading)가 섞였고, 어긋남이 0 인 평범한 글줄에서도 2~3px(헤딩은 더) 이 나왔다 — 그 값으로는 0 을 단언할 수 없다. `domAtPos` 로 그 줄을 그린 DOM 상자(`.cm-line` 또는 블록 위젯의 바깥 상자)를 찾아 heightmap 의 top 과 견주도록 바꿨다. 종전 값은 단언에 쓰이지 않는 참고 출력이었으므로 약화가 아니라 자를 옳게 댄 것이다."
+      ],
+      "files": ["packages/editor/test/heightmap-drift-check.mjs"],
+      "evidence": "정상 상태에서 세 자리 모두 0px, `.dl-code` 무력화 뮤테이션에서 세 자리 모두 34px 로 FAIL"
+    },
+    {
+      "id": "FND-006",
+      "severity": "MEDIUM",
+      "axis": "P6",
+      "title": "진짜 회귀 신호(위젯 미마운트)를 '재지 못했다'(exit 2)로 분류한다",
+      "detail": [
+        "`cellCount === 0` 을 `unmeasurable()` 에서 `check(..., false, ...)` 로 내렸다 — 표 영역은 바로 앞의 `bringTailIntoView()` 로 이미 화면에 있으므로 스크롤 가설은 배제돼 있고, 칸 0개는 노출 판정 회귀의 모습이다.",
+        "catch-all 을 갈랐다. fixture 를 다 찾은 뒤(`measuring = true`)의 예상 못 한 예외는 exit 1, 그 전(접속·데모 확인·fixture 탐색)의 예외와 명시적 `unmeasurable()` 만 exit 2 다. 파일 머리의 종료 코드 계약도 그렇게 다시 적었다."
+      ],
+      "files": ["packages/editor/test/heightmap-drift-check.mjs"]
+    },
+    {
+      "id": "FND-007",
+      "severity": "MEDIUM",
+      "axis": "P8",
+      "title": "ignoreEvent 주석의 안전 근거가 click 에 성립하지 않고, click 개방이 캐럿에 불필요하다",
+      "verified": "`node_modules/@codemirror/view/dist/index.js` 의 `handlers.*` 는 keydown·mousedown·dragstart·dragend·drop·paste·copy/cut·beforeinput 뿐이다 — 코어에 `click` 핸들러가 없다. 캐럿 배치는 전적으로 `mousedown` 이 한다.",
+      "detail": [
+        "`ignoreEvent` 에서 `click` 을 닫았다: `event.type === 'mousedown' ? this.readOnly : true`. 캐럿에 필요하지 않으면서 위젯 안의 클릭을 contentDOM 수준 확장 핸들러(`inline-preview` · `wiki-links`)에 다시 노출시키는 순개방이었다.",
+        "주석에서 `click` 관련 서술을 정리하고, 왜 닫는지를 근거(코어 핸들러 목록)와 함께 적었다."
+      ],
+      "files": ["packages/editor/src/vendor/atomic-editor/table-widget.ts"],
+      "tests_first": "기존 브라우저 회귀가 덮는다 — `table-reveal-check` ②(칸 클릭→노출)와 ⑤, `browser-check` 의 편집/읽기 모드 클릭 판정이 모두 통과한다. 링크 열기는 위젯 안 DOM 리스너라 `ignoreEvent` 와 무관하다."
+    },
+    {
+      "id": "FND-008",
+      "severity": "MEDIUM",
+      "axis": "P7",
+      "title": "selectionTouches 가 같은 술어의 네 번째 사본이 됐다",
+      "approach": "DocuLight 쪽 사본 셋을 하나로 합치고, vendor 사본은 남기되 왜 남는지를 코드에 적었다.",
+      "detail": [
+        "`packages/editor/src/core/selection-touches.ts` 를 새로 세우고 `code-blocks.ts` · `mermaid-blocks.ts` · `math-blocks.ts` 가 그것을 쓴다. `math-blocks.ts` 의 `touchesSelection` 이라는 두 번째 이름도 사라졌다.",
+        "vendor 사본은 그대로 둔다 — `src/vendor/` 가 `src/core/` 를 import 하면 그 경계가 뒤집힌다(다음 vendor 드롭에서 이 import 가 사라지거나 우리 모듈을 함께 끌고 온다). 그 사유와 「두 사본은 같아야 한다」를 양쪽 주석에 적었다."
+      ],
+      "files": [
+        "packages/editor/src/core/selection-touches.ts",
+        "packages/editor/src/core/code-blocks.ts",
+        "packages/editor/src/core/mermaid-blocks.ts",
+        "packages/editor/src/core/math-blocks.ts",
+        "packages/editor/src/vendor/atomic-editor/table-widget.ts"
+      ],
+      "not_touched": "`tag-decoration.ts:63` 의 `revealed(ranges, tag)` 와 `inline-preview.ts:458` 의 인라인 형태는 시그니처가 다르고(상태가 아니라 ranges 를 받는다) 이번 변경이 만든 것도 아니라 손대지 않았다 — §3.",
+      "tests_first": "면제 — 동작 변경 없는 순수 통합. 기존 시험(code-blocks / mermaid-blocks / math-blocks / live-preview)이 그대로 통과한다."
+    },
+    {
+      "id": "FND-009",
+      "severity": "MEDIUM",
+      "axis": "P2",
+      "title": "초점 게이팅이 표에만 걸려 있다",
+      "decision": "일관화하지 않고 근거를 적었다",
+      "reason": [
+        "나머지 여덟은 DocuLight 쪽(`core/`)에 있고 초점 신호를 갖고 있지 않다. 일관화하려면 vendor 경계를 넘는 공용 초점 필드를 발행하고 여덟 요소의 기본 동작을 한꺼번에 뒤집어야 한다 — 그 자체로 별도 AC 가 필요한 변경이지 이번 변경의 부수 효과로 넣을 것이 아니다.",
+        "그리고 그렇게 하면 기존 vitest(`live-preview.test.tsx` 의 아홉 요소 노출 판정)가 초점 비동기 때문에 통째로 깨진다. 통과시키려면 그 시험을 약화해야 하는데 그것은 금지 사항이다.",
+        "표가 먼저 필요한 이유도 함께 적었다 — 드러난 형태(파이프 원문 행)가 아홉 중 유일하게 「렌더가 깨졌다」로 읽힌다."
+      ],
+      "files": ["packages/editor/src/vendor/atomic-editor/table-widget.ts"],
+      "follow_up": "SRS 쪽(FR-EDITOR-007 Implementation Notes)에는 적지 않았다. `docs/spec/*.srs.md` 손 편집이 금지돼 있고 MCP mutation 은 이번 지시의 산출물 범위 밖이라, 상위가 판단할 수 있게 여기 남긴다."
+    },
+    {
+      "id": "FND-010",
+      "severity": "MEDIUM",
+      "axis": "P6",
+      "title": "새 노출 경로에 vitest 커버리지가 0 이다",
+      "approach": "주석만 고치는 데서 멈추지 않고 **실제 커버리지를 세웠다.**",
+      "detail": [
+        "`packages/editor/src/vendor/atomic-editor/__tests__/table-reveal-state.test.ts` (신규, 6건). 뷰 없이 `EditorState` 만으로 노출 규칙을 잰다 — 초점은 `state.facet(EditorView.focusChangeEffect)` 에 등록된 함수를 그대로 불러 트랜잭션에 실어 만든다(CM6 의 `focusChangeTransaction` 과 같은 경로다. mock 이 아니다). 뷰가 없으므로 happy-dom 재진입도 타지 않는다.",
+        "재는 것: 초점+표 밖→위젯 / 표에 올리면 걷히고 빼면 다시 섬 / 초점을 잃으면 다시 섬 / 표에 닿지 않는 이동은 재구축 없음 / 초점 없으면 재구축 없음 / 표를 떠나는 변경+선택 트랜잭션.",
+        "`live-preview.test.tsx` 의 skip 주석에 **두 번째 차단 사유**를 적었다 — CM6 가 초점 변화를 `setTimeout(..., 10)` 뒤에 발행하므로(`updateForFocusChange`) 동기 시험 본문에서는 `view.focus()` 가 상태에 반영되지 않는다. 새 상태 단위 시험이 어디를 덮는지도 함께 가리켰다."
+      ],
+      "files": [
+        "packages/editor/src/vendor/atomic-editor/__tests__/table-reveal-state.test.ts",
+        "packages/editor/test/live-preview.test.tsx"
+      ]
+    },
+    {
+      "id": "FND-011",
+      "severity": "LOW",
+      "axis": "P6",
+      "title": "table-reveal-check 의 판정 ① 은 초점이 없는 시점에 잰다",
+      "detail": [
+        "① 앞에 `clickAboveTable()` 을 넣어 편집기에 초점을 준 뒤 재고, 판정 조건에 `idle.focused` 를 넣어 그 전제를 시험이 스스로 강제하게 했다. 이름도 「초점이 있고 커서가 표 밖이면」으로 바꿨다.",
+        "정직한 한계 기록: 뮤테이션 탐침(`selectionTouches` 를 항상 true 로) 에서 ① 은 여전히 통과하고 ④ 가 FAIL 했다. 노출 규칙이 망가지면 재도장 게이트(`revealedTableSignature`)도 같은 규칙 위에 서 있어 캐럿이 표에서 먼 ① 시점에는 재구축이 일어나지 않기 때문이다. 그 계열의 회귀는 같은 파일의 ②·④·⑤ 와 새 상태 단위 시험이 잡는다(위 탐침에서 ④ 가 실제로 잡았고 파일 전체는 exit 1 이 됐다)."
+      ],
+      "files": ["packages/editor/test/table-reveal-check.mjs"]
+    }
+  ],
+  "rejected": [
+    { "id": "FND-012", "reason": "out_of_scope", "note": ".serena/ 무시 규칙 — 되돌리면 캐시가 매 git status 를 오염시킨다" },
+    { "id": "FND-013", "reason": "out_of_scope", "note": "reveal() 주석 중복은 선재 결함이며 이번 diff 가 만든 것이 아니다" },
+    { "id": "FND-014", "reason": "external_library", "note": "append_section_note 의 replace 500자 상한 때문에 고치면 기존 항 넷을 잃는다. srs.md 손 편집 금지" }
+  ],
+  "collateral_changes": [
+    {
+      "file": "packages/editor/test/browser-check.mjs",
+      "what": "테마·팔레트 두 판정을 문서 끝머리가 아니라 top 의 다이어그램 자리에서 재도록 자리를 옮겼다",
+      "why": "데모 문서가 길어지자 끝머리에 남는 다이어그램이 rect 없는 pie 와 렌더 실패 블록뿐이 되어, 색을 못 찾은 것이 '테마가 어긋났다'로 읽혔다(가상화 민감도). 같은 파일의 SDS-AC-4 가 이미 같은 이유로 landmark 로 옮긴 전례가 있다. 단언 자체는 그대로다(luma 임계·fill >= 3). 옮긴 뒤 fill 8종으로 통과.",
+      "weakened": false
+    },
+    {
+      "file": "packages/editor/test/browser-check.mjs",
+      "what": "SDS-AC-3 에 '다이어그램 안에 있지 않다'를 더했다",
+      "why": "데모가 codeBlocks 를 얹으면서 js 펜스가 코드 위젯으로 서게 됐다. '글자가 보인다'만으로는 어느 확장이 가져갔는지 가리지 못해 판정이 약해진다. 재는 대상(mermaid 가 남의 언어를 가져가지 않는다)은 그대로 두고 단언을 조였다.",
+      "weakened": false
+    }
+  ],
+  "new_observations_for_parent": [
+    {
+      "severity": "HIGH?",
+      "title": "제품(packages/web)이 에디터 스타일시트를 하나도 import 하지 않는다",
+      "evidence": [
+        "`packages/web/src/main.tsx` 는 `./styles/shell.css` 만 import 한다.",
+        "`packages/editor/src/styles/editor.css` 와 `src/vendor/atomic-editor/styles/inline-preview.css` 를 import 하는 자리가 web 어디에도 없다(index.html 에도 없다). katex 스타일시트도 없다.",
+        "그 둘을 import 하는 것은 `packages/editor/demo/main.tsx` 뿐이다."
+      ],
+      "impact": "FND-003 이 전제한 '제품 번들에는 남아 있다'는 CSS 축으로는 성립하지 않는다 — 제품에는 `.dl-mermaid-block` padding(이번 회차의 mermaid 수정)도, 새 `.dl-code` 수정도, `.cm-atomic-table` 스타일도 애초에 닿지 않는다. `<pre>` 의 UA margin 은 스타일시트와 무관하게 살아 있으므로 코드블록 heightmap 어긋남은 제품에 그대로 있다.",
+      "action_taken": "고치지 않았다 — 선재 결함이고 이번 리뷰 범위 밖이며, import 를 넣는 순간 제품 화면의 겉보기가 크게 달라져 별도 검증이 필요하다. 상위 판단으로 넘긴다."
+    },
+    {
+      "severity": "INFO",
+      "title": "재도장 게이트와 노출 규칙의 결합",
+      "detail": "`revealedTableSignature` 는 '선택 근처의 표만 노출 상태가 달라질 수 있다'를 전제한다. 현재 규칙(`selectionTouches`)에서는 정확히 참이고 술어도 공유하지만, 노출 규칙을 '닿는 표' 밖으로 넓히면 이 게이트가 그 변화를 걸러 재도장이 일어나지 않는다. 코드 주석에 창(window)이 최적화일 뿐이라는 사실을 적어 두었다."
+    }
+  ],
+  "verification": {
+    "table_reveal_check": "exit 0 — 4/4 통과 (기록성 관찰 ③ 은 종전대로 OBS-)",
+    "heightmap_drift_check": "exit 0 — 6/6 통과, 어긋남 세 자리 모두 0px",
+    "browser_check": "exit 0 — 12/12 통과",
+    "npm_test": "실패 0 — editor 243 통과 / 1 건너뜀 (기준선 237+1, 신규 6건), server 1248, web 521",
+    "typecheck": "오류 0 (editor / server / web)",
+    "guardrails": {
+      "existing_tests_weakened_or_deleted": false,
+      "public_symbol_signature_changed": false,
+      "files_deleted_or_moved": false,
+      "mocks_used_to_pass": false,
+      "srs_hand_edited": false,
+      "committed": false,
+      "temp_scripts_removed": true
+    }
+  }
+}

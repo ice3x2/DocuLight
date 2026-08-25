@@ -85,9 +85,21 @@ await page.waitForTimeout(1200); // 마지막 다이어그램 렌더 여유
 const rendered = await page.locator('.dl-mermaid svg').count();
 check('SDS-AC-1 다이어그램이 SVG 로 렌더된다', rendered >= 2, `svg ${rendered}개`);
 
-// --- SDS-AC-3: js 펜스는 위젯 대상이 아니다 (원문이 그대로 보인다)
+// --- SDS-AC-3: js 펜스는 **mermaid** 위젯 대상이 아니다
+//
+// 데모가 `codeBlocks()` 도 얹으므로 이 펜스는 이제 코드 위젯(`pre.dl-code`)으로
+// 선다 — 글자가 보이는지만 재면 어느 확장이 가져갔는지를 가리지 못한다. 그래서
+// 「글자가 보인다」에 「다이어그램 안에 있지 않다」를 더한다. 재는 대상은 그대로
+// 「mermaid 가 남의 언어를 가져가지 않는다」다.
 const jsVisible = await page.getByText('const notMermaid = true;').count();
-check('SDS-AC-3 js 펜스는 위젯으로 대체되지 않는다', jsVisible > 0);
+const jsInDiagram = await page
+  .locator('.dl-mermaid', { hasText: 'const notMermaid = true;' })
+  .count();
+check(
+  'SDS-AC-3 js 펜스는 mermaid 위젯으로 대체되지 않는다',
+  jsVisible > 0 && jsInDiagram === 0,
+  `보이는 자리 ${jsVisible}개, 다이어그램 안 ${jsInDiagram}개`,
+);
 
 // --- SDS-AC-4: 잘못된 mermaid 는 오류 표시로 떨어지고 페이지를 죽이지 않는다
 //
@@ -187,6 +199,16 @@ const leaked = await page.evaluate(() => {
     .map((el) => el.id || el.tagName);
 });
 check('SDS-AC-8 에디터 밖 DOM 잔여물 없음', leaked.length === 0, leaked.join(', '));
+
+// 남은 두 판정은 다이어그램의 **색**을 재므로, 색을 가진 다이어그램이 화면에
+// 있는 자리에서 재야 한다. 문서 끝머리에서 재면 그 자리에 어떤 다이어그램이
+// 남아 있는지가 문서 길이에 딸려 흔들린다 — 실제로 데모 문서가 길어지자 끝머리에
+// 남는 것이 rect 없는 pie 와 렌더 실패 블록뿐이 되어, 색을 못 찾은 것이 「테마가
+// 어긋났다」로 읽혔다. 위 SDS-AC-4 가 landmark 로 자리를 옮긴 것과 같은 이유이고
+// 같은 처방이다. 단언은 그대로다 — 자를 옳은 곳에 댈 뿐이다.
+await scrollToTop();
+await page.waitForSelector('.dl-mermaid svg', { timeout: 20_000 });
+await page.waitForTimeout(600);
 
 // --- 기본 테마가 라이트다 (배경과 다이어그램이 같은 방향이어야 한다)
 //

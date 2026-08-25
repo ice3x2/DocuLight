@@ -28,6 +28,7 @@ import {
   setCachedSize,
   type MermaidRenderer,
 } from './mermaid-render';
+import { selectionTouches } from './selection-touches.js';
 
 export interface MermaidBlock {
   /** 펜스를 포함한 블록 시작 */
@@ -79,10 +80,6 @@ export function findMermaidBlocks(state: EditorState): MermaidBlock[] {
   });
 
   return blocks;
-}
-
-function selectionTouches(state: EditorState, from: number, to: number): boolean {
-  return state.selection.ranges.some((range) => range.from <= to && range.to >= from);
 }
 
 let widgetSeq = 0;
