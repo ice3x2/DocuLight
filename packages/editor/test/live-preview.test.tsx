@@ -84,9 +84,30 @@ describe('FR-EDITOR-007 — 커서가 없는 줄에서 마크다운 기호가 �
     // 울타리를 숨기는 기구가 둘이다 — 코드블록 위젯(`code-blocks.ts`)이 블록을
     // 통째로 대체하는 길과, 벤더의 `HIDEABLE_SYNTAX` 가 `CodeMark`·`CodeInfo`
     // 를 걷는 길이다. 위의 글자 단언만으로는 한쪽이 죽어도 다른 쪽이 가려 준다.
-    // 위젯이 실제로 섰는지를 함께 재야 두 길 중 어느 쪽이 무너져도 이 항이
-    // 죽는다 (뮤테이션 탐침으로 양쪽을 각각 무력화해 확인했다).
+    // 위젯이 실제로 섰는지를 함께 재야 위젯 쪽이 무너질 때 이 항이 죽는다.
+    //
+    // **이 항은 벤더 쪽 길은 재지 못한다.** 언어가 붙은 이 펜스는 위젯이 통째로
+    // 가져가므로 울타리 글자가 애초에 DOM 에 없고, `HIDEABLE_SYNTAX` 에서
+    // `CodeMark`·`CodeInfo` 를 빼도 이 항은 그대로 통과한다(2026-08-26 실측).
+    // 그 길은 아래 항이 잰다.
     expect(host.querySelector('pre.dl-code'), '코드블록 위젯이 서지 않았다').not.toBeNull();
+  });
+
+  it('AC-6: 언어 없는 울타리도 숨는다 — 위젯이 가져가지 않는 자리', () => {
+    // 위 항이 재지 못하는 **나머지 한 길**을 잰다. `code-blocks.ts` 는
+    // `CodeInfo` 가 없는 펜스를 가져가지 않으므로(`if (info === null) return`),
+    // 여기서 울타리를 숨기는 것은 벤더의 `HIDEABLE_SYNTAX` 하나뿐이다.
+    // 그래서 이 항은 그 집합에서 `CodeMark`·`CodeInfo` 가 빠지면 죽는다.
+    const host = mount('앞 문단\n\n```\nconst a = 1;\n```\n');
+    const shown = visibleText(host);
+
+    // 위젯이 서지 않았음을 먼저 못박는다 — 이것이 이 항이 벤더 쪽 길을 재고
+    // 있다는 전제다. 위젯이 언어 없는 펜스까지 가져가게 바뀌면 이 전제가
+    // 무너지고, 그때는 표본을 다시 골라야지 단언을 지워서는 안 된다.
+    expect(host.querySelector('pre.dl-code'), '언어 없는 펜스에 위젯이 섰다').toBeNull();
+
+    expect(shown, '코드블록의 내용이 사라졌다').toContain('const a = 1;');
+    expect(shown, '언어 없는 펜스의 울타리가 그대로 보인다').not.toContain('```');
   });
 
   it('AC-7: 표가 구분선 없이 렌더된다', () => {
@@ -305,5 +326,63 @@ describe('FR-EDITOR-007 — 아홉 요소 모두 커서를 올리면 원문이 �
     const shown = reveal('앞 문단\n\n오늘 #회의 를 했다\n', '#회의');
 
     expect(shown).toContain('#회의');
+  });
+});
+
+/**
+ * 조항이 말하는 축은 **줄**이다 — 「커서가 없는 **줄**에서 기호가 숨고, 그
+ * **줄**에 커서를 올리면 원문이 드러난다」.
+ *
+ * 위의 두 무리는 그 축을 재지 못한다. 숨는 항은 초점이 **없는** 상태로 재고
+ * 드러나는 항은 `view.focus()` 를 켜고 재므로, 두 항의 차이를 **초점 하나**로
+ * 설명할 수 있다. 실제로 활성 줄 계산을 「초점이 있으면 문서의 모든 줄이
+ * 활성」으로 퇴화시켜도 위의 항들은 전부 통과한다.
+ *
+ * 그래서 여기서는 **초점을 켠 채** 같은 문서에 같은 요소를 둘 두고, 커서를
+ * 하나에만 올린다. 커서가 놓인 줄은 원문이 드러나고 **다른 줄은 여전히 숨어
+ * 있어야** 한다. 그 둘을 한 항에서 함께 단언한다 — 한쪽만 재면 초점 축과
+ * 구별되지 않는다.
+ */
+describe('FR-EDITOR-007 — 드러남은 문서가 아니라 커서가 놓인 줄에서만 일어난다', () => {
+  it('AC-1: 커서를 올린 헤딩만 `#` 가 돌아오고 다른 헤딩은 숨은 채다', () => {
+    const shown = reveal('# 커서 있는 제목\n\n# 커서 없는 제목\n', '커서 있는 제목');
+
+    expect(shown, '커서가 놓인 헤딩의 기호가 돌아오지 않았다').toContain('# 커서 있는 제목');
+    expect(shown, '커서가 없는 헤딩의 기호까지 드러났다').not.toContain('# 커서 없는 제목');
+    expect(shown, '커서가 없는 헤딩의 내용이 사라졌다').toContain('커서 없는 제목');
+  });
+
+  it('AC-2: 커서를 올린 줄의 강조만 `**` 가 돌아오고 다른 줄은 숨은 채다', () => {
+    const shown = reveal('**커서 있는 강조** 문장\n\n**커서 없는 강조** 문장\n', '커서 있는 강조');
+
+    expect(shown, '커서가 놓인 줄의 강조 기호가 돌아오지 않았다').toContain('**커서 있는 강조**');
+    expect(shown, '커서가 없는 줄의 강조 기호까지 드러났다').not.toContain('**커서 없는 강조**');
+    expect(shown, '커서가 없는 줄의 강조 내용이 사라졌다').toContain('커서 없는 강조');
+  });
+
+  it('AC-4: 커서를 올린 링크만 주소가 돌아오고 다른 링크는 숨은 채다', () => {
+    // AC-4 는 다른 여덟과 달리 **링크 단위** 규칙(`activeLinkStarts`)을 탄다.
+    // 그래도 조항의 문면은 「줄」이므로 둘을 서로 다른 줄에 두고, 커서가 닿지
+    // 않은 링크의 주소가 숨은 채로 남는지를 같은 방식으로 잰다.
+    const shown = reveal(
+      '[커서 있는 링크](https://example.test/cursor-here)\n\n[커서 없는 링크](https://example.test/no-cursor)\n',
+      '커서 있는 링크',
+    );
+
+    expect(shown, '커서가 놓인 링크의 주소가 돌아오지 않았다').toContain(
+      'https://example.test/cursor-here',
+    );
+    expect(shown, '커서가 없는 링크의 주소까지 드러났다').not.toContain(
+      'https://example.test/no-cursor',
+    );
+    expect(shown, '커서가 없는 링크의 글자가 사라졌다').toContain('커서 없는 링크');
+  });
+
+  it('AC-5: 커서를 올린 인용만 `>` 가 돌아오고 다른 인용은 숨은 채다', () => {
+    const shown = reveal('> 커서 있는 인용\n\n> 커서 없는 인용\n', '커서 있는 인용');
+
+    expect(shown, '커서가 놓인 인용의 기호가 돌아오지 않았다').toContain('> 커서 있는 인용');
+    expect(shown, '커서가 없는 인용의 기호까지 드러났다').not.toContain('> 커서 없는 인용');
+    expect(shown, '커서가 없는 인용의 내용이 사라졌다').toContain('커서 없는 인용');
   });
 });

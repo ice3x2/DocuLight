@@ -25,7 +25,7 @@
 // 브라우저를 띄우고 데모에 붙고 판정을 집계하는 기계장치는
 // `_browser-harness.mjs` 에 있다. 이 파일에는 무엇을 재는지만 남는다.
 
-import { VIEW, openDemo, runBrowserChecks, unmeasurable } from './_browser-harness.mjs';
+import { VIEW, openDemo, runBrowserChecks, unmeasurable, waitUntil } from './_browser-harness.mjs';
 
 // 데모 문서의 본문 태그. 이 토막은 문서 전체에서 그 한 줄에만 있다 — 펜스 안의
 // `fill:#e0e7ff` 류는 `findTags` 가 보는 원문에서 이미 가려져 태그가 되지 않는다.
@@ -155,18 +155,6 @@ await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
         cursorLine: view.state.doc.lineAt(head).number,
       };
     })()`);
-  }
-
-  // 조건이 설 때까지 짧게 기다린다. 서면 즉시 돌아오고, 서지 않으면 상한까지만
-  // 기다린다 — 통과는 빠르고 실패는 일정하다.
-  async function waitFor(holds, timeoutMs = 1500) {
-    const deadline = Date.now() + timeoutMs;
-    for (;;) {
-      const s = await snapshot();
-      if (holds(s)) return s;
-      if (Date.now() >= deadline) return s;
-      await page.waitForTimeout(100);
-    }
   }
 
   // 커서를 태그 줄 밖으로 빼는 실제 제스처. 문서 위쪽의 인용문을 누른다.
@@ -332,15 +320,28 @@ await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
   // 성립하지 않으므로 누르러 가지 않는다 — 없는 것을 누르러 가면 판정문 대신
   // 30 초짜리 타임아웃 트레이스가 남는다. 그 경우 아래 전건의 `idle.chips >= 1`
   // 이 거짓이라 이 항은 그대로 실패하고, 칩이 0 개였다는 사실이 detail 에 남는다.
+  //
+  // **기다리는 것은 전제이지 판정 대상이 아니다.** 재려는 성질(`revealed` ·
+  // `chips`)이 설 때까지 기다린 뒤 그 값으로 판정하면, 한 프레임 떴다 곧
+  // 사라지는 노출이 통과한다 — 폴링이 그 한 프레임을 집어 돌려주기 때문이다.
+  // 그래서 제스처가 실제로 닿았는지(`cursorLine`)만 전제로 기다리고, 판정은
+  // 전제가 선 뒤에 새로 한 번 잰다. 상한과 간격은 하네스의 `waitUntil` 규약을
+  // 그대로 따른다.
+  const onTagLine = (s) => s.cursorLine === tagLine.number;
+  const offTagLine = (s) => s.cursorLine !== tagLine.number;
+
+  await waitUntil(snapshot, offTagLine);
   const idle = await snapshot();
   let afterClick = idle;
   let afterLeave = idle;
   if (idle.chips >= 1) {
     await page.locator('.dl-tag').first().click();
-    afterClick = await waitFor((s) => s.revealed);
+    await waitUntil(snapshot, onTagLine);
+    afterClick = await snapshot();
     await clickAwayFromTag();
     await bringTagIntoView();
-    afterLeave = await waitFor((s) => s.chips >= 1);
+    await waitUntil(snapshot, offTagLine);
+    afterLeave = await snapshot();
   }
 
   // 복귀 절반에 `!afterLeave.revealed` 를 함께 문다. `chips` 는 문서 전체를
