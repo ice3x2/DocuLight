@@ -3,11 +3,17 @@
  * 색은 vendor 테마의 CSS 변수를 그대로 물려받는다 — 우리 값을 새로 정의하면
  * 테마 전환 시 이 블록만 어긋난다. (docs/research/editor/02 §10) */
 
+/* 세로 여백은 이 바깥 컨테이너가 padding 으로 갖는다 — 시각 상자에 margin 을
+ * 두면 CM6 heightmap 이 그만큼 짧아져 아래 줄들의 클릭이 밀린다. 자세한 이유는
+ * `MermaidWidget.toDOM` 의 주석에 있다. */
+.dl-mermaid-block {
+  padding: 0.6em 0;
+}
+
 .dl-mermaid {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0.6em 0;
   padding: 1em;
   border: 1px solid var(--atomic-editor-border, #d0d7de);
   border-radius: var(--atomic-editor-radius, 6px);

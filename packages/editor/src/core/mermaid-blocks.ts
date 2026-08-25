@@ -99,31 +99,46 @@ class MermaidWidget extends WidgetType {
     return other.code === this.code && other.readOnly === this.readOnly;
   }
 
+  /**
+   * 바깥 컨테이너가 세로 여백을 갖고, 그 안에 다이어그램의 시각 상자를 둔다.
+   *
+   * CM6 는 블록 위젯의 높이를 `getBoundingClientRect` 로 재는데 그 값은 `margin`
+   * 을 빼고 `padding` 은 넣는다. 여백을 시각 상자의 `margin` 으로 두면 heightmap
+   * 이 DOM 보다 그만큼 짧아지고, 이 블록 아래의 모든 줄에서 클릭이 눌린 줄보다
+   * 아래 줄로 라우팅된다. `.cm-atomic-table` 이 같은 이유로 `padding` 을 쓴다.
+   *
+   * 시각 상자에 직접 `padding` 을 줄 수는 없다 — 테두리와 배경이 있어 상자가
+   * 그만큼 커져 보인다. 그래서 여백만 갖는 컨테이너를 하나 덧댄다.
+   */
   toDOM(view: EditorView): HTMLElement {
     const host = document.createElement('div');
-    host.className = 'dl-mermaid';
+    host.className = 'dl-mermaid-block';
+
+    const box = document.createElement('div');
+    box.className = 'dl-mermaid';
+    host.append(box);
 
     // 마운트 시점에 이전 렌더 크기를 잡아 둔다 — 렌더 완료 후 높이가 자라면
     // 스크롤 앵커와 충돌한다.
     const cached = getCachedSize(this.code);
-    if (cached) host.style.minHeight = `${cached.h}px`;
+    if (cached) box.style.minHeight = `${cached.h}px`;
 
-    void this.paint(host, view.state.facet(mermaidRendererFacet));
+    void this.paint(box, view.state.facet(mermaidRendererFacet));
     return host;
   }
 
-  private async paint(host: HTMLElement, renderer: MermaidRenderer): Promise<void> {
+  private async paint(box: HTMLElement, renderer: MermaidRenderer): Promise<void> {
     const result = await renderMermaid(this.code, `dl-mermaid-${widgetSeq++}`, renderer);
 
     if ('error' in result) {
-      host.classList.add('dl-mermaid-error');
-      host.textContent = result.error;
+      box.classList.add('dl-mermaid-error');
+      box.textContent = result.error;
       return;
     }
 
-    host.innerHTML = result.svg;
+    box.innerHTML = result.svg;
 
-    const svg = host.querySelector('svg');
+    const svg = box.querySelector('svg');
     if (!svg) return;
     const rect = svg.getBoundingClientRect();
     if (rect.height > 0) setCachedSize(this.code, { w: rect.width, h: rect.height });

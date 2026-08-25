@@ -1,0 +1,117 @@
+{
+  "task_id": "T-PH001-05",
+  "started_at": "2026-08-25T02:05:00Z",
+  "completed_at": "2026-08-25T11:28:00Z",
+  "status": "done",
+  "phase2": {
+    "impl_iters": [
+      {
+        "iter": 1,
+        "files_changed": [
+          "packages/editor/src/core/mermaid-blocks.ts",
+          "packages/editor/src/styles/editor.css"
+        ],
+        "approach": "MermaidWidget.toDOM 이 바깥 컨테이너 .dl-mermaid-block 를 반환하고 그 안에 시각 상자 .dl-mermaid 를 둔다. 세로 여백 0.6em 을 .dl-mermaid 의 margin 에서 .dl-mermaid-block 의 padding 으로 옮겼다. padding 은 getBoundingClientRect 에 포함되므로 heightmap 과 DOM 이 일치한다."
+      },
+      {
+        "iter": 2,
+        "files_changed": [
+          "packages/editor/test/browser-check.mjs"
+        ],
+        "approach": "SDS-AC-4 가 세는 위치만 옮겼다. 단언 errorBlocks === 1 은 글자 그대로 유지(diff 삽입 56 / 삭제 0). centerLineContaining 이 오류 펜스 앞 고정 landmark 소제목을 뷰포트 가운데로 들인 뒤 그 자리에서 한 번만 센다. 루프 종료 조건은 landmark 줄의 존재이지 .dl-mermaid-error 가 아니다 — 훑다가 하나 나오면 통과하는 형태가 아니다. 센 뒤 scrollToTop 으로 뒤따르는 열한 항의 전제를 복원한다."
+      }
+    ],
+    "plan_code_match": {
+      "changed_files_subset_of_sidecar_files": true,
+      "existing_test_weakened_or_deleted": false,
+      "existing_public_contract_change": false,
+      "existing_file_deleted_or_moved": false,
+      "note": "export 표면 6개 동일. table-widget.ts 는 건드리지 않았다 (직전 Task 의 미커밋 산출물)."
+    },
+    "green_evidence": {
+      "command": "cd packages/editor && node test/heightmap-drift-check.mjs && node test/browser-check.mjs && NODE_ENV=production npx vitest run",
+      "exit_code": 0,
+      "timestamp": "2026-08-25T11:28:00Z"
+    },
+    "green_evidence_meta": {
+      "passed_test_case_ids": [
+        "TC-REQ-FR-EDITOR-007-AC7-11"
+      ],
+      "drift_px_before": 38,
+      "drift_px_after": 0,
+      "heightmap_drift_check": "3/3 통과",
+      "browser_check": "12/12 통과",
+      "editor_vitest": "19 파일 · 237 passed | 1 skipped — 기준선 동일",
+      "mutation_probe": {
+        "target": "packages/editor/src/core/mermaid-blocks.ts — MermaidWidget.paint 의 오류 경로에서 box.classList.add('dl-mermaid-error') 제거",
+        "result_under_mutation": "browser-check 11/12 — SDS-AC-4 단독 FAIL (error 0개)",
+        "result_after_revert": "browser-check 12/12 — SDS-AC-4 PASS (error 1개)",
+        "verdict": "이 항은 여전히 문다. 오류 렌더 경로를 망가뜨리면 SDS-AC-4 가 단독으로 죽는다.",
+        "reverted": true,
+        "log": "docs/analysis/kiwi-coder-2026-08-25.wave1-editor007.coder-0825/T-PH001-05.ac4-mutation-probe.md"
+      }
+    },
+    "dod_check": [
+      {
+        "item": "heightmap-drift-check.mjs 가 PASS 한다",
+        "satisfied": true,
+        "evidence": "exit 0, 3/3 통과, 어긋남 0px"
+      },
+      {
+        "item": "문단·인용·표 어느 것을 눌러도 커서가 눌린 그 줄에 놓인다",
+        "satisfied": true,
+        "evidence": "98→98, 92→92, 표 94-96→96"
+      },
+      {
+        "item": "기존 test/browser-check.mjs(mermaid 라이브 프리뷰)가 그대로 PASS 한다",
+        "satisfied": true,
+        "evidence": "12/12. 단언은 하나도 지우거나 약화하지 않았다 — diff 삽입 56 / 삭제 0."
+      },
+      {
+        "item": "browser-check.mjs 가 12/12 로 PASS 한다",
+        "satisfied": true,
+        "evidence": "12/12 통과"
+      },
+      {
+        "item": "mermaid 블록의 겉보기 여백이 눈에 띄게 바뀌지 않는다",
+        "satisfied": true,
+        "evidence": "바깥 컨테이너 padding 10.2px 상/하 = 종전 .dl-mermaid margin 10.2px"
+      },
+      {
+        "item": "packages/editor vitest 실패 0",
+        "satisfied": true,
+        "evidence": "237 passed | 1 skipped — 기준선 동일"
+      },
+      {
+        "item": "green 증거를 사이드카에 남긴다",
+        "satisfied": true,
+        "evidence": "sidecar tasks[T-PH001-05].tdd.green_evidence 갱신"
+      }
+    ],
+    "verification_channel": {
+      "subagent": "ac4-review — 완료 통지는 왔으나 보고 본문 회수 실패(무응답). 앞선 자식과 같은 증상.",
+      "substituted_with": [
+        "뮤테이션 탐침",
+        "git diff --numstat 56/0 (삭제 0줄)",
+        "3회 연속 12/12",
+        "tsc --noEmit exit 0",
+        "vitest 기준선 동일"
+      ],
+      "note": "판단이 끼지 않는 기계적 채널로 대체했다. 상세는 docs/analysis/kiwi-coder-2026-08-25.wave1-editor007.coder-0825/T-PH001-05.ac4-mutation-probe.md"
+    }
+  },
+  "phase3": {
+    "regression": {
+      "scope": "impacted-only",
+      "editor_vitest": "237 passed | 1 skipped (기준선과 동일, 신규 실패 0)",
+      "browser_check": "12/12 PASS",
+      "heightmap_drift_check": "3/3 PASS"
+    },
+    "mcp_calls": []
+  },
+  "resolved_gate": {
+    "gate_id": "existing-test-weakened-or-deleted",
+    "resolution": "해소 — 약화가 아니라 세는 위치의 교정이다. browser-check.mjs 는 sidecar tasks[T-PH001-05].files[] 에 등재되어 있고 action 이 이 교정을 명시한다(§0.20.4 intended-improvement). diff 삭제 0줄로 기존 단언·케이스는 하나도 사라지지 않았다.",
+    "classification": "intended-improvement"
+  }
+}

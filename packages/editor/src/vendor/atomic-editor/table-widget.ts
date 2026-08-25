@@ -3,6 +3,7 @@ import {
   EditorSelection,
   Facet,
   Prec,
+  StateEffect,
   StateField,
   Transaction,
   type EditorState,
@@ -702,10 +703,33 @@ class TableWidget extends WidgetType {
     return wrap;
   }
 
-  // All cell interactions are handled by the listeners we attach in
-  // `makeCell`; tell CM6 to stay out of events within the widget so
-  // its own selection/click logic doesn't compete with contenteditable.
-  ignoreEvent(): boolean {
+  // Pointer events go to CM6 in edit mode; everything else stays inside
+  // the widget.
+  //
+  // A click has to reach CM6 or the caret can never land on a table line,
+  // and without the caret there the source is never revealed — live
+  // preview's whole point (`FR-EDITOR-007` AC-7). Read-only keeps the old
+  // behaviour: there is nothing to edit, so the caret has no business
+  // inside the block.
+  //
+  // The opening stops at pointer events on purpose. Unlike the mermaid
+  // widget this one contains a `contenteditable` editing subsystem
+  // (`makeCell` / `attachCellEditing`), and a cell can hold DOM focus
+  // while CM6's own selection sits elsewhere — Tab / Enter navigation
+  // (`moveCellFocus`) and the cell's pointerdown focus routing both leave
+  // it that way. Handing `keydown` / `beforeinput` / `paste` to CM6 in
+  // that state would let a keystroke aimed at the cell edit the document
+  // instead. Those stay captured by the cell's own listeners.
+  //
+  // Note the three handlers that must keep the caret out of the document
+  // (the link icon, the image preview, and the cell-padding focus
+  // routing) cancel on `pointerdown`, which suppresses the compatibility
+  // `mousedown` this method releases. Moving any of them to `mousedown`
+  // or `click` would hand their gesture to CM6 as well.
+  //
+  // (Returning `true` means "the editor keeps its hands off this event".)
+  ignoreEvent(event: Event): boolean {
+    if (event.type === 'mousedown' || event.type === 'click') return this.readOnly;
     return true;
   }
 }
@@ -1220,15 +1244,43 @@ function backspaceAtTableBoundary(view: EditorView): boolean {
 
 // ---- state field ----------------------------------------------------
 
+// Editor focus, carried in state so the StateField below can see it.
+// `view.hasFocus` is a view-side value and a StateField has no view;
+// `EditorView.focusChangeEffect` is the supported bridge.
+const setEditorFocused = StateEffect.define<boolean>();
+
+const tableFocusField = StateField.define<boolean>({
+  create: () => false,
+  update(focused, tr) {
+    for (const effect of tr.effects) {
+      if (effect.is(setEditorFocused)) return effect.value;
+    }
+    return focused;
+  },
+});
+
+// Boundary-inclusive, matching `code-blocks.ts` — a caret resting on the
+// table's first or last position counts as touching it. That matters
+// because a click on a block widget resolves to one of its two ends, so
+// an exclusive test would drop exactly the positions clicks produce.
+const selectionTouches = (state: EditorState, from: number, to: number) =>
+  state.selection.ranges.some((range) => range.from <= to && range.to >= from);
+
 function buildTableWidgets(state: EditorState): DecorationSet {
   const ranges: Range<Decoration>[] = [];
   const readOnly = state.facet(readOnlyFacet);
+  // Reveal the source only when the user is actually in the editor.
+  // Read-only has nothing to reveal for (no editing), and without the
+  // focus half a mounted-but-unfocused editor whose document starts with
+  // a table would render that table as raw pipes: selection defaults to
+  // position 0, which is inside it.
+  const revealable = state.field(tableFocusField) && !readOnly;
   // Force full-doc parse so tables past the initial parsed region
-  // also get the widget treatment. This StateField only rebuilds on
-  // doc change; CM6's background parser advancing the tree later
-  // doesn't retrigger it, so a partial tree at mount means orphaned
-  // `| col |` raw lines for the rest of the session. 200ms budget
-  // bounds the worst case on very long atoms.
+  // also get the widget treatment. Building from a partial tree leaves
+  // orphaned `| col |` raw lines below it until something retriggers
+  // this field, so we pay for the whole parse up front rather than
+  // waiting on `treeGrowthEffect`. 200ms budget bounds the worst case
+  // on very long atoms.
   const tree =
     ensureSyntaxTree(state, state.doc.length, 200) ?? syntaxTree(state);
   const doc = state.doc;
@@ -1242,6 +1294,11 @@ function buildTableWidgets(state: EditorState): DecorationSet {
       // Block-replace needs whole-line coverage.
       const startLine = doc.lineAt(node.from);
       const endLine = doc.lineAt(node.to);
+      // Caret on the table: leave the markdown source standing instead
+      // of covering it with the widget. Same shape as `code-blocks.ts`.
+      if (revealable && selectionTouches(state, startLine.from, endLine.to)) {
+        return false; // don't descend
+      }
       ranges.push(
         Decoration.replace({
           widget: new TableWidget(model, readOnly),
@@ -1310,7 +1367,26 @@ const tableField = StateField.define<DecorationSet>({
     ) {
       return buildTableWidgets(tr.state);
     }
-    if (!tr.docChanged) return deco;
+    if (!tr.docChanged) {
+      // Moving the caret or focusing / blurring the editor changes which
+      // tables reveal their source without touching the doc. Returning
+      // `deco` here — as this field used to for every non-doc change —
+      // would mean the reveal never repaints.
+      //
+      // This check belongs inside the no-doc-change arm, not ahead of it:
+      // typing moves the selection too, so hoisting it would rebuild on
+      // every keystroke in the document and make the `changeAffectsTables`
+      // fast path below unreachable.
+      const focusChanged =
+        tr.startState.field(tableFocusField) !== tr.state.field(tableFocusField);
+      if (!focusChanged && tr.startState.selection.eq(tr.state.selection)) {
+        return deco;
+      }
+      // Reading mode never reveals, so no caret move can change the
+      // output. (A mode toggle already returned above.)
+      if (tr.state.facet(readOnlyFacet)) return deco;
+      return buildTableWidgets(tr.state);
+    }
     const mapped = deco.map(tr.changes);
     if (!changeAffectsTables(tr, deco)) return mapped;
     return buildTableWidgets(tr.state);
@@ -1347,6 +1423,14 @@ export const tableLinkClickFacet = Facet.define<
 
 export function tables(config: TablesConfig = {}): Extension {
   return [
+    // `buildTableWidgets` reads this field, so it has to be in the
+    // configuration. Its position in this array is not significant —
+    // `@codemirror/state` resolves field slots on demand, not in array
+    // order — it is listed first only to read alongside the effect.
+    tableFocusField,
+    EditorView.focusChangeEffect.of((_state, focusing) =>
+      setEditorFocused.of(focusing),
+    ),
     tableField,
     treeProgressPlugin,
     ...(config.onLinkClick ? [tableLinkClickFacet.of(config.onLinkClick)] : []),

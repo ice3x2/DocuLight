@@ -1,0 +1,178 @@
+{
+  "task_id": "T-PH001-02",
+  "started_at": "2026-08-25T10:00:00Z",
+  "completed_at": null,
+  "status": "NEEDS_USER",
+  "phase1": {
+    "note": "tdd.phase=green — 시험은 T-PH001-01 이 세우고 red 를 확인했다. 본 Task 는 Phase 2 로 직행했다.",
+    "red_recheck": {
+      "command": "cd packages/editor && node test/table-reveal-check.mjs",
+      "result": "2/5 (1,4 PASS / 2,3,5 FAIL)"
+    }
+  },
+  "phase2": {
+    "impl_iters": [
+      {
+        "iter": 1,
+        "files_changed": [
+          "packages/editor/src/vendor/atomic-editor/table-widget.ts"
+        ],
+        "loc_added": 69,
+        "loc_removed": 4
+      }
+    ],
+    "formal_reviews": [
+      {
+        "iter": 1,
+        "axis": "type-build",
+        "command": "npx tsc --noEmit -p tsconfig.json",
+        "exit_code": 0,
+        "findings": []
+      },
+      {
+        "iter": 1,
+        "axis": "mock-regex",
+        "findings": []
+      },
+      {
+        "iter": 1,
+        "axis": "plan-code-match",
+        "findings": [
+          "변경 파일 1개 = sidecar.files[] 의 유일한 path. 위반 없음."
+        ]
+      },
+      {
+        "iter": 1,
+        "axis": "test-coverage",
+        "findings": [
+          "TC-...-AC7-06 (보조 판정 ⑤) green. AC7-04 (판정 ②) 는 범위 밖 결함에 막힘. AC7-05 (판정 ③) 는 R-08 분기 ⓑ."
+        ]
+      }
+    ],
+    "green_evidence_meta": {
+      "vitest": {
+        "command": "cd packages/editor && NODE_ENV=production npx vitest run",
+        "exit_code": 0,
+        "result": "19 files / 237 passed / 1 skipped / 0 failed",
+        "baseline_match": true
+      },
+      "e2e": {
+        "command": "cd packages/editor && node test/table-reveal-check.mjs",
+        "before": "2/5 — ① PASS ② FAIL ③ FAIL ④ PASS ⑤ FAIL",
+        "after": "3/5 — ① PASS ② FAIL ③ FAIL ④ PASS ⑤ PASS",
+        "after_with_drift_neutralised": "4/5 — ① PASS ② PASS ③ FAIL ④ PASS ⑤ PASS"
+      }
+    },
+    "dod_check": [
+      {
+        "item": "table-reveal-check.mjs 판정 다섯 전건 PASS",
+        "satisfied": false,
+        "reason": "② 는 범위 밖 heightmap drift 에 막히고 ③ 은 R-08 분기 ⓑ 대상이다"
+      },
+      {
+        "item": "packages/editor vitest 실패 0",
+        "satisfied": true
+      },
+      {
+        "item": "읽기 전용에서는 칸을 눌러도 드러나지 않는다",
+        "satisfied": true
+      },
+      {
+        "item": "green 증거를 사이드카에 남긴다",
+        "satisfied": false,
+        "reason": "전건 green 이 아니므로 거짓 증거를 쓰지 않았다"
+      }
+    ],
+    "prickly_reviews": [
+      {
+        "iter": 1,
+        "status": "RETURNED",
+        "severity_summary": {
+          "CRITICAL": 1,
+          "HIGH": 2,
+          "MEDIUM": 4,
+          "LOW": 2
+        },
+        "findings": [
+          {
+            "id": 1,
+            "severity": "CRITICAL",
+            "verdict": "PARTLY_ACCEPTED",
+            "claim": "칸 본문 클릭이 칸 편집 대신 표 전체를 원문으로 뒤집는다 — 클릭 지점(본문 vs 여백/이미지/링크아이콘)에 따라 동작이 갈린다",
+            "resolution": "메커니즘은 브라우저로 재확인해 사실로 확정. 다만 「칸 편집이 죽는다」는 판정은 계획 §1.4 의 결정 DI-W1-02(원문 노출이 칸 직접 편집보다 우선한다)와 반대다 — 리뷰어에게 그 결정을 알리지 않은 내 브리핑 누락. 남는 실질은 클릭 지점에 따른 분기이며, 계획 §5.4 가 이 경로의 조건을 미리 정해 두었고 그 조건(칸 본문 경로가 선다)을 충족하므로 취소를 걷지 않고 남긴다. findings.md §4 에 기록."
+          },
+          {
+            "id": 2,
+            "severity": "HIGH",
+            "verdict": "ACCEPTED_FIXED",
+            "claim": "선택 검사를 !tr.docChanged 앞에 두어 changeAffectsTables 빠른 경로가 죽고 모든 키 입력이 전체 문서 재파싱을 낸다",
+            "resolution": "옳다. 선택·초점 검사를 no-doc-change 분기 **안**으로 옮겨 기존 docChanged 경로를 그대로 살렸다."
+          },
+          {
+            "id": 3,
+            "severity": "HIGH",
+            "verdict": "ACCEPTED_RECORDED",
+            "claim": "칸이 DOM 초점을 쥔 채 프로그램적 view.focus() 가 오면, 낡은 선택이 표에 걸려 있을 때 편집 중 위젯이 파괴될 수 있다",
+            "resolution": "성립하는 엣지다(문서 기본 선택 0 이 표 안인 형태). 막으려면 「지금 칸이 초점을 쥐고 있는가」라는 DOM 상태를 편집기 상태로 들여와야 하는데 계획이 요구하지 않은 기계장치다. 고치지 않고 잔여 위험으로 PM 에 올린다."
+          },
+          {
+            "id": 4,
+            "severity": "MEDIUM",
+            "verdict": "ACCEPTED_FIXED",
+            "claim": "읽기 전용에서도 캐럿 이동마다 재구성한다",
+            "resolution": "옳다. no-doc-change 분기에 readOnly 조기 반환을 넣었다."
+          },
+          {
+            "id": 5,
+            "severity": "MEDIUM",
+            "verdict": "ACCEPTED_OUT_OF_SCOPE",
+            "claim": "selectionTouches 가 code-blocks·mermaid-blocks 에 이어 세 번째 사본이다",
+            "resolution": "옳다(§10.2). 공용화는 sidecar.files[] 밖 두 파일을 건드려야 해 이 Task 범위 밖. 보고만 한다."
+          },
+          {
+            "id": 6,
+            "severity": "MEDIUM",
+            "verdict": "ACCEPTED_FIXED",
+            "claim": "tables() 의 「state fields resolve in configuration order」 주석이 거짓 — CM6 는 슬롯을 지연 해석한다",
+            "resolution": "옳다. 배열 순서가 유의하지 않다는 사실대로 주석을 고쳤다."
+          },
+          {
+            "id": 7,
+            "severity": "MEDIUM",
+            "verdict": "ACCEPTED_FIXED",
+            "claim": "ignoreEvent 주석의 「컨텍스트 메뉴가 행을 더한 뒤 칸에 초점을 남긴다」가 거짓 — 행 수가 바뀌면 eq 가 거짓이라 toDOM 이 다시 돌아 옛 DOM 이 파괴된다",
+            "resolution": "옳다. 예시를 실제로 성립하는 경로(Tab/Enter 이동·칸 pointerdown 초점 라우팅)로 교체했다."
+          },
+          {
+            "id": 8,
+            "severity": "LOW",
+            "verdict": "ACCEPTED_FIXED",
+            "claim": "field 접근이 한쪽은 optional, 한쪽은 required 로 갈린다",
+            "resolution": "옳다. 둘 다 required 형으로 통일하고 === true 강제를 지웠다."
+          },
+          {
+            "id": 9,
+            "severity": "LOW",
+            "verdict": "ACCEPTED_FIXED",
+            "claim": "「pointerdown 취소가 호환 mouse 이벤트를 억제한다」는 전제가 문서화돼 있지 않다",
+            "resolution": "옳다. ignoreEvent 주석에 그 의존을 명시했다."
+          }
+        ]
+      }
+    ],
+    "self_corrections": [
+      "selectionTouches 주석에서 「경계 포함 판정이 화살표 진입을 성립시킨다」는 거짓 주장을 걷어냈다 — 실측은 반대였다.",
+      "buildTableWidgets 의 선재 주석 「This StateField only rebuilds on doc change」가 본 변경으로 거짓이 되어(그리고 treeGrowthEffect 로 이미 거짓이었다) 사실에 맞게 고쳤다."
+    ],
+    "post_review_verification": {
+      "tsc": "exit 0",
+      "editor_vitest": "19 files / 237 passed / 1 skipped / 0 failed",
+      "full_repo_regression": "editor 237+1skip / server 1248 / web 521 / 0 failed — 기준선 완전 일치",
+      "e2e": "3/5 (1,4,5 PASS / 2,3 FAIL) — 리뷰 반영 전후 동일"
+    }
+  },
+  "phase3": {
+    "regression": null,
+    "mcp_calls": []
+  }
+}

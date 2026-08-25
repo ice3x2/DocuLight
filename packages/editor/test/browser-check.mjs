@@ -39,6 +39,43 @@ const revealedCount = () =>
     return markers.filter((marker) => text.includes(marker)).length;
   }, SOURCE_MARKERS);
 
+// 문서의 한 줄을 뷰포트 가운데로 들인다.
+//
+// CM6 는 뷰포트 밖 줄을 DOM 에 두지 않으므로 목표 줄이 아직 없을 수 있다.
+// 한 화면씩 내려가며 그 줄이 DOM 에 나타나기를 기다렸다가 가운데로 고정한다.
+// 끝까지 내려가도 없으면 던진다 — 조용히 넘어가면 그 뒤의 단언이 무엇을
+// 재고 있는지 알 수 없게 된다.
+async function centerLineContaining(needle) {
+  const findAndCenter = () =>
+    page.evaluate((text) => {
+      const line = [...document.querySelectorAll('.cm-line')].find((el) =>
+        el.textContent?.includes(text),
+      );
+      if (!line) return false;
+      line.scrollIntoView({ block: 'center' });
+      return true;
+    }, needle);
+
+  for (let step = 0; step < 20; step += 1) {
+    if (await findAndCenter()) {
+      await page.waitForTimeout(1200); // 들어온 위젯이 그려질 여유
+      return;
+    }
+    await page.locator('.cm-scroller').evaluate((el) => {
+      el.scrollTop += el.clientHeight * 0.8;
+    });
+    await page.waitForTimeout(250);
+  }
+  throw new Error(`문서에서 줄을 찾지 못했다: ${needle}`);
+}
+
+const scrollToTop = async () => {
+  await page.locator('.cm-scroller').evaluate((el) => {
+    el.scrollTop = 0;
+  });
+  await page.waitForTimeout(600);
+};
+
 await page.goto(URL, { waitUntil: 'networkidle' });
 await page.waitForSelector('.cm-editor', { timeout: 15_000 });
 await page.waitForSelector('.dl-mermaid svg', { timeout: 20_000 });
@@ -53,8 +90,27 @@ const jsVisible = await page.getByText('const notMermaid = true;').count();
 check('SDS-AC-3 js 펜스는 위젯으로 대체되지 않는다', jsVisible > 0);
 
 // --- SDS-AC-4: 잘못된 mermaid 는 오류 표시로 떨어지고 페이지를 죽이지 않는다
+//
+// 세는 자리를 스크롤 top 에서 오류 블록이 실제로 있는 자리로 옮겼다. 단언은
+// 그대로 "정확히 1개" 다 — 기준을 낮춘 것이 아니라 자를 옳은 곳에 댔다.
+//
+// 왜 옮겼나: mermaid 위젯의 heightmap 어긋남이 사라지면서 CM6 가 뷰포트 밖
+// 블록 위젯을 정확히 언마운트하게 됐다. 종전에는 heightmap 이 DOM 보다 짧아
+// CM6 가 필요보다 많이 렌더했고, 그 덕에 문서 아래쪽의 오류 블록이 top 에서도
+// 잡혀 이 단언이 우연히 통과하고 있었다. 위 revealedCount 주석이 경고하는
+// 그대로다 — 개수 변화의 대부분은 가상화이지 동작이 아니다. 오류 표시 동작
+// 자체는 멀쩡하다 (오류 블록 자리에서 error 1개 + 정상 다이어그램 svg 2개).
+//
+// 자리를 찾는 방법은 문서의 고정 landmark 다: 오류 펜스 바로 앞 소제목을
+// 가운데로 들이면 그 바로 아래가 오류 블록이다. "오류가 나올 때까지 훑는다"
+// 가 아니다 — 훑는 대상은 landmark 줄뿐이고, 개수는 그 자리에서 딱 한 번
+// 읽어 정확히 1개인지 본다.
+await centerLineContaining('렌더 실패도 예외를 던지지 않습니다');
 const errorBlocks = await page.locator('.dl-mermaid-error').count();
 check('SDS-AC-4 렌더 실패가 오류 표시로 격리된다', errorBlocks === 1, `error ${errorBlocks}개`);
+
+// 뒤따르는 단언들은 문서 top 에서 시작하는 것을 전제한다.
+await scrollToTop();
 
 // --- SDS-AC-2: 커서를 블록 안으로 옮기면 원문이 드러난다
 await page.locator('.dl-mermaid').first().click();

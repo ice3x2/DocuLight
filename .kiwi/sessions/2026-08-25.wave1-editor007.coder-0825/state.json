@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "2026-08-25.wave1-editor007.coder-0825",
+  "plan_run_id": "2026-08-25.doculight2.wave1-editor007",
+  "plan_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md",
+  "sidecar_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.sidecar.json",
+  "target": "phase-1",
+  "mode": "normal",
+  "flags": [
+    "--auto",
+    "--drive",
+    "--auto-integration",
+    "--auto-cost-warning"
+  ],
+  "spawn_context": "pm-child",
+  "started_at": "2026-08-25T00:00:00Z",
+  "updated_at": "2026-08-25T11:28:00Z",
+  "frozen_at": null,
+  "current_phase_id": "PH-001",
+  "current_task_id": null,
+  "next_resume_hint": null,
+  "task_queue": [],
+  "completed_task_ids": [
+    "T-PH001-04",
+    "T-PH001-05"
+  ],
+  "skipped_task_ids": [],
+  "failed_task_ids": [],
+  "tdd_exempted_task_ids": [],
+  "tdd_pending_task_ids": [],
+  "severity_counters": {},
+  "regression_baseline": {
+    "command": "NODE_ENV=production npm test",
+    "source": "parent-pinned (--regression-baseline)",
+    "exit_code": 0,
+    "note": "실패 0 · editor 237 통과+1 건너뜀 / server 1248 통과 / web 521 통과",
+    "head_sha": "51c54a6",
+    "captured_at": "2026-08-25T00:00:00Z"
+  },
+  "regression_summary": {
+    "last_run_at": "2026-08-25T11:28:00Z",
+    "scope": "impacted-only",
+    "passed": 237,
+    "failed": 0,
+    "regressed_files": []
+  },
+  "mcp_call_log": [],
+  "pending_mutations": [],
+  "tool_versions": {
+    "kiwi_planner": "0.6.0",
+    "kiwi_coder": "0.1.9",
+    "speckiwi": "2.13.1"
+  },
+  "blocked_gate": {
+    "task_id": "T-PH001-05",
+    "gate_id": "existing-test-weakened-or-deleted",
+    "severity": "critical"
+  }
+}

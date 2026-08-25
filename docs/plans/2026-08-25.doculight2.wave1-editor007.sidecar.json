@@ -3,7 +3,7 @@
   "plan_contract": "1.2.0",
   "run_id": "2026-08-25.doculight2.wave1-editor007",
   "target": "phase-1",
-  "plan_version": "0.4.1",
+  "plan_version": "0.6.0",
   "generated_at": "2026-08-25T00:00:00Z",
   "tool_versions": {
     "speckiwi": "2.13.1",
@@ -21,6 +21,8 @@
       "depends_on": [],
       "task_ids": [
         "T-PH001-01",
+        "T-PH001-04",
+        "T-PH001-05",
         "T-PH001-02",
         "T-PH001-03"
       ]
@@ -123,7 +125,12 @@
             "expected_failure_signature": "구분선 드러나지 않음"
           }
         ],
-        "red_evidence": null,
+        "red_evidence": {
+          "command": "cd packages/editor && node test/table-reveal-check.mjs",
+          "exit_code": 1,
+          "captured_failure": "2/5 통과. FAIL 판정 셋 — (2) 칸 클릭: 구분선 드러나지 않음 (커서 1행, 표 94-96행, 편집기 초점 false) / (3) 화살표: 커서 97행으로 표 줄을 건너뜀 / (5) 보조 dispatch: 커서 95행 초점 true 인데도 드러나지 않음. PASS 는 (1) 숨는 절반과 (4) 복귀.",
+          "timestamp": "2026-08-25T00:56:54Z"
+        },
         "green_evidence": null
       },
       "trace_links": [
@@ -132,6 +139,185 @@
           "source": {
             "type": "Task",
             "id": "T-PH001-01"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "FR-EDITOR-007"
+          },
+          "relation": "depends_on"
+        }
+      ]
+    },
+    {
+      "id": "T-PH001-04",
+      "phase_id": "PH-001",
+      "title": "클릭이 눌린 줄에 커서를 놓는지 재는 브라우저 시험을 세우고 red 를 확인한다",
+      "type": "code",
+      "req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "files": [
+        {
+          "path": "packages/editor/test/heightmap-drift-check.mjs"
+        }
+      ],
+      "action": "T-PH001-02 실행 중에 드러난 선재 결함이다. CM6 는 블록 위젯의 높이를 getBoundingClientRect 로 재는데 그 값은 margin 을 포함하지 않는다. editor.css 의 .dl-mermaid { margin: 0.6em 0 } 때문에 mermaid 블록마다 약 1.2em 씩 heightmap 이 모자라고, 데모 문서는 표 위에 mermaid 가 다섯이라 표에 이르면 어긋남이 -39.7px 다. 표에 국한되지 않는다 — 인용문(92행) 클릭이 93행에, 위키링크 줄(98행) 클릭이 99행에 커서를 놓는다. 이 Task 는 시험만 세운다 — 고치는 것은 T-PH001-05 다. browser-check.mjs 의 모양을 따라 test/heightmap-drift-check.mjs 를 신설하고 데모 문서의 문단·인용·표 세 자리를 각각 눌러 커서가 눌린 그 줄에 놓이는지를 잰다. 지금 상태에서 반드시 FAIL 해야 한다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "node test/heightmap-drift-check.mjs",
+          "expected_exit": 1,
+          "stdout_regex": "FAIL"
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/editor && node test/heightmap-drift-check.mjs",
+        "windows": "cd packages/editor; node test/heightmap-drift-check.mjs"
+      },
+      "dod": [
+        "새 시험 test/heightmap-drift-check.mjs 가 존재한다",
+        "지금 상태에서 FAIL 한다",
+        "문단·인용·표 각각을 눌렀을 때 커서가 어느 줄에 놓이는지를 값으로 낸다",
+        "red 증거를 사이드카에 남긴다"
+      ],
+      "rollback": "새 파일 하나를 지우면 원상복구된다",
+      "estimated_effort": "S",
+      "depends_on_task": [],
+      "covers_ac": [
+        "AC-7"
+      ],
+      "test_files": [
+        {
+          "path": "packages/editor/test/heightmap-drift-check.mjs"
+        }
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "red",
+        "test_cases": [
+          {
+            "id": "TC-REQ-FR-EDITOR-007-AC7-10",
+            "req_id": "FR-EDITOR-007",
+            "ac_refs": [
+              "AC-7"
+            ],
+            "test_file": "packages/editor/test/heightmap-drift-check.mjs",
+            "test_symbol": "클릭한 줄에 커서가 놓인다",
+            "kind": "e2e",
+            "expected_failure_signature": "커서가 눌린 줄보다 아래에 놓임"
+          }
+        ],
+        "red_evidence": {
+          "command": "cd packages/editor && node test/heightmap-drift-check.mjs",
+          "exit_code": 1,
+          "captured_failure": "heightmap 어긋남: 표 첫 줄(94행)에서 38px (DOM 이 heightmap 보다 이만큼 아래에 그려진다)\n\nFAIL  ① 문단(98행)을 누르면 커서가 그 줄에 놓인다  — 커서 99행 (누른 자리 y=496, 줄 상자 484-507)\nFAIL  ② 인용(92행)을 누르면 커서가 그 줄에 놓인다  — 커서 93행 (누른 자리 y=307, 줄 상자 296-319)\nFAIL  ③ 표(94-96행)의 칸을 누르면 커서가 표 줄에 놓인다  — 커서 97행 (표 94-96행, 칸 2개)\n\n0/3 통과",
+          "timestamp": "2026-08-25T01:46:00Z"
+        },
+        "green_evidence": null
+      },
+      "trace_links": [
+        {
+          "link_id": "TL-08",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-04"
+          },
+          "target": {
+            "type": "Requirement",
+            "reference": "FR-EDITOR-007"
+          },
+          "relation": "depends_on"
+        }
+      ]
+    },
+    {
+      "id": "T-PH001-05",
+      "phase_id": "PH-001",
+      "title": "mermaid 여백을 바깥 컨테이너로 옮겨 heightmap 어긋남을 없앤다",
+      "type": "code",
+      "req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "files": [
+        {
+          "path": "packages/editor/src/styles/editor.css"
+        },
+        {
+          "path": "packages/editor/src/core/mermaid-blocks.ts"
+        },
+        {
+          "path": "packages/editor/test/browser-check.mjs"
+        }
+      ],
+      "action": "겉보기를 바꾸지 않는 쪽으로 고친다 — mermaid 의 시각 상자를 바깥 컨테이너로 감싸고 여백을 그 컨테이너에 두어(mermaid-blocks.ts 의 toDOM + CSS) 위젯의 바깥 상자가 여백을 포함하게 한다. 그러면 getBoundingClientRect 가 재는 높이에 여백이 들어와 heightmap 과 DOM 이 일치한다. margin 을 padding 으로 바꾸는 한 줄짜리 길은 쓰지 마라 — .dl-mermaid 는 테두리와 배경이 있어 상자가 1.2em 커져 보인다. table-widget.ts 는 이 Task 에서 건드리지 않는다. 아울러 browser-check.mjs 의 SDS-AC-4 가 세는 위치를 고친다 — 단언 errorBlocks === 1 은 그대로 두고 오류 블록이 있는 자리로 스크롤해 들인 뒤 센다. 찾을 때까지 훑다가 하나라도 나오면 통과하는 느슨한 형태로 바꾸지 마라. 근거는 계획 1.4 의 교정이지 약화가 아니다 절이다.",
+      "acceptance_tests": [
+        {
+          "kind": "shell",
+          "cmd": "node test/heightmap-drift-check.mjs",
+          "expected_exit": 0
+        }
+      ],
+      "verification_cmd": {
+        "posix": "cd packages/editor && node test/heightmap-drift-check.mjs && node test/browser-check.mjs && NODE_ENV=production npx vitest run",
+        "windows": "cd packages/editor; node test/heightmap-drift-check.mjs; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; node test/browser-check.mjs; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; $env:NODE_ENV='production'; npx vitest run"
+      },
+      "dod": [
+        "heightmap-drift-check.mjs 가 PASS 한다",
+        "문단·인용·표 어느 것을 눌러도 커서가 눌린 그 줄에 놓인다",
+        "기존 test/browser-check.mjs(mermaid 라이브 프리뷰)가 그대로 PASS 한다",
+        "browser-check.mjs 가 12/12 로 PASS 한다",
+        "mermaid 블록의 겉보기 여백이 눈에 띄게 바뀌지 않는다",
+        "packages/editor vitest 실패 0",
+        "green 증거를 사이드카에 남긴다"
+      ],
+      "rollback": "editor.css 와 mermaid-blocks.ts 의 변경을 되돌리면 종전 동작으로 돌아간다",
+      "estimated_effort": "M",
+      "depends_on_task": [
+        "T-PH001-04"
+      ],
+      "covers_ac": [
+        "AC-7"
+      ],
+      "test_files": [
+        {
+          "path": "packages/editor/test/heightmap-drift-check.mjs"
+        }
+      ],
+      "tdd": {
+        "applicable": true,
+        "phase": "green",
+        "test_cases": [
+          {
+            "id": "TC-REQ-FR-EDITOR-007-AC7-11",
+            "req_id": "FR-EDITOR-007",
+            "ac_refs": [
+              "AC-7"
+            ],
+            "test_file": "packages/editor/test/heightmap-drift-check.mjs",
+            "test_symbol": "여백을 옮긴 뒤 클릭한 줄에 커서가 놓인다",
+            "kind": "e2e",
+            "expected_failure_signature": null
+          }
+        ],
+        "red_evidence": {
+          "command": "cd packages/editor && node test/heightmap-drift-check.mjs",
+          "exit_code": 1,
+          "captured_failure": "heightmap 어긋남: 표 첫 줄(94행)에서 38px (DOM 이 heightmap 보다 이만큼 아래에 그려진다)\n\nFAIL  ① 문단(98행)을 누르면 커서가 그 줄에 놓인다  — 커서 99행 (누른 자리 y=496, 줄 상자 484-507)\nFAIL  ② 인용(92행)을 누르면 커서가 그 줄에 놓인다  — 커서 93행 (누른 자리 y=307, 줄 상자 296-319)\nFAIL  ③ 표(94-96행)의 칸을 누르면 커서가 표 줄에 놓인다  — 커서 97행 (표 94-96행, 칸 2개)\n\n0/3 통과",
+          "timestamp": "2026-08-25T01:46:00Z",
+          "note": "red 는 선행 Task T-PH001-04 가 같은 시험 파일에서 잰 것이다 — 전역 CLAUDE.md 의 TDD 규칙이 red 와 green 을 별개 Task 로 가르라고 요구하므로 증거를 짝으로 연결한다"
+        },
+        "green_evidence": {
+          "command": "cd packages/editor && node test/heightmap-drift-check.mjs && node test/browser-check.mjs && NODE_ENV=production npx vitest run",
+          "exit_code": 0,
+          "timestamp": "2026-08-25T11:28:00Z"
+        }
+      },
+      "trace_links": [
+        {
+          "link_id": "TL-09",
+          "source": {
+            "type": "Task",
+            "id": "T-PH001-05"
           },
           "target": {
             "type": "Requirement",
@@ -196,7 +382,8 @@
       "rollback": "table-widget.ts 의 변경을 되돌리면 종전 동작으로 돌아간다. 새 파일을 만들지 않으므로 삭제할 것이 없다",
       "estimated_effort": "L",
       "depends_on_task": [
-        "T-PH001-01"
+        "T-PH001-01",
+        "T-PH001-05"
       ],
       "covers_ac": [
         "AC-7"
@@ -244,7 +431,13 @@
             "expected_failure_signature": "구분선 드러나지 않음"
           }
         ],
-        "red_evidence": null,
+        "red_evidence": {
+          "command": "cd packages/editor && node test/table-reveal-check.mjs",
+          "exit_code": 1,
+          "captured_failure": "2/5 통과. FAIL 판정 셋 — (2) 칸 클릭: 구분선 드러나지 않음 (커서 1행, 표 94-96행, 편집기 초점 false) / (3) 화살표: 커서 97행으로 표 줄을 건너뜀 / (5) 보조 dispatch: 커서 95행 초점 true 인데도 드러나지 않음. PASS 는 (1) 숨는 절반과 (4) 복귀.",
+          "timestamp": "2026-08-25T00:56:54Z",
+          "note": "red 는 선행 Task T-PH001-01 가 같은 시험 파일에서 잰 것이다 — 전역 CLAUDE.md 의 TDD 규칙이 red 와 green 을 별개 Task 로 가르라고 요구하므로 증거를 짝으로 연결한다"
+        },
         "green_evidence": null
       },
       "trace_links": [
@@ -288,7 +481,8 @@
             "초점 게이팅을 항상 참으로 바꾸면 read-only 시험이 FAIL 한다",
             "ignoreEvent 를 무조건 true 로 되돌리면 판정 (2) 만 FAIL 하고 (5) 는 PASS 로 남는다",
             "ignoreEvent 를 편집 모드에서 모든 이벤트에 열면 칸 초점 상태의 키 입력이 문서를 건드린다 — 건드리지 않으면 포인터 한정 조항을 고친다",
-            "탐침 후 git diff 가 T-PH001-02 종료 시점과 같다"
+            "판정 (3) 이 기록성 관찰로 내려가고 그 사유가 주석에 적혔다",
+            "탐침 후 git diff 가 T-PH001-02 · T-PH001-05 종료 시점과 같다"
           ]
         }
       ],
@@ -639,6 +833,8 @@
       ],
       "covered_tasks": [
         "T-PH001-01",
+        "T-PH001-04",
+        "T-PH001-05",
         "T-PH001-02",
         "T-PH001-03",
         "T-PH002-01",
@@ -658,7 +854,9 @@
             "TC-REQ-FR-EDITOR-007-AC7-06",
             "TC-REQ-FR-EDITOR-007-AC7-07",
             "TC-REQ-FR-EDITOR-007-AC7-08",
-            "TC-REQ-FR-EDITOR-007-AC7-09"
+            "TC-REQ-FR-EDITOR-007-AC7-09",
+            "TC-REQ-FR-EDITOR-007-AC7-10",
+            "TC-REQ-FR-EDITOR-007-AC7-11"
           ]
         },
         {
@@ -780,6 +978,17 @@
     }
   ],
   "risks": [
+    {
+      "id": "R-09",
+      "severity": "high",
+      "description": "mermaid 의 margin 이 CM6 heightmap 을 어긋나게 해 문서 전체에서 클릭이 한 줄씩 밀린다. 표에 이르면 어긋남이 -39.7px 라 칸 클릭이 표를 지나친다 — AC-7 판정 (2) 를 막는 유일한 장애물이다",
+      "mitigation": "T-PH001-04(red)와 T-PH001-05(green)를 신설해 겉보기를 바꾸지 않는 쪽으로 고치고, 그 시험이 어긋남 0 을 잰다. table-widget.ts 를 기준선으로 되돌려도 어긋남이 같아 이 wave 의 변경과 무관함을 확인했다",
+      "affected_task_ids": [
+        "T-PH001-04",
+        "T-PH001-05",
+        "T-PH001-02"
+      ]
+    },
     {
       "id": "R-01",
       "severity": "high",
@@ -1062,6 +1271,44 @@
         "reference": "docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md#T-PH001-02"
       },
       "args_hash": "1a5dd6ceca52e59cf81a8c7f9fc1d406309029fb",
+      "response_hash": null,
+      "timestamp": "2026-08-25T00:00:00Z",
+      "ok": null
+    },
+    {
+      "seq": 9,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-04"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "FR-EDITOR-007"
+        },
+        "relation": "depends_on"
+      },
+      "args_hash": "c0653fb70d089cb7d5e5b5cacf8be2198ce411ff",
+      "response_hash": null,
+      "timestamp": "2026-08-25T00:00:00Z",
+      "ok": null
+    },
+    {
+      "seq": 10,
+      "call": "add_trace_link",
+      "args": {
+        "source": {
+          "type": "Task",
+          "id": "T-PH001-05"
+        },
+        "target": {
+          "type": "Requirement",
+          "reference": "FR-EDITOR-007"
+        },
+        "relation": "depends_on"
+      },
+      "args_hash": "0fe9532b72fccee58328711452dfb4eada4da529",
       "response_hash": null,
       "timestamp": "2026-08-25T00:00:00Z",
       "ok": null

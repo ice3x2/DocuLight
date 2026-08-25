@@ -1,0 +1,39 @@
+{
+  "task_id": "T-PH001-04",
+  "started_at": "2026-08-25T01:20:00Z",
+  "completed_at": "2026-08-25T01:52:00Z",
+  "phase1": {
+    "tdd_draft_iters": [
+      { "iter": 1, "file_paths": ["packages/editor/test/heightmap-drift-check.mjs"] },
+      { "iter": 2, "file_paths": ["packages/editor/test/heightmap-drift-check.mjs"], "note": "MEDIUM 2건 반영 — 측정 불가를 exit 2 로 분리, try/finally 로 브라우저 종료 보장" }
+    ],
+    "verification": {
+      "channel": "codex-cli (in-process Agent 서브에이전트 5회 무응답으로 대체)",
+      "axes": ["intent-alignment", "tech-quality"],
+      "severity_summary": { "CRITICAL": 0, "HIGH": 0, "MEDIUM": 2, "LOW": 0 },
+      "findings": [
+        { "severity": "MEDIUM", "problem": "spotOfLine() 이 null 일 때 측정 불가가 exit 1(어긋남)로 처리된다", "resolved": true },
+        { "severity": "MEDIUM", "problem": "goto/wait/evaluate/click 예외 경로에 try/finally 가 없어 브라우저 종료가 보장되지 않는다", "resolved": true }
+      ]
+    },
+    "req_mapping": {
+      "req_id_in_task": true,
+      "ac_refs_subset": true,
+      "note": "FR-EDITOR-007 의 AC-7 실재 확인 (MCP get_requirement). target phase-1 일치. Stability=evolving"
+    },
+    "red_evidence_meta": {
+      "test_case_ids": ["TC-REQ-FR-EDITOR-007-AC7-10"],
+      "matched_signature": "커서가 눌린 줄보다 아래에 놓임 — 98→99, 92→93, 표 94-96→97",
+      "measured_drift_px": 38
+    }
+  },
+  "phase2": {
+    "note": "이 Task 의 산출물은 시험 파일 하나뿐이다 (action: '이 Task 는 시험만 세운다'). 별도 구현 단계 없음."
+  },
+  "phase3": {
+    "regression": {
+      "scope": "impacted-only",
+      "note": "src 변경 없음 — 신규 .mjs 시험 파일 1개만 추가. editor vitest 237 passed + 1 skipped (기준선과 동일), browser-check.mjs 12/12 PASS"
+    }
+  }
+}

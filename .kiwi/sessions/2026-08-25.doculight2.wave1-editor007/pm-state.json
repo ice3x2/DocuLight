@@ -1,0 +1,174 @@
+{
+  "run_id": "2026-08-25.doculight2.wave1-editor007",
+  "plan_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md",
+  "sidecar_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.sidecar.json",
+  "plan_sha256": "438c8c6325d53380dadef50504ebfa92b84a6720943d95ec901acf724fad3c47",
+  "sidecar_sha256": "c6969b20edda4b968d61e9f91519fe8c621d66b1dc7cff831b17aa8c96552f81",
+  "target_slug": "phase-1",
+  "started_at": "2026-08-24T18:26:11Z",
+  "last_updated_at": "2026-08-25T02:33:59Z",
+  "pm_version": "0.1",
+  "tasks": [
+    {
+      "task_id": "T-PH001-01",
+      "phase_id": "PH-001",
+      "status": "done",
+      "tdd_exempted": false,
+      "started_at": "2026-08-25T00:56:54Z",
+      "ended_at": "2026-08-25T00:56:54Z",
+      "coder_run_id": "2026-08-25.wave1-editor007.coder-0825",
+      "result_summary": "브라우저 E2E 시험 table-reveal-check.mjs 신설. 판정 다섯 중 (2)(3)(5) 가 FAIL 로 red 확인, (1)(4) 는 PASS. 화살표가 위젯을 건너뛴다는 사실을 실측해 R-08 의 분기를 정했다.",
+      "trace_req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "questions": [],
+      "attempts": 1
+    },
+    {
+      "task_id": "T-PH001-04",
+      "phase_id": "PH-001",
+      "status": "done",
+      "tdd_exempted": false,
+      "started_at": "2026-08-25T02:33:59Z",
+      "ended_at": "2026-08-25T02:33:59Z",
+      "coder_run_id": "2026-08-25.wave1-editor007.coder-0825",
+      "result_summary": "heightmap-drift-check.mjs 를 신설하고 red 를 확인했다 — 문단 98→99행 · 인용 92→93행 · 표 94-96→97행, 표 첫 줄 어긋남 38px.",
+      "trace_req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "questions": [],
+      "attempts": 1
+    },
+    {
+      "task_id": "T-PH001-05",
+      "phase_id": "PH-001",
+      "status": "done",
+      "tdd_exempted": false,
+      "started_at": "2026-08-25T02:33:59Z",
+      "ended_at": "2026-08-25T02:33:59Z",
+      "coder_run_id": "2026-08-25.wave1-editor007.coder-0825",
+      "result_summary": "mermaid 여백을 margin 에서 바깥 컨테이너 padding 으로 옮겨 어긋남 38px→0px. 겉보기 여백은 10.2px 로 종전과 동일. browser-check 의 SDS-AC-4 는 단언을 그대로 두고 세는 위치만 옮겼고 뮤테이션 탐침으로 여전히 무는 것을 확인했다.",
+      "trace_req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "questions": [],
+      "attempts": 1
+    },
+    {
+      "task_id": "T-PH001-02",
+      "phase_id": "PH-001",
+      "status": "done",
+      "tdd_exempted": false,
+      "started_at": "2026-08-25T02:33:59Z",
+      "ended_at": "2026-08-25T02:33:59Z",
+      "coder_run_id": "2026-08-25.wave1-editor007.coder-0825",
+      "result_summary": "표에 초점·선택 판정과 커서 진입 경로를 세웠다. E2E 4/5 — AC-7 본 판정 (2) 칸 클릭이 PASS 로 뒤집혔다. 남은 (3) 화살표는 R-08 분기 ⓑ 로 확정돼 T-PH001-03 이 기록성 관찰로 내린다.",
+      "trace_req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "questions": [],
+      "attempts": 1
+    },
+    {
+      "task_id": "T-PH001-03",
+      "phase_id": "PH-001",
+      "status": "pending",
+      "tdd_exempted": false,
+      "started_at": null,
+      "ended_at": null,
+      "coder_run_id": null,
+      "result_summary": null,
+      "trace_req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "questions": [],
+      "attempts": 0
+    },
+    {
+      "task_id": "T-PH002-01",
+      "phase_id": "PH-002",
+      "status": "pending",
+      "tdd_exempted": true,
+      "started_at": null,
+      "ended_at": null,
+      "coder_run_id": null,
+      "result_summary": null,
+      "trace_req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "questions": [],
+      "attempts": 0
+    },
+    {
+      "task_id": "T-PH002-02",
+      "phase_id": "PH-002",
+      "status": "pending",
+      "tdd_exempted": true,
+      "started_at": null,
+      "ended_at": null,
+      "coder_run_id": null,
+      "result_summary": null,
+      "trace_req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "questions": [],
+      "attempts": 0
+    },
+    {
+      "task_id": "T-PH002-03",
+      "phase_id": "PH-002",
+      "status": "pending",
+      "tdd_exempted": true,
+      "started_at": null,
+      "ended_at": null,
+      "coder_run_id": null,
+      "result_summary": null,
+      "trace_req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "questions": [],
+      "attempts": 0
+    },
+    {
+      "task_id": "T-PH002-04",
+      "phase_id": "PH-002",
+      "status": "pending",
+      "tdd_exempted": true,
+      "started_at": null,
+      "ended_at": null,
+      "coder_run_id": null,
+      "result_summary": null,
+      "trace_req_ids": [
+        "FR-EDITOR-007"
+      ],
+      "questions": [],
+      "attempts": 0
+    }
+  ],
+  "stats": {
+    "total": 9,
+    "done": 4,
+    "running": 0,
+    "pending": 5,
+    "failed": 0,
+    "blocked": 0,
+    "skipped": 0
+  },
+  "last_question": null,
+  "last_error": null,
+  "lifecycle_gate_state": {
+    "evaluated_at": "2026-08-24T18:26:11Z",
+    "blocked_req_ids": [],
+    "stability_snapshot": {
+      "FR-EDITOR-007": "evolving"
+    },
+    "status_snapshot": {
+      "FR-EDITOR-007": "in_progress"
+    }
+  },
+  "req_coverage": {},
+  "final_mutations": [],
+  "pending_mutations": [],
+  "report_path": null,
+  "doculight_viewer_id": null
+}

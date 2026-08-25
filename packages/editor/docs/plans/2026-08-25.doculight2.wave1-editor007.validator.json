@@ -1,0 +1,20 @@
+{
+  "validator_version": "0.6.0",
+  "target": "phase-1",
+  "summary": {
+    "errors": 1,
+    "warnings": 0,
+    "checks_total": 1
+  },
+  "results": [
+    {
+      "id": "C00",
+      "title": "plan.md read",
+      "status": "error",
+      "severity": "error",
+      "detail": {
+        "message": "ENOENT: no such file or directory, stat 'C:\\Work\\git\\DocuLight2.0\\packages\\editor\\docs\\plans\\2026-08-25.doculight2.wave1-editor007.plan.md'"
+      }
+    }
+  ]
+}
