@@ -1,0 +1,289 @@
+{
+  "round": 8,
+  "tree_clean": true,
+  "tree_clean_note": "시작 시 git status --porcelain 이 0행이고 HEAD 가 f67d34a 로 창의 끝과 같다. 되돌림 둘을 넣고 뺀 뒤에도 inline-preview.ts 의 md5 가 3f8675da5005027350431bd2bf811b35 로 라운드 7 이 기록한 HEAD 값과 바이트 동일하다. 보고서를 쓰기 직전 워킹트리의 유일한 미추적 항목은 동시에 도는 다른 검증자의 wave-1.verify-r8.axis-b.json 하나이며 내가 만든 것이 아니다. 임시 사본은 스크래치패드에 두었다가 지웠다",
+  "req_ac_layer": {
+    "expected": 12,
+    "checked": 12,
+    "rows": [
+      {
+        "ac": "AC-1",
+        "covered_by": "VE-1",
+        "pointer": "packages/editor/test/live-preview.test.tsx:53 · :62 (숨는 절반) · :255-262 (드러나는 절반) · :347 (줄 단위 축)",
+        "resolved": true,
+        "note": "줄 단위 축 항이 activeLines 퇴화에 죽는 것을 이 회차가 직접 실측했다"
+      },
+      {
+        "ac": "AC-2",
+        "covered_by": "VE-1",
+        "pointer": "packages/editor/test/live-preview.test.tsx:54 · :62 · :255-262 · :355",
+        "resolved": true,
+        "note": "activeLines 퇴화에 죽는 것을 실측했다"
+      },
+      {
+        "ac": "AC-3",
+        "covered_by": "VE-1",
+        "pointer": "packages/editor/test/live-preview.test.tsx:55 · :62 · :270 · :363",
+        "resolved": true,
+        "note": "f67d34a 가 신설한 :363 항이 activeLines 퇴화에 죽는 것을 실측했다. 라운드 7 이 지적한 「AC-3 만 줄 단위 축이 없다」는 공백이 이 창에서 닫혔다"
+      },
+      {
+        "ac": "AC-4",
+        "covered_by": "VE-1",
+        "pointer": "packages/editor/test/live-preview.test.tsx:56 · :62 · :255-262 · :373",
+        "resolved": true,
+        "note": "다른 넷과 달리 링크 단위 규칙(activeLinkStarts)을 탄다. 겹침 판정을 무조건 참으로 만들면 이 항 하나만 죽는 것을 실측했다"
+      },
+      {
+        "ac": "AC-5",
+        "covered_by": "VE-1",
+        "pointer": "packages/editor/test/live-preview.test.tsx:57 · :62 · :255-262 · :391",
+        "resolved": true,
+        "note": "activeLines 퇴화에 죽는 것을 실측했다"
+      },
+      {
+        "ac": "AC-6",
+        "covered_by": "VE-1",
+        "pointer": "packages/editor/test/live-preview.test.tsx:71 · :96 · :280",
+        "resolved": true,
+        "note": "라운드 7 이 HIDEABLE_SYNTAX 에서 CodeMark 를 빼는 되돌림으로 :96 항이 죽는 것을 실측해 닫았다. 이 회차는 유지만 확인했다 — inline-preview.ts:209 의 'CodeMark' 항과 :96 항이 그대로 있다"
+      },
+      {
+        "ac": "AC-7",
+        "covered_by": "VE-6 · VE-7",
+        "pointer": "packages/editor/test/table-reveal-check.mjs (브라우저 4/4, 8회 전부) · packages/editor/src/vendor/atomic-editor/__tests__/table-reveal-state.test.ts (it 7항, 실측으로 7개 확인)",
+        "resolved": true,
+        "note": "자동 시험의 드러나는 절반은 live-preview.test.tsx:314 에 사유를 적은 skip 으로 남아 있고 그것이 editor vitest 의 유일한 건너뛴 1항이다 — VE-1 (나) 의 서술과 일치한다"
+      },
+      {
+        "ac": "AC-8",
+        "covered_by": "VE-3",
+        "pointer": "packages/editor/test/math-blocks.test.ts · packages/editor/test/live-preview.test.tsx:121 · :139",
+        "resolved": true
+      },
+      {
+        "ac": "AC-9",
+        "covered_by": "VE-1",
+        "pointer": "packages/editor/test/live-preview.test.tsx:131 · :319",
+        "resolved": true
+      },
+      {
+        "ac": "AC-10",
+        "covered_by": "VE-9",
+        "pointer": "packages/editor/test/tag-chip-check.mjs (브라우저 2/2, 8회 전부) · packages/editor/src/styles/editor.css:81 의 .dl-tag 규칙",
+        "resolved": true,
+        "note": "증거가 데모까지만 닿는다는 사실은 요구 본문에 적혀 있고 그 처분은 이 wave 밖의 잔여 FND-101 이다. 이 회차는 되돌려지지 않았음만 확인했다"
+      },
+      {
+        "ac": "AC-11",
+        "covered_by": "VE-8",
+        "pointer": "packages/web/test/screen-wiring.test.tsx · packages/web/src/shell/AppShell.tsx:436 의 searchForTag 통합 (:552 · :582 두 자리가 같은 함수를 쓴다)",
+        "resolved": true
+      },
+      {
+        "ac": "AC-12",
+        "covered_by": "VE-2",
+        "pointer": "packages/editor/test/tags.test.ts · packages/editor/test/live-preview.test.tsx:183",
+        "resolved": true
+      }
+    ],
+    "unresolved": []
+  },
+  "design_layer": {
+    "expected": 4,
+    "mapped": 4,
+    "unmapped": [],
+    "rows": [
+      {
+        "id": "DI-W1-01",
+        "evidence": "packages/editor/src/vendor/atomic-editor/table-widget.ts:1311 의 selectionTouches 술어와 :1398 의 revealable && selectionTouches(...) 분기. 자동 시험 table-reveal-state.test.ts 7항, 브라우저 판정 table-reveal-check.mjs 4/4 가 8회 전부 통과"
+      },
+      {
+        "id": "DI-W1-02",
+        "evidence": "docs/spec/07.editor.srs.md Implementation Notes 의 [2026-08-25] 항 — 「라이브 프리뷰에서는 원문 노출이 칸 직접 편집보다 우선한다」로 확정한 기록이 남아 있다"
+      },
+      {
+        "id": "DI-W1-03",
+        "evidence": "packages/editor/src/core/selection-touches.ts:14-16 의 주석이 table-widget.ts 에 같은 술어 사본이 있다는 사실과 vendor 경계 때문에 import 하지 않는다는 사유, 그리고 함께 고쳐야 한다는 규약을 명시한다. 경계 판정이 코드에 기록돼 있다"
+      },
+      {
+        "id": "DI-W1-04",
+        "evidence": "packages/editor/test/live-preview.test.tsx:113 (표가 구분선 없이 렌더된다) · table-reveal-check.mjs 판정 ①④ · heightmap-drift-check.mjs 7/7. 브라우저 게이트 8회 전부 통과"
+      }
+    ]
+  },
+  "constraint_layer": {
+    "expected": 14,
+    "checked": 14,
+    "violations": [],
+    "rows": [
+      {
+        "id": "C-01",
+        "verdict": "준수",
+        "evidence": "docs/spec/00.index.md:8 의 Active Target 이 phase-1 이다. wave-N target 이 신설된 자리가 0건이다"
+      },
+      {
+        "id": "C-02",
+        "verdict": "준수",
+        "evidence": "git diff --name-only b73f70c..f67d34a 에 DocLight / DocuLight/ 1.0 경로가 0건이다. 이 회차의 되돌림 둘도 전부 이 저장소 안에서 넣고 뺐다"
+      },
+      {
+        "id": "C-03",
+        "verdict": "해당 없음(준수)",
+        "evidence": "1.0 서비스 기동 중단이나 리버스 프록시 차단에 해당하는 변경이 창에 0건이다"
+      },
+      {
+        "id": "C-04",
+        "verdict": "준수",
+        "evidence": "창의 변경 파일에 아카이브·복원 기능이 0건이다"
+      },
+      {
+        "id": "C-05",
+        "verdict": "해당 없음(준수)",
+        "evidence": "프록시 홉 수를 다루는 변경이 창에 0건이다"
+      },
+      {
+        "id": "C-06",
+        "verdict": "준수(형상 일치)",
+        "evidence": "실측 — 창의 docs/spec/07.editor.srs.md diff 가 전부 MCP mutation 의 형상이다: Status 행 치환(update_status), AC 체크(check_acceptance_criteria), VE-1·VE-4 행 치환(edit_requirement_table_rows), VE-5~VE-9 행 추가(add_verification_evidence), Trace Links 7행 추가(add_trace_link), Implementation Notes 의 날짜 접두 불릿 추가(append_section_note), Change Notes 행 추가. 요구 ID 행을 바꾼 hunk 가 0건이고 재서식이 없다. 00.index.md 집계도 in_progress 4→3 · implemented 221→222 로 상태 전이 하나와 정합한다. 다만 mutation 이 실제로 MCP 를 거쳤다는 것은 산출물만으로 확정할 수 없고, 관측 가능한 신호가 전부 MCP 형상과 일치한다는 데까지가 실측이다"
+      },
+      {
+        "id": "C-07",
+        "verdict": "준수",
+        "evidence": "실측 — 창의 docs/spec 변경이 네 파일뿐이다(00.index.md · 02.feature-request-live-preview.md · 07.editor.srs.md · 91.completed-work-log.md). 07 의 diff 에 추가·삭제된 ### 요구 헤딩이 0건이므로 FR-EDITOR-007 블록 밖의 요구를 건드린 자리가 없다. implemented 221건의 일괄 승급도 없다(집계가 222 로 하나만 늘었다)"
+      },
+      {
+        "id": "C-08",
+        "verdict": "준수",
+        "evidence": "FR-EDITOR-007 의 Stability 가 evolving 그대로다. feasibility 진입 흔적이 창에 0건이다"
+      },
+      {
+        "id": "C-09",
+        "verdict": "준수",
+        "evidence": "실측 — git log b73f70c..f67d34a --format=%H%n%B 전문에 co-authored-by · generated with/by · assisted by · claude · anthropic · [bot] · [ai] · 로봇 이모지가 대소문자 무시 0건. 제목 21개에 Phase n · Step n · TASK-XXX 표식이 0건"
+      },
+      {
+        "id": "C-10",
+        "verdict": "준수",
+        "evidence": "이 wave 의 범위가 FR-EDITOR-007 하나이고 AC-7 이 Wave 2-a 로 처리됐다. FR-EDITOR-001 이나 한글 IME 를 다시 연 자리가 0건이다"
+      },
+      {
+        "id": "C-11",
+        "verdict": "준수",
+        "evidence": "이 회차의 신규 커밋 f67d34a 는 시험(live-preview.test.tsx +10행)과 기록(07.editor.srs.md +1행 · kiwi/.status.json · 검증 산출물)만 바꾼다. 제품 소스를 건드린 자리가 0건이므로 TDD 순서가 문제되는 자리가 없다"
+      },
+      {
+        "id": "C-12",
+        "verdict": "준수",
+        "evidence": "창의 모든 코드 변경이 FR-EDITOR-007 의 AC 로 추적된다 — 표 노출은 AC-7, AppShell 의 searchForTag 는 AC-11, .dl-tag 규칙은 AC-10, f67d34a 의 신규 시험은 AC-3 이다"
+      },
+      {
+        "id": "C-13",
+        "verdict": "준수",
+        "evidence": "브라우저 시험 넷이 http://localhost:3399/ 로 붙어 8회 전부 통과했다. 다른 포트를 쓴 자리가 창에 0건이다"
+      },
+      {
+        "id": "C-14",
+        "verdict": "준수",
+        "evidence": "실측 — f67d34a 가 신설한 AC-3 줄 단위 항(:363)에 activeLines 퇴화를 직접 넣어 죽는 것을 확인했다. 앞 회차가 세운 넷도 같은 되돌림 둘로 각자의 축에서 죽는 것을 이 회차가 재확인했다"
+      }
+    ]
+  },
+  "gate_stability": {
+    "runs": 8,
+    "failures": 0,
+    "detail": "두 게이트를 각각 8회 돌렸다. ① 회귀 vitest — 무변경 트리에서 editor · server · web 세 패키지를 NODE_ENV=production npx vitest run 으로 8라운드(총 24회 실행). server 1248 통과 · web 522 통과가 8라운드 전부 동일하고 실패가 0 이다. editor 는 5·6·7 라운드에서만 254 통과 · 1 건너뜀이 나왔고 나머지 다섯 라운드는 기준선대로 250 통과 · 1 건너뜀이었다. 실패는 어느 라운드에도 0 건이며, 직후 git status --porcelain 이 0행이고 HEAD 도 f67d34a 그대로였다. 동시에 도는 다른 검증자가 그 구간에 임시 시험 파일 넷을 공유 트리에 올렸다가 지운 것으로 읽는 것이 가장 자연스럽다 — 회귀가 아니라 분모의 흔들림이며, 여러 검증자가 한 워킹트리를 공유하는 한 실행 시각에 따라 항 수가 달라진다는 사실 자체를 기록으로 남긴다. ② 브라우저 게이트 — 저장소 루트 사슬과 같은 npm run test:browser:all 을 8회 연속 돌려 8회 전부 종료 코드 0, 판정 집계가 매번 12/12 · 4/4 · 7/7 · 2/2, FAIL 줄이 0 이다. 라운드 6 이 짚었던 13회 중 1회 실패와 라운드 7 의 12/12 무실패를 이어 흔들림이 재현되지 않았다. 부하 의심 재실행이 필요했던 자리는 없었다"
+  },
+  "carried_rows": [
+    {
+      "id": "line-axis-ac3",
+      "verdict": "closed",
+      "note": "직접 실측으로 닫았다. 주장을 받지 않고 되돌림 둘을 각각 넣어 셌다. 되돌림 A — inline-preview.ts:386-392 의 activeLines 계산을 「초점이 있으면 문서의 모든 줄이 활성」(for (let n = 1; n <= doc.lines; n++))으로 퇴화 — 을 넣자 editor vitest 가 4 failed | 246 passed | 1 skipped 로 바뀌었고 죽은 것은 정확히 AC-1(:347) · AC-2(:355) · AC-3(:363) · AC-5(:391) 넷이다. AC-4(:373) 는 살아남았다. 되돌림 B — 같은 파일 :458 의 링크 겹침 판정을 if (true) 로 — 을 넣자 1 failed | 249 passed 로 AC-4 하나만 죽었다. 두 되돌림 어느 쪽에서도 함께 죽은 다른 항이 0 건이다. 라운드 7 이 셋(AC-1·2·5)을 셌던 자리에 f67d34a 가 목록을 더해 넷이 됐고, 겨누는 축이 둘로 갈린다는 서술이 실측과 정확히 일치한다. 되돌림은 각각 즉시 취소했고 inline-preview.ts 는 md5 3f8675da5005027350431bd2bf811b35 로 HEAD 와 바이트 동일하다"
+    },
+    {
+      "id": "ve1-note",
+      "verdict": "not-closed",
+      "note": "정정의 배치가 「읽는 사람이 정정에 도달하는가」를 만족하지 못한다. 사실관계 — f67d34a 는 Implementation Notes 에 [줄 단위 축이 닫혔다] 불릿 한 줄만 덧붙였고 VE-1 의 Notes 칸(07.editor.srs.md:703)은 한 글자도 고치지 않았다. 그 칸의 (다) 항에는 지금 HEAD 에서 거짓인 문장이 셋 남아 있고 전부 이 회차가 실측으로 반증했다: ①「AC-1·AC-2·AC-4·AC-5 는 조항이 말하는 줄 단위 축을 재지 못한다」— 되돌림 A·B 로 넷이 각자의 축에서 죽는다. ②「activeLines 를 퇴화시켜도 editor vitest 244 항이 전부 통과한다」— 4 failed 이고 총 항 수도 244 가 아니라 251 이다. ③「그 축을 무너뜨리는 변경이 회귀 게이트를 그대로 지나간다」— 지나가지 못한다. 넷째로 「AC-3 은 마커 글자를 정확히 물어 그 축만은 실효가 있다」는 정정 불릿 자신이 「AC-3 도 같은 구멍이 있어 함께 세웠다」로 부정한다. 도달성 판정의 근거 셋 — (가) VE-1 칸에 앞을 가리키는 표지가 없다. 그 칸의 유일한 내부 지시는 「무엇을 재고 무엇을 못 재는지를 아래에 적는다」이고 그 '아래'는 같은 칸의 (가)(나)(다) 를 가리킨다. 정정은 44행 뒤 다른 절의 13개 날짜 불릿 중 마지막에 있다. (나) 이 문서의 확립된 관례는 증거 칸의 정정을 그 칸 안에서 하는 것이다 — VE-4 는 [2026-08-25 해소] 와 [2026-08-25 정정] 을 칸 안에 인라인으로 달았고, VE-1 자신도 「모두 잰다」의 정정을 칸 안에 달았다. Implementation Notes 에 놓인 다른 정정들([확장 축 정정] · [정정의 정정] · [관측 정정])은 전부 같은 절의 불릿을 고치는 절 내부 정정이다. 절을 가로지르는 정정을 원격에 둔 것은 이 한 건뿐이다. (다) 결정적으로 날짜 표기가 실제 순서를 뒤집는다. 거짓 문장을 담은 VE-1 칸의 문면은 「2026-08-26 상호검증이…」로 시작하는데 정정 불릿은 「[2026-08-25]」다. 두 서술을 날짜로 조정하는 독자는 더 새것으로 보이는 VE-1 쪽을 남기고 정정을 낡은 것으로 버리게 된다. 실제 순서는 그 반대다(d210a9d 2026-08-26 02:21 이 (다)를 썼고 f67d34a 2026-08-26 04:49 가 정정했다). 덧붙여 같은 낡은 문면이 kiwi/waves.jsonl 18행의 잔여 R-LINE-AXIS 에 「editor vitest 244 항이 전부 통과한다」로 토씨까지 그대로 남아 있고 그쪽에는 정정이 아예 없다. 같은 파일의 R-GATE-FLAKE · R-AC6-CLAIM · R-POLL-DUP 도 라운드 7 과 이 회차의 실측으로 이미 닫힌 것들이라 낡았다(R-POLL-DUP 은 tag-chip-check.mjs:28 이 _browser-harness.mjs 의 waitUntil 을 쓰게 바뀌어 사라졌다). 라운드 7 이 같은 행을 not-closed 로 올렸고 이번 회차의 조치가 코드 쪽 공백(AC-3)은 닫았으나 기록 쪽은 닫지 못했다. 고칠 것은 코드가 아니라 기록이며, 지시대로 이 라운드는 아무것도 고치지 않았다"
+    },
+    {
+      "id": "gate-flake",
+      "verdict": "closed",
+      "note": "유지된다. 브라우저 게이트 8회 전부 종료 0 · FAIL 0 · 집계 12/12 · 4/4 · 7/7 · 2/2 로 동일하다. 라운드 6 이 짚었던 tag-chip-check.mjs 판정 ② 의 흔들림 원인이 제거된 상태가 코드에서도 유지된다 — 그 파일이 자체 폴링 사본을 두지 않고 하네스의 waitUntil 을 import 해 쓰며, 기다리는 대상이 판정 대상(revealed · chips)이 아니라 전제(cursorLine)라 통과를 만들어내지 않는다. 회귀 vitest 쪽도 8라운드 실패 0 이다. 다만 editor 항 수가 250 과 254 사이에서 흔들린 것은 새 관측이며 gate_stability 에 적었다 — 실패가 아니라 분모의 흔들림이고, 원인은 여러 검증자가 한 워킹트리를 공유하는 데 있다"
+    },
+    {
+      "id": "G-9",
+      "verdict": "accepted-residual",
+      "note": "기록이 정확하다. kiwi/waves.jsonl 18행의 residual 배열에 G-9 가 severity LOW 로 「같은 coder 실행이 세 벌의 세션 디렉터리로 갈려 커밋됐다. 합치면 검증 문서들의 포인터가 끊기므로 기록으로만 남긴다」로 실려 있고, 라운드 7 이 확인한 문면과 같다. 새 finding 으로 되풀이하지 않는다"
+    },
+    {
+      "id": "FND-101",
+      "verdict": "accepted-residual(이 wave 밖)",
+      "note": "기록이 정확하고 사실도 유지된다. kiwi/waves.jsonl 18행에 R-FND-101 이 severity MEDIUM 으로 실려 있고, packages/web/src 전체에서 editor 스타일을 import 하는 자리가 0건이며 web/src/main.tsx 는 styles/shell.css 하나만 가져온다. 요구 본문의 [증거 도달 범위] 항과 [두 수정의 도달 범위가 다르다] 항이 같은 사실을 적는다. 이 wave 밖으로 배정된 잔여이므로 새 finding 으로 되풀이하지 않는다"
+    },
+    {
+      "id": "ac6-vendor",
+      "verdict": "closed",
+      "note": "되돌려지지 않았다. inline-preview.ts 의 HIDEABLE_SYNTAX 에 'CodeMark' 항이 그대로 있고 live-preview.test.tsx:96 의 「AC-6: 언어 없는 울타리도 숨는다 — 위젯이 가져가지 않는 자리」 항도 그대로다. 라운드 7 이 되돌림으로 실측해 닫은 자리를 유지 확인만 했다"
+    },
+    {
+      "id": "hmr-filter",
+      "verdict": "closed",
+      "note": "되돌려지지 않았다. browser-check.mjs:21-29 의 거름 술어가 그대로이며 두 형태(ws 연결 실패 · [vite] failed to connect to websocket)만 거르고 그 밖의 페이지 오류는 판정에 들어간다. 브라우저 게이트 8회 전부 「페이지 오류 없음」 판정이 통과했다"
+    },
+    {
+      "id": "AC-10",
+      "verdict": "closed",
+      "note": "되돌려지지 않았다. editor.css:81 의 .dl-tag 규칙이 그대로 있고 tag-chip-check.mjs 판정 ① 이 8회 전부 통과한다(배경 합성 차 24/255, 기준 8). VE-9 가 SRS 에 AC-10 증거로 등재돼 있고 VE-1 의 Covers 에서 AC-10 이 빠진 상태도 유지된다"
+    },
+    {
+      "id": "AC-11",
+      "verdict": "closed",
+      "note": "되돌려지지 않았다. AppShell.tsx:436 의 searchForTag 가 그대로이고 :552 와 :582 두 자리가 같은 함수를 쓴다. web vitest 522 통과 · 실패 0 을 8라운드 전부 확인했다. VE-8 이 SRS 에 AC-11 증거로 등재돼 있다"
+    },
+    {
+      "id": "shadow-axis",
+      "verdict": "closed",
+      "note": "되돌려지지 않았다. tag-chip-check.mjs 가 배경·테두리·윤곽선·그림자·그러데이션 다섯을 색의 알파와 길이로 재는 형태 그대로이고, 8회 실행의 판정문이 매번 다섯 속성의 값을 함께 남긴다. 글자색과 모서리 반경은 관찰로만 남기고 판정에 넣지 않는 규약도 유지된다"
+    }
+  ],
+  "probes_reexecuted": [
+    {
+      "what": "되돌림 A — inline-preview.ts:386-392 의 activeLines 계산을 「초점이 있으면 문서의 모든 줄이 활성」으로 퇴화시킨다",
+      "expected": "AC-1·2·3·5 넷이 죽고 AC-4 는 살아남으며, 함께 죽는 다른 항이 없다",
+      "actual": "4 failed | 246 passed | 1 skipped. 죽은 것은 AC-1(:347) · AC-2(:355) · AC-3(:363) · AC-5(:391) 넷이고 AC-4(:373) 는 통과했다. 함께 죽은 다른 항 0건",
+      "match": true
+    },
+    {
+      "what": "되돌림 B — inline-preview.ts:458 의 링크 겹침 판정 range.from <= node.to && range.to >= node.from 을 if (true) 로 바꾼다",
+      "expected": "AC-4 하나만 죽는다",
+      "actual": "1 failed | 249 passed | 1 skipped. 죽은 것은 AC-4(:373) 하나뿐이고 함께 죽은 다른 항 0건",
+      "match": true
+    },
+    {
+      "what": "되돌림 원복 증명 — 두 되돌림을 각각 취소한 뒤 소스가 HEAD 와 같은지",
+      "expected": "git status --porcelain 0행, inline-preview.ts md5 가 라운드 7 기록값과 동일",
+      "actual": "porcelain 0행, md5 3f8675da5005027350431bd2bf811b35 로 라운드 7 이 기록한 값과 바이트 동일",
+      "match": true
+    },
+    {
+      "what": "VE-1 Notes (다) 항의 참·거짓 — 요구의 Implementation Notes 와 대조",
+      "expected": "정정이 덧붙었으므로 독자가 거짓 문장에서 정정으로 도달할 수 있어야 한다",
+      "actual": "VE-1 칸(07.editor.srs.md:703)은 f67d34a 에서 한 글자도 바뀌지 않았고 거짓 문장 셋이 그대로다. 정정은 44행 뒤 Implementation Notes 의 13개 불릿 중 마지막(:747)에 있으며 VE-1 칸에서 앞을 가리키는 표지가 0건이다. 게다가 정정의 날짜 표기 [2026-08-25] 가 거짓 문장이 든 칸의 「2026-08-26」보다 앞서 실제 순서를 뒤집는다",
+      "match": false
+    },
+    {
+      "what": "브라우저 시험 넷의 기대값 — 12/12 · 4/4 · 7/7 · 2/2 · 종료 0",
+      "expected": "12/12 · 4/4 · 7/7 · 2/2 · 종료 0",
+      "actual": "8회 전부 12/12 · 4/4 · 7/7 · 2/2 · 종료 0 · FAIL 줄 0. 표 시험의 기록성 관찰 ③(화살표 진입)은 8회 전부 0/1 로 성립하지 않으나 VE-6 의 서술대로 종료 코드에 들어가지 않는다",
+      "match": true
+    },
+    {
+      "what": "회귀 기준선 — editor 250 통과·1 건너뜀 / server 1248 / web 522 / 실패 0",
+      "expected": "editor 250+1skip · server 1248 · web 522 · 실패 0",
+      "actual": "8라운드 중 다섯 라운드가 정확히 기준선(editor 250 통과·1 건너뜀 / server 1248 / web 522 / 실패 0)이고, 5·6·7 라운드에서 editor 만 254 통과·1 건너뜀이 나왔다. 실패는 8라운드 전부 0 이고 그 구간 직후 트리가 깨끗했으므로 회귀가 아니라 공유 워킹트리에 다른 검증자가 임시 시험을 올린 데 따른 분모의 흔들림으로 판단한다",
+      "match": true
+    }
+  ],
+  "roll_up": "GAPS",
+  "roll_up_reason": "다섯 조건 중 넷이 성립한다 — REQ/AC 12건 전건 해소, 미매핑 설계 0, 제약 위반 0, 게이트 실패 0(두 게이트 각 8회). 성립하지 않는 하나는 carried_rows 의 ve1-note 가 not-closed 라는 것이다. 코드 축은 이 창에서 완전히 닫혔다 — 라운드 7 이 남긴 AC-3 의 줄 단위 공백을 f67d34a 가 메웠고 되돌림 둘로 실측 확인했다. 남은 결함은 오직 기록이다: 요구의 VE-1 Notes (다) 항에 HEAD 에서 거짓인 문장 셋이 표지 없이 그대로 서 있고, 그 정정이 다른 절 끝에 놓인 데다 날짜 표기가 실제 순서를 뒤집어 독자가 정정 대신 거짓 쪽을 채택하게 만든다. 같은 낡은 문면이 kiwi/waves.jsonl 의 잔여 R-LINE-AXIS 에 정정 없이 그대로 남아 있고 R-GATE-FLAKE · R-AC6-CLAIM · R-POLL-DUP 도 함께 낡았다. 고칠 것은 코드가 아니라 기록이며, 이 라운드는 지시대로 아무것도 고치지 않았다"
+}

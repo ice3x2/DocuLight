@@ -129,9 +129,19 @@ describe('FR-EDITOR-007 — 커서가 없는 줄에서 마크다운 기호가 �
   });
 
   it('AC-9: Mermaid 블록의 울타리가 숨는다', () => {
-    const host = mount('```mermaid\ngraph TD;\nA-->B;\n```\n');
+    // 앞에 문단을 둔다. 블록을 0 번 자리에 두면 커서(기본값 0)가 그 블록에
+    // 닿아 `selectionTouches` 가 참이 되고, 그러면 mermaid 위젯이 **애초에
+    // 서지 않는다** — 즉 이 항이 드러난 상태에서 돌면서도 통과한다. 그때
+    // 울타리를 숨기는 것은 벤더의 `HIDEABLE_SYNTAX` 이고 mermaid 경로는 한
+    // 번도 돌지 않는다.
+    const host = mount('앞 문단\n\n```mermaid\ngraph TD;\nA-->B;\n```\n');
 
-    expect(visibleText(host)).not.toContain('```mermaid');
+    // 위젯이 섰음을 먼저 못박는다 — 이것이 이 항이 mermaid 경로를 재고
+    // 있다는 전제다. 전제가 무너지면 표본을 다시 골라야지 단언을 지워서는
+    // 안 된다.
+    expect(host.querySelector('.dl-mermaid'), 'mermaid 위젯이 서지 않았다').not.toBeNull();
+
+    expect(visibleText(host), '울타리가 그대로 보인다').not.toContain('```mermaid');
   });
 });
 
