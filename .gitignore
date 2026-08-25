@@ -26,3 +26,6 @@ packages/editor/test/*.png
 
 # Serena 도구가 만드는 로컬 캐시
 .serena/
+
+# kiwi 파이프라인이 만드는 머신별 경로 마커 (절대 경로 한 줄)
+kiwi/.pipeline-path
