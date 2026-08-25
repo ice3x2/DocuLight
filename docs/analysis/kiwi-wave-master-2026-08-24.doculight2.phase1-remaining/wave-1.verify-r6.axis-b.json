@@ -1,0 +1,198 @@
+{
+  "round": 6,
+  "tree_clean": false,
+  "tree_note": "라운드 시작 시점에는 `git status --porcelain` 이 빈 출력이었고 측정은 전부 커밋 판본 e2b6e48 위에서 이뤄졌다. 라운드 도중 다른 에이전트가 `packages/editor/src/core/code-blocks.ts` 와 `packages/editor/src/styles/editor.css` 를 다시 써서 두 파일이 M 으로 뜬다. 내용 변경은 0 이다 — `git diff --numstat` 이 빈 출력이고, CR 을 걷어낸 뒤의 md5 가 HEAD 와 두 파일 모두 같다(29c8ee11… / 1d29c4f0…). 차이는 개행 형식(작업 사본 LF, 저장소 CRLF)뿐이다. 내가 건 뮤테이션 둘(`tag-decoration.ts` · `inline-preview.ts`)은 각각 `git checkout --` 로 되돌렸고 그 직후 트리가 비었음을 확인했다.",
+  "preservation": {
+    "denominator": 8,
+    "derivation": "`git diff --name-status -M b73f70c..e2b6e48` 에서 기계적으로 뽑았다. (1) 삭제·이동된 기존 파일 — `--diff-filter=DR` 0건. (2) 삭제·변경된 기존 public 심볼 — `git diff | grep -E '^-.*\\bexport\\b'` 0건, 그 밖에 계약이 바뀐 자리 넷. (3) 삭제·수정된 기존 시험 파일 셋. (4) 기존 시험의 단언 약화 — 아래 세 시험 파일의 판정 술어를 창 이전 판본과 한 줄씩 대조했다.",
+    "rows": [
+      {
+        "path": "packages/editor/src/core/mermaid-blocks.ts + packages/editor/src/styles/editor.css",
+        "verdict": "intended-improvement",
+        "evidence": "`MermaidWidget.toDOM` 의 위젯 루트 클래스가 `.dl-mermaid` 에서 `.dl-mermaid-block` 으로 바뀌고 `.dl-mermaid` 는 안쪽 시각 상자로 내려갔다. 세로 여백도 `margin` 에서 바깥 컨테이너의 `padding` 으로 옮겼다. 소비자 계약이 바뀌는 자리인데, 저장소에서 `.dl-mermaid` 를 쓰는 곳은 `editor.css` 와 `browser-check.mjs` 뿐이고 둘 다 함께 고쳐졌다(`.dl-mermaid svg` · `.dl-mermaid-error` 는 안쪽 상자에 그대로 선다). 브라우저 12/12 통과가 이를 실측한다.",
+        "note": "사유가 코드 주석과 CSS 주석 양쪽에 적혀 있다 — CM6 가 블록 위젯 높이를 `getBoundingClientRect` 로 재는데 그 값이 `margin` 을 빼므로 heightmap 이 짧아진다. heightmap-drift ⓪ 3항이 0px 로 그 처방의 효과를 잰다."
+      },
+      {
+        "path": "packages/web/src/shell/AppShell.tsx",
+        "verdict": "intended-improvement",
+        "evidence": "본문 태그 칩의 질의가 `할일` 에서 `#할일` 로 바뀌었다(`onTagClick={searchFor}` → `searchForTag`). 기존 동작을 바꾼 것이지만 AC-11 이 요구하는 「우측 태그 탭에서 클릭했을 때와 같은 결과」를 세우는 변경이고, 우측 탭이 이미 `#할일` 이었으므로 두 자리를 우측 쪽으로 합친 것이다. `screen-wiring.test.tsx` 의 기존 항이 기대값을 함께 바꿨고, 같은 자리를 되돌리면 그 항과 새 항이 함께 죽는다.",
+        "note": "질의를 짓는 자리가 `searchForTag` 하나로 합쳐져 사본이 사라졌다."
+      },
+      {
+        "path": "packages/editor/src/core/code-blocks.ts · math-blocks.ts · mermaid-blocks.ts",
+        "verdict": "intended-improvement",
+        "evidence": "세 파일에 각각 있던 지역 술어(`selectionTouches` · `touchesSelection` · `selectionTouches`)가 삭제되고 `src/core/selection-touches.ts` 하나로 합쳐졌다. 셋 다 파일 밖으로 내보내지 않던 비공개 심볼이라 소비자 계약은 바뀌지 않았고, 술어의 본문(`range.from <= to && range.to >= from`)은 세 사본과 새 모듈이 문자 단위로 같다. `src/index.ts` 는 `codeBlockField` 등을 **추가로** 내보낼 뿐 지운 것이 없다.",
+        "note": "vendor 의 `table-widget.ts` 사본은 남았고 그 사유가 새 모듈의 주석에 적혀 있다."
+      },
+      {
+        "path": "packages/editor/test/browser-check.mjs",
+        "verdict": "intended-improvement",
+        "evidence": "파일이 전면 재작성됐으나 판정 수는 12 로 그대로이고, 12항의 술어를 창 이전 판본과 한 줄씩 대조한 결과 **느슨해진 것이 0건**이다 — `rendered >= 2` · `errorBlocks === 1` · `sourceShown === 1` · `stillRevealed === 0 && svg >= 1` · `editors === 1` · `roAfter === 0 && roBefore === 0 && roStillRendered >= 1` · `editRevealed >= 1` · `leaked.length === 0` · `attr === 'light' && pageLuma > 128 && diagramLuma > 128` · `fillVariety >= 3` · `consoleErrors.length === 0` 이 전부 동일하다. 유일하게 바뀐 항 SDS-AC-3 은 `jsVisible > 0` 에서 `jsVisible > 0 && jsInDiagram === 0` 으로 **강화**됐다. 실행 결과 12/12.",
+        "note": "SDS-AC-4 · 테마 · fill 종수 셋은 술어를 그대로 두고 재는 **자리**를 landmark 로 옮겼다. 종전 자리에서는 가상화가 우연히 마운트해 둔 것에 판정이 딸려 있었으므로 자리 이동은 교정이다. 다만 fill 종수는 새 자리에서 실측 8종이라 하한 3 과의 여유가 커졌다 — 술어는 그대로이나 부분적 팔레트 회귀에 대한 민감도는 낮아졌다(아래 LOW-4)."
+      },
+      {
+        "path": "packages/editor/test/live-preview.test.tsx (AC-6 숨는 항)",
+        "verdict": "intended-improvement",
+        "evidence": "삭제된 단언은 `expect(host.querySelector('.cm-content')).not.toBeNull()` 하나이고 그것은 편집기가 마운트됐다는 사실만 재던 공허한 항이다. 그 자리에 `not.toContain('```')` 와 `pre.dl-code` 존재 둘이 들어갔다 — 조항이 요구하는 「울타리가 숨는다」를 처음으로 실제로 문다. fixture 가 `앞 문단` 을 앞세운 것도 커서를 울타리에서 떼기 위한 필수 변경이다.",
+        "note": "재는 항이 하나 늘고 하나가 공허에서 실효로 바뀌었다. 약화 0."
+      },
+      {
+        "path": "packages/editor/test/live-preview.test.tsx (AC-7 it.skip)",
+        "verdict": "intended-improvement",
+        "evidence": "창 안에서 `it.skip` 이 새로 생긴 항은 0건이고(`git diff | grep '^+.*it\\.skip'` 이 시험 코드에서 0건), 기존 AC-7 skip 은 b73f70c 이전부터 있던 것이다. 이 창의 diff 는 그 앞 주석뿐이며 단언 본문은 그대로다. 실행 계수도 `24 passed | 1 skipped` 로 창 전후 동일하다.",
+        "note": "주석이 대체 증거 둘(`table-reveal-check.mjs` · `table-reveal-state.test.ts`)을 지목하게 됐다."
+      },
+      {
+        "path": "packages/web/test/screen-wiring.test.tsx",
+        "verdict": "intended-improvement",
+        "evidence": "기존 항의 기대값이 `'할일'` 에서 `'#할일'` 로 바뀌었다. 제품이 바뀌었으므로 따라온 것이고 엄격함은 같다 — 값 하나를 정확히 문다. 그 위에 「본문에서 누른 결과 == 태그 탭에서 누른 결과」를 재는 항이 새로 붙어 조항의 실제 요구(둘이 같은가)를 처음으로 문다.",
+        "note": "두 항이 서로를 받쳐 준다 — 첫 항만 있으면 두 자리가 함께 틀려도 통과하고, 둘째 항만 있으면 값이 무엇이든 통과한다."
+      },
+      {
+        "path": "(삭제·이동된 기존 파일)",
+        "verdict": "intended-improvement",
+        "evidence": "`git diff --name-status -M b73f70c..e2b6e48` 에 D 도 R 도 0건이다. 창의 81개 변경 중 삭제·이동이 없다.",
+        "note": "분모의 첫 부류가 비어 있다는 사실 자체를 한 행으로 남긴다."
+      }
+    ],
+    "unapproved_damage_rows": 0
+  },
+  "polling_not_a_weakening": {
+    "verdict": true,
+    "evidence": "`_browser-harness.mjs` 의 `waitUntil(probe, isReady, {timeout=10_000, interval=100})` 는 **상한에 닿아도 마지막으로 읽은 값을 그대로 돌려준다** — 던지지도, 판정을 대신하지도 않는다. 부르는 쪽의 단언이 그 값을 받아 원래대로 판정하므로 실패를 통과로 바꾸는 경로가 없다. 소비 자리 넷을 각각 확인했다. (1) `browser-check.mjs` 의 다이어그램 렌더 대기는 반환값을 쓰지 않고, 뒤이은 `fillVariety >= 3` 이 그대로 판정한다. (2) `heightmap-drift-check.mjs` ④ 의 `waitUntil(codeBlockSpacing, s => s !== null)` 뒤에 `if (spacing === null) check(label, false, ...)` 실패 분기가 그대로 남아 있고 `codeBlockSpacing` 은 부수효과 없는 읽기다. (3) `table-reveal-check.mjs` ① 은 `s.focused && s.widgets >= 1` **전제만** 기다리고 판정 대상인 `revealed` 는 기다리지 않으며, 두 전제가 단언에 그대로 남아 있다. (4) `waitForRevealed` 는 손수 만든 같은 루프를 하네스로 옮긴 것으로 상한·간격·반환 규약이 동일하다. `centerLineContaining` 은 20 화면을 훑고도 못 찾으면 **던진다**(조용히 넘어가지 않는다). 실측으로도 게이트를 연속 4회 돌려 25 PASS / 0 FAIL / 종료 0 이 네 번 재현됐다.",
+    "caveat": "예외가 하나 있다. `tag-chip-check.mjs:340` 의 `afterClick = await waitFor((s) => s.revealed)` 는 판정 대상 자체를 기다린다 — `table-reveal-check.mjs:126-141` 이 명시적으로 금지한 형태다. 실패를 통과로 바꾸지는 못하지만(끝내 서지 않으면 단언이 죽는다) 잠깐 드러났다 사라지는 상태를 통과로 만든다. 이 회차가 만든 완화는 아니고(같은 창에서 새로 들어온 파일이다) 세 시험에 적용한 규율을 넷째에만 적용하지 않은 것이다. LOW-2 로 올린다."
+  },
+  "ac_evidence_audit": [
+    {
+      "ac": "AC-1 헤딩",
+      "evidence": "VE-1 — live-preview.test.tsx:62-68 (숨는 항) · :241-247 (드러나는 항)",
+      "actually_measures_it": false,
+      "note": "조항의 절반만 잰다. 숨는 항은 **초점이 없는** 상태로 재고 드러나는 항은 `view.focus()` 를 켜고 재므로, 두 항의 차이를 「초점」 하나로 설명할 수 있다 — 조항이 말하는 「커서가 **없는 줄**」이라는 줄 단위 축이 어느 항에도 없다. 실측: `inline-preview.ts:386-392` 의 `activeLines` 구성을 「초점이 있으면 문서의 모든 줄이 활성」으로 퇴화시켜도 editor vitest 244 항이 **전부 통과**했다. 제품은 실제로 줄 단위로 동작하므로 이것은 제품 결함이 아니라 증거의 구멍이다. MEDIUM-1."
+    },
+    {
+      "ac": "AC-2 강조",
+      "evidence": "VE-1 — live-preview.test.tsx:62-68 · :241-247",
+      "actually_measures_it": false,
+      "note": "AC-1 과 같은 뮤테이션에 살아남는다. 같은 축의 같은 구멍이다."
+    },
+    {
+      "ac": "AC-3 목록",
+      "evidence": "VE-1 — live-preview.test.tsx:62-68 · :249-257",
+      "actually_measures_it": false,
+      "note": "드러나는 항이 `-첫째 항목` 과 `not.toContain('•')` 로 마커 글자를 정확히 물어 그 축은 실효가 있으나, 줄 단위 축은 AC-1 과 같이 비어 있다."
+    },
+    {
+      "ac": "AC-4 링크",
+      "evidence": "VE-1 — live-preview.test.tsx:62-68 · :241-247",
+      "actually_measures_it": false,
+      "note": "링크는 `activeLinkStarts` 라는 별도 규칙을 타지만 그 규칙도 `view.hasFocus` 안에서만 선다. 같은 뮤테이션에 살아남는다."
+    },
+    {
+      "ac": "AC-5 인용",
+      "evidence": "VE-1 — live-preview.test.tsx:62-68 · :241-247",
+      "actually_measures_it": false,
+      "note": "AC-1 과 같다."
+    },
+    {
+      "ac": "AC-6 코드블록",
+      "evidence": "VE-1 — live-preview.test.tsx:71-90 (숨는 항, 이 회차가 고쳤다) · :259-261 (드러나는 항)",
+      "actually_measures_it": true,
+      "note": "이 회차가 공허를 걷어낸 자리다. 숨는 항이 이제 `not.toContain('```')` 와 `pre.dl-code` 존재 둘을 물고, 드러나는 항이 `toContain('```')` 를 문다. 코드블록은 `selectionTouches`(초점 무관, 위치 기반)를 쓰므로 위의 줄 단위 구멍을 타지 않는다 — 두 항이 **같은 원문을 자리만 바꿔** 재고 그 차이가 커서 위치 하나다. 조항을 실제로 잰다."
+    },
+    {
+      "ac": "AC-7 표",
+      "evidence": "VE-6 — table-reveal-check.mjs 판정 넷(실측 4/4) · VE-7 — table-reveal-state.test.ts 7항 · VE-1 — live-preview.test.tsx:92-98 (숨는 절반)",
+      "actually_measures_it": true,
+      "note": "세 증거가 겹치지 않게 나눠 문다. VE-7 은 7항 전건이 뮤테이션 탐침으로 실효를 확인받았고(`wave-1.mutation-probes.md` M1~M7, 옛 M1 이 살아남아 고쳐진 이력까지 남아 있다), VE-6 의 ① 은 「초점을 먼저 준 뒤」 재도록 짜여 노출 로직을 지워도 통과하는 길을 막았다. ② 는 실제 칸 클릭 제스처다. 화살표 진입은 기록성 관찰로 종료 코드에서 뺐고 그 사유가 CM6 `posAtCoords` 설계로 적혀 있다."
+    },
+    {
+      "ac": "AC-8 수식",
+      "evidence": "VE-3 — math-blocks.test.ts · VE-1 — live-preview.test.tsx:100-108 · :118-125",
+      "actually_measures_it": true,
+      "note": "수식도 `selectionTouches` 를 쓴다. 숨는 항은 `본문\\n\\n$$…` 로 커서를 떼고, 드러나는 항은 `$$…` 를 첫 자리에 두어 커서를 붙인다 — 같은 원문의 자리만 다르므로 차이가 커서 위치 하나다. 조항을 잰다."
+    },
+    {
+      "ac": "AC-9 Mermaid",
+      "evidence": "VE-1 — live-preview.test.tsx:110-114 · :298-302",
+      "actually_measures_it": true,
+      "note": "AC-6·AC-8 과 같은 구조다(`selectionTouches`). 브라우저 쪽에서도 `browser-check.mjs` 의 SDS-AC-2 와 「커서를 빼면 복귀한다」가 왕복을 잰다."
+    },
+    {
+      "ac": "AC-10 태그",
+      "evidence": "VE-9 — tag-chip-check.mjs ①② (실측 2/2) · VE-1 — live-preview.test.tsx:129-135 (칩 배선) · :304-308 (노출)",
+      "actually_measures_it": false,
+      "note": "**증거가 있으나 조항을 재지 않는 자리가 여기 남아 있다.** VE-1 의 노출 항(:304-308)은 `visibleText(host)` 가 `#회의` 를 담는지만 보는데, 칩의 `textContent` 가 바로 `#회의` 라(`tag-decoration.ts:37`) 칩이 서 있든 걷혔든 이 단언은 참이다. 실측 둘 — (1) 커서를 태그에서 뗀 상태로 마운트해도 `visibleText` 가 `#회의` 를 담는다(탐침 통과). (2) `tag-decoration.ts:60-63` 의 `revealed` 를 `false` 로 되돌려 노출 경로를 통째로 죽여도 **editor vitest 244 항이 전부 통과**했다. 그런데 SRS 의 VE-1 Notes 는 「숨는 절반과 드러나는 절반을 모두 잰다」고 적고 Covers 에 AC-10 을 넣는다. 조항 자체는 VE-9 ② 가 칩을 걷어낸 복제본에서 원문을 찾는 방식으로 제대로 재고 있으므로 제품은 참이다 — 결함은 증거 원장의 거짓 주장과, 자동으로 도는 시험에 이 축이 0건이라는 사실이다. HIGH-1."
+    },
+    {
+      "ac": "AC-11 태그 클릭",
+      "evidence": "VE-8 — screen-wiring.test.tsx 2항 · VE-1 — live-preview.test.tsx:137-160 (콜백 이름 전달)",
+      "actually_measures_it": true,
+      "note": "세 항이 사슬의 세 마디를 나눠 문다 — 편집기가 `회의` 를 넘긴다 / 셸이 `#할일` 로 번역한다 / 두 진입점의 결과가 같다. `searchForTag` 를 되돌리면 첫 항이 죽고, 두 자리를 함께 틀리게 하면 둘째 항이 죽는다."
+    },
+    {
+      "ac": "AC-12 프론트매터 제외",
+      "evidence": "VE-2 — tags.test.ts · VE-1 — live-preview.test.tsx:162-171",
+      "actually_measures_it": true,
+      "note": "live-preview 항이 `chips` 를 정확히 `['#실제태그']` 로 문다 — 프론트매터 쪽에 실제로 `#` 를 넣고 본문 쪽에도 하나 두어, 제외를 지우면 배열이 두 개가 되어 죽고 데코레이션이 죽으면 배열이 비어 죽는다. 공허해지는 길이 양쪽 다 막혀 있다."
+    }
+  ],
+  "whats_missing": [
+    {
+      "severity": "HIGH",
+      "title": "AC-10 의 노출 축이 자동 시험 어디에도 없는데 VE-1 은 「모두 잰다」고 적는다 — 이 회차가 넷을 잡은 그 부류의 다섯째",
+      "evidence": "`packages/editor/test/live-preview.test.tsx:304-308` 의 단언은 `expect(visibleText(host)).toContain('#회의')` 하나다. 칩 위젯의 `textContent` 가 `#${name}` 이므로(`packages/editor/src/core/tag-decoration.ts:37`) 이 문자열은 칩이 서 있는 동안에도 `.cm-content` 안에 있다. 실측 (1) — 커서를 태그에서 뗀 채 마운트하고 `.dl-tag` 가 서 있음을 확인한 상태에서 같은 단언이 통과함을 탐침으로 확인했다. 실측 (2) — `tag-decoration.ts` 의 `revealed()` 를 `(): boolean => false` 로 바꿔 노출 경로를 완전히 죽인 뒤 `NODE_ENV=production npx vitest run` 을 돌려 **20 파일 244 통과 · 1 건너뜀 · 실패 0** 을 받았다. 두 뮤테이션 모두 `git checkout --` 로 되돌리고 트리가 빈 것을 확인했다. 대비되는 자리 — `tag-chip-check.mjs:145-157` 의 `snapshot()` 은 `.cm-content` 를 복제해 `.dl-tag` 를 **제거한 뒤** 문자열을 찾으므로 두 상태를 정확히 가른다. `docs/spec/07.editor.srs.md` 의 VE-1 행은 Covers 에 AC-10 을 넣고 Notes 에 「숨는 절반과 드러나는 절반을 모두 잰다」고 적는다.",
+      "why_it_matters": "직전 회차가 AC-6 에서 고친 것과 **같은 부류가 같은 파일에 그대로 남았다** — 그때의 진단문(「앞은 울타리가 숨든 말든 참이고 뒤는 아무 것도 재지 않는다」)이 이 항에 글자 그대로 들어맞는다. 잔여 목록(Implementation Notes · report.md §10)에 이 항목은 없다. 있는 항([체크된 AC 가 거짓이었다 · 둘째])은 AC-10 의 **앞절반**(칩 겉모습)을 다루고 「뒷절반은 이미 구현돼 있었고 CSS 가 없어 관측할 수 없었을 뿐이다」라고 적어, 뒷절반의 증거가 공허하다는 사실을 오히려 반대로 기록한다. 실제 결과는 이렇다 — 태그 노출 규칙을 지우고 커밋해도 `npm test` 는 초록이고, 그것을 잡는 유일한 자리는 사람이 데브 서버를 띄운 채 손으로 부르는 `tag-chip-check.mjs` 뿐이다."
+    },
+    {
+      "severity": "MEDIUM",
+      "title": "AC-1~AC-5 의 「커서가 없는 **줄**」 축이 자동 시험 어디에도 없다 — 초점 하나로 통과한다",
+      "evidence": "숨는 항(`live-preview.test.tsx:62-68`)은 편집기에 초점을 주지 않은 채 재고, 드러나는 항(`:241-247`)은 `reveal()` 이 `view.focus()` 를 켠 뒤 잰다. 벤더의 숨김 판정은 `inline-preview.ts:386-392` 에서 `if (view.hasFocus && !readOnly)` 안에서만 `activeLines` 를 채운다. 그 안쪽 루프를 「선택이 걸친 줄」에서 「문서 전체 줄」로 퇴화시키면 제품은 「초점이 있으면 전부 드러난다」가 되는데, 그 상태에서 editor vitest 가 **20 파일 244 통과 · 실패 0** 이었다(`git checkout --` 로 되돌림 확인). 브라우저 시험 넷 중에도 헤딩·강조·목록·링크·인용의 줄 단위 노출을 재는 항은 0건이다.",
+      "why_it_matters": "제품은 실제로 줄 단위로 동작하므로 지금 사용자가 겪는 결함은 없다. 그러나 정본 목록의 다섯 조항이 「줄」이라는 핵심 단어를 잃은 채 체크돼 있고, 그 축을 무너뜨리는 변경이 회귀 게이트를 그대로 통과한다. AC-6·AC-8·AC-9 는 `selectionTouches` 경로라 같은 구멍을 타지 않으므로, 구멍은 벤더 문법 숨김 경로에만 있고 그 경로가 다섯 조항을 덮는다."
+    },
+    {
+      "severity": "MEDIUM",
+      "title": "부하에서 흔들리는 것은 editor vitest 만이 아니다 — web 도 흔들리는데 기록에는 없다",
+      "evidence": "이 라운드의 첫 web 전체 실행이 `Test Files 2 failed | 46 passed (48) · Tests 4 failed | 518 passed (522)` 였다. 실패는 `test/acl-audit.test.tsx` 1건(`TypeError: URL is not a constructor`)과 `test/settings-panel.test.tsx` 3건(5초 타임아웃 2건 · `Found multiple elements with the role \"button\" and name \"설정\"` 1건)이고, 어느 것도 FR-EDITOR-007 과 무관하다. 두 파일만 격리해 다시 돌리면 35/35 통과, 전체를 다시 돌리면 522/522 통과다. `docs/spec/07.editor.srs.md` 의 [관측 · 부하에서 흔들리는 단언] 항은 **editor vitest 만** 적고 실패를 「데코레이션 개수의 동일성 단언」으로 한정한다.",
+      "why_it_matters": "그 관측 항의 처분이 실제 범위보다 좁다. 다음 회차가 web 에서 이 넷을 만나면 기록이 가리키는 곳(editor·데코레이션 개수)과 맞지 않아 회귀로 단정하게 된다. 그리고 이 wave 의 통과 조건이 「실패 0」인데, 그 기준선이 한 번의 실행으로는 성립하지 않는다는 사실 자체가 게이트의 성질을 바꾼다 — 사람이 초록이 날 때까지 다시 돌리는 습관은 마지막 커밋 메시지가 브라우저 게이트에 대해 경고한 바로 그 습관이다."
+    },
+    {
+      "severity": "MEDIUM",
+      "title": "SRS 의 [증거 도달 범위 · 확장 축] 항이 같은 wave 의 뒷 커밋에 의해 거짓이 됐다",
+      "evidence": "그 항은 「editor/demo/App.tsx 는 mermaidBlocks·codeBlocks·mathBlocks 셋만 조립하는데 … doculightExtensions() 는 거기에 tagDecorations 와 wikiLinks 를 더 얹는다」고 적는다. 이 항을 넣은 커밋은 7dfd328 이고, 그 뒤의 d84e985 가 데모에 `tagDecorations()` 를 얹었다. 현재 `packages/editor/demo/App.tsx:156-159` 는 `[mermaidBlocks(), codeBlocks(), mathBlocks(), tagDecorations()]` 넷이고, `packages/editor/src/doculight-extensions.ts:48-62` 는 거기에 `wikiLinks(...)` 와 `pasteUploadExtension` 을 더 얹는다. 남은 차이는 tagDecorations 가 아니라 wikiLinks(와 붙여넣기 업로드)다.",
+      "why_it_matters": "요구 원장이 SSOT 인데 그 안의 사실 열거가 틀렸다. 이 항이 지목한 구체 사례(「heightmap-drift-check.mjs 가 문단 표지로 쓰는 [[위키링크]] 는 데모에서 평범한 글자이지만 제품에서는 데코레이션된 링크」)는 **여전히 참이다** — `heightmap-drift-check.mjs:48` 의 `PARAGRAPH_MARKER` 가 `[[위키링크]]` 이고 데모는 wikiLinks 를 얹지 않는다. 그러니 결론은 살아 있고 열거만 낡았다. 그대로 두면 배달 결함을 닫으러 오는 사람이 이미 닫힌 항목(tagDecorations)을 다시 닫으려 하고, 실제로 남은 항목(wikiLinks)의 무게를 오독한다."
+    },
+    {
+      "severity": "LOW",
+      "title": "폴링 헬퍼를 공용화하면서 넷째 시험의 사본만 남겼다",
+      "evidence": "`packages/editor/test/tag-chip-check.mjs:162-170` 이 `_browser-harness.mjs:66-75` 의 `waitUntil` 과 같은 일을 하는 `waitFor` 를 손수 들고 있다. 같은 커밋(e2b6e48)이 `table-reveal-check.mjs` 의 손수 만든 루프를 하네스로 합치면서 「같은 것이 두 벌이면 한쪽만 고쳐진다」고 적었는데, 그 문장이 붙은 자리 바로 옆에 세 번째 벌이 남아 있다.",
+      "why_it_matters": "하네스의 상한·간격 규약이 바뀌면 태그 시험만 옛 규약으로 남는다. 지금은 두 구현의 동작이 같아 관측되는 차이가 없다."
+    },
+    {
+      "severity": "LOW",
+      "title": "태그 시험이 판정 대상 자체를 기다린다 — 세 시험에 세운 규율을 넷째에만 적용하지 않았다",
+      "evidence": "`packages/editor/test/tag-chip-check.mjs:340` 의 `afterClick = await waitFor((s) => s.revealed)` 는 `revealed` 가 설 때까지 기다린 뒤 `afterClick.revealed` 를 단언한다. `table-reveal-check.mjs:126-141` 은 같은 자리에서 「**`revealed` 는 기다리지 않는다.** 그것이 이 항이 재는 성질이므로, 그것이 설 때까지 기다리면 잠깐 드러났다 사라지는 상태도 통과가 된다」고 명시하고 전제(`focused && widgets >= 1`)만 기다린다.",
+      "why_it_matters": "실패를 통과로 바꾸지는 못한다 — 끝내 서지 않으면 단언이 상한만큼 늦게 죽는다. 다만 노출이 한 프레임 떴다 사라지는 회귀는 통과한다. 같은 파일의 복귀 절반(`waitFor((s) => s.chips >= 1)`)도 같은 형태다."
+    },
+    {
+      "severity": "LOW",
+      "title": "표 시험의 ④ 복귀만 폴링으로 옮겨지지 않았다",
+      "evidence": "`packages/editor/test/table-reveal-check.mjs:214-216` 의 ④ 는 `clickAboveTable()` + `bringTableIntoView()` 뒤에 단발 `snapshot()` 을 읽는다. 같은 파일의 ① 은 바로 이 회차에 「초점은 CM6 가 `setTimeout(..., 10)` 뒤에 발행하고 위젯은 가상화가 다시 돌아야 선다」는 사유로 `waitUntil` 로 옮겨졌는데, ④ 는 같은 두 전제(위젯 마운트)를 타면서 고정 대기 300ms + 400ms 뒤에 읽는다.",
+      "why_it_matters": "이 라운드의 4회 실행에서는 재현되지 않았다. 남은 흔들림 표면이며, 흔들리면 ④ 가 「위젯 0개」로 실패해 진짜 회귀와 구별되지 않는다."
+    },
+    {
+      "severity": "LOW",
+      "title": "browser-check 주석의 실측값이 실제와 다르고, CLAUDE.md 가 낡은 본을 지목한다",
+      "evidence": "(가) `packages/editor/test/browser-check.mjs` 의 새 주석이 landmark 아래에서 「fill 이 9종이다」라고 적는데 이 라운드 4회 실행 모두 `서로 다른 fill 8종` 이었다. (나) `CLAUDE.md` 의 브라우저 검사 항이 여전히 「`packages/editor/test/browser-check.mjs` … reuse its shape for other browser-only checks rather than inventing a new one」이라 적는데, 이 회차 이후 재사용해야 할 본은 `packages/editor/test/_browser-harness.mjs` 다. CLAUDE.md 의 나머지 사실은 실측으로 맞았다 — 루트 `npm run dev` 가 web 앱(`package.json:14`), editor 데모는 `--workspace @doculight/editor`(`packages/editor/package.json:13` 의 `vite`), playwright 1.62.1 이 `packages/editor/node_modules` 에 있음, `test:browser:all` 이 네 시험을 그 순서로 돌림, 종료 코드 2 가 워크스페이스 층과 루트 래퍼를 모두 통과함(`EDITOR_URL=http://localhost:9/` 로 실측해 양쪽 다 `exit=2`).",
+      "why_it_matters": "(가)는 사소한 값 오차다. (나)를 따르면 다음 사람이 하네스를 지나쳐 다섯째 사본을 만들고, 접속 실패 처리가 다시 갈라진다 — 하네스 머리말이 적은 바로 그 사고다."
+    }
+  ],
+  "regression": {
+    "editor": "20 파일 244 통과 · 1 건너뜀 · 실패 0 (기준선 일치). 건너뛴 1건은 창 이전부터 있던 AC-7 it.skip.",
+    "server": "115 파일 1248 통과 · 실패 0 (기준선 일치)",
+    "web": "1회차 4 실패(522 중) → 격리 재실행 35/35 통과 → 전체 재실행 522/522 통과. 실패 넷은 acl-audit·settings-panel 로 이 wave 와 무관하며 부하 흔들림으로 판정했다(MEDIUM-3).",
+    "browser": "npm run test:browser:all 을 연속 4회 실행해 매회 12/12 · 4/4 · 7/7 · 2/2 = 25 PASS · 0 FAIL · 종료 0. 기록성 관찰 ③(화살표 진입)은 매회 OBS- 이며 종료 코드에 들어가지 않는다.",
+    "new_failures": 0
+  },
+  "counts": { "critical": 0, "high": 1, "medium": 3, "low": 4 },
+  "substantive_clean": false
+}
