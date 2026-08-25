@@ -14,8 +14,25 @@ const SHOT = 'test/browser-check.png';
 
 await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
   const consoleErrors = [];
-  page.on('pageerror', (e) => consoleErrors.push(e.message));
-  page.on('console', (m) => m.type() === 'error' && consoleErrors.push(m.text()));
+
+  // Vite 의 HMR 클라이언트가 붙지 못하면 콘솔에 오류를 남긴다. 그것은 개발
+  // 서버의 기계장치이고 제품 번들에는 존재하지 않으므로 이 판정의 대상이
+  // 아니다 — 무변경 트리에서 게이트가 이따금 죽던 원인이 이것이었다
+  // (실측: 8회 중 1회, `ws://localhost:3399/?token=...` 연결 실패).
+  //
+  // **이 화면의 웹소켓은 그것 하나뿐이다.** `packages/web/src` 와
+  // `packages/editor/src` 를 전수 검색해 `new WebSocket` 이 0건임을 확인했다.
+  // 그러니 이 거름이 제품 신호를 삼키지 않는다. 제품이 웹소켓을 쓰게 되면
+  // 이 거름을 **좁혀야 한다** — 넓히지 말고.
+  const isViteHmrNoise = (text) =>
+    /WebSocket connection to 'ws:\/\/[^']*' failed/.test(text) ||
+    text.includes('[vite] failed to connect to websocket');
+
+  const note = (text) => {
+    if (!isViteHmrNoise(text)) consoleErrors.push(text);
+  };
+  page.on('pageerror', (e) => note(e.message));
+  page.on('console', (m) => m.type() === 'error' && note(m.text()));
 
   // 붙지 못한 것과 회귀는 다르다. 데브 서버가 없거나 붙은 화면이 editor 데모가
   // 아니면 `openDemo` 가 스택 트레이스가 아니라 안내로 끝낸다(종료 코드 2) —

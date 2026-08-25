@@ -205,9 +205,18 @@ await runBrowserChecks(async ({ page, check, note, beginMeasuring }) => {
   );
 
   // --- ④ 복귀 — 커서를 표 밖으로 빼면 위젯이 다시 서고 원문이 사라진다
+  //
+  // 전제는 ① 과 같다 — 스크롤 뒤 CM6 의 가상화가 다시 돌아야 표 위젯이 선다.
+  // ① 은 그것을 폴링으로 기다리는데 여기만 고정 대기로 남아 있었다. 같은
+  // 전제를 두 자리가 다른 방식으로 기다리면 한쪽만 흔들린다.
+  //
+  // **`revealed` 는 여기서도 기다리지 않는다.** 그것이 이 항이 재는 성질이므로,
+  // 그것이 설 때까지 기다리면 원문이 끝내 사라지지 않아도 통과가 된다. 기다리는
+  // 것은 판정의 전제뿐이고, 두 전제는 아래 단언에 그대로 남아 있다 — 위젯이
+  // 끝내 서지 않으면 상한만큼 늦게, 그러나 똑같이 실패한다.
   await clickAboveTable();
   await bringTableIntoView();
-  const afterLeave = await snapshot();
+  const afterLeave = await waitUntil(snapshot, (s) => s.widgets >= 1);
   check(
     '④ 복귀 — 커서를 표 밖으로 빼면 위젯이 다시 서고 구분선 원문이 사라진다',
     afterLeave.widgets >= 1 && !afterLeave.revealed,
