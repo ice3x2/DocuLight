@@ -1,0 +1,5 @@
+{"event":"task_start","task_id":"T-PH001-03","phase_id":"PH-001"}
+{"event":"tdd_red_confirmed","task_id":"T-PH001-03","exit_code":1,"note":"mutation probe 1 removed the selectionTouches branch; items 2 and 5 failed"}
+{"event":"impl_done","task_id":"T-PH001-03","iter":1,"files_changed":["packages/editor/test/table-reveal-check.mjs"]}
+{"event":"test_green","task_id":"T-PH001-03","exit_code":0}
+{"event":"regression_done","task_id":"T-PH001-03","scope":"full","failed":0}

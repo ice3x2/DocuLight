@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "2026-08-25.doculight2.wave1-editor007.coder-0825",
+  "plan_run_id": "2026-08-25.doculight2.wave1-editor007",
+  "plan_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md",
+  "sidecar_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.sidecar.json",
+  "target": "phase-1",
+  "mode": "normal",
+  "flags": ["--auto", "--drive", "--auto-integration", "--auto-cost-warning"],
+  "spawn_context": "pm-child",
+  "current_phase_id": "PH-001",
+  "current_task_id": null,
+  "next_resume_hint": null,
+  "task_queue": [],
+  "completed_task_ids": ["T-PH001-03"],
+  "skipped_task_ids": [],
+  "failed_task_ids": [],
+  "tdd_exempted_task_ids": [],
+  "regression_baseline": {
+    "command": "NODE_ENV=production npm test",
+    "exit_code": 0,
+    "editor": "237 passed | 1 skipped",
+    "server": "1248 passed",
+    "web": "521 passed",
+    "failed_test_ids": [],
+    "head_sha": "bc3527d"
+  },
+  "regression_summary": {
+    "scope": "full",
+    "editor": "237 passed | 1 skipped",
+    "server": "1248 passed",
+    "web": "521 passed",
+    "failed": 0,
+    "regressed_files": []
+  },
+  "mcp_call_log": [],
+  "pending_mutations": ["deferred to kiwi-pm close-out (pm-child context)"]
+}

@@ -6,7 +6,7 @@
   "sidecar_sha256": "c6969b20edda4b968d61e9f91519fe8c621d66b1dc7cff831b17aa8c96552f81",
   "target_slug": "phase-1",
   "started_at": "2026-08-24T18:26:11Z",
-  "last_updated_at": "2026-08-25T02:33:59Z",
+  "last_updated_at": "2026-08-25T02:57:13Z",
   "pm_version": "0.1",
   "tasks": [
     {
@@ -72,17 +72,17 @@
     {
       "task_id": "T-PH001-03",
       "phase_id": "PH-001",
-      "status": "pending",
+      "status": "done",
       "tdd_exempted": false,
-      "started_at": null,
-      "ended_at": null,
-      "coder_run_id": null,
-      "result_summary": null,
+      "started_at": "2026-08-25T02:57:13Z",
+      "ended_at": "2026-08-25T02:57:13Z",
+      "coder_run_id": "2026-08-25.doculight2.wave1-editor007.coder-0825",
+      "result_summary": "탐침 다섯 완료. (4) 가 예상대로 판정 (2) 만 죽이고 (5) 를 살려 본 판정과 보조 판정이 다른 축을 잼을 증명했다. (5) 는 아무 시험도 죽이지 않아 계획이 든 키 입력 누출 사유를 반증했다 — 제한은 최소 개방을 근거로 유지하고 사유를 고쳤다. 판정 (3) 은 OBS 채널로 내려 종료 코드 0.",
       "trace_req_ids": [
         "FR-EDITOR-007"
       ],
       "questions": [],
-      "attempts": 0
+      "attempts": 1
     },
     {
       "task_id": "T-PH002-01",
@@ -147,9 +147,9 @@
   ],
   "stats": {
     "total": 9,
-    "done": 4,
+    "done": 5,
     "running": 0,
-    "pending": 5,
+    "pending": 4,
     "failed": 0,
     "blocked": 0,
     "skipped": 0

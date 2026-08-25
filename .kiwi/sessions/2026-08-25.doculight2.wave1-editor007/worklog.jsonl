@@ -10,3 +10,4 @@
 {"ts":"2026-08-25T10:35:00Z","event":"prickly_review_done","task_id":"T-PH001-02","iter":1,"severity_summary":{"CRITICAL":1,"HIGH":2,"MEDIUM":4,"LOW":2},"resolution":"6 fixed in-file, 1 partly-accepted+recorded, 2 recorded (1 out-of-scope, 1 residual risk)"}
 {"ts": "2026-08-25T01:36:15Z", "event": "plan_amended", "added": ["T-PH001-04", "T-PH001-05"], "reason": "T-PH001-02 가 선재 heightmap 결함을 드러냈고 그것이 AC-7 판정 (2) 의 유일한 장애물이다", "decisions": {"Q1": "승인 — 새 Task 로 연다", "Q2": "(a)", "Q3": "(a)", "Q4": "(a)"}}
 {"ts": "2026-08-25T02:33:59Z", "event": "tasks_done", "task_ids": ["T-PH001-04", "T-PH001-05", "T-PH001-02"], "e2e": "table-reveal 4/5 · browser-check 12/12 · drift 3/3", "regression": "기준선 동일"}
+{"ts": "2026-08-25T02:57:13Z", "event": "task_done", "task_id": "T-PH001-03", "finding": "탐침 (5) 가 계획의 키 입력 누출 사유를 반증 — 사유를 최소 개방으로 교정"}

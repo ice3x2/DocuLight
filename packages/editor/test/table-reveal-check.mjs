@@ -1,11 +1,11 @@
 // 실제 브라우저에서 표의 라이브 프리뷰 왕복을 확인한다 (FR-EDITOR-007 AC-7).
 //
-// AC-7 은 절반씩 나뉜다. 숨는 절반(커서가 표 밖이면 마크다운 기호가 사라진다)은
-// 이미 동작하고, 드러나는 절반(커서를 표 줄에 올리면 원문이 드러난다)은 아직
-// 서지 않았다. vitest 는 happy-dom 에서 데코레이션 발행만 검증하는데, 표는
-// 각 칸이 contenteditable 인 WYSIWYG 위젯이라 커서 진입 자체가 브라우저의
-// 초점·포인터 동작에 걸린다. 그래서 이 판정은 진짜 브라우저가 아니면 성립하지
-// 않는다.
+// AC-7 은 절반씩 나뉜다. 숨는 절반(커서가 표 밖이면 마크다운 기호가 사라진다)과
+// 드러나는 절반(커서를 표 줄에 올리면 원문이 드러난다)이 둘 다 이제 선다 —
+// 드러나는 절반은 칸 클릭으로 선다. vitest 는 happy-dom 에서 데코레이션 발행만
+// 검증하는데, 표는 각 칸이 contenteditable 인 WYSIWYG 위젯이라 커서 진입 자체가
+// 브라우저의 초점·포인터 동작에 걸린다. 그래서 이 판정은 진짜 브라우저가
+// 아니면 성립하지 않는다.
 //
 // 이 시험은 서버를 띄우지 않는다. 이미 떠 있는 데모에 붙는다.
 //
@@ -26,6 +26,15 @@ const DEMO_MARKER = '.demo-toggle';
 // 위젯이 선 동안에는 위젯 DOM 어디에도 나타나지 않는다(칸은 `data-raw` 와
 // 칸 텍스트만 갖는다). 그래서 이 토막의 등장이 곧 「원문이 드러났다」다.
 const SEPARATOR = '|---|';
+
+// 기록성 관찰 — 결과를 출력하되 종료 코드에 넣지 않는다. 판정과 달리 이
+// 카운터의 결과는 시험의 성패를 가르지 않고, 상대하는 플랫폼이 언젠가
+// 달라졌는지를 기록으로 남기는 데만 쓴다.
+const observations = [];
+function observe(name, holds, detail = '') {
+  observations.push({ name, holds, detail });
+  console.log(`${holds ? 'OBS+' : 'OBS-'}  ${name}${detail ? `  — ${detail}` : ''}`);
+}
 
 const results = [];
 function check(name, pass, detail = '') {
@@ -154,7 +163,24 @@ check(
         `편집기 초점 ${afterCellClick.focused}${measurable(afterCellClick) ? '' : ', 표 영역이 화면 밖이라 재지 못했다'})`,
 );
 
-// --- ③ AC-7 본 판정 (화살표 이동) — 표 위 문단에서 ArrowDown 으로 내려간다
+// --- ③ 기록성 관찰 (화살표 이동) — 표 위 문단에서 ArrowDown 으로 내려간다
+//
+// 이 항은 AC-7 의 본 판정이 아니다. 화살표는 표에 들어가지 못하며, 그것은
+// 이 저장소가 고칠 수 있는 것이 아니라 CM6 의 설계다. 수직 이동이 쓰는
+// `posAtCoords(..., scanY)` 는 세로로 훑으면서 Text 블록을 만날 때까지
+// 루프를 돌고, 그 도중의 위젯 블록은 의도적으로 건너뛴다. 표는 블록 위젯으로
+// 서므로 커서가 표 위 줄에서 표 아래 줄로 통째 넘어간다. 이는
+// `EditorView.atomicRanges` 와 무관하고 데코레이션 축으로는 풀리지 않는다 —
+// 풀려면 keymap 을 새로 세워야 하고 그것은 이 회차의 범위 밖이다. 저장소의
+// 다른 블록 위젯(`code-blocks.ts` · `mermaid-blocks.ts` · `image-blocks.ts`)도
+// 같은 이유로 화살표 진입 경로가 없고, 그것들을 재는 브라우저 시험에도 화살표로
+// 위젯에 들어가는 항은 없다. AC-7 은 ②(칸 클릭)가 닫는다. 근거는
+// `docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md` 의 §5.4
+// `deferred_ac` 절에 적혀 있다.
+//
+// 그러므로 이 시험을 지우지 마라 — 지우면 CM6 가 나중에 화살표 진입을 열어도
+// 아무도 그 사실을 알지 못한다. 여기서는 결과를 적기만 하고 종료 코드에는
+// 넣지 않는다. OBS+ 가 나오면 그것이 CM6 가 달라졌다는 신호다.
 await clickAboveTable();
 let arrowRevealed = false;
 let arrowTouchedTable = false;
@@ -172,8 +198,8 @@ for (let i = 0; i < 5; i++) {
   }
   if (arrowLast.cursorLine > tableRange.to) break;
 }
-check(
-  '③ AC-7 본 판정 — 화살표로 표 줄에 내려가면 구분선 원문이 드러난다',
+observe(
+  '③ 기록성 관찰 — 화살표로 표 줄에 내려가면 구분선 원문이 드러난다 (AC-7 판정 아님)',
   arrowRevealed,
   arrowRevealed
     ? ''
@@ -195,8 +221,9 @@ check(
 // --- ⑤ 보조 (데코레이션 규칙) — 커서 진입 경로를 건너뛰고 선택만 옮긴다.
 //
 // 이 항은 AC-7 판정이 아니다. AC-7 은 사용자가 커서를 「올리는」 것을 요구하고
-// 그 제스처는 ②·③ 이 잰다. 여기서는 진입 수단을 빼고 데코레이션 규칙 하나만
-// 남겨, 실패가 어느 축의 것인지 갈라 보는 데 쓴다.
+// 그 제스처는 ②(칸 클릭)가 잰다 — ③ 은 기록성 관찰로 내려가 판정이 아니다.
+// 여기서는 진입 수단을 빼고 데코레이션 규칙 하나만 남겨, 실패가 어느 축의
+// 것인지 갈라 보는 데 쓴다.
 await page.evaluate(`(() => {
   const view = ${VIEW};
   view.focus();
@@ -216,4 +243,10 @@ await browser.close();
 
 const failed = results.filter((r) => !r.pass);
 console.log(`\n${results.length - failed.length}/${results.length} 통과`);
+if (observations.length > 0) {
+  const held = observations.filter((o) => o.holds).length;
+  console.log(
+    `기록성 관찰 ${held}/${observations.length} 성립 (종료 코드에 넣지 않는다)`,
+  );
+}
 process.exit(failed.length === 0 ? 0 : 1);
