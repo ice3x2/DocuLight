@@ -34,23 +34,38 @@ const TAG_TEXT = '#회의';
 // 커서를 태그 줄 밖으로 뺄 자리. 태그 줄과 같은 화면에 들어오는 인용문이다.
 const QUOTE_TEXT = '인용문입니다.';
 
-// 색의 RGB 성분만 비교 가능한 하나의 값으로 눕힌다. 계산된 색은 형식이 한
-// 가지가 아니다 — `color-mix()` 를 쓴 자리는 크롬에서 `color(srgb …)` 로,
-// 나머지는 `rgb()` · `rgba()` 로 돌아온다. 형식이 다르면 같은 색도 문자열로는
-// 다르므로, 그대로 견주면 아무것도 안 바뀌었는데 「달라졌다」가 나온다.
-const COLOR_KEY = `((value) => {
+// 색을 0-255 세 성분으로 눕힌다. 계산된 색은 형식이 한 가지가 아니다 —
+// `color-mix()` 를 쓴 자리는 크롬에서 `color(srgb …)` 로, 나머지는 `rgb()` ·
+// `rgba()` 로 돌아온다. 형식이 다르면 같은 색도 문자열로는 다르므로, 문자열을
+// 그대로 견주면 아무것도 안 바뀌었는데 「달라졌다」가 나온다.
+//
+// `color()` 는 색공간 이름을 가리지 않고 성분만 읽는다. display-p3 를 srgb 로
+// 읽는 것은 근사지만, 여기서 재는 것은 「얼마나 다른가」이므로 근사로 족하고,
+// 색공간을 가려서 파싱에 실패하는 쪽보다 오탐이 안전한 방향으로 기운다.
+// 퍼센트 표기와 색역 밖 음수 성분도 함께 받는다.
+//
+// 읽어내지 못한 값은 `null` 이다. 그 경우를 통과로 두면 파싱 실패가 곧
+// 통과가 되므로, 부르는 쪽에서 구별 없음으로 다룬다.
+const RGB_OF = `((value) => {
   const text = String(value ?? '');
-  const srgb = text.match(/^color\\(srgb\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)/);
-  if (srgb) return [1, 2, 3].map((i) => Math.round(Number(srgb[i]) * 255)).join(',');
+  if (text === 'transparent') return [0, 0, 0];
+  const fn = text.match(/^color\\(\\s*[a-z0-9-]+\\s+([^)]*)\\)/);
+  if (fn) {
+    const parts = fn[1].split('/')[0].trim().split(/\\s+/).slice(0, 3);
+    if (parts.length < 3) return null;
+    return parts.map((p) => {
+      const n = Number(p.replace('%', ''));
+      if (Number.isNaN(n)) return NaN;
+      return Math.round(Math.min(255, Math.max(0, p.endsWith('%') ? n * 2.55 : n * 255)));
+    });
+  }
   const rgb = text.match(/^rgba?\\(([^)]*)\\)/);
   if (rgb) {
-    return rgb[1]
-      .split(',')
-      .slice(0, 3)
-      .map((n) => Math.round(Number(n)))
-      .join(',');
+    const parts = rgb[1].split(',').slice(0, 3);
+    if (parts.length < 3) return null;
+    return parts.map((n) => Math.round(Number(n)));
   }
-  return text;
+  return null;
 })`;
 
 // 알파를 뽑는다. 알파가 0 이면 RGB 성분이 무엇이든 화면에는 아무것도 그려지지
@@ -72,9 +87,19 @@ const ALPHA_OF = `((value) => {
   return 1;
 })`;
 
-// 이보다 옅은 칠은 사람 눈에 닿지 않는다. 알파 0 만 걸러내면
-// `rgba(…, 0.002)` 짜리 배경이 「구별된다」로 통과한다.
-const MIN_VISIBLE_ALPHA = 0.02;
+// 배경은 알파와 색을 따로 걸지 않고 **바탕 위에 합성한 결과**로 잰다. 알파
+// 하한과 색 부등호를 따로 두면 그 사이로 빠져나가는 값이 생긴다 — 진한 색을
+// 3% 로 묽히면 알파는 하한을 넘고 원색은 바탕과 다르지만 합성 결과는 바탕과
+// 사실상 같다. 합성해서 재면 그 경로가 한꺼번에 닫히고 판정도 단순해진다.
+//
+// 채널당 8 은 인접한 두 면의 색을 눈으로 갈라내기 시작하는 어림이다. 지금
+// 칩(강조색 12%)은 이 값으로 18 이 나오고, 같은 색을 3% 로 묽히면 5 가 나와
+// 걸린다.
+const MIN_VISIBLE_DELTA = 8;
+
+// 테두리·윤곽선·그림자는 바탕에 섞이지 않고 제 색으로 그려지므로 알파만 본다.
+// 알파 0 만 걸러내면 `rgba(…, 0.002)` 짜리 선이 「구별된다」로 통과한다.
+const MIN_VISIBLE_ALPHA = 0.05;
 
 await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
   // 접속 실패와 「붙은 화면이 데모가 아니다」만 「재지 못했다」로 나간다 —
@@ -183,9 +208,10 @@ await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
     const line = chip.closest('.cm-line');
     const c = getComputedStyle(chip);
     const l = getComputedStyle(line);
-    const key = ${COLOR_KEY};
+    const rgbOf = ${RGB_OF};
     const alphaOf = ${ALPHA_OF};
     const paints = (color) => alphaOf(color) >= ${MIN_VISIBLE_ALPHA};
+    const readable = (rgb) => rgb !== null && rgb.every((v) => !Number.isNaN(v));
 
     // 칩의 배경이 얹히는 바탕. 비교 상대를 .cm-line 으로 두면 안 된다 — 이
     // 저장소의 줄은 배경을 칠하지 않아서 그 비교가 「칩이 배경을 갖기만 하면
@@ -194,38 +220,72 @@ await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
     let backdrop = 'rgb(255, 255, 255)';
     for (let node = chip.parentElement; node; node = node.parentElement) {
       const bg = getComputedStyle(node).backgroundColor;
-      if (paints(bg)) {
+      if (alphaOf(bg) > 0) {
         backdrop = bg;
         break;
       }
     }
 
-    // 칩이 **스스로** 칠해야 하고, 그 색이 바탕과 달라야 한다. 두 조건 중
-    // 하나만 빠져도 화면에는 아무 상자도 나타나지 않는다.
-    const bgDiffers = paints(c.backgroundColor) && key(c.backgroundColor) !== key(backdrop);
+    // 칩 배경을 바탕 위에 합성한 결과가 바탕과 얼마나 다른가. 알파와 색을
+    // 따로 걸지 않고 이 한 값으로 판정한다.
+    const chipRgb = rgbOf(c.backgroundColor);
+    const backRgb = rgbOf(backdrop);
+    let bgDelta = 0;
+    if (readable(chipRgb) && readable(backRgb)) {
+      const a = alphaOf(c.backgroundColor);
+      bgDelta = Math.max(
+        ...chipRgb.map((v, i) => Math.abs(v * a + backRgb[i] * (1 - a) - backRgb[i])),
+      );
+    }
+    const bgDiffers = bgDelta >= ${MIN_VISIBLE_DELTA};
 
     const borderDiffers =
       parseFloat(c.borderTopWidth) > 0 &&
       c.borderTopStyle !== 'none' &&
       paints(c.borderTopColor);
 
-    // 윤곽선과 그림자도 상자를 그린다. 이 둘을 빼면 테두리 대신 그것들로
-    // 칩을 그린 정당한 재디자인이 근거 없이 실패하고, 그 압력은 시험을
-    // 약화시키는 쪽으로 간다.
+    // 윤곽선·그림자·배경 이미지도 상자를 그린다. 이것들을 빼면 테두리 대신
+    // 그것들로 칩을 그린 정당한 재디자인이 근거 없이 실패하고, 그 압력은
+    // 시험을 약화시키는 쪽으로 간다.
     const outlineDiffers =
       parseFloat(c.outlineWidth) > 0 && c.outlineStyle !== 'none' && paints(c.outlineColor);
 
-    const shadowDiffers = c.boxShadow !== 'none' && c.boxShadow !== '';
+    // 그림자도 나머지와 같은 엄격함으로 잰다. 「none 이 아니다」만 보면
+    // \`box-shadow: 0 0 0 0 transparent\` 처럼 0 픽셀을 그리는 값이 통과한다 —
+    // 그것은 transition 자리표시로 흔히 쓰이는 관용구다. 색이 보이고, 오프셋 ·
+    // 흐림 · 번짐 중 하나라도 0 이 아니어야 실제로 무언가가 그려진다.
+    const shadowColor = c.boxShadow.match(/rgba?\\([^)]*\\)|color\\([^)]*\\)/);
+    const shadowLengths = c.boxShadow.match(/-?[\\d.]+px/g) ?? [];
+    const shadowDiffers =
+      c.boxShadow !== 'none' &&
+      shadowColor !== null &&
+      paints(shadowColor[0]) &&
+      shadowLengths.some((v) => parseFloat(v) !== 0);
+
+    // 그러데이션으로 칠한 칩은 계산된 backgroundColor 가 투명이라 위의 합성
+    // 판정에 걸리지 않는다. 사람 눈에는 명백히 채워진 상자이므로 별도 축으로
+    // 받는다. 안에 보이는 색이 하나도 없으면 그것도 0 픽셀이다.
+    const imageColors = c.backgroundImage.match(/rgba?\\([^)]*\\)|color\\([^)]*\\)/g) ?? [];
+    const imageDiffers =
+      c.backgroundImage !== 'none' &&
+      (imageColors.length === 0 || imageColors.some(paints));
 
     // 글자색은 기록만 한다 — 모서리(아래 radius)와 함께, 상자를 그리지 않으므로
     // 판정에 넣지 않는다.
-    const colorDiffers = key(c.color) !== key(l.color);
+    const chipColorRgb = rgbOf(c.color);
+    const lineColorRgb = rgbOf(l.color);
+    const colorDiffers =
+      readable(chipColorRgb) &&
+      readable(lineColorRgb) &&
+      String(chipColorRgb) !== String(lineColorRgb);
 
     return {
       bgDiffers,
+      bgDelta: Math.round(bgDelta),
       borderDiffers,
       outlineDiffers,
       shadowDiffers,
+      imageDiffers,
       colorDiffers,
       chipBg: c.backgroundColor,
       backdrop,
@@ -234,6 +294,7 @@ await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
       border: \`\${c.borderTopWidth} \${c.borderTopStyle} \${c.borderTopColor}\`,
       outline: \`\${c.outlineWidth} \${c.outlineStyle}\`,
       shadow: c.boxShadow,
+      image: c.backgroundImage,
       radius: c.borderTopLeftRadius,
     };
   })()`);
@@ -244,15 +305,21 @@ await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
   // 않아 노출 축까지 통째로 조용해진다 — 실제로 이 자리를 `unmeasurable` 로
   // 두었을 때 뮤테이션 탐침이 그 구멍을 잡아냈다.
   check(
-    '① 칩이 상자로 그려져 주변 글자와 시각적으로 구별된다 — 칠해진 배경·테두리·윤곽선·그림자 중 최소 하나',
+    '① 칩이 상자로 그려져 주변 글자와 시각적으로 구별된다 — 배경·테두리·윤곽선·그림자·그러데이션 중 최소 하나',
     look !== null &&
-      (look.bgDiffers || look.borderDiffers || look.outlineDiffers || look.shadowDiffers),
+      (look.bgDiffers ||
+        look.borderDiffers ||
+        look.outlineDiffers ||
+        look.shadowDiffers ||
+        look.imageDiffers),
     look === null
       ? '태그 칩(.dl-tag)이 화면에 한 개도 서지 않았다'
-      : `배경 ${look.chipBg} vs 바탕 ${look.backdrop} (${look.bgDiffers ? '다름' : '같음'}), ` +
+      : `배경 ${look.chipBg} 을 바탕 ${look.backdrop} 위에 합성한 차 ${look.bgDelta}/255 ` +
+        `(${look.bgDiffers ? '다름' : '같음'}, 기준 ${MIN_VISIBLE_DELTA}), ` +
         `테두리 ${look.border} (${look.borderDiffers ? '있음' : '없음'}), ` +
         `윤곽선 ${look.outline} (${look.outlineDiffers ? '있음' : '없음'}), ` +
-        `그림자 ${look.shadow} (${look.shadowDiffers ? '있음' : '없음'}) ` +
+        `그림자 ${look.shadow} (${look.shadowDiffers ? '있음' : '없음'}), ` +
+        `그러데이션 ${look.image} (${look.imageDiffers ? '있음' : '없음'}) ` +
         `/ 판정에 넣지 않는 관찰 — 글자색 ${look.chipColor} vs 줄 ${look.lineColor} ` +
         `(${look.colorDiffers ? '다름' : '같음'}), 모서리 ${look.radius}`,
   );
