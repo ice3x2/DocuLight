@@ -1,6 +1,7 @@
 // 브라우저 시험 셋이 함께 쓰는 기계장치.
 //
-// `browser-check.mjs` · `table-reveal-check.mjs` · `heightmap-drift-check.mjs`
+// `browser-check.mjs` · `table-reveal-check.mjs` · `heightmap-drift-check.mjs` ·
+// `tag-chip-check.mjs`
 // 는 무엇을 재는지가 서로 다르지만, 재기까지의 절차는 같다 — 브라우저를 띄우고,
 // 3399 에 뜬 화면이 editor 데모인지 확인하고, 판정을 모아 마지막에 집계하고,
 // 종료 코드로 결과를 내보낸다. 그 절차가 세 벌로 갈라져 있으면 한쪽만 고쳐지고

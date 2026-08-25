@@ -1,6 +1,12 @@
 import { useMemo, useState, type CSSProperties } from 'react';
 
-import { AtomicCodeMirrorEditor, codeBlocks, mathBlocks, mermaidBlocks } from '../src/index';
+import {
+  AtomicCodeMirrorEditor,
+  codeBlocks,
+  mathBlocks,
+  mermaidBlocks,
+  tagDecorations,
+} from '../src/index';
 
 const SAMPLE = `# DocuLight 에디터 — Mermaid 라이브 프리뷰
 
@@ -112,6 +118,8 @@ $$
 | 커서를 | 올리면 원문 |
 
 [[위키링크]] 와 [일반 링크](https://example.com) 도 동작합니다.
+
+본문 태그는 칩으로 그려집니다 — 오늘 #회의 를 했습니다.
 `;
 
 // 본문 폭은 `--atomic-editor-measure` 하나로 정해진다 (기본 70ch).
@@ -134,10 +142,21 @@ export default function App() {
   // 위젯을 한 번도 보지 못하고, 그 둘에만 있는 결함이 제품에 그대로 남는다 —
   // 실제로 `pre.dl-code` 의 UA 기본 margin 이 그렇게 살아 있었다.
   //
-  // 태그·위키링크·붙여넣기 업로드는 얹지 않는다. 이 데모가 재는 것은 블록
-  // 위젯의 레이아웃이고, 콜백을 받는 확장은 그 축과 무관하게 이 화면에
-  // 셸이 없는 상태로 들어온다.
-  const extensions = useMemo(() => [mermaidBlocks(), codeBlocks(), mathBlocks()], []);
+  // **태그 데코레이션도 얹는다.** 태그 칩이 주변 글자와 실제로 구별되는지는
+  // 계산된 스타일로만 잴 수 있고, 그것을 재는 `test/tag-chip-check.mjs` 가 붙을
+  // 화면이 이 데모뿐이다. 얹지 않으면 브라우저 어디에도 칩이 서지 않아 그
+  // 시험이 재지 못한다 — 실제로 `.dl-tag` 규칙이 한 건도 없는 채로 조항이
+  // 통과해 있었다.
+  //
+  // 콜백은 주지 않는다. 눌렀을 때 무엇이 열리는지는 셸이 정하고 이 화면에는
+  // 셸이 없다.
+  //
+  // 위키링크·붙여넣기 업로드는 여전히 얹지 않는다 — 이 데모가 재는 나머지 축은
+  // 블록 위젯의 레이아웃이고, 그 둘은 그 축과 무관하다.
+  const extensions = useMemo(
+    () => [mermaidBlocks(), codeBlocks(), mathBlocks(), tagDecorations()],
+    [],
+  );
 
   return (
     <div className="demo-shell">

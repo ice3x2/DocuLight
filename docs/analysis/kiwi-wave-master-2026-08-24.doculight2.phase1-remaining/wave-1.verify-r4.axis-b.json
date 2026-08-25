@@ -1,0 +1,171 @@
+{
+  "round": 4,
+  "window": "git diff b73f70c..248ad93 (12 commits)",
+  "preservation": {
+    "denominator": 17,
+    "derivation": "네 부류를 창에서 기계적으로 뽑았다. (1) 삭제·이동 파일 3행 — `git show --name-status` 를 12개 커밋 전부에 돌려 D/R 행을 모았다. 창 전체 `git diff --diff-filter=DR b73f70c..248ad93` 은 0행이다. (2) 삭제·변경된 기존 public 심볼 8행 — 수정된 src 파일 전부의 diff 전문을 읽어 제거·시그니처 변경·DOM/CSS 계약 변경을 모았다. (3) 삭제·수정된 기존 시험 파일 3행 — name-status 의 M 중 test 경로 전부. (4) 단언 약화 후보 3행 — (3)의 세 파일에서 판정문이 바뀐 자리 전부. 3+8+3+3=17.",
+    "rows": [
+      {
+        "path": "packages/editor/docs/plans/2026-08-25.doculight2.wave1-editor007.validator.json",
+        "category": "1-deleted-or-moved-file",
+        "verdict": "intended-improvement",
+        "evidence": "bc3527d 에서 삭제. `git cat-file -e b73f70c:<path>` 가 실패한다 — 기저에 존재하지 않았다. 창 안에서 잘못된 경로에 생겼다가 같은 창에서 지워진 산출물이다.",
+        "note": "기존 파일이 아니다."
+      },
+      {
+        "path": ".kiwi/sessions/2026-08-25.doculight2.wave1-editor007/pm.lock",
+        "category": "1-deleted-or-moved-file",
+        "verdict": "intended-improvement",
+        "evidence": "be66168 에서 삭제. `git cat-file -e b73f70c:<path>` 실패 — 기저에 없었다. 세션 lock 파일이다.",
+        "note": "기존 파일이 아니다."
+      },
+      {
+        "path": "kiwi/.pipeline-path",
+        "category": "1-deleted-or-moved-file",
+        "verdict": "intended-improvement",
+        "evidence": "186043b 에서 추적 해제. `git cat-file -e b73f70c:<path>` 실패 — 기저에 없었다. 같은 커밋이 .gitignore 에 사유를 적어 등록했다(머신별 절대경로 한 줄).",
+        "note": "기존 파일이 아니다. 창 전체 --diff-filter=DR 이 0행이므로 기저에 있던 파일이 삭제·이동된 사례는 0건이다."
+      },
+      {
+        "path": "packages/editor/src/vendor/atomic-editor/table-widget.ts :: TableWidget.ignoreEvent",
+        "category": "2-public-symbol-changed",
+        "verdict": "intended-improvement",
+        "evidence": "`(): boolean => true` 에서 `(event: Event): boolean => event.type === 'mousedown' ? this.readOnly : true` 로 시그니처와 동작이 모두 바뀌었다. 이 변경이 곧 AC-7 의 커서 진입 경로이며 요구가 지시한 것이다. 읽기 전용의 종전 거동(전부 true)은 그대로 보존된다.",
+        "note": "이 변경이 만든 새 위험은 whats_missing #2 에 적었다."
+      },
+      {
+        "path": "packages/editor/src/core/mermaid-blocks.ts :: MermaidWidget.toDOM DOM 계약",
+        "category": "2-public-symbol-changed",
+        "verdict": "intended-improvement",
+        "evidence": "위젯 루트가 `.dl-mermaid` 에서 `.dl-mermaid-block` 으로 바뀌고 `.dl-mermaid` 가 그 자식으로 내려갔다. 저장소에서 `.dl-mermaid` 를 잡는 자리 전수 grep — browser-check.mjs(클릭·svg 개수·색), heightmap-drift-check.mjs, editor.css — 가 모두 자손 선택자이거나 자식 상자를 직접 가리키므로 전부 그대로 해석된다. `.dl-mermaid-error` 도 자식 상자에 붙는다.",
+        "note": "heightmap 어긋남을 없애기 위한 변경이며 사유가 toDOM 주석과 editor.css 주석에 적혀 있다."
+      },
+      {
+        "path": "packages/editor/src/styles/editor.css :: .dl-mermaid { margin: 0.6em 0 }",
+        "category": "2-public-symbol-changed",
+        "verdict": "intended-improvement",
+        "evidence": "규칙이 제거되고 같은 여백이 `.dl-mermaid-block { padding: 0.6em 0 }` 으로 옮겨갔다. 겉보기 여백은 보존되고 heightmap 만 DOM 과 맞는다. 새로 선 `.dl-code` 규칙에는 실측값(앞뒤 줄 간격 17px → 34px → 17px, 위젯 바깥 상자 63px 고정)이 주석에 적혀 있고 heightmap-drift-check.mjs 의 ④ 가 지킨다.",
+        "note": "이 CSS 가 제품에 배달되지 않는 문제는 FND-101 이 이미 적었다 — 되풀이하지 않는다."
+      },
+      {
+        "path": "packages/editor/src/core/{code-blocks,math-blocks,mermaid-blocks}.ts :: selectionTouches / touchesSelection",
+        "category": "2-public-symbol-changed",
+        "verdict": "intended-improvement",
+        "evidence": "세 벌의 동일 술어가 지워지고 새 모듈 `core/selection-touches.ts` 한 곳으로 합쳐졌다. 세 심볼 모두 모듈 지역 const 이며 export 된 적이 없다 — 공개 표면에서 사라진 것은 없다. 술어 본문은 세 벌과 문자 단위로 같다.",
+        "note": "vendor 쪽 table-widget.ts 는 같은 술어를 일부러 복제하고 사유(vendor 경계 역전 방지)를 주석에 적었다."
+      },
+      {
+        "path": "packages/editor/src/index.ts",
+        "category": "2-public-symbol-changed",
+        "verdict": "intended-improvement",
+        "evidence": "diff 가 추가 한 줄뿐이다(`codeBlockField, codeBlocks, findCodeBlocks, type CodeBlock`). 제거된 export 가 0건이다.",
+        "note": "새로 연 표면 중 둘은 소비자가 시험뿐이다 — whats_missing #3."
+      },
+      {
+        "path": "packages/web/src/shell/AppShell.tsx :: onTagClick / onPick 배선",
+        "category": "2-public-symbol-changed",
+        "verdict": "intended-improvement",
+        "evidence": "두 자리가 각각 `searchFor` 와 `(tag) => searchFor('#'+tag)` 를 쓰던 것이 `searchForTag` 하나로 합쳐졌다. 우측 태그 탭의 결과값은 종전과 같고(`#할일`), 본문 칩의 결과값만 `할일` 에서 `#할일` 로 바뀐다 — 그 변경이 AC-11 의 결함 수정이다.",
+        "note": "assertion_change_verdict 참조."
+      },
+      {
+        "path": "packages/editor/src/vendor/atomic-editor/table-widget.ts :: tableField.update 분기",
+        "category": "2-public-symbol-changed",
+        "verdict": "intended-improvement",
+        "evidence": "`if (!tr.docChanged) return deco;` 뒤 map+rebuild 이던 구조가 revealChanged 를 더한 두 갈래로 바뀌었다. 종전 조건 `changeAffectsTables` 가 그대로 남아 있고 재빌드 조건이 OR 로 넓어졌을 뿐이다 — 재빌드가 줄어드는 방향의 변경이 아니다. 선택 전용 트랜잭션에서 전문서 iterate 를 피하는 최적화는 `revealedTableSignature` 가 커서 줄 창만 훑는 것으로 처리한다.",
+        "note": "`ensureSyntaxTree` 는 buildTableWidgets 에 그대로 남아 있다. FND-104 가 가리키는 것은 signature 쪽의 syntaxTree 사용이다."
+      },
+      {
+        "path": "packages/editor/demo/App.tsx :: extensions 묶음과 SAMPLE 문서",
+        "category": "2-public-symbol-changed",
+        "verdict": "intended-improvement",
+        "evidence": "`[mermaidBlocks()]` 가 `[mermaidBlocks(), codeBlocks(), mathBlocks()]` 로 늘었고 표 예시 문구가 「셀을 클릭해 보세요」에서 「커서를 올리면 원문」으로 바뀌었다. 얹는 확장이 늘기만 했고 빠진 것이 없다. 문구 변경은 이 회차가 바꾼 실제 동작과 맞춘 것이다.",
+        "note": "이 묶음이 제품 묶음과 여전히 다르다는 사실은 Implementation Notes [증거 도달 범위 · 확장 축]이 이미 적었다."
+      },
+      {
+        "path": "packages/editor/test/browser-check.mjs",
+        "category": "3-existing-test-modified",
+        "verdict": "intended-improvement",
+        "evidence": "`grep -c '^ *check('` 이 기저 12, HEAD 12 로 같다. 사라진 판정이 0건이고 skip 으로 내려간 항이 0건이다. 407줄 변경의 대부분은 브라우저 기동·데모 확인·집계·종료 코드 기계장치를 `_browser-harness.mjs` 로 뽑아낸 것이며, 새 파일 이름의 밑줄이 「시험이 아니라 시험의 도구」 표시다.",
+        "note": "종료 코드 의미가 갈렸다(2 = 재지 못했다). 기저에서 접속 실패는 unhandled rejection 으로 1 이었고 지금은 2 다. 둘 다 0 이 아니며 test:browser:all 이 && 로 엮여 있어 집계 실행은 종전과 같이 멈춘다 — 판정이 종료 코드에서 빠진 자리가 아니다."
+      },
+      {
+        "path": "packages/editor/test/live-preview.test.tsx",
+        "category": "3-existing-test-modified",
+        "verdict": "intended-improvement",
+        "evidence": "diff hunk 가 주석 16줄 추가 하나뿐이다. `grep -c 'it.skip'` 이 기저 1, HEAD 1 이고 `it(` 총수도 18 로 같다. 새로 skip 된 항이 0건이며 기존 skip 은 창 이전부터 있던 것이다. 추가된 주석은 그 skip 이 이제 어느 시험으로 덮이는지(table-reveal-check.mjs / table-reveal-state.test.ts)를 적는다.",
+        "note": "다만 이 파일의 AC-10 노출 항이 공허하다는 별개 사실은 whats_missing #1 에 적었다."
+      },
+      {
+        "path": "packages/web/test/screen-wiring.test.tsx",
+        "category": "3-existing-test-modified",
+        "verdict": "intended-improvement",
+        "evidence": "기존 항 1개의 기대값이 바뀌고 새 항 1개가 섰다. 사라진 항이 0건, skip 0건이다. 재는 대상이 좁아지지 않았다 — 오히려 「두 자리가 같은가」라는 축이 새로 생겼다.",
+        "note": "assertion_change_verdict 에서 뮤테이션 탐침 둘로 직접 쟀다."
+      },
+      {
+        "path": "packages/editor/test/browser-check.mjs :: SDS-AC-3 판정문",
+        "category": "4-assertion-change",
+        "verdict": "intended-improvement",
+        "evidence": "`jsVisible > 0` 에서 `jsVisible > 0 && jsInDiagram === 0` 으로 항이 하나 늘었다. 강화다. 데모가 codeBlocks() 를 얹게 되면서 글자만 보는 단언이 어느 확장이 그 펜스를 가져갔는지 가리지 못하게 된 것을 막는다.",
+        "note": "약화의 반대 방향이다."
+      },
+      {
+        "path": "packages/editor/test/browser-check.mjs :: SDS-AC-4 판정문",
+        "category": "4-assertion-change",
+        "verdict": "intended-improvement",
+        "evidence": "술어는 `errorBlocks === 1` 로 문자 단위 동일하다. 바뀐 것은 재는 자리뿐이며(스크롤 top → 오류 펜스 앞 소제목 landmark), 사유가 파일 안에 14줄로 적혀 있다 — heightmap 어긋남이 사라져 CM6 가 뷰포트 밖 위젯을 정확히 언마운트하게 되면서, 종전 자리에서 우연히 통과하던 것이 드러났다. landmark 를 못 찾으면 throw 하며 조용히 넘어가지 않는다.",
+        "note": "「재는 대상이 좁아졌는데 사유가 어디에도 적히지 않았다」에 걸리지 않는다."
+      },
+      {
+        "path": "packages/editor/test/browser-check.mjs :: 테마 · fill 다양성 판정문",
+        "category": "4-assertion-change",
+        "verdict": "intended-improvement",
+        "evidence": "두 술어(`theme.attr === 'light' && pageLuma > 128 && diagramLuma > 128` 과 `fillVariety >= 3`)가 문자 단위로 그대로다. 재는 자리를 문서 끝머리에서 top 으로 옮겼고 사유가 파일 안에 적혀 있다 — 끝머리에 rect 없는 pie 와 렌더 실패 블록만 남아 색을 못 찾은 것이 「테마가 어긋났다」로 읽혔다.",
+        "note": "판정 자체는 그대로다."
+      }
+    ],
+    "unapproved_damage_rows": 0
+  },
+  "assertion_change_verdict": {
+    "path": "packages/web/test/screen-wiring.test.tsx",
+    "weakened": false,
+    "evidence": "상위의 판정(약화가 아니라 교정)을 그대로 받지 않고 뮤테이션 탐침 둘로 직접 쟀다. 탐침 1 — AppShell.tsx:552 를 수정 전 배선 `onTagClick={searchFor}` 로 되돌리자 두 항이 함께 죽었다. `AssertionError: expected '할일' to be '#할일'` 이 「본문의 태그를 누르면…」과 「본문 태그를 누른 결과가 우측 태그 탭에서 누른 결과와 같다」 양쪽에서 났고 결과는 2 failed | 20 passed 였다. 즉 옛 기대값 '할일' 은 제품의 결함을 그대로 받아 적고 있었고 새 기대값 '#할일' 은 그 결함을 잡는다 — 교정이다. 탐침 2 — 본문 칩은 고친 채로 두고 우측 태그 탭만 `onPick={(tag) => searchFor(tag)}` 로 어긋뜨리자 등식 항만 죽었다. `expected '#할일' to be '할일'`, 1 failed | 21 passed. 두 탐침이 양방향으로 물므로 새 항은 공허하지 않고 두 자리를 각각 실제로 잰다. 엄밀도는 유지가 아니라 상승이다 — 종전에는 한 자리의 값만 쟀고 지금은 그 자리의 옳은 값에 더해 「두 자리가 같은가」라는 축이 하나 늘었다. 되돌림은 즉시 취소했고, `git status --porcelain | grep -v '^??'` 가 AppShell.tsx 를 내놓지 않으며 `git diff --stat HEAD -- packages/web/src/shell/AppShell.tsx` 가 빈 출력이다."
+  },
+  "whats_missing": [
+    {
+      "severity": "HIGH",
+      "title": "AC-10 도 체크돼 있지만 제품에서 참이 아니다 — `.dl-tag` 에 CSS 규칙이 저장소에 0건이고, 그 조항의 노출 시험은 아무것도 재지 않는다",
+      "evidence": "① 저장소의 CSS 파일은 넷이다(demo/demo.css · src/styles/editor.css · vendor/atomic-editor/styles/inline-preview.css · web/src/styles/shell.css). 넷 전부에 `.dl-tag` 규칙이 0건이고 빌드 산출 번들에도 0건이다. ② packages/editor/src/core/tag-decoration.ts:35-37 의 칩은 `<span class=\"dl-tag\" role=\"button\">` 에 `textContent = '#'+name` 을 넣는다. core/tags.ts:91 의 from/to 는 `#` 를 포함하므로 칩의 글자는 원문 구간과 바이트 단위로 같다. ③ AC-10 의 문면 자체가 노출 상태에도 `#` 가 남는다고 정한다. 따라서 숨은 상태와 드러난 상태를 가르는 것은 오직 칩의 겉모습인데, 그 겉모습을 만드는 규칙이 없다. ④ 뮤테이션 탐침 — tag-decoration.ts 의 `revealed` 를 항상 false 로 만들어 태그가 영영 드러나지 않게 했는데도 editor 전 시험이 244 passed | 1 skipped 로 통과했다. 그 안에 `AC-10: 태그에 커서를 올리면 '#' 를 포함한 원문이 드러난다`(live-preview.test.tsx:292)가 들어 있다. AC-10 의 나머지 항(live-preview.test.tsx:117)도 `.dl-tag` 원소의 존재만 본다. 탐침은 즉시 되돌렸다. ⑤ AC-10 은 `[x]` 이고 VE-1 이 덮는다고 적혀 있다.",
+      "why_it_matters": "이 회차가 AC-11 에서 잡은 것과 정확히 같은 부류다 — 체크돼 있고 증거가 붙어 있는데 제품에서 거짓이다. FND-101 로는 닫히지 않는다. FND-101 은 **있는 CSS 가 제품에 배달되지 않는** 문제이고 이것은 CSS 가 **아예 없는** 문제라, web 에 editor.css 를 import 해도 그대로 남는다. 게다가 AC-11 과 달리 이쪽은 증거가 공허하기까지 하다 — 노출 로직을 통째로 무력화해도 초록이므로, 지금 고치든 나중에 고치든 그 시험은 고쳐졌는지조차 알려주지 않는다."
+    },
+    {
+      "severity": "MEDIUM",
+      "title": "칸 편집 진입 경로 셋의 안전성이 별도 관례에 얹혀 있는데 그것을 재는 시험이 0건이고, report §10 은 그 사실을 severity 없이 잔여로 내렸다",
+      "evidence": "`ignoreEvent` 가 편집 모드의 mousedown 을 CM6 에 넘기게 바뀌었다. 칸 여백 클릭·이미지 미리보기·링크 아이콘이 여전히 칸으로 라우팅되는 근거는 그 셋이 `pointerdown` 에서 preventDefault 를 불러 호환 mousedown 을 억제한다는 별도 관례이며, table-widget.ts 의 주석이 그 의존을 스스로 적는다(「그 관례가 바뀌면 안전성이 함께 사라지고 여기서는 아무도 그 사실을 말해 주지 않는다」). 근거는 수동 Chromium 관측 한 번뿐이고, report §10 이 「그 세 경로를 재는 시험이 저장소에 0건이다」라고 자인한다.",
+      "why_it_matters": "이미 잔여 목록에 있으나 처분이 어긋나 있어 올린다. §10 의 「왜 지금 안 고치나」 칸에 적힌 사유가 「시험이 0건이다」인데, 그것은 미루는 사유가 아니라 시험을 써야 할 사유다. severity 도 붙어 있지 않아 LOW 둘 사이에 놓여 있다. 표의 WYSIWYG 칸 편집은 이 회차가 건드리기 전부터 있던 기능이고 그 진입 경로가 바뀌었으므로, 회귀가 나면 조용히 난다."
+    },
+    {
+      "severity": "LOW",
+      "title": "index.ts 가 `codeBlockField` 와 `findCodeBlocks` 를 새로 공개했는데 패키지 밖 소비자가 0건이다",
+      "evidence": "전수 grep 결과 두 심볼을 쓰는 곳은 `packages/editor/test/code-blocks.test.ts` 뿐이고, 그 시험은 `../src/core/code-blocks` 를 직접 import 하므로 index.ts 의 재수출을 타지 않는다. 이번 회차에 실제로 필요했던 것은 데모가 얹는 `codeBlocks` 하나다.",
+      "why_it_matters": "쓰이지 않는 공개 표면은 다음 회차에 계약이 된다. 지금 좁히는 비용이 가장 싸다."
+    }
+  ],
+  "already_recorded_and_confirmed_accurate": [
+    "FND-101 — packages/web 이 editor.css · inline-preview.css · katex CSS 를 하나도 import 하지 않아 이번 회차의 `.dl-mermaid-block` · `.dl-code` · `.cm-atomic-table` 이 제품에 닿지 않는다. 실측으로 확인했다. packages/web/src 의 CSS import 는 main.tsx:5 의 shell.css 한 줄뿐이고 위젯 클래스 넷을 가리키는 자리가 0건이다. 처분(선재 결함 · verified 보류)도 타당하다. 새 finding 으로 되풀이하지 않는다.",
+    "Implementation Notes [증거 도달 범위 · 확장 축] — 데모는 mermaidBlocks·codeBlocks·mathBlocks 셋만, 제품 doculightExtensions() 는 거기에 tagDecorations 와 wikiLinks 를 더 얹는다. 축 2-① 로 직접 대조했고 기록과 정확히 일치한다(demo/App.tsx:137 과 src/doculight-extensions.ts 를 나란히 읽었다). 새 finding 으로 되풀이하지 않는다.",
+    "화살표 진입 · FND-103 · FND-104 — 처분과 사실이 어긋나는 자리를 찾지 못했다. 특히 `ensureSyntaxTree` 는 buildTableWidgets 에 그대로 남아 있고 FND-104 가 가리키는 것은 revealedTableSignature 쪽의 syntaxTree 사용이라는 점을 확인했다."
+  ],
+  "regression": {
+    "editor": "244 passed | 1 skipped (245) / 20 files — 기준선과 같다",
+    "server": "1248 passed / 115 files — 기준선과 같다",
+    "web": "522 passed / 48 files — 기준선과 같다",
+    "new_failures": 0,
+    "browser_suite": "돌리지 않았다. 검증 중 다른 에이전트가 packages/editor/test/browser-check.mjs 를 뮤테이션 탐침 상태(83행의 `.dl-nope-probe svg`)로 디스크에 올려 두고 있었다. 그 상태에서 test:browser:all 을 돌리면 저장소가 아니라 남의 탐침을 재게 되므로 손대지 않았다. 그 파일은 이후 원상복구됐다(현재 tracked 변경 없음)."
+  },
+  "counts": { "critical": 0, "high": 1, "medium": 1, "low": 1 },
+  "substantive_clean": false,
+  "clean_gate_note": "CRITICAL 0 이고 unapproved-damage 0행이지만 HIGH 가 1건이므로 참이 아니다. 보존 축은 17행 전건 intended-improvement 로 통과했고, 막은 것은 축 2 의 AC-10 이다.",
+  "worktree_state": "수정 없음. 탐침 셋(AppShell.tsx ×2, tag-decoration.ts ×1) 전부 즉시 되돌렸다. `git status --porcelain | grep -v '^??'` 에 남는 tracked 변경은 kiwi/.status.json 하나인데 그것은 speckiwi 가 내는 생성 캐시이며 이 검증자가 만든 것이 아니다(세션 시작 시점 git status 에는 없었고, 내용은 07.editor.srs.md 의 해시·크기·타임스탬프 갱신뿐이다). 커밋하지 않았다."
+}

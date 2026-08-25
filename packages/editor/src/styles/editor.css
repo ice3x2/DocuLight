@@ -57,6 +57,35 @@
   margin: 0;
 }
 
+/* 본문 태그 칩 (`core/tag-decoration.ts` 의 `TagWidget`).
+ *
+ * 이 규칙이 없으면 칩은 스타일 없는 `span` 이라 평범한 글자와 구별되지 않는다.
+ * `FR-EDITOR-007` AC-10 이 요구하는 「칩으로 렌더된다」는 클래스가 붙는 것이
+ * 아니라 그렇게 **보이는** 것이므로, 규칙이 없는 동안은 그 조항이 제품에서
+ * 서지 않는다. 겉모습을 재는 자리는 `test/tag-chip-check.mjs` 의 ① 이다.
+ *
+ * 색은 다른 위젯과 같이 vendor 테마 변수를 물려받는다 — 우리 값을 새로
+ * 정의하면 테마 전환 시 이 칩만 어긋난다. 인라인 fallback 은 이 파일의 나머지
+ * 규칙과 같은 light 조율값이다. vendor 쪽 fallback 은 dark 조율값이라 두 값이
+ * 서로 다른데, 그 어긋남은 이 규칙이 만든 것이 아니라 이 파일 전체와 vendor
+ * 사이에 이미 있던 것이다 (`.dl-mermaid` 의 border·bg 도 같다). 변수가 실제로
+ * 정의되는 경로에서는 fallback 이 쓰이지 않으므로 겉보기는 갈리지 않는다.
+ *
+ * 세로 여백은 인라인 코드(`.cm-atomic-inline-code`)와 같은 0.08em 으로 맞춘다.
+ * 겉보기를 그 선례와 같게 두려는 것이고, heightmap 때문은 아니다 — 이 칩은
+ * `Decoration.replace` 가 그리는 **인라인** 위젯이고, 비치환 인라인 박스의
+ * 세로 padding 은 line box 높이에 기여하지 않는다(CSS 2.1 §10.6.1). 그러니
+ * `.dl-mermaid-block` · `.dl-code` 가 겪은 부류의 어긋남은 이 자리에서는 값과
+ * 무관하게 일어나지 않는다. 실측(데모 1280×900): 칩이 선 줄의 heightmap 높이와
+ * DOM 높이가 둘 다 28.89px 로 같고, 칩이 없는 이웃 문단과도 같다. */
+.dl-tag {
+  color: var(--atomic-editor-accent-bright, #8250df);
+  background: color-mix(in srgb, var(--atomic-editor-accent, #6639ba) 12%, transparent);
+  border-radius: 0.75em;
+  padding: 0.08em 0.5em;
+  font-size: 0.9em;
+}
+
 .dl-mermaid-error {
   display: block;
   justify-content: unset;
