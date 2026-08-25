@@ -200,6 +200,20 @@ describe('FR-SHELL-008 AC-5 — 되돌릴 수 없는 덮어쓰기는 경고한�
 });
 
 describe('FR-EDITOR-007 AC-11 — 태그를 누르면 그 태그로 검색된다', () => {
+  /** 태그 탭이 목록을 그리려면 색인이 있어야 한다. */
+  const 태그색인 = () => {
+    routes.set('/api/tags', () =>
+      json({
+        tags: [{ name: '할일', documents: 1 }],
+        basis: '내가 볼 수 있는 문서 기준 출현 문서 수',
+      }),
+    );
+  };
+
+  /** 지금 검색 입력에 들어 있는 질의. */
+  const 질의 = async () =>
+    ((await screen.findByRole('combobox', { name: '검색' })) as HTMLInputElement).value;
+
   it('본문의 태그를 누르면 좌측이 검색 탭으로 바뀌고 그 태그가 질의가 된다', async () => {
     const user = await openTree();
 
@@ -207,8 +221,26 @@ describe('FR-EDITOR-007 AC-11 — 태그를 누르면 그 태그로 검색된다
     const tag = await screen.findByRole('button', { name: '#할일' });
     await user.click(tag);
 
-    const search = await screen.findByRole('combobox', { name: '검색' });
-    expect(search).toHaveProperty('value', '할일');
+    expect(await 질의()).toBe('#할일');
+  });
+
+  it('본문 태그를 누른 결과가 우측 태그 탭에서 누른 결과와 같다', async () => {
+    // 조항이 요구하는 것은 두 자리가 각각 무엇을 채우는가가 아니라 **둘이
+    // 같은가**이다. 한쪽만 재면 다음에 다른 쪽이 어긋나도 아무도 모른다.
+    태그색인();
+    const user = await openTree();
+
+    await user.click(screen.getByRole('button', { name: '회의록.md' }));
+    await user.click(await screen.findByRole('button', { name: '#할일' }));
+    const 본문경로 = await 질의();
+
+    const 우측 = screen.getByRole('complementary', { name: '우측 사이드바' });
+    await user.click(within(우측).getByRole('tab', { name: '태그' }));
+    const 태그구역 = await screen.findByRole('region', { name: '태그' });
+    await user.click(within(태그구역).getByRole('button', { name: /할일/ }));
+    const 태그탭경로 = await 질의();
+
+    expect(본문경로).toBe(태그탭경로);
   });
 });
 

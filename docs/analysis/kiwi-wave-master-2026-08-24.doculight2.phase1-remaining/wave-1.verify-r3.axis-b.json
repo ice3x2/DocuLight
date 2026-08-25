@@ -1,0 +1,65 @@
+{
+  "round": 3,
+  "preservation": {
+    "denominator": 2,
+    "rows": [
+      {
+        "path": "packages/editor/test/browser-check.mjs",
+        "verdict": "intended-improvement",
+        "evidence": "판정 항의 수와 순서가 12 -> 12 로 보존됐다. 이름은 한 항만 바뀌었고(`SDS-AC-3 js 펜스는 위젯으로 대체되지 않는다` -> `... mermaid 위젯으로 ...`) 그 항의 단언은 느슨해진 것이 아니라 조여졌다 (`jsVisible > 0` -> `jsVisible > 0 && jsInDiagram === 0`). 나머지 11 항의 단언 식은 글자까지 동일하다 — `rendered >= 2`, `errorBlocks === 1`, `sourceShown === 1`, `stillRevealed === 0 && svg >= 1`, `editors === 1`, `roAfter === 0 && roBefore === 0 && roStillRendered >= 1`, `editRevealed >= 1`, `leaked.length === 0`, `attr === 'light' && pageLuma > 128 && diagramLuma > 128`, `fillVariety >= 3`, `consoleErrors.length === 0`. `=== N` 이 `>= N` 으로 바뀐 자리는 0건이고, 사라지거나 skip 으로 내려간 항도 0건이다. 재는 자리를 옮긴 항이 둘 있으나(SDS-AC-4 는 landmark 줄로, 테마·색 두 항은 문서 top 으로) 단언 식은 그대로이고 사유가 파일 안에 적혀 있다. 되돌려 실행한 결과가 그 이동이 필요했음을 증명한다: `git checkout b73f70c -- packages/editor/test/browser-check.mjs` 로 되돌려 돌리자 같은 데모 화면에서 9/12 통과·종료 코드 1 이 나왔고, 실패한 셋이 정확히 자리를 옮긴 그 셋이다 (`error 0개`, `다이어그램 -1`, `fill 2종`). 현재 판정은 같은 화면에서 12/12 통과이며 그 셋이 각각 `error 1개`, `다이어그램 232`, `fill 8종` 이라는 실값을 읽는다 — 즉 고친 뒤의 항은 아무것도 재지 않는 것이 아니라, 옛 자리에서 비어 있던 값을 실제로 읽는 자리로 옮겨 간 것이다. 되돌림은 `git checkout HEAD --` 로 즉시 취소했고 `git status --porcelain` 이 빈 출력이다.",
+        "note": "추출로 사라진 것은 판정이 아니라 기계장치(브라우저 기동·집계·종료)뿐이다. 무엇을 재는가 — SOURCE_MARKERS, revealedCount, centerLineContaining, scrollToTop, 판정문 — 는 전부 이 파일에 남았다."
+      },
+      {
+        "path": "packages/editor/test/live-preview.test.tsx",
+        "verdict": "intended-improvement",
+        "evidence": "diff 는 +16 행이고 전부 기존 `/** */` 블록 안의 주석 행이다 — 실행되는 코드는 한 줄도 바뀌지 않았다. 시험 항 목록을 전후로 열거해 대조한 결과 23 항이 이름·순서·종류까지 동일하다. 문제의 `it.skip('AC-7: 표에 커서를 올리면 구분선이 드러난다 (브라우저에서 확인)')` 는 이 wave 가 내린 것이 아니라 b73f70c 에 이미 `it.skip` 으로 있었다(전 265행, 현 281행). 되돌려 실행해 대조했다: b73f70c 판으로 되돌린 실행이 `24 passed | 1 skipped`, HEAD 판 실행이 같은 `24 passed | 1 skipped` 로 계수가 일치한다. 되돌림은 즉시 취소했고 `git status --porcelain` 이 빈 출력이다.",
+        "note": "덧붙은 주석은 재는 대상을 좁히지 않고 오히려 넓힌다 — 이 항이 어디서 실제로 측정되는지(`table-reveal-check.mjs` 와 `table-reveal-state.test.ts`)를 가리키고, skip 이 미검증을 뜻하지 않음을 적는다. 막는 사유가 둘(happy-dom 재진입 + CM6 의 `setTimeout(...,10)` 초점 반영 지연)이라는 서술도 새로 들어왔다."
+      }
+    ]
+  },
+  "harness_extraction": {
+    "checks_preserved": true,
+    "assertions_preserved": true,
+    "exit_semantics_preserved": false,
+    "notes": "① 판정 항의 수와 이름 — 보존됐다. browser-check.mjs 는 12 항 그대로이고 순서도 같다. 이름이 바뀐 것은 SDS-AC-3 한 항뿐이며, 이름이 넓어진 것이 아니라 좁아졌다(무슨 위젯인지 명시). ② 단언 식 — 느슨해진 항이 0건이다. 11 항은 글자까지 동일하고 SDS-AC-3 한 항만 조건이 하나 늘어 조여졌다. 데모가 codeBlocks() 를 얹으면서 js 펜스가 코드 위젯으로 서게 됐고, 「글자가 보인다」만으로는 어느 확장이 가져갔는지 가리지 못하므로 「다이어그램 안에 있지 않다」를 더한 것이다. ③ 종료 코드의 뜻 — **세 파일에서 같은 조건이 같은 코드로 끝나지 않는다.** 추출 전 browser-check.mjs 에는 코드 2 자체가 없었고(0 또는 1), 이 wave 가 0/1/2 를 새로 세웠다. 그 자체는 개선이나 경계가 파일마다 다르다. browser-check.mjs(28행)와 table-reveal-check.mjs(47행)는 `beginMeasuring()` 을 `openDemo()` **앞**에서 부르므로, 명시적 `unmeasurable()` 을 빼면 그 뒤의 모든 예외가 1 로 나간다. heightmap-drift-check.mjs 는 `beginMeasuring()` 이 219행이라 `openDemo()`(55행), `waitForSelector('.dl-mermaid svg', 20_000)`(58행), 그리고 VIEW 를 무방비로 역참조하는 조회 넷(lineOf x3, tableRangeOf — 모두 `const view = ${VIEW}; view.state.doc` 로 null 가드가 없다)이 전부 그 **앞**에 놓인다. 그래서 같은 조건이 갈린다 — 「mermaid 가 SVG 를 끝내 그리지 못한다」는 browser-check.mjs 에서 1(83행, beginMeasuring 뒤)이지만 heightmap-drift-check.mjs 에서 2(58행, 앞)이고, 「CM 의 EditorView 를 DOM 에서 되찾지 못한다」는 table-reveal-check.mjs 에서 1 이지만 heightmap-drift-check.mjs 에서 2 다. 하네스 주석(59-61행)이 「화면은 떴는데 CM 이 서지 않는 것은 재지 못한 것이 아니라 실패다」라고 스스로 적어 둔 바로 그 경우다. 하네스의 분류 자체는 스크래치패드 탐침으로 실측 확인했다 — 동일한 TypeError 가 beginMeasuring 앞에서는 종료 코드 2, 뒤에서는 1 로 갈렸다(저장소는 건드리지 않았다). ④ 공용 모듈의 과잉 일반화 — 없다. _browser-harness.mjs 에는 기계장치만 있다(chromium 기동, EDITOR_URL/HEADED, .demo-toggle 로 화면 정체 확인, Unmeasurable, VIEW 토막, check 수집과 집계, 종료). 각 시험의 고유한 판정 로직은 각자에게 남았다 — table-reveal-check.mjs 의 observe/note(기록성 관찰) · measurable() · waitForRevealed(), browser-check.mjs 의 revealedCount() · centerLineContaining(), heightmap-drift-check.mjs 의 DRIFT_TOLERANCE_PX · spotOfLine() · driftAtLine() 이 그대로다. 공용화된 것 중 판정을 대신 내리는 것은 하나도 없다."
+  },
+  "whats_missing": [
+    {
+      "severity": "HIGH",
+      "title": "본문 태그 클릭과 우측 태그 탭 클릭이 서로 다른 질의를 채운다 — AC-11 이 못박은 「같은 결과」가 제품에서 거짓이고, 양쪽을 잇는 시험이 0건이다",
+      "evidence": "FR-EDITOR-007 AC-11 은 「본문 태그를 클릭하면 좌측 검색 탭이 활성되고 그 태그가 질의로 채워진다 — 우측 태그 탭에서 클릭했을 때와 같은 결과다」이고 `[x]` 로 체크돼 있다. 그 증거 VE-1(live-preview.test.tsx:125 `AC-11: 칩을 누르면 그 태그 이름이 전달된다`)은 편집기가 콜백에 이름을 넘기는 데까지만 재고 `expect(clicked).toEqual(['회의'])` 로 끝난다 — 뒤의 「검색 탭이 활성되고 질의가 채워진다」와 「우측과 같은 결과다」 두 절은 이 시험이 재지 않는다. 그 두 절이 실제로 사는 자리는 packages/web/src/shell/AppShell.tsx 이고 거기서 두 경로가 갈린다. 543행은 `onTagClick={searchFor}` 로 **접두사 없는 이름**을 넘기고(TagWidget 이 `this.onClick?.(this.name)` 을 부르며 `name` 은 tag-decoration.ts:37 이 `#${this.name}` 로 따로 붙이는 데서 보듯 `#` 를 포함하지 않는다), 573행은 `onPick={(tag) => searchFor(\\`#${tag}\\`)}` 로 **`#` 를 붙여** 넘긴다. 그 차이가 결과까지 간다 — packages/server/src/app/document/search-service.ts:79 가 `wanted = query.trim().toLowerCase()` 로 받고 178행이 `findTags(body).some((tag) => tag.toLowerCase().includes(wanted))` 로 태그 축을 판정하는데, findTags(domain/document/tag.ts:31)가 돌려주는 것은 `#` 없는 이름이다. 그래서 본문 칩 경로(`회의`)는 `'회의'.includes('회의')` 로 태그 축에 걸리고, 우측 탭 경로(`#회의`)는 `'회의'.includes('#회의')` 가 거짓이라 **태그 축에 영영 걸리지 못한다**(본문 축의 글자 일치로만 떨어진다). 양쪽은 각각 통과하는 시험으로 고정돼 있으면서 서로 만나지 않는다 — packages/web/test/tag-panel.test.tsx:124 가 질의 입력이 `'#기획'` 이 되는 것을 단언하고, live-preview.test.tsx:139 가 `['회의']` 를 단언한다. 정작 FR-SHELL-010 의 VE-1 비고는 「검색 탭을 여는 자리는 본문 태그 클릭과 **같은 함수** 하나다 — 밖에서 또 받으면 두 경로가 서로 다르게 같은 일을 한다」고 적고 AppShell.tsx:570-572 주석도 같은 말을 반복하는데, 바로 그 다음 줄에서 `#` 를 붙여 그 불변식을 깬다. 이 회차의 diff 밖이며 §10 잔여와 FR-EDITOR-007 Implementation Notes 어디에도 없다.",
+      "why_it_matters": "체크된 AC 가 제품에서 거짓이다. 기록된 잔여 두 건(스타일이 packages/web 에 배달되지 않는다 · 데모와 제품의 확장 묶음이 다르다)은 「증거가 제품까지 닿지 않는다」는 도달 범위의 문제이지만, 이것은 닿지 않는 그 자리에 실제로 결함이 있다는 뜻이다 — 도달 범위 잔여가 왜 위험한지를 보여 주는 구체적 사례다. 사용자에게는 같은 태그를 어디서 누르느냐에 따라 검색 결과가 달라지고, 태그 탐색의 주 표면인 우측 탭 쪽이 태그 축을 아예 놓치는 쪽이다. 다만 「같은 결과」를 「질의 문자열이 같다」가 아니라 「검색 탭이 열리고 태그가 채워진다는 동선이 같다」로 읽으면 AC-11 은 느슨하게 성립한다고 볼 여지가 있다 — 그 해석에서도 채워지는 문자열과 그 결과가 다르다는 사실과 저장소가 스스로 적은 불변식이 깨진다는 사실은 남는다. 어느 쪽을 정본으로 삼을지(우측의 `#` 를 떼는가, 본문 쪽에 붙이는가, 서버가 `#` 를 벗겨 받는가)는 FR-EDITOR-007 과 FR-SHELL-010 을 함께 보는 자리가 정해야 한다."
+    },
+    {
+      "severity": "MEDIUM",
+      "title": "heightmap-drift-check.mjs 의 beginMeasuring 경계가 나머지 둘과 달라, 같은 회귀가 이 파일에서만 「재지 못했다」로 묻힌다",
+      "evidence": "위 harness_extraction ③ 의 근거와 같다. browser-check.mjs(28행)·table-reveal-check.mjs(47행)는 `beginMeasuring()` 이 `openDemo()` 앞이고, heightmap-drift-check.mjs 는 219행이라 `waitForSelector('.dl-mermaid svg', 20_000)`(58행)과 VIEW 를 null 가드 없이 역참조하는 조회 넷(lineOf x3 · tableRangeOf, 각각 `const view = ${VIEW}; const doc = view.state.doc;`)이 전부 그 앞에 놓인다. 하네스의 분기(_browser-harness.mjs:117-131)는 `Unmeasurable` 이 아니고 `measuring` 이 거짓이면 코드 2 로 끝내므로, 이 창에서 난 TypeError 는 회귀가 아니라 환경 사고로 집계된다. 스크래치패드 탐침으로 실측했다 — 동일한 TypeError 를 beginMeasuring 앞/뒤에서 각각 던져 종료 코드 2 와 1 을 확인했다(저장소 파일은 건드리지 않았다). 파일 머리의 주석(28-32행)은 fixture 탐색을 일부러 앞에 뒀다고 적지만, 「CM 의 뷰를 되찾지 못한다」와 「mermaid 가 끝내 렌더되지 않는다」는 하네스 주석 59-61행이 스스로 실패라고 규정한 경우다.",
+      "why_it_matters": "이 셋이 FR-EDITOR-007 AC-7 과 위젯 기하 판정의 유일한 증거이고 아무것도 자동으로 부르지 않는다. 어긋남을 만드는 mermaid 위젯이 서지 않게 되는 회귀가 나면, 그 회귀를 재려고 만든 시험이 20 초를 기다린 뒤 「재지 못했다」로 나간다 — 고칠 것이 있는데 없는 것처럼 읽힌다. 실제 노출은 지금은 제한적이다: `test:browser:all` 이 browser-check.mjs 를 먼저 돌리고 그쪽은 같은 조건을 1 로 내므로 사슬이 거기서 끊긴다. 그러나 drift 검사를 단독으로 부르는 진입점(`npm run test:browser:drift`)이 CLAUDE.md 와 package.json 에 함께 등록돼 있어 그 보호는 호출 순서에 기댄 우연이다. 고치는 값은 낮다 — `beginMeasuring()` 을 fixture 조회 앞으로 올리고, 진짜로 판정 불가인 자리는 이미 `unmeasurable()` 로 명시돼 있으므로 그대로 두면 된다."
+    },
+    {
+      "severity": "MEDIUM",
+      "title": "89c3980 의 커밋 메시지가 하지 않은 일을 적었다 — kiwi/.pipeline-path 는 여전히 추적되고 머신별 절대 경로가 저장소에 남아 있다",
+      "evidence": "커밋 제목이 「머신별 경로 마커를 추적에서 뺀다」이고 본문이 「추적 대상이 아니었어야 한다. 무시 목록에 사유와 함께 넣었다」인데, `git show 89c3980 --stat` 이 실제로 바꾼 것은 `.gitignore`(+3)와 `kiwi/.status.json`(10줄) 둘뿐이고 `kiwi/.pipeline-path` 는 손대지 않았다(`git show 89c3980 --stat -- kiwi/.pipeline-path` 가 빈 출력). HEAD 에서 `git ls-files kiwi/.pipeline-path` 가 그 경로를 돌려주므로 파일은 그대로 추적 중이고, `git diff --stat b73f70c..89c3980` 에도 `kiwi/.pipeline-path | 1 +` 로 남아 있다(51c54a6 이 추가했다). git 은 이미 추적 중인 파일에 무시 규칙을 적용하지 않으므로 `.gitignore:31` 의 `kiwi/.pipeline-path` 는 이 파일에 아무 효력이 없다 — `git check-ignore -v --no-index` 로는 규칙이 잡히지만 `--no-index` 없이는 잡히지 않는 것이 그 증거다. 내용은 `/c/Work/git/DocuLight2.0/kiwi` 한 줄로, 커밋 본문이 적은 그대로 이 기계에서만 유효하다. 메시지가 말한 조치(`git rm --cached kiwi/.pipeline-path`)는 실행되지 않았다.",
+      "why_it_matters": "무시 규칙만 넣고 추적을 끊지 않으면 의도한 효과가 하나도 나지 않는다 — 다른 클론은 존재하지 않는 자리를 가리키는 파일을 계속 받고, 각 기계에서 도구가 그 파일을 고칠 때마다 수정으로 떠서 무관한 커밋에 섞여 들어간다. 이 저장소는 기록의 정확성을 강하게 요구하고(FR-EDITOR-007 Implementation Notes 에 「정정」과 「정정의 정정」까지 남긴다) 이 wave 의 마지막 커밋이 바로 그 기준을 어겼다. 고침은 한 줄이고, 함께 넣은 `.serena/` 규칙은 추적된 적이 없어 정상 동작한다."
+    },
+    {
+      "severity": "LOW",
+      "title": "FR-SHELL-010 의 AC 세 건이 Status=implemented · VE-1 보유 상태에서 전부 미체크로 남아 있다",
+      "evidence": "docs/spec/08.app-shell.srs.md:1025 이하에서 Status 가 `implemented` 이고 Verification Evidence 표에 VE-1(`packages/web/test/tag-panel.test.tsx`, Covers `AC-1, AC-2, AC-3`)이 있는데 Acceptance Criteria 셋이 모두 `- [ ]` 다. 그 시험은 실제로 존재하고 통과한다(web 521 통과에 포함되며 :124 가 질의 `'#기획'` 을 단언한다). 위 HIGH 항을 추적하다 발견했다.",
+      "why_it_matters": "이 회차의 diff 밖이고 FR-EDITOR-007 도 아니지만, AC-11 의 「우측 태그 탭에서 클릭했을 때와 같은 결과다」가 가리키는 상대 요구가 바로 이것이라 위 HIGH 항의 처분을 정할 때 함께 열게 된다. 체크 상태와 증거가 어긋나 있으면 그 자리에서 무엇이 이미 재어졌는지 판단하는 데 시간이 든다."
+    }
+  ],
+  "regression": {
+    "editor": "20 파일 · 244 통과 · 1 건너뜀 (기준선과 일치)",
+    "server": "115 파일 · 1248 통과 (기준선과 일치)",
+    "web": "48 파일 · 521 통과 (기준선과 일치)",
+    "new_failures": 0
+  },
+  "counts": {
+    "critical": 0,
+    "high": 1,
+    "medium": 2,
+    "low": 1
+  },
+  "substantive_clean": false
+}

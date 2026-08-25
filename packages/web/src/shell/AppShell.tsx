@@ -427,6 +427,15 @@ export function AppShell({
   );
 
   /**
+   * 태그 이름 하나로 검색한다 (`FR-EDITOR-007` AC-11).
+   *
+   * 태그를 누르는 자리는 둘이다 — 본문의 칩과 우측 태그 탭의 줄. 둘 다
+   * `#` 없는 이름을 건네므로 질의를 짓는 자리도 **하나여야 한다.** 각자
+   * 지으면 한쪽만 고쳐지고 같은 태그가 서로 다른 결과를 낸다.
+   */
+  const searchForTag = useCallback((name: string) => searchFor(`#${name}`), [searchFor]);
+
+  /**
    * 위키링크를 눌렀다 (`CON-EDITOR-002` AC-1).
    *
    * 이름으로 찾는다 — 본문에 적히는 것이 이름뿐이기 때문이다. 못 찾으면
@@ -540,7 +549,7 @@ export function AppShell({
           hashes={hashes}
           {...(onSaveState === undefined ? {} : { onSaveState })}
           {...(onSaved === undefined ? {} : { onSaved })}
-          onTagClick={searchFor}
+          onTagClick={searchForTag}
           onOpenWikiLink={openByName}
         />
       </main>
@@ -567,10 +576,10 @@ export function AppShell({
                 workspaces={workspaces.map((entry) => entry.workspace)}
                 {...(tagScope === undefined ? {} : { scope: tagScope })}
                 {...(onTagScope === undefined ? {} : { onScope: onTagScope })}
-                // 검색 탭을 여는 자리는 `searchFor` 하나다 — 밖에서 또
+                // 검색 탭을 여는 자리는 `searchForTag` 하나다 — 밖에서 또
                 // 받으면 태그 클릭과 본문 태그 클릭이 서로 다른 경로로
                 // 같은 일을 하게 된다 (`FR-SHELL-010` AC-1 · AC-2).
-                onPick={(tag) => searchFor(`#${tag}`)}
+                onPick={searchForTag}
               />
             );
           return <p>{tab.label}</p>;

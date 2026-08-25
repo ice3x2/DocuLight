@@ -24,12 +24,12 @@
 // 2 를 1 과 섞지 않는다 — 스크롤 사고나 데모 부재를 어긋남으로 오독하면
 // 고칠 것이 없는 곳을 고치게 된다.
 //
-// **재지 못한 것과 회귀는 다르다.** fixture 를 다 찾은 뒤(= 붙은 화면이 데모이고
-// 재는 자리가 문서에 있다는 것이 확인된 뒤)에 터지는 예외는 「재지 못했다」가
-// 아니라 실패다. 그 뒤로는 예상 못 한 예외도 1 로 나간다 — 그 자리에서 2 를
-// 돌려주면 회귀가 「환경 탓」으로 조용히 묻힌다. 그 경계를 긋는 것이
-// `beginMeasuring()` 이고, 판정 불가가 확실한 자리(줄이 화면 밖이다 등)만
-// 명시적으로 `unmeasurable()` 을 부른다.
+// **재지 못한 것과 회귀는 다르다.** 「재지 못했다」로 나가는 것은 시험이 스스로
+// 그렇게 선언한 자리뿐이다 — 데브 서버가 없거나 붙은 화면이 데모가 아닌 경우와,
+// 명시적으로 `unmeasurable()` 을 부르는 자리(줄이 화면 밖이다, fixture 가 문서에
+// 없다). 그 밖의 예상 못 한 예외는 전부 1 로 나간다 — 그 자리에서 2 를 돌려주면
+// 회귀가 「환경 탓」으로 조용히 묻힌다. 그 경계를 긋는 것이 `beginMeasuring()`
+// 이고, 이 시험은 나머지 두 시험과 같은 자리에서 — 화면에 붙기 전에 — 긋는다.
 //
 // 사용: npm run dev --workspace @doculight/editor 로 데모를 띄운 뒤
 //       node test/heightmap-drift-check.mjs [--headed]
@@ -51,6 +51,20 @@ const QUOTE_MARKER = '인용문입니다.';
 const TABLE_SEPARATOR = '|---|';
 
 await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
+  // 접속 실패와 「붙은 화면이 데모가 아니다」만 「재지 못했다」로 나간다 —
+  // `openDemo` 가 그 둘을 안내 문구와 종료 코드 2 로 끝내고, 하네스가
+  // `Unmeasurable` 을 이 경계보다 **먼저** 검사하므로 그 성질은 여기서
+  // 보존된다. 명시적인 `unmeasurable()` 자리들(줄이 화면 밖이다, fixture 가
+  // 문서에 없다)도 같은 이유로 종전대로 2 다.
+  //
+  // 그 밖의 예외는 여기서부터 전부 실패다. 위젯이 서지 않아 mermaid 를
+  // 기다리다 시간이 다하거나 CM 의 뷰를 DOM 에서 되찾지 못하는 것은 환경
+  // 사고가 아니라 회귀이고, 그것을 2 로 돌려주면 회귀가 「데브 서버 탓」으로
+  // 조용히 묻힌다. 나머지 두 시험(`browser-check` · `table-reveal-check`)이
+  // 긋는 경계도 같은 자리다 — 갈라 두면 같은 조건이 파일마다 다른 종료
+  // 코드로 끝난다.
+  beginMeasuring();
+
   // --- 붙은 화면이 editor 데모인지 먼저 확인한다. 아니면 판정을 내리지 않는다.
   await openDemo(page);
 
@@ -215,8 +229,6 @@ await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
         'demo/App.tsx 의 문단·인용문·코드블록·표가 사라졌는지 확인하라.',
     );
   }
-
-  beginMeasuring();
 
   // --- ⓪ 원인 축 — heightmap 과 DOM 이 어긋나지 않는다
   //
