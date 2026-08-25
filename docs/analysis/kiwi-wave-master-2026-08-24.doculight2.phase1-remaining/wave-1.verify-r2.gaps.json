@@ -1,0 +1,93 @@
+{
+  "round": 2,
+  "denominator": 9,
+  "rows": [
+    {
+      "id": "G-1",
+      "verdict": "closed",
+      "evidence": "docs/analysis/kiwi-wave-master-2026-08-24.doculight2.phase1-remaining/wave-1.mutation-probes.md:17-29 이 전 7 항의 탐침을 적는다. 그 표에서 네 칸(M1·M3·M4·M5)을 직접 되돌려 `cd packages/editor && NODE_ENV=production npx vitest run src/vendor/atomic-editor/__tests__/table-reveal-state.test.ts --reporter=verbose` 를 돌렸다. 기준선 7/7 통과. M1(table-widget.ts:1398 의 `revealable && selectionTouches(...)` 를 `revealable` 로) 3 failed — M1·M2·M7 의 항. M3(table-widget.ts:1333-1334 의 `state.field(tableFocusField) && !state.facet(readOnlyFacet)` 를 `!state.facet(readOnlyFacet)` 로) 2 failed — M3·M6 의 항. M4(같은 자리를 `state.field(tableFocusField)` 로) 1 failed — M4 의 항만. M5(table-widget.ts:1485-1488 의 `revealedTableSignature` 비교 연언 제거) 2 failed — M5·M6 의 항. 네 회차 모두 되돌림 직후 원문으로 복원했고 `git diff -- packages/editor/src/vendor/atomic-editor/table-widget.ts` 가 매번 비었다.",
+      "note": "네 칸 모두 「그 시험」과 「함께 죽은 항」 두 열이 문서와 정확히 일치해, red 선행을 대신하는 뮤테이션 탐침이 실재하고 재현된다."
+    },
+    {
+      "id": "G-2",
+      "verdict": "closed",
+      "evidence": "docs/spec/07.editor.srs.md 에 낡은 문면이 남은 자리는 네 곳이다. 706행(VE-4)은 같은 칸 안에 [2026-08-25 정정] 이 붙어 「커밋 1665cd2 기준 구현은 편집 모드의 mousedown 하나만 열며」를 적는다. 733행(Implementation Notes)은 바로 다음 줄 734행이 그 항을 이름으로 지목해 정정한다. 743행(Change Notes)도 734행이 「Change Notes 의 2026-08-25 Status -> implemented 행」이라고 이름으로 지목하며 같은 요구 블록에서 앞선다. 707행(VE-5)은 계획 문서를 서술하는 plan 증거이고, 그 대상인 docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md:69 에 「이 계획 문면은 실행 결과와 어긋나며 실행 쪽이 옳다」는 경고가 문제의 문단 바로 아래 들어갔다. 구현 실측은 packages/editor/src/vendor/atomic-editor/table-widget.ts:770-771 의 `return event.type === 'mousedown' ? this.readOnly : true;` 다.",
+      "note": "07.editor.srs.md 의 네 자리 모두 같은 칸·바로 다음 줄·이름 지목·대상 문서 안의 정정 중 하나로 독자가 정정에 닿는다."
+    },
+    {
+      "id": "G-3",
+      "verdict": "not-closed",
+      "evidence": "`git diff --stat 1665cd2 -- packages/web` 가 비어 있다 — 이 회차가 packages/web 을 한 줄도 건드리지 않았다. packages/web/src/main.tsx:5 는 `import './styles/shell.css';` 하나뿐이고 packages/web/src/styles/shell.css 에 @import 가 0건이다. 표 위젯 규칙 26건은 전부 packages/editor/src/vendor/atomic-editor/styles/inline-preview.css 에 있는데(`grep -c cm-atomic-table` 이 26, editor.css 는 0) 그 파일을 실제로 import 하는 곳은 packages/editor/demo/main.tsx:4 하나다. packages/web/src/document/DocumentSurface.tsx:1 은 `@doculight/editor` 의 JS 만 가져오고 packages/editor/package.json:10 이 내보내는 `@doculight/editor/styles.css` 는 어디서도 가져오지 않는다. 정정도 잔여 기록도 07.editor.srs.md 와 계획 문서 어디에도 없다.",
+      "note": "제품 화면인 packages/web 은 표 위젯을 무스타일로 그리며 AC-7 의 증거는 여전히 데모(:3399)까지만 닿는데, 이 회차가 손대지도 기록하지도 않았다."
+    },
+    {
+      "id": "G-4",
+      "verdict": "closed",
+      "evidence": "docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md:336 의 R-05 대책이 「§1.4 에 적었다」를 버리고 코드 두 자리를 지목하도록 다시 쓰였다. 두 포인터를 직접 열어 확인했다 — packages/editor/src/vendor/atomic-editor/table-widget.ts:1305-1310 이 「`src/vendor/` 는 다시 받아오는 상류 코드라 `src/core/` 를 import 하지 않는다」를 적고, packages/editor/src/core/selection-touches.ts:14-15 가 「`src/vendor/atomic-editor/table-widget.ts` 에도 같은 술어가 하나 더 있다. 그쪽은 vendor 경계 때문에 이 모듈을 import 하지 않으며」를 적는다. 행 번호까지 정확하다.",
+      "note": "실재하지 않던 §1.4 참조가 실재하는 코드 두 자리로 교체됐고 행 범위가 어긋나지 않는다."
+    },
+    {
+      "id": "G-5",
+      "verdict": "accepted-residual",
+      "evidence": "전파를 직접 쟀다. ① packages/editor/package.json:19 의 test:browser 를 즉시 실패하는 스텁(process.exit(1))으로 임시 대체하고 저장소 루트에서 `npm run test:browser:all` 실행 — ROOT_EXIT=1 이고 로그에 test:browser:table 과 test:browser:drift 의 출력이 0줄이다(뒤 두 시험이 돌지 않았다). ② 같은 스텁을 process.exit(2) 로 바꿔 재실행 — ROOT_EXIT=2 로 코드 2 도 그대로 올라온다. ③ 스텁을 되돌리고 데브 서버가 뜬 채 루트에서 실행 — ROOT_EXIT=0 이고 셋이 순서대로 돌아 12/12 · 4/4 · 7/7 통과했다. package.json:13 에서 packages/editor/package.json:25 의 && 사슬로 이어지는 경로가 실제로 전파한다. 다만 자동 경로 자체는 그대로 없다 — packages/editor/vite.config.ts:36 의 include 가 ['test/**/*.test.{ts,tsx}', 'src/**/__tests__/**/*.test.{ts,tsx}'] 라 .mjs 를 잡지 않고, `ls -d .github` 가 여전히 없다.",
+      "note": "저장소에 CI 가 하나도 없어 진짜 자동 실행은 CI 도입이라는 별개 변경이며 FR-EDITOR-007 범위 밖이다 — 이 wave 가 할 수 있는 절반(단일 진입점·앞 실패 시 중단·종료 코드 전파·CLAUDE.md 의 상시 의무)은 서고 실측됐다."
+    },
+    {
+      "id": "G-6",
+      "verdict": "closed",
+      "evidence": "packages/editor/src/vendor/atomic-editor/__tests__/table-reveal-state.test.ts:120-127 에 「읽기 전용이면 초점이 있고 커서가 표에 있어도 원문이 드러나지 않는다」 항이 신설됐고, 같은 자리·같은 초점의 편집 가능한 상태를 대조로 함께 잰다. 탐침 M4 를 직접 재실행했다 — table-widget.ts:1333-1334 의 canRevealSource 에서 `&& !state.facet(readOnlyFacet)` 만 빼면 이 항 하나만 죽고(1 failed | 6 passed) 나머지 여섯은 살아남는다. 되돌린 뒤 `git diff` 로 원상복구를 확인했다.",
+      "note": "!readOnly 축을 이 항이 혼자 잡고 있다는 문서의 주장이 재실행으로 확인됐다."
+    },
+    {
+      "id": "G-7",
+      "verdict": "not-closed",
+      "evidence": "`git diff --stat 1665cd2 -- docs/spec/91.completed-work-log.md docs/spec/00.index.md` 가 비어 있다. docs/spec/91.completed-work-log.md:11 은 여전히 「표 데코레이션에 선택·초점 판정을 세우고 ignoreEvent 를 편집 모드의 mousedown 과 click 에만 열어」를 적고, 그 파일 전체에서 click·정정·1665cd2 를 찾으면 그 한 줄뿐이라 정정도 정정을 가리키는 표지도 없다. 이 파일 머리말은 「완료의 SSOT 가 아니니 각 Requirement Block 을 보라」고만 적어 완료 여부를 가리킬 뿐, 이 요약 문장이 사실과 어긋난다는 표지가 아니다. 07.editor.srs.md:734 의 정정 항이 「완료 작업 로그의 같은 날 두 행」을 지목하지만 그 지목은 07 안에만 있고 로그 쪽에서 되짚을 경로가 없다. 덧붙여 실제로 그 주장을 담은 행은 두 행이 아니라 한 행이다. 07.editor.srs.md 쪽 자리들은 G-2 에서 닫혔고 남은 것은 91 뿐이다.",
+      "note": "append-only 로그라 정정 행을 덧붙이는 길이 열려 있었는데 쓰이지 않아, 로그만 읽는 사람은 허위 진술에서 정정에 닿지 못한다."
+    },
+    {
+      "id": "G-8",
+      "verdict": "closed",
+      "evidence": "`git ls-files kiwi/.pipeline-path` 가 비었고 `git diff --cached --stat -- kiwi/.pipeline-path` 가 `1 file changed, 1 deletion(-)` 로 색인에서 내려간 것을 보인다. `git check-ignore -v kiwi/.pipeline-path` 가 .gitignore:31 을 가리키며, .gitignore 에 「kiwi 파이프라인이 만드는 머신별 경로 마커」 주석과 함께 등록됐다. 파일 자체는 디스크에 남아(/c/Work/git/DocuLight2.0/kiwi) 도구 동작을 깨지 않는다.",
+      "note": "앞으로의 커밋에 머신 절대경로가 다시 실릴 길이 닫혔다 — 이미 지나간 커밋의 blob 은 히스토리에 남지만 그것을 지우려면 히스토리 재작성이 필요해 이 회차가 취할 수단이 아니다."
+    },
+    {
+      "id": "G-9",
+      "verdict": "not-closed",
+      "evidence": "`git ls-files | grep -i wave1-editor007` 이 여전히 세 벌의 세션 디렉터리를 보인다 — .kiwi/sessions/2026-08-25.doculight2.wave1-editor007(pm-state.json), .kiwi/sessions/2026-08-25.doculight2.wave1-editor007.coder-0825(state.json · worklog.jsonl · reports/coder-PH-002.md · reports/coder-T-PH001-03.md), .kiwi/sessions/2026-08-25.wave1-editor007.coder-0825(preflight.json · state.json · worklog.jsonl · tasks/T-PH001-02.json · T-PH001-04.json · T-PH001-05.json). 분석 산출물도 docs/analysis/kiwi-coder-2026-08-25.doculight2.wave1-editor007 와 docs/analysis/kiwi-coder-2026-08-25.wave1-editor007.coder-0825 두 벌로 갈려 있다. `git status --porcelain` 에 이들에 대한 변경이 0건이고, 통합했다는 기록이나 잔여로 받아들인다는 기록도 어디에도 없다.",
+      "note": "제품 코드가 아닌 오케스트레이터 기록물이라 동작에는 닿지 않으나, 이 회차가 손대지도 기록하지도 않아 같은 실행의 상태와 보고서가 여전히 두 이름으로 갈려 있다."
+    }
+  ],
+  "probes_reexecuted": [
+    {
+      "cell": "M1 — buildTableWidgets 의 노출 조건에서 selectionTouches 연언 제거 (table-widget.ts:1398)",
+      "expected_dead": "M1 의 항 + M2·M7 의 항 (3건)",
+      "actual_dead": "초점이 있으면 커서가 닿은 표만 드러나고 나머지 표는 위젯으로 선다 / 커서를 표에 올리면 위젯이 걷히고, 빼면 다시 선다 / 표를 떠나는 변경+선택 트랜잭션이 원문을 드러난 채 남기지 않는다 (3 failed | 4 passed)",
+      "match": true
+    },
+    {
+      "cell": "M3 — canRevealSource 에서 초점 연언 제거 (table-widget.ts:1333-1334)",
+      "expected_dead": "M3 의 항 + M6 의 항 (2건)",
+      "actual_dead": "초점을 잃으면 커서가 표에 있어도 위젯이 다시 선다 / 초점이 없으면 커서를 표에 올려도 다시 만들지 않는다 (2 failed | 5 passed)",
+      "match": true
+    },
+    {
+      "cell": "M4 — canRevealSource 에서 !readOnly 연언 제거 (table-widget.ts:1333-1334)",
+      "expected_dead": "M4 의 항만, 함께 죽은 항 없음 (1건)",
+      "actual_dead": "읽기 전용이면 초점이 있고 커서가 표에 있어도 원문이 드러나지 않는다 (1 failed | 6 passed)",
+      "match": true
+    },
+    {
+      "cell": "M5 — revealChanged 에서 revealedTableSignature 비교 제거 (table-widget.ts:1485-1488)",
+      "expected_dead": "M5 의 항 + M6 의 항 (2건)",
+      "actual_dead": "표에 닿지 않는 커서 이동은 데코레이션 집합을 다시 만들지 않는다 / 초점이 없으면 커서를 표에 올려도 다시 만들지 않는다 (2 failed | 5 passed)",
+      "match": true
+    }
+  ],
+  "restoration_proof": "네 회차 모두 되돌림 직후 원문 사본으로 복원했고, 마지막에 `git diff -- packages/editor/src/vendor/atomic-editor/table-widget.ts` 와 `git diff 1665cd2 -- packages/editor/package.json` 으로 원상복구를 확인했다. `git status --porcelain` 이 검증 시작 시점의 목록과 같으며 늘어난 것은 이 결과 파일 하나뿐이다.",
+  "counts": {
+    "closed": 5,
+    "not_closed": 3,
+    "accepted_residual": 1
+  },
+  "roll_up": "GAPS"
+}

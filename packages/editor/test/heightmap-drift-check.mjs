@@ -27,21 +27,17 @@
 // **재지 못한 것과 회귀는 다르다.** fixture 를 다 찾은 뒤(= 붙은 화면이 데모이고
 // 재는 자리가 문서에 있다는 것이 확인된 뒤)에 터지는 예외는 「재지 못했다」가
 // 아니라 실패다. 그 뒤로는 예상 못 한 예외도 1 로 나간다 — 그 자리에서 2 를
-// 돌려주면 회귀가 「환경 탓」으로 조용히 묻힌다. 판정 불가가 확실한 자리
-// (줄이 화면 밖이다 등)만 명시적으로 `unmeasurable()` 을 부른다.
+// 돌려주면 회귀가 「환경 탓」으로 조용히 묻힌다. 그 경계를 긋는 것이
+// `beginMeasuring()` 이고, 판정 불가가 확실한 자리(줄이 화면 밖이다 등)만
+// 명시적으로 `unmeasurable()` 을 부른다.
 //
 // 사용: npm run dev --workspace @doculight/editor 로 데모를 띄운 뒤
 //       node test/heightmap-drift-check.mjs [--headed]
+//
+// 브라우저를 띄우고 데모에 붙고 판정을 집계하는 기계장치는
+// `_browser-harness.mjs` 에 있다. 이 파일에는 무엇을 재는지만 남는다.
 
-import { chromium } from 'playwright';
-
-const URL = process.env.EDITOR_URL ?? 'http://localhost:3399/';
-const HEADED = process.argv.includes('--headed');
-
-// 3399 에 뜨는 것이 둘이다 — 저장소 루트의 `npm run dev` 는 web 앱을 같은
-// 포트에 올린다. 화면 정체를 확인하지 않으면 web 앱의 부재를 어긋남으로
-// 오독한다. `.demo-toggle` 은 editor 데모에만 있다.
-const DEMO_MARKER = '.demo-toggle';
+import { VIEW, openDemo, runBrowserChecks, unmeasurable } from './_browser-harness.mjs';
 
 // heightmap 과 DOM 좌표의 허용 차. 반올림 한 픽셀까지만 봐준다 — 이 시험이
 // 잡은 재발이 38px 이었고, 되돌아오는 여백은 언제나 이보다 훨씬 크다.
@@ -54,51 +50,13 @@ const CODE_MARKER = 'const answer: number = 42;';
 const QUOTE_MARKER = '인용문입니다.';
 const TABLE_SEPARATOR = '|---|';
 
-const results = [];
-function check(name, pass, detail = '') {
-  results.push({ name, pass, detail });
-  console.log(`${pass ? 'PASS' : 'FAIL'}  ${name}${detail ? `  — ${detail}` : ''}`);
-}
-
-/** 판정을 내릴 수 없는 상태. 「어긋났다」가 아니라 「재지 못했다」다. */
-class Unmeasurable extends Error {}
-
-function unmeasurable(message) {
-  throw new Unmeasurable(message);
-}
-
-const browser = await chromium.launch({ headless: !HEADED });
-let exitCode = 2;
-// fixture 를 다 찾은 뒤로는 예상 못 한 예외도 실패다 (파일 머리 참조).
-let measuring = false;
-
-try {
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-
-  await page.goto(URL, { waitUntil: 'networkidle' });
-  await page.waitForSelector('.cm-editor', { timeout: 15_000 });
-
+await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
   // --- 붙은 화면이 editor 데모인지 먼저 확인한다. 아니면 판정을 내리지 않는다.
-  if ((await page.locator(DEMO_MARKER).count()) === 0) {
-    unmeasurable(
-      `editor 데모가 ${URL} 에 떠 있지 않다. ` +
-        '`npm run dev --workspace @doculight/editor` 로 띄우라. ' +
-        '(저장소 루트의 `npm run dev` 는 web 앱을 같은 포트에 올린다.)',
-    );
-  }
+  await openDemo(page);
 
   // 어긋남을 만드는 것이 mermaid 위젯이므로 그것이 다 서기 전에는 재지 않는다.
   await page.waitForSelector('.dl-mermaid svg', { timeout: 20_000 });
   await page.waitForTimeout(1500); // 마지막 다이어그램 렌더 여유
-
-  // CM6 의 EditorView 를 DOM 에서 되찾는다. `EditorView.findFromDOM` 이 하는
-  // 일과 같되, 페이지 안에는 그 모듈이 없으므로 같은 경로를 직접 걷는다.
-  const VIEW = `(() => {
-    const content = document.querySelector('.cm-content');
-    let tile = content?.cmTile;
-    while (tile?.parent) tile = tile.parent;
-    return tile?.view ?? null;
-  })()`;
 
   // 재는 자리는 문서 끝머리에 있고 CM6 는 뷰포트 밖 줄을 렌더하지 않는다.
   // 재는 것마다 그 영역을 먼저 화면에 들여야 좌표가 뜻을 갖는다.
@@ -258,7 +216,7 @@ try {
     );
   }
 
-  measuring = true;
+  beginMeasuring();
 
   // --- ⓪ 원인 축 — heightmap 과 DOM 이 어긋나지 않는다
   //
@@ -361,27 +319,4 @@ try {
         `(위젯 padding ${spacing.padTop}/${spacing.padBottom}px, 허용 ±${DRIFT_TOLERANCE_PX}px)`,
     );
   }
-
-  const failed = results.filter((r) => !r.pass);
-  console.log(`\n${results.length - failed.length}/${results.length} 통과`);
-  exitCode = failed.length === 0 ? 0 : 1;
-} catch (error) {
-  if (error instanceof Unmeasurable) {
-    // 판정을 내릴 수 없다고 **이 시험이 스스로 선언한** 자리들.
-    console.error(error.message);
-    exitCode = 2;
-  } else if (measuring) {
-    // 재는 자리는 다 확인됐는데 그 뒤에 터졌다. 환경 문제로 뭉개지 않는다.
-    console.error('재는 도중 예상 못 한 예외가 났다 — 실패로 센다.');
-    console.error(error);
-    exitCode = 1;
-  } else {
-    // 화면을 붙잡기도 전(접속·데모 확인·fixture 탐색)에 터졌다.
-    console.error(error);
-    exitCode = 2;
-  }
-} finally {
-  await browser.close();
-}
-
-process.exit(exitCode);
+});

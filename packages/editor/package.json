@@ -21,7 +21,8 @@
     "test:browser:table": "node test/table-reveal-check.mjs",
     "test:browser:table:headed": "node test/table-reveal-check.mjs --headed",
     "test:browser:drift": "node test/heightmap-drift-check.mjs",
-    "test:browser:drift:headed": "node test/heightmap-drift-check.mjs --headed"
+    "test:browser:drift:headed": "node test/heightmap-drift-check.mjs --headed",
+    "test:browser:all": "npm run test:browser && npm run test:browser:table && npm run test:browser:drift"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.0",

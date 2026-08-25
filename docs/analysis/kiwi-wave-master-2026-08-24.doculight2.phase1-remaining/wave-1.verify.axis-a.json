@@ -1,0 +1,230 @@
+{
+  "wave": "wave-1",
+  "verifier": "axis-a (분모 대조)",
+  "verified_at": "2026-08-25",
+  "diff_range": "b73f70c..1665cd2",
+  "head_at_verification": "1665cd2 (master, working tree clean)",
+  "req_ac_layer": {
+    "expected": 12,
+    "checked": 12,
+    "resolved": 12,
+    "rows": [
+      {
+        "ac": "AC-1",
+        "checked": true,
+        "evidence": "packages/editor/test/live-preview.test.tsx:53 (NINE 헤딩) → 숨는 절반 :62, 드러나는 절반 :229",
+        "resolved": true,
+        "note": "VE-1. 파일 실측 — NINE[0] 이 `# 제목입니다` / keeps `제목입니다` / hides `#`. 이번 wave 의 diff 는 이 파일에 주석 16줄만 더했고 삭제 0줄이라 단언을 건드리지 않았다. 자체 실행 확인: editor vitest 243 passed · 1 skipped."
+      },
+      {
+        "ac": "AC-2",
+        "checked": true,
+        "evidence": "packages/editor/test/live-preview.test.tsx:54 (NINE 강조) → :62 · :229",
+        "resolved": true,
+        "note": "VE-1. 동일."
+      },
+      {
+        "ac": "AC-3",
+        "checked": true,
+        "evidence": "packages/editor/test/live-preview.test.tsx:55 (NINE 목록) → 숨는 절반 :62, 드러나는 절반은 전용 항 :237",
+        "resolved": true,
+        "note": "VE-1. 드러나는 절반이 파라미터 루프에서 빠지고(:226-228) 마커 뒤 공백을 빼고 재는 전용 항으로 갈라져 있다 — 사유가 주석에 있고 재는 대상은 여전히 AC-3 이다."
+      },
+      {
+        "ac": "AC-4",
+        "checked": true,
+        "evidence": "packages/editor/test/live-preview.test.tsx:56 (NINE 링크) → :62 · :229",
+        "resolved": true,
+        "note": "VE-1."
+      },
+      {
+        "ac": "AC-5",
+        "checked": true,
+        "evidence": "packages/editor/test/live-preview.test.tsx:57 (NINE 인용) → :62 · :229",
+        "resolved": true,
+        "note": "VE-1."
+      },
+      {
+        "ac": "AC-6",
+        "checked": true,
+        "evidence": "packages/editor/test/live-preview.test.tsx:71 (숨는 절반) · :247 (드러나는 절반)",
+        "resolved": true,
+        "note": "VE-1."
+      },
+      {
+        "ac": "AC-7",
+        "checked": true,
+        "evidence": "packages/editor/test/table-reveal-check.mjs 판정 ①:156 ②:165 ④:223 ⑤:241 (VE-6). live-preview.test.tsx:281 은 it.skip 으로 존치. 상태 단위 보강: packages/editor/src/vendor/atomic-editor/__tests__/table-reveal-state.test.ts:64,69,79",
+        "resolved": true,
+        "note": "**직접 재실행으로 확인했다.** editor 데모를 띄우고 `node test/table-reveal-check.mjs` 를 돌려 4/4 PASS · 종료 코드 0 을 받았다(① 위젯 1개·원문 숨음 / ② 칸 클릭에 원문 드러남 / ④ 커서를 빼면 숨음 / ⑤ dispatch 선택에도 드러남). ③(화살표)은 OBS- 로 나오지만 설계대로 종료 코드에서 빠져 있다. 다만 이 증거는 **editor 데모**에서 잰 것이고 제품(packages/web)에서 잰 것이 아니다 — 아래 gap G-2 참조."
+      },
+      {
+        "ac": "AC-8",
+        "checked": true,
+        "evidence": "packages/editor/test/math-blocks.test.ts:11-58 (찾는 규칙) · :60-72 (커서 노출) — VE-3. 보조: live-preview.test.tsx:88 · :106",
+        "resolved": true,
+        "note": "이번 wave 의 diff 에 이 파일이 없다(무변경)."
+      },
+      {
+        "ac": "AC-9",
+        "checked": true,
+        "evidence": "packages/editor/test/live-preview.test.tsx:98 (숨는 절반) · :286 (드러나는 절반) — VE-1",
+        "resolved": true,
+        "note": "이번 wave 가 mermaid-blocks.ts · editor.css 를 고쳤으나 AC-9 단언은 무변경이고 재실행 통과. 브라우저 쪽 browser-check.mjs 도 12/12 통과(직접 실행)."
+      },
+      {
+        "ac": "AC-10",
+        "checked": true,
+        "evidence": "packages/editor/test/live-preview.test.tsx:117 (칩 렌더) · :292 (커서 노출) — VE-1. 태그 탐지 규칙은 tags.test.ts",
+        "resolved": true,
+        "note": "VE-1 이 편집기를 띄우는 절반을 갖는다는 SRS 서술과 파일 실측이 일치한다."
+      },
+      {
+        "ac": "AC-11",
+        "checked": true,
+        "evidence": "packages/editor/test/live-preview.test.tsx:125 — VE-1",
+        "resolved": true,
+        "note": "무변경."
+      },
+      {
+        "ac": "AC-12",
+        "checked": true,
+        "evidence": "packages/editor/test/tags.test.ts:49-80 (VE-2). 보조: live-preview.test.tsx:150",
+        "resolved": true,
+        "note": "tags.test.ts 는 이번 wave 의 diff 에 없다(무변경). SRS 가 적은 「샵 기호를 실제로 넣어 두었다」가 :62 에서 확인된다."
+      }
+    ]
+  },
+  "design_layer": {
+    "expected": 4,
+    "mapped": 4,
+    "unmapped": [],
+    "rows": [
+      {
+        "id": "DI-W1-01",
+        "mapped_to": "T-PH001-01 · T-PH001-02 (+ FND-001 · FND-008)",
+        "where": "계획 docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md:194-208 · 구현 packages/editor/src/vendor/atomic-editor/table-widget.ts:1311-1312 (selectionTouches) · :1333-1334 (canRevealSource) · :1376-1398 (buildTableWidgets 노출 분기) · packages/editor/src/core/selection-touches.ts",
+        "note": "표에도 selectionTouches 노출 규칙이 실제로 섰다. 다른 여덟 요소와 달리 `view.hasFocus` 게이팅이 추가로 걸리며, 그 비대칭의 사유가 table-widget.ts:1314-1332 에 적혀 있다."
+      },
+      {
+        "id": "DI-W1-02",
+        "mapped_to": "T-PH001-02 (결정 자체는 계획 §1.4)",
+        "where": "docs/plans/2026-08-25.doculight2.wave1-editor007.plan.md:52-64 — `DI-W1-02` 를 이름으로 지목하고 「라이브 프리뷰에서는 원문 노출이 칸 직접 편집보다 우선한다」를 근거 넷과 함께 확정. SRS 쪽 기록: docs/spec/07.editor.srs.md Implementation Notes [2026-08-25] 항 (MCP get_requirement 로 확인)",
+        "note": "**착수 전에 정해졌고 적혔다.** 세 계층 중 유일하게 DI id 로 직접 호명된 항목이다. 결정이 Task 로도 옮겨졌다 — ignoreEvent 개방이 그 결정의 구현 지시다. 리뷰-수정 회차의 브라우저 탐침이 「칸 편집 경로가 죽었다」는 반대 전제를 반증해, 칸 텍스트 클릭은 원문 노출로 / 칸 여백 클릭은 칸 편집으로 갈린다는 사실을 table-widget.ts:722-748 주석에 적었다."
+      },
+      {
+        "id": "DI-W1-03",
+        "mapped_to": "T-PH001-02 · FND-008 (리뷰-수정 회차)",
+        "where": "packages/editor/src/vendor/atomic-editor/table-widget.ts:1300-1312 (벤더 사본을 남기는 사유: `src/vendor/` 는 되받는 상위 코드이므로 `src/core/` 를 import 하면 의존이 뒤집힌다) · packages/editor/src/core/selection-touches.ts:14-17 (반대편 사본에 상호 참조) · 리뷰 보고 §5 FND-008 · 계획 §5.3 R-05",
+        "note": "판정은 내려졌고 두 자리에 적혔다 — DocuLight 쪽 core 에 공용 술어를 두고, 벤더 파일은 의도적으로 사본을 유지하며 그 사유를 코드에 남긴다. 다만 계획 R-05 의 완화책이 「vendor 파일을 고치는 것이 이 작업의 전제임을 §1.4 에 적었다」고 가리키는데 §1.4(:50-95)에는 그런 전제 문장이 없다 — 그 포인터는 해소되지 않는다. 실제 판정은 착수 전이 아니라 리뷰-수정 회차에서 내려졌다."
+      },
+      {
+        "id": "DI-W1-04",
+        "mapped_to": "T-PH001-01 판정 ① · T-PH001-02 DoD · T-PH001-03 탐침 ③",
+        "where": "packages/editor/test/table-reveal-check.mjs:145-160 (판정 ① — 초점이 있고 커서가 표 밖이면 위젯이 서고 원문이 숨는다) · :218-228 (판정 ④ 복귀) · __tests__/read-only.test.tsx (초점 게이팅이 살린 기존 시험)",
+        "note": "회귀 없음을 직접 실측했다 — 판정 ①·④ 모두 PASS. FND-011 이 「판정 ① 이 초점 없는 시점에 재고 있어 노출 로직을 통째로 지워도 통과한다」를 잡아 고쳤고, 그 교정이 이 항목을 실제로 무는 판정으로 만들었다."
+      }
+    ]
+  },
+  "constraint_layer": {
+    "expected": 14,
+    "checked": 14,
+    "violations": ["C-14"],
+    "rows": [
+      {
+        "id": "C-01",
+        "held": true,
+        "evidence": "wave-N target 신설 없음. FR-EDITOR-007 의 Target 은 phase-1 그대로(MCP get_requirement), 계획 머리표도 target=phase-1. docs/spec/00.index.md 의 diff 는 Status 집계 두 줄(in_progress 4→3, implemented 221→222)뿐이고 Target Map 행 추가가 없다."
+      },
+      {
+        "id": "C-02",
+        "held": true,
+        "evidence": "git diff --stat b73f70c..1665cd2 의 65개 경로가 전부 C:/Work/git/DocuLight2.0 안이다. 1.0 저장소를 가리키는 경로 0건."
+      },
+      {
+        "id": "C-03",
+        "held": true,
+        "evidence": "이 wave 는 packages/editor · docs · kiwi 만 건드린다. 1.0 서비스 기동 중단·리버스 프록시 관련 변경 0건 (해당 없음으로 성립)."
+      },
+      {
+        "id": "C-04",
+        "held": true,
+        "evidence": "아카이브·복원 관련 코드·요구 변경 0건. 건드린 요구는 FR-EDITOR-007 하나."
+      },
+      {
+        "id": "C-05",
+        "held": true,
+        "evidence": "프록시 홉 수 관련 config·DB 설정 변경 0건."
+      },
+      {
+        "id": "C-06",
+        "held": true,
+        "evidence": "docs/spec/07.editor.srs.md 의 변경은 전부 MCP 도구가 남기는 모양이다 — Status 필드 1줄 + Change Notes 행 1줄(update_status), AC-7 체크박스 1자(check_acceptance_criteria), VE-5·VE-6 행 2줄(add_verification_evidence), Trace Links Task 행 7줄(add_trace_link), Implementation Notes 1줄. 그 Implementation Notes 줄이 `[2026-08-25] [2026-08-25]` 로 날짜 접두를 이중으로 달고 있는데, 이는 append_section_note 가 접두를 자동 부여한 흔적이며 손 편집자가 만들 모양이 아니다(PM 보고 §7 이 같은 사실을 적는다). 리뷰-수정 회차도 docs/spec 관련 finding 하나를 「손 편집 금지」를 이유로 거절했다(보고 §9). 참고 — docs/spec/02.feature-request-live-preview.md:71 에 인용문 1줄이 손으로 더해졌으나 이 파일은 `*.srs.md` 가 아니므로 C-06 의 문면 밖이다."
+      },
+      {
+        "id": "C-07",
+        "held": true,
+        "evidence": "07.editor.srs.md 의 hunk 가 전부 FR-EDITOR-007 블록(661-743행) 안이다. 00.index.md 집계도 정확히 1건 이동(in_progress -1 / implemented +1)이며 verified 는 18 그대로 — implemented 221건 일괄 승급 흔적 0건. 나머지 요구는 손대지 않았다."
+      },
+      {
+        "id": "C-08",
+        "held": true,
+        "evidence": "kiwi/pipeline.jsonl 의 run_id=2026-08-25.doculight2.wave1-editor007 이벤트가 kiwi-planner(TASK_DONE) → kiwi-pm(TASK_DONE) → kiwi-review-fix-loop(TASK_DONE) 순이다. kiwi-srs-feasibility 이벤트 0건."
+      },
+      {
+        "id": "C-09",
+        "held": true,
+        "evidence": "`git log b73f70c..1665cd2 --format='%H%n%B'` 여섯 커밋 전문에 Co-Authored-By · Generated with/by · Claude · 🤖 · [bot] 0건(정규식 대조). 제목 여섯 줄 어디에도 `Phase n` · `Step n` · TASK-XXX 없다 — 전부 conventional 접두 + 무엇이 바뀌었는가만 담는다. `Phase 둘 Task 일곱` 은 51c54a6 의 **본문**에만 있어 문면에 걸리지 않는다."
+      },
+      {
+        "id": "C-10",
+        "held": true,
+        "evidence": "이 wave 가 실제로 처리한 것은 FR-EDITOR-007 AC-7 하나다. FR-EDITOR-001 · 한글 IME 관련 요구·코드 변경 0건."
+      },
+      {
+        "id": "C-11",
+        "held": true,
+        "evidence": "동작을 바꾼 각 항에 red 선행 기록이 있다 — T-PH001-01: table-reveal-check.mjs 신설 후 2/5(②③⑤ FAIL) 확인(.kiwi/sessions/2026-08-25.wave1-editor007.coder-0825/tasks/T-PH001-02.json phase1.red_recheck). T-PH001-04: heightmap-drift-check.mjs 신설 후 어긋남 38px red 확인(T-PH001-04.json phase1.red_evidence_meta), 구현은 T-PH001-05 로 분리. 리뷰-수정 회차 FND-001 · FND-003 · FND-004 는 fix_iter1.json 에 `tests_first: true` 와 RED 확인 문장을 갖는다. FND-102(코드블록 겉보기 회귀)도 판정 ④ 를 더해 red/green 확인. **연약한 지점 하나** — FND-007(ignoreEvent 에서 `click` 을 닫음)은 동작 변경이면서 새 red 를 세우지 않았고 「기존 브라우저 회귀가 덮는다」로 면제를 적었다. 면제 사유가 기록돼 있어 위반으로 세지 않되 기록한다."
+      },
+      {
+        "id": "C-12",
+        "held": true,
+        "evidence": "코드 변경 전부가 FR-EDITOR-007(AC-7) 아래로 추적된다 — 계획 §4 가 9개 Task 를 FR-EDITOR-007 하나에 묶고, 리뷰-수정 fix_iter1.json 의 requirement_ids 는 FR-EDITOR-007 · CON-ARCH-005 다(둘 다 MCP 로 실존 확인, 후자 Stability=stable). 늘어난 T-PH001-04/-05(mermaid heightmap)는 판정 ②(칸 클릭)를 막던 유일한 장애물이라 AC-7 의 전제로 성립한다."
+      },
+      {
+        "id": "C-13",
+        "held": true,
+        "evidence": "새 브라우저 시험 셋 모두 기본 주소가 http://localhost:3399/ 다(browser-check.mjs:10 · heightmap-drift-check.mjs:38 · table-reveal-check.mjs:17). table-reveal-check.mjs:23 는 3399 에 web 앱이 뜰 수 있음을 알고 `.demo-toggle` 로 화면 정체를 먼저 확인한 뒤에만 판정한다."
+      },
+      {
+        "id": "C-14",
+        "held": false,
+        "evidence": "**부분 미이행.** 두 신규 브라우저 시험에는 탐침이 있다 — T-PH001-03 이 다섯 축(선택 겹침 분기 제거 · tr.selection 재구성 조건 되돌림 · 초점 게이팅 고정 · ignoreEvent 무조건 true · ignoreEvent 전면 개방)을 돌려 각 판정이 죽는 것을 확인했고(docs/analysis/kiwi-coder-2026-08-25.wave1-editor007.coder-0825/T-PH001-03.mutation-probes.md), T-PH001-05 는 browser-check.mjs 의 SDS-AC-4 에 대해 오류 클래스 제거 탐침을 돌려 단독 FAIL 을 확인했다(T-PH001-05.ac4-mutation-probe.md). 그러나 리뷰-수정 회차가 새로 세운 packages/editor/src/vendor/atomic-editor/__tests__/table-reveal-state.test.ts 6건 중 **:64 · :69 · :79 세 건에는 red 선행도 뮤테이션 탐침도 없다** — fix_iter1.json 은 :93 · :108(FND-001) 과 :125(FND-004) 셋에만 RED 확인을 적고, FND-010 은 tests_first 를 비워 두었다. 새 시험 셋이 실제로 무는지가 확인되지 않았다."
+      }
+    ]
+  },
+  "roll_up": "GAPS",
+  "gaps": [
+    {
+      "layer": "constraint",
+      "id": "C-14",
+      "why": "리뷰-수정 회차가 신설한 table-reveal-state.test.ts 6건 중 3건(:64 위젯이 선다 · :69 올렸다 빼면 복귀 · :79 초점 상실 시 복귀)에 red 선행도 뮤테이션 탐침도 없다. 그 셋이 실효 없는 시험인지 아닌지가 이 wave 의 기록으로는 판정되지 않는다."
+    },
+    {
+      "layer": "req_ac",
+      "id": "FR-EDITOR-007 (기록 정합)",
+      "why": "요구 본문이 셋 자리에서 「ignoreEvent 를 mousedown 과 **click** 에 한정해 열어」라고 적는데(VE-4 해소 뒷말 · Implementation Notes [2026-08-25] · Change Notes 2026-08-25), 최종 커밋 1665cd2 가 `click` 을 닫아 코드는 `event.type === 'mousedown' ? this.readOnly : true`(table-widget.ts:770-772) 다. 요구 기록이 배달된 구현과 어긋난다. 리뷰-수정 회차가 FND-103 으로 스스로 잡았으나 SRS mutation 권한이 없어 열어 둔 채 넘겼다 — 아직 닫히지 않았다."
+    },
+    {
+      "layer": "req_ac",
+      "id": "AC-1..AC-12 (증거의 도달 범위)",
+      "why": "FND-103 과 별개로 FND-101 — packages/web 이 editor.css · inline-preview.css · katex CSS 를 하나도 import 하지 않는다(grep 실측 0건). AC-7 을 덮는 VE-6 을 포함해 이 요구의 증거 전부가 editor 데모/유닛에서 잰 것이고 제품 화면에서 잰 것이 아니다. 선재 결함이며 이 wave 가 만든 것은 아니다."
+    },
+    {
+      "layer": "design",
+      "id": "DI-W1-03",
+      "why": "판정 자체는 내려졌고 코드 주석 두 자리에 적혔으므로 미매핑은 아니다. 다만 계획 R-05 의 완화책이 가리키는 「§1.4 에 적었다」가 실제 §1.4(:50-95)에 없어 그 포인터는 해소되지 않으며, 판정 시점도 「착수 전에 함께」가 아니라 리뷰-수정 회차였다."
+    }
+  ],
+  "summary": "세 계층을 전량 열거해 대조했다 — REQ/AC 12/12 · 설계 4/4 매핑 · 제약 14/14 검사. AC 12건의 증거 포인터를 모두 열어 확인했고, 실행으로도 재현했다: editor vitest 243 통과·1 건너뜀, table-reveal-check 4/4 종료 0, heightmap-drift-check 7/7, browser-check 12/12. AC-7 의 새 증거 VE-6 은 실제로 AC-7 을 잰다 — 커서가 표 밖일 때 숨고, 칸을 클릭하면 드러나고, 빼면 다시 숨는 왕복을 실제 제스처로 재며, 화살표 항은 판정에서 내려져 종료 코드에 들어가지 않는다. AC-1~6 · 8~12 는 회귀하지 않았다: live-preview.test.tsx 의 diff 는 주석 16줄 추가·삭제 0줄이고 tags.test.ts · math-blocks.test.ts 는 무변경이다. 계획이 Task 7 → 9 로 늘어난 것은 분모를 흔들지 않았다 — 늘어난 둘은 AC-7 판정을 막던 heightmap 어긋남을 잡는 전제 작업이고, AC 12 · 설계 4 는 그대로다. `verified` 를 주지 않은 판단은 정직하며 과도하지 않다: packages/web 이 editor 스타일을 하나도 import 하지 않는다는 사실을 grep 으로 직접 확인했고, 그 상태에서 증거는 데모까지만 닿는다. 롤업은 GAPS 다 — 제약 C-14 가 신규 vitest 3건에서 이행되지 않았고, 요구 본문 셋 자리가 최종 커밋이 닫은 `click` 개방을 여전히 열려 있는 것으로 적고 있다(FND-103, 미해소)."
+}

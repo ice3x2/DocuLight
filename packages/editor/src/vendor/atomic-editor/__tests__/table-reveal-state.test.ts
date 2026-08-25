@@ -3,6 +3,7 @@ import { EditorState, type StateEffect } from '@codemirror/state';
 import { EditorView, type DecorationSet } from '@codemirror/view';
 import { describe, expect, it } from 'vitest';
 
+import { readOnlyExtension } from '../read-only';
 import { tables } from '../table-widget';
 
 /**
@@ -17,11 +18,19 @@ import { tables } from '../table-widget';
 const TABLE = '| A | B |\n| --- | --- |\n| 1 | 2 |';
 const DOC = `앞 문단\n\n${TABLE}\n\n뒤 문단\n`;
 
-const stateOf = (doc: string, anchor = 0): EditorState =>
+const OTHER_TABLE = '| C | D |\n| --- | --- |\n| 3 | 4 |';
+const TWO_TABLES = `앞 문단\n\n${TABLE}\n\n사이 문단\n\n${OTHER_TABLE}\n\n뒤 문단\n`;
+
+const stateOf = (doc: string, anchor = 0, readOnly = false): EditorState =>
   EditorState.create({
     doc,
     selection: { anchor },
-    extensions: [markdown({ base: markdownLanguage }), tables()],
+    extensions: [
+      markdown({ base: markdownLanguage }),
+      tables(),
+      // 읽기 전용일 때만 얹는다 — 기존 항들이 재는 상태를 건드리지 않는다.
+      readOnly ? readOnlyExtension(true) : [],
+    ],
   });
 
 /**
@@ -61,9 +70,23 @@ function withFocus(state: EditorState, focusing: boolean): EditorState {
 const posOf = (doc: string, needle: string) => doc.indexOf(needle);
 
 describe('표 원문 노출 — 상태 단위 규칙 (`FR-EDITOR-007` AC-7)', () => {
-  it('초점이 있고 커서가 표 밖이면 위젯이 선다', () => {
-    const state = withFocus(stateOf(DOC, 0), true);
-    expect(widgetCount(state)).toBe(1);
+  /**
+   * 커서가 닿은 표만 드러난다 — 초점이 켜진 **동안의** 규칙으로.
+   *
+   * 커서를 표 밖에 둔 채 초점만 켜면 노출 대상이 그대로라 데코레이션이
+   * 그대로 물려내려온다. 그 상태를 재면 초점이 켜진 동안의 규칙이 아니라
+   * 상태가 만들어질 때(초점 없음)의 결과를 재게 되어, 노출 조건에서
+   * `selectionTouches` 를 통째로 빼도 이 항이 살아남는다 — 실제로 그렇게
+   * 되돌려 확인했다(`wave-1.mutation-probes.md` M1). 그래서 커서를 표 안에
+   * 두고 초점을 켜 규칙이 실제로 다시 돌게 한 뒤, 커서가 닿지 않은 **다른**
+   * 표가 위젯으로 서 있는지를 잰다.
+   */
+  it('초점이 있으면 커서가 닿은 표만 드러나고 나머지 표는 위젯으로 선다', () => {
+    const state = withFocus(
+      stateOf(TWO_TABLES, posOf(TWO_TABLES, '| 1 |') + 3),
+      true,
+    );
+    expect(widgetCount(state), '커서가 닿지 않은 표까지 원문이 드러났다').toBe(1);
   });
 
   it('커서를 표에 올리면 위젯이 걷히고, 빼면 다시 선다', () => {
@@ -81,6 +104,28 @@ describe('표 원문 노출 — 상태 단위 규칙 (`FR-EDITOR-007` AC-7)', ()
     expect(widgetCount(inside)).toBe(0);
 
     expect(widgetCount(withFocus(inside, false))).toBe(1);
+  });
+
+  /**
+   * 읽기 전용은 원문 노출의 **안전 조건**이다.
+   *
+   * `canRevealSource` 는 초점과 `!readOnly` 를 함께 요구한다. 초점 축은 위
+   * 항이 재지만 `!readOnly` 축은 그것만으로 재지지 않는다 — 읽기 전용에서도
+   * 편집기는 초점을 받을 수 있고(`readOnlyExtension` 은 `editable` 을 내리지만
+   * 상태 단위에서는 초점 효과가 그대로 실린다), 그 상태에서 커서가 표에
+   * 놓이면 고칠 수도 없는 원문이 드러난 채 남는다.
+   *
+   * 같은 자리·같은 초점에서 편집 가능한 상태가 원문을 드러낸다는 것을 함께
+   * 재어, 이 항이 「위치를 잘못 짚어서」 통과하는 길을 막는다.
+   */
+  it('읽기 전용이면 초점이 있고 커서가 표에 있어도 원문이 드러나지 않는다', () => {
+    const anchor = posOf(DOC, '| 1 |') + 3;
+
+    const editable = withFocus(stateOf(DOC, anchor), true);
+    expect(widgetCount(editable), '대조 실패 — 편집 가능한 상태가 원문을 드러내지 않았다').toBe(0);
+
+    const readOnly = withFocus(stateOf(DOC, anchor, true), true);
+    expect(widgetCount(readOnly), '읽기 전용인데 원문이 드러났다').toBe(1);
   });
 
   /**
