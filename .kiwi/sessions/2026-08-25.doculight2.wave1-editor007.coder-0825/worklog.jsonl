@@ -3,3 +3,30 @@
 {"event":"impl_done","task_id":"T-PH001-03","iter":1,"files_changed":["packages/editor/test/table-reveal-check.mjs"]}
 {"event":"test_green","task_id":"T-PH001-03","exit_code":0}
 {"event":"regression_done","task_id":"T-PH001-03","scope":"full","failed":0}
+{"event":"task_start","task_id":"T-PH002-01","phase_id":"PH-002","at":"2026-08-25T12:00:00Z"}
+{"event":"tdd_exempted","task_id":"T-PH002-01","reason":"package.json 의 스크립트 등록 두 줄이며 제품 실행 동작을 바꾸지 않는다. 등록의 실효는 그 스크립트가 실제로 도는 것으로 확인하며 별도 자동 시험을 세울 대상이 아니다","at":"2026-08-25T12:00:05Z"}
+{"event":"impl_done","task_id":"T-PH002-01","iter":1,"files_changed":["packages/editor/package.json"],"at":"2026-08-25T12:01:00Z"}
+{"event":"formal_review_done","task_id":"T-PH002-01","iter":1,"severity_summary":{"CRITICAL":0,"HIGH":0,"MEDIUM":0,"LOW":0},"at":"2026-08-25T12:02:00Z"}
+{"event":"scope_extension_recorded","task_id":"T-PH002-01","detail":"test:browser:drift · test:browser:drift:headed 두 스크립트를 action 문면 밖에서 추가. 오케스트레이터 Task 지시에 명시. 같은 files[] 안, 가산적, 되돌리기 쉬움.","at":"2026-08-25T12:02:10Z"}
+{"event":"test_green","task_id":"T-PH002-01","exit_code":0,"detail":"test:browser:table 4/4 · test:browser:drift 3/3 · test:browser 12/12","at":"2026-08-25T12:03:00Z"}
+{"event":"regression_done","task_id":"T-PH002-01","scope":"full","exit_code":0,"detail":"editor+server 1248+web 521, 실패 0","at":"2026-08-25T12:05:00Z"}
+{"event":"task_done","task_id":"T-PH002-01","detail":"package.json 에 test:browser:table(:headed) · test:browser:drift(:headed) 넷 등록","at":"2026-08-25T12:06:00Z"}
+{"event":"task_start","task_id":"T-PH002-02","phase_id":"PH-002","at":"2026-08-25T12:06:10Z"}
+{"event":"tdd_exempted","task_id":"T-PH002-02","reason":"type=doc — 데모 안내 문구 한 줄. content_regex 판정이 잰다","at":"2026-08-25T12:06:15Z"}
+{"event":"impl_done","task_id":"T-PH002-02","iter":1,"files_changed":["packages/editor/demo/App.tsx"],"at":"2026-08-25T12:07:00Z"}
+{"event":"test_green","task_id":"T-PH002-02","exit_code":0,"detail":"grep '올리면 원문' 0 · grep '클릭해 보세요' 1 · build 0 · table 4/4 · drift 3/3 · browser 12/12","at":"2026-08-25T12:09:00Z"}
+{"event":"task_done","task_id":"T-PH002-02","detail":"데모 표 데이터 행을 「| 커서를 | 올리면 원문 |」 으로 교체. 세 브라우저 시험 모두 재실행 통과 — 시험은 표를 |---| 로 찾으므로 단언 조정 불필요","at":"2026-08-25T12:09:10Z"}
+{"event":"task_start","task_id":"T-PH002-03","phase_id":"PH-002","at":"2026-08-25T12:09:20Z"}
+{"event":"tdd_exempted","task_id":"T-PH002-03","reason":"주석만 고친다 — 실행 동작 변경 0 이라 그 변경을 재는 시험을 쓸 수 없다","at":"2026-08-25T12:09:25Z"}
+{"event":"impl_done","task_id":"T-PH002-03","iter":1,"files_changed":["packages/editor/test/live-preview.test.tsx","packages/editor/src/vendor/atomic-editor/table-widget.ts"],"at":"2026-08-25T12:10:00Z"}
+{"event":"test_green","task_id":"T-PH002-03","exit_code":0,"detail":"live-preview 24 passed | 1 skipped — it.skip 존치","at":"2026-08-25T12:10:30Z"}
+{"event":"task_done","task_id":"T-PH002-03","detail":"it.skip 앞 주석에 table-reveal-check.mjs 지목 추가. ignoreEvent 의 반증된 사유를 최소 개방 근거로 교체 — diff 는 주석 줄만","at":"2026-08-25T12:10:40Z"}
+{"event":"task_start","task_id":"T-PH002-04","phase_id":"PH-002","at":"2026-08-25T12:10:50Z"}
+{"event":"mcp_call","task_id":"T-PH002-04","tool":"add_verification_evidence","ok":true,"detail":"VE-6 covers AC-7","at":"2026-08-25T12:11:00Z"}
+{"event":"mcp_call","task_id":"T-PH002-04","tool":"check_acceptance_criteria","ok":true,"detail":"AC-7 checked","at":"2026-08-25T12:11:10Z"}
+{"event":"mcp_call","task_id":"T-PH002-04","tool":"edit_requirement_table_rows","ok":true,"detail":"VE-4 notes 에 [2026-08-25 해소] 뒷말 추가 — 원 관측 보존","at":"2026-08-25T12:11:20Z"}
+{"event":"mcp_call","task_id":"T-PH002-04","tool":"append_section_note","ok":true,"detail":"implementation_notes 해소 기록. 도구가 날짜 접두를 자동 부여해 [2026-08-25] 가 중복 표기됨(내용은 참)","at":"2026-08-25T12:11:30Z"}
+{"event":"regression_done","task_id":"T-PH002-04","scope":"full","exit_code":0,"detail":"editor 237+1skip · server 1248 · web 521 · 기준선과 동일, 신규 실패 0","at":"2026-08-25T12:14:00Z"}
+{"event":"task_done","task_id":"T-PH002-04","detail":"AC 12/12 체크. validate_spec errors 0. update_status 미호출(PM 소관)","at":"2026-08-25T12:14:10Z"}
+{"event":"need_user","task_id":"T-PH002-03","reason":"검증 서브에이전트 둘 무응답 — 기계적 독립 채널로 대체하고 진행(부모 지시)","options":[],"at":"2026-08-25T12:16:00Z"}
+{"event":"phase_end","run_id":"2026-08-25.doculight2.wave1-editor007.coder-0825","summary":"PH-002 네 Task 완료. AC 12/12, validate_spec errors 0, 회귀 신규 실패 0","at":"2026-08-25T12:16:30Z"}

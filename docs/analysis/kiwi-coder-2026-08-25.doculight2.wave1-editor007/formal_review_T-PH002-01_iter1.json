@@ -1,0 +1,18 @@
+{
+  "pass": "formal-check (script)",
+  "task_id": "T-PH002-01",
+  "iter": 1,
+  "axes": {
+    "mock_regex": { "result": "PASS", "detail": "packages/editor/package.json 에 mock 정규식 매칭 0건" },
+    "type_build": { "result": "PASS", "detail": "npm run typecheck (tsc --noEmit) exit 0" },
+    "plan_code_mapping": {
+      "result": "PASS_WITH_NOTE",
+      "detail": "변경 파일 집합 = {packages/editor/package.json} ⊆ sidecar.files[]. action 이 명시한 test:browser:table · test:browser:table:headed 둘 다 존재. 추가로 test:browser:drift · test:browser:drift:headed 둘을 같은 파일에 등록 — action 문면 밖이나 오케스트레이터가 Task 지시에 명시적으로 포함했고, 같은 files[] 안이며 가산적(삭제·약화 0)이고 되돌리기 쉬움. scope 확장으로 기록."
+    },
+    "test_coverage": { "result": "N/A", "detail": "sidecar.tdd.applicable=false (exempt_reason 존재). test_cases[] 없음." }
+  },
+  "severity_summary": { "CRITICAL": 0, "HIGH": 0, "MEDIUM": 0, "LOW": 0 },
+  "existing_test_weakened_or_deleted": false,
+  "existing_public_contract_change": false,
+  "existing_file_deleted_or_moved": false
+}

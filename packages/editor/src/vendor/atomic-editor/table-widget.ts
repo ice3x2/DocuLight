@@ -712,14 +712,29 @@ class TableWidget extends WidgetType {
   // behaviour: there is nothing to edit, so the caret has no business
   // inside the block.
   //
-  // The opening stops at pointer events on purpose. Unlike the mermaid
-  // widget this one contains a `contenteditable` editing subsystem
-  // (`makeCell` / `attachCellEditing`), and a cell can hold DOM focus
-  // while CM6's own selection sits elsewhere — Tab / Enter navigation
-  // (`moveCellFocus`) and the cell's pointerdown focus routing both leave
-  // it that way. Handing `keydown` / `beforeinput` / `paste` to CM6 in
-  // that state would let a keystroke aimed at the cell edit the document
-  // instead. Those stay captured by the cell's own listeners.
+  // The opening stops at pointer events on purpose: release only what the
+  // caret needs, nothing more.
+  //
+  // This comment used to justify the limit differently — it claimed that
+  // handing `keydown` / `beforeinput` / `paste` to CM6 would let a
+  // keystroke aimed at a cell edit the document instead. A mutation probe
+  // disproved that. With a cell's `contenteditable` holding DOM focus and
+  // CM6's selection parked on a line outside the table, a keystroke
+  // landed in the cell and left the selected line untouched — identically
+  // whether `ignoreEvent` released only pointer events or every event.
+  // While the cell holds focus `view.hasFocus` is false, so CM6 does not
+  // treat those keystrokes as document edits at all; `ignoreEvent` filters
+  // events passing through the widget and cannot move focus. (Only
+  // printable keystrokes were measured — `paste` and IME composition
+  // were not.)
+  //
+  // The limit stays for a different, real reason. Safety under a full
+  // opening would rest on a separate convention: that a cell keeps DOM
+  // focus while it is typed into (`makeCell` / `attachCellEditing`, plus
+  // the Tab / Enter routing in `moveCellFocus`). If that convention ever
+  // changes, the safety vanishes with it and nothing here would say so.
+  // Releasing only the events the caret actually needs never builds that
+  // dependency in the first place.
   //
   // Note the three handlers that must keep the caret out of the document
   // (the link icon, the image preview, and the cell-padding focus

@@ -6,16 +6,32 @@
   "sidecar_path": "docs/plans/2026-08-25.doculight2.wave1-editor007.sidecar.json",
   "target": "phase-1",
   "mode": "normal",
-  "flags": ["--auto", "--drive", "--auto-integration", "--auto-cost-warning"],
+  "flags": [
+    "--auto",
+    "--drive",
+    "--auto-integration",
+    "--auto-cost-warning"
+  ],
   "spawn_context": "pm-child",
   "current_phase_id": "PH-001",
   "current_task_id": null,
   "next_resume_hint": null,
   "task_queue": [],
-  "completed_task_ids": ["T-PH001-03"],
+  "completed_task_ids": [
+    "T-PH001-03",
+    "T-PH002-01",
+    "T-PH002-02",
+    "T-PH002-03",
+    "T-PH002-04"
+  ],
   "skipped_task_ids": [],
   "failed_task_ids": [],
-  "tdd_exempted_task_ids": [],
+  "tdd_exempted_task_ids": [
+    "T-PH002-01",
+    "T-PH002-02",
+    "T-PH002-03",
+    "T-PH002-04"
+  ],
   "regression_baseline": {
     "command": "NODE_ENV=production npm test",
     "exit_code": 0,
@@ -23,16 +39,23 @@
     "server": "1248 passed",
     "web": "521 passed",
     "failed_test_ids": [],
-    "head_sha": "bc3527d"
+    "head_sha": "a424c1e",
+    "captured_at": "2026-08-25T03:02:30.554Z",
+    "provenance": "PH-001 종료 시점(HEAD a424c1e, clean tree)에 부모가 실측한 값을 이 run 의 기준선으로 승계. 본 Task 종료 회귀에서 동일 결과 재확인."
   },
   "regression_summary": {
+    "last_run_at": "2026-08-25T03:09:21.925Z",
     "scope": "full",
+    "command": "NODE_ENV=production npm test",
+    "exit_code": 0,
     "editor": "237 passed | 1 skipped",
     "server": "1248 passed",
     "web": "521 passed",
-    "failed": 0,
     "regressed_files": []
   },
   "mcp_call_log": [],
-  "pending_mutations": ["deferred to kiwi-pm close-out (pm-child context)"]
+  "pending_mutations": [
+    "deferred to kiwi-pm close-out (pm-child context)"
+  ],
+  "updated_at": "2026-08-25T03:09:21.925Z"
 }

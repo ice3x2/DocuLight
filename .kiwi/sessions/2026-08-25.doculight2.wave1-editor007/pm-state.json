@@ -6,7 +6,7 @@
   "sidecar_sha256": "c6969b20edda4b968d61e9f91519fe8c621d66b1dc7cff831b17aa8c96552f81",
   "target_slug": "phase-1",
   "started_at": "2026-08-24T18:26:11Z",
-  "last_updated_at": "2026-08-25T02:57:13Z",
+  "last_updated_at": "2026-08-25T03:15:08Z",
   "pm_version": "0.1",
   "tasks": [
     {
@@ -87,69 +87,69 @@
     {
       "task_id": "T-PH002-01",
       "phase_id": "PH-002",
-      "status": "pending",
+      "status": "done",
       "tdd_exempted": true,
-      "started_at": null,
-      "ended_at": null,
-      "coder_run_id": null,
-      "result_summary": null,
+      "started_at": "2026-08-25T03:15:08Z",
+      "ended_at": "2026-08-25T03:15:08Z",
+      "coder_run_id": "2026-08-25.doculight2.wave1-editor007.coder-0825",
+      "result_summary": "package.json 에 test:browser:table 과 test:browser:drift 계열 넷을 등록했다. npm test 는 vitest 라 .mjs 를 줍지 않으므로 이것이 없으면 AC-7 의 유일한 증거가 회귀에서 빠진다.",
       "trace_req_ids": [
         "FR-EDITOR-007"
       ],
       "questions": [],
-      "attempts": 0
+      "attempts": 1
     },
     {
       "task_id": "T-PH002-02",
       "phase_id": "PH-002",
-      "status": "pending",
+      "status": "done",
       "tdd_exempted": true,
-      "started_at": null,
-      "ended_at": null,
-      "coder_run_id": null,
-      "result_summary": null,
+      "started_at": "2026-08-25T03:15:08Z",
+      "ended_at": "2026-08-25T03:15:08Z",
+      "coder_run_id": "2026-08-25.doculight2.wave1-editor007.coder-0825",
+      "result_summary": "데모 표 데이터 행을 「커서를 / 올리면 원문」 으로 바꿨다. 브라우저 시험 셋은 표를 구분선으로 찾아 줄 번호에 기대지 않으므로 단언을 손댈 필요가 없었다.",
       "trace_req_ids": [
         "FR-EDITOR-007"
       ],
       "questions": [],
-      "attempts": 0
+      "attempts": 1
     },
     {
       "task_id": "T-PH002-03",
       "phase_id": "PH-002",
-      "status": "pending",
+      "status": "done",
       "tdd_exempted": true,
-      "started_at": null,
-      "ended_at": null,
-      "coder_run_id": null,
-      "result_summary": null,
+      "started_at": "2026-08-25T03:15:08Z",
+      "ended_at": "2026-08-25T03:15:08Z",
+      "coder_run_id": "2026-08-25.doculight2.wave1-editor007.coder-0825",
+      "result_summary": "it.skip 을 존치한 채 주석이 새 시험을 지목하게 했고, ignoreEvent 주석의 반증된 사유를 최소 개방 근거로 바꿔 적었다. 주석을 걷어낸 두 판본이 완전 동일해 동작 변경 0 을 기계적으로 증명했다.",
       "trace_req_ids": [
         "FR-EDITOR-007"
       ],
       "questions": [],
-      "attempts": 0
+      "attempts": 1
     },
     {
       "task_id": "T-PH002-04",
       "phase_id": "PH-002",
-      "status": "pending",
+      "status": "done",
       "tdd_exempted": true,
-      "started_at": null,
-      "ended_at": null,
-      "coder_run_id": null,
-      "result_summary": null,
+      "started_at": "2026-08-25T03:15:08Z",
+      "ended_at": "2026-08-25T03:15:08Z",
+      "coder_run_id": "2026-08-25.doculight2.wave1-editor007.coder-0825",
+      "result_summary": "MCP 로만 처리했다. VE-6 을 AC-7 증거로 등록해 AC 12/12 를 달성했고, VE-4 의 미구현 관측은 지우지 않고 해소 뒷말을 덧붙였다.",
       "trace_req_ids": [
         "FR-EDITOR-007"
       ],
       "questions": [],
-      "attempts": 0
+      "attempts": 1
     }
   ],
   "stats": {
     "total": 9,
-    "done": 5,
+    "done": 9,
     "running": 0,
-    "pending": 4,
+    "pending": 0,
     "failed": 0,
     "blocked": 0,
     "skipped": 0
@@ -166,9 +166,42 @@
       "FR-EDITOR-007": "in_progress"
     }
   },
-  "req_coverage": {},
-  "final_mutations": [],
+  "req_coverage": {
+    "FR-EDITOR-007": {
+      "status_at_start": "in_progress",
+      "status_at_end": "implemented",
+      "stability_at_start": "evolving",
+      "tasks": [
+        "T-PH001-01",
+        "T-PH001-04",
+        "T-PH001-05",
+        "T-PH001-02",
+        "T-PH001-03",
+        "T-PH002-01",
+        "T-PH002-02",
+        "T-PH002-03",
+        "T-PH002-04"
+      ],
+      "all_done": true
+    }
+  },
+  "final_mutations": [
+    {
+      "ts": "2026-08-25T03:15:08Z",
+      "kind": "update_status",
+      "req_id": "FR-EDITOR-007",
+      "from": "in_progress",
+      "to": "implemented",
+      "dry_run": false
+    },
+    {
+      "ts": "2026-08-25T03:15:08Z",
+      "kind": "add_completed_work_plan_summary",
+      "req_id": "FR-EDITOR-007",
+      "dry_run": false
+    }
+  ],
   "pending_mutations": [],
-  "report_path": null,
+  "report_path": ".kiwi/sessions/2026-08-25.doculight2.wave1-editor007/reports/pm-2026-08-25.md",
   "doculight_viewer_id": null
 }

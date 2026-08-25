@@ -1,0 +1,58 @@
+{
+  "pass": "formal-check (script)",
+  "phase_id": "PH-002",
+  "task_ids": ["T-PH002-01", "T-PH002-02", "T-PH002-03", "T-PH002-04"],
+  "iter": 1,
+  "axes": {
+    "mock_regex": { "result": "PASS", "detail": "변경 파일 전체에서 mock 정규식 매칭 0건" },
+    "type_build": { "result": "PASS", "detail": "npm run typecheck exit 0 · npm run build exit 0" },
+    "plan_code_mapping": {
+      "result": "PASS",
+      "changed_files": [
+        "packages/editor/package.json",
+        "packages/editor/demo/App.tsx",
+        "packages/editor/test/live-preview.test.tsx",
+        "packages/editor/src/vendor/atomic-editor/table-widget.ts",
+        "docs/spec/07.editor.srs.md",
+        "docs/spec/91.completed-work-log.md",
+        "docs/spec/02.feature-request-live-preview.md"
+      ],
+      "detail": "네 Task 의 files[] 합집합 안. docs/spec/07.editor.srs.md 와 91.completed-work-log.md 는 MCP mutation 이 쓴 것이며 손 편집 아님. 02.feature-request-live-preview.md 는 T-PH002-04 files[] 에 명시된 파일이고 scope SRS 가 아니라 손 편집이 허용된다."
+    },
+    "test_coverage": { "result": "N/A", "detail": "네 Task 모두 tdd.applicable=false + exempt_reason 존재 (§0.G1 면제)" }
+  },
+  "severity_summary": { "CRITICAL": 0, "HIGH": 0, "MEDIUM": 0, "LOW": 1 },
+  "findings": [
+    {
+      "severity": "LOW",
+      "task_id": "T-PH002-04",
+      "axis": "srs-cosmetic",
+      "description": "append_section_note 가 날짜 접두를 자동 부여하는데 본문에도 같은 접두를 적어 Implementation Notes 항이 '[2026-08-25] [2026-08-25]' 로 시작한다. 내용은 참이며 거짓 진술이 아니다.",
+      "resolution": "고치지 않았다. 이 도구의 replace 모드는 500자 상한이라 섹션 전체를 다시 쓸 수 없고, docs/spec/*.srs.md 손 편집은 금지돼 있다. 표기 중복을 없애려고 기존 항 넷을 잃는 쪽이 더 나쁘다."
+    }
+  ],
+  "existing_test_weakened_or_deleted": false,
+  "existing_public_contract_change": false,
+  "existing_file_deleted_or_moved": false,
+  "behavior_change_in_table_widget": false,
+  "regression": {
+    "command": "NODE_ENV=production npm test",
+    "exit_code": 0,
+    "editor": "237 passed | 1 skipped",
+    "server": "1248 passed",
+    "web": "521 passed",
+    "new_failures": 0,
+    "baseline_head_sha": "a424c1e"
+  },
+  "browser_entrypoints": {
+    "npm run test:browser:table": { "exit_code": 0, "result": "4/4 통과, 기록성 관찰 0/1" },
+    "npm run test:browser:drift": { "exit_code": 0, "result": "3/3 통과, 어긋남 0px" },
+    "npm run test:browser": { "exit_code": 0, "result": "12/12 통과" }
+  },
+  "srs": {
+    "validate_spec_errors": 0,
+    "validate_spec_warnings": ["SRS-W072 (선행 존재, 문서 번호 충돌)", "SRS-W015 (FR-EDITOR-007 status 미완 — PM 이 전이 소유)"],
+    "ac_checked": "12/12",
+    "update_status_called": false
+  }
+}
