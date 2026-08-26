@@ -8,6 +8,8 @@ import { isVersioned } from '../../domain/document/version-layout.js';
 import type { NodeId } from '../../domain/node/node-id.js';
 import { isServable } from '../../domain/serving/servable.js';
 import type { AttachmentRepository } from '../../domain/ports/attachment-repository.js';
+import type { PdfTextExtractor } from '../../domain/ports/pdf-text.js';
+import { pdfjsTextExtractor } from '../../infra/pdf/pdfjs-text.js';
 import { workspaceRootOf, type DocumentStores } from './save-service.js';
 
 /**
@@ -40,6 +42,13 @@ export interface SearchExcerpt {
   readonly axis: SearchAxis;
   /** 그 자리의 글자. 일치한 부분을 담는다. */
   readonly text: string;
+  /**
+   * PDF 본문에서 온 발췌라면 그 글자가 있던 페이지 번호 (AC-4).
+   *
+   * 마크다운 본문에는 페이지가 없으므로 그쪽 발췌에는 서지 않는다 — 없는
+   * 값을 0 이나 1 로 채우면 읽는 쪽이 그것을 실제 페이지로 읽는다.
+   */
+  readonly page?: number;
 }
 
 /** 결과의 한 문서 — 머리행 하나에 발췌가 쌓인다 (AC-10). */
@@ -66,7 +75,18 @@ export interface SearchResult {
  * 첨부 경계가 함께 드는 이유는 첨부 **이름**이 네 축의 하나이기 때문이다 —
  * 첨부의 바이트는 보지 않는다.
  */
-export type SearchStores = DocumentStores & { attachments: AttachmentRepository };
+export type SearchStores = DocumentStores & {
+  attachments: AttachmentRepository;
+  /**
+   * PDF 본문 추출기 (AC-4). 주지 않으면 기본 구현을 쓴다 — 검색이 PDF 를
+   * 덮는 것은 조항이 요구하는 기본 동작이므로, 부르는 쪽이 매번 넘겨야
+   * 한다면 넘기지 않은 자리에서 조항이 조용히 꺼진다.
+   */
+  pdf?: PdfTextExtractor;
+};
+
+/** PDF 노드인가 — 본문을 읽는 방법이 마크다운과 다르다. */
+const isPdf = (name: string) => name.toLowerCase().endsWith('.pdf');
 
 /** 발췌의 앞뒤로 남기는 글자 수. 너무 길면 목록이 본문 뷰어가 된다. */
 const AROUND = 20;
@@ -170,6 +190,13 @@ async function matchesOf(
     }
   }
 
+  // PDF 는 **본문 축의 확장**이다 (AC-4) — 다섯째 축이 아니다. 태그 축은
+  // 타지 않는다: 태그는 마크다운 문법이고 PDF 에는 그 문법이 없다.
+  if (on.has('body') && isPdf(node.name)) {
+    found.push(...(await pdfExcerpts(stores, node, wanted)));
+    return found;
+  }
+
   // 본문을 읽는 두 축은 함께 판정한다 — 축마다 파일을 다시 읽으면 같은
   // 문서를 두 번 읽는다.
   if (on.has('body') || on.has('tag')) {
@@ -181,6 +208,40 @@ async function matchesOf(
     if (on.has('body')) found.push(...bodyExcerpts(body, wanted));
   }
 
+  return found;
+}
+
+/**
+ * PDF 의 일치 지점마다 **그 글자가 있던 페이지 번호를 함께** 싣는다 (AC-4).
+ *
+ * 페이지를 하나로 이어 붙이지 않는 이유가 그것이다 — 이어 붙이면 번호를
+ * 되찾을 수 없고, 조항이 요구하는 것은 본문이 걸리는 것만이 아니라 그
+ * 자리가 몇 쪽인지다.
+ */
+async function pdfExcerpts(
+  stores: SearchStores,
+  node: { path: string; workspaceId: string },
+  wanted: string,
+): Promise<SearchExcerpt[]> {
+  let bytes: Uint8Array;
+  try {
+    // `Buffer` 를 그대로 넘기지 않는다 — 하위 타입이라 타입 검사는 통과하지만
+    // 추출기가 그것을 거절하면 아래 계약대로 빈 배열이 되어, 조항이 조용히
+    // 꺼진 채 시험만 초록이 된다.
+    bytes = new Uint8Array(
+      await readFile(join(workspaceRootOf(stores, node.workspaceId), node.path)),
+    );
+  } catch {
+    return [];
+  }
+
+  const extractor = stores.pdf ?? pdfjsTextExtractor;
+  const found: SearchExcerpt[] = [];
+  for (const one of await extractor.extract(bytes)) {
+    for (const excerpt of bodyExcerpts(one.text, wanted)) {
+      found.push({ ...excerpt, page: one.page });
+    }
+  }
   return found;
 }
 

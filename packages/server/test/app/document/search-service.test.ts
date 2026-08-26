@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -197,6 +197,45 @@ describe('SEC-WORKSPACE-004 — 검색 결과의 권한 필터', () => {
     });
 
     expect(이름들(본것)).toEqual(['열린것.md']);
+  });
+
+  /**
+   * PDF 는 본문 축의 확장이다 (`FR-SHELL-013` AC-4).
+   *
+   * 다섯째 축이 아니라 본문 축이 넓어진 것이므로, 본문 축 하나만 켜고
+   * 잰다 — 새 축을 켜야 걸린다면 그것은 조항이 말하는 동작이 아니다.
+   *
+   * 표본은 실제 두 페이지 PDF 다(`test/support/fixtures/two-pages.pdf`).
+   * 가짜 추출기를 두면 이 항이 재는 것은 우리가 쓴 흉내이지 PDF 에서
+   * 글자가 나온다는 사실이 아니다.
+   */
+  it('AC-4: PDF 가 본문 축으로 걸리고 발췌에 페이지 번호가 실린다', async () => {
+    const 아이디 = idOf(
+      createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'file', name: '보고서.pdf' }),
+    );
+    const 자리 = join(docsRoot, ws, stores.nodes.pathOf(아이디));
+    await mkdir(dirname(자리), { recursive: true });
+    await copyFile(join(__dirname, '../../support/fixtures/two-pages.pdf'), 자리);
+
+    // 둘째 페이지에만 있는 글자로 찾는다 — 첫 페이지 글자로 찾으면 번호가
+    // 1 로 나와, 번호를 세지 않고 상수를 넣어도 통과한다.
+    const 본것 = await search(stores, root, { query: 'mitigation', axes: ['body'] });
+
+    expect(이름들(본것)).toEqual(['보고서.pdf']);
+    const 발췌 = 본것.documents[0]!.excerpts.filter((one) => one.axis === 'body');
+    expect(발췌.length, 'PDF 본문에서 발췌가 나오지 않았다').toBeGreaterThan(0);
+    expect(발췌[0]!.page, '발췌에 페이지 번호가 실리지 않았다').toBe(2);
+    expect(발췌[0]!.text).toContain('mitigation');
+  });
+
+  it('AC-4: 마크다운 발췌에는 페이지 번호가 서지 않는다', async () => {
+    await 문서('가.md', '설계 문서입니다\n');
+
+    const 본것 = await search(stores, root, { query: '설계', axes: ['body'] });
+
+    const 발췌 = 본것.documents[0]!.excerpts.filter((one) => one.axis === 'body');
+    expect(발췌.length).toBeGreaterThan(0);
+    expect(발췌[0]!.page, '페이지가 없는 본문에 번호가 붙었다').toBeUndefined();
   });
 
   it('AC-8: 건수를 셀 값이 필터를 통과한 항목뿐이다', async () => {
