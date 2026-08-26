@@ -20,13 +20,19 @@ await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
   // 아니다 — 무변경 트리에서 게이트가 이따금 죽던 원인이 이것이었다
   // (실측: 8회 중 1회, `ws://localhost:3399/?token=...` 연결 실패).
   //
-  // **이 화면의 웹소켓은 그것 하나뿐이다.** `packages/web/src` 와
-  // `packages/editor/src` 를 전수 검색해 `new WebSocket` 이 0건임을 확인했다.
-  // 그러니 이 거름이 제품 신호를 삼키지 않는다. 제품이 웹소켓을 쓰게 되면
-  // 이 거름을 **좁혀야 한다** — 넓히지 말고.
+  // **거르는 것은 개발 서버 자신의 오리진에 붙는 평문 ws 하나뿐이다.**
+  // 종전 술어는 호스트를 보지 않아 `ws://` 이기만 하면 무엇이든 삼켰고,
+  // 그래서 커밋 81319a3 의 「로컬 ws 소켓만 거른다」가 실제보다 좁게 적혀
+  // 있었다. 상호검증이 `ws://localhost:59998/api/stream` 실패가 걸러지는
+  // 것을 실측해 그 어긋남을 잡았다.
+  //
+  // 지금은 호스트와 포트를 함께 본다. 제품이 다른 자리에 웹소켓을 쓰게
+  // 되면 그 오류는 걸리지 않고 판정에 남는다. 좁히는 방향으로만 고친다 —
+  // 넓히면 이 거름이 다시 제품 신호를 삼킨다.
+  const DEV_SERVER_WS =
+    /^WebSocket connection to 'ws:\/\/(localhost|127\.0\.0\.1):3399\/[^']*' failed/;
   const isViteHmrNoise = (text) =>
-    /WebSocket connection to 'ws:\/\/[^']*' failed/.test(text) ||
-    text.includes('[vite] failed to connect to websocket');
+    DEV_SERVER_WS.test(text) || text.includes('[vite] failed to connect to websocket');
 
   const note = (text) => {
     if (!isViteHmrNoise(text)) consoleErrors.push(text);
