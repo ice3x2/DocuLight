@@ -116,6 +116,23 @@ await runBrowserChecks(async ({ page, check, note, beginMeasuring }) => {
     await page.waitForTimeout(300);
   }
 
+  // 커서가 표 밖에 있는가 — 이것이 숨는 절반의 **전제**다.
+  const offTable = (s) => s.cursorLine < tableRange.from || s.cursorLine > tableRange.to;
+
+  // 위젯이 설 때까지 짧게 기다린다.
+  //
+  // **이 조건은 판정 대상의 여집합과 동치다.** 데모 문서에 표가 하나뿐이라,
+  // 표가 드러나면 그 표의 위젯이 서지 않으므로 `widgets >= 1` 은 `!revealed`
+  // 와 같은 말이다. 종전 주석은 「revealed 는 기다리지 않는다」고 적었으나
+  // 그것은 사실이 아니었다 — 이름만 다른 같은 값을 기다리고 있었다.
+  //
+  // 그래도 기다림을 없애지 않는 이유는 위젯 마운트가 스크롤 뒤 가상화를
+  // 거쳐 비동기로 서기 때문이다. 대신 상한을 하네스 기본값 10초가 아니라
+  // 2초로 못박아, 그보다 늦게 드러남이 걷히는 지연 회귀는 그대로 잡히게
+  // 한다. 기다린 값을 단언에 쓰지 않고 **새로 재는** 것도 같은 이유다.
+  const settleWidgets = () =>
+    waitUntil(snapshot, (s) => s.widgets >= 1, { timeout: 2000 });
+
   // --- ① 숨는 절반 — 초점이 있고 커서가 표 밖이면 위젯이 서고 원문이 보이지 않는다
   //
   // **먼저 표 밖을 클릭해 초점을 준다.** 로드 직후 그대로 재면 편집기가 한 번도
@@ -135,12 +152,13 @@ await runBrowserChecks(async ({ page, check, note, beginMeasuring }) => {
   //
   // **`revealed` 는 기다리지 않는다.** 그것이 이 항이 재는 성질이므로, 그것이
   // 설 때까지 기다리면 잠깐 드러났다 사라지는 상태도 통과가 된다. 기다리는
-  // 것은 판정의 **전제**뿐이다 — 초점이 없으면 표는 애초에 드러나지 않아
-  // 이 항이 공허해지고(아래 주석), 위젯이 없으면 잴 것이 없다.
-  //
-  // 두 전제는 아래 단언에 그대로 남아 있다. 끝내 서지 않으면 상한만큼 늦게,
-  // 그러나 똑같이 실패한다.
-  const idle = await waitUntil(snapshot, (s) => s.focused && s.widgets >= 1);
+  // 것은 초점과 **커서 위치**라는 두 전제이고, 위젯 마운트는 `settleWidgets`
+  // 가 2초 상한으로만 본다(그 사유는 그 자리 주석에 있다). 세 값 모두 아래
+  // 단언에서 **새로 잰 스냅숏**으로 다시 물린다 — 끝내 서지 않으면 상한만큼
+  // 늦게, 그러나 똑같이 실패한다.
+  await waitUntil(snapshot, (s) => s.focused && offTable(s));
+  await settleWidgets();
+  const idle = await snapshot();
   check(
     '① 숨는 절반 — 초점이 있고 커서가 표 밖이면 위젯이 서고 구분선 원문이 보이지 않는다',
     idle.focused && idle.widgets >= 1 && !idle.revealed,
@@ -210,13 +228,16 @@ await runBrowserChecks(async ({ page, check, note, beginMeasuring }) => {
   // ① 은 그것을 폴링으로 기다리는데 여기만 고정 대기로 남아 있었다. 같은
   // 전제를 두 자리가 다른 방식으로 기다리면 한쪽만 흔들린다.
   //
-  // **`revealed` 는 여기서도 기다리지 않는다.** 그것이 이 항이 재는 성질이므로,
-  // 그것이 설 때까지 기다리면 원문이 끝내 사라지지 않아도 통과가 된다. 기다리는
-  // 것은 판정의 전제뿐이고, 두 전제는 아래 단언에 그대로 남아 있다 — 위젯이
-  // 끝내 서지 않으면 상한만큼 늦게, 그러나 똑같이 실패한다.
+  // 기다리는 것은 **커서가 표 밖으로 나갔다**는 전제이고, 위젯 마운트는
+  // `settleWidgets` 가 2초 상한으로만 본다. 종전에는 위젯을 하네스 기본
+  // 상한으로 기다린 값을 그대로 단언했는데, 표가 하나뿐이라 그 조건이 판정
+  // 대상의 여집합과 동치였다 — 그 자리 주석을 참조하라. 지금은 기다린 값을
+  // 버리고 **새로 재서** 두 성질을 함께 문다.
   await clickAboveTable();
   await bringTableIntoView();
-  const afterLeave = await waitUntil(snapshot, (s) => s.widgets >= 1);
+  await waitUntil(snapshot, offTable);
+  await settleWidgets();
+  const afterLeave = await snapshot();
   check(
     '④ 복귀 — 커서를 표 밖으로 빼면 위젯이 다시 서고 구분선 원문이 사라진다',
     afterLeave.widgets >= 1 && !afterLeave.revealed,

@@ -89,6 +89,32 @@ describe('표 원문 노출 — 상태 단위 규칙 (`FR-EDITOR-007` AC-7)', ()
     expect(widgetCount(state), '커서가 닿지 않은 표까지 원문이 드러났다').toBe(1);
   });
 
+  /**
+   * 커서가 표의 **경계 자리**에 있어도 닿은 것으로 친다.
+   *
+   * `selectionTouches` 가 `range.from <= to && range.to >= from` 이라 경계를
+   * 포함한다. 블록 위젯을 클릭하면 커서가 그 두 끝 중 하나로 가므로, 경계를
+   * 빼면 클릭이 만드는 자리를 정확히 놓친다 — AC-7 의 본 판정이 무는 자리다.
+   *
+   * 이 항이 없으면 벤더 사본(`table-widget.ts`)과 공용 사본
+   * (`src/core/selection-touches.ts`)이 어긋나도 아무 시험이 울지 않는다. 두
+   * 파일의 주석이 서로를 가리키며 「반드시 같아야 한다」고 적지만 주석은 그것을
+   * 지키게 하지 못한다. 나머지 항들이 커서를 언제나 표 안쪽에 두는 탓에,
+   * 벤더 사본만 경계를 배타로 바꾸는 되돌림에 이 파일 전까지는 아무 항도
+   * 죽지 않았다.
+   */
+  it('커서가 표의 첫 자리나 끝 자리에 있어도 원문이 드러난다', () => {
+    const focused = withFocus(stateOf(DOC, 0), true);
+    const from = posOf(DOC, TABLE);
+    const to = from + TABLE.length;
+
+    const atStart = focused.update({ selection: { anchor: from } }).state;
+    expect(widgetCount(atStart), '커서가 표의 첫 자리인데 원문이 드러나지 않았다').toBe(0);
+
+    const atEnd = focused.update({ selection: { anchor: to } }).state;
+    expect(widgetCount(atEnd), '커서가 표의 끝 자리인데 원문이 드러나지 않았다').toBe(0);
+  });
+
   it('커서를 표에 올리면 위젯이 걷히고, 빼면 다시 선다', () => {
     const focused = withFocus(stateOf(DOC, 0), true);
 
