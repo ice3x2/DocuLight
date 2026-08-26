@@ -26,6 +26,15 @@ export const RECONCILE_OPERATION = {
   restore: 'restore',
   /** 자기 자리에 있지 않은 워크스페이스 디렉토리를 격리했다. */
   quarantine: 'quarantine',
+  /**
+   * 서버에서 직접 옮겨진 파일을 같은 노드로 인정해 경로를 따라가게 했다
+   * (`REL-STORAGE-002` AC-1).
+   *
+   * `node.move` 와 갈라 둔다 — 그쪽은 사람이 UI 로 옮긴 것이고 이쪽은
+   * 관측된 두 사건에서 **추측한** 것이다. 한 이름으로 뭉치면 나중에
+   * 오이식을 조사할 때 어느 쪽이 추측이었는지 가릴 수 없다.
+   */
+  relocate: 'reconcile.relocate',
 } as const;
 
 export type ReconcileOperation = (typeof RECONCILE_OPERATION)[keyof typeof RECONCILE_OPERATION];
@@ -43,6 +52,16 @@ export const FINDING_TYPE = {
   missingFile: 'missing-file',
   /** 같은 `id` 를 가진 사이드카가 둘 이상이라 나중 것을 격리했다. */
   duplicateWorkspaceSidecar: 'duplicate-workspace-sidecar',
+  /**
+   * 사라진 파일과 나타난 파일이 짝으로 보였으나 같은 노드로 인정하지
+   * 못했다 (`REL-STORAGE-002` AC-5).
+   *
+   * 위 둘과 나눠 두는 이유는 사람이 할 일이 다르기 때문이다 — 미등록
+   * 파일은 그대로 두면 되고 없는 파일은 복구하면 되지만, 이것은 **두
+   * 사실을 이을지 말지**를 사람이 판정해야 한다(`R77-a` 수동 연결).
+   * 한 항목이 감사 행 둘을 참조하는 유일한 유형이다(`R139-a`).
+   */
+  correlationRejected: 'correlation-rejected',
 } as const;
 
 export type FindingType = (typeof FINDING_TYPE)[keyof typeof FINDING_TYPE];

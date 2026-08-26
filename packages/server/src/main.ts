@@ -8,6 +8,7 @@ import {
   startReconciliationLoop,
   type ReconciliationLoop,
 } from './app/reconciliation/reconcile.js';
+import { startFileWatch, type FileWatch } from './app/watch/file-watch.js';
 import { bootstrapDefaultWorkspace } from './app/workspace/bootstrap-default-workspace.js';
 import { actorFor, type Actor } from './app/acl/permission-service.js';
 import { authenticateSession } from './app/auth/login-service.js';
@@ -124,6 +125,14 @@ function apiRouter(runtime: ServerRuntime): Router {
 export interface ServerRuntime {
   /** 주기 재조정 (`REL-STORAGE-001` AC-4). */
   reconciliation: ReconciliationLoop;
+  /**
+   * 서버에서 직접 옮겨진 파일의 상관 판정 (`REL-STORAGE-002`).
+   *
+   * 주기 재조정과 나눠 둔다 — 그쪽은 「지금 무엇이 있는가」를 훑고 이쪽은
+   * 「무엇이 일어났는가」를 본다. 재조정만으로는 사라짐과 나타남이 서로
+   * 다른 회차에 잡혀 짝을 이룰 수 없다.
+   */
+  fileWatch: FileWatch;
   /** 라우트가 쓰는 저장소 전부. */
   stores: RuntimeStores;
   /**
@@ -231,9 +240,13 @@ export async function bootstrap(
   // 첫 회차는 위에서 이미 돌았다 — 루프에게 다시 돌지 말라고 **말해야**
   // 한다. 말하지 않으면 기동 직후 전체 스캔이 두 번 돈다.
   const reconciliation = startReconciliationLoop(stores, { runImmediately: false });
+  // 재조정이 첫 회차를 마친 **뒤에** 건다. 앞서 걸면 그 회차가 등재하는
+  // 파일들을 감시자가 「방금 나타났다」로 읽는다.
+  const fileWatch = await startFileWatch(stores, config.docsRoot);
 
   return {
     reconciliation,
+    fileWatch,
     stores,
     actorOf: (request: Request): Actor | undefined => {
       const token = sessionTokenOf(request.headers.cookie);
@@ -246,6 +259,9 @@ export async function bootstrap(
       // 돌고 있는 회차를 기다린 뒤에 닫는다 — 기다리지 않으면 닫힌 DB 에
       // 그 회차의 쓰기가 도착한다.
       await reconciliation.stop();
+      // 감시자를 재조정보다 뒤에 닫아도 되는 이유는 그것이 DB 를 쓰지 않고
+      // 기다리기 때문이다 — 다만 닫기 전에 멈춰야 닫힌 DB 로 판정이 간다.
+      await fileWatch.stop();
       db.close();
     },
   };
