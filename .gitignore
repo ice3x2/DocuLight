@@ -29,3 +29,6 @@ packages/editor/test/*.png
 
 # kiwi 파이프라인이 만드는 머신별 경로 마커 (절대 경로 한 줄)
 kiwi/.pipeline-path
+
+# 기계별 지시 — 커밋하지 않는다
+CLAUDE.local.md
