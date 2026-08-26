@@ -1,0 +1,21 @@
+# 줄바꿈 변환에서 빼야 하는 파일들.
+#
+# 이 저장소는 Windows 에서 `core.autocrlf=true` 로 돌아, 선언이 없으면 git 이
+# 체크아웃할 때 LF 를 CRLF 로 바꾼다. 텍스트에는 무해하지만 바이너리에는
+# 손상이다 — `packages/server/test/support/fixtures/two-pages.pdf` 는 그
+# 변환에 905 바이트가 948 로 부풀고 xref 오프셋이 전부 어긋난다.
+#
+# **그래도 지금은 시험이 통과한다.** 실측했다 — 948 바이트로 손상시킨 채
+# 돌려도 19 항이 전부 통과하는데, pdfjs 가 어긋난 xref 를 만나면 파일을
+# 훑어 재구축하기 때문이다. 그러니 이 선언은 오늘의 실패를 막는 것이
+# 아니라, 바이너리를 글자로 취급하는 일 자체를 막는다. 복구는 그 라이브러리의
+# 관용이지 우리가 기댈 보장이 아니고, 다음에 들어올 자산(이미지·폰트)에는
+# 그런 관용이 없다.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.woff binary
+*.woff2 binary
+*.ico binary
