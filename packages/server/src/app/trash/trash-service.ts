@@ -3,6 +3,7 @@ import { basename } from 'node:path';
 import { permissionBatch, permissionOf, type AclStores, type Actor } from '../acl/permission-service.js';
 import type { Clock } from '../auth/login-service.js';
 import { purgeAttachmentsOf, type AttachmentPurgeStores } from '../attachment/attachment-service.js';
+import type { VectorIndex } from '../../domain/ports/vector-index.js';
 import { subtreeIdsOf } from '../node/node-service.js';
 import { SYSTEM_RETENTION } from '../../domain/principal/system-principals.js';
 
@@ -38,6 +39,15 @@ export interface TrashStores extends AclStores, AttachmentPurgeStores {
   trash: TrashRepository;
   trashFiles: TrashFiles;
   clock: Clock;
+  /**
+   * 벡터 인덱스 (`SEC-STORAGE-007`).
+   *
+   * **선택 의존이다.** 이 요구는 갱신 시점과 제외 규칙만 소유하고 인덱스를
+   * 세우는 것은 의미 검색 쪽(`FR-ARCH-001`)의 몫이라, 인덱스가 아직 없는
+   * 조립에서도 노드 조작은 그대로 돌아야 한다. 있으면 반드시 같은 처리
+   * 안에서 따라간다.
+   */
+  vectors?: VectorIndex;
 }
 
 export type TrashRule = 'unknown-node' | 'forbidden' | 'not-in-trash' | 'parent-gone';
@@ -302,6 +312,10 @@ async function hardDelete(
   // 걸지 않는다(AC-3) — 복구할 수 있는 상태에서 첨부를 지우면 복구된
   // 문서가 깨져서 돌아온다.
   await purgeAttachmentsOf(stores, entry.nodeId);
+  // 벡터 인덱스도 **여기서** 걷는다 (`SEC-STORAGE-007` AC-1). 첨부와 같은
+  // 자리인 이유도 같다 — 인덱스는 본문 조각과 요약을 들고 있어, 남으면
+  // 삭제된 문서의 내용이 검색으로 새어 나간다.
+  stores.vectors?.removeNode(entry.nodeId);
   stores.trash.remove(entry.nodeId);
   // 노드 제거가 그 서브트리의 ACL 도 함께 걷는다 — 복구할 수 없다는 것이
   // 이 조작의 내용이다.

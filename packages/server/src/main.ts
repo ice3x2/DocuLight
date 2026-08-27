@@ -38,6 +38,7 @@ import { SqliteSessionRepository } from './infra/sqlite/session-repository.js';
 import { SqliteSettingStore } from './infra/sqlite/setting-store.js';
 import { SqlitePersonalSettingStore } from './infra/sqlite/personal-setting-store.js';
 import { SqliteTrashRepository } from './infra/sqlite/trash-repository.js';
+import { SqliteVectorIndex } from './infra/sqlite/vector-index-repository.js';
 import { SqliteVersionRepository } from './infra/sqlite/version-repository.js';
 import { SqliteWorkspaceRepository } from './infra/sqlite/workspace-repository.js';
 
@@ -202,6 +203,10 @@ export async function bootstrap(
     attachments: new SqliteAttachmentRepository(db),
     favorites: new SqliteFavoriteRepository(db),
     trash: new SqliteTrashRepository(db),
+    // 벡터 인덱스를 조립에 넣는다 (`SEC-STORAGE-007`). 넣지 않으면
+    // `stores.vectors` 가 비어 삭제·이동의 동기 갱신이 제품에서 조용히
+    // 꺼진다 — 시험은 초록인데 조항은 성립하지 않는 상태가 된다.
+    vectors: new SqliteVectorIndex(db),
     trashFiles: new FsTrashFiles(config.docsRoot),
     files: new FsWorkspaceFiles(config.docsRoot),
     documents: new FsDocumentStore(config.docsRoot),

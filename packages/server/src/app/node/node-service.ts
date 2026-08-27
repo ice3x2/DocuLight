@@ -11,6 +11,7 @@ import { checkPathLength, joinPath, validateNodeName } from '../../domain/naming
 import type { NameRule, NameViolation } from '../../domain/naming/validation-result.js';
 import type { NodeId } from '../../domain/node/node-id.js';
 import type { NewNode, NodeRecord, NodeRepository } from '../../domain/ports/node-repository.js';
+import type { VectorIndex } from '../../domain/ports/vector-index.js';
 import type { WorkspaceRepository } from '../../domain/ports/workspace-repository.js';
 import {
   permissionBatch,
@@ -82,6 +83,15 @@ export interface Rejection {
 export interface NodeStores extends AclStores {
   nodes: NodeRepository;
   workspaces: WorkspaceRepository;
+  /**
+   * 벡터 인덱스 (`SEC-STORAGE-007`).
+   *
+   * **선택 의존이다.** 이 요구는 갱신 시점과 제외 규칙만 소유하고 인덱스를
+   * 세우는 것은 의미 검색 쪽(`FR-ARCH-001`)의 몫이라, 인덱스가 아직 없는
+   * 조립에서도 노드 조작은 그대로 돌아야 한다. 있으면 반드시 같은 처리
+   * 안에서 따라간다.
+   */
+  vectors?: VectorIndex;
 }
 
 /** 아무 권한도 없는 상태. 축을 하나씩 채워 요구와 맞댄다. */
@@ -284,6 +294,11 @@ export function moveNode(
   const before = stores.nodes.pathOf(id);
   const moved = place(stores, node, parentId, node.name);
   if (!moved.ok) return moved;
+
+  // 벡터 인덱스를 **같은 처리 안에서** 따라가게 한다 (`SEC-STORAGE-007`
+  // AC-2). 나중에 훑어 맞추는 방식으로 두면 그 사이의 조회가 옛 자리를
+  // 가리킨다.
+  stores.vectors?.relocate(id, node.workspaceId);
 
   // 위치 변화를 이전값·이후값으로 담는다 — 노드 ID 가 보존되므로 상대
   // 노드 칸은 비운다 (`DR-AUDIT-003` AC-2).
