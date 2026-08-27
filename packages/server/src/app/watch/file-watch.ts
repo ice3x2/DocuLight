@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { relative, sep } from 'node:path';
 
+import { hasDotSegment } from '../../domain/naming/hidden-name-rule.js';
 import { contentHash } from '../../domain/document/content-hash.js';
 import {
   CORRELATION_WINDOW_MS,
@@ -19,9 +20,35 @@ import { applyRelocation, type RelocationStores } from './relocation-service.js'
  * `relocation-service.ts` 가 소유한다.
  */
 
+/** 감시자가 지금까지 무엇을 보고 어떻게 처리했는가. */
+export interface WatchStats {
+  /** 첫 스캔 이후 받은 사건의 수. */
+  readonly seen: number;
+  /**
+   * **상관 판정에 실제로 들어간 사건의 수** (AC-6).
+   *
+   * 조항의 문면이 「이 상관 판정 경로가 실행되지 않는다」이므로, 그것을
+   * 값으로 재는 자리가 이 칸이다. 걸러진 개수를 세는 것만으로는 부족하다 —
+   * 플랫폼마다 개명이 만드는 사건의 수가 달라 그 값은 흔들린다.
+   */
+  readonly correlated: number;
+  /**
+   * 상관 판정에 넣지 않고 흘려보낸 사건의 수 (AC-6).
+   *
+   * 이 값이 없으면 「UI 개명은 이 경로를 타지 않는다」를 재는 항이 **감시자가
+   * 사건을 받기도 전에** 통과한다 — 아무 일도 일어나지 않은 것과 걸러 낸
+   * 것이 밖에서 같아 보이기 때문이다.
+   */
+  readonly ignored: number;
+}
+
 export interface FileWatch {
   /** 첫 스캔이 끝나 감시가 실제로 걸린 시점. */
   ready(): Promise<void>;
+  /** 사건을 그 수만큼 받을 때까지. 받지 못하면 상한에서 그대로 돌아온다. */
+  seen(count: number): Promise<void>;
+  /** 지금까지의 관측. */
+  stats(): WatchStats;
   /** 모인 사건이 전부 판정을 거칠 때까지. 시험이 쓴다. */
   settle(): Promise<void>;
   stop(): Promise<void>;
@@ -37,7 +64,13 @@ function split(docsRoot: string, absolute: string): { workspaceId: string; path:
   if (rel === '' || rel.startsWith('..')) return null;
   const segments = rel.split(sep);
   if (segments.length < 2) return null;
-  return { workspaceId: segments[0]!, path: segments.slice(1).join('/') };
+  const path = segments.slice(1).join('/');
+  // **점으로 시작하는 이름은 문서가 아니다.** 재조정이 같은 규칙으로 거르며
+  // (`app/reconciliation/reconcile.ts`), 이 자리에서 빠뜨리면 워크스페이스
+  // 사이드카 `.workspace.json` 과 휴지통 `.trash/` 아래 파일이 상관 판정에
+  // 들어가 문서 노드로 등재된다 — 상호검증이 그것을 실측했다.
+  if (hasDotSegment(path)) return null;
+  return { workspaceId: segments[0]!, path };
 }
 
 /** 그 경로를 갖고 있는 살아 있는 노드. */
@@ -69,11 +102,16 @@ export async function startFileWatch(
   let timer: NodeJS.Timeout | undefined;
   /** 아직 해시를 읽고 있는 `add` 의 수. 0 이 되어야 사건이 다 모인 것이다. */
   let inflight = 0;
+  let seen = 0;
+  let ignored = 0;
+  let correlated = 0;
 
   const flush = () => {
     if (unlinks.length === 0 && adds.length === 0) return;
+
     const takenUnlinks = unlinks.splice(0);
     const takenAdds = adds.splice(0);
+    correlated += takenUnlinks.length + takenAdds.length;
 
     // 워크스페이스마다 따로 판정한다 — 경계를 넘는 상관을 인정하면 한
     // 워크스페이스의 ACL 이 다른 워크스페이스로 건너간다.
@@ -124,11 +162,13 @@ export async function startFileWatch(
         inflight -= 1;
         return;
       }
+      seen += 1;
       // **노드가 이미 그 경로를 갖고 있으면 우리가 옮긴 것이다** (AC-6).
       // UI·API 이동은 노드 ID 를 유지한 트랜잭션이라 파일이 도착하기 전에
       // 이미 그 경로가 노드에 적혀 있다. 그것을 상관 판정에 넣으면 정상
       // 개명이 신규 노드가 되어 이력이 끊긴다.
       if (nodeAt(stores, at.workspaceId, at.path) !== undefined) {
+        ignored += 1;
         inflight -= 1;
         return;
       }
@@ -136,21 +176,27 @@ export async function startFileWatch(
       const event: AddEvent = { path: at.path, contentHash: hash, at: Date.now() };
       byWorkspace.set(event, at.workspaceId);
       adds.push(event);
-      inflight -= 1;
+      // **예약을 먼저 건다.** `inflight` 가 0 이 되는 순간과 타이머가 걸리는
+      // 순간 사이에 `settle()` 이 검사하면 둘 다 만족해 판정 전에 돌아간다.
       schedule();
+      inflight -= 1;
     })();
   });
 
   watcher.on('unlink', (absolute: string) => {
     const at = split(docsRoot, absolute);
     if (at === null) return;
+    seen += 1;
     const hash = hashes.get(absolute) ?? '';
     hashes.delete(absolute);
 
     // **그 경로에 노드가 없으면 이미 우리가 처리한 것이다** (AC-6). UI 개명
     // 뒤의 옛 경로가 그렇다 — 노드는 새 이름을 갖고 살아 있다.
     const node = nodeAt(stores, at.workspaceId, at.path);
-    if (node === undefined) return;
+    if (node === undefined) {
+      ignored += 1;
+      return;
+    }
 
     const event: UnlinkEvent = {
       path: at.path,
@@ -167,6 +213,15 @@ export async function startFileWatch(
   scanning = false;
 
   return {
+    stats() {
+      return { seen, ignored, correlated };
+    },
+    async seen(count: number) {
+      const deadline = Date.now() + windowMs * 20 + 2_000;
+      while (Date.now() < deadline && seen < count) {
+        await new Promise((done) => setTimeout(done, 10));
+      }
+    },
     async ready() {
       // 첫 스캔의 해시 채우기가 비동기라 한 틱 더 준다.
       await new Promise((done) => setTimeout(done, 50));
