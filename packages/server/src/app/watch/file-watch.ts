@@ -105,6 +105,14 @@ export async function startFileWatch(
   let seen = 0;
   let ignored = 0;
   let correlated = 0;
+  /**
+   * `stop()` 이 불렸는가.
+   *
+   * 떠 있는 해시 읽기가 풀릴 때 저장소로 가는 것을 막는 자리다. 감시자를
+   * 닫는 것만으로는 부족하다 — 닫기는 새 사건을 끊을 뿐이고, 이미 시작된
+   * 읽기는 그것과 무관하게 풀린다.
+   */
+  let stopped = false;
 
   const flush = () => {
     if (unlinks.length === 0 && adds.length === 0) return;
@@ -158,7 +166,12 @@ export async function startFileWatch(
       hashes.set(absolute, hash);
       // 첫 스캔에서는 이미 있는 파일을 전부 본다 — 그것은 사건이 아니라
       // 현황이므로 해시만 채우고 넘어간다.
-      if (scanning) {
+      //
+      // `stopped` 를 여기서 함께 보는 이유는 이 자리가 **읽기가 풀린 뒤**라서다.
+      // 첫 스캔이 띄운 읽기가 풀릴 무렵에는 `scanning` 이 이미 거짓이므로,
+      // 그 사이에 `stop()` 이 불렸다면 이것은 사건이 아니라 잔여다. 그것을
+      // 저장소로 보내면 제품의 종료 순서상 이미 닫힌 연결에 도착한다.
+      if (scanning || stopped) {
         inflight -= 1;
         return;
       }
@@ -184,6 +197,7 @@ export async function startFileWatch(
   });
 
   watcher.on('unlink', (absolute: string) => {
+    if (stopped) return;
     const at = split(docsRoot, absolute);
     if (at === null) return;
     seen += 1;
@@ -241,7 +255,16 @@ export async function startFileWatch(
       }
     },
     async stop() {
-      if (timer !== undefined) clearTimeout(timer);
+      // 닫기보다 먼저 표시한다 — 닫기는 await 이라 그동안 풀린 읽기가 표시를
+      // 보지 못하면 저장소로 간다. **다만 그 순서는 실측되지 않았다**: 표시를
+      // 닫기 뒤로 옮기는 탐침에도 아래 항이 죽지 않았다. 창이 수 밀리초라
+      // 걸리지 않을 뿐이므로 이른 표시를 유지하되, 재고 있는 것은 순서가
+      // 아니라 「stop() 이 돌아온 뒤에는 읽지 않는다」임을 적어 둔다.
+      stopped = true;
+      if (timer !== undefined) {
+        clearTimeout(timer);
+        timer = undefined;
+      }
       await watcher.close();
     },
   };

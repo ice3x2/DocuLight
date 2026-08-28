@@ -118,4 +118,45 @@ describe('파일 감시가 상관 판정을 돌린다', () => {
       'UI 개명이 상관 실패 항목을 만들었다',
     ).toEqual([]);
   });
+
+  /**
+   * **멈춘 감시자는 저장소를 읽지 않는다.**
+   *
+   * 첫 스캔이 보는 파일마다 해시 읽기가 비동기로 뜨는데, 그 읽기가 풀리는
+   * 시점에는 `scanning` 이 이미 거짓이라 사건으로 취급되어 노드 저장소를
+   * 읽는다. `stop()` 은 그 읽기들을 기다리지 않으므로, 돌아온 뒤에 저장소를
+   * 닫아도 그것들이 도착한다 — 제품의 종료 순서가 `fileWatch.stop()` 뒤의
+   * `db.close()` 이므로(`main.ts` 의 `close`), 전체 회귀는 이것을 처리되지
+   * 않은 거부 세 건으로 냈고 vitest 는 그것이 다른 항을 거짓 통과시킬 수
+   * 있다고 경고했다.
+   *
+   * 닫힌 연결이 아니라 **읽기 자체**를 재는 이유는 그것이 원인이기 때문이다.
+   * 멈춘 감시자가 저장소를 읽지 않으면 연결이 닫혔는지는 문제가 되지 않는다.
+   */
+  it('stop() 이 돌아온 뒤에는 저장소를 읽지 않는다', async () => {
+    // 첫 스캔이 볼 파일을 미리 여럿 둔다. 하나로는 그 해시 읽기가 `stop()`
+    // 전에 끝나 버려 결함이 드러나지 않는다.
+    await mkdir(join(docsRoot, ws), { recursive: true });
+    for (let i = 0; i < 50; i += 1) {
+      await writeFile(join(docsRoot, ws, `문서${i}.md`), `내용 ${i}\n`, 'utf8');
+    }
+
+    watch = await startFileWatch(stores, docsRoot, { windowMs: 120 });
+    // `ready()` 를 부르지 않는다 — 제품도 기다리지 않는다(`main.ts`).
+    await watch.stop();
+    watch = undefined;
+
+    // **`stop()` 이 돌아온 뒤의 읽기만 센다.** 그 앞의 읽기는 정상이다.
+    let readsAfterStop = 0;
+    const allIn = stores.nodes.allIn.bind(stores.nodes);
+    stores.nodes.allIn = ((workspaceId: string) => {
+      readsAfterStop += 1;
+      return allIn(workspaceId);
+    }) as typeof stores.nodes.allIn;
+
+    // 떠 있던 읽기가 풀릴 시간을 준다.
+    await new Promise((done) => setTimeout(done, 500));
+
+    expect(readsAfterStop, 'stop() 이 돌아온 뒤에도 감시자가 노드 저장소를 읽었다').toBe(0);
+  });
 });
