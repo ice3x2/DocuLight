@@ -49,6 +49,18 @@ const 아직_배선되지_않음: ReadonlyMap<string, string> = new Map([
     'SEC-STORAGE-006 · R55-b 의 fail-closed 서빙 가드. documents.ts 만이 이것을 쓰므로 그 라우터가 붙는 순간 함께 도달한다 — 두 줄은 한 작업이다',
   ],
   [
+    'app/search/index-node.ts',
+    'FR-ARCH-001 AC-4 의 벡터 색인. 문서 저장 경로가 아직 이것을 부르지 않아 MIG-AUTH-001 AC-5 의 이행 재구축이 유일한 호출자다 — 저장 시 색인을 거는 작업이 이 줄을 지운다',
+  ],
+  [
+    'app/migration/migrate-accounts.ts',
+    'MIG-AUTH-002 의 일회성 이행 도구다. 제품 조립에 상시로 걸지 않는 것이 결정이며(MIG-AUTH-001 AC-3 이 「일회성」을 명시한다), 그 자리는 src/migrate.ts 다 — 그 진입점에서 실제로 도달하는지는 아래 별도 항이 잰다',
+  ],
+  [
+    'app/migration/migrate-content.ts',
+    'MIG-AUTH-001 AC-3 의 일회성 콘텐츠 이행. 위와 같은 진입점을 공유하며 같은 항이 그 도달을 잰다',
+  ],
+  [
     'http/guards/dot-path-guard.ts',
     'SEC-STORAGE-004 · R64 의 점 경로 거부 가드. 이것을 부르는 제품 코드가 아직 없다 — documents.ts 배선이 이것을 자동으로 데려오지 않으므로 그 wave 가 호출부를 함께 세워야 한다',
   ],
@@ -163,6 +175,31 @@ describe('조립 방벽 — 진입점에서 닿지 않는 부품이 늘지 않�
   it('허용목록의 모듈이 전부 실존한다 — 사라진 파일이 면제로 남으면 그 줄이 영구 통과한다', () => {
     for (const 모듈 of 아직_배선되지_않음.keys()) {
       expect([모듈, existsSync(join(SRC, 모듈))]).toEqual([모듈, true]);
+    }
+  });
+
+  /**
+   * 이행 도구는 `main.ts` 에서 닿지 않는 것이 **맞다** — 그래서 허용목록에
+   * 있다. 그러나 허용목록은 「닿지 않아도 된다」만 말하고 「어디선가는
+   * 닿는다」를 말하지 않는다. 그 자리를 못박지 않으면 위 두 줄이 죽은 코드의
+   * 영구 면제가 된다.
+   */
+  it('이행 도구가 이행 진입점에서 전부 도달한다 — 상시 배선하지 않는 대신 그 자리를 못박는다', () => {
+    // 목록을 여기 적는다. 허용목록에서 접두로 걸러 오면 새 면제가 그 접두를
+    // 쓰는 순간 이 항의 분모에 조용히 들어오고, 그 파일이 실제로 이행
+    // 진입점에서 닿는지 아무도 정하지 않은 채 요구된다.
+    const 이행진입점에서_닿아야_하는_것 = [
+      'app/migration/migrate-accounts.ts',
+      'app/migration/migrate-content.ts',
+      'app/search/index-node.ts',
+    ];
+
+    const 이행진입점 = join(SRC, 'migrate.ts');
+    expect([이행진입점, existsSync(이행진입점)]).toEqual([이행진입점, true]);
+
+    const 닿는것 = 도달가능(이행진입점);
+    for (const 모듈 of 이행진입점에서_닿아야_하는_것) {
+      expect([모듈, 닿는것.has(join(SRC, 모듈))]).toEqual([모듈, true]);
     }
   });
 

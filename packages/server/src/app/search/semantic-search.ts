@@ -1,10 +1,7 @@
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
-
 import { permits } from '../../domain/acl/level.js';
 import type { NodeId } from '../../domain/node/node-id.js';
 import type { VectorEntry, VectorIndex } from '../../domain/ports/vector-index.js';
-import { chunk, embed, similarity } from '../../domain/search/embedding.js';
+import { embed, similarity } from '../../domain/search/embedding.js';
 import { permissionOf, type AclStores, type Actor } from '../acl/permission-service.js';
 import { searchVectors } from './vector-search.js';
 
@@ -26,27 +23,6 @@ export interface SemanticHit {
   readonly workspaceId: string;
   readonly chunk: string;
   readonly score: number;
-}
-
-/**
- * 노드 하나를 색인한다.
- *
- * 다시 부르면 이전 엔트리를 걷고 새로 넣는다 — 걷지 않으면 고친 문서의
- * 옛 조각이 남아, 지운 문장이 검색으로 계속 나온다.
- */
-export async function indexNode(stores: SemanticStores, nodeId: NodeId): Promise<void> {
-  const node = stores.nodes.findById(nodeId);
-  if (node === undefined || node.orphanedAt !== null) return;
-
-  stores.vectors.removeNode(nodeId);
-
-  const at = join(stores.docsRoot, node.workspaceId, stores.nodes.pathOf(nodeId));
-  const body = await readFile(at, 'utf8').catch(() => undefined);
-  if (body === undefined) return;
-
-  for (const piece of chunk(body)) {
-    stores.vectors.put({ nodeId, workspaceId: node.workspaceId, chunk: piece });
-  }
 }
 
 /**

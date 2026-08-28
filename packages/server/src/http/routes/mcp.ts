@@ -74,6 +74,33 @@ function subjectOf(stores: TokenStores, req: Request): McpSubject | undefined {
   return authenticateToken(stores, plain);
 }
 
+/**
+ * 1.0 전역 API Key 를 실은 요청인가 (`MIG-AUTH-002` AC-4 · AC-5).
+ *
+ * 1.0 은 이 헤더 하나로 전역 키를 받았다(1.0 `src/middleware/auth.js`).
+ * 2.0 은 그 값을 **자격증명으로 읽지 않는다** — 주체가 없는 공유 비밀로는
+ * `effectiveLevel(사용자, 노드)` 판정 자체가 불가능하기 때문이다(원장
+ * `R58`). 읽는 것은 값이 아니라 **그 헤더가 왔다는 사실**뿐이고, 그것은
+ * 자격이 아니라 보낸 쪽이 1.0 클라이언트라는 표식이다.
+ *
+ * 값을 보지 않는 것이 중요하다 — 값을 대조하는 순간 그 헤더가 자격증명이
+ * 되고, 유예 없이 폐기하기로 한 것(AC-4)이 조용히 되살아난다.
+ */
+function carriesLegacyApiKey(req: Request): boolean {
+  return typeof req.headers['x-api-key'] === 'string';
+}
+
+/**
+ * 1.0 클라이언트에게 보내는 갈아타기 안내 (`MIG-AUTH-002` AC-5).
+ *
+ * 발급 **화면**을 가리키지 않는다 — 그 표면은 `SEC-AUTH-005` 의 몫이라
+ * 아직 서지 않았고, 없는 화면을 가리키는 안내는 안내가 아니라 오도다.
+ * 무엇으로 갈아타야 하는지와 언제부터인지만 담는다.
+ */
+const LEGACY_KEY_GUIDANCE =
+  '1.0 전역 API Key 는 이행 시점부터 인정되지 않습니다. 유예 기간은 없습니다. ' +
+  '개인 액세스 토큰(PAT)을 발급받아 Authorization: Bearer 헤더로 보내십시오.';
+
 interface RpcRequest {
   jsonrpc?: unknown;
   id?: unknown;
@@ -92,6 +119,11 @@ export function mcpRouter(deps: McpDeps): Router {
     // 알려 준다.
     const subject = subjectOf(deps.stores, req);
     if (subject === undefined) {
+      // 거부는 같고 안내만 붙는다 — 안내가 붙는다고 통과하지 않는다.
+      if (carriesLegacyApiKey(req)) {
+        res.status(401).json({ error: { message: LEGACY_KEY_GUIDANCE } });
+        return;
+      }
       res.sendStatus(401);
       return;
     }
