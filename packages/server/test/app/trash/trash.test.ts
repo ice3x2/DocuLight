@@ -18,15 +18,25 @@ import {
   sweepExpiredTrash,
   type TrashStores,
 } from '../../../src/app/trash/trash-service.js';
+import {
+  readDocument,
+  saveDocument,
+  type DocumentStores,
+} from '../../../src/app/document/save-service.js';
+import {
+  beginEditSession,
+  listVersions,
+} from '../../../src/app/document/version-service.js';
 import { TRASH_DIRECTORY } from '../../../src/domain/trash/trash-layout.js';
 import { FsWorkspaceFiles } from '../../../src/infra/fs/workspace-sidecar.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
-import { superuserActor, trashStores } from '../../support/acl-fixture.js';
+import { documentStores, superuserActor, trashStores } from '../../support/acl-fixture.js';
 
 let dir: string;
 let docsRoot: string;
 let db: Database;
 let stores: NodeStores & TrashStores;
+let docs: DocumentStores;
 let ws: string;
 let other: string;
 let root: Actor;
@@ -52,6 +62,7 @@ beforeEach(async () => {
   db = openDatabase(join(dir, 'doculight.db'));
   now = new Date('2026-08-22T09:00:00.000Z');
   stores = trashStores(db, docsRoot, () => now);
+  docs = documentStores(db, docsRoot, () => now);
   root = superuserActor(stores);
   const files = new FsWorkspaceFiles(docsRoot);
   ws = (await createWorkspace({ workspaces: stores.workspaces, files }, '기획팀')).id;
@@ -413,5 +424,75 @@ describe('SEC-ACL-012 · SEC-ACL-013 — 삭제가 권한 판정을 지난다', 
       ok: false,
       rule: 'forbidden',
     });
+  });
+});
+
+describe('FR-STORAGE-006 — 복구가 버전 이력을 데려온다 (AC-3)', () => {
+  /**
+   * AC-3 은 세 가지가 삭제 전과 같기를 요구한다 — 노드 ID · ACL · **버전 이력**.
+   * 위의 「권한이 있으면 원본 경로로 돌아가고 ID·ACL 이 보존된다」 항이 앞의 둘을
+   * 잰다. 셋째 축은 어느 시험도 재지 않았고 이 절이 그 자리다.
+   *
+   * **구조가 그렇게 생겼다는 것은 재어진 것이 아니다.** 버전은 지금
+   * `.versions/<노드ID>/` 에 노드 ID 로 놓이므로(`version-layout.ts`) 문서 실체만
+   * 옮기는 휴지통을 그냥 지나친다. 그러나 그 성질은 언제든 바뀔 수 있고, 바뀌면
+   * 사용자는 삭제했다 되살린 문서의 이력을 통째로 잃는다 — 되살린 사람은 그것이
+   * 사라진 줄도 모른다.
+   */
+
+  /** 세션을 열고 저장해 스냅샷을 하나 남긴다. 버전은 「저장 직전의 본문」이다. */
+  async function 버전을쌓는다(actor: Actor, nodeId: string, bodies: readonly string[]): Promise<void> {
+    for (const body of bodies) {
+      const session = beginEditSession(docs, actor, nodeId);
+      const before = ((await readDocument(docs, actor, nodeId)) as { ok: true; hash: string }).hash;
+      await saveDocument(docs, actor, { nodeId, body, baseHash: before, session });
+    }
+  }
+
+  /**
+   * **이 항은 DB 인덱스 축만 잰다.** 실측으로 확인했다 — `moveToTrash` 가
+   * `.versions/<노드ID>/` 를 걷어 가게 만든 탐침에서 아래 두 항은 죽었으나
+   * 이 항은 그대로 초록이었다. `listVersions` 가 목록을 DB 에서 읽기
+   * 때문이며, 실체 축은 다음 두 항이 소유한다.
+   */
+  it('AC-3: 복구 뒤에도 버전 목록이 순번까지 그대로다', async () => {
+    grantPermission(stores, root, { nodeId: ws, principalId: me.id, level: 'edit' });
+    const doc = await place(ws, '회의록.md');
+    await 버전을쌓는다(me, doc, ['# 1판\n', '# 2판\n']);
+
+    const 삭제전 = listVersions(docs, me, doc).map((one) => one.seq);
+    expect(삭제전, '전제가 서지 않았다 — 쌓인 버전이 없으면 이 항은 아무것도 재지 않는다').toHaveLength(2);
+
+    await moveToTrash(stores, me, doc);
+    expect(await restoreFromTrash(stores, me, doc)).toEqual({ ok: true, name: '회의록.md' });
+
+    expect(listVersions(docs, me, doc).map((one) => one.seq), '복구가 버전 이력을 잃었다').toEqual(삭제전);
+  });
+
+  it('AC-3: 되살린 문서의 버전 실체가 그대로 열린다 — 목록만 남고 파일이 없으면 복원이 안 된다', async () => {
+    grantPermission(stores, root, { nodeId: ws, principalId: me.id, level: 'edit' });
+    const doc = await place(ws, '회의록.md');
+    await 버전을쌓는다(me, doc, ['# 1판\n']);
+
+    const 삭제전본문 = await readFile(listVersions(docs, me, doc)[0]!.path, 'utf8');
+
+    await moveToTrash(stores, me, doc);
+    await restoreFromTrash(stores, me, doc);
+
+    const 복구후 = listVersions(docs, me, doc)[0]!;
+    expect(existsSync(복구후.path), '버전 목록은 남았는데 실체 파일이 없다').toBe(true);
+    expect(await readFile(복구후.path, 'utf8')).toBe(삭제전본문);
+  });
+
+  it('AC-3: 휴지통에 든 동안에도 버전 실체가 지워지지 않는다', async () => {
+    grantPermission(stores, root, { nodeId: ws, principalId: me.id, level: 'edit' });
+    const doc = await place(ws, '회의록.md');
+    await 버전을쌓는다(me, doc, ['# 1판\n']);
+    const 실체 = listVersions(docs, me, doc)[0]!.path;
+
+    await moveToTrash(stores, me, doc);
+
+    // 복구 전에 이미 사라졌다면 복구 뒤의 판정은 우연히 서 있는 것이다.
+    expect(existsSync(실체), '휴지통으로 보내는 조작이 버전 실체를 걷어 갔다').toBe(true);
   });
 });

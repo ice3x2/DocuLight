@@ -1,10 +1,10 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-08-28T13:08:41.325Z",
+  "generatedAt": "2026-08-28T22:45:01.769Z",
   "source": "speckiwi",
   "specFingerprint": {
     "algorithm": "sha256",
-    "value": "cb7bec7b55c14de6a43ecb816def5e9cb3b44103d3b45d23c1f09aa1b855e033",
+    "value": "bb9753e4e3f15d65a573787b8418cfe8bd1ea73e982809d3eaf83e1d601f4110",
     "files": [
       {
         "path": "docs/spec/00.index.md",
@@ -62,9 +62,9 @@
       },
       {
         "path": "docs/spec/14.storage.srs.md",
-        "sha256": "ece21d57bb817cfd17aa482a494bf6641d603f8fecf6bf18c4bf961f56d28f7f",
-        "size": 110916,
-        "mtimeMs": 1787893134168.5059
+        "sha256": "1e3d6d450c0f5d0b6539ac9e6e39a12a61de76ebaee90b73534b52af125d9445",
+        "size": 111697,
+        "mtimeMs": 1787957101734.4094
       },
       {
         "path": "docs/spec/15.attachments.srs.md",
