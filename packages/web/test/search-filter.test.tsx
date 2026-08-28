@@ -130,3 +130,40 @@ describe('FR-SHELL-013 AC-7 — 고른 조합이 브라우저에 남는다', () 
     Object.defineProperty(globalThis, 'localStorage', { value: 원래, configurable: true });
   });
 });
+
+describe('FR-SHELL-013 AC-1 — 결과가 검색 탭 안에 서고 그 목록의 표면이 하나다', () => {
+  it('셸을 세우면 검색 결과가 좌측 검색 탭 안에 그려진다', async () => {
+    const { AppShell } = await import('../src/shell/AppShell.js');
+    const user = userEvent.setup();
+
+    render(
+      <AppShell
+        viewer={{ superuser: false, workspaceCount: 1, adminWorkspaceCount: 0 }}
+        searchResults={결과}
+        query="설계"
+      />,
+    );
+
+    // 탭을 실제로 눌러서 연다 — 처음부터 열려 있다고 전제하면 이 항이
+    // 재는 것이 「검색 탭에 있다」가 아니라 「어딘가에 있다」가 된다.
+    await user.click(screen.getByRole('tab', { name: '검색' }));
+
+    const 검색탭 = screen.getByRole('tabpanel', { name: '검색' });
+    expect(within(검색탭).getByText('회의록.md')).toBeDefined();
+  });
+
+  it('결과 목록을 그리는 표면이 셸에 하나뿐이다 — 둘이면 둘째가 거르기를 다시 판정한다', async () => {
+    const { readFile } = await import('node:fs/promises');
+    const { join } = await import('node:path');
+
+    const 셸 = await readFile(
+      join(import.meta.dirname, '..', 'src', 'shell', 'AppShell.tsx'),
+      'utf8',
+    );
+
+    // 넘겨받은 결과를 **소비하는** 자리를 센다. 선언(기본값·타입)은 그
+    // 목록을 그리지 않으므로 표면이 아니다.
+    const 소비 = 셸.match(/documents=\{searchResults\}/g) ?? [];
+    expect(소비.length, '검색 결과를 그리는 자리가 하나가 아니다').toBe(1);
+  });
+});
