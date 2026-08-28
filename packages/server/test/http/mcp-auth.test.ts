@@ -13,6 +13,7 @@ import { mcpRouter } from '../../src/http/routes/mcp.js';
 import { FsWorkspaceFiles } from '../../src/infra/fs/workspace-sidecar.js';
 import { openDatabase, type Database } from '../../src/infra/sqlite/database.js';
 import { SqliteTokenRepository } from '../../src/infra/sqlite/token-repository.js';
+import { SqliteVectorIndex } from '../../src/infra/sqlite/vector-index-repository.js';
 import { attachmentStores } from '../support/acl-fixture.js';
 
 /**
@@ -32,7 +33,10 @@ import { attachmentStores } from '../support/acl-fixture.js';
 let dir: string;
 let docsRoot: string;
 let db: Database;
-let stores: ReturnType<typeof attachmentStores> & { tokens: SqliteTokenRepository };
+let stores: ReturnType<typeof attachmentStores> & {
+  tokens: SqliteTokenRepository;
+  vectors: SqliteVectorIndex;
+};
 let app: Express;
 let userId: string;
 let pat: string;
@@ -52,7 +56,11 @@ beforeEach(async () => {
   docsRoot = join(dir, 'docs');
   await mkdir(docsRoot, { recursive: true });
   db = openDatabase(join(dir, 'doculight.db'));
-  stores = { ...attachmentStores(db, docsRoot), tokens: new SqliteTokenRepository(db) };
+  stores = {
+    ...attachmentStores(db, docsRoot),
+    tokens: new SqliteTokenRepository(db),
+    vectors: new SqliteVectorIndex(db),
+  };
   await createWorkspace(
     { workspaces: stores.workspaces, files: new FsWorkspaceFiles(docsRoot) },
     '기획팀',

@@ -49,10 +49,6 @@ const 아직_배선되지_않음: ReadonlyMap<string, string> = new Map([
     'SEC-STORAGE-006 · R55-b 의 fail-closed 서빙 가드. documents.ts 만이 이것을 쓰므로 그 라우터가 붙는 순간 함께 도달한다 — 두 줄은 한 작업이다',
   ],
   [
-    'app/search/vector-search.ts',
-    'SEC-STORAGE-007 AC-4·AC-5 의 둘째 방어(조회 시 존재 확인)다. 이것을 부르는 표면은 MCP 의미 검색이며 FR-ARCH-001 이 세운다 — 그 요구가 오면 이 줄이 지워진다. 첫째 방어(삭제·이동의 동기 갱신)는 이미 조립에 들어가 있어 app/trash/trash-service.ts 와 app/node/node-service.ts 로 도달한다',
-  ],
-  [
     'http/guards/dot-path-guard.ts',
     'SEC-STORAGE-004 · R64 의 점 경로 거부 가드. 이것을 부르는 제품 코드가 아직 없다 — documents.ts 배선이 이것을 자동으로 데려오지 않으므로 그 wave 가 호출부를 함께 세워야 한다',
   ],

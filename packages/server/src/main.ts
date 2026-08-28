@@ -169,6 +169,13 @@ type RuntimeStores = { personalSettings: SqlitePersonalSettingStore } & Attachme
      */
     tokens: SqliteTokenRepository;
     /**
+     * 벡터 인덱스 (`SEC-STORAGE-007` · `FR-ARCH-001`).
+     *
+     * 조립에는 이미 들어가 있었으나 타입에 없어 MCP 가 그것을 요구하는
+     * 순간 드러났다. 타입에 없으면 라우터가 조립을 그대로 받지 못한다.
+     */
+    vectors: SqliteVectorIndex;
+    /**
      * 콘솔에 한 줄 낸다 (`SEC-AUTH-012` AC-1).
      *
      * `docsRoot`·`clock` 과 같은 자리에 둔다 — 저장소가 아니라 **실행
