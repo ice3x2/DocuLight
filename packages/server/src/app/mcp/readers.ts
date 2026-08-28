@@ -3,7 +3,7 @@ import { join } from 'node:path';
 
 import type { NodeRecord } from '../../domain/ports/node-repository.js';
 import { visibleChildrenOf, type Actor } from '../acl/permission-service.js';
-import type { SemanticStores } from '../search/semantic-search.js';
+import type { AclStores } from '../acl/permission-service.js';
 
 /**
  * 1.0 의 읽기 도구들이 하던 일 (`FR-ARCH-001` AC-1 · AC-2).
@@ -16,7 +16,14 @@ import type { SemanticStores } from '../search/semantic-search.js';
  * `{content:[{type:'text', text}]}` 였으므로 그 모양도 계약이다.
  */
 
-export type ReaderStores = SemanticStores;
+/**
+ * 읽기 도구가 요구하는 것 — ACL 판정과 문서 뿌리뿐이다.
+ *
+ * 의미 검색 저장소를 여기 끌어들이지 않는다. 이 파일의 함수들은 벡터를
+ * 보지 않으므로 그 의존은 쓰이지 않는 것을 요구하는 것이고, 경계를 재는
+ * 시험에는 AI 표면이 하나 더 있는 것처럼 보인다.
+ */
+export type ReaderStores = AclStores & { docsRoot: string };
 
 /** 노드 아래를 재귀로 훑되 **보이는 것만** 든다. */
 export function walk(
