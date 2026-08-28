@@ -71,6 +71,7 @@ export function DocumentArea({
   onSaved,
   onTagClick,
   onOpenWikiLink,
+  missing = false,
 }: {
   /**
    * 열린 탭들. **바깥이 소유한다.**
@@ -92,6 +93,14 @@ export function DocumentArea({
   onSaved?: (nodeId: string, body: string, hash: string) => void;
   /** 위키링크를 눌렀다 (`CON-EDITOR-002` AC-1). 그 문서를 여는 일은 셸이 한다. */
   onOpenWikiLink?: (target: string) => void;
+  /**
+   * 주소가 가리킨 문서에 닿지 못했다 (`SEC-ACL-006` AC-6).
+   *
+   * **왜 닿지 못했는지는 받지 않는다.** 없는 문서와 권한 없는 문서를
+   * 구별하는 값이 이 경계를 넘는 순간, 그 값을 쓰지 않더라도 구별이
+   * 가능해진 것이고 언젠가 누가 쓴다.
+   */
+  missing?: boolean;
 }) {
   /**
    * 헤더 메뉴가 연 자리.
@@ -101,7 +110,14 @@ export function DocumentArea({
    */
   const [panel, setPanel] = useState<string | null>(null);
 
-  if (state.tabs.length === 0) return <div data-empty="documents" />;
+  if (state.tabs.length === 0) {
+    // 삭제된 문서와 권한을 잃은 문서에 **같은 문구**를 준다 (`R94`). 화면
+    // 설계(`03` §3.9.4)가 이 문면을 정했고 「권한이 없습니다」라고 쓰지
+    // 않으며 요청 버튼도 두지 않는다(`R103-a`) — 버튼의 존재 자체가 그
+    // 자리에 대상이 있다는 사실을 드러낸다.
+    if (missing) return <div data-empty="documents">문서를 찾을 수 없습니다</div>;
+    return <div data-empty="documents" />;
+  }
 
   return (
     <div>

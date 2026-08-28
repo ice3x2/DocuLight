@@ -489,11 +489,25 @@ function AppBody() {
   // 다시 받을 때마다 도는데, 그때마다 열면 주소가 같은 자리에 또 쌓여
   // 뒤로 가기가 여러 번 눌러야 동작한다 (AC-4).
   const activeId = documents.activeId;
+  /**
+   * 주소가 가리킨 문서에 닿지 못했다 (`SEC-ACL-006` AC-6).
+   *
+   * **왜 닿지 못했는지는 담지 않는다.** 서버가 못 보는 노드를 트리에서
+   * 빼고 원문에 404 를 주므로 화면이 받는 입력은 두 경우가 이미 같다 —
+   * 여기서 사유를 되살리면 그 구분이 화면에서 다시 태어난다.
+   */
+  const [missingDocument, setMissingDocument] = useState(false);
   useEffect(() => {
     const wanted = nodeIdOf(window.location.pathname);
-    if (wanted === null || wanted === activeId || workspaces.length === 0) return;
+    // 트리가 도착하기 전에는 판정하지 않는다 — 로딩 중에 「찾을 수
+    // 없습니다」가 잠깐 뜨면 사용자는 멀쩡한 링크를 깨진 것으로 읽는다.
+    if (wanted === null || workspaces.length === 0 || wanted === activeId) {
+      setMissingDocument(false);
+      return;
+    }
 
     const node = findNode(workspaces, wanted);
+    setMissingDocument(node === undefined);
     if (node !== undefined) open(node, false);
   }, [workspaces, open, activeId]);
 
@@ -545,6 +559,7 @@ function AppBody() {
       viewer={session.data}
       workspaces={workspaces}
       documents={documents}
+      missingDocument={missingDocument}
       bodies={bodies}
       hashes={hashes}
       trash={trash.data ?? []}

@@ -274,6 +274,7 @@ export function AppShell({
   viewer,
   workspaces = [],
   documents = { tabs: [], activeId: null },
+  missingDocument = false,
   favorites = [],
   links = { outgoing: [], backlinks: [] },
   notice,
@@ -318,6 +319,8 @@ export function AppShell({
   viewer: Viewer;
   workspaces?: readonly WorkspaceTreeView[];
   documents?: TabState;
+  /** 주소가 가리킨 문서에 닿지 못했다 (`SEC-ACL-006` AC-6). 문서 영역이 그린다. */
+  missingDocument?: boolean;
   favorites?: readonly Favorite[];
   /** 노드 ID → 서버에서 받아 온 본문. 아직 안 온 것은 없다. */
   bodies?: Readonly<Record<string, string>>;
@@ -544,6 +547,7 @@ export function AppShell({
         )}
         <DocumentArea
           state={documents}
+          missing={missingDocument}
           onState={(next) => onDocuments?.(next)}
           bodies={bodies}
           hashes={hashes}
