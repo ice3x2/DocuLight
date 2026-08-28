@@ -2,6 +2,7 @@ import { Router } from 'express';
 import type { Request } from 'express';
 
 import { authenticateToken, type TokenStores } from '../../app/auth/token-service.js';
+import { callTool, type DispatchStores, type ToolRule } from '../../app/mcp/dispatch.js';
 import { mcpTools, sanitizeForToolName, type McpTool } from '../../app/mcp/tools.js';
 import type { TokenScope } from '../../domain/auth/token-scope.js';
 import type { PrincipalId } from '../../domain/principal/principal.js';
@@ -26,7 +27,7 @@ export interface McpSubject {
 }
 
 export interface McpDeps {
-  stores: TokenStores;
+  stores: TokenStores & DispatchStores;
   /**
    * 도구 이름의 접두 (`FR-ARCH-001` AC-1).
    *
@@ -123,7 +124,7 @@ export function mcpRouter(deps: McpDeps): Router {
     }
 
     if (body.method === 'tools/call') {
-      const params = (body.params ?? {}) as { name?: unknown };
+      const params = (body.params ?? {}) as { name?: unknown; arguments?: unknown };
       const tool = typeof params.name === 'string' ? byName.get(params.name) : undefined;
       if (tool === undefined) {
         res.status(400).json({
@@ -134,12 +135,32 @@ export function mcpRouter(deps: McpDeps): Router {
         return;
       }
 
-      // 실행은 아직 없다. 이 자리는 인가와 도구 구현이 함께 채운다.
-      res.status(501).json({
-        jsonrpc: '2.0',
-        id,
-        error: { code: RPC.methodNotFound, message: '아직 구현되지 않은 도구다' },
-      });
+      const args =
+        typeof params.arguments === 'object' && params.arguments !== null
+          ? (params.arguments as Record<string, unknown>)
+          : {};
+
+      void callTool(deps.stores, subject, tool, args).then(
+        (outcome) => {
+          if (outcome.ok) {
+            res.json({ jsonrpc: '2.0', id, result: outcome.result });
+            return;
+          }
+          const [status, message] = failureOf(outcome.rule);
+          res.status(status).json({
+            jsonrpc: '2.0',
+            id,
+            error: { code: RPC.invalidParams, message },
+          });
+        },
+        () => {
+          res.status(500).json({
+            jsonrpc: '2.0',
+            id,
+            error: { code: RPC.invalidRequest, message: '도구 실행이 실패했다' },
+          });
+        },
+      );
       return;
     }
 
@@ -151,6 +172,25 @@ export function mcpRouter(deps: McpDeps): Router {
   });
 
   return router;
+}
+
+/**
+ * 실패를 응답으로 옮긴다.
+ *
+ * **`not-found` 와 `forbidden` 이 같은 값으로 나간다** (`SEC-ACL-006` AC-5).
+ * 사유가 갈리면 그 차이가 곧 존재 여부를 알려 주는 신호가 되므로, 권한이
+ * 없어 못 보는 것과 애초에 없는 것이 글자까지 같은 응답을 받는다. 그래서
+ * 403 을 쓰지 않는다 (AC-3).
+ */
+function failureOf(rule: ToolRule): [number, string] {
+  switch (rule) {
+    case 'missing-argument':
+      return [400, '인자가 모자란다'];
+    case 'not-implemented':
+      return [501, '아직 구현되지 않은 도구다'];
+    default:
+      return [404, '그런 문서가 없다'];
+  }
 }
 
 /** 도구 인자를 JSON Schema 로 옮긴다. MCP 클라이언트가 이 모양을 읽는다. */
