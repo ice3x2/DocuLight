@@ -37,10 +37,6 @@ const 아직_배선되지_않음: ReadonlyMap<string, string> = new Map([
     'SEC-AUTH-018 의 비밀번호 변경 라우트와 설정 모달 account 패널이 아직 없다',
   ],
   [
-    'app/auth/token-service.ts',
-    'SEC-AUTH-005 · SEC-AUTH-007 의 PAT 라우트와 설정 모달 tokens 패널이 아직 없다',
-  ],
-  [
     'app/audit/audit-retention.ts',
     'R84-a 의 감사 보존 일소를 도는 자리가 없다. app/trash/trash-service.ts 의 휴지통 일소도 같은 상태이며 그쪽은 모듈이 다른 export 로 도달해 이 방벽이 못 잡는다 — 두 축을 한 주기 작업으로 함께 세워야 한다',
   ],

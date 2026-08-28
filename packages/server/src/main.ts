@@ -20,6 +20,7 @@ import { installGate, INSTALL_SCREEN } from './http/middleware/install-gate.js';
 import { isInstalled, mintInstallToken } from './app/install/install-service.js';
 import { authRouter, sessionTokenOf } from './http/routes/auth.js';
 import { installRouter } from './http/routes/install.js';
+import { mcpRouter } from './http/routes/mcp.js';
 import { workspaceApiRouter } from './http/routes/workspace-api.js';
 import { FsDocumentStore } from './infra/fs/document-store.js';
 import { FsTrashFiles } from './infra/fs/trash-files.js';
@@ -39,6 +40,7 @@ import { SqliteSettingStore } from './infra/sqlite/setting-store.js';
 import { SqlitePersonalSettingStore } from './infra/sqlite/personal-setting-store.js';
 import { SqliteTrashRepository } from './infra/sqlite/trash-repository.js';
 import { SqliteVectorIndex } from './infra/sqlite/vector-index-repository.js';
+import { SqliteTokenRepository } from './infra/sqlite/token-repository.js';
 import { SqliteVersionRepository } from './infra/sqlite/version-repository.js';
 import { SqliteWorkspaceRepository } from './infra/sqlite/workspace-repository.js';
 
@@ -118,6 +120,10 @@ function apiRouter(runtime: ServerRuntime): Router {
   router.use(installRouter(runtime.stores));
   router.use(authRouter(runtime.stores));
   router.use(workspaceApiRouter({ stores: runtime.stores, actorOf: runtime.actorOf }));
+  // MCP 는 자기 인증을 갖는다 (`IR-AUTH-002`) — 세션 쿠키를 읽는 위의
+  // 라우터들과 달리 `Authorization: Bearer <PAT>` 만 본다. 그래서
+  // `actorOf` 를 받지 않는다.
+  router.use(mcpRouter({ stores: runtime.stores }));
 
   return router;
 }
@@ -154,6 +160,14 @@ type RuntimeStores = { personalSettings: SqlitePersonalSettingStore } & Attachme
     documents: FsDocumentStore;
     queue: SqliteFindingQueue;
     files: FsWorkspaceFiles;
+    /**
+     * PAT 저장소 (`IR-AUTH-002`).
+     *
+     * MCP 표면이 이것으로 호출자를 세운다. 여기 없으면 그 표면이 조립에서
+     * 주체를 얻지 못해 모든 호출이 거부되고, 그 사실은 시험이 아니라 운영에서
+     * 드러난다.
+     */
+    tokens: SqliteTokenRepository;
     /**
      * 콘솔에 한 줄 낸다 (`SEC-AUTH-012` AC-1).
      *
@@ -196,6 +210,7 @@ export async function bootstrap(
     acl: new SqliteAclRepository(db),
     principals: new SqlitePrincipalRepository(db),
     sessions: new SqliteSessionRepository(db),
+    tokens: new SqliteTokenRepository(db),
     passwords: new BcryptPasswordHasher(),
     settings: new SqliteSettingStore(db),
     personalSettings: new SqlitePersonalSettingStore(db),
