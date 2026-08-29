@@ -90,6 +90,24 @@ Before starting work in a fresh session, read `docs/next/LATEST.md`. It points a
 - A real-browser check already exists as a precedent: `packages/editor/test/browser-check.mjs`, run via `npm run test:browser` or `npm run test:browser:headed` from `packages/editor` once the dev server is up. It drives Playwright's chromium against `http://localhost:3399/` and currently checks Mermaid live preview only — reuse its shape for other browser-only checks rather than inventing a new one. `playwright` 1.62.1 and its chromium binary **are** installed, in `packages/editor/node_modules` (not the repository-root `node_modules`). Import it by absolute path from scripts that live outside that workspace. Measured 2026-08-25.
 - The browser checks carry the live-preview acceptance criteria that only a real browser can measure — real gestures, computed style, widget geometry. They are **not** the only evidence: `npm test` also carries axes no browser check covers (the line-unit reveal rule, the table reveal state machine), so a live-preview change needs both. What is true is that **nothing runs the browser checks automatically**: `npm test` is vitest and its `include` does not match `.mjs`, and this repository has no CI at all (there is no `.github/` directory). Measured 2026-08-25. Run all four in one go with `npm run test:browser:all` from the repository root — it forwards to the same script name in `packages/editor`, which runs `browser-check.mjs` (Mermaid), `table-reveal-check.mjs` (table source reveal, `FR-EDITOR-007` AC-7), `heightmap-drift-check.mjs` (widget heightmap drift) and `tag-chip-check.mjs` (body tags actually look like chips — computed style, not class names — plus the AC-10 reveal round trip) in that order, stops at the first failure, and propagates its exit code (`1` = a check failed, `2` = could not measure — usually the dev server is not up, and each script prints how to start it). Whoever changes live preview (tables, code blocks, Mermaid, math), widget geometry, or the reveal rules runs it before committing, with the dev server already up.
 
+- **`packages/web` 에도 브라우저 검사가 있다** (2026-08-29 신설). editor 의 검사와 전제가
+  다르다 — web 은 서버가 있어야 트리도 본문도 저장도 성립하므로, **web 3399 와 API 3400 이
+  함께 떠 있고 로그인할 계정이 있어야** 한다. 그 셋이 갖춰지지 않으면 「실패」가 아니라
+  종료 코드 `2`(재지 못했다)로 나가고 무엇이 빠졌는지 안내한다.
+  ```
+  # 1) API 서버 — 데이터 디렉터리를 격리해 띄우면 기존 데이터를 건드리지 않는다
+  DOCULIGHT_DATA_DIR=<임시경로> PORT=3400 npx tsx src/main.ts   # packages/server 에서
+  # 2) 콘솔에 나온 설치 토큰으로 /api/install/verify-token → /api/install/commit
+  # 3) web dev
+  npm run dev                                                   # 저장소 루트, 3399
+  # 4) 검사 — 만든 계정을 환경변수로 준다
+  DOCULIGHT_E2E_USER=<이름> DOCULIGHT_E2E_PASS=<비밀번호>     npm run test:browser:all --workspace @doculight/web
+  ```
+  기계장치는 editor 의 `_browser-harness.mjs` 를 **그대로 재사용**하고, web 에만 있는
+  절차(로그인·시험 문서 준비·트리에서 열기)만 `packages/web/test/_web-harness.mjs` 에
+  있다. 검사는 자기 문서를 만들고 끝나면 지우므로 **개인 볼트에 기대지 않는다**.
+  저장소 루트의 `npm run test:browser:all` 은 이제 editor 와 web 을 차례로 부른다.
+
 
 ## Gate decisions (2026-08-25, standing user instruction)
 
