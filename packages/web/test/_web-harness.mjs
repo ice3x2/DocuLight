@@ -79,9 +79,9 @@ export async function login(page) {
  * 앞 회차의 잔여와 부딪히지 않게 한다 — 부딪히면 서버가 접미사를 붙이는데
  * 그 자체는 옳지만 시험이 자기 문서를 못 찾는다.
  */
-export async function makeDocument(page, body = '# 시험 문서\n') {
+export async function makeDocument(page, body = '# 시험 문서\n', 이름접두 = 'e2e') {
   const made = await page.evaluate(
-    async ([초기본문]) => {
+    async ([초기본문, 접두]) => {
       const tree = await (await fetch('/api/tree')).json();
       const first = tree[0];
       if (first === undefined) return { error: '볼 수 있는 워크스페이스가 없다' };
@@ -95,7 +95,7 @@ export async function makeDocument(page, body = '# 시험 문서\n') {
             workspaceId: first.workspace.id,
             parentId: null,
             kind: 'file',
-            name: `e2e-${stamp}.md`,
+            name: `${접두}-${stamp}.md`,
           }),
         })
       ).json();
@@ -111,7 +111,7 @@ export async function makeDocument(page, body = '# 시험 문서\n') {
 
       return { id: created.id, name: created.name };
     },
-    [body],
+    [body, 이름접두],
   );
 
   if (made.error) unmeasurable(`${made.error}.\n${안내}`);
@@ -162,16 +162,14 @@ export async function openInEditor(page, nodeId, name) {
       글자: (document.body.textContent ?? '').slice(0, 120),
     }));
     unmeasurable(
-      `문서를 편집 화면에서 열지 못했다.
-` +
-        `  주소: ${상태.url}
-` +
-        `  영역: ${상태.regions.join(', ') || '없음'}
-` +
-        `  버튼: ${상태.buttons.join(' | ') || '없음'}
-` +
-        `  화면: ${상태.글자}
-${안내}`,
+      [
+        '문서를 편집 화면에서 열지 못했다.',
+        `  주소: ${상태.url}`,
+        `  영역: ${상태.regions.join(', ') || '없음'}`,
+        `  버튼: ${상태.buttons.join(' | ') || '없음'}`,
+        `  화면: ${상태.글자}`,
+        안내,
+      ].join('\n'),
     );
   }
 }

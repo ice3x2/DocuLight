@@ -47,36 +47,42 @@ export function SearchPanel({
     onAxes?.(SEARCH_AXES.filter((one) => (one === axis ? !on.has(one) : on.has(one))));
 
   return (
-    <Command label="검색" shouldFilter={false}>
-      <Command.Input
-        aria-label="검색"
-        value={query}
-        // 거르는 일은 서버가 한다 — 여기서 다시 거르면 두 곳이 같은
-        // 규칙을 갖게 되고 한쪽만 바뀐다.
-        onValueChange={(next) => onQuery?.(next)}
-        placeholder="문서 제목 · 본문 · 태그 · 첨부파일 이름"
-      />
+    <Command label="검색" shouldFilter={false} data-search="panel">
+      {/* 검색창과 필터 버튼을 **한 줄로 묶는다** (AC-5).
+          묶지 않으면 그 둘이 최상위의 형제가 되고, 결과 영역이 남은 높이를
+          받도록 최상위를 세로 흐름으로 만드는 순간(AC-12) 버튼이 입력 아래로
+          내려간다 — 두 조항이 서로를 깨뜨리는 자리였다. */}
+      <div data-search="query-row">
+        <Command.Input
+          aria-label="검색"
+          value={query}
+          // 거르는 일은 서버가 한다 — 여기서 다시 거르면 두 곳이 같은
+          // 규칙을 갖게 되고 한쪽만 바뀐다.
+          onValueChange={(next) => onQuery?.(next)}
+          placeholder="문서 제목 · 본문 · 태그 · 첨부파일 이름"
+        />
 
-      {/* 검색창 오른쪽의 필터 버튼 (`FR-SHELL-013` AC-5). */}
-      <Popover.Root>
-        <Popover.Trigger aria-label="검색 대상">필터</Popover.Trigger>
-        <Popover.Portal>
-          <Popover.Content>
-            {SEARCH_AXES.map((axis) => (
-              <button
-                key={axis}
-                type="button"
-                role="checkbox"
-                aria-label={AXIS_LABELS[axis]}
-                aria-checked={on.has(axis)}
-                onClick={() => toggle(axis)}
-              >
-                {AXIS_LABELS[axis]}
-              </button>
-            ))}
-          </Popover.Content>
-        </Popover.Portal>
-      </Popover.Root>
+        {/* 검색창 오른쪽의 필터 버튼 (`FR-SHELL-013` AC-5). */}
+        <Popover.Root>
+          <Popover.Trigger aria-label="검색 대상">필터</Popover.Trigger>
+          <Popover.Portal>
+            <Popover.Content>
+              {SEARCH_AXES.map((axis) => (
+                <button
+                  key={axis}
+                  type="button"
+                  role="checkbox"
+                  aria-label={AXIS_LABELS[axis]}
+                  aria-checked={on.has(axis)}
+                  onClick={() => toggle(axis)}
+                >
+                  {AXIS_LABELS[axis]}
+                </button>
+              ))}
+            </Popover.Content>
+          </Popover.Portal>
+          </Popover.Root>
+      </div>
 
       {/* 목록이 **자기 안에서** 스크롤한다 (AC-12) — 화면 전체가 스크롤되면
           검색창이 위로 밀려 사라지고, 질의를 고치려면 되돌아와야 한다.
