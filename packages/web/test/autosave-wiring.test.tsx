@@ -70,6 +70,66 @@ async function openDocument() {
   return user;
 }
 
+describe('FR-EDITOR-009 — 저장이 편집기를 갈아 끼우지 않는다', () => {
+  /**
+   * **본문 문자열이 편집기의 정체성이면 저장이 곧 재마운트다.**
+   *
+   * 저장이 성공하면 서버가 새 해시를 주고 상위가 새 본문을 내려보낸다.
+   * 그때 편집기의 정체성이 그 본문이면 EditorView 가 destroy 되고 다시
+   * 서며, 포커스가 빠지고 이어 친 글자가 사라진다 — 2026-08-24 실제 볼트
+   * 검증 §3.2 가 관측한 그대로다.
+   *
+   * 노드로만 고정해도 안 된다. 그러면 새 버전 올리기가 갈아 끼운 본문을
+   * 편집기가 받지 못한다(`FR-SHELL-008` AC-2). 갈리는 자리는 **아는
+   * 판본인가**이고, 그 두 방향을 여기와 `body-adoption.test.tsx` 가
+   * 각각 맡는다.
+   *
+   * 포커스와 이어 친 글자 자체는 happy-dom 이 재지 못한다 — 브라우저
+   * 검사가 그 축을 맡는다.
+   */
+  /**
+   * **친 글자가 있어야 이 축이 재어진다.** 아무것도 치지 않고 저장하면
+   * 저장된 본문이 열었을 때와 같아 캐시가 같은 문자열로 갱신되고, 그러면
+   * 편집기가 받는 문서도 그대로라 재마운트가 애초에 일어나지 않는다 —
+   * 그 상태의 시험은 구현을 되돌려도 초록이다(탐침으로 확인했다).
+   */
+  async function 치고저장한다(user: ReturnType<typeof userEvent.setup>): Promise<void> {
+    const content = document.querySelector('.cm-content') as HTMLElement;
+    await user.click(content);
+    await user.keyboard('추가');
+    await user.keyboard('{Control>}s{/Control}');
+  }
+
+  it('AC-1 · AC-2: 친 글자를 저장해도 같은 편집기가 남는다', async () => {
+    const user = await openDocument();
+    await user.click(screen.getByRole('button', { name: '편집' }));
+    const 처음 = document.querySelector('.cm-editor');
+    expect(처음, '편집기가 서지 않았다').not.toBeNull();
+
+    await 치고저장한다(user);
+    await waitFor(() => expect(saves.length).toBeGreaterThan(0));
+    expect(saves.at(-1)!.body, '전제가 서지 않았다 — 친 글자가 저장에 실리지 않았다').toContain('추가');
+
+    await waitFor(() => {
+      expect(document.querySelector('.cm-editor'), '저장이 편집기를 갈아 끼웠다').toBe(처음);
+    });
+  });
+
+  /**
+   * **AC-2 의 「이어 친 글자가 들어간다」는 여기서 재지 않는다.**
+   *
+   * 실측으로 확인했다 — 이 환경에서는 저장 직후 `document.activeElement`
+   * 가 편집기에서 빠지는데, 그때 `.cm-editor` 는 한 개 그대로이고
+   * `.cm-content` 도 **같은 요소**다. DOM 이 바뀌지 않았는데 포커스만
+   * 빠지므로 원인을 이 계층에서 특정할 수 없고, 그것이 happy-dom 의
+   * 한계인지 제품의 결함인지도 여기서는 갈리지 않는다.
+   *
+   * 그래서 그 축은 브라우저 검사가 맡는다 — 이 요구의 Verification
+   * Method 가 Playwright E2E 인 이유가 그것이다. 여기가 맡는 것은 저장이
+   * 편집기 **인스턴스**를 갈아 끼우지 않는다는 위의 한 축뿐이다.
+   */
+});
+
 describe('FR-STORAGE-001 — 자동 저장이 실제로 돈다', () => {
   it('AC-3: Ctrl+S 로 즉시 저장된다', async () => {
     const user = await openDocument();

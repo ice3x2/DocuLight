@@ -246,6 +246,16 @@ export function DocumentSurface({
    * 옛 본문이 다시 와도 그 해시는 이미 아는 것이라 아무 일도 없다.
    */
   const knownHashes = useRef<Set<string>>(new Set(baseHash === undefined ? [] : [baseHash]));
+  /**
+   * **남의 판본을 받아들인 횟수** (`FR-EDITOR-009` · `FR-SHELL-008` AC-2).
+   *
+   * 편집기의 정체성이 이 값을 탄다. 노드로만 고정하면 새 버전 올리기가
+   * 갈아 끼운 본문을 편집기가 받지 못하고, 본문 문자열로 두면 우리가 방금
+   * 저장한 판본이 돌아올 때마다 편집기가 통째로 다시 선다 — 그때 포커스가
+   * 빠지고 이어 친 글자가 사라진다. 갈리는 자리는 **아는 판본인가**이고
+   * 그 판정은 바로 아래 `knownHashes` 가 이미 한다.
+   */
+  const adopted = useRef(0);
   // 본문이 **나중에** 도착한다. 탭은 곧바로 서고 서버 응답은 그 뒤에
   // 오므로, 처음 한 번만 채우는 초기값에 기대면 그 자리가 빈 채로 굳는다 —
   // 그 상태로 Ctrl+S 를 누르면 빈 문자열이 저장되어 문서가 지워진다.
@@ -261,6 +271,8 @@ export function DocumentSurface({
   if (baseHash !== undefined && !knownHashes.current.has(baseHash) && body !== undefined) {
     knownHashes.current.add(baseHash);
     lastBody.current = body;
+    // 편집기가 이 본문을 실제로 열어야 한다 — 세대를 올려 정체성을 바꾼다.
+    adopted.current += 1;
   } else if (body !== undefined && lastBody.current === undefined) {
     lastBody.current = body;
   }
@@ -371,6 +383,17 @@ export function DocumentSurface({
             // 때문이다. 넘기는 문서는 **마지막으로 꺼내 온 것**이라 그 사이
             // 편집이 살아남는다.
             key={mode}
+            // **정체성은 노드와 채택 세대다** (`FR-EDITOR-009`).
+            //
+            // 이 값을 넘기지 않으면 편집기가 `markdownSource` 문자열을 자기
+            // 정체성으로 삼고, 저장이 성공해 상위가 새 본문을 내려보낼 때마다
+            // EditorView 를 destroy 하고 다시 만든다. 그러면 포커스가 빠지고
+            // 이어 친 글자가 그대로 사라진다.
+            //
+            // 노드로만 고정해도 안 된다 — 남이 갈아 끼운 본문(새 버전 올리기,
+            // `FR-SHELL-008` AC-2)을 편집기가 받지 못한다. 세대를 함께 담아
+            // **아는 판본이면 그대로, 모르는 판본이면 다시** 세운다.
+            documentId={`${file.nodeId}:${adopted.current}`}
             markdownSource={documentText}
             extensions={extensions}
             readOnly={mode === 'read'}
