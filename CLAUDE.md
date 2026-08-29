@@ -107,6 +107,10 @@ Before starting work in a fresh session, read `docs/next/LATEST.md`. It points a
   절차(로그인·시험 문서 준비·트리에서 열기)만 `packages/web/test/_web-harness.mjs` 에
   있다. 검사는 자기 문서를 만들고 끝나면 지우므로 **개인 볼트에 기대지 않는다**.
   저장소 루트의 `npm run test:browser:all` 은 이제 editor 와 web 을 차례로 부른다.
+  web 쪽은 둘이다 — `focus-retention-check.mjs`(`FR-EDITOR-009`: 저장이 포커스·커서·
+  이어 쓰기를 끊지 않는다)와 `ime-composition-check.mjs`(원장 §4 **수용 기준 7**:
+  한글 IME 조합이 편집 중 깨지지 않는다). 뒤의 것은 CDP `Input.imeSetComposition` 으로
+  조합 단계를 그대로 내므로 OS 입력기 없이도 그 축이 재어진다.
 
 
 ## Gate decisions (2026-08-25, standing user instruction)

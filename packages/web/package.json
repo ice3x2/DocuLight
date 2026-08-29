@@ -13,7 +13,9 @@
     "test:watch": "vitest",
     "test:browser:focus": "node test/focus-retention-check.mjs",
     "test:browser:focus:headed": "node test/focus-retention-check.mjs --headed",
-    "test:browser:all": "npm run test:browser:focus"
+    "test:browser:all": "npm run test:browser:focus && npm run test:browser:ime",
+    "test:browser:ime": "node test/ime-composition-check.mjs",
+    "test:browser:ime:headed": "node test/ime-composition-check.mjs --headed"
   },
   "dependencies": {
     "@codemirror/merge": "^6.10.4",
