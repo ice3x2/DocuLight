@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
@@ -472,7 +473,7 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
    * 묻는 순간 그 물음 자체가 「거기 무언가 있다」를 알리고, 보이지 않는
    * 파일과의 충돌에서 그것이 곧 존재 오라클이 된다.
    */
-  router.post('/nodes', (req, res) => {
+  router.post('/nodes', async (req, res) => {
     const actor = actorFor(req);
     if (actor === undefined) {
       res.sendStatus(401);
@@ -502,6 +503,25 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       // 경로 열거 오라클이 된다(`SEC-ACL-006`).
       res.sendStatus(created.violations.some((v) => v.rule === 'forbidden') ? 403 : 400);
       return;
+    }
+
+    // **실체를 함께 세운다** (`FR-SHELL-003` AC-1).
+    //
+    // `createNode` 는 노드·ACL·감사만 다루고 파일시스템에 손대지 않는다.
+    // 그것만으로 끝내면 트리에는 서지만 열 수 없는 노드가 남는다 —
+    // `readDocument` 가 본문의 SSOT 인 파일을 읽으므로 ENOENT 로 던진다.
+    // 「만들 수 있다」는 만든 것을 열 수 있다는 뜻이다.
+    //
+    // 같은 자리를 MCP 쪽은 이미 이렇게 다룬다(`dispatch.ts` 의
+    // `createOrOverwrite`). 두 경로가 같은 모양을 갖는다.
+    const at = join(workspaceRootOf(stores, workspaceId), stores.nodes.pathOf(created.id));
+    if ((kind ?? 'file') === 'directory') {
+      await mkdir(at, { recursive: true });
+    } else {
+      await mkdir(dirname(at), { recursive: true });
+      // 이미 있으면 덮지 않는다 — 재조정이 세운 노드처럼 실체가 먼저
+      // 있는 경우가 있고, 빈 내용으로 덮으면 그 본문이 사라진다.
+      if (!existsSync(at)) await writeFile(at, '', 'utf8');
     }
 
     res.json({

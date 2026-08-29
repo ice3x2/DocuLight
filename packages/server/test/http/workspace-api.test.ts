@@ -237,6 +237,56 @@ describe('FR-SHELL-003 · FR-ATTACH-001 — 노드 생성과 디렉토리 업로
     expect(typeof res.body.id).toBe('string');
   });
 
+  /**
+   * **만들었는데 열리지 않으면 만들어진 것이 아니다** (`FR-SHELL-003` AC-1).
+   *
+   * 위의 항은 응답의 이름과 id 만 본다. 그것만으로는 이 라우트가 DB 노드만
+   * 세우고 파일을 만들지 않아도 통과한다 — 실제로 그랬고, 화면의 「새 노트」
+   * 버튼으로 만든 문서를 열면 `readDocument` 가 ENOENT 로 던졌다
+   * (2026-08-24 실제 볼트 검증 §4 에서 관측).
+   *
+   * 같은 함정을 MCP 쪽은 이미 알고 있다 — `dispatch.ts` 의 `createOrOverwrite`
+   * 가 빈 파일을 먼저 세우고 그 사유를 주석에 적는다. 이 라우트에는 그것이
+   * 없었다.
+   */
+  it('AC-1: 만든 문서를 곧바로 열 수 있다', async () => {
+    const created = await request(app)
+      .post('/api/nodes')
+      .send({ workspaceId: ws, parentId: null, kind: 'file', name: '갓만든.md' });
+
+    const opened = await request(app).get(`/api/documents/${created.body.id}`);
+
+    expect(opened.status, '만든 문서가 열리지 않는다').toBe(200);
+    expect(opened.body.body, '갓 만든 문서는 빈 본문이다').toBe('');
+  });
+
+  it('AC-1: 만든 문서에 곧바로 쓸 수 있다 — 읽기만 되고 저장이 안 되면 반쪽이다', async () => {
+    const created = await request(app)
+      .post('/api/nodes')
+      .send({ workspaceId: ws, parentId: null, kind: 'file', name: '갓만들고쓴다.md' });
+
+    const { hash } = (await request(app).get(`/api/documents/${created.body.id}`)).body;
+    const saved = await request(app)
+      .put(`/api/documents/${created.body.id}`)
+      .send({ body: '# 첫 줄\n', baseHash: hash });
+
+    expect(saved.status).toBe(200);
+    expect((await request(app).get(`/api/documents/${created.body.id}`)).body.body).toBe('# 첫 줄\n');
+  });
+
+  it('디렉토리를 만들면 그 자리가 실제로 생긴다 — 그 아래에 문서를 만들 수 있다', async () => {
+    const dir = await request(app)
+      .post('/api/nodes')
+      .send({ workspaceId: ws, parentId: null, kind: 'directory', name: '기획' });
+
+    const inside = await request(app)
+      .post('/api/nodes')
+      .send({ workspaceId: ws, parentId: dir.body.id, kind: 'file', name: '안쪽.md' });
+
+    expect(inside.status).toBe(200);
+    expect((await request(app).get(`/api/documents/${inside.body.id}`)).status).toBe(200);
+  });
+
   it('이름이 겹치면 접미사가 붙고 확인을 묻지 않는다 (`SEC-SHELL-002`)', async () => {
     await request(app).post('/api/nodes').send({ workspaceId: ws, parentId: null, kind: 'file', name: '겹침.md' });
 
