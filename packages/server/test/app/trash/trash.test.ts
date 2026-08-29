@@ -496,3 +496,93 @@ describe('FR-STORAGE-006 — 복구가 버전 이력을 데려온다 (AC-3)', ()
     expect(existsSync(실체), '휴지통으로 보내는 조작이 버전 실체를 걷어 갔다').toBe(true);
   });
 });
+
+describe('SEC-STORAGE-008 — 영구 삭제는 버전 이력도 함께 걷는다', () => {
+  /**
+   * **버전 파일은 본문 그 자체를 담는다.**
+   *
+   * 영구 삭제가 첨부와 벡터 인덱스를 걷는 사유는 같다 — 남으면 지운 문서의
+   * 내용이 남는다. 버전은 조각도 요약도 아니라 본문 전문이라 그 사유가 더
+   * 강하게 걸리는데, 소거 목록에 들어 있지 않았다.
+   *
+   * 휴지통으로 보내는 경로에서는 걷지 않는다. 복구가 이력을 데려와야 하기
+   * 때문이며(`FR-STORAGE-006` AC-3), 그것이 이 요구의 AC-4 다.
+   */
+
+  /** 세션을 열고 저장해 스냅샷을 남긴다. */
+  async function 버전을쌓는다(actor: Actor, nodeId: string, bodies: readonly string[]): Promise<void> {
+    for (const body of bodies) {
+      const session = beginEditSession(docs, actor, nodeId);
+      const before = ((await readDocument(docs, actor, nodeId)) as { ok: true; hash: string }).hash;
+      await saveDocument(docs, actor, { nodeId, body, baseHash: before, session });
+    }
+  }
+
+  /** 그 문서의 버전들이 사는 디렉터리. */
+  const 버전자리 = (nodeId: string) => join(docsRoot, ws, '.versions', nodeId);
+
+  it('AC-1 · AC-2: 영구 삭제하면 버전 실체와 사이드카가 모두 사라진다', async () => {
+    const doc = await place(ws, '회의록.md');
+    await 버전을쌓는다(root, doc, ['# 1판\n', '# 2판\n']);
+    expect(listVersions(docs, root, doc), '전제가 서지 않았다').toHaveLength(2);
+    expect(existsSync(버전자리(doc))).toBe(true);
+
+    await moveToTrash(stores, root, doc);
+    expect(await purgeFromTrash(stores, root, doc)).toEqual({ ok: true });
+
+    expect(existsSync(버전자리(doc)), '영구 삭제한 문서의 버전이 디스크에 남았다').toBe(false);
+  });
+
+  it('AC-3: 버전 인덱스 행도 함께 사라진다', async () => {
+    const doc = await place(ws, '회의록.md');
+    await 버전을쌓는다(root, doc, ['# 1판\n']);
+
+    await moveToTrash(stores, root, doc);
+    await purgeFromTrash(stores, root, doc);
+
+    expect(docs.versions.listOf(doc), '인덱스에 유령이 남았다').toHaveLength(0);
+  });
+
+  it('AC-4: 휴지통으로 보내는 조작은 버전을 걷지 않는다', async () => {
+    const doc = await place(ws, '회의록.md');
+    await 버전을쌓는다(root, doc, ['# 1판\n']);
+
+    await moveToTrash(stores, root, doc);
+
+    expect(existsSync(버전자리(doc)), '되돌릴 수 있는 상태에서 이력을 지웠다').toBe(true);
+    expect(docs.versions.listOf(doc)).toHaveLength(1);
+  });
+
+  it('AC-5: 보존 기간 경과에 따른 자동 영구 삭제도 버전을 걷는다', async () => {
+    const doc = await place(ws, '회의록.md');
+    await 버전을쌓는다(root, doc, ['# 1판\n']);
+    await moveToTrash(stores, root, doc);
+
+    // 사람이 부르지 않는 경로다 — 여기가 비면 만료된 문서의 본문만 남는다.
+    now = new Date('2026-10-22T09:00:00.000Z');
+    expect(await sweepExpiredTrash(stores)).toEqual({ purged: 1 });
+
+    expect(existsSync(버전자리(doc)), '자동 영구 삭제가 버전을 두고 갔다').toBe(false);
+    expect(docs.versions.listOf(doc)).toHaveLength(0);
+  });
+
+  it('AC-6: 버전이 하나도 없던 노드를 영구 삭제해도 실패하지 않는다', async () => {
+    const doc = await place(ws, '한번도안고침.md');
+    await moveToTrash(stores, root, doc);
+
+    expect(await purgeFromTrash(stores, root, doc)).toEqual({ ok: true });
+  });
+
+  it('다른 문서의 버전은 건드리지 않는다 — 걷는 범위가 그 노드 하나다', async () => {
+    const 지울것 = await place(ws, '지울것.md');
+    const 남을것 = await place(ws, '남을것.md');
+    await 버전을쌓는다(root, 지울것, ['# 1판\n']);
+    await 버전을쌓는다(root, 남을것, ['# 1판\n']);
+
+    await moveToTrash(stores, root, 지울것);
+    await purgeFromTrash(stores, root, 지울것);
+
+    expect(existsSync(버전자리(남을것)), '남의 버전까지 걷어 갔다').toBe(true);
+    expect(listVersions(docs, root, 남을것)).toHaveLength(1);
+  });
+});

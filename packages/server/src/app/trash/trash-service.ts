@@ -1,8 +1,12 @@
+import { rm } from 'node:fs/promises';
 import { basename } from 'node:path';
 
 import { permissionBatch, permissionOf, type AclStores, type Actor } from '../acl/permission-service.js';
 import type { Clock } from '../auth/login-service.js';
 import { purgeAttachmentsOf, type AttachmentPurgeStores } from '../attachment/attachment-service.js';
+import { workspaceRootOf } from '../document/save-service.js';
+import { versionDirectoryOf } from '../../domain/document/version-layout.js';
+import type { VersionRepository } from '../../domain/ports/version-repository.js';
 import type { VectorIndex } from '../../domain/ports/vector-index.js';
 import { subtreeIdsOf } from '../node/node-service.js';
 import { SYSTEM_RETENTION } from '../../domain/principal/system-principals.js';
@@ -39,6 +43,14 @@ export interface TrashStores extends AclStores, AttachmentPurgeStores {
   trash: TrashRepository;
   trashFiles: TrashFiles;
   clock: Clock;
+  /**
+   * 버전 이력 (`SEC-STORAGE-008`).
+   *
+   * **벡터 인덱스와 달리 선택 의존이 아니다.** 인덱스는 없는 조립에서도
+   * 노드 조작이 돌아야 하지만, 버전은 본문 전문을 들고 있어 걷지 못하는
+   * 조립이 곧 지운 문서의 본문이 남는 조립이다.
+   */
+  versions: VersionRepository;
   /**
    * 벡터 인덱스 (`SEC-STORAGE-007`).
    *
@@ -316,6 +328,15 @@ async function hardDelete(
   // 자리인 이유도 같다 — 인덱스는 본문 조각과 요약을 들고 있어, 남으면
   // 삭제된 문서의 내용이 검색으로 새어 나간다.
   stores.vectors?.removeNode(entry.nodeId);
+  // 버전도 **여기서** 걷는다 (`SEC-STORAGE-008`). 첨부·벡터와 같은 자리인
+  // 이유가 같고 사유는 더 강하다 — 인덱스는 조각과 요약을 들지만 버전
+  // 파일은 본문 전문을 든다. 휴지통으로 보내는 경로에는 걸지 않는다(AC-4):
+  // 복구가 이력을 데려와야 한다(`FR-STORAGE-006` AC-3).
+  await rm(versionDirectoryOf(workspaceRootOf(stores, entry.workspaceId), entry.nodeId), {
+    recursive: true,
+    force: true,
+  });
+  stores.versions.replaceAllOf(entry.nodeId, []);
   stores.trash.remove(entry.nodeId);
   // 노드 제거가 그 서브트리의 ACL 도 함께 걷는다 — 복구할 수 없다는 것이
   // 이 조작의 내용이다.

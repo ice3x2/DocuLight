@@ -71,6 +71,7 @@ export function trashStores(
     ...nodeStores(db),
     trash: new SqliteTrashRepository(db),
     trashFiles: new FsTrashFiles(docsRoot),
+    versions: new SqliteVersionRepository(db),
     attachments: new SqliteAttachmentRepository(db),
     docsRoot,
     clock,
