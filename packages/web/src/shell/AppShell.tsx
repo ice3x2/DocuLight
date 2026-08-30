@@ -14,6 +14,7 @@ import type { UploadRequest } from '../attachment/upload-contract.js';
 import { EmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
 import { RenamePrompt } from '../tree/RenamePrompt.js';
+import { RelocationDialog } from './RelocationDialog.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { PersonalSettings } from '../settings/PersonalSettings.js';
 import { AclAuditPanel, type AclAuditProps } from '../acl/AclAuditPanel.js';
@@ -28,6 +29,7 @@ import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
 import type { RosterGroup, RosterUser } from '../api/client.js';
+import { destinationsFor } from '../tree/tree-contract.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
   LEFT_TABS,
@@ -312,6 +314,7 @@ export function AppShell({
   onFavorite,
   onDelete,
   onRename,
+  onRelocate,
   onNewVersion,
   onNoticeDismiss,
   confirmReplace,
@@ -396,6 +399,7 @@ export function AppShell({
   onFavorite?: (nodeId: string) => void;
   onDelete?: (nodeId: string) => void;
   onRename?: (nodeId: string, name: string) => void;
+  onRelocate?: (nodeId: string, kind: 'move' | 'copy', destinationId: string) => void;
   /** 그 파일에 새 버전을 올린다 (`FR-SHELL-008` AC-2). */
   onNewVersion?: (node: TreeNodeView, file: File) => void;
   /** 안내를 닫았다. 문구를 바깥이 들고 있으므로 지우는 것도 바깥이 한다. */
@@ -424,6 +428,13 @@ export function AppShell({
   const [overwriting, setOverwriting] = useState<TreeNodeView | null>(null);
   /** 이름을 바꾸는 중인 노드 (`FR-SHELL-015` AC-1). */
   const [renaming, setRenaming] = useState<TreeNodeView | null>(null);
+  /** 옮기거나 복사하는 중인 노드와 그 조작 (`FR-SHELL-015` AC-2 · AC-4). */
+  const [relocating, setRelocating] = useState<{
+    node: TreeNodeView;
+    kind: 'move' | 'copy';
+  } | null>(null);
+  /** 고른 목적지. 다이얼로그가 제어 상태로 받으므로 여기서 든다. */
+  const [destinationId, setDestinationId] = useState('');
 
   // **정체가 흔들리면 안 된다.** 이 둘은 편집기 확장 묶음에 들어가는데,
   // 렌더마다 새로 만들면 그때마다 편집기가 통째로 재구성되어 커서·되돌리기
@@ -490,6 +501,10 @@ export function AppShell({
                 onFavorite={onFavorite}
                 onDelete={onDelete}
                 onRename={setRenaming}
+                onRelocate={(node, kind) => {
+                  setDestinationId('');
+                  setRelocating({ node, kind });
+                }}
                 onNewVersion={setOverwriting}
               />
             );
@@ -598,6 +613,22 @@ export function AppShell({
           return <p>{tab.label}</p>;
         }}
       </Sidebar>
+
+      {relocating !== null && (
+        <RelocationDialog
+          kind={relocating.kind}
+          open
+          sourceName={relocating.node.name}
+          destinations={destinationsFor(workspaces, relocating.kind, relocating.node.id)}
+          destinationId={destinationId}
+          onDestination={setDestinationId}
+          onConfirm={() => {
+            onRelocate?.(relocating.node.id, relocating.kind, destinationId);
+            setRelocating(null);
+          }}
+          onCancel={() => setRelocating(null)}
+        />
+      )}
 
       {renaming !== null && (
         <RenamePrompt

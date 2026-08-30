@@ -11,6 +11,8 @@ import {
   uploadAttachment,
   uploadIntoDirectory,
   moveNodeToTrash,
+  moveNode,
+  copyNode,
   renameNode,
   purgeFromTrash,
   restoreFromTrash,
@@ -304,6 +306,33 @@ function AppBody() {
       await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
     },
     [queries],
+  );
+
+  /**
+   * 옮기거나 복사한다 (`FR-SHELL-015` AC-2 · AC-4).
+   *
+   * 목적지 id 가 **워크스페이스 자신이면 그 루트**다. 두 조작이 그것을
+   * 다르게 표현한다 — 이동은 부모 없음(`null`)이고, 복사는 목적지를 판별
+   * 합집합으로 받으므로 `{ workspaceId }` 다. 서버가 그 둘을 나란히 받지
+   * 않는 이유가 어긋나는 조합을 표현 불가능하게 두기 위해서이므로, 화면도
+   * 여기서 한 번에 갈라 보낸다.
+   */
+  const relocate = useCallback(
+    async (nodeId: string, kind: 'move' | 'copy', destinationId: string) => {
+      const 루트로 = workspaces.some((entry) => entry.workspace.id === destinationId);
+
+      if (kind === 'move') {
+        await moveNode(nodeId, 루트로 ? null : destinationId).catch(() => undefined);
+      } else {
+        await copyNode(
+          nodeId,
+          루트로 ? { workspaceId: destinationId } : { parentId: destinationId },
+        ).catch(() => undefined);
+      }
+
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
+    },
+    [workspaces, queries],
   );
 
   const purgeTrash = useCallback(
@@ -628,6 +657,7 @@ function AppBody() {
       onFavorite={favorite}
       onDelete={deleteNode}
       onRename={rename}
+      onRelocate={relocate}
       onNewVersion={newVersion}
       onNoticeDismiss={() => setNotice(undefined)}
       onSaveState={noteSaveState}

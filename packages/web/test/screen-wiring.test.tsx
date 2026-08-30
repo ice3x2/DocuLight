@@ -546,8 +546,8 @@ describe('IR-SHELL-005 — 트리 컨텍스트 메뉴의 항목이 실제 조작
     ['new-file', '메뉴 항목이 끊겨 있다. 문서 생성은 트리 상단 「새 노트」 버튼에만 배선돼 있고 그 버튼은 자리를 고를 수 없다'],
     ['new-directory', '메뉴 항목이 끊겨 있다. kind=directory 로 createNode 를 부르는 자리가 화면에 없다'],
     ['rename', '**배선은 이어져 있다.** 다만 이름을 고르는 자리를 거치므로 「눌렀을 때 곧바로 나가는가」로는 재어지지 않는다 — 아래 `FR-SHELL-015` 시험이 그 왕복을 잰다'],
-    ['move', '서버에 실행 라우트가 없다 — relocation-preview 만 있다. 이동 조작을 소유하는 요구가 서야 닫힌다'],
-    ['copy', '서버에 실행 라우트가 없다. 복사 조작을 소유하는 요구가 서야 닫힌다'],
+    ['move', '**배선은 이어져 있다.** 다만 목적지를 고르고 확인 관문을 지나야 하므로 「눌렀을 때 곧바로 나가는가」로는 재어지지 않는다 — 아래 `FR-SHELL-015` 시험이 그 왕복을 잰다'],
+    ['copy', '**배선은 이어져 있다.** 이동과 같은 자리를 거치므로 같은 사유다 — 아래 `FR-SHELL-015` 시험이 그 왕복을 잰다'],
     ['share', 'client 함수와 서버 라우트는 있으나 그것을 쓸 화면이 자리표다 — document/ShareModal.tsx 가 안내 문구만 그린다'],
     ['new-version', '**배선은 이어져 있다.** 다만 파일 선택기를 거치므로 고르기 전에는 요청이 나가지 않아, 이 시험의 「눌렀을 때 나가는가」로는 재어지지 않는다'],
   ]);
@@ -693,5 +693,72 @@ describe('FR-SHELL-015 — 이름 변경이 화면에서 서버까지 닿는다'
     // 이름 **규칙**은 서버가 소유한다. 화면이 막는 것은 입력이 아예 없는
     // 경우 하나뿐이고, 그것은 규칙 판정이 아니다.
     expect(sent.some((one) => one.path.includes('/rename'))).toBe(false);
+  });
+});
+
+describe('FR-SHELL-015 — 이동과 복사가 화면에서 서버까지 닿는다', () => {
+  /** 메뉴를 열어 한 항목을 고르고, 목적지를 고른 뒤 확인 관문까지 지난다. */
+  const 자리를고르고실행한다 = async (항목: string, 목적지: string) => {
+    const user = await openTree();
+
+    await user.pointer({
+      keys: '[MouseRight]',
+      target: screen.getByRole('treeitem', { name: /회의록/ }),
+    });
+    await user.click(within(await screen.findByRole('menu')).getByRole('menuitem', { name: 항목 }));
+
+    await user.selectOptions(await screen.findByLabelText('목적지'), 목적지);
+
+    // 실행 버튼은 **관문이 아니다** — 그것을 누르면 확인 다이얼로그가 서고,
+    // 거기서 한 번 더 실행해야 나간다 (`FR-CONFIRM-005`).
+    await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: '실행' }));
+    await user.click(
+      within(await screen.findByRole('alertdialog')).getByRole('button', { name: '실행' }),
+    );
+    return user;
+  };
+
+  it('AC-2: 이동은 고른 자리로 나가고 워크스페이스를 고르면 루트다', async () => {
+    routes.set('/api/nodes/n1/move', () => json({ name: '회의록.md' }));
+
+    await 자리를고르고실행한다('이동', 'ws-1');
+
+    await waitFor(() =>
+      expect(sent).toContainEqual({
+        path: '/api/nodes/n1/move',
+        method: 'POST',
+        body: { parentId: null },
+      }),
+    );
+  });
+
+  it('AC-4: 복사는 같은 자리를 워크스페이스로 표현한다 — 두 조작의 계약이 다르다', async () => {
+    routes.set('/api/nodes/n1/copy', () => json({ id: 'n9', name: '회의록 (2).md', copied: 1 }));
+
+    await 자리를고르고실행한다('복사', 'ws-1');
+
+    // 이동은 부모 없음, 복사는 워크스페이스 — 서버가 목적지를 판별
+    // 합집합으로 받으므로 화면도 여기서 갈라 보낸다.
+    await waitFor(() =>
+      expect(sent).toContainEqual({
+        path: '/api/nodes/n1/copy',
+        method: 'POST',
+        body: { workspaceId: 'ws-1' },
+      }),
+    );
+  });
+
+  it('AC-2: 목적지를 고르지 않으면 실행할 수 없다', async () => {
+    const user = await openTree();
+
+    await user.pointer({
+      keys: '[MouseRight]',
+      target: screen.getByRole('treeitem', { name: /회의록/ }),
+    });
+    await user.click(within(await screen.findByRole('menu')).getByRole('menuitem', { name: '이동' }));
+
+    const 실행 = within(await screen.findByRole('dialog')).getByRole('button', { name: '실행' });
+    expect(실행).toHaveProperty('disabled', true);
+    expect(sent.some((one) => one.path.includes('/move'))).toBe(false);
   });
 });

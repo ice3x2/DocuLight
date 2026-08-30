@@ -6,7 +6,7 @@ import request from 'supertest';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { actorFor, type Actor } from '../../src/app/acl/permission-service.js';
-import { grantPermission } from '../../src/app/acl/grant-service.js';
+import { breakInheritance, grantPermission } from '../../src/app/acl/grant-service.js';
 import { createNode } from '../../src/app/node/node-service.js';
 import { writeSetting } from '../../src/app/settings/instance-settings.js';
 import { createWorkspace } from '../../src/app/workspace/create-workspace.js';
@@ -938,6 +938,30 @@ describe('FR-SHELL-015 — 이름 변경 · 이동 · 복사가 API 로 도달�
 
     expect(res.status).toBe(400);
     expect(stores.nodes.findById(folder)?.parentId).toBe(null);
+  });
+
+  it('AC-3: 숨은 하위가 있으면 편집만으로는 옮길 수 없다 — 라우트가 그 게이트를 거친다', async () => {
+    const source = await 디렉토리를만든다('기획');
+    const destination = await 디렉토리를만든다('보관');
+    const buried = idOf(
+      createNode(stores, root, { workspaceId: ws, parentId: source, kind: 'file', name: '숨김.md' }),
+    );
+
+    grantPermission(stores, root, { nodeId: source, principalId: me.id, level: 'edit' });
+    grantPermission(stores, root, { nodeId: destination, principalId: me.id, level: 'edit' });
+    // 하위 하나만 상속을 끊어 요청자에게서 감춘다.
+    breakInheritance(stores, root, buried);
+    actingAs = me;
+
+    const res = await request(app).post(`/api/nodes/${source}/move`).send({ parentId: destination });
+
+    // 대상·목적지 둘 다 편집을 가졌는데도 거부된다 — 숨은 하위가 요구를
+    // 워크스페이스 관리로 올렸기 때문이다. 그 판정은 서비스가 소유하고
+    // 이 시험이 재는 것은 **라우트가 그것을 거치는가**다.
+    expect(res.status).toBe(403);
+    // 거부가 숨은 노드의 이름이나 개수를 드러내지 않는다.
+    expect(JSON.stringify(res.body)).not.toContain('숨김');
+    expect(stores.nodes.findById(source)?.parentId).toBe(null);
   });
 
   it('AC-4: 복사하면 원본이 그대로 남고 사본이 새 노드로 선다', async () => {
