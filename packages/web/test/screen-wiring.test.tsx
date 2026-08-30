@@ -548,7 +548,7 @@ describe('IR-SHELL-005 — 트리 컨텍스트 메뉴의 항목이 실제 조작
     ['rename', '**배선은 이어져 있다.** 다만 이름을 고르는 자리를 거치므로 「눌렀을 때 곧바로 나가는가」로는 재어지지 않는다 — 아래 `FR-SHELL-015` 시험이 그 왕복을 잰다'],
     ['move', '**배선은 이어져 있다.** 다만 목적지를 고르고 확인 관문을 지나야 하므로 「눌렀을 때 곧바로 나가는가」로는 재어지지 않는다 — 아래 `FR-SHELL-015` 시험이 그 왕복을 잰다'],
     ['copy', '**배선은 이어져 있다.** 이동과 같은 자리를 거치므로 같은 사유다 — 아래 `FR-SHELL-015` 시험이 그 왕복을 잰다'],
-    ['share', 'client 함수와 서버 라우트는 있으나 그것을 쓸 화면이 자리표다 — document/ShareModal.tsx 가 안내 문구만 그린다'],
+    ['share', '**배선은 이어져 있다.** 다만 모달을 거쳐 주체를 고르고 레벨을 정해야 하므로 「눌렀을 때 곧바로 나가는가」로는 재어지지 않는다 — 아래 `IR-ACL-002`·`IR-ACL-003` 시험이 그 왕복을 잰다'],
     ['new-version', '**배선은 이어져 있다.** 다만 파일 선택기를 거치므로 고르기 전에는 요청이 나가지 않아, 이 시험의 「눌렀을 때 나가는가」로는 재어지지 않는다'],
   ]);
 
@@ -760,5 +760,193 @@ describe('FR-SHELL-015 — 이동과 복사가 화면에서 서버까지 닿는�
     const 실행 = within(await screen.findByRole('dialog')).getByRole('button', { name: '실행' });
     expect(실행).toHaveProperty('disabled', true);
     expect(sent.some((one) => one.path.includes('/move'))).toBe(false);
+  });
+});
+
+describe('IR-ACL-002 · IR-ACL-003 — 공유가 화면에서 서버까지 닿는다', () => {
+  /** 서버가 주는 공유 화면. 직접 항목 하나와 상속 항목 하나를 담는다. */
+  const 공유상태 = {
+    metrics: { reachable: 3, viaAcl: 2 },
+    rows: [
+      {
+        entryId: 'e1',
+        principalId: 'p1',
+        principalName: '한범',
+        principalKind: 'user' as const,
+        level: 'edit' as const,
+        inherited: false,
+        source: null,
+      },
+      {
+        entryId: null,
+        principalId: 'p2',
+        principalName: '기획팀',
+        principalKind: 'group' as const,
+        level: 'view' as const,
+        inherited: true,
+        source: '기획팀',
+      },
+    ],
+    level: 'admin' as const,
+    nodeKind: 'file' as const,
+    inheritsAcl: true,
+    reached: 1,
+  };
+
+  const 공유를연다 = async () => {
+    routes.set('/api/nodes/n1/share', (init) =>
+      init?.method === 'POST' ? json(null, 204) : json(공유상태),
+    );
+    const user = await openTree();
+
+    await user.pointer({
+      keys: '[MouseRight]',
+      target: screen.getByRole('treeitem', { name: /회의록/ }),
+    });
+    await user.click(within(await screen.findByRole('menu')).getByRole('menuitem', { name: '공유' }));
+    return user;
+  };
+
+  it('IR-ACL-002 AC-1 · AC-2 · AC-3: 서버가 준 목록이 그려지고 상속 줄에는 회수가 없다', async () => {
+    await 공유를연다();
+
+    // 수치가 서버 값이면 조회가 닿은 것이다 — GET 은 `sent` 에 남지 않으므로
+    // 화면에 그려진 것으로 잰다.
+    expect(await screen.findByText(/접근 가능 3명/)).toBeTruthy();
+
+    const 목록 = await screen.findByRole('list', { name: '공유 대상' });
+    // 직접 항목에는 회수가 서고, 상속 항목에는 출처만 선다 — 상속의 소유가
+    // 조상 노드에 있으므로 여기서 지울 수 있으면 안 된다.
+    expect(within(목록).getByRole('button', { name: '한범 회수' })).toBeTruthy();
+    expect(within(목록).queryByRole('button', { name: '기획팀 회수' })).toBeNull();
+    expect(within(목록).getByText(/기획팀 에서 상속/)).toBeTruthy();
+  });
+
+  it('IR-ACL-003 AC-1 · AC-3: 검색해 고른 주체에 레벨을 정해 부여한다', async () => {
+    routes.set('/api/principals', () =>
+      json([{ id: 'p9', name: '새사람', kind: 'user', status: 'active' }]),
+    );
+    const user = await 공유를연다();
+
+    // 전체 목록을 펼치지 않고 **검색해서** 찾는다 — 그것이 디렉토리 열거
+    // 표면을 줄이는 근거다.
+    await user.type(await screen.findByRole('combobox', { name: '사용자·그룹 검색' }), '새사');
+
+    await waitFor(() => expect(screen.getByText('새사람')).toBeTruthy());
+    await user.click(screen.getByText('새사람'));
+    await user.click(screen.getByRole('button', { name: '추가' }));
+
+    await waitFor(() =>
+      expect(sent).toContainEqual({
+        path: '/api/nodes/n1/share',
+        method: 'POST',
+        body: { principalId: 'p9', level: 'view' },
+      }),
+    );
+  });
+
+  it('FR-SHELL-002 AC-2: 문서 헤더 메뉴도 같은 공유 화면을 연다', async () => {
+    routes.set('/api/nodes/n1/share', () => json(공유상태));
+    routes.set('/api/documents/n1/links', () => json({ outgoing: [], backlinks: [] }));
+    const user = await openTree();
+
+    await user.click(screen.getByRole('button', { name: '회의록.md' }));
+    await user.click(await screen.findByRole('button', { name: /회의록\.md 문서 메뉴/ }));
+    await user.click(await screen.findByRole('menuitem', { name: '공유' }));
+
+    // 문서와 디렉토리가 같은 부품을 쓴다 (`IR-ACL-003` AC-5) — 트리에서
+    // 연 것과 같은 목록이 같은 이름으로 선다.
+    expect(await screen.findByRole('list', { name: '공유 대상' })).toBeTruthy();
+    expect(await screen.findByText(/접근 가능 3명/)).toBeTruthy();
+  });
+
+  it('FR-CONFIRM-014: 부여 뒤 되돌리기 토스트가 서고 그 버튼이 회수로 나간다', async () => {
+    routes.set('/api/principals', () =>
+      json([{ id: 'p9', name: '새사람', kind: 'user', status: 'active' }]),
+    );
+    routes.set('/api/acl-entries/e9', () => json(null, 204));
+    const user = await 공유를연다();
+
+    await user.type(await screen.findByRole('combobox', { name: '사용자·그룹 검색' }), '새사');
+    await waitFor(() => expect(screen.getByText('새사람')).toBeTruthy());
+    await user.click(screen.getByText('새사람'));
+
+    // 부여가 나간 뒤 목록에 그 줄이 생긴 것으로 서버 갱신을 흉내 낸다 —
+    // 토스트의 회수 버튼은 그 줄의 항목 ID 를 써야 한다.
+    routes.set('/api/nodes/n1/share', (init) =>
+      init?.method === 'POST'
+        ? json(null, 204)
+        : json({
+            ...공유상태,
+            rows: [
+              ...공유상태.rows,
+              {
+                entryId: 'e9',
+                principalId: 'p9',
+                principalName: '새사람',
+                principalKind: 'user' as const,
+                level: 'view' as const,
+                inherited: false,
+                source: null,
+              },
+            ],
+          }),
+    );
+    await user.click(screen.getByRole('button', { name: '추가' }));
+
+    // 넓히는 조작은 미리 묻지 않고 **사후에 물릴 길**을 준다.
+    const 토스트 = await screen.findByRole('status');
+    expect(within(토스트).getByText(/새사람 에게 권한을 부여했습니다/)).toBeTruthy();
+
+    await user.click(within(토스트).getByRole('button'));
+    await waitFor(() =>
+      expect(sent).toContainEqual({
+        path: '/api/acl-entries/e9',
+        method: 'DELETE',
+        body: undefined,
+      }),
+    );
+  });
+
+  it('FR-CONFIRM-018: 디렉토리 항목의 회수는 확인을 거친다', async () => {
+    routes.set('/api/nodes/n1/share', () => json({ ...공유상태, nodeKind: 'directory' }));
+    routes.set('/api/acl-entries/e1', () => json(null, 204));
+    const user = await openTree();
+
+    await user.pointer({
+      keys: '[MouseRight]',
+      target: screen.getByRole('treeitem', { name: /회의록/ }),
+    });
+    await user.click(within(await screen.findByRole('menu')).getByRole('menuitem', { name: '공유' }));
+    await user.click(await screen.findByRole('button', { name: '한범 회수' }));
+
+    // 누른 즉시 나가지 않는다 — 서브트리 규모로 번지는 조작이라 한 번 묻는다.
+    expect(sent.some((one) => one.path.includes('/acl-entries/'))).toBe(false);
+
+    const 확인 = await screen.findByRole('alertdialog');
+    await user.click(within(확인).getByRole('button', { name: '실행' }));
+
+    await waitFor(() =>
+      expect(sent).toContainEqual({
+        path: '/api/acl-entries/e1',
+        method: 'DELETE',
+        body: undefined,
+      }),
+    );
+  });
+
+  it('IR-ACL-003 AC-4: 같은 화면에서 회수가 나간다', async () => {
+    routes.set('/api/acl-entries/e1', () => json(null, 204));
+    const user = await 공유를연다();
+
+    await user.click(await screen.findByRole('button', { name: '한범 회수' }));
+
+    await waitFor(() =>
+      expect(sent).toContainEqual({
+        path: '/api/acl-entries/e1',
+        method: 'DELETE',
+        body: undefined,
+      }),
+    );
   });
 });

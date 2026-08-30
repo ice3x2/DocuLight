@@ -2,6 +2,8 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useId, useState } from 'react';
 
 import { ConfirmGate } from '../confirm/ConfirmGate.js';
+import { GrantToast } from '../confirm/GrantToast.js';
+import { RevokeConfirm } from '../confirm/RevokeConfirm.js';
 
 import { PrincipalPicker } from '../principal/PrincipalPicker.js';
 import {
@@ -26,6 +28,8 @@ export function ShareModal({
   nodeId,
   nodeName,
   nodeKind = 'file',
+  open,
+  onOpenChange,
   view,
   onGrant,
   onRevoke,
@@ -34,6 +38,15 @@ export function ShareModal({
 }: {
   nodeId: string;
   nodeName: string;
+  /**
+   * 밖에서 여닫는가 (`FR-SHELL-003` · `FR-SHELL-002`).
+   *
+   * **주지 않으면 자기 트리거로만 연다.** 두 진입점이 메뉴 항목이라
+   * 제어가 필요한데, 기본값을 제어로 두면 트리거만 쓰는 기존 자리가
+   * 열리지 않는 채로 남는다.
+   */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   /**
    * 컨테이너인가 (`FR-CONFIRM-013`). 상속 고지는 하위가 있는 자리에만
    * 붙는다 — 문서에 붙이면 문구 자체가 거짓이 된다.
@@ -50,11 +63,31 @@ export function ShareModal({
   /** 지금 열려 있는 확인. 둘을 한 상태로 두어야 겹쳐 뜨지 않는다. */
   const [관문, set관문] = useState<'break' | 'inherit' | null>(null);
   const [고른주체, set고른주체] = useState<PrincipalRow | null>(null);
+  /**
+   * 방금 부여한 주체 (`FR-CONFIRM-014`).
+   *
+   * 부여는 확인 관문이 아니라 **되돌리기 토스트**를 쓴다 — 넓히는 조작은
+   * 되돌릴 수 있으므로 미리 묻는 대신 사후에 물릴 길을 준다.
+   *
+   * 부여 응답은 204 라 새 항목의 ID 를 싣지 않는다. 갱신된 목록에서 그
+   * 주체의 줄을 찾아 회수 버튼에 넘긴다 — 못 찾으면 버튼이 아무 일도 하지
+   * 않는데, 그 상태는 목록이 아직 안 온 짧은 사이뿐이다.
+   */
+  const [방금부여, set방금부여] = useState<PrincipalRow | null>(null);
+  /** 회수를 누른 줄 (`FR-CONFIRM-018`). 확인이 필요한지는 부품이 판정한다. */
+  const [회수대상, set회수대상] = useState<ShareRow | null>(null);
   const [레벨, set레벨] = useState<'view' | 'edit'>('view');
 
   return (
-    <Dialog.Root>
-      <Dialog.Trigger aria-label={`${nodeName} 공유`}>공유</Dialog.Trigger>
+    // `open` 이 `undefined` 면 Radix 가 비제어로 돈다 — 트리거만 쓰는
+    // 자리가 그대로 성립한다.
+    <Dialog.Root
+      {...(open === undefined ? {} : { open })}
+      {...(onOpenChange === undefined ? {} : { onOpenChange })}
+    >
+      {open === undefined ? (
+        <Dialog.Trigger aria-label={`${nodeName} 공유`}>공유</Dialog.Trigger>
+      ) : null}
 
       <Dialog.Portal>
         <Dialog.Overlay />
@@ -99,7 +132,9 @@ export function ShareModal({
             type="button"
             disabled={고른주체 === null}
             onClick={() => {
-              if (고른주체 !== null) onGrant?.(고른주체.id, 레벨);
+              if (고른주체 === null) return;
+              onGrant?.(고른주체.id, 레벨);
+              set방금부여(고른주체);
             }}
           >
             추가
@@ -163,12 +198,47 @@ export function ShareModal({
             onCancel={() => set관문(null)}
           />
 
+          {방금부여 === null ? null : (
+            <GrantToast
+              subjectName={방금부여.name}
+              {...(() => {
+                const 새줄 = view?.rows?.find(
+                  (row) => row.principalId === 방금부여.id && row.entryId !== null,
+                );
+                return 새줄?.entryId == null ? {} : { entryId: 새줄.entryId };
+              })()}
+              onRevoke={(entryId) => {
+                onRevoke?.(entryId);
+                set방금부여(null);
+              }}
+            />
+          )}
+
+          {/* 회수의 확인은 **대상 유형으로 갈린다** (`FR-CONFIRM-018`) —
+              디렉토리와 워크스페이스는 묻고 문서는 곧바로 실행한다. 그
+              판정을 여기서 다시 적지 않는다: 부품이 `targetKind` 를 보고
+              스스로 가르며, 확인이 필요 없으면 열리는 즉시 실행한다. */}
+          <RevokeConfirm
+            open={회수대상 !== null}
+            targetKind={view?.nodeKind ?? 'file'}
+            subjectName={회수대상?.principalName ?? ''}
+            onConfirm={() => {
+              if (회수대상?.entryId != null) onRevoke?.(회수대상.entryId);
+              set회수대상(null);
+            }}
+            onCancel={() => set회수대상(null)}
+          />
+
           {/* 목록은 관리 전용이라 `null` 로 온다 (`SEC-ACL-015` AC-1).
               부분 목록으로 대신하지 않는다 (AC-6) — 아예 그리지 않는다. */}
           {view?.rows == null ? null : (
             <ul aria-label="공유 대상">
               {view.rows.map((row) => (
-                <ShareEntry key={row.entryId ?? `${row.principalId}@${row.source}`} row={row} {...(onRevoke === undefined ? {} : { onRevoke })} />
+                <ShareEntry
+                  key={row.entryId ?? `${row.principalId}@${row.source}`}
+                  row={row}
+                  onRevoke={() => set회수대상(row)}
+                />
               ))}
             </ul>
           )}
@@ -184,7 +254,7 @@ export function ShareModal({
  * 판정 근거가 `entryId` 의 부재 하나다 — 별도 플래그를 보고 감추면 그
  * 플래그를 안 보는 화면이 생기고, 그때 버튼은 지울 것이 없는 요청을 낸다.
  */
-function ShareEntry({ row, onRevoke }: { row: ShareRow; onRevoke?: (entryId: string) => void }) {
+function ShareEntry({ row, onRevoke }: { row: ShareRow; onRevoke?: () => void }) {
   return (
     <li data-inherited={row.inherited ? 'true' : 'false'}>
       <span>{row.principalName}</span>
@@ -193,7 +263,7 @@ function ShareEntry({ row, onRevoke }: { row: ShareRow; onRevoke?: (entryId: str
         // 출처가 있어야 관리자가 어디를 고쳐야 하는지 안다 (AC-2).
         <span data-testid="share-source">{row.source} 에서 상속</span>
       ) : (
-        <button type="button" onClick={() => onRevoke?.(row.entryId!)}>
+        <button type="button" onClick={() => onRevoke?.()}>
           {row.principalName} 회수
         </button>
       )}

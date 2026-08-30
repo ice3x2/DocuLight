@@ -18,11 +18,13 @@ import { RelocationDialog } from './RelocationDialog.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { PersonalSettings } from '../settings/PersonalSettings.js';
 import { AclAuditPanel, type AclAuditProps } from '../acl/AclAuditPanel.js';
+import { ShareModal } from '../acl/ShareModal.js';
 import { AuditLogPanel } from '../audit/AuditLogPanel.js';
 import type {
   AuditViewBody,
   ReconciliationQueueBody,
   SearchDocumentBody,
+  ShareViewBody,
   TagIndexBody,
 } from '../api/client.js';
 import { GroupRoster } from '../principal/GroupRoster.js';
@@ -315,6 +317,7 @@ export function AppShell({
   onDelete,
   onRename,
   onRelocate,
+  share,
   onNewVersion,
   onNoticeDismiss,
   confirmReplace,
@@ -400,6 +403,21 @@ export function AppShell({
   onDelete?: (nodeId: string) => void;
   onRename?: (nodeId: string, name: string) => void;
   onRelocate?: (nodeId: string, kind: 'move' | 'copy', destinationId: string) => void;
+  /**
+   * 공유 화면의 배선 (`IR-ACL-002` · `IR-ACL-003`).
+   *
+   * 여섯을 낱개 소품으로 늘어놓지 않고 묶는다 — `AclAuditPanel` 이 쓰는
+   * 방식과 같다. 낱개로 두면 하나를 빠뜨린 호출이 타입을 통과한다.
+   */
+  share?: {
+    /** 서버가 준 것. 아직 안 왔으면 `undefined`. */
+    view?: ShareViewBody;
+    onOpen?: (nodeId: string) => void;
+    onGrant?: (nodeId: string, principalId: string, level: 'view' | 'edit') => void;
+    onRevoke?: (entryId: string) => void;
+    onBreakInheritance?: (nodeId: string) => void;
+    onInheritFromParent?: (nodeId: string) => void;
+  };
   /** 그 파일에 새 버전을 올린다 (`FR-SHELL-008` AC-2). */
   onNewVersion?: (node: TreeNodeView, file: File) => void;
   /** 안내를 닫았다. 문구를 바깥이 들고 있으므로 지우는 것도 바깥이 한다. */
@@ -435,6 +453,8 @@ export function AppShell({
   } | null>(null);
   /** 고른 목적지. 다이얼로그가 제어 상태로 받으므로 여기서 든다. */
   const [destinationId, setDestinationId] = useState('');
+  /** 공유 화면을 연 노드 (`IR-ACL-002`). */
+  const [sharing, setSharing] = useState<TreeNodeView | null>(null);
 
   // **정체가 흔들리면 안 된다.** 이 둘은 편집기 확장 묶음에 들어가는데,
   // 렌더마다 새로 만들면 그때마다 편집기가 통째로 재구성되어 커서·되돌리기
@@ -501,6 +521,10 @@ export function AppShell({
                 onFavorite={onFavorite}
                 onDelete={onDelete}
                 onRename={setRenaming}
+                onShare={(node) => {
+                  share?.onOpen?.(node.id);
+                  setSharing(node);
+                }}
                 onRelocate={(node, kind) => {
                   setDestinationId('');
                   setRelocating({ node, kind });
@@ -570,6 +594,7 @@ export function AppShell({
           </div>
         )}
         <DocumentArea
+          {...(share === undefined ? {} : { share })}
           state={documents}
           missing={missingDocument}
           onState={(next) => onDocuments?.(next)}
@@ -613,6 +638,23 @@ export function AppShell({
           return <p>{tab.label}</p>;
         }}
       </Sidebar>
+
+      {sharing !== null && (
+        <ShareModal
+          nodeId={sharing.id}
+          nodeName={sharing.name}
+          nodeKind={sharing.kind}
+          open
+          onOpenChange={(next) => {
+            if (!next) setSharing(null);
+          }}
+          {...(share?.view === undefined ? {} : { view: share.view })}
+          onGrant={(principalId, level) => share?.onGrant?.(sharing.id, principalId, level)}
+          {...(share?.onRevoke === undefined ? {} : { onRevoke: share.onRevoke })}
+          onBreakInheritance={() => share?.onBreakInheritance?.(sharing.id)}
+          onInheritFromParent={() => share?.onInheritFromParent?.(sharing.id)}
+        />
+      )}
 
       {relocating !== null && (
         <RelocationDialog

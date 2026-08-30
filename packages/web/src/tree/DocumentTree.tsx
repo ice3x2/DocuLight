@@ -187,6 +187,7 @@ export function DocumentTree({
   onDelete,
   onRename,
   onRelocate,
+  onShare,
   onNewVersion,
 }: {
   workspaces: readonly WorkspaceTreeView[];
@@ -201,6 +202,8 @@ export function DocumentTree({
   onRename?: (node: TreeNodeView) => void;
   /** 이동·복사 — 목적지를 고를 자리를 연다 (`FR-SHELL-015` AC-2 · AC-4). */
   onRelocate?: (node: TreeNodeView, kind: 'move' | 'copy') => void;
+  /** 공유 — 권한을 주고 거두는 자리를 연다 (`IR-ACL-002` · `IR-ACL-003`). */
+  onShare?: (node: TreeNodeView) => void;
   /** 그 파일을 덮어쓰겠다 (`FR-SHELL-008` AC-2). 확인과 파일 고르기는 바깥이 한다. */
   onNewVersion?: (node: TreeNodeView) => void;
 }) {
@@ -250,6 +253,7 @@ export function DocumentTree({
               if (itemId === 'rename') onRename?.(node);
               if (itemId === 'move') onRelocate?.(node, 'move');
               if (itemId === 'copy') onRelocate?.(node, 'copy');
+              if (itemId === 'share') onShare?.(node);
               if (itemId === 'new-version') onNewVersion?.(node);
             })
           }

@@ -3,7 +3,8 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { useState } from 'react';
 
 import { DocumentSurface } from './DocumentSurface.js';
-import { ShareModal } from './ShareModal.js';
+import { ShareModal } from '../acl/ShareModal.js';
+import type { ShareViewBody } from '../api/client.js';
 import { VersionHistory } from './VersionHistory.js';
 import { DOCUMENT_MENU_ITEMS } from './document-menu.js';
 import { activeTab, closeTab, type SaveState, type TabState } from './tab-state.js';
@@ -71,6 +72,7 @@ export function DocumentArea({
   onSaved,
   onTagClick,
   onOpenWikiLink,
+  share,
   missing = false,
 }: {
   /**
@@ -100,6 +102,18 @@ export function DocumentArea({
    * 구별하는 값이 이 경계를 넘는 순간, 그 값을 쓰지 않더라도 구별이
    * 가능해진 것이고 언젠가 누가 쓴다.
    */
+  /**
+   * 공유 화면의 배선 (`IR-ACL-002` · `IR-ACL-003`). 셸이 내려준다 —
+   * 이 부품은 API 를 직접 부르지 않는다.
+   */
+  share?: {
+    view?: ShareViewBody;
+    onOpen?: (nodeId: string) => void;
+    onGrant?: (nodeId: string, principalId: string, level: 'view' | 'edit') => void;
+    onRevoke?: (entryId: string) => void;
+    onBreakInheritance?: (nodeId: string) => void;
+    onInheritFromParent?: (nodeId: string) => void;
+  };
   missing?: boolean;
 }) {
   /**
@@ -133,7 +147,16 @@ export function DocumentArea({
           ))}
         </Tabs.List>
 
-        <DocumentHeader state={state} onSelect={setPanel} />
+        <DocumentHeader
+          state={state}
+          onSelect={(id) => {
+            // 공유를 열 때 그 노드의 권한 화면을 받아 온다 — 늘 받으면
+            // 탭을 옮길 때마다 관리 전용 조회가 나간다.
+            const tab = activeTab(state);
+            if (id === 'share' && tab !== undefined) share?.onOpen?.(tab.nodeId);
+            setPanel(id);
+          }}
+        />
 
         {state.tabs.map((tab) => (
           <Tabs.Content key={tab.nodeId} value={tab.nodeId}>
@@ -147,10 +170,20 @@ export function DocumentArea({
                 onRestored={() => setPanel(null)}
               />
             )}
+            {/* 문서와 디렉토리가 **같은 부품**을 쓴다 (`IR-ACL-003` AC-5).
+                문서 전용 공유 화면을 따로 두면 그 AC 와 정면으로 어긋나고,
+                같은 조작이 두 화면에서 다르게 동작하게 된다. */}
             <ShareModal
-              name={tab.name}
+              nodeId={tab.nodeId}
+              nodeName={tab.name}
+              nodeKind="file"
               open={panel === 'share'}
               onOpenChange={(next) => setPanel(next ? 'share' : null)}
+              {...(share?.view === undefined ? {} : { view: share.view })}
+              onGrant={(principalId, level) => share?.onGrant?.(tab.nodeId, principalId, level)}
+              {...(share?.onRevoke === undefined ? {} : { onRevoke: share.onRevoke })}
+              onBreakInheritance={() => share?.onBreakInheritance?.(tab.nodeId)}
+              onInheritFromParent={() => share?.onInheritFromParent?.(tab.nodeId)}
             />
             <DocumentSurface
               file={{ nodeId: tab.nodeId, name: tab.name, level: tab.level ?? null }}

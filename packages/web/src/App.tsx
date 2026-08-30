@@ -1,5 +1,11 @@
-import { QueryClient, QueryClientProvider, useQueries, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useEffect, useState } from 'react';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQueries,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   ApiError,
@@ -13,6 +19,11 @@ import {
   moveNodeToTrash,
   moveNode,
   copyNode,
+  breakInheritance,
+  inheritFromParent,
+  fetchShareView,
+  grantShare,
+  revokeShare,
   renameNode,
   purgeFromTrash,
   restoreFromTrash,
@@ -333,6 +344,55 @@ function AppBody() {
       await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
     },
     [workspaces, queries],
+  );
+
+  /**
+   * 공유 화면 (`IR-ACL-002` · `IR-ACL-003`).
+   *
+   * 연 노드가 있을 때만 묻는다 — 늘 물으면 트리를 훑는 동안에도 노드마다
+   * 권한 조회가 나가고, 그 조회는 관리 전용 명단을 담고 있어 값싸지 않다.
+   */
+  const [sharingId, setSharingId] = useState<string | null>(null);
+  const shareQuery = useQuery({
+    queryKey: ['share', sharingId],
+    queryFn: () => fetchShareView(sharingId as string),
+    enabled: sharingId !== null,
+  });
+
+  /** 부여·회수·상속 조작 뒤에 그 노드의 공유 화면을 다시 받는다. */
+  const afterShareChange = useCallback(
+    async (nodeId: string) => {
+      await queries.invalidateQueries({ queryKey: ['share', nodeId] });
+      // 상속을 끊거나 되붙이면 트리의 보임도 달라질 수 있다.
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
+    },
+    [queries],
+  );
+
+  const share = useMemo(
+    () => ({
+      ...(shareQuery.data === undefined ? {} : { view: shareQuery.data }),
+      onOpen: setSharingId,
+      onGrant: async (nodeId: string, principalId: string, level: 'view' | 'edit') => {
+        await grantShare(nodeId, principalId, level).catch(() => undefined);
+        await afterShareChange(nodeId);
+      },
+      onRevoke: async (entryId: string) => {
+        await revokeShare(entryId).catch(() => undefined);
+        // 회수는 항목 ID 로 나가므로 어느 노드의 것인지 여기서 알 수 없다 —
+        // 지금 열려 있는 노드를 다시 받는다.
+        if (sharingId !== null) await afterShareChange(sharingId);
+      },
+      onBreakInheritance: async (nodeId: string) => {
+        await breakInheritance(nodeId).catch(() => undefined);
+        await afterShareChange(nodeId);
+      },
+      onInheritFromParent: async (nodeId: string) => {
+        await inheritFromParent(nodeId).catch(() => undefined);
+        await afterShareChange(nodeId);
+      },
+    }),
+    [shareQuery.data, sharingId, afterShareChange],
   );
 
   const purgeTrash = useCallback(
@@ -658,6 +718,7 @@ function AppBody() {
       onDelete={deleteNode}
       onRename={rename}
       onRelocate={relocate}
+      share={share}
       onNewVersion={newVersion}
       onNoticeDismiss={() => setNotice(undefined)}
       onSaveState={noteSaveState}
