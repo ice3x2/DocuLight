@@ -58,18 +58,32 @@ export async function login(page) {
     unmeasurable(`web 앱이 ${WEB_URL} 에 떠 있지 않다.\n${안내}`);
   }
 
-  const ok = await page.evaluate(
+  const 결과 = await page.evaluate(
     async ([name, password]) => {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ name, password }),
       });
-      return res.ok;
+      return { ok: res.ok, status: res.status };
     },
     [USER, PASS],
   );
-  if (!ok) unmeasurable(`그 계정으로 로그인되지 않는다.\n${안내}`);
+
+  // **429 는 자격 문제가 아니다.** 로그인은 15분 창에 10회로 제한되므로 이
+  // 검사를 짧은 사이에 여러 번 돌리면 그 창이 찬다. 「계정이 틀렸다」로
+  // 안내하면 멀쩡한 계정을 의심하게 되고, 그 의심이 다음 사람의 시간을 쓴다.
+  if (결과.status === 429) {
+    unmeasurable(
+      [
+        '로그인 요청 빈도 제한에 걸렸다 (429).',
+        '  계정 문제가 아니다 — 15분 창에 10회 제한이 있고 이 검사가 매번 로그인한다.',
+        '  창이 열릴 때까지 기다리거나 API 서버를 재기동하면 즉시 풀린다',
+        '  (limiter 는 메모리에 있고 계정은 DB 에 남는다).',
+      ].join('\n'),
+    );
+  }
+  if (!결과.ok) unmeasurable(`그 계정으로 로그인되지 않는다 (${결과.status}).\n${안내}`);
 }
 
 /**
