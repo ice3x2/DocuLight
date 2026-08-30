@@ -5,7 +5,7 @@
 | 작성일 | 2026-08-30 |
 | 저장소 / 브랜치 | `C:\Work\git\DocuLight2.0` / `master` |
 | 최종 작업 목표 | 원장 §4 각 기준의 「브라우저 잔여」 일곱을 브라우저 검사로 세운다 |
-| 현재 상태 | 기반 완성 · 잔여 0/7 착수 · 워킹트리 clean · HEAD `8835e1e` |
+| 현재 상태 | 기반 완성 · 잔여 0/7 착수 · 워킹트리 clean |
 | SSOT | `C:\Work\git\DocuLight2.0\docs\analysis\phase1-acceptance-matrix.md` |
 | 다음 세션 첫 행동 | 서버·web 을 띄우고 `npm run test:browser:all --workspace @doculight/web` 이 12/12 인지 확인한 뒤 잔여 하나를 고른다 |
 
@@ -19,8 +19,8 @@
 1. 이 문서를 끝까지 읽는다.
 2. `C:\Work\git\DocuLight2.0\docs\analysis\phase1-acceptance-matrix.md` 를 정독한다 — 기준
    열셋의 「브라우저 잔여」 칸이 이 세션의 작업 목록이다.
-3. `git status --porcelain` 이 이 문서 하나(`?? docs/next/2026-08-30-browser-remainder.md`)와
-   `M docs/next/LATEST.md` 만 보이는지 확인한다. 다르면 그 사이 누가 작업한 것이다.
+3. `git status --porcelain` 이 **빈 출력**인지 확인한다. 이 문서까지 커밋한 상태로
+   넘긴다 — 무언가 보이면 그 사이 누가 작업한 것이다.
 4. **환경을 세운다** — 아래 「브라우저 검사를 돌리는 절차」를 그대로 따른다. 이 단계를
    건너뛰면 검사가 종료 코드 `2`(재지 못했다)로 나간다.
 5. 기존 검사 셋이 12/12 인지 먼저 확인한다. 초록이 아니면 새 검사를 쓰기 전에 그 원인부터
@@ -69,14 +69,15 @@
 
 ## 3. 현재 워킹트리·저장소 상태
 
-- 브랜치: `master` (origin `B:/work/git/DocuLight2.0.git` 대비 ahead 0 / behind 0 — 커밋
-  `8835e1e` 까지 푸시 완료)
-- 미커밋 파일: **셋** — 이 핸드오프 문서 · `docs/next/LATEST.md` ·
-  `packages/web/test/_web-harness.mjs`. 그 밖은 clean.
-  (마지막 것은 검증이 잡아낸 어긋남을 고친 결과다 — 아래 「기억과 실제가 달랐던 항목」 참조.
-  다음 세션이 `git status` 를 돌릴 때 이 셋이 아니라 **0건**이면 이미 커밋된 것이다)
-- **origin 은 같은 기계의 `B:` 드라이브다.** 네트워크 매핑이 아니라 로컬 경로의 bare
-  저장소이므로 푸시해도 사본이 이 기계를 벗어나지 않는다. 기계 밖 원격은 등록돼 있지 않다
+- 브랜치: `master` (origin `B:/work/git/DocuLight2.0.git` 대비 behind 0)
+- 미커밋 파일: **없음(clean).** 이 핸드오프 문서와 `docs/next/LATEST.md`,
+  그리고 `packages/web/test/_web-harness.mjs` 의 429 안내까지 커밋했다.
+  **HEAD 해시를 여기 적지 않는다** — 이 문서를 커밋하면 그 해시가 바뀌므로 적는 순간
+  틀린 값이 된다. 마지막 커밋의 제목은 `docs(next): 브라우저 잔여 작업을 위한 핸드오프를
+  남긴다` 이며 `git log --oneline -3` 으로 확인한다
+- **origin 은 같은 기계의 `B:` 드라이브다.**
+  네트워크 매핑이 아니라 로컬 경로의 bare 저장소이므로 푸시해도 사본이 이 기계를 벗어나지
+  않는다. 기계 밖 원격은 등록돼 있지 않다
 
 ## 4. 관련 문서·코드 (절대경로)
 
