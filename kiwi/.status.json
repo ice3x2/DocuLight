@@ -1,16 +1,16 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-08-30T14:45:11.872Z",
+  "generatedAt": "2026-08-30T15:44:21.695Z",
   "source": "speckiwi",
   "specFingerprint": {
     "algorithm": "sha256",
-    "value": "ec4f5894fe31874b35c23041d1d6066f51e703c955f63a5adf04109680444024",
+    "value": "c05aca111e9c37db814d6f766ab00a5df2188fa7f8e645c81e190674c742d5cc",
     "files": [
       {
         "path": "docs/spec/00.index.md",
-        "sha256": "e5a7f47af9cb919631fe608d137d213a8214ccdcabda85c4cd39974dd2f018fe",
+        "sha256": "6dce8ea57d72e8910d95abdad2272a3874e86e88d56083227f56495c3e82b61f",
         "size": 9286,
-        "mtimeMs": 1787978168366.5945
+        "mtimeMs": 1788104661654.5945
       },
       {
         "path": "docs/spec/02.product-architecture.srs.md",
@@ -20,9 +20,9 @@
       },
       {
         "path": "docs/spec/07.editor.srs.md",
-        "sha256": "f9988894495d0beb3f30cfcefda51c688f0116c53a4aaa12409ad1ec6bf81a61",
-        "size": 83593,
-        "mtimeMs": 1788101087301.6013
+        "sha256": "981e99f335e033ab6c7e0709829b9b9211b325a6f47913d6389a442fa4ae368d",
+        "size": 94086,
+        "mtimeMs": 1788104661606.3662
       },
       {
         "path": "docs/spec/08.app-shell.srs.md",
@@ -101,7 +101,7 @@
     },
     "functional": {
       "ARCH": 1,
-      "EDITOR": 9,
+      "EDITOR": 10,
       "SHELL": 14,
       "AUTH": 5,
       "ACL": 6,
@@ -127,6 +127,7 @@
       "STORAGE": 1
     },
     "interface": {
+      "EDITOR": 1,
       "SHELL": 4,
       "AUTH": 2,
       "ACL": 3,

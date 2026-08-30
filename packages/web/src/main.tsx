@@ -2,6 +2,11 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { App } from './App.js';
+
+// 편집기 화면의 스타일 (`IR-EDITOR-001`). 편집기는 자기 스타일을 진입점
+// 하나로 내보내고, 그것을 얹는 것은 쓰는 쪽의 몫이다 — 얹지 않으면 데코레이션
+// 클래스는 붙지만 규칙이 없어 태그가 칩으로 보이지 않고 수식이 두 벌 겹친다.
+import '@doculight/editor/styles.css';
 import './styles/shell.css';
 
 const container = document.getElementById('root');

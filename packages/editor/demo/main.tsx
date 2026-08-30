@@ -1,7 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import '../src/vendor/atomic-editor/styles/inline-preview.css';
+// 편집기 스타일은 진입점 하나로 얹는다 (`IR-EDITOR-001` AC-3) — 데모가
+// 자기 목록을 따로 갖고 있으면 제품과 갈린다.
 import '../src/styles/editor.css';
 import './demo.css';
 

@@ -88,7 +88,7 @@ Before starting work in a fresh session, read `docs/next/LATEST.md`. It points a
 - Default dev-server port is **3399** (`packages/editor` and any later frontend package). Do not use another port without saying why.
 - Two different apps compete for port 3399, so name the one you mean. `npm run dev` from the repository root starts the **web** app (`@doculight/web`). The **editor demo** is a separate app started with `npm run dev --workspace @doculight/editor`, and that demo — not the web app — is what every browser check below drives. Only one of them can hold 3399 at a time, so a browser check run against the web app measures the wrong screen. Measured 2026-08-25.
 - A real-browser check already exists as a precedent: `packages/editor/test/browser-check.mjs`, run via `npm run test:browser` or `npm run test:browser:headed` from `packages/editor` once the dev server is up. It drives Playwright's chromium against `http://localhost:3399/` and currently checks Mermaid live preview only — reuse its shape for other browser-only checks rather than inventing a new one. `playwright` 1.62.1 and its chromium binary **are** installed, in `packages/editor/node_modules` (not the repository-root `node_modules`). Import it by absolute path from scripts that live outside that workspace. Measured 2026-08-25.
-- The browser checks carry the live-preview acceptance criteria that only a real browser can measure — real gestures, computed style, widget geometry. They are **not** the only evidence: `npm test` also carries axes no browser check covers (the line-unit reveal rule, the table reveal state machine), so a live-preview change needs both. What is true is that **nothing runs the browser checks automatically**: `npm test` is vitest and its `include` does not match `.mjs`, and this repository has no CI at all (there is no `.github/` directory). Measured 2026-08-25. Run all four in one go with `npm run test:browser:all` from the repository root — it forwards to the same script name in `packages/editor`, which runs `browser-check.mjs` (Mermaid), `table-reveal-check.mjs` (table source reveal, `FR-EDITOR-007` AC-7), `heightmap-drift-check.mjs` (widget heightmap drift) and `tag-chip-check.mjs` (body tags actually look like chips — computed style, not class names — plus the AC-10 reveal round trip) in that order, stops at the first failure, and propagates its exit code (`1` = a check failed, `2` = could not measure — usually the dev server is not up, and each script prints how to start it). Whoever changes live preview (tables, code blocks, Mermaid, math), widget geometry, or the reveal rules runs it before committing, with the dev server already up.
+- The browser checks carry the live-preview acceptance criteria that only a real browser can measure — real gestures, computed style, widget geometry. They are **not** the only evidence: `npm test` also carries axes no browser check covers (the line-unit reveal rule, the table reveal state machine), so a live-preview change needs both. What is true is that **nothing runs the browser checks automatically**: `npm test` is vitest and its `include` does not match `.mjs`, and this repository has no CI at all (there is no `.github/` directory). Measured 2026-08-25. Run all five in one go with `npm run test:browser:all` from the repository root — it forwards to the same script name in `packages/editor`, which runs `browser-check.mjs` (Mermaid), `table-reveal-check.mjs` (table source reveal, `FR-EDITOR-007` AC-7), `heightmap-drift-check.mjs` (widget heightmap drift), `tag-chip-check.mjs` (body tags actually look like chips — computed style, not class names — plus the AC-10 reveal round trip) and `math-render-check.mjs` (`FR-EDITOR-010`: math actually stands on the KaTeX stylesheet — computed font, the folded MathML copy, and the superscript's real geometry) in that order, stops at the first failure, and propagates its exit code (`1` = a check failed, `2` = could not measure — usually the dev server is not up, and each script prints how to start it). Whoever changes live preview (tables, code blocks, Mermaid, math), widget geometry, or the reveal rules runs it before committing, with the dev server already up.
 
 - **`packages/web` 에도 브라우저 검사가 있다** (2026-08-29 신설). editor 의 검사와 전제가
   다르다 — web 은 서버가 있어야 트리도 본문도 저장도 성립하므로, **web 3399 와 API 3400 이
@@ -118,9 +118,16 @@ Before starting work in a fresh session, read `docs/next/LATEST.md`. It points a
   저장해 충돌을 실제로 만들고, 그 병합 화면과 버전 비교 화면에서 `@codemirror/merge`
   가 세운 `.cm-mergeView` 의 기하와 `.cm-changedLine` 을 잰다. 둘째 세션은 로그인을
   한 번 더 하지 않고 `storageState` 를 복사해 연다(위의 15분 10회 제한 때문이다).
-  **로그인은 15분 창에 10회로 제한된다** — 검사를 짧은 사이에 여러 번 돌리면
-  429 가 나고, 그때 검사는 「계정이 틀렸다」가 아니라 그 사실을 안내한다.
-  창이 열릴 때까지 기다리거나 API 서버를 재기동하면 즉시 풀린다.
+  다섯째는 `editor-styles-check.mjs`(`IR-EDITOR-001`: 편집기 스타일이 **제품 화면**에
+  실제로 닿는가)이며, 같은 축의 조립 시험 `editor-styles-assembly.test.ts` 가 vitest
+  쪽에 함께 선다 — 브라우저 검사는 서버가 있어야 돌지만 그쪽은 늘 돈다.
+  **로그인은 15분 창에 10회로 제한되고 web 검사 다섯이 한 번에 5회를 쓴다** — 그래서
+  한 창에 두 번은 돌지 못한다. 짧은 사이에 다시 돌리면 429 가 나고, 그때 검사는
+  「계정이 틀렸다」가 아니라 그 사실을 안내한다. 창이 열릴 때까지 기다리거나 API 서버를
+  재기동하면 즉시 풀린다.
+  **두 패키지의 검사를 한 자리에서 돌리려면 포트를 나눠야 한다** — 둘 다 기본으로
+  3399 를 보므로, editor 데모를 다른 포트에 띄우고 `EDITOR_URL` 로 넘긴다:
+  `npx vite --port 3401 --strictPort` 뒤 `EDITOR_URL=http://localhost:3401/ npm run test:browser:all`.
 
 
 ## Gate decisions (2026-08-25, standing user instruction)

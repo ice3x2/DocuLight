@@ -1,3 +1,35 @@
+/* 편집기 화면의 **하나뿐인 스타일 진입점** (`IR-EDITOR-001`).
+ *
+ * 이 파일을 얹으면 편집기 화면에 필요한 스타일이 전부 선다. 진입점을 하나로
+ * 두는 이유는 데모와 제품이 각자 목록을 갖고 있으면 한쪽에만 얹힌 시트가
+ * 생기고, 그러면 데모를 재는 검사가 초록인 채로 제품 화면만 조용히 어긋나기
+ * 때문이다 — 실제로 그 상태였다.
+ *
+ * `@import` 는 CSS 규칙상 다른 규칙보다 앞에 와야 하므로 파일 맨 위에 둔다. */
+
+/* 인라인 라이브 프리뷰 (vendor). 데코레이션의 숨김과 드러남이 여기 있다. */
+@import '../vendor/atomic-editor/styles/inline-preview.css';
+
+/* 수식 엔진의 스타일시트 (`FR-EDITOR-010`). KaTeX 는 글꼴 · 수직 정렬 ·
+ * 분수와 근호의 배치를 전부 CSS 로 세우고, MathML 사본을 1px 로 접어 화면에서
+ * 감추는 것도 이 시트가 한다. 없으면 같은 수식이 두 벌 겹쳐 보인다. */
+@import 'katex/dist/katex.min.css';
+
+/* 블록 수식의 세로 여백은 **바깥 컨테이너가 padding 으로** 갖는다.
+ *
+ * KaTeX 는 `.katex-display` 에 `margin: 1em 0` 을 준다. 그 margin 은 CM6 가
+ * 블록 위젯 높이를 재는 `getBoundingClientRect` 에 들어가지 않으므로 heightmap
+ * 이 그만큼 짧아지고, 그 아래 줄들의 클릭이 한 줄씩 밀린다 — mermaid 위젯에서
+ * 이미 한 번 겪어 같은 방식으로 고친 결함이다(`.dl-mermaid-block` 아래 주석).
+ * 실제로 이 시트를 들이자 표 클릭 판정이 그 자리에서 깨졌다. */
+.dl-math-block .katex-display {
+  margin: 0;
+}
+
+.dl-math-block {
+  padding: 1em 0;
+}
+
 /* Mermaid 블록 위젯.
  *
  * 색은 vendor 테마의 CSS 변수를 그대로 물려받는다 — 우리 값을 새로 정의하면
