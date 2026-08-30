@@ -107,12 +107,17 @@ Before starting work in a fresh session, read `docs/next/LATEST.md`. It points a
   절차(로그인·시험 문서 준비·트리에서 열기)만 `packages/web/test/_web-harness.mjs` 에
   있다. 검사는 자기 문서를 만들고 끝나면 지우므로 **개인 볼트에 기대지 않는다**.
   저장소 루트의 `npm run test:browser:all` 은 이제 editor 와 web 을 차례로 부른다.
-  web 쪽은 둘이다 — `focus-retention-check.mjs`(`FR-EDITOR-009`: 저장이 포커스·커서·
+  web 쪽은 넷이다. `focus-retention-check.mjs`(`FR-EDITOR-009`: 저장이 포커스·커서·
   이어 쓰기를 끊지 않는다)와 `ime-composition-check.mjs`(원장 §4 **수용 기준 7**:
-  한글 IME 조합이 편집 중 깨지지 않는다). 뒤의 것은 CDP `Input.imeSetComposition` 으로
+  한글 IME 조합이 편집 중 깨지지 않는다) — 뒤의 것은 CDP `Input.imeSetComposition` 으로
   조합 단계를 그대로 내므로 OS 입력기 없이도 그 축이 재어진다. 셋째는
   `search-layout-check.mjs`(`FR-SHELL-013` AC-5·AC-12: 필터 버튼의 배치와 결과
-  목록의 실제 스크롤)이며 계산된 기하를 잰다.
+  목록의 실제 스크롤)이며 계산된 기하를 잰다. 넷째는 `merge-view-check.mjs`(원장 §4
+  **수용 기준 6·12** · `FR-EDITOR-008` AC-2~AC-4 · `IR-STORAGE-001` AC-1·AC-3)이며
+  **브라우저 컨텍스트를 둘 띄우는 유일한 검사**다 — 같은 문서를 두 세션이 차례로
+  저장해 충돌을 실제로 만들고, 그 병합 화면과 버전 비교 화면에서 `@codemirror/merge`
+  가 세운 `.cm-mergeView` 의 기하와 `.cm-changedLine` 을 잰다. 둘째 세션은 로그인을
+  한 번 더 하지 않고 `storageState` 를 복사해 연다(위의 15분 10회 제한 때문이다).
   **로그인은 15분 창에 10회로 제한된다** — 검사를 짧은 사이에 여러 번 돌리면
   429 가 나고, 그때 검사는 「계정이 틀렸다」가 아니라 그 사실을 안내한다.
   창이 열릴 때까지 기다리거나 API 서버를 재기동하면 즉시 풀린다.

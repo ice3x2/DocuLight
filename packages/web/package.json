@@ -13,11 +13,13 @@
     "test:watch": "vitest",
     "test:browser:focus": "node test/focus-retention-check.mjs",
     "test:browser:focus:headed": "node test/focus-retention-check.mjs --headed",
-    "test:browser:all": "npm run test:browser:focus && npm run test:browser:ime && npm run test:browser:search",
+    "test:browser:all": "npm run test:browser:focus && npm run test:browser:ime && npm run test:browser:search && npm run test:browser:merge",
     "test:browser:ime": "node test/ime-composition-check.mjs",
     "test:browser:ime:headed": "node test/ime-composition-check.mjs --headed",
     "test:browser:search": "node test/search-layout-check.mjs",
-    "test:browser:search:headed": "node test/search-layout-check.mjs --headed"
+    "test:browser:search:headed": "node test/search-layout-check.mjs --headed",
+    "test:browser:merge": "node test/merge-view-check.mjs",
+    "test:browser:merge:headed": "node test/merge-view-check.mjs --headed"
   },
   "dependencies": {
     "@codemirror/merge": "^6.10.4",
