@@ -50,12 +50,18 @@
 - [x] `search-layout-check.mjs` (판정 4) — `FR-SHELL-013` AC-5·AC-12. 커밋 `052dee7`
 - [x] 브라우저 검사 실행 — `DOCULIGHT_E2E_USER=e2e DOCULIGHT_E2E_PASS=e2e-pass-2026
       npm run test:browser:all --workspace @doculight/web` (2026-08-29 실행, **12/12 통과**,
-      종료 코드 0)
+      종료 코드 0. 2026-08-30 harness 수정 뒤 같은 명령으로 재실행해 같은 결과).
+      ⚠️ **독립 재현 없음** — 검증 서브에이전트는 서버·계정이 필요해 실행하지 않았고,
+      `check()` 호출 수가 5·3·4=12 라는 것만 정적으로 대조했다. 다음 세션이 위
+      「브라우저 검사를 돌리는 절차」로 직접 확인할 수 있다
 - [x] 전체 회귀 — `npm test` (2026-08-29 실행, exit 0, editor 253 통과 1 건너뜀 / server
       1336 통과 / web 536 통과)
 - [x] 타입 검사 — `npm run typecheck` (2026-08-29 실행, exit 0)
 - [x] 독립 검증 — 서브에이전트가 세 스위트를 직접 실행해 위 수치를 대조했다. 판정 `pass`,
-      false_claims 0, 탐침 잔여 0
+      false_claims 0, 탐침 잔여 0.
+      ⚠️ **그 실행 자체는 재현되지 않았다** — 과거 세션의 서브에이전트 실행이라 다시
+      돌릴 수 없다. `kiwi/waves.jsonl` 마지막 행(wave-7 · phase `verify`)이 같은 수치와
+      `independently_measured` 서술로 뒷받침한다
 
 ### 2.1 기억과 실제가 달랐던 항목
 
