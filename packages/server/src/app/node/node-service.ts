@@ -598,6 +598,11 @@ function place(
       .map((sibling) => sibling.name),
   );
 
+  // **노드 행 하나만 바꾼다.** 디스크의 실물을 새 자리로 따라가게 하는 것은
+  // 부르는 쪽의 몫이며(`FR-SHELL-015`), 그 순서는 뒤집을 수 없다 — 파일 감시가
+  // 「노드가 이미 그 경로를 갖고 있으면 우리가 옮긴 것」으로 서버발 이동을
+  // 무시하므로(`file-watch.ts`), 디스크를 먼저 옮기면 정상 이동이 신규 노드로
+  // 판정되어 권한과 이력이 끊긴다.
   nodes.relocate(node.id, { parentId, name: resolved });
   return { ok: true, name: resolved };
 }

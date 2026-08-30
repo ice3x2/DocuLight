@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rename as renameOnDisk, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
 import { Router, type Request } from 'express';
@@ -29,7 +29,13 @@ import {
   removeFavorite,
   type FavoriteStores,
 } from '../../app/favorite/favorite-service.js';
-import { createNode } from '../../app/node/node-service.js';
+import {
+  copyNode,
+  createNode,
+  moveNode,
+  renameNode,
+  type Rejected,
+} from '../../app/node/node-service.js';
 import { searchPrincipals } from '../../app/principal/principal-search-service.js';
 import { maySearchFor, parseScope } from '../../app/principal/search-scope.js';
 import { shareView } from '../../app/acl/share-service.js';
@@ -1423,6 +1429,159 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
         scope: scope === 'all' ? ('all' as TrashScope) : ('mine' as TrashScope),
       }),
     );
+  });
+
+  /**
+   * 거절을 상태 코드로 옮긴다.
+   *
+   * **사유를 본문에 싣지 않는다** (`SEC-ACL-006`). 권한 부족과 부재를 다른
+   * 코드로 가르면 그 차이 자체가 「거기 무엇이 있다」를 알려주는 오라클이
+   * 되므로, 보이지 않는 노드는 없는 노드와 같은 값으로 나간다.
+   */
+  const refuse = (rejected: Rejected): 403 | 400 =>
+    rejected.violations.some((v) => v.rule === 'forbidden') ? 403 : 400;
+
+  /**
+   * 노드의 디스크 자리. 노드가 없으면 `undefined`.
+   *
+   * 경로를 **파생**해 얻는다 — 노드 행에 담지 않는 것이 이 저장소의 규칙이고
+   * (`DR-STORAGE-003`), 그래서 이름이나 부모가 바뀌면 이 함수의 결과도 함께
+   * 바뀐다. 옮기기 **전후로 각각** 불러 옛 자리와 새 자리를 얻는다.
+   */
+  const diskPathOf = (nodeId: string): string | undefined => {
+    const node = stores.nodes.findById(nodeId);
+    if (node === undefined) return undefined;
+    return join(workspaceRootOf(stores, node.workspaceId), stores.nodes.pathOf(nodeId));
+  };
+
+  /**
+   * 노드 서비스가 DB 를 바꾼 뒤 디스크를 그 자리로 따라가게 한다.
+   *
+   * `place` 는 `nodes.relocate` 로 행 하나만 갱신하고 파일시스템에 손대지
+   * 않는다 — 생성이 그랬듯이(`POST /nodes` 의 주석) 실체를 세우는 것은 이
+   * 계층의 몫이다. 따라가지 않으면 트리에는 새 이름·새 자리가 서는데 그
+   * 문서를 열 수 없다.
+   *
+   * 디렉토리는 `rename` 한 번으로 하위가 함께 간다 — 노드 행도 같은 이유로
+   * 하나만 바뀌므로 두 계층이 같은 모양이 된다.
+   *
+   * 실체가 없는 노드는 그냥 둔다. 재조정이 세운 노드처럼 행만 있는 경우가
+   * 있고, 그때 옮기기를 실패로 만들면 DB 는 이미 바뀐 뒤라 되돌릴 수 없다.
+   */
+  const followOnDisk = async (from: string | undefined, to: string | undefined) => {
+    if (from === undefined || to === undefined || from === to) return;
+    if (!existsSync(from)) return;
+    await mkdir(dirname(to), { recursive: true });
+    await renameOnDisk(from, to);
+  };
+
+  /**
+   * 이름을 바꾼다 (`FR-SHELL-015` AC-1 · 원장 `R88-a`).
+   *
+   * 노드 ID 는 그대로다 — 새 노드로 대신하면 그 문서 앞으로 부여된 권한과
+   * 이력이 끊긴다. 같은 이름이 이미 있으면 거부하지 않고 접미사를 붙이며,
+   * 그 사실을 `notice` 로 알린다(알리지 않으면 사용자가 그 문서를 못 찾는다).
+   */
+  router.post('/nodes/:nodeId/rename', async (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const { name } = req.body as { name?: string };
+    if (typeof name !== 'string') {
+      res.sendStatus(400);
+      return;
+    }
+
+    const nodeId = req.params.nodeId;
+    const before = diskPathOf(nodeId);
+
+    const placed = renameNode(stores, actor, nodeId, name);
+    if (!placed.ok) {
+      res.sendStatus(refuse(placed));
+      return;
+    }
+
+    await followOnDisk(before, diskPathOf(nodeId));
+    res.json({
+      name: placed.name,
+      ...(placed.name === name ? {} : { notice: noticeFor(placed.name) }),
+    });
+  });
+
+  /**
+   * 자리를 옮긴다 (`FR-SHELL-015` AC-2 · AC-3).
+   *
+   * 목적지는 **같은 워크스페이스**여야 한다 — 경계를 넘는 수요는 복사가
+   * 받는다(`SEC-ACL-014`). 자기 자신이나 자기 자손 아래로는 갈 수 없고,
+   * 하위에 요청자가 볼 수 없는 노드가 있는 디렉토리는 관리 권한을 요구한다.
+   * 그 판정은 전부 `moveNode` 가 소유하며 이 라우트가 복제하지 않는다.
+   */
+  router.post('/nodes/:nodeId/move', async (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const { parentId } = req.body as { parentId?: string | null };
+    if (parentId !== null && typeof parentId !== 'string') {
+      res.sendStatus(400);
+      return;
+    }
+
+    const nodeId = req.params.nodeId;
+    const before = diskPathOf(nodeId);
+
+    const placed = moveNode(stores, actor, nodeId, parentId);
+    if (!placed.ok) {
+      res.sendStatus(refuse(placed));
+      return;
+    }
+
+    await followOnDisk(before, diskPathOf(nodeId));
+    res.json({ name: placed.name });
+  });
+
+  /**
+   * 복사한다 (`FR-SHELL-015` AC-4).
+   *
+   * 워크스페이스 경계를 넘을 수 있는 유일한 조작이며 원본에는 **보기**면
+   * 족하다 — 원본을 건드리지 않기 때문이다. 목적지를 판별 합집합으로 받는
+   * 것은 `copyNode` 의 계약이다: 부모 아래와 워크스페이스 루트는 서로 다른
+   * 두 요청이라, 둘을 나란히 받으면 어긋나는 조합이 표현 가능해진다.
+   *
+   * 디스크 사본은 `copyNode` 자신이 만든다 — 이 조작만은 새 실체를 세우는
+   * 일이라 서비스가 이미 파일까지 다룬다.
+   */
+  router.post('/nodes/:nodeId/copy', async (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const { parentId, workspaceId } = req.body as { parentId?: string; workspaceId?: string };
+    const destination =
+      typeof parentId === 'string'
+        ? { parentId }
+        : typeof workspaceId === 'string'
+          ? { workspaceId }
+          : undefined;
+    if (destination === undefined) {
+      res.sendStatus(400);
+      return;
+    }
+
+    const copied = await copyNode(stores, actor, req.params.nodeId, destination);
+    if (!copied.ok) {
+      res.sendStatus(refuse(copied));
+      return;
+    }
+
+    res.json({ id: copied.id, name: copied.name, copied: copied.copied });
   });
 
   router.delete('/nodes/:nodeId', async (req, res) => {

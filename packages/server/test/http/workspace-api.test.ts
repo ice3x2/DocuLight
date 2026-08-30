@@ -887,3 +887,78 @@ describe('휴지통 복구 (`FR-SHELL-007`)', () => {
     expect((await request(app).post(`/api/trash/${doc}/restore`)).status).toBe(404);
   });
 });
+
+describe('FR-SHELL-015 — 이름 변경 · 이동 · 복사가 API 로 도달한다', () => {
+  /** 옮겨 갈 자리. 디렉토리 노드는 디스크에도 자리가 있어야 한다. */
+  const 디렉토리를만든다 = async (name: string) => {
+    const id = idOf(
+      createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name }),
+    );
+    await mkdir(fileOf(id), { recursive: true });
+    return id;
+  };
+
+  it('AC-1: 이름을 바꾸면 노드와 디스크의 파일이 함께 바뀌고 노드 ID 는 그대로다', async () => {
+    const res = await request(app).post(`/api/nodes/${doc}/rename`).send({ name: '바뀐이름.md' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.name).toBe('바뀐이름.md');
+    expect(stores.nodes.findById(doc)?.name).toBe('바뀐이름.md');
+    // **디스크가 따라와야 한다.** 오지 않으면 트리에는 새 이름이 서는데
+    // 그 문서를 열 수 없다 — 본문을 읽는 쪽이 이름에서 파생된 경로를
+    // 보기 때문이다. 「이름을 바꿨다」는 바꾼 뒤에도 열린다는 뜻이다.
+    expect(await readFile(fileOf(doc), 'utf8')).toBe('# 처음\n');
+  });
+
+  it('AC-1: 볼 수 없는 사람의 개명은 없는 노드와 **같은 값**으로 거절된다', async () => {
+    actingAs = me;
+
+    const res = await request(app).post(`/api/nodes/${doc}/rename`).send({ name: '몰래.md' });
+
+    // 권한 부족과 부재를 다른 코드로 가르면 그 차이가 존재 오라클이 된다.
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({});
+    expect(stores.nodes.findById(doc)?.name).toBe('회의록.md');
+  });
+
+  it('AC-2: 옮기면 새 부모 아래에 서고 디스크도 따라간다', async () => {
+    const folder = await 디렉토리를만든다('자료');
+
+    const res = await request(app).post(`/api/nodes/${doc}/move`).send({ parentId: folder });
+
+    expect(res.status).toBe(200);
+    expect(stores.nodes.findById(doc)?.parentId).toBe(folder);
+    expect(await readFile(fileOf(doc), 'utf8')).toBe('# 처음\n');
+  });
+
+  it('AC-2: 자기 자신 아래로 옮기려 하면 400 이고 자리는 그대로다', async () => {
+    const folder = await 디렉토리를만든다('자료');
+
+    const res = await request(app).post(`/api/nodes/${folder}/move`).send({ parentId: folder });
+
+    expect(res.status).toBe(400);
+    expect(stores.nodes.findById(folder)?.parentId).toBe(null);
+  });
+
+  it('AC-4: 복사하면 원본이 그대로 남고 사본이 새 노드로 선다', async () => {
+    const res = await request(app).post(`/api/nodes/${doc}/copy`).send({ workspaceId: ws });
+
+    expect(res.status).toBe(200);
+    expect(res.body.id).not.toBe(doc);
+    // 원본을 건드리지 않는 것이 복사가 보기 권한만 요구하는 근거다.
+    expect(await readFile(fileOf(doc), 'utf8')).toBe('# 처음\n');
+    expect(await readFile(fileOf(res.body.id), 'utf8')).toBe('# 처음\n');
+  });
+
+  it('세 조작 모두 인증되지 않은 요청은 401 이다', async () => {
+    actingAs = undefined;
+
+    for (const [경로, 본문] of [
+      [`/api/nodes/${doc}/rename`, { name: 'x.md' }],
+      [`/api/nodes/${doc}/move`, { parentId: null }],
+      [`/api/nodes/${doc}/copy`, { workspaceId: ws }],
+    ] as const) {
+      expect((await request(app).post(경로).send(본문)).status).toBe(401);
+    }
+  });
+});
