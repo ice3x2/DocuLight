@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { App } from '../src/App.js';
+import { CONTEXT_MENU_ITEMS } from '../src/tree/tree-contract.js';
 
 /**
  * 화면 배선 — 조작이 서버까지, 서버가 다시 화면까지 닿는가.
@@ -526,4 +527,104 @@ describe('FR-SHELL-006 AC-4 — 트리가 갱신돼도 이력이 쌓이지 않�
 
     expect(pushed.filter((one) => one.includes('n1'))).toHaveLength(1);
   });
+});
+
+describe('IR-SHELL-005 — 트리 컨텍스트 메뉴의 항목이 실제 조작에 닿는다', () => {
+  /**
+   * **아직 조작에 닿지 못하는 항목과 그 사유.**
+   *
+   * 이 목록이 줄어드는 것이 다음 작업의 정의다. 사유를 함께 적는 이유는
+   * 빈 허용목록이 곧 「나중에」가 되기 때문이며, 어느 작업이 이 줄을
+   * 지우는지가 적혀 있어야 그 작업이 실제로 온다. `packages/server` 의
+   * 조립 방벽이 쓰는 방식과 같다.
+   *
+   * **여기 없는 항목이 끊기면 그 순간 이 시험이 실패한다** — 그것이 이
+   * 방벽이 있는 이유다. 겉모습만 재는 `tree-menu.test.tsx` 는 아홉 항목이
+   * 전부 끊겨 있어도 통과한다.
+   */
+  const 아직_닿지_않음: ReadonlyMap<string, string> = new Map([
+    ['new-file', '메뉴 항목이 끊겨 있다. 문서 생성은 트리 상단 「새 노트」 버튼에만 배선돼 있고 그 버튼은 자리를 고를 수 없다'],
+    ['new-directory', '메뉴 항목이 끊겨 있다. kind=directory 로 createNode 를 부르는 자리가 화면에 없다'],
+    ['rename', '서버에 실행 라우트가 없다. 이름 변경 조작을 소유하는 요구가 서야 닫힌다'],
+    ['move', '서버에 실행 라우트가 없다 — relocation-preview 만 있다. 이동 조작을 소유하는 요구가 서야 닫힌다'],
+    ['copy', '서버에 실행 라우트가 없다. 복사 조작을 소유하는 요구가 서야 닫힌다'],
+    ['share', 'client 함수와 서버 라우트는 있으나 그것을 쓸 화면이 자리표다 — document/ShareModal.tsx 가 안내 문구만 그린다'],
+    ['new-version', '**배선은 이어져 있다.** 다만 파일 선택기를 거치므로 고르기 전에는 요청이 나가지 않아, 이 시험의 「눌렀을 때 나가는가」로는 재어지지 않는다'],
+  ]);
+
+  it('AC-1 · AC-2: 삭제를 고르면 그 노드가 휴지통으로 간다', async () => {
+    const user = await openTree();
+
+    await user.pointer({
+      keys: '[MouseRight]',
+      target: screen.getByRole('treeitem', { name: /회의록/ }),
+    });
+    await user.click(within(await screen.findByRole('menu')).getByRole('menuitem', { name: '삭제' }));
+
+    await waitFor(() =>
+      expect(sent).toContainEqual({ path: '/api/nodes/n1', method: 'DELETE', body: undefined }),
+    );
+  });
+
+  it('AC-2: 삭제한 노드가 휴지통 목록에 나타난다', async () => {
+    // 삭제가 나간 뒤에만 휴지통이 그 노드를 돌려준다 — 목록이 처음부터
+    // 차 있으면 「삭제가 넣었다」와 「원래 있었다」가 갈리지 않는다.
+    routes.set('/api/trash', () =>
+      json(
+        sent.some((one) => one.method === 'DELETE' && one.path === '/api/nodes/n1')
+          ? [
+              {
+                nodeId: 'n1',
+                originalPath: '기획팀/회의록.md',
+                workspaceName: '기획팀',
+                deletedAt: '2026-08-30T00:00:00.000Z',
+                canPurge: false,
+              },
+            ]
+          : [],
+      ),
+    );
+    const user = await openTree();
+
+    await user.pointer({
+      keys: '[MouseRight]',
+      target: screen.getByRole('treeitem', { name: /회의록/ }),
+    });
+    await user.click(within(await screen.findByRole('menu')).getByRole('menuitem', { name: '삭제' }));
+
+    await user.click(screen.getByRole('button', { name: '설정' }));
+    await user.click(await screen.findByRole('tab', { name: '휴지통' }));
+
+    expect(await screen.findByRole('button', { name: /기획팀\/회의록\.md 복구/ })).toBeTruthy();
+  });
+
+  it.each(CONTEXT_MENU_ITEMS.map((item) => [item.id, item.label] as const))(
+    'AC-3 · AC-4: `%s` 는 명시된 목록과 실제 배선이 일치한다',
+    async (id, label) => {
+      const user = await openTree();
+      await user.pointer({
+        keys: '[MouseRight]',
+        target: screen.getByRole('treeitem', { name: /회의록/ }),
+      });
+
+      const 항목 = within(await screen.findByRole('menu')).getByRole('menuitem', { name: label });
+      const 이전 = sent.length;
+      await user.click(항목);
+      // 요청은 비동기로 나간다. 나가지 않는 항목을 기다리느라 시험이 느려지지
+      // 않도록, 나가는 항목만 기다리고 나머지는 한 틱만 준다.
+      await waitFor(() => expect(sent.length).toBeGreaterThan(이전)).catch(() => undefined);
+
+      const 닿았다 = sent.length > 이전;
+      const 사유 = 아직_닿지_않음.get(id);
+
+      if (사유 === undefined) {
+        expect(닿았다, `\`${id}\` 가 끊겼다. 고치거나, 사유와 함께 목록에 올려라`).toBe(true);
+      } else {
+        expect(
+          닿았다,
+          `\`${id}\` 가 이제 닿는다 — 목록에서 그 줄을 지워라. 적혀 있던 사유: ${사유}`,
+        ).toBe(false);
+      }
+    },
+  );
 });

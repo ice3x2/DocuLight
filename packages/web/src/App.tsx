@@ -10,6 +10,7 @@ import {
   loadDocument,
   uploadAttachment,
   uploadIntoDirectory,
+  moveNodeToTrash,
   purgeFromTrash,
   restoreFromTrash,
   uploadNewVersion,
@@ -272,6 +273,23 @@ function AppBody() {
     await queries.invalidateQueries({ queryKey: ['trash'] });
     await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
   }, [queries]);
+
+  /**
+   * 노드를 휴지통으로 보낸다 (`IR-SHELL-005` AC-1).
+   *
+   * 되돌릴 수 있는 조작이라 확인을 거치지 않는다 — 복구는 휴지통 화면에
+   * 있고, 영구 삭제만이 되돌릴 수 없다.
+   *
+   * 트리와 휴지통을 함께 무효화한다. 트리만 갱신하면 지운 노드가 트리에서는
+   * 사라지는데 휴지통에는 나타나지 않아, 사용자가 그것을 잃었다고 읽는다.
+   */
+  const deleteNode = useCallback(
+    async (nodeId: string) => {
+      await moveNodeToTrash(nodeId).catch(() => undefined);
+      await afterTrashAction();
+    },
+    [afterTrashAction],
+  );
 
   const purgeTrash = useCallback(
     async (nodeId: string) => {
@@ -593,6 +611,7 @@ function AppBody() {
       onUpload={upload}
       onCreateNote={createNote}
       onFavorite={favorite}
+      onDelete={deleteNode}
       onNewVersion={newVersion}
       onNoticeDismiss={() => setNotice(undefined)}
       onSaveState={noteSaveState}

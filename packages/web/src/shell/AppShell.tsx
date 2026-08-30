@@ -309,6 +309,7 @@ export function AppShell({
   onUpload,
   onCreateNote,
   onFavorite,
+  onDelete,
   onNewVersion,
   onNoticeDismiss,
   confirmReplace,
@@ -391,6 +392,7 @@ export function AppShell({
   onCreateNote?: () => void;
   /** 즐겨찾기에 더한다 (`FR-SHELL-001` AC-3 · AC-4). */
   onFavorite?: (nodeId: string) => void;
+  onDelete?: (nodeId: string) => void;
   /** 그 파일에 새 버전을 올린다 (`FR-SHELL-008` AC-2). */
   onNewVersion?: (node: TreeNodeView, file: File) => void;
   /** 안내를 닫았다. 문구를 바깥이 들고 있으므로 지우는 것도 바깥이 한다. */
@@ -481,6 +483,7 @@ export function AppShell({
                 onUpload={onUpload}
                 onCreateNote={onCreateNote}
                 onFavorite={onFavorite}
+                onDelete={onDelete}
                 onNewVersion={setOverwriting}
               />
             );
