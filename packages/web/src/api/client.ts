@@ -144,6 +144,48 @@ export const fetchTrash = <T>(where: { scope?: 'mine' | 'all'; workspaceId?: str
   return call<T>(`/trash${suffix === '' ? '' : `?${suffix}`}`);
 };
 
+/**
+ * 이름을 바꾼다 (`FR-SHELL-015` AC-1).
+ *
+ * 노드 ID 는 그대로다 — 새 노드로 대신하면 그 문서 앞으로 부여된 권한과
+ * 이력이 끊긴다. 같은 이름이 있으면 서버가 접미사를 붙이고 `notice` 로
+ * 알린다.
+ */
+export const renameNode = (nodeId: string, name: string) =>
+  call<{ name: string; notice?: string }>(`/nodes/${encodeURIComponent(nodeId)}/rename`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ name }),
+  });
+
+/** 자리를 옮긴다 (`FR-SHELL-015` AC-2). 목적지를 비우면 워크스페이스 루트다. */
+export const moveNode = (nodeId: string, parentId: string | null) =>
+  call<{ name: string }>(`/nodes/${encodeURIComponent(nodeId)}/move`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ parentId }),
+  });
+
+/**
+ * 복사한다 (`FR-SHELL-015` AC-4).
+ *
+ * 목적지를 **판별 합집합**으로 받는다 — 부모 아래와 워크스페이스 루트는
+ * 서로 다른 두 요청이고, 둘을 나란히 받으면 어긋나는 조합이 표현
+ * 가능해진다. 서버의 계약이 그렇게 되어 있다.
+ */
+export const copyNode = (
+  nodeId: string,
+  destination: { parentId: string } | { workspaceId: string },
+) =>
+  call<{ id: string; name: string; copied: number }>(
+    `/nodes/${encodeURIComponent(nodeId)}/copy`,
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(destination),
+    },
+  );
+
 export const moveNodeToTrash = (nodeId: string) =>
   call<void>(`/nodes/${encodeURIComponent(nodeId)}`, { method: 'DELETE' });
 
@@ -456,7 +498,11 @@ export interface MovePreviewBody {
 /** 목적지를 비우면 워크스페이스 루트로 옮기는 것이다. */
 export const fetchMovePreview = (nodeId: string, destinationId: string | null) => {
   const query = destinationId === null ? '' : `?destinationId=${encodeURIComponent(destinationId)}`;
-  return call<MovePreviewBody>(`/nodes/${encodeURIComponent(nodeId)}/move-preview${query}`);
+  // 서버가 여는 이름은 `relocation-preview` 다. 호출부가 0건이던 동안
+  // 이 불일치가 드러나지 않았을 뿐이며, 잇는 순간 404 가 된다.
+  return call<MovePreviewBody>(
+    `/nodes/${encodeURIComponent(nodeId)}/relocation-preview${query}`,
+  );
 };
 
 export type RevocationScope = 'instance' | 'managed-workspaces';

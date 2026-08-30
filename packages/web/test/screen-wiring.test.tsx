@@ -545,7 +545,7 @@ describe('IR-SHELL-005 — 트리 컨텍스트 메뉴의 항목이 실제 조작
   const 아직_닿지_않음: ReadonlyMap<string, string> = new Map([
     ['new-file', '메뉴 항목이 끊겨 있다. 문서 생성은 트리 상단 「새 노트」 버튼에만 배선돼 있고 그 버튼은 자리를 고를 수 없다'],
     ['new-directory', '메뉴 항목이 끊겨 있다. kind=directory 로 createNode 를 부르는 자리가 화면에 없다'],
-    ['rename', '서버에 실행 라우트가 없다. 이름 변경 조작을 소유하는 요구가 서야 닫힌다'],
+    ['rename', '**배선은 이어져 있다.** 다만 이름을 고르는 자리를 거치므로 「눌렀을 때 곧바로 나가는가」로는 재어지지 않는다 — 아래 `FR-SHELL-015` 시험이 그 왕복을 잰다'],
     ['move', '서버에 실행 라우트가 없다 — relocation-preview 만 있다. 이동 조작을 소유하는 요구가 서야 닫힌다'],
     ['copy', '서버에 실행 라우트가 없다. 복사 조작을 소유하는 요구가 서야 닫힌다'],
     ['share', 'client 함수와 서버 라우트는 있으나 그것을 쓸 화면이 자리표다 — document/ShareModal.tsx 가 안내 문구만 그린다'],
@@ -627,4 +627,71 @@ describe('IR-SHELL-005 — 트리 컨텍스트 메뉴의 항목이 실제 조작
       }
     },
   );
+});
+
+describe('FR-SHELL-015 — 이름 변경이 화면에서 서버까지 닿는다', () => {
+  it('AC-1: 메뉴에서 고른 이름이 서버로 나간다', async () => {
+    routes.set('/api/nodes/n1/rename', () => json({ name: '바뀐이름.md' }));
+    const user = await openTree();
+
+    await user.pointer({
+      keys: '[MouseRight]',
+      target: screen.getByRole('treeitem', { name: /회의록/ }),
+    });
+    await user.click(
+      within(await screen.findByRole('menu')).getByRole('menuitem', { name: '이름 변경' }),
+    );
+
+    // 지금 이름이 골라진 채로 서 있어야 한다 — 바꾸려는 사람이 먼저
+    // 지워야 하면 그 한 걸음이 매번 든다.
+    const 입력 = await screen.findByRole('textbox', { name: /새 이름/ });
+    expect((입력 as HTMLInputElement).value).toBe('회의록.md');
+
+    await user.clear(입력);
+    await user.type(입력, '바뀐이름.md');
+    await user.click(screen.getByRole('button', { name: '이름 바꾸기' }));
+
+    await waitFor(() =>
+      expect(sent).toContainEqual({
+        path: '/api/nodes/n1/rename',
+        method: 'POST',
+        body: { name: '바뀐이름.md' },
+      }),
+    );
+  });
+
+  it('AC-1: 그만두면 아무것도 나가지 않는다', async () => {
+    const user = await openTree();
+
+    await user.pointer({
+      keys: '[MouseRight]',
+      target: screen.getByRole('treeitem', { name: /회의록/ }),
+    });
+    await user.click(
+      within(await screen.findByRole('menu')).getByRole('menuitem', { name: '이름 변경' }),
+    );
+    await user.click(await screen.findByRole('button', { name: '그만두기' }));
+
+    // 잘못 연 사용자가 빠져나갈 길이 없으면 아무 이름이나 넣게 된다.
+    expect(screen.queryByRole('textbox', { name: /새 이름/ })).toBeNull();
+    expect(sent.some((one) => one.path.includes('/rename'))).toBe(false);
+  });
+
+  it('AC-1: 빈 이름으로는 나가지 않는다 — 부재는 판정 이전이다', async () => {
+    const user = await openTree();
+
+    await user.pointer({
+      keys: '[MouseRight]',
+      target: screen.getByRole('treeitem', { name: /회의록/ }),
+    });
+    await user.click(
+      within(await screen.findByRole('menu')).getByRole('menuitem', { name: '이름 변경' }),
+    );
+    await user.clear(await screen.findByRole('textbox', { name: /새 이름/ }));
+    await user.click(screen.getByRole('button', { name: '이름 바꾸기' }));
+
+    // 이름 **규칙**은 서버가 소유한다. 화면이 막는 것은 입력이 아예 없는
+    // 경우 하나뿐이고, 그것은 규칙 판정이 아니다.
+    expect(sent.some((one) => one.path.includes('/rename'))).toBe(false);
+  });
 });

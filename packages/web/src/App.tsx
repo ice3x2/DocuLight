@@ -11,6 +11,7 @@ import {
   uploadAttachment,
   uploadIntoDirectory,
   moveNodeToTrash,
+  renameNode,
   purgeFromTrash,
   restoreFromTrash,
   uploadNewVersion,
@@ -289,6 +290,20 @@ function AppBody() {
       await afterTrashAction();
     },
     [afterTrashAction],
+  );
+
+  /**
+   * 이름을 바꾼다 (`FR-SHELL-015` AC-1).
+   *
+   * 트리를 무효화한다 — 화면에서 지어 넣으면 서버가 접미사를 붙인 경우와
+   * 갈리고, 그때 사용자는 자기 문서를 못 찾는다.
+   */
+  const rename = useCallback(
+    async (nodeId: string, name: string) => {
+      await renameNode(nodeId, name).catch(() => undefined);
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
+    },
+    [queries],
   );
 
   const purgeTrash = useCallback(
@@ -612,6 +627,7 @@ function AppBody() {
       onCreateNote={createNote}
       onFavorite={favorite}
       onDelete={deleteNode}
+      onRename={rename}
       onNewVersion={newVersion}
       onNoticeDismiss={() => setNotice(undefined)}
       onSaveState={noteSaveState}

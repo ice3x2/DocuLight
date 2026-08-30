@@ -13,6 +13,7 @@ import { DocumentTree } from '../tree/DocumentTree.js';
 import type { UploadRequest } from '../attachment/upload-contract.js';
 import { EmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
+import { RenamePrompt } from '../tree/RenamePrompt.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { PersonalSettings } from '../settings/PersonalSettings.js';
 import { AclAuditPanel, type AclAuditProps } from '../acl/AclAuditPanel.js';
@@ -310,6 +311,7 @@ export function AppShell({
   onCreateNote,
   onFavorite,
   onDelete,
+  onRename,
   onNewVersion,
   onNoticeDismiss,
   confirmReplace,
@@ -393,6 +395,7 @@ export function AppShell({
   /** 즐겨찾기에 더한다 (`FR-SHELL-001` AC-3 · AC-4). */
   onFavorite?: (nodeId: string) => void;
   onDelete?: (nodeId: string) => void;
+  onRename?: (nodeId: string, name: string) => void;
   /** 그 파일에 새 버전을 올린다 (`FR-SHELL-008` AC-2). */
   onNewVersion?: (node: TreeNodeView, file: File) => void;
   /** 안내를 닫았다. 문구를 바깥이 들고 있으므로 지우는 것도 바깥이 한다. */
@@ -419,6 +422,8 @@ export function AppShell({
   const [leftTab, setLeftTab] = useState(LEFT_TABS[0]!.id);
   /** 새 버전을 올릴 대상. 골라 둔 뒤 확인과 파일 고르기가 이어진다. */
   const [overwriting, setOverwriting] = useState<TreeNodeView | null>(null);
+  /** 이름을 바꾸는 중인 노드 (`FR-SHELL-015` AC-1). */
+  const [renaming, setRenaming] = useState<TreeNodeView | null>(null);
 
   // **정체가 흔들리면 안 된다.** 이 둘은 편집기 확장 묶음에 들어가는데,
   // 렌더마다 새로 만들면 그때마다 편집기가 통째로 재구성되어 커서·되돌리기
@@ -484,6 +489,7 @@ export function AppShell({
                 onCreateNote={onCreateNote}
                 onFavorite={onFavorite}
                 onDelete={onDelete}
+                onRename={setRenaming}
                 onNewVersion={setOverwriting}
               />
             );
@@ -592,6 +598,17 @@ export function AppShell({
           return <p>{tab.label}</p>;
         }}
       </Sidebar>
+
+      {renaming !== null && (
+        <RenamePrompt
+          node={renaming}
+          onRename={(name) => {
+            onRename?.(renaming.id, name);
+            setRenaming(null);
+          }}
+          onCancel={() => setRenaming(null)}
+        />
+      )}
 
       {overwriting !== null && (
         <NewVersionPrompt

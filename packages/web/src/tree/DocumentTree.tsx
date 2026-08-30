@@ -185,6 +185,7 @@ export function DocumentTree({
   onCreateNote,
   onFavorite,
   onDelete,
+  onRename,
   onNewVersion,
 }: {
   workspaces: readonly WorkspaceTreeView[];
@@ -195,6 +196,8 @@ export function DocumentTree({
   onFavorite?: (nodeId: string) => void;
   /** 삭제 — 휴지통으로 보낸다 (`IR-SHELL-005` AC-1). */
   onDelete?: (nodeId: string) => void;
+  /** 이름 변경 — 이름을 고를 자리를 연다 (`FR-SHELL-015` AC-1). */
+  onRename?: (node: TreeNodeView) => void;
   /** 그 파일을 덮어쓰겠다 (`FR-SHELL-008` AC-2). 확인과 파일 고르기는 바깥이 한다. */
   onNewVersion?: (node: TreeNodeView) => void;
 }) {
@@ -241,6 +244,7 @@ export function DocumentTree({
             TreeRowWrapper(props, onUpload, (itemId, node) => {
               if (itemId === 'favorite') onFavorite?.(node.id);
               if (itemId === 'delete') onDelete?.(node.id);
+              if (itemId === 'rename') onRename?.(node);
               if (itemId === 'new-version') onNewVersion?.(node);
             })
           }
