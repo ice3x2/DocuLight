@@ -63,6 +63,20 @@ export function applyRelocation(
 
   // --- 짝이 없던 사라짐
   for (const one of verdict.orphaned) {
+    // **휴지통에 든 노드는 서버가 스스로 옮긴 것이다** (`REL-STORAGE-003`).
+    // 삭제가 파일을 `.trash/<노드ID>/` 로 옮기므로 원래 자리에서는 사라지고,
+    // 그 사라짐에는 짝이 없다 — 옮겨 간 자리가 숨은 이름이라 감시가 보지
+    // 않기 때문이다. 그것을 고아로 표시하면 복구가 `trashedAt` 만 지우므로
+    // 되살린 문서가 트리에는 서고 열리지 않는다. 사용자는 트리에 이름이
+    // 있으니 잃어버린 줄도 모른다.
+    //
+    // 「서버가 옮긴 것은 감시가 따라가되 새로 만들지 않는다」와 같은 축의
+    // 셋째 조각이다. 앞의 둘은 경로가 바뀌므로 노드가 그 경로를 이미 갖고
+    // 있는지로 갈리지만, 휴지통은 노드 경로를 바꾸지 않아 그 규칙에
+    // 걸리지 않는다.
+    const node = stores.nodes.findById(one.nodeId);
+    if (node !== undefined && node.trashedAt !== null) continue;
+
     const gone = markGone(stores, one);
     orphaned.push(gone.nodeId);
     findings.push(openFinding(stores, FINDING_TYPE.missingFile, [gone.auditId]));

@@ -16,6 +16,7 @@ import { SqliteAuditLog } from '../../../src/infra/sqlite/audit-log-repository.j
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
 import { SqliteFindingQueue } from '../../../src/infra/sqlite/finding-queue-repository.js';
 import { SqliteNodeRepository } from '../../../src/infra/sqlite/node-repository.js';
+import { SqliteTrashRepository } from '../../../src/infra/sqlite/trash-repository.js';
 import { SqliteWorkspaceRepository } from '../../../src/infra/sqlite/workspace-repository.js';
 
 const UUID_V4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
@@ -91,6 +92,30 @@ describe('REL-STORAGE-001 · DR-STORAGE-001 — 재조정이 정지 중의 변�
     // 한계 — ACL 테이블이 wave-1 에 없어 상속 자체는 관측 대상이 아니다.
     // 여기서 고정하는 것은 상속이 걸릴 **부모 사슬이 실제로 선다**는 것이며,
     // 상속 규칙은 ACL scope 가 서는 wave 가 자기 자리에서 판정한다.
+  });
+
+  it('REL-STORAGE-003 AC-1: 휴지통에 든 노드는 재조정이 고아로 세지 않는다', async () => {
+    await putOnDisk('회의록.md');
+    await reconcile(stores);
+    const [id] = nodes.allIn(ws).filter((n) => n.kind === 'file').map((n) => n.id);
+
+    // 삭제한 상태를 만든다 — 노드 행은 남고 파일만 `.trash/<노드ID>/` 로
+    // 옮겨져 원래 자리에서 사라진다. **서버가 스스로 옮긴 것**이므로 재조정이
+    // 그것을 소실로 세면, 복구가 `trashedAt` 만 지워 되살린 문서가 트리에는
+    // 서고 열리지 않는다.
+    new SqliteTrashRepository(db).add({
+      nodeId: id!,
+      workspaceId: ws,
+      originalPath: '회의록.md',
+      deletedAt: new Date().toISOString(),
+      deletedBy: '지운사람',
+    });
+    await rm(join(docsRoot, ws, '회의록.md'));
+
+    const result = await reconcile(stores);
+
+    expect(result.orphaned, '휴지통에 든 노드를 재조정이 고아로 세웠다').toEqual([]);
+    expect(nodes.findById(id!)?.orphanedAt).toBeNull();
   });
 
   it('REL-STORAGE-001 AC-2 — 서버가 정지한 동안 사라진 파일의 노드는 ACL 이 삭제되지 않고 orphaned_at 이 기록된 tombstone 상태가 된다.', async () => {

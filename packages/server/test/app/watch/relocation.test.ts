@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { breakInheritance, grantPermission } from '../../../src/app/acl/grant-service.js';
 import { actorFor, permissionOf, type Actor } from '../../../src/app/acl/permission-service.js';
 import { createNode } from '../../../src/app/node/node-service.js';
+import { moveToTrash } from '../../../src/app/trash/trash-service.js';
 import { applyRelocation } from '../../../src/app/watch/relocation-service.js';
 import { createWorkspace } from '../../../src/app/workspace/create-workspace.js';
 import { correlate, type AddEvent, type UnlinkEvent } from '../../../src/domain/watch/correlation.js';
@@ -126,6 +127,32 @@ describe('상관 판정을 반영한다', () => {
 
     const 행들 = db.all<{ operation: string }>('SELECT operation FROM audit_log ORDER BY rowid');
     expect(행들.some((r) => r.operation === RECONCILE_OPERATION.relocate)).toBe(true);
+  });
+
+  it('REL-STORAGE-003 AC-1 · AC-3: 휴지통에 든 노드의 사라짐은 tombstone 이 아니다', async () => {
+    // 삭제는 파일을 `.trash/<노드ID>/` 로 옮긴다. 원래 자리에서는 사라지므로
+    // 감시가 그것을 보는데, **서버가 스스로 옮긴 것**이라 짝 없는 사라짐이
+    // 아니다. 고아로 표시하면 복구가 `trashedAt` 만 지우므로 되살린 문서가
+    // 트리에는 서고 열리지 않는다.
+    const 지운것 = 문서('예산.md');
+    await writeFile(join(docsRoot, ws, '예산.md'), '# 예산\n', 'utf8');
+    await moveToTrash(stores, root, 지운것);
+
+    const 결과 = applyRelocation(stores, ws, correlate([사라짐(지운것)], []));
+
+    expect(stores.nodes.findById(지운것)?.orphanedAt, '휴지통에 넣은 노드가 고아가 됐다').toBeNull();
+    expect(결과.orphaned).toEqual([]);
+
+    // AC-3: 휴지통과 무관한 사라짐은 그대로 고아다 — 예외가 감시의 본래
+    // 역할을 지우면 진짜 소실이 조용히 지나간다.
+    const 그냥사라진것 = 문서('보고서.md');
+    const 둘째 = applyRelocation(
+      stores,
+      ws,
+      correlate([사라짐(그냥사라진것, { path: '보고서.md' })], []),
+    );
+    expect(stores.nodes.findById(그냥사라진것)?.orphanedAt).not.toBeNull();
+    expect(둘째.orphaned).toEqual([그냥사라진것]);
   });
 
   it('짝 없는 사라짐은 tombstone 이 되고 짝 없는 나타남은 신규 노드가 된다', () => {

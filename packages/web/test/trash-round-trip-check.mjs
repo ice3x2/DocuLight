@@ -163,14 +163,26 @@ await runBrowserChecks(async ({ page, check, note }) => {
 
     // 이름이 돌아온 것과 문서가 돌아온 것은 다르다 — 노드 행만 되살리고
     // 실체를 두고 오면 열리지 않는 문서가 트리에 선다.
-    const 되돌아온본문 = await page.evaluate(async (id) => {
-      const res = await fetch(`/api/documents/${id}`);
-      return res.ok ? (await res.json()).body : null;
-    }, 준비.문서.id);
+    const 읽기 = await page.evaluate(
+      async ([id, 이름]) => {
+        // 트리가 돌려준 노드와 처음 만든 노드가 같은지 함께 본다 — 다르면
+        // 「복구가 새 노드를 세웠다」는 뜻이고 그것은 ID 보존 위반이다.
+        const tree = await (await fetch('/api/tree')).json();
+        const 훑는다 = (nodes) => nodes.flatMap((n) => [n, ...훑는다(n.children)]);
+        const 트리노드 = tree.flatMap((e) => 훑는다(e.roots)).find((n) => n.name === 이름);
+
+        const res = await fetch(`/api/documents/${id}`);
+        const body = res.ok ? ((await res.json()).body ?? null) : null;
+        return { status: res.status, body, 트리id: 트리노드?.id ?? null, 만든id: id };
+      },
+      [준비.문서.id, 문서이름],
+    );
     check(
       '기준 11 되돌아온 문서의 본문이 그대로다 — 노드 ID 가 보존된다',
-      되돌아온본문 !== null && 되돌아온본문.includes(시각),
-      되돌아온본문 === null ? '본문을 읽지 못했다' : `본문 ${되돌아온본문.length}자`,
+      읽기.body !== null && 읽기.body.includes(시각),
+      읽기.body === null
+        ? `본문을 읽지 못했다 (응답 ${읽기.status} · 만든 id ${읽기.만든id} · 트리 id ${읽기.트리id})`
+        : `본문 ${읽기.body.length}자`,
     );
 
     // 버전 이력은 `.versions/<노드ID>/` 에 노드 ID 로 놓이므로 왕복을
@@ -178,7 +190,11 @@ await runBrowserChecks(async ({ page, check, note }) => {
     // 남으므로(`R75-a`) 판이 아직 없을 수 있고, 그때는 이 자리가 무엇에
     // 매여 있는지를 남긴다.
     await page.getByRole('button', { name: 문서이름 }).first().click();
-    await page.waitForSelector('[role="region"]', { timeout: 15_000 });
+    // 문서 영역이 서기를 기다리되 **가시성을 요구하지 않는다** — 탭이 여럿이면
+    // 화면 밖 영역이 먼저 잡히고, 그 기다림이 이 축과 무관하게 시간을 쓴다.
+    await page
+      .waitForSelector('[role="region"]', { state: 'attached', timeout: 15_000 })
+      .catch(() => undefined);
     const 문서메뉴 = page.getByRole('button', { name: `${문서이름} 문서 메뉴` });
     if ((await 문서메뉴.count()) > 0) {
       await 문서메뉴.first().click();

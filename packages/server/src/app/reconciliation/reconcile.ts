@@ -121,7 +121,17 @@ async function reconcileWorkspace(
   for (const [path, node] of known) {
     // 디렉토리는 파일 경로에서 파생되므로 따로 세지 않는다. 세면 빈
     // 디렉토리가 매 회차마다 사라진 것으로 읽힌다.
-    if (node.kind !== 'file' || alive.has(path) || node.orphanedAt !== null) {
+    //
+    // **휴지통에 든 노드도 세지 않는다** (`REL-STORAGE-003`). 삭제가 파일을
+    // `.trash/<노드ID>/` 로 옮기므로 원래 자리에서는 사라지는데, 서버가
+    // 스스로 옮긴 것이라 소실이 아니다. 고아로 세면 복구가 `trashedAt` 만
+    // 지우므로 되살린 문서가 트리에는 서고 열리지 않는다.
+    if (
+      node.kind !== 'file' ||
+      alive.has(path) ||
+      node.orphanedAt !== null ||
+      node.trashedAt !== null
+    ) {
       continue;
     }
     const at = new Date().toISOString();

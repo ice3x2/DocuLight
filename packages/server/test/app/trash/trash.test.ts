@@ -254,6 +254,31 @@ describe('FR-STORAGE-006 — 복구는 원본 편집 권한을 요구한다', ()
     expect(resolveNode(stores, me, doc)?.id).toBe(doc);
   });
 
+  it('AC-1 · AC-3: 디렉토리 안의 문서도 그 자리로 돌아오고 다시 열린다', async () => {
+    // 위 항은 **루트의 문서**만 잰다. 복구는 `pathOf` 로 되돌릴 자리를
+    // 파생하므로 조상 사슬이 있는 경우가 다른 경로이고, 그것이 사용자가
+    // 실제로 지우는 자리다.
+    //
+    // **파일이 그 자리에 있는 것과 그 문서가 열리는 것은 다르다.** 노드 행만
+    // 되살리고 실체를 두고 오면 트리에는 이름이 서는데 열리지 않는 문서가
+    // 된다 — 이 저장소는 만들기 라우트에서 그 부류를 이미 겪었다.
+    grantPermission(stores, root, { nodeId: ws, principalId: me.id, level: 'edit' });
+    const folder = idOf(
+      createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name: '자료' }),
+    );
+    await mkdir(join(docsRoot, ws, '자료'), { recursive: true });
+    const doc = await place(ws, '회의록.md', folder);
+
+    await moveToTrash(stores, me, doc);
+    expect(await restoreFromTrash(stores, me, doc)).toEqual({ ok: true, name: '회의록.md' });
+
+    expect(stores.nodes.pathOf(doc)).toBe('자료/회의록.md');
+    expect(existsSync(join(docsRoot, ws, '자료', '회의록.md'))).toBe(true);
+
+    const read = await readDocument(docs, me, doc);
+    expect(read.ok, '복구한 문서를 다시 읽을 수 있어야 한다').toBe(true);
+  });
+
   it('AC-2: 볼 수도 없는 요청자에게는 없는 항목과 같은 답이 온다', async () => {
     const doc = await place(ws, '회의록.md');
     await moveToTrash(stores, root, doc);
