@@ -13,7 +13,7 @@
     "test:watch": "vitest",
     "test:browser:focus": "node test/focus-retention-check.mjs",
     "test:browser:focus:headed": "node test/focus-retention-check.mjs --headed",
-    "test:browser:all": "npm run test:browser:focus && npm run test:browser:ime && npm run test:browser:search && npm run test:browser:merge && npm run test:browser:styles && npm run test:browser:acl && npm run test:browser:trash",
+    "test:browser:all": "npm run test:browser:focus && npm run test:browser:ime && npm run test:browser:search && npm run test:browser:merge && npm run test:browser:styles && npm run test:browser:acl && npm run test:browser:trash && npm run test:browser:gestures",
     "test:browser:ime": "node test/ime-composition-check.mjs",
     "test:browser:ime:headed": "node test/ime-composition-check.mjs --headed",
     "test:browser:search": "node test/search-layout-check.mjs",
@@ -25,7 +25,9 @@
     "test:browser:acl": "node test/acl-two-account-check.mjs",
     "test:browser:acl:headed": "node test/acl-two-account-check.mjs --headed",
     "test:browser:trash": "node test/trash-round-trip-check.mjs",
-    "test:browser:trash:headed": "node test/trash-round-trip-check.mjs --headed"
+    "test:browser:trash:headed": "node test/trash-round-trip-check.mjs --headed",
+    "test:browser:gestures": "node test/input-gestures-check.mjs",
+    "test:browser:gestures:headed": "node test/input-gestures-check.mjs --headed"
   },
   "dependencies": {
     "@codemirror/merge": "^6.10.4",
