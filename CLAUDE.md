@@ -107,7 +107,7 @@ Before starting work in a fresh session, read `docs/next/LATEST.md`. It points a
   절차(로그인·시험 문서 준비·트리에서 열기)만 `packages/web/test/_web-harness.mjs` 에
   있다. 검사는 자기 문서를 만들고 끝나면 지우므로 **개인 볼트에 기대지 않는다**.
   저장소 루트의 `npm run test:browser:all` 은 이제 editor 와 web 을 차례로 부른다.
-  web 쪽은 여섯이다. `focus-retention-check.mjs`(`FR-EDITOR-009`: 저장이 포커스·커서·
+  web 쪽은 일곱이다. `focus-retention-check.mjs`(`FR-EDITOR-009`: 저장이 포커스·커서·
   이어 쓰기를 끊지 않는다)와 `ime-composition-check.mjs`(원장 §4 **수용 기준 7**:
   한글 IME 조합이 편집 중 깨지지 않는다) — 뒤의 것은 CDP `Input.imeSetComposition` 으로
   조합 단계를 그대로 내므로 OS 입력기 없이도 그 축이 재어진다. 셋째는
@@ -127,7 +127,11 @@ Before starting work in a fresh session, read `docs/next/LATEST.md`. It points a
   않는다. 부여 전·부여 후·회수 후 세 시점의 트리를 화면의 `role="treeitem"` 으로 세며,
   API 응답을 보지 않는다(그러면 서버 판정을 한 번 더 재는 것일 뿐이고 화면까지의 배선이
   끊겨도 통과한다).
-  **로그인은 15분 창에 10회로 제한되고 web 검사 여섯이 한 번에 7회를 쓴다**(여섯째가
+  일곱째는 `trash-round-trip-check.mjs`(원장 §4 **수용 기준 11**: 화면에서 지우고 휴지통에서
+  되살리는 왕복)이며, **되돌아온 문서를 실제로 다시 읽어 본다** — 트리에 이름이 서는 것과
+  문서가 열리는 것은 다르고, 그 차이가 `REL-STORAGE-003` 의 결함을 잡았다. 원위치를 재려면
+  루트가 아니어야 하므로 디렉토리를 만들고 그 안에 둔다.
+  **로그인은 15분 창에 10회로 제한되고 web 검사 일곱이 한 번에 8회를 쓴다**(여섯째가
   둘을 쓴다) — 그래서 한 창에 두 번은 돌지 못한다. 짧은 사이에 다시 돌리면 429 가 나고, 그때 검사는
   「계정이 틀렸다」가 아니라 그 사실을 안내한다. 창이 열릴 때까지 기다리거나 API 서버를
   재기동하면 즉시 풀린다.

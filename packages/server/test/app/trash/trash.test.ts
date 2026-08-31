@@ -254,6 +254,31 @@ describe('FR-STORAGE-006 — 복구는 원본 편집 권한을 요구한다', ()
     expect(resolveNode(stores, me, doc)?.id).toBe(doc);
   });
 
+  it('REL-STORAGE-003 AC-1: 휴지통 표시가 파일 이동보다 먼저다', async () => {
+    // **DB 를 먼저, 디스크를 나중에.** 이 저장소가 이름 변경·이동·복사에서
+    // 이미 못박은 순서인데 삭제만 뒤집혀 있었다.
+    //
+    // 감시는 파일이 사라지는 것을 보고 그 노드가 휴지통에 들었는지로 판정을
+    // 가른다. 파일을 먼저 옮기면 그 판정이 도는 순간 아직 표시가 없어 짝 없는
+    // 사라짐이 되고, 노드가 고아가 된다. 복구는 휴지통 표시만 지우므로
+    // 고아 표시가 남아 되살린 문서가 트리에는 서고 열리지 않는다.
+    const doc = await place(ws, '회의록.md');
+    let 이동시점의표시: boolean | undefined;
+    const 원래 = stores.trashFiles.moveIn.bind(stores.trashFiles);
+    stores.trashFiles.moveIn = async (entry, name) => {
+      이동시점의표시 = stores.trash.find(doc) !== undefined;
+      await 원래(entry, name);
+    };
+
+    try {
+      await moveToTrash(stores, root, doc);
+    } finally {
+      stores.trashFiles.moveIn = 원래;
+    }
+
+    expect(이동시점의표시, '파일이 옮겨질 때 아직 휴지통 표시가 없었다').toBe(true);
+  });
+
   it('AC-1 · AC-3: 디렉토리 안의 문서도 그 자리로 돌아오고 다시 열린다', async () => {
     // 위 항은 **루트의 문서**만 잰다. 복구는 `pathOf` 로 되돌릴 자리를
     // 파생하므로 조상 사슬이 있는 경우가 다른 경로이고, 그것이 사용자가

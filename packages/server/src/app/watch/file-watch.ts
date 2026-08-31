@@ -1,5 +1,6 @@
+import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
-import { relative, sep } from 'node:path';
+import { join, relative, sep } from 'node:path';
 
 import { hasDotSegment } from '../../domain/naming/hidden-name-rule.js';
 import { contentHash } from '../../domain/document/content-hash.js';
@@ -117,9 +118,27 @@ export async function startFileWatch(
   const flush = () => {
     if (unlinks.length === 0 && adds.length === 0) return;
 
-    const takenUnlinks = unlinks.splice(0);
+    // **판정이 도는 시점에 그 자리에 파일이 있으면 사라진 것이 아니다**
+    // (`REL-STORAGE-003` AC-1). 창을 기다리는 동안 되돌아온 것이며, 휴지통에
+    // 넣었다 곧 되살리는 왕복이 정확히 그 모양이다 — 파일이 `.trash/` 로
+    // 갔다가 원래 자리로 돌아온다.
+    //
+    // 돌아온 자리의 `add` 는 그 경로를 가진 노드가 있어 위에서 걸러지므로
+    // (서버가 옮긴 것이라 옳다), 거르지 않으면 `unlink` 만 짝 없이 남아
+    // 노드가 고아가 된다. 복구는 휴지통 표시만 지우므로 그 고아 표시가
+    // 그대로 남고, 되살린 문서가 트리에는 서는데 열리지 않는다.
+    //
+    // **사라짐을 늦게 처리하는 모든 경우를 함께 덮는다** — 판정이 창 뒤에
+    // 도는 이상, 그 사이에 무엇이 파일을 되돌렸는지는 이 자리의 관심이
+    // 아니다. 지금 있으면 없어진 것이 아니다.
+    const takenUnlinks = unlinks.splice(0).filter((one) => {
+      if (!existsSync(join(docsRoot, byWorkspace.get(one)!, one.path))) return true;
+      ignored += 1;
+      return false;
+    });
     const takenAdds = adds.splice(0);
     correlated += takenUnlinks.length + takenAdds.length;
+    if (takenUnlinks.length === 0 && takenAdds.length === 0) return;
 
     // 워크스페이스마다 따로 판정한다 — 경계를 넘는 상관을 인정하면 한
     // 워크스페이스의 ACL 이 다른 워크스페이스로 건너간다.
