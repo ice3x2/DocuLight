@@ -67,6 +67,7 @@ import {
 import { nodeIdOf, urlForNode } from './routing/deep-link.js';
 import type { SaveState } from './document/tab-state.js';
 import type { TrashLens } from './trash/TrashPanel.js';
+import { CREATE_DEFAULTS } from './tree/tree-contract.js';
 import type { WorkspaceTreeView, TreeNodeView } from './tree/tree-contract.js';
 
 /** 트리에서 그 노드를 찾는다 — 문서를 열 때 이름과 권한이 필요하다. */
@@ -419,28 +420,43 @@ function AppBody() {
   );
 
   /**
-   * 새 문서를 만든다 (`FR-SHELL-003` AC-1).
+   * 고른 자리에 노드를 만든다 (`FR-SHELL-016`).
    *
-   * 첫 워크스페이스의 루트에 만든다 — 어디에 만들지 먼저 고르게 하면 조작이
-   * 하나 더 붙는데, 「새 노트」는 곧바로 쓰기 시작하는 자리다.
+   * **만들기로 가는 길은 이 함수 하나다** (AC-7). 트리 상단 버튼과 컨텍스트
+   * 메뉴가 각자 서버를 부르면 한쪽만 고쳐지고 다른 쪽은 조용히 어긋난다 —
+   * 이 저장소가 이미 여러 번 겪은 부류다.
+   */
+  const create = useCallback(
+    async (
+      workspaceId: string,
+      parentId: string | null,
+      kind: 'file' | 'directory',
+      name: string,
+    ) => {
+      const made = await createNode({ workspaceId, parentId, kind, name }).catch(() => null);
+      if (made === null) return;
+
+      // 접미사가 붙었을 때만 말이 온다 — 늘 말하면 사용자가 그 자리를 읽지
+      // 않게 되고, 정작 이름이 바뀐 때도 지나친다.
+      setNotice(made.notice);
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
+    },
+    [queries],
+  );
+
+  /**
+   * 트리 상단 `새 노트` 버튼 (`FR-SHELL-003` AC-1 · `FR-SHELL-016` AC-7).
+   *
+   * 첫 워크스페이스의 루트에 **이름을 묻지 않고** 만든다 — 어디에 만들지
+   * 먼저 고르게 하면 조작이 하나 더 붙는데, 「새 노트」는 곧바로 쓰기
+   * 시작하는 자리다. 자리를 고르고 이름을 정하는 길은 컨텍스트 메뉴가 받는다.
    */
   const createNote = useCallback(async () => {
     const first = workspaces[0];
     if (first === undefined) return;
 
-    const made = await createNode({
-      workspaceId: first.workspace.id,
-      parentId: null,
-      kind: 'file',
-      name: '제목 없음.md',
-    }).catch(() => null);
-    if (made === null) return;
-
-    // 접미사가 붙었을 때만 말이 온다 — 늘 말하면 사용자가 그 자리를 읽지
-    // 않게 되고, 정작 이름이 바뀐 때도 지나친다.
-    setNotice(made.notice);
-    await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
-  }, [workspaces, queries]);
+    await create(first.workspace.id, null, 'file', CREATE_DEFAULTS.file.name);
+  }, [workspaces, create]);
 
   /**
    * 즐겨찾기에 더한다 (`FR-SHELL-001` AC-3 · AC-4).
@@ -714,6 +730,7 @@ function AppBody() {
       onOpen={open}
       onUpload={upload}
       onCreateNote={createNote}
+      onCreate={create}
       onFavorite={favorite}
       onDelete={deleteNode}
       onRename={rename}

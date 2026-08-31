@@ -13,7 +13,7 @@ import { DocumentTree } from '../tree/DocumentTree.js';
 import type { UploadRequest } from '../attachment/upload-contract.js';
 import { EmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
-import { RenamePrompt } from '../tree/RenamePrompt.js';
+import { NamePrompt } from '../tree/NamePrompt.js';
 import { RelocationDialog } from './RelocationDialog.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { PersonalSettings } from '../settings/PersonalSettings.js';
@@ -31,7 +31,7 @@ import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
 import type { RosterGroup, RosterUser } from '../api/client.js';
-import { destinationsFor } from '../tree/tree-contract.js';
+import { containerFor, CREATE_DEFAULTS, destinationsFor } from '../tree/tree-contract.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
   LEFT_TABS,
@@ -313,6 +313,7 @@ export function AppShell({
   onOpen,
   onUpload,
   onCreateNote,
+  onCreate,
   onFavorite,
   onDelete,
   onRename,
@@ -398,6 +399,18 @@ export function AppShell({
   onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
   onUpload?: (request: UploadRequest) => void;
   onCreateNote?: () => void;
+  /**
+   * 고른 자리에 새 노드를 만든다 (`FR-SHELL-016`).
+   *
+   * `parentId` 가 `null` 이면 그 워크스페이스의 루트다 — 서버의 `POST /nodes`
+   * 가 부모를 그렇게 받으므로 화면이 여기서 이미 그 모양으로 넘긴다.
+   */
+  onCreate?: (
+    workspaceId: string,
+    parentId: string | null,
+    kind: 'file' | 'directory',
+    name: string,
+  ) => void;
   /** 즐겨찾기에 더한다 (`FR-SHELL-001` AC-3 · AC-4). */
   onFavorite?: (nodeId: string) => void;
   onDelete?: (nodeId: string) => void;
@@ -455,6 +468,17 @@ export function AppShell({
   const [destinationId, setDestinationId] = useState('');
   /** 공유 화면을 연 노드 (`IR-ACL-002`). */
   const [sharing, setSharing] = useState<TreeNodeView | null>(null);
+  /**
+   * 만드는 중인 것 — 담길 자리와 종류 (`FR-SHELL-016` AC-1 · AC-3).
+   *
+   * 자리를 여기서 풀어 두는 이유는 이름을 정하는 동안 트리가 다시 올 수
+   * 있기 때문이다. 노드를 들고 있다가 나중에 풀면 그 사이에 사라진 노드의
+   * 자리를 묻게 된다.
+   */
+  const [creating, setCreating] = useState<{
+    container: { workspaceId: string; parentId: string | null };
+    kind: 'file' | 'directory';
+  } | null>(null);
 
   // **정체가 흔들리면 안 된다.** 이 둘은 편집기 확장 묶음에 들어가는데,
   // 렌더마다 새로 만들면 그때마다 편집기가 통째로 재구성되어 커서·되돌리기
@@ -518,6 +542,12 @@ export function AppShell({
                 onOpen={onOpen}
                 onUpload={onUpload}
                 onCreateNote={onCreateNote}
+                onCreate={(node, kind) => {
+                  // 자리를 **지금** 푼다 — 담길 자리를 고르는 규칙은 계약이
+                  // 소유하고(`containerFor`) 화면은 그것을 부르기만 한다.
+                  const container = containerFor(workspaces, node.id);
+                  if (container !== undefined) setCreating({ container, kind });
+                }}
                 onFavorite={onFavorite}
                 onDelete={onDelete}
                 onRename={setRenaming}
@@ -673,13 +703,30 @@ export function AppShell({
       )}
 
       {renaming !== null && (
-        <RenamePrompt
-          node={renaming}
-          onRename={(name) => {
+        <NamePrompt
+          title={`${renaming.name} 이름 바꾸기`}
+          fieldLabel={`${renaming.name} 새 이름`}
+          initialName={renaming.name}
+          submitLabel="이름 바꾸기"
+          onSubmit={(name) => {
             onRename?.(renaming.id, name);
             setRenaming(null);
           }}
           onCancel={() => setRenaming(null)}
+        />
+      )}
+
+      {creating !== null && (
+        <NamePrompt
+          title={CREATE_DEFAULTS[creating.kind].title}
+          fieldLabel={CREATE_DEFAULTS[creating.kind].fieldLabel}
+          initialName={CREATE_DEFAULTS[creating.kind].name}
+          submitLabel="만들기"
+          onSubmit={(name) => {
+            onCreate?.(creating.container.workspaceId, creating.container.parentId, creating.kind, name);
+            setCreating(null);
+          }}
+          onCancel={() => setCreating(null)}
         />
       )}
 

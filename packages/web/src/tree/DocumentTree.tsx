@@ -183,6 +183,7 @@ export function DocumentTree({
   onUpload,
   onOpen,
   onCreateNote,
+  onCreate,
   onFavorite,
   onDelete,
   onRename,
@@ -194,6 +195,11 @@ export function DocumentTree({
   onUpload?: (request: UploadRequest) => void;
   onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
   onCreateNote?: () => void;
+  /**
+   * 그 노드가 담긴 자리에 새 노드를 만든다 (`FR-SHELL-016` AC-1 · AC-2).
+   * 담길 자리를 고르는 일과 이름을 묻는 일은 바깥이 한다.
+   */
+  onCreate?: (node: TreeNodeView, kind: 'file' | 'directory') => void;
   /** 즐겨찾기에 더한다 (`FR-SHELL-001` AC-3 · AC-4). 문서와 디렉토리를 가리지 않는다. */
   onFavorite?: (nodeId: string) => void;
   /** 삭제 — 휴지통으로 보낸다 (`IR-SHELL-005` AC-1). */
@@ -248,6 +254,8 @@ export function DocumentTree({
           disableDrop
           renderRow={(props: RowRendererProps<Row>) =>
             TreeRowWrapper(props, onUpload, (itemId, node) => {
+              if (itemId === 'new-file') onCreate?.(node, 'file');
+              if (itemId === 'new-directory') onCreate?.(node, 'directory');
               if (itemId === 'favorite') onFavorite?.(node.id);
               if (itemId === 'delete') onDelete?.(node.id);
               if (itemId === 'rename') onRename?.(node);

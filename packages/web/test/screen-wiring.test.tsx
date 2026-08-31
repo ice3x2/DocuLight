@@ -1,5 +1,8 @@
 import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { existsSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { App } from '../src/App.js';
@@ -36,9 +39,25 @@ const TREE = [
         overwriteIrreversible: true,
         children: [],
       },
+      // 만들기가 담길 자리는 노드 종류에 따라 갈린다 — 그 축을 재려면
+      // 디렉토리가 하나 있어야 한다 (`FR-SHELL-016` AC-1).
+      {
+        id: 'd1',
+        name: '자료',
+        kind: 'directory',
+        visibility: 'full',
+        level: 'edit',
+        parentLevel: 'edit',
+        children: [],
+      },
     ],
   },
 ];
+
+/** 저장소 루트에서 돌리든 이 패키지에서 돌리든 같은 자리를 가리킨다. */
+const WEB = existsSync(resolve(process.cwd(), 'src/main.tsx'))
+  ? process.cwd()
+  : resolve(process.cwd(), 'packages/web');
 
 const routes = new Map<string, (init?: RequestInit) => Response>();
 /** 서버로 나간 요청 — 배선이 끊기면 여기가 빈다. */
@@ -531,20 +550,25 @@ describe('FR-SHELL-006 AC-4 — 트리가 갱신돼도 이력이 쌓이지 않�
 
 describe('IR-SHELL-005 — 트리 컨텍스트 메뉴의 항목이 실제 조작에 닿는다', () => {
   /**
-   * **아직 조작에 닿지 못하는 항목과 그 사유.**
+   * **눌렀을 때 곧바로 요청이 나가지 않는 항목과 그 사유.**
    *
-   * 이 목록이 줄어드는 것이 다음 작업의 정의다. 사유를 함께 적는 이유는
-   * 빈 허용목록이 곧 「나중에」가 되기 때문이며, 어느 작업이 이 줄을
-   * 지우는지가 적혀 있어야 그 작업이 실제로 온다. `packages/server` 의
-   * 조립 방벽이 쓰는 방식과 같다.
+   * 처음에는 「아직 조작에 닿지 못하는 항목」이었고 일곱이 실제로 끊겨
+   * 있었다. 지금은 일곱 다 배선이 이어졌고 남은 것은 **재는 방식의
+   * 한계**다 — 이름이나 목적지나 주체를 고르는 자리를 거치는 항목은
+   * 「눌렀을 때 나가는가」로 재어지지 않는다. 그 왕복은 각 조작을 소유한
+   * 요구의 시험이 잰다.
+   *
+   * 사유를 함께 적는 이유는 빈 허용목록이 곧 「나중에」가 되기 때문이며,
+   * 무엇이 그 줄을 지우는지가 적혀 있어야 그 작업이 실제로 온다.
+   * `packages/server` 의 조립 방벽이 쓰는 방식과 같다.
    *
    * **여기 없는 항목이 끊기면 그 순간 이 시험이 실패한다** — 그것이 이
    * 방벽이 있는 이유다. 겉모습만 재는 `tree-menu.test.tsx` 는 아홉 항목이
    * 전부 끊겨 있어도 통과한다.
    */
-  const 아직_닿지_않음: ReadonlyMap<string, string> = new Map([
-    ['new-file', '메뉴 항목이 끊겨 있다. 문서 생성은 트리 상단 「새 노트」 버튼에만 배선돼 있고 그 버튼은 자리를 고를 수 없다'],
-    ['new-directory', '메뉴 항목이 끊겨 있다. kind=directory 로 createNode 를 부르는 자리가 화면에 없다'],
+  const 곧바로_나가지_않음: ReadonlyMap<string, string> = new Map([
+    ['new-file', '**배선은 이어져 있다.** 다만 이름을 정하는 자리를 거치므로 「눌렀을 때 곧바로 나가는가」로는 재어지지 않는다 — 아래 `FR-SHELL-016` 시험이 그 왕복을 잰다'],
+    ['new-directory', '**배선은 이어져 있다.** 새 문서와 같은 자리를 거치므로 같은 사유다 — 아래 `FR-SHELL-016` 시험이 그 왕복을 잰다'],
     ['rename', '**배선은 이어져 있다.** 다만 이름을 고르는 자리를 거치므로 「눌렀을 때 곧바로 나가는가」로는 재어지지 않는다 — 아래 `FR-SHELL-015` 시험이 그 왕복을 잰다'],
     ['move', '**배선은 이어져 있다.** 다만 목적지를 고르고 확인 관문을 지나야 하므로 「눌렀을 때 곧바로 나가는가」로는 재어지지 않는다 — 아래 `FR-SHELL-015` 시험이 그 왕복을 잰다'],
     ['copy', '**배선은 이어져 있다.** 이동과 같은 자리를 거치므로 같은 사유다 — 아래 `FR-SHELL-015` 시험이 그 왕복을 잰다'],
@@ -614,15 +638,15 @@ describe('IR-SHELL-005 — 트리 컨텍스트 메뉴의 항목이 실제 조작
       // 않도록, 나가는 항목만 기다리고 나머지는 한 틱만 준다.
       await waitFor(() => expect(sent.length).toBeGreaterThan(이전)).catch(() => undefined);
 
-      const 닿았다 = sent.length > 이전;
-      const 사유 = 아직_닿지_않음.get(id);
+      const 곧바로나갔다 = sent.length > 이전;
+      const 사유 = 곧바로_나가지_않음.get(id);
 
       if (사유 === undefined) {
-        expect(닿았다, `\`${id}\` 가 끊겼다. 고치거나, 사유와 함께 목록에 올려라`).toBe(true);
+        expect(곧바로나갔다, `\`${id}\` 가 끊겼다. 고치거나, 사유와 함께 목록에 올려라`).toBe(true);
       } else {
         expect(
-          닿았다,
-          `\`${id}\` 가 이제 닿는다 — 목록에서 그 줄을 지워라. 적혀 있던 사유: ${사유}`,
+          곧바로나갔다,
+          `\`${id}\` 가 이제 곧바로 나간다 — 목록에서 그 줄을 지워라. 적혀 있던 사유: ${사유}`,
         ).toBe(false);
       }
     },
@@ -948,5 +972,135 @@ describe('IR-ACL-002 · IR-ACL-003 — 공유가 화면에서 서버까지 닿�
         body: undefined,
       }),
     );
+  });
+});
+
+describe('FR-SHELL-016 — 트리에서 자리를 골라 만든다', () => {
+  /** 메뉴를 열어 만들기 항목 하나를 고른다. 이름을 정하는 자리까지만 간다. */
+  const 만들기를고른다 = async (대상: RegExp, 항목: string) => {
+    const user = await openTree();
+
+    await user.pointer({ keys: '[MouseRight]', target: screen.getByRole('treeitem', { name: 대상 }) });
+    await user.click(within(await screen.findByRole('menu')).getByRole('menuitem', { name: 항목 }));
+    return user;
+  };
+
+  it('AC-1 · AC-3: 파일에서 고르면 그 파일이 담긴 자리에 만든다', async () => {
+    routes.set('/api/nodes', () => json({ id: 'n9', name: '제목 없음.md' }));
+    const user = await 만들기를고른다(/회의록/, '새 문서');
+
+    // 기본 이름이 **골라진 채** 서 있다 — 고르지 않으면 다르게 지으려는
+    // 사람이 먼저 지워야 하고, 채우지 않으면 매번 처음부터 쳐야 한다.
+    const 입력 = await screen.findByRole('textbox', { name: '새 문서 이름' });
+    expect(입력).toHaveProperty('value', '제목 없음.md');
+
+    await user.click(screen.getByRole('button', { name: '만들기' }));
+
+    await waitFor(() =>
+      expect(sent).toContainEqual({
+        path: '/api/nodes',
+        method: 'POST',
+        // `회의록.md` 는 워크스페이스 루트의 파일이므로 담길 자리는 그 루트다.
+        body: { workspaceId: 'ws-1', parentId: null, kind: 'file', name: '제목 없음.md' },
+      }),
+    );
+  });
+
+  it('AC-1: 디렉토리에서 고르면 그 디렉토리 아래에 만든다', async () => {
+    routes.set('/api/nodes', () => json({ id: 'n9', name: '메모.md' }));
+    const user = await 만들기를고른다(/자료/, '새 문서');
+
+    await user.clear(await screen.findByRole('textbox', { name: '새 문서 이름' }));
+    await user.type(screen.getByRole('textbox', { name: '새 문서 이름' }), '메모.md');
+    await user.click(screen.getByRole('button', { name: '만들기' }));
+
+    await waitFor(() =>
+      expect(sent).toContainEqual({
+        path: '/api/nodes',
+        method: 'POST',
+        body: { workspaceId: 'ws-1', parentId: 'd1', kind: 'file', name: '메모.md' },
+      }),
+    );
+  });
+
+  it('AC-2: 새 디렉토리는 같은 자리에 다른 종류로 나간다', async () => {
+    routes.set('/api/nodes', () => json({ id: 'n9', name: '새 디렉토리' }));
+    const user = await 만들기를고른다(/자료/, '새 디렉토리');
+
+    expect(await screen.findByRole('textbox', { name: '새 디렉토리 이름' })).toHaveProperty(
+      'value',
+      '새 디렉토리',
+    );
+    await user.click(screen.getByRole('button', { name: '만들기' }));
+
+    await waitFor(() =>
+      expect(sent).toContainEqual({
+        path: '/api/nodes',
+        method: 'POST',
+        body: { workspaceId: 'ws-1', parentId: 'd1', kind: 'directory', name: '새 디렉토리' },
+      }),
+    );
+  });
+
+  it('AC-3: 그만두면 아무것도 나가지 않는다', async () => {
+    const user = await 만들기를고른다(/회의록/, '새 문서');
+
+    await user.click(await screen.findByRole('button', { name: '그만두기' }));
+
+    expect(screen.queryByRole('textbox', { name: '새 문서 이름' })).toBeNull();
+    expect(sent.some((one) => one.path === '/api/nodes')).toBe(false);
+  });
+
+  it('AC-4: 빈 이름으로는 나가지 않는다 — 부재는 판정 이전이다', async () => {
+    const user = await 만들기를고른다(/회의록/, '새 문서');
+
+    await user.clear(await screen.findByRole('textbox', { name: '새 문서 이름' }));
+    await user.click(screen.getByRole('button', { name: '만들기' }));
+
+    // 금지 문자와 길이 상한과 이름 충돌은 **서버가** 소유한다. 화면이 그것을
+    // 다시 적으면 두 곳이 조용히 갈린다.
+    expect(sent.some((one) => one.path === '/api/nodes')).toBe(false);
+  });
+
+  it('AC-5: 만든 노드가 트리에 나타난다', async () => {
+    routes.set('/api/nodes', () => json({ id: 'n9', name: '메모.md' }));
+    // 만들기가 나간 뒤에만 트리가 그 노드를 돌려준다 — 처음부터 있으면
+    // 「만들기가 세웠다」와 「원래 있었다」가 갈리지 않는다.
+    routes.set('/api/tree', () =>
+      json(
+        sent.some((one) => one.path === '/api/nodes')
+          ? [
+              {
+                ...TREE[0]!,
+                roots: [
+                  ...TREE[0]!.roots,
+                  {
+                    id: 'n9',
+                    name: '메모.md',
+                    kind: 'file',
+                    visibility: 'full',
+                    level: 'edit',
+                    parentLevel: 'edit',
+                    children: [],
+                  },
+                ],
+              },
+            ]
+          : TREE,
+      ),
+    );
+    const user = await 만들기를고른다(/회의록/, '새 문서');
+
+    await user.click(await screen.findByRole('button', { name: '만들기' }));
+
+    expect(await screen.findByRole('treeitem', { name: /메모\.md/ })).toBeTruthy();
+  });
+
+  it('AC-7: 두 진입점이 만들기를 부르는 자리는 하나다', async () => {
+    // 상단 버튼과 메뉴가 다른 코드를 타면 한쪽만 고쳐지고 다른 쪽은 조용히
+    // 어긋난다. 이 저장소는 그 부류를 이미 여러 번 겪었다.
+    const app = await readFile(join(WEB, 'src/App.tsx'), 'utf8');
+
+    expect(app.match(/\bcreateNode\(/g) ?? []).toHaveLength(1);
   });
 });

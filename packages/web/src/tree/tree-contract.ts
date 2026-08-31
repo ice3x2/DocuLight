@@ -20,7 +20,11 @@ export interface TreeNodeView {
   visibility: Visibility;
   /** 이 노드에 대한 요청자의 유효 권한. pass-through 면 `null` 이다. */
   level: Level;
-  /** 부모(또는 워크스페이스)에 대한 유효 권한 — 만들기가 이것을 본다. */
+  /**
+   * 부모(또는 워크스페이스)에 대한 유효 권한 — **파일에서 고른** 만들기가
+   * 이것을 본다. 디렉토리에서 고른 만들기는 그 디렉토리 안에 담기므로
+   * `level` 을 본다(`담길자리의권한`).
+   */
   parentLevel: Level;
   /**
    * 새 버전을 올리면 되돌릴 수 없는가 (`FR-SHELL-008` AC-5).
@@ -47,14 +51,31 @@ export interface ContextMenuItem {
   filesOnly?: boolean;
   /** 이 노드에 필요한 레벨. `null` 이면 이 축을 보지 않는다. */
   target?: Exclude<Level, null>;
-  /** 부모에 필요한 레벨 — 만들기가 쓴다. */
-  parent?: Exclude<Level, null>;
+  /**
+   * 새 노드가 **담길 자리**에 필요한 레벨 — 만들기가 쓴다.
+   *
+   * 그 자리는 노드 종류에 따라 갈린다: 디렉토리에서 고르면 그 디렉토리
+   * 자신이고, 파일에서 고르면 그 파일이 담긴 자리다. `containerFor` 가
+   * 고르는 자리와 같으며, 서버도 같은 자리를 본다.
+   */
+  container?: Exclude<Level, null>;
 }
 
 const RANK = { view: 1, edit: 2, admin: 3 } as const;
 
 const permits = (held: Level, required: Exclude<Level, null>) =>
   held !== null && RANK[held] >= RANK[required];
+
+/**
+ * 이 노드에서 고른 만들기가 담길 자리의 권한.
+ *
+ * **디렉토리는 자기 안이고 파일은 자기가 담긴 자리다.** 이 한 문장이
+ * `containerFor` 가 자리의 **id** 를 고르는 규칙과 같아야 한다 — 두 곳이
+ * 갈리면 활성 판정과 실제 결과가 다른 자리를 가리키고, 열려 보이던 항목이
+ * 서버에서 거절된다.
+ */
+const 담길자리의권한 = (node: TreeNodeView): Level =>
+  node.kind === 'directory' ? node.level : node.parentLevel;
 
 /**
  * 컨텍스트 메뉴 아홉 항목 (`FR-SHELL-003` AC-2).
@@ -67,8 +88,8 @@ const permits = (held: Level, required: Exclude<Level, null>) =>
  * 않기 때문이다(`SEC-ACL-014` AC-3).
  */
 export const CONTEXT_MENU_ITEMS: readonly ContextMenuItem[] = [
-  { id: 'new-file', label: '새 문서', parent: 'edit' },
-  { id: 'new-directory', label: '새 디렉토리', parent: 'edit' },
+  { id: 'new-file', label: '새 문서', container: 'edit' },
+  { id: 'new-directory', label: '새 디렉토리', container: 'edit' },
   { id: 'rename', label: '이름 변경', target: 'edit' },
   { id: 'move', label: '이동', target: 'edit' },
   { id: 'copy', label: '복사', target: 'view' },
@@ -77,6 +98,21 @@ export const CONTEXT_MENU_ITEMS: readonly ContextMenuItem[] = [
   { id: 'favorite', label: '즐겨찾기', target: 'view' },
   { id: 'new-version', label: '새 버전 올리기', filesOnly: true, target: 'edit' },
 ];
+
+/**
+ * 만들기 자리의 문구와 기본 이름 (`FR-SHELL-016` AC-3 · AC-7).
+ *
+ * 기본 이름은 **서버가 받아 주는 값**이다 — 금지 문자도 예약 장치명도 아니고,
+ * 겹치면 서버가 접미사를 붙여 준다. 화면이 그 규칙을 다시 적지 않는 대신
+ * 안전한 값 하나를 골라 둔다.
+ *
+ * 트리 상단 `새 노트` 버튼도 이 이름을 쓴다 — 그 버튼은 이름을 묻지 않을 뿐
+ * 만드는 것은 같은 문서이고, 두 곳에 따로 적으면 한쪽만 바뀐다.
+ */
+export const CREATE_DEFAULTS = {
+  file: { title: '새 문서 만들기', fieldLabel: '새 문서 이름', name: '제목 없음.md' },
+  directory: { title: '새 디렉토리 만들기', fieldLabel: '새 디렉토리 이름', name: '새 디렉토리' },
+} as const;
 
 /**
  * 이 노드에서 **열리는** 항목들.
@@ -90,11 +126,12 @@ export function enabledMenuItems(node: TreeNodeView): ContextMenuItem[] {
   return CONTEXT_MENU_ITEMS.filter((item) => {
     if (item.filesOnly === true && node.kind !== 'file') return false;
     if (item.target !== undefined && !permits(node.level, item.target)) return false;
-    // 만들기는 **담을 자리**에 쓰는 조작이라 그 자리의 권한을 본다. 노드
-    // 자신의 권한으로 판정하면 서버가 거절할 항목이 열려 보이고, 사용자에게는
-    // 고장으로 보인다 — 그리고 서버가 채워 보내는 `parentLevel` 은 아무도
-    // 읽지 않는 칸이 된다.
-    if (item.parent !== undefined && !permits(node.parentLevel, item.parent)) return false;
+    // 만들기는 **담길 자리**에 쓰는 조작이라 그 자리의 권한을 본다. 그 자리는
+    // `containerFor` 가 고르는 자리와 같아야 한다 — 판정과 결과가 다른 자리를
+    // 가리키면 열려 보이던 항목이 서버에서 거절되고, 사용자에게는 고장으로
+    // 보인다. 서버도 같은 자리를 본다(`node-service.ts` 의 `parentTarget` 은
+    // `parentId ?? workspaceId` 이며, 그 `parentId` 를 화면이 여기서 정한다).
+    if (item.container !== undefined && !permits(담길자리의권한(node), item.container)) return false;
     return true;
   });
 }
@@ -178,4 +215,58 @@ function 모은다(
     }
     모은다(node.children, 경로, sourceId, 모을곳);
   }
+}
+
+/**
+ * 새 노드가 담길 자리. `parentId` 가 `null` 이면 그 워크스페이스의 루트다 —
+ * 서버의 `POST /nodes` 가 부모를 그렇게 받는다.
+ */
+export interface Container {
+  workspaceId: string;
+  parentId: string | null;
+}
+
+/**
+ * 이 노드에서 만들기를 고르면 어디에 담기는가 (`FR-SHELL-016` AC-1 · AC-2).
+ *
+ * **디렉토리는 자기 아래가, 파일은 자기가 담긴 자리가 답이다.** 같은 규칙을
+ * `담길자리의권한` 이 활성 판정 쪽에서 쓴다 — 두 곳이 갈리면 열려 보이던
+ * 항목이 서버에서 거절된다. 파일 자신 아래에 만들려 하면 파일 밑에 노드를
+ * 두는 셈이 되고, 서버가 그것을 받지 않는다.
+ *
+ * 규칙을 화면 부품이 아니라 여기 두는 이유는 `destinationsFor` 와 같다 —
+ * 같은 메뉴를 다른 자리에서 그릴 때 규칙이 갈리지 않게 하기 위해서다.
+ *
+ * 워크스페이스 id 를 함께 돌려주는 이유는 부르는 쪽이 그것을 다시 찾으면
+ * 같은 순회가 두 곳에 생기기 때문이다.
+ */
+export function containerFor(
+  workspaces: readonly WorkspaceTreeView[],
+  nodeId: string,
+): Container | undefined {
+  for (const entry of workspaces) {
+    const 담을곳 = 담을자리(entry.roots, nodeId, null);
+    if (담을곳 !== undefined) return { workspaceId: entry.workspace.id, parentId: 담을곳.parentId };
+  }
+  return undefined;
+}
+
+/**
+ * 가지를 훑어 그 노드가 담길 자리를 찾는다.
+ *
+ * 찾지 못한 것과 부모가 없는 것을 객체로 갈라 돌려준다 — 둘 다 `null` 로
+ * 표현하면 트리에 없는 노드가 첫 워크스페이스의 루트로 읽힌다.
+ */
+function 담을자리(
+  nodes: readonly TreeNodeView[],
+  nodeId: string,
+  부모: string | null,
+): { parentId: string | null } | undefined {
+  for (const node of nodes) {
+    if (node.id === nodeId) return { parentId: node.kind === 'directory' ? node.id : 부모 };
+
+    const 아래 = 담을자리(node.children, nodeId, node.id);
+    if (아래 !== undefined) return 아래;
+  }
+  return undefined;
 }

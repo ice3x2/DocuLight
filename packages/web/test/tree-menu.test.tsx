@@ -141,8 +141,8 @@ describe('FR-SHELL-003 — 트리 컨텍스트 메뉴와 새 노트 버튼', () 
   });
 });
 
-describe('FR-SHELL-003 AC-3 — 만들기는 부모 권한을 본다', () => {
-  it('그 노드는 고칠 수 있어도 부모를 못 고치면 만들기가 열리지 않는다', () => {
+describe('FR-SHELL-003 AC-3 · FR-SHELL-016 AC-1 — 만들기는 담길 자리의 권한을 본다', () => {
+  it('파일에서는 그 노드를 고칠 수 있어도 부모를 못 고치면 만들기가 열리지 않는다', () => {
     // 만들기는 **담을 자리**에 쓰는 조작이다. 노드 자신의 권한으로 판정하면
     // 서버가 거절할 항목이 열려 보이고, 사용자에게는 고장으로 보인다.
     const items = enabledMenuItems(node({ level: 'edit', parentLevel: 'view' })).map((i) => i.label);
@@ -153,10 +153,32 @@ describe('FR-SHELL-003 AC-3 — 만들기는 부모 권한을 본다', () => {
     expect(items).toContain('이름 변경');
   });
 
-  it('부모를 고칠 수 있으면 그 노드를 못 고쳐도 만들기가 열린다', () => {
+  it('파일에서는 부모를 고칠 수 있으면 그 노드를 못 고쳐도 만들기가 열린다', () => {
     const items = enabledMenuItems(node({ level: 'view', parentLevel: 'edit' })).map((i) => i.label);
 
     expect(items).toContain('새 문서');
     expect(items).not.toContain('삭제');
+  });
+
+  it('디렉토리에서는 그 디렉토리 자신을 못 고치면 만들기가 열리지 않는다', () => {
+    // 디렉토리에서 고른 만들기는 **그 디렉토리 안**에 담긴다. 그래서 서버가
+    // 보는 자리도 그 디렉토리이고(`node-service.ts` 의 `parentTarget` 은
+    // `parentId ?? workspaceId` 다), 설계서 §2.2.5 도 「대상 디렉토리 편집」을
+    // 적었다. 화면이 그 부모를 보면 열려 보이던 항목이 403 으로 거절된다.
+    const 디렉토리 = node({ kind: 'directory', level: 'view', parentLevel: 'edit' });
+    const items = enabledMenuItems(디렉토리).map((i) => i.label);
+
+    expect(items).not.toContain('새 문서');
+    expect(items).not.toContain('새 디렉토리');
+  });
+
+  it('디렉토리에서는 그 디렉토리를 고칠 수 있으면 부모를 못 고쳐도 만들기가 열린다', () => {
+    // 상속이 끊긴 디렉토리에 편집을 직접 받은 경우다. 부모를 보면 이 사람은
+    // 자기가 편집할 수 있는 자리에 문서를 만들지 못한다.
+    const 디렉토리 = node({ kind: 'directory', level: 'edit', parentLevel: 'view' });
+    const items = enabledMenuItems(디렉토리).map((i) => i.label);
+
+    expect(items).toContain('새 문서');
+    expect(items).toContain('새 디렉토리');
   });
 });

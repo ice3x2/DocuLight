@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { destinationsFor, type WorkspaceTreeView } from '../src/tree/tree-contract.js';
+import { containerFor, destinationsFor, type WorkspaceTreeView } from '../src/tree/tree-contract.js';
 
 /**
  * 옮기거나 복사할 자리의 목록 (`FR-SHELL-015` AC-2 · AC-4).
@@ -30,7 +30,17 @@ const 트리: readonly WorkspaceTreeView[] = [
             visibility: 'full',
             level: 'edit',
             parentLevel: 'edit',
-            children: [],
+            children: [
+              {
+                id: 'f2',
+                name: '작년정리.md',
+                kind: 'file',
+                visibility: 'full',
+                level: 'edit',
+                parentLevel: 'edit',
+                children: [],
+              },
+            ],
           },
         ],
       },
@@ -112,5 +122,35 @@ describe('FR-SHELL-015 — 옮기거나 복사할 자리를 고른다', () => {
     const 깊은자리 = destinationsFor(트리, 'move', 'f1').find((one) => one.id === 'd1-1');
 
     expect(깊은자리?.path).toBe('기획팀 / 자료 / 지난해');
+  });
+});
+
+describe('FR-SHELL-016 — 만들기가 담길 자리를 고른다', () => {
+  it('AC-1: 디렉토리에서 고르면 그 디렉토리 아래다', () => {
+    expect(containerFor(트리, 'd1')).toEqual({ workspaceId: 'ws-1', parentId: 'd1' });
+  });
+
+  it('AC-1: 파일에서 고르면 그 파일이 담긴 자리다', () => {
+    // 활성 판정(`enabledMenuItems`)이 **부모**의 편집 권한을 보므로 결과도
+    // 같은 자리를 가리켜야 한다. 노드 자신 아래에 만들면 파일 아래에 노드를
+    // 두는 셈이 되고, 열려 보이던 항목이 서버에서 거절된다.
+    expect(containerFor(트리, 'f2')).toEqual({ workspaceId: 'ws-1', parentId: 'd1-1' });
+  });
+
+  it('AC-1: 워크스페이스 루트의 노드는 부모가 없다', () => {
+    // `null` 이 곧 그 워크스페이스의 루트다 — 서버의 `POST /nodes` 가
+    // `parentId` 를 그렇게 받는다.
+    expect(containerFor(트리, 'f1')).toEqual({ workspaceId: 'ws-1', parentId: null });
+  });
+
+  it('AC-1: 어느 워크스페이스의 노드인지를 함께 돌려준다', () => {
+    // 워크스페이스 id 없이 부모만 주면 부르는 쪽이 그것을 다시 찾아야 하고,
+    // 두 곳이 같은 순회를 갖게 된다.
+    expect(containerFor(트리, 'd3')).toEqual({ workspaceId: 'ws-2', parentId: 'd3' });
+  });
+
+  it('트리에 없는 노드에는 자리가 없다', () => {
+    // 없는 자리에 기본값을 주면 엉뚱한 워크스페이스에 문서가 선다.
+    expect(containerFor(트리, '없는노드')).toBeUndefined();
   });
 });
