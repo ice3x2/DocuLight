@@ -107,7 +107,7 @@ Before starting work in a fresh session, read `docs/next/LATEST.md`. It points a
   절차(로그인·시험 문서 준비·트리에서 열기)만 `packages/web/test/_web-harness.mjs` 에
   있다. 검사는 자기 문서를 만들고 끝나면 지우므로 **개인 볼트에 기대지 않는다**.
   저장소 루트의 `npm run test:browser:all` 은 이제 editor 와 web 을 차례로 부른다.
-  web 쪽은 넷이다. `focus-retention-check.mjs`(`FR-EDITOR-009`: 저장이 포커스·커서·
+  web 쪽은 여섯이다. `focus-retention-check.mjs`(`FR-EDITOR-009`: 저장이 포커스·커서·
   이어 쓰기를 끊지 않는다)와 `ime-composition-check.mjs`(원장 §4 **수용 기준 7**:
   한글 IME 조합이 편집 중 깨지지 않는다) — 뒤의 것은 CDP `Input.imeSetComposition` 으로
   조합 단계를 그대로 내므로 OS 입력기 없이도 그 축이 재어진다. 셋째는
@@ -121,8 +121,14 @@ Before starting work in a fresh session, read `docs/next/LATEST.md`. It points a
   다섯째는 `editor-styles-check.mjs`(`IR-EDITOR-001`: 편집기 스타일이 **제품 화면**에
   실제로 닿는가)이며, 같은 축의 조립 시험 `editor-styles-assembly.test.ts` 가 vitest
   쪽에 함께 선다 — 브라우저 검사는 서버가 있어야 돌지만 그쪽은 늘 돈다.
-  **로그인은 15분 창에 10회로 제한되고 web 검사 다섯이 한 번에 5회를 쓴다** — 그래서
-  한 창에 두 번은 돌지 못한다. 짧은 사이에 다시 돌리면 429 가 나고, 그때 검사는
+  여섯째는 `acl-two-account-check.mjs`(원장 §4 **수용 기준 4**: 권한이 다른 두 계정의
+  화면이 실제로 다르게 그려지는가)이며, **둘째 계정을 스스로 만들어 실제로 로그인하는
+  유일한 검사**다 — 재려는 것이 바로 다른 자격의 화면이라 `storageState` 복사가 성립하지
+  않는다. 부여 전·부여 후·회수 후 세 시점의 트리를 화면의 `role="treeitem"` 으로 세며,
+  API 응답을 보지 않는다(그러면 서버 판정을 한 번 더 재는 것일 뿐이고 화면까지의 배선이
+  끊겨도 통과한다).
+  **로그인은 15분 창에 10회로 제한되고 web 검사 여섯이 한 번에 7회를 쓴다**(여섯째가
+  둘을 쓴다) — 그래서 한 창에 두 번은 돌지 못한다. 짧은 사이에 다시 돌리면 429 가 나고, 그때 검사는
   「계정이 틀렸다」가 아니라 그 사실을 안내한다. 창이 열릴 때까지 기다리거나 API 서버를
   재기동하면 즉시 풀린다.
   **두 패키지의 검사를 한 자리에서 돌리려면 포트를 나눠야 한다** — 둘 다 기본으로

@@ -51,7 +51,17 @@ const 안내 =
  */
 export async function login(page) {
   if (!USER || !PASS) unmeasurable(`로그인 계정이 주어지지 않았다.\n${안내}`);
+  await loginAs(page, USER, PASS);
+}
 
+/**
+ * 지정한 자격으로 로그인한다.
+ *
+ * 환경변수의 계정 말고 **시험이 만든 계정**으로 붙어야 하는 자리가 있다 —
+ * 두 계정의 화면이 다르게 그려지는지 재려면 둘째 자격이 필요하고, 그것을
+ * 환경변수로 더 받으면 검사를 돌리는 사람이 계정을 하나 더 준비해야 한다.
+ */
+export async function loginAs(page, name, password) {
   try {
     await page.goto(WEB_URL, { waitUntil: 'domcontentloaded' });
   } catch {
@@ -59,15 +69,15 @@ export async function login(page) {
   }
 
   const 결과 = await page.evaluate(
-    async ([name, password]) => {
+    async ([이름, 비밀번호]) => {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ name, password }),
+        body: JSON.stringify({ name: 이름, password: 비밀번호 }),
       });
       return { ok: res.ok, status: res.status };
     },
-    [USER, PASS],
+    [name, password],
   );
 
   // **429 는 자격 문제가 아니다.** 로그인은 15분 창에 10회로 제한되므로 이
