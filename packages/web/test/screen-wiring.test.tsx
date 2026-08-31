@@ -1,7 +1,7 @@
 import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { existsSync } from 'node:fs';
-import { readFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -991,8 +991,12 @@ describe('FR-SHELL-016 — 트리에서 자리를 골라 만든다', () => {
 
     // 기본 이름이 **골라진 채** 서 있다 — 고르지 않으면 다르게 지으려는
     // 사람이 먼저 지워야 하고, 채우지 않으면 매번 처음부터 쳐야 한다.
-    const 입력 = await screen.findByRole('textbox', { name: '새 문서 이름' });
-    expect(입력).toHaveProperty('value', '제목 없음.md');
+    // 값만 재면 「채워는 있으나 골라지지 않은」 화면이 통과한다.
+    const 입력 = (await screen.findByRole('textbox', {
+      name: '새 문서 이름',
+    })) as HTMLInputElement;
+    expect(입력.value).toBe('제목 없음.md');
+    expect([입력.selectionStart,입력.selectionEnd]).toEqual([0, '제목 없음.md'.length]);
 
     await user.click(screen.getByRole('button', { name: '만들기' }));
 
@@ -1096,11 +1100,52 @@ describe('FR-SHELL-016 — 트리에서 자리를 골라 만든다', () => {
     expect(await screen.findByRole('treeitem', { name: /메모\.md/ })).toBeTruthy();
   });
 
+  it('AC-6: 메뉴로 만들 때도 접미사 안내가 뜬다', async () => {
+    // 상단 버튼 축은 `SEC-SHELL-002` 항이 재고 있다. 그것과 이 항이 함께
+    // 있어야 「두 진입점이 같은 함수를 지난다」(AC-7)가 화면에서도 참임이
+    // 드러난다 — AC-7 의 소스 단언만으로는 그 함수가 안내까지 데려오는지
+    // 알 수 없다.
+    routes.set('/api/nodes', () =>
+      json({ id: 'n9', name: '제목 없음 (2).md', notice: '같은 이름이 있어 `제목 없음 (2).md` 로 만들었습니다.' }),
+    );
+    const user = await 만들기를고른다(/회의록/, '새 문서');
+
+    await user.click(await screen.findByRole('button', { name: '만들기' }));
+
+    expect(await screen.findByRole('status', { name: '알림' })).toHaveProperty(
+      'textContent',
+      '같은 이름이 있어 `제목 없음 (2).md` 로 만들었습니다.',
+    );
+  });
+
   it('AC-7: 두 진입점이 만들기를 부르는 자리는 하나다', async () => {
     // 상단 버튼과 메뉴가 다른 코드를 타면 한쪽만 고쳐지고 다른 쪽은 조용히
     // 어긋난다. 이 저장소는 그 부류를 이미 여러 번 겪었다.
-    const app = await readFile(join(WEB, 'src/App.tsx'), 'utf8');
+    //
+    // **화면 소스 전체를 훑는다.** 한 파일만 보면 호출을 다른 파일로 옮기는
+    // 것만으로 이 시험이 통과하고, 그것이 바로 막으려는 상태다. `client.ts`
+    // 는 그 함수를 **정의**하는 자리라 뺀다.
+    const 훑는다 = async (dir) => {
+      const 담긴것 = await readdir(dir, { withFileTypes: true });
+      const 모은것 = [];
+      for (const one of 담긴것) {
+        const 자리 = join(dir, one.name);
+        if (one.isDirectory()) 모은것.push(...(await 훑는다(자리)));
+        else if (/\.tsx?$/.test(one.name) && one.name !== 'client.ts') 모은것.push(자리);
+      }
+      return 모은것;
+    };
 
-    expect(app.match(/\bcreateNode\(/g) ?? []).toHaveLength(1);
+    const 파일들 = await 훑는다(join(WEB, 'src'));
+    const 호출한파일 = [];
+    for (const 파일 of 파일들) {
+      const 글 = await readFile(파일, 'utf8');
+      const 횟수 = (글.match(/\bcreateNode\(/g) ?? []).length;
+      if (횟수 > 0) 호출한파일.push(`${파일.replace(WEB, '')} ×${횟수}`);
+    }
+
+    expect(파일들.length).toBeGreaterThan(0);
+    expect(호출한파일, '만들기를 부르는 자리').toHaveLength(1);
+    expect(호출한파일[0]).toContain('×1');
   });
 });

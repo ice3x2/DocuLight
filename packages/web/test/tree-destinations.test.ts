@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { containerFor, destinationsFor, type WorkspaceTreeView } from '../src/tree/tree-contract.js';
+import {
+  containerFor,
+  destinationsFor,
+  enabledMenuItems,
+  type TreeNodeView,
+  type WorkspaceTreeView,
+} from '../src/tree/tree-contract.js';
 
 /**
  * 옮기거나 복사할 자리의 목록 (`FR-SHELL-015` AC-2 · AC-4).
@@ -152,5 +158,36 @@ describe('FR-SHELL-016 — 만들기가 담길 자리를 고른다', () => {
   it('트리에 없는 노드에는 자리가 없다', () => {
     // 없는 자리에 기본값을 주면 엉뚱한 워크스페이스에 문서가 선다.
     expect(containerFor(트리, '없는노드')).toBeUndefined();
+  });
+
+  it('AC-1: 활성 판정이 보는 권한과 담길 자리의 권한이 같다', () => {
+    // **두 함수가 같은 한 문장을 따른다** — 디렉토리는 자기 안이고 파일은
+    // 자기가 담긴 자리다. `containerFor` 는 그 자리의 **id** 를 고르고
+    // `enabledMenuItems` 는 그 자리의 **권한**을 보는데, 둘이 갈리면 열려
+    // 보이던 항목이 서버에서 거절된다. 주석으로만 묶으면 다음 변경이
+    // 한쪽만 고친다.
+    const 훑는다 = (nodes: readonly TreeNodeView[]): TreeNodeView[] =>
+      nodes.flatMap((node) => [node, ...훑는다(node.children)]);
+    const 모든노드 = 트리.flatMap((entry) => 훑는다(entry.roots));
+    const 찾는다 = (id: string) => 모든노드.find((one) => one.id === id);
+
+    let 대조한수 = 0;
+    for (const 노드 of 모든노드) {
+      const 자리 = containerFor(트리, 노드.id);
+      // 워크스페이스 루트가 자리인 경우는 뺀다 — `WorkspaceTreeView` 가 그
+      // 자리의 유효 권한을 담고 있지 않아 대조할 값이 없다(`destinationsFor`
+      // 주석이 같은 한계를 적는다).
+      if (자리 === undefined || 자리.parentId === null) continue;
+
+      const 자리노드 = 찾는다(자리.parentId);
+      const 자리가허용한다 = 자리노드?.level === 'edit' || 자리노드?.level === 'admin';
+      const 열린다 = enabledMenuItems(노드).some((item) => item.id === 'new-file');
+
+      expect(열린다, `${노드.name} 에서 고른 만들기`).toBe(자리가허용한다);
+      대조한수 += 1;
+    }
+
+    // 훑기가 비면 위 루프가 한 번도 돌지 않고 시험이 공허하게 통과한다.
+    expect(대조한수).toBeGreaterThan(0);
   });
 });
