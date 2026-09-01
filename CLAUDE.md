@@ -152,6 +152,20 @@ Before starting work in a fresh session, read `docs/next/LATEST.md`. It points a
   `U+FFFD` 로 저장되고, 그러면 브라우저에서만 로그인이 401 로 실패한다(curl 은 같은
   방식으로 깨뜨려 보내므로 200 이 나와 원인이 가려진다). **설치 계정은 ASCII 로 만든다**
   (2026-09-01 실측).
+  **dev 서버가 아니라 배포 형태에서도 잰다** (2026-09-01 실측). `WEB_URL` 을 빌드
+  산출물을 서빙하는 서버로 주면 그대로 돈다 — dev 는 vite 가 자산을 내고 API 를
+  프록시하지만, 배포는 **한 프로세스가 정적 산출물과 API 를 같은 오리진에** 올린다
+  (`OPS-ARCH-001`). 그 차이가 자산 경로와 쿠키 범위에서 드러나므로 dev 만 재면
+  배포에서 처음 깨진다. 절차:
+  ```
+  npm run build                                            # 저장소 루트
+  DOCULIGHT_DATA_DIR=<임시경로> PORT=3440 npx tsx src/main.ts   # packages/server 에서
+  # 설치를 마친 뒤
+  WEB_URL=http://localhost:3440/ DOCULIGHT_E2E_USER=... npm run test:browser:all --workspace @doculight/web
+  ```
+  2026-09-01 에 그 형태로 아홉 전건이 통과했다(인증 11 · focus 5 · ime 3 · search 4 ·
+  merge 7 · styles 3 · acl 8 · trash 5 · gestures 4).
+
   **두 패키지의 검사를 한 자리에서 돌리려면 포트를 나눠야 한다** — 둘 다 기본으로
   3399 를 보므로, editor 데모를 다른 포트에 띄우고 `EDITOR_URL` 로 넘긴다:
   `npx vite --port 3401 --strictPort` 뒤 `EDITOR_URL=http://localhost:3401/ npm run test:browser:all`.
