@@ -40,6 +40,9 @@ await runBrowserChecks(async ({ page, check, note }) => {
   await login(page);
 
   const 문서 = await makeDocument(page, '# 제스처 시험\n\n여기에 붙인다\n', 'gesture');
+  // 자동완성 판정은 **깨끗한 문서**에서 한다 — 붙여넣기가 본문을 바꾸면 그
+  // 변경의 자동 저장이 뒤이어 돌고, 그 사이에 친 글자가 밀린다.
+  const 링크문서 = await makeDocument(page, '# 링크 시험\n\n여기에 링크를 건다\n', 'gesture-link');
   // **떨구는 자리는 디렉토리여야 한다** — 파일 아래에는 아무것도 설 수 없고
   // `acceptedDrop` 이 그것을 `not-a-directory` 로 거절한다.
   const 담을곳 = await page.evaluate(async () => {
@@ -129,14 +132,44 @@ await runBrowserChecks(async ({ page, check, note }) => {
     );
 
     // ── 기준 3 — `[[` 자동완성 팝오버 ───────────────────────────────
-    // 본문 끝으로 가서 새 줄에 친다 — 앞 판정이 넣은 링크 위에 겹쳐 치면
-    // 무엇이 후보를 띄웠는지 갈리지 않는다.
+    // **문서를 새로 연다.** 앞 판정이 본문에 이미지 링크를 넣었고 그 변경의
+    // 자동 저장이 아직 돌고 있어, 같은 화면에서 이어 치면 저장이 끼어드는
+    // 순간 커서가 밀려 친 글자가 흩어진다. 두 축에 문서를 따로 주는 것은
+    // 머지 뷰 검사가 같은 이유로 쓰는 방식이다.
+    await openInEditor(page, 링크문서.id, 링크문서.name);
     await page.locator('.cm-content').first().click();
     await page.keyboard.press('Control+End');
     await page.keyboard.press('Enter');
-    // 질의를 함께 친다 — 빈 질의로도 후보가 오는지는 서버 정책이고, 이
-    // 검사가 재려는 것은 **팝오버가 실제로 서고 키보드로 골라지는가**다.
-    await page.keyboard.type('[[gesture');
+    // **괄호는 넣고 질의는 친다.** `[` 를 키로 치면 편집기가 `]` 를 자동으로
+    // 닫는데, 그 자동 닫기와 다음 `[` 가 겹쳐 `[[` 대신 `[` 하나만 남는 경우가
+    // 있다 — 그러면 `matchBefore` 가 매치하지 않아 후보 API 가 200 에 1건을
+    // 돌려주는데도 팝오버가 서지 않는다. 닫는 괄호까지 넣고 그 사이로 커서를
+    // 옮기면 사용자가 `[[` 를 쳤을 때 편집기가 만들어 주는 상태와 같아진다.
+    //
+    // 질의는 **실제로 친다** — 자동완성 트리거는 타이핑에서 나므로, 여기까지
+    // 삽입으로 넣으면 「치면 뜨는가」가 재어지지 않는다.
+    await page.keyboard.insertText('[[]]');
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.type('gesture', { delay: 40 });
+
+    // **친 글자가 실제로 들어갔는지 먼저 본다.** 포커스가 편집기 밖에 있으면
+    // 타이핑이 아무 데도 닿지 않고, 그때 팝오버가 안 서는 것은 자동완성의
+    // 결함이 아니라 이 검사가 글자를 못 넣은 것이다. 둘을 갈라 두지 않으면
+    // 실패 메시지가 엉뚱한 곳을 가리킨다.
+    const 친글자 = await waitUntil(
+      () => page.evaluate(() => document.querySelector('.cm-content')?.textContent ?? ''),
+      (t) => t.includes('[[gesture'),
+      { timeout: 8_000 },
+    );
+    if (!친글자.includes('[[gesture')) {
+      check(
+        '기준 3 `[[` 를 실제로 치면 후보 팝오버가 뜬다',
+        false,
+        `친 글자가 본문에 들어가지 않았다 — 편집기에 포커스가 없다 (본문 끝: ${친글자.slice(-30)})`,
+      );
+      return;
+    }
 
     const 팝오버 = await waitUntil(
       () =>
@@ -150,10 +183,23 @@ await runBrowserChecks(async ({ page, check, note }) => {
       (v) => v.있다 && v.후보 > 0,
       { timeout: 20_000 },
     );
+    // 서지 않았으면 **왜인지**를 함께 남긴다 — 후보가 0건인 것과 팝오버가
+    // 그려지지 않은 것은 다른 결함이고, 메시지가 그것을 가르지 않으면 다음
+    // 사람이 엉뚱한 곳을 고친다.
+    const 왜 = 팝오버.있다
+      ? ''
+      : await page.evaluate(async () => {
+          const res = await fetch('/api/wiki-targets?q=gesture');
+          const body = res.ok ? await res.json() : null;
+          const 수 = Array.isArray(body) ? body.length : (body?.targets?.length ?? -1);
+          return ` (후보 API ${res.status} · ${수}건 · 본문 끝 「${(
+            document.querySelector('.cm-content')?.textContent ?? ''
+          ).slice(-24)}」)`;
+        });
     check(
       '기준 3 `[[` 를 실제로 치면 후보 팝오버가 뜬다',
       팝오버.있다 && 팝오버.후보 > 0,
-      팝오버.있다 ? `후보 ${팝오버.후보}개` : '팝오버가 서지 않았다',
+      팝오버.있다 ? `후보 ${팝오버.후보}개` : `팝오버가 서지 않았다${왜}`,
     );
 
     if (팝오버.있다 && 팝오버.후보 > 0) {
@@ -187,6 +233,7 @@ await runBrowserChecks(async ({ page, check, note }) => {
     note('(세 축을 한 검사에 묶은 이유는 로그인 제한이다 — 축마다 나누면 한 창에 전체를 돌리지 못한다)');
   } finally {
     await removeDocument(page, 문서.id);
+    await removeDocument(page, 링크문서.id);
     if (담을곳?.id !== undefined) await removeDocument(page, 담을곳.id);
   }
 });
