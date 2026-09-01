@@ -29,16 +29,8 @@ const ENTRY = join(SRC, 'main.ts');
  */
 const 아직_배선되지_않음: ReadonlyMap<string, string> = new Map([
   [
-    'app/audit/audit-retention.ts',
-    'R84-a 의 감사 보존 일소를 도는 자리가 없다. app/trash/trash-service.ts 의 휴지통 일소도 같은 상태이며 그쪽은 모듈이 다른 export 로 도달해 이 방벽이 못 잡는다 — 두 축을 한 주기 작업으로 함께 세워야 한다',
-  ],
-  [
     'http/guards/dot-path-guard.ts',
     'SEC-STORAGE-004 · R64 의 점 경로 거부 가드. documents.ts 에 한 겹 더 두어 봤으나 그 호출을 무력화해도 죽는 항이 없었다(2026-09-01 탐침) — isServable 이 같은 것을 이미 막는다. 이 모듈이 값을 하는 것은 EXEMPT_ENDPOINTS 가 채워질 때이며, 첨부 다운로드와 휴지통·버전 API 가 각자 자기를 등록하면서 함께 도달한다',
-  ],
-  [
-    'app/search/index-node.ts',
-    'FR-ARCH-001 AC-4 의 벡터 색인. 문서 저장 경로가 아직 이것을 부르지 않아 MIG-AUTH-001 AC-5 의 이행 재구축이 유일한 호출자다 — 저장 시 색인을 거는 작업이 이 줄을 지운다',
   ],
   [
     'app/migration/migrate-accounts.ts',

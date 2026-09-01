@@ -9,6 +9,8 @@ import { permits } from '../../domain/acl/level.js';
 import { isServable } from '../../domain/serving/servable.js';
 import type { NodeId } from '../../domain/node/node-id.js';
 import type { VersionRepository } from '../../domain/ports/version-repository.js';
+import type { VectorIndex } from '../../domain/ports/vector-index.js';
+import { indexNode } from '../search/index-node.js';
 import { snapshotIfFirstSave } from './version-service.js';
 
 export interface DocumentStores extends AclStores {
@@ -16,6 +18,14 @@ export interface DocumentStores extends AclStores {
   clock: Clock;
   /** 워크스페이스들이 사는 루트. 본문의 SSOT 는 이 아래 파일들이다. */
   docsRoot: string;
+  /**
+   * 벡터 색인 (`FR-ARCH-001` AC-4). 저장이 이것을 따라온다.
+   *
+   * **선택으로 둔다.** 색인이 없는 조립(이행 도구·좁은 시험)이 실재하고,
+   * 그 자리에 빈 구현을 억지로 끼우면 색인이 도는지 아닌지가 호출자마다
+   * 갈린다 — 없으면 없는 대로 저장은 성립한다.
+   */
+  vectors?: VectorIndex;
 }
 
 export type SaveRule = 'unknown-node' | 'forbidden' | 'conflict';
@@ -143,5 +153,16 @@ export async function saveDocument(
   });
 
   await writeFile(found.path, input.body, 'utf8');
+
+  // **쓴 뒤에 색인한다** (`FR-ARCH-001` AC-4). 거절된 저장은 여기까지 오지
+  // 못하므로 색인이 실제 문서에 없는 문장을 가리키는 일이 없다.
+  //
+  // 색인은 파일을 다시 읽으므로 방금 쓴 내용을 본다 — 본문을 인자로
+  // 넘기지 않는 이유는 그러면 「디스크가 SSOT」라는 전제가 이 경로에서만
+  // 깨지기 때문이다.
+  if (stores.vectors !== undefined) {
+    await indexNode({ ...stores, vectors: stores.vectors }, input.nodeId);
+  }
+
   return { ok: true, hash: contentHash(input.body) };
 }

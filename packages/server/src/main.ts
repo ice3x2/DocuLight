@@ -20,6 +20,13 @@ import { createHttpServer } from './http/server.js';
 import { installGate, INSTALL_SCREEN } from './http/middleware/install-gate.js';
 import { isInstalled, mintInstallToken } from './app/install/install-service.js';
 import { authRouter, sessionTokenOf } from './http/routes/auth.js';
+import {
+  startRetentionLoop,
+  type RetentionLoop,
+} from './app/retention/retention-loop.js';
+import { sweepExpiredAudit } from './app/audit/audit-retention.js';
+import { SqliteAuditRetention } from './infra/sqlite/audit-retention-repository.js';
+import { sweepExpiredTrash } from './app/trash/trash-service.js';
 import { documentsRouter } from './http/routes/documents.js';
 import { installRouter } from './http/routes/install.js';
 import { mcpRouter } from './http/routes/mcp.js';
@@ -151,6 +158,8 @@ export interface ServerRuntime {
    * 다른 회차에 잡혀 짝을 이룰 수 없다.
    */
   fileWatch: FileWatch;
+  /** 보존 기간 일소 (`R84-a` · `FR-STORAGE-006`). */
+  retention: RetentionLoop;
   /** 라우트가 쓰는 저장소 전부. */
   stores: RuntimeStores;
   /**
@@ -187,6 +196,7 @@ type RuntimeStores = { personalSettings: SqlitePersonalSettingStore } & Attachme
      * 순간 드러났다. 타입에 없으면 라우터가 조립을 그대로 받지 못한다.
      */
     vectors: SqliteVectorIndex;
+    auditRetention: SqliteAuditRetention;
     /**
      * 콘솔에 한 줄 낸다 (`SEC-AUTH-012` AC-1).
      *
@@ -243,6 +253,9 @@ export async function bootstrap(
     // `stores.vectors` 가 비어 삭제·이동의 동기 갱신이 제품에서 조용히
     // 꺼진다 — 시험은 초록인데 조항은 성립하지 않는 상태가 된다.
     vectors: new SqliteVectorIndex(db),
+    // 감사 보존 일소가 쓰는 자리 (`REL-AUDIT-003`). 조립에 없으면 그
+    // 일소가 도는 순간 주체를 얻지 못한다.
+    auditRetention: new SqliteAuditRetention(db),
     trashFiles: new FsTrashFiles(config.docsRoot),
     files: new FsWorkspaceFiles(config.docsRoot),
     documents: new FsDocumentStore(config.docsRoot),
@@ -284,10 +297,19 @@ export async function bootstrap(
   // 재조정이 첫 회차를 마친 **뒤에** 건다. 앞서 걸면 그 회차가 등재하는
   // 파일들을 감시자가 「방금 나타났다」로 읽는다.
   const fileWatch = await startFileWatch(stores, config.docsRoot);
+  // 보존 기간 일소 (`R84-a` · `REL-AUDIT-003` · `FR-STORAGE-006`). 두 축을
+  // 한 자리에서 돈다 — 나누면 타이머가 둘이 되고 한쪽 배선이 빠져도
+  // 드러나지 않는다. 보존 기간을 설정할 수는 있는데 그 기간이 지나도 아무
+  // 일도 일어나지 않던 것이 이 줄이 없던 상태다.
+  const retention = startRetentionLoop({
+    sweepAudit: () => sweepExpiredAudit(stores),
+    sweepTrash: () => sweepExpiredTrash(stores),
+  });
 
   return {
     reconciliation,
     fileWatch,
+    retention,
     stores,
     actorOf: (request: Request): Actor | undefined => {
       const token = sessionTokenOf(request.headers.cookie);
@@ -306,6 +328,7 @@ export async function bootstrap(
       // stop() 이 기다려 주지도 않았다. 그래서 이 순서만으로는 닫힌 연결에
       // 읽기가 도착했고, 지금은 stop() 자신이 그 잔여를 막는다.
       await fileWatch.stop();
+      await retention.stop();
       db.close();
     },
   };

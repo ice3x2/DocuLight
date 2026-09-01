@@ -97,6 +97,41 @@ const 볼트에둔다 = async (path: string, body: string) => {
 const 원문을받는다 = (path: string, headers: Record<string, string> = {}) =>
   fetch(`${origin}/api/documents/${workspaceId}/${path}`, { headers });
 
+describe('R84-a · FR-STORAGE-006 — 운영 조립에 보존 일소가 물려 있다', () => {
+  it('런타임이 보존 루프를 갖고 close 가 그것을 멈춘다', async () => {
+    // **함수의 존재가 아니라 조립의 존재를 잰다.** 일소 함수 둘은 오래
+    // 있었고 그것을 도는 자리만 없었다 — 그 상태에서는 보존 기간을 설정할
+    // 수는 있는데 기간이 지나도 아무 일도 일어나지 않는다.
+    expect(typeof runtime.retention.stop).toBe('function');
+
+    // 멈추지 않으면 종료 절차가 닫은 DB 를 다음 회차가 건드린다. 여기서는
+    // `close` 가 그것을 부르는지를 두 번 멈춰도 터지지 않는 것으로 잰다.
+    await runtime.retention.stop();
+  });
+});
+
+describe('FR-ARCH-001 AC-4 — 운영 조립에서 저장이 색인을 따라온다', () => {
+  it('화면에서 저장한 본문이 벡터 색인에 든다', async () => {
+    await 볼트에둔다('회의록.md', '# 처음\n');
+    const [노드] = runtime.stores.nodes.allIn(workspaceId).filter((one) => one.kind === 'file');
+
+    const 읽음 = await fetch(`${origin}/api/documents/${노드!.id}`, { headers: { cookie } });
+    const { hash } = (await 읽음.json()) as { hash: string };
+    const 저장 = await fetch(`${origin}/api/documents/${노드!.id}`, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json', cookie },
+      body: JSON.stringify({ body: '# 고침\n\n의사록을 남긴다\n', baseHash: hash }),
+    });
+
+    expect(저장.status).toBe(200);
+    // **`vectors` 가 선택 인자라 흘리지 않아도 타입이 통과한다.** 그래서
+    // 여기서 제품 조립을 지나 실제로 도는지 확인한다 — 이 항이 없으면
+    // 색인이 조용히 꺼진 채로 남는다.
+    const 조각 = runtime.stores.vectors.entriesOf(노드!.id).map((one) => one.chunk);
+    expect(조각.join(' ')).toContain('의사록');
+  });
+});
+
 describe('SEC-STORAGE-006 — 문서 원문 서빙이 운영 조립에 물려 있다', () => {
   it('권한 있는 사용자가 원문을 받는다', async () => {
     await 볼트에둔다('회의록.md', '# 회의를 했다\n');
