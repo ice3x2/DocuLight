@@ -14,6 +14,7 @@ import {
   logIn,
   logOut,
   changePassword,
+  requestSignup,
   removeGroup,
   savePersonalSetting,
   createNode,
@@ -34,6 +35,10 @@ import {
   uploadNewVersion,
   addGroupMember,
   registerUser,
+  approveUser,
+  reopenUser,
+  setUserStatus,
+  type RosterUserStatus,
   restoreInheritance,
   revokeAllFor,
   type PrincipalRow,
@@ -46,6 +51,7 @@ import {
   useSearch,
   useBrokenInheritance,
   useFavorites,
+  useSignupMode,
   useGroupRoster,
   usePersonalSettings,
   useRevocation,
@@ -59,7 +65,7 @@ import {
 } from './api/queries.js';
 import { axesFrom, axesTo, readAxes, writeAxes, type SearchAxis } from './search/search-axes.js';
 import type { UploadRequest } from './attachment/upload-contract.js';
-import { PreAuthScreen } from './auth/PreAuthScreen.js';
+import { PreAuthScreen, type PreAuthScreenId } from './auth/PreAuthScreen.js';
 import { AppShell } from './shell/AppShell.js';
 import {
   activeTab,
@@ -160,6 +166,14 @@ function AppBody() {
    * 충돌의 문구가 갈리고, 그 차이가 존재 오라클이 된다.
    */
   const [notice, setNotice] = useState<string | undefined>(undefined);
+  /**
+   * 지금 서 있는 인증 전 화면 (`IR-AUTH-001`).
+   *
+   * 주소에 담지 않는다 — 인증 전 화면은 세션이 없을 때만 서고, 세션이
+   * 생기면 어느 화면에 있었든 앱으로 넘어간다. 주소에 담으면 로그인한
+   * 뒤에도 그 자리가 이력에 남아 뒤로 가기가 인증 전으로 되돌린다.
+   */
+  const [preAuthScreen, setPreAuthScreen] = useState<PreAuthScreenId>('login');
   /** 좌측 검색 탭의 질의. 태그를 눌러도 이 값이 채워진다. */
   const [query, setQuery] = useState('');
   /**
@@ -191,6 +205,8 @@ function AppBody() {
   const personal = usePersonalSettings(signedIn);
   // 슈퍼유저가 아니면 서버가 404 로 답한다 — 화면이 다시 판정하지 않는다.
   const users = useUserRoster(signedIn && session.data?.superuser === true);
+  // 가입 승인 화면이 빈 대기열의 **원인**을 말하려면 모드를 알아야 한다.
+  const signupMode = useSignupMode(signedIn && session.data?.superuser === true);
   const groups = useGroupRoster(signedIn && session.data?.superuser === true);
   const links = useLinks(documents.activeId);
 
@@ -286,6 +302,34 @@ function AppBody() {
       await queries.invalidateQueries({ queryKey: QUERY_KEYS.userRoster });
     },
     [queries],
+  );
+
+  /**
+   * 가입 승인·재심사·상태 전환 (`SEC-AUTH-004` · `FR-AUTH-002` · `R112-d`).
+   *
+   * 셋이 같은 뒷정리를 한다 — 명부를 다시 받는다. 화면에서 상태를 지어
+   * 넣으면 서버가 거절했을 때 그 사실이 드러나지 않고, 사용자는 바뀐 줄 안다.
+   */
+  const 명부를다시받는다 = useCallback(
+    async (조작: Promise<unknown>) => {
+      await 조작.catch(() => undefined);
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.userRoster });
+    },
+    [queries],
+  );
+
+  const approve = useCallback(
+    (userId: string) => void 명부를다시받는다(approveUser(userId)),
+    [명부를다시받는다],
+  );
+  const reopen = useCallback(
+    (userId: string) => void 명부를다시받는다(reopenUser(userId)),
+    [명부를다시받는다],
+  );
+  const changeUserStatus = useCallback(
+    (userId: string, status: RosterUserStatus) =>
+      void 명부를다시받는다(setUserStatus(userId, status)),
+    [명부를다시받는다],
   );
 
   const afterTrashAction = useCallback(async () => {
@@ -506,6 +550,29 @@ function AppBody() {
     },
     [queries],
   );
+
+  /**
+   * 가입을 신청한다 (`IR-AUTH-001` AC-2 · `FR-AUTH-004` AC-5).
+   *
+   * 성공해도 세션을 다시 받지 않는다 — 신청은 계정을 `pending` 으로
+   * 세울 뿐이고, 그 상태로는 로그인되지 않는다. 다시 받으면 401 이 한 번
+   * 더 돌 뿐이다.
+   */
+  const signUp = useCallback(async (input: { name: string; password: string }) => {
+    try {
+      await requestSignup(input);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        // 403 은 인스턴스가 신청을 받지 않는다는 뜻이다. 「이름이 이미
+        // 있습니다」로 뭉개면 사용자는 이름만 바꿔 가며 계속 시도한다.
+        return error.status === 403
+          ? '이 인스턴스는 지금 가입 신청을 받지 않습니다. 관리자에게 문의하십시오.'
+          : '신청하지 못했습니다. 이름이 이미 쓰이고 있거나 입력이 올바르지 않습니다.';
+      }
+      throw error;
+    }
+    return undefined;
+  }, []);
 
   /**
    * 로그아웃한다 (`SEC-AUTH-019`).
@@ -765,7 +832,14 @@ function AppBody() {
   // 401 만 익명이다. 다른 실패를 익명으로 접으면 서버가 잠깐 죽은 것과
   // 로그아웃이 구별되지 않아 사용자가 다시 로그인하게 된다.
   if (session.error instanceof ApiError && session.error.status === 401)
-    return <PreAuthScreen screen="login" onLogin={signIn} />;
+    return (
+      <PreAuthScreen
+        screen={preAuthScreen}
+        onLogin={signIn}
+        onSignup={signUp}
+        onScreen={setPreAuthScreen}
+      />
+    );
   // **트리가 올 때까지 셸을 세우지 않는다.** 빈 트리로 먼저 세우면 아직
   // 모르는 상태가 「접근 가능한 워크스페이스가 없다」로 그려지고
   // (`FR-AUTH-005` AC-1), 사용자는 권한을 잃었다고 읽는다.
@@ -791,6 +865,10 @@ function AppBody() {
       onGroupRemove={dropGroup}
       onGroupAddMember={addMember}
       onRegisterUser={makeUser}
+      {...(signupMode.data === undefined ? {} : { signupMode: signupMode.data.mode })}
+      onApproveUser={approve}
+      onReopenUser={reopen}
+      onUserStatus={changeUserStatus}
       aclAudit={{
         ...(workspaceList.data?.[0] === undefined ? {} : { workspaceId: workspaceList.data[0].id }),
         subjects: 회수주체,

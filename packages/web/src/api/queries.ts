@@ -4,6 +4,7 @@ import {
   fetchAuditLog,
   fetchBrokenInheritance,
   fetchFavorites,
+  fetchSignupMode,
   fetchRevocation,
   fetchSimulation,
   fetchWorkspaceList,
@@ -51,6 +52,7 @@ export const QUERY_KEYS = {
   session: ['session'] as const,
   tree: ['tree'] as const,
   favorites: ['favorites'] as const,
+  signupMode: ['signup-mode'] as const,
   trash: (scope: 'mine' | 'all', workspaceId?: string) => ['trash', scope, workspaceId] as const,
   links: (nodeId: string) => ['links', nodeId] as const,
   personalSettings: ['personal-settings'] as const,
@@ -91,6 +93,10 @@ export const useUserRoster = (enabled: boolean): UseQueryResult<RosterUser[]> =>
 
 export const useGroupRoster = (enabled: boolean): UseQueryResult<RosterGroup[]> =>
   useQuery({ queryKey: QUERY_KEYS.groupRoster, queryFn: fetchGroupRoster, enabled, retry: false });
+
+/** 지금 가입 모드 (`FR-AUTH-004`). 슈퍼유저만 받는다. */
+export const useSignupMode = (enabled: boolean): UseQueryResult<{ mode: string }> =>
+  useQuery({ queryKey: QUERY_KEYS.signupMode, queryFn: fetchSignupMode, enabled });
 
 export const useFavorites = (enabled: boolean): UseQueryResult<FavoriteRow[]> =>
   useQuery({ queryKey: QUERY_KEYS.favorites, queryFn: fetchFavorites, enabled });

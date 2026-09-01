@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -183,5 +183,147 @@ describe('수용 기준 14 — 로그아웃 (R145) · 비밀번호 변경 (R144)
     expect((await screen.findByRole('alert')).textContent).toContain('현재 비밀번호');
     // 실패했는데 화면을 닫으면 사용자는 바뀐 줄 안다.
     expect(screen.getByLabelText('새 비밀번호')).toBeDefined();
+  });
+});
+
+describe('IR-AUTH-001 AC-2 · FR-AUTH-004 AC-5 — 가입 신청이 서버까지 닿는다', () => {
+  /** 로그인 화면에서 가입 화면으로 건너간다. 그 길이 없으면 폼에 닿을 수 없다. */
+  const 가입화면으로 = async (user: ReturnType<typeof userEvent.setup>) => {
+    await user.click(await screen.findByRole('button', { name: '가입 신청하기' }));
+    return screen.findByRole('main', { name: '가입 신청' });
+  };
+
+  it('로그인 화면에서 가입 화면으로 갈 수 있다', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const 가입 = await 가입화면으로(user);
+
+    // 갈 길이 없으면 그 화면은 존재해도 아무도 닿지 못한다.
+    expect(가입).toBeDefined();
+    expect(within(가입).getByRole('button', { name: '가입 신청' })).toBeDefined();
+  });
+
+  it('신청이 서버로 나가고 승인 안내가 선다', async () => {
+    routes.set('/api/signup', () => json(null, 201));
+    const user = userEvent.setup();
+    render(<App />);
+    await 가입화면으로(user);
+
+    await user.type(screen.getByLabelText('이름'), '신청자');
+    await user.type(screen.getByLabelText('비밀번호'), 'x'.repeat(12));
+    await user.click(screen.getByRole('button', { name: '가입 신청' }));
+
+    await waitFor(() =>
+      expect(sent).toContainEqual({
+        path: '/api/signup',
+        method: 'POST',
+        body: { name: '신청자', password: 'x'.repeat(12) },
+      }),
+    );
+    expect((await screen.findByRole('status')).textContent).toContain('승인');
+  });
+
+  it('가입이 닫혀 있으면 그 사유가 선다', async () => {
+    routes.set('/api/signup', () => json(null, 403));
+    const user = userEvent.setup();
+    render(<App />);
+    await 가입화면으로(user);
+
+    await user.type(screen.getByLabelText('이름'), '신청자');
+    await user.type(screen.getByLabelText('비밀번호'), 'x'.repeat(12));
+    await user.click(screen.getByRole('button', { name: '가입 신청' }));
+
+    // 403 을 「이름이 이미 있습니다」로 보이면 사용자는 이름만 바꿔 가며
+    // 계속 시도한다 — 그 인스턴스는 아예 신청을 받지 않는데도.
+    expect((await screen.findByRole('alert')).textContent).toContain('신청');
+  });
+
+  it('가입 화면에서 로그인 화면으로 돌아올 수 있다', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await 가입화면으로(user);
+
+    await user.click(screen.getByRole('button', { name: '로그인하기' }));
+
+    expect(await screen.findByRole('main', { name: '로그인' })).toBeDefined();
+  });
+});
+
+describe('SEC-AUTH-004 · FR-AUTH-002 — 가입 승인이 서버까지 닿는다', () => {
+  const 명부를연다 = async () => {
+    로그인됨 = true;
+    // **슈퍼유저로 붙는다** — 이 카테고리는 그 자격에만 보인다(`R24-a`).
+    routes.set('/api/session', () =>
+      json({ superuser: true, workspaceCount: 1, adminWorkspaceCount: 1 }),
+    );
+    routes.set('/api/roster/users', () =>
+      json([
+        { id: 'u2', name: '대기자', status: 'pending' },
+        { id: 'u4', name: '거절자', status: 'rejected' },
+      ]),
+    );
+    routes.set('/api/roster/groups', () => json([]));
+    routes.set('/api/instance/signup-mode', () => json({ mode: 'approval' }));
+    const user = userEvent.setup();
+    render(<App />);
+    await screen.findByRole('tree', { name: '문서 트리' });
+    await user.click(screen.getByRole('button', { name: '설정' }));
+    // 명부가 아니라 **가입 승인** 카테고리다 (설계서 `04` §2.10).
+    await user.click(await screen.findByRole('tab', { name: '가입 승인' }));
+    return user;
+  };
+
+  it('승인이 `/api/roster/users/:id/approve` 로 나간다', async () => {
+    routes.set('/api/roster/users/u2/approve', () => json(null, 204));
+    const user = await 명부를연다();
+
+    await user.click(
+      within(await screen.findByRole('row', { name: /대기자/ })).getByRole('button', { name: '승인' }),
+    );
+
+    await waitFor(() =>
+      expect(sent).toContainEqual({
+        path: '/api/roster/users/u2/approve',
+        method: 'POST',
+        body: undefined,
+      }),
+    );
+  });
+
+  it('재심사가 `/api/roster/users/:id/reopen` 으로 나간다', async () => {
+    routes.set('/api/roster/users/u4/reopen', () => json(null, 204));
+    const user = await 명부를연다();
+
+    // 거절됨 탭으로 건너간다 — 대기 중 탭에는 그 행이 없다.
+    await user.click(screen.getByRole('tab', { name: /거절됨/ }));
+    await user.click(
+      within(await screen.findByRole('row', { name: /거절자/ })).getByRole('button', { name: '재심사' }),
+    );
+
+    await waitFor(() =>
+      expect(sent).toContainEqual({
+        path: '/api/roster/users/u4/reopen',
+        method: 'POST',
+        body: undefined,
+      }),
+    );
+  });
+
+  it('거절이 상태 전환으로 나간다', async () => {
+    routes.set('/api/roster/users/u2/status', () => json(null, 204));
+    const user = await 명부를연다();
+
+    await user.click(
+      within(await screen.findByRole('row', { name: /대기자/ })).getByRole('button', { name: '거절' }),
+    );
+
+    await waitFor(() =>
+      expect(sent).toContainEqual({
+        path: '/api/roster/users/u2/status',
+        method: 'POST',
+        body: { status: 'rejected' },
+      }),
+    );
   });
 });

@@ -29,8 +29,9 @@ import type {
 } from '../api/client.js';
 import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
+import { SignupApproval } from '../principal/SignupApproval.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
-import type { RosterGroup, RosterUser } from '../api/client.js';
+import type { RosterGroup, RosterUser, RosterUserStatus } from '../api/client.js';
 import { containerFor, destinationsFor, nodeById } from '../tree/tree-contract.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
@@ -130,6 +131,10 @@ function SettingsModal({
   onGroupRemove,
   onGroupAddMember,
   onRegisterUser,
+  signupMode,
+  onApproveUser,
+  onReopenUser,
+  onUserStatus,
   onLogout,
   onPasswordChange,
 }: {
@@ -159,6 +164,14 @@ function SettingsModal({
   onGroupAddMember?: (groupId: string, userId: string) => void;
   /** 슈퍼유저 직접 등록 (`FR-AUTH-003`). */
   onRegisterUser?: (input: { name: string; password: string }) => void;
+  /** 지금 가입 모드 (`FR-AUTH-004`). 빈 대기열의 원인이 여기서 갈린다. */
+  signupMode?: string;
+  /** 가입 승인 (`SEC-AUTH-004` AC-1). */
+  onApproveUser?: (userId: string) => void;
+  /** 거절된 계정의 재심사 (`FR-AUTH-002`). */
+  onReopenUser?: (userId: string) => void;
+  /** 계정 상태 전환 (`R112-d`). */
+  onUserStatus?: (userId: string, status: RosterUserStatus) => void;
   /** 이 브라우저의 세션을 끊는다 (`SEC-AUTH-019` AC-1). */
   onLogout?: () => void | Promise<void>;
   /** 자기 비밀번호를 바꾼다 (`SEC-AUTH-018` AC-1). 거절되면 규칙 코드가 돌아온다. */
@@ -259,6 +272,19 @@ function SettingsModal({
                   <UserRoster
                     users={userRoster}
                     {...(onRegisterUser === undefined ? {} : { onRegister: onRegisterUser })}
+                    {...(onApproveUser === undefined ? {} : { onApprove: onApproveUser })}
+                    {...(onReopenUser === undefined ? {} : { onReopen: onReopenUser })}
+                    {...(onUserStatus === undefined ? {} : { onStatus: onUserStatus })}
+                  />
+                ) : category.id === 'signup-approval' ? (
+                  // 명부와 **다른 화면**이다 (설계서 `04` §2.10) — 조작이
+                  // 동질적이고 대상이 대기 건수로 한정되기 때문이다.
+                  <SignupApproval
+                    users={userRoster}
+                    {...(signupMode === undefined ? {} : { signupMode })}
+                    {...(onApproveUser === undefined ? {} : { onApprove: onApproveUser })}
+                    {...(onReopenUser === undefined ? {} : { onReopen: onReopenUser })}
+                    {...(onUserStatus === undefined ? {} : { onStatus: onUserStatus })}
                   />
                 ) : category.id === 'groups' ? (
                   <GroupRoster
@@ -330,6 +356,10 @@ export function AppShell({
   onGroupRemove,
   onGroupAddMember,
   onRegisterUser,
+  signupMode,
+  onApproveUser,
+  onReopenUser,
+  onUserStatus,
   query = '',
   onQuery,
   onOpen,
@@ -399,6 +429,14 @@ export function AppShell({
   onGroupAddMember?: (groupId: string, userId: string) => void;
   /** 슈퍼유저 직접 등록 (`FR-AUTH-003`). */
   onRegisterUser?: (input: { name: string; password: string }) => void;
+  /** 지금 가입 모드 (`FR-AUTH-004`). 빈 대기열의 원인이 여기서 갈린다. */
+  signupMode?: string;
+  /** 가입 승인 (`SEC-AUTH-004` AC-1). */
+  onApproveUser?: (userId: string) => void;
+  /** 거절된 계정의 재심사 (`FR-AUTH-002`). */
+  onReopenUser?: (userId: string) => void;
+  /** 계정 상태 전환 (`R112-d`). */
+  onUserStatus?: (userId: string, status: RosterUserStatus) => void;
   /**
    * 권한 감사 구역이 그릴 것 (`FR-ACL-003`~`FR-ACL-005`).
    *
@@ -653,6 +691,10 @@ export function AppShell({
           {...(onAuditOperation === undefined ? {} : { onAuditOperation })}
           {...(onGroupRemove === undefined ? {} : { onGroupRemove })}
           {...(onGroupAddMember === undefined ? {} : { onGroupAddMember })}
+          {...(signupMode === undefined ? {} : { signupMode })}
+          {...(onApproveUser === undefined ? {} : { onApproveUser })}
+          {...(onReopenUser === undefined ? {} : { onReopenUser })}
+          {...(onUserStatus === undefined ? {} : { onUserStatus })}
           {...(onRegisterUser === undefined ? {} : { onRegisterUser })}
         />
         {notice !== undefined && (

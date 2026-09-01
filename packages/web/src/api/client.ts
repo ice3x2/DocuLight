@@ -92,6 +92,18 @@ export const logIn = (input: { name: string; password: string }) =>
     body: JSON.stringify(input),
   });
 
+/**
+ * 가입을 신청한다 (`FR-AUTH-004` AC-5).
+ *
+ * **인증 없이 부른다.** 계정이 없는 사람이 하는 조작이므로 세션이 있을 리 없다.
+ */
+export const requestSignup = (input: { name: string; password: string }) =>
+  call<void>('/signup', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+
 /** 로그아웃한다 (`SEC-AUTH-019`). 이 브라우저의 세션 하나만 끊는다. */
 export const logOut = () => call<void>('/auth/logout', { method: 'POST' });
 
@@ -714,6 +726,30 @@ export const registerUser = (input: { name: string; password: string }) =>
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(input),
+  });
+
+/**
+ * 지금 가입 모드 (`FR-AUTH-004`).
+ *
+ * 명부를 볼 수 있는 자격과 같다 — 그 둘 다 슈퍼유저 전용이며(`R24-a`),
+ * 자격이 없으면 404 다.
+ */
+export const fetchSignupMode = () => call<{ mode: string }>('/instance/signup-mode');
+
+/** 가입을 승인한다 (`SEC-AUTH-004` AC-1). */
+export const approveUser = (userId: string) =>
+  call<void>(`/roster/users/${encodeURIComponent(userId)}/approve`, { method: 'POST' });
+
+/** 거절된 계정을 재심사 대상으로 되돌린다 (`FR-AUTH-002`). */
+export const reopenUser = (userId: string) =>
+  call<void>(`/roster/users/${encodeURIComponent(userId)}/reopen`, { method: 'POST' });
+
+/** 계정 상태를 바꾼다 (`R112-d` 의 네 상태). */
+export const setUserStatus = (userId: string, status: RosterUserStatus) =>
+  call<void>(`/roster/users/${encodeURIComponent(userId)}/status`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ status }),
   });
 
 export const fetchTags = (workspaceId?: string) =>

@@ -76,6 +76,15 @@ import {
 } from '../../app/principal/roster-service.js';
 import { addGroupMember, removeFromGroup } from '../../app/principal/principal-service.js';
 import { registerAccount } from '../../app/auth/account-service.js';
+import {
+  approveAccount,
+  currentSignupMode,
+  reopenRejected,
+  requestSignup,
+  setSignupMode,
+} from '../../app/auth/signup-service.js';
+import { setAccountStatus } from '../../app/principal/principal-service.js';
+import { SIGNUP_MODES, type SignupMode } from '../../domain/auth/signup-mode.js';
 import { uploadNewVersion, warnsIrreversible } from '../../app/document/new-version.js';
 import { noticeFor } from '../../domain/node/collision-notice.js';
 import { linksOf, wikiTargets } from '../../app/document/link-service.js';
@@ -118,6 +127,8 @@ export interface WorkspaceApiDeps {
       queue: FindingQueue;
       /** 슈퍼유저 직접 등록이 계정 규칙을 가입 경로와 함께 쓴다 (`FR-AUTH-003`). */
       passwords: PasswordHasher;
+      /** 가입 모드가 DB 에 산다 (`FR-AUTH-004` AC-4). */
+      settings: Parameters<typeof currentSignupMode>[0]['settings'];
     };
   /**
    * 이 요청을 누구로 볼 것인가. 세울 수 없으면 `undefined`.
@@ -1166,6 +1177,126 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
    * 계정 규칙은 가입 경로와 같은 `registerAccount` 하나를 쓴다 — 여기서
    * 따로 만들면 빈 비밀번호·중복 이름 판정이 두 벌이 된다.
    */
+  /**
+   * 셀프 가입 신청 (`FR-AUTH-004` AC-5).
+   *
+   * **인증을 요구하지 않는다.** 계정이 없는 사람이 하는 조작이므로 여기에
+   * 인증을 붙이면 신청 자체가 불가능해진다 — 그 모순은 조용해서, 라우트를
+   * 세우는 사람이 습관으로 붙이면 드러나지 않는다.
+   *
+   * 태어나는 상태는 서비스가 가입 모드에서 판단한다. 여기서 다시 판단하면
+   * 한쪽이 `active` 로 만들어 승인 절차를 통째로 건너뛴다.
+   */
+  router.post('/signup', async (req, res) => {
+    const made = await requestSignup(stores, {
+      name: one(req.body?.name) ?? '',
+      password: one(req.body?.password) ?? '',
+    });
+
+    if (!made.ok) {
+      // 모드가 닫혀 있는 것과 입력이 틀린 것을 가른다 — 앞의 것은 사용자가
+      // 고칠 수 없고 뒤의 것은 고칠 수 있다.
+      res.sendStatus(made.rule === 'signup-closed' ? 403 : 400);
+      return;
+    }
+    // **id 를 돌려주지 않는다.** 신청자는 아직 아무 자격도 없고, 그 값은
+    // 승인하는 쪽에서 명부로 얻는다.
+    res.sendStatus(201);
+  });
+
+  /** 가입 모드 설정 (`FR-AUTH-004` AC-2 ~ AC-4). 슈퍼유저 전용이다. */
+  router.post('/instance/signup-mode', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const mode = one(req.body?.mode);
+    if (mode === undefined || !SIGNUP_MODES.includes(mode as SignupMode)) {
+      res.sendStatus(400);
+      return;
+    }
+
+    const outcome = setSignupMode(stores, actor.id, mode as SignupMode);
+    res.sendStatus(outcome.ok ? 204 : 403);
+  });
+
+  /** 지금 가입 모드. 설정 화면이 무엇이 켜져 있는지 보이려면 읽을 길이 있어야 한다. */
+  router.get('/instance/signup-mode', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+    if (userRoster(stores, actor) === null) {
+      // 명부를 못 보는 사람은 이 설정도 못 본다 — 두 자격이 같다
+      // (`FR-AUTH-004` AC-2 · `R24-a`).
+      res.sendStatus(404);
+      return;
+    }
+    res.json({ mode: currentSignupMode(stores) });
+  });
+
+  /** 가입 승인 (`SEC-AUTH-004` AC-1 · AC-4). */
+  router.post('/roster/users/:userId/approve', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const outcome = approveAccount(stores, actor.id, req.params.userId!);
+    res.sendStatus(outcome.ok ? 204 : outcome.rule === 'needs-superuser' ? 403 : 404);
+  });
+
+  /** 거절된 계정을 재심사 대상으로 되돌린다 (`FR-AUTH-002`). */
+  router.post('/roster/users/:userId/reopen', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const outcome = reopenRejected(stores, actor.id, req.params.userId!);
+    res.sendStatus(outcome.ok ? 204 : outcome.rule === 'needs-superuser' ? 403 : 404);
+  });
+
+  /**
+   * 계정 상태 전환 (`R112-d` 의 네 상태). 거절·정지가 이 자리를 지난다.
+   *
+   * 승인·재심사와 나누어 둔 이유는 그 둘이 **가입 흐름의 조작**이기
+   * 때문이다 — 이름이 다르면 화면도 다르게 부르고, 감사 로그에서도 갈린다.
+   */
+  router.post('/roster/users/:userId/status', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+    if (userRoster(stores, actor) === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    const status = one(req.body?.status);
+    if (status !== 'active' && status !== 'pending' && status !== 'suspended' && status !== 'rejected') {
+      res.sendStatus(400);
+      return;
+    }
+
+    const changed = setAccountStatus(stores, req.params.userId!, status, {
+      audit: stores.audit,
+      actor: actor.id,
+    });
+    if (!changed.ok) {
+      // 마지막 슈퍼유저를 내리는 것은 거절이지 없는 계정이 아니다.
+      res.status(changed.rule === 'last-active-superuser' ? 409 : 404).json({ rule: changed.rule });
+      return;
+    }
+    res.sendStatus(204);
+  });
+
   router.post('/roster/users', async (req, res) => {
     const actor = actorFor(req);
     if (actor === undefined) {

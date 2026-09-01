@@ -92,6 +92,51 @@ describe('IR-AUTH-001 AC-1 — 로그인 화면에서 자격을 입력해 로그
   });
 });
 
+describe('IR-AUTH-001 AC-2 — 가입 신청 폼에서 실제로 신청한다', () => {
+  it('이름·비밀번호 입력과 신청 버튼이 선다', () => {
+    render(<PreAuthScreen screen="signup" />);
+
+    expect(screen.getByLabelText('이름')).toBeDefined();
+    expect(screen.getByLabelText('비밀번호').getAttribute('type')).toBe('password');
+    expect(screen.getByRole('button', { name: '가입 신청' })).toBeDefined();
+  });
+
+  it('넣은 값을 그대로 넘긴다', async () => {
+    const user = userEvent.setup();
+    const 받은것: { name: string; password: string }[] = [];
+    render(<PreAuthScreen screen="signup" onSignup={async (input) => void 받은것.push(input)} />);
+
+    await user.type(screen.getByLabelText('이름'), '신청자');
+    await user.type(screen.getByLabelText('비밀번호'), 'x'.repeat(12));
+    await user.click(screen.getByRole('button', { name: '가입 신청' }));
+
+    expect(받은것).toEqual([{ name: '신청자', password: 'x'.repeat(12) }]);
+  });
+
+  it('신청이 받아들여지면 승인을 기다리라고 알린다', async () => {
+    const user = userEvent.setup();
+    render(<PreAuthScreen screen="signup" onSignup={async () => undefined} />);
+
+    await user.type(screen.getByLabelText('이름'), '신청자');
+    await user.type(screen.getByLabelText('비밀번호'), 'x'.repeat(12));
+    await user.click(screen.getByRole('button', { name: '가입 신청' }));
+
+    // 아무 말도 없으면 사용자는 신청이 나갔는지 알 수 없어 다시 누른다.
+    expect((await screen.findByRole('status')).textContent).toContain('승인');
+  });
+
+  it('거절되면 그 사유가 선다', async () => {
+    const user = userEvent.setup();
+    render(<PreAuthScreen screen="signup" onSignup={async () => '지금은 신청을 받지 않습니다'} />);
+
+    await user.type(screen.getByLabelText('이름'), '신청자');
+    await user.type(screen.getByLabelText('비밀번호'), 'x'.repeat(12));
+    await user.click(screen.getByRole('button', { name: '가입 신청' }));
+
+    expect((await screen.findByRole('alert')).textContent).toContain('신청을 받지 않습니다');
+  });
+});
+
 describe('FR-AUTH-005 — 접근 가능한 노드가 0개인 사용자의 빈 상태 안내', () => {
   it('AC-1: 접근 가능한 것이 없으면 빈 트리 대신 안내가 선다', () => {
     render(<AppShell viewer={VIEWER} workspaces={[]} />);
