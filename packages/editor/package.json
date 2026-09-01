@@ -26,7 +26,9 @@
     "test:browser:tag:headed": "node test/tag-chip-check.mjs --headed",
     "test:browser:math": "node test/math-render-check.mjs",
     "test:browser:math:headed": "node test/math-render-check.mjs --headed",
-    "test:browser:all": "npm run test:browser && npm run test:browser:table && npm run test:browser:drift && npm run test:browser:tag && npm run test:browser:math"
+    "test:browser:inline": "node test/inline-preview-check.mjs",
+    "test:browser:inline:headed": "node test/inline-preview-check.mjs --headed",
+    "test:browser:all": "npm run test:browser && npm run test:browser:table && npm run test:browser:drift && npm run test:browser:tag && npm run test:browser:math && npm run test:browser:inline"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.0",
