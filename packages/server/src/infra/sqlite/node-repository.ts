@@ -169,6 +169,42 @@ export class SqliteNodeRepository implements NodeRepository {
       .join('/');
   }
 
+  pathsIn(workspaceId: string): ReadonlyMap<NodeId, string> {
+    // **질의는 한 번이다.** 워크스페이스의 노드를 통째로 받아 부모 사슬을
+    // 메모리에서 따라간다 — `pathOf` 는 노드마다 재귀 CTE 를 돌리므로,
+    // 1,300 개짜리 볼트에서 그 수만큼 질의가 난다.
+    const all = this.allIn(workspaceId);
+    const byId = new Map(all.map((node) => [node.id, node]));
+    const paths = new Map<NodeId, string>();
+
+    const 판다 = (id: NodeId, 보던것: Set<NodeId>): string => {
+      const 이미 = paths.get(id);
+      if (이미 !== undefined) return 이미;
+
+      const node = byId.get(id);
+      // 부모가 이 워크스페이스에 없다 — 사슬이 끊겼다. `chainOf` 는 이때
+      // 던지는데 여기서 던지면 볼트 하나의 파손이 회차 전체를 멈춘다.
+      // 이름만으로 접어 두고, 그 자리가 어긋난 사실은 재조정이 자기
+      // 대기열로 드러낸다.
+      if (node === undefined) return '';
+
+      // 고리는 무결성 파손이다. `chainOf` 와 같은 판정을 여기서도 든다 —
+      // 접어 두면 무한 재귀로 회차가 끝나지 않는다.
+      if (보던것.has(id)) {
+        throw new Error(`node ${id} sits on a parent cycle`);
+      }
+      보던것.add(id);
+
+      const 위 = node.parentId === null ? '' : 판다(node.parentId, 보던것);
+      const 경로 = 위 === '' ? node.name : `${위}/${node.name}`;
+      paths.set(id, 경로);
+      return 경로;
+    };
+
+    for (const node of all) 판다(node.id, new Set());
+    return paths;
+  }
+
   setInheritance(id: NodeId, inherits: boolean): void {
     this.store.run(
       "UPDATE node SET inherits_acl = ?, updated_at = datetime('now') WHERE id = ?",

@@ -1,10 +1,10 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-09-01T05:19:44.927Z",
+  "generatedAt": "2026-09-01T08:20:24.807Z",
   "source": "speckiwi",
   "specFingerprint": {
     "algorithm": "sha256",
-    "value": "bedf4cdbc96b08a25e1e6d01eff14ca6ec3d38b62c30d25337cdd3cf7c51c1eb",
+    "value": "b86959636356cbcb49534fb55d78be7cc223bb075f2fc29ee4b012a66f3d1c73",
     "files": [
       {
         "path": "docs/spec/00.index.md",
@@ -38,9 +38,9 @@
       },
       {
         "path": "docs/spec/10.access-control.srs.md",
-        "sha256": "4a62545a810741684b0c6d65fcc750a09d8500961879a31bcd629b7a1d079ad5",
-        "size": 149533,
-        "mtimeMs": 1788129648323.5093
+        "sha256": "430b2a8eceb06cd04cd603615904110c776386c3066e108a85a46766973c172e",
+        "size": 150629,
+        "mtimeMs": 1788250824678.4314
       },
       {
         "path": "docs/spec/11.confirmation-grades.srs.md",
@@ -62,9 +62,9 @@
       },
       {
         "path": "docs/spec/14.storage.srs.md",
-        "sha256": "24bb56851168bd4713395560652aac57384dfc791b51ee4f98cd2a11b0aac141",
-        "size": 127950,
-        "mtimeMs": 1788239984890.6492
+        "sha256": "1441aa9306000fb33a0f2602363ef109146487ca25197a96f3a5f674b586081d",
+        "size": 129884,
+        "mtimeMs": 1788250814249.7695
       },
       {
         "path": "docs/spec/15.attachments.srs.md",

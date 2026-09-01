@@ -7,6 +7,7 @@ import {
   reconcile,
   startReconciliationLoop,
   type ReconciliationLoop,
+  type ReconciliationStores,
 } from './app/reconciliation/reconcile.js';
 import { startFileWatch, type FileWatch } from './app/watch/file-watch.js';
 import { bootstrapDefaultWorkspace } from './app/workspace/bootstrap-default-workspace.js';
@@ -19,6 +20,7 @@ import { createHttpServer } from './http/server.js';
 import { installGate, INSTALL_SCREEN } from './http/middleware/install-gate.js';
 import { isInstalled, mintInstallToken } from './app/install/install-service.js';
 import { authRouter, sessionTokenOf } from './http/routes/auth.js';
+import { documentsRouter } from './http/routes/documents.js';
 import { installRouter } from './http/routes/install.js';
 import { mcpRouter } from './http/routes/mcp.js';
 import { workspaceApiRouter } from './http/routes/workspace-api.js';
@@ -120,6 +122,15 @@ function apiRouter(runtime: ServerRuntime): Router {
   router.use(installRouter(runtime.stores));
   router.use(authRouter(runtime.stores));
   router.use(workspaceApiRouter({ stores: runtime.stores, actorOf: runtime.actorOf }));
+  // 문서 **원문** 서빙 (`SEC-STORAGE-006` · `SEC-ACL-006`). 위 라우터의
+  // 노드 ID 축과 다른 표면이다 — 이쪽은 워크스페이스와 경로로 연다.
+  router.use(
+    documentsRouter({
+      stores: runtime.stores,
+      documents: runtime.stores.documents,
+      actorOf: runtime.actorOf,
+    }),
+  );
   // MCP 는 자기 인증을 갖는다 (`IR-AUTH-002`) — 세션 쿠키를 읽는 위의
   // 라우터들과 달리 `Authorization: Bearer <PAT>` 만 본다. 그래서
   // `actorOf` 를 받지 않는다.
@@ -154,6 +165,7 @@ export interface ServerRuntime {
 
 /** 라우트가 필요로 하는 저장소의 합집합. */
 type RuntimeStores = { personalSettings: SqlitePersonalSettingStore } & AttachmentStores &
+  Pick<ReconciliationStores, 'transaction'> &
   TrashStores &
   FavoriteStores &
   Parameters<typeof authRouter>[0] & {
@@ -212,6 +224,8 @@ export async function bootstrap(
   // 저장소를 **한 번만** 조립한다. 라우트마다 따로 만들면 같은 DB 위에
   // 서로 다른 캐시가 서고, 한쪽이 쓴 것을 다른 쪽이 못 본다.
   const stores: RuntimeStores = {
+    // 재조정 한 회차를 통째로 묶는 자리 (`DR-STORAGE-002` AC-2).
+    transaction: <T,>(fn: () => T): T => db.transaction(fn),
     nodes: new SqliteNodeRepository(db),
     workspaces: new SqliteWorkspaceRepository(db),
     acl: new SqliteAclRepository(db),

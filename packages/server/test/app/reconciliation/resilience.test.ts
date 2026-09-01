@@ -45,7 +45,7 @@ beforeEach(async () => {
   workspaces = new SqliteWorkspaceRepository(db);
   files = new FsWorkspaceFiles(docsRoot);
   queue = new SqliteFindingQueue(db);
-  stores = { nodes, workspaces, documents, files: new FsWorkspaceFiles(docsRoot), audit: new SqliteAuditLog(db), queue };
+  stores = { nodes, workspaces, documents, files: new FsWorkspaceFiles(docsRoot), audit: new SqliteAuditLog(db), queue, transaction: <T,>(fn: () => T): T => db.transaction(fn) };
 
   ws = (await createWorkspace({ workspaces, files }, '기획팀')).id;
 });
@@ -77,6 +77,31 @@ describe('REL-STORAGE-001 — 재조정은 되돌릴 수 있고 스스로를 망
     // 새 노드를 만들어 대신하지 않는다 — 만들면 ID 가 바뀌어 그 노드
     // 앞으로 부여된 권한과 이력이 끊긴다.
     expect(nodes.allIn(ws).filter((n) => n.kind === 'file')).toHaveLength(1);
+  });
+
+  it('REL-STORAGE-001 — 회차 도중 실패하면 그 회차가 통째로 되돌아간다.', async () => {
+    for (let i = 0; i < 5; i += 1) {
+      await documents.write(ws, `기획/문서${i}.md`, '# 본문');
+    }
+
+    // 대기열이 세 번째 발견에서 터진다 — 디스크 오류·잠금 경합의 대역이다.
+    let 남은것 = 3;
+    const 터지는큐 = {
+      ...queue,
+      open: (input: Parameters<typeof queue.open>[0]) => {
+        남은것 -= 1;
+        if (남은것 < 0) throw new Error('큐가 터졌다');
+        return queue.open(input);
+      },
+      unresolved: () => queue.unresolved(),
+    } as typeof queue;
+
+    await expect(reconcile({ ...stores, queue: 터지는큐 })).rejects.toThrow('큐가 터졌다');
+
+    // **절반만 반영된 상태가 남으면 안 된다.** 남으면 다음 회차가 그
+    // 절반 위에서 돌고, 그 절반이 무엇인지는 아무 기록에도 없다.
+    expect(nodes.allIn(ws)).toEqual([]);
+    expect(queue.unresolved()).toEqual([]);
   });
 
   it('REL-STORAGE-001 — 디렉토리를 읽지 못한 것을 「전부 사라졌다」로 읽지 않는다.', async () => {
@@ -138,6 +163,7 @@ describe('REL-STORAGE-001 — 재조정은 되돌릴 수 있고 스스로를 망
         files,
         audit: new SqliteAuditLog(live),
         queue: new SqliteFindingQueue(live),
+        transaction: <T,>(fn: () => T): T => live.transaction(fn),
       };
 
       // 재기동을 기다리지 않고 주기 재조정이 잡아야 한다 — 기다리면 그

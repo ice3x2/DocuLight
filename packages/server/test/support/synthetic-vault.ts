@@ -106,11 +106,14 @@ export async function makeSyntheticVault(
     ...bulk.map((path) => ({ path, body: `# ${path}\n` })),
   ];
 
-  for (const one of 전부) {
-    const full = join(root, one.path);
-    await mkdir(join(full, '..'), { recursive: true });
-    await writeFile(full, one.body, 'utf8');
-  }
+  // **디렉토리를 먼저 한 번씩만 만들고 파일은 함께 쓴다.**
+  //
+  // 파일마다 `mkdir` 을 부르고 하나씩 기다리면 1,300 개에서 13 초가 든다
+  // (2026-09-01 실측). 그 시간은 재려는 것과 아무 상관이 없고, 병렬로 도는
+  // 다른 시험의 타이밍만 흔든다 — 실제로 감시자 시험 둘이 그 부하로 죽었다.
+  const 디렉토리들 = new Set(전부.map((one) => join(root, one.path, '..')));
+  await Promise.all([...디렉토리들].map((one) => mkdir(one, { recursive: true })));
+  await Promise.all(전부.map((one) => writeFile(join(root, one.path), one.body, 'utf8')));
 
   const 보이는것 = await 보이는파일들(root);
   const 뿌리이름 = (await readdir(root)).filter((one) => !one.startsWith('.'));

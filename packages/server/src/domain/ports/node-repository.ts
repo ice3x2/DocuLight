@@ -128,6 +128,20 @@ export interface NodeRepository {
   pathOf(id: NodeId): string;
 
   /**
+   * 이 워크스페이스의 **모든** 노드 경로를 한 번에 판다.
+   *
+   * `pathOf` 를 노드마다 부르면 그 수만큼 재귀 질의가 돌아 `CON-ACL-001`
+   * AC-4 가 깨진다 — 그 조항의 O(N) 은 질의가 아니라 메모리 순회다.
+   * `chainsOf` 가 ACL 경로에서 같은 문제를 이미 닫았고, 이것은 **경로**
+   * 쪽의 같은 처방이다.
+   *
+   * `chainsOf` 로 대신할 수 없다 — 그쪽은 사슬의 **합집합**이라 어느 노드의
+   * 것인지 구별되지 않아 경로를 조립할 수 없다. `allIn` 도 대신하지 못한다:
+   * 경로를 주지 않으므로 호출자가 파생 규칙을 다시 적게 된다.
+   */
+  pathsIn(workspaceId: string): ReadonlyMap<NodeId, string>;
+
+  /**
    * 자리와 이름을 **한 번에** 옮긴다 (`DR-STORAGE-003` AC-3 · AC-4).
    *
    * 둘을 나누지 않는 이유가 AC-4 다 — 자리 갱신과 이름 갱신이 별개 쓰기면

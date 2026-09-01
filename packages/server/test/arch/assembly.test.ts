@@ -37,12 +37,8 @@ const 아직_배선되지_않음: ReadonlyMap<string, string> = new Map([
     'R84-a 의 감사 보존 일소를 도는 자리가 없다. app/trash/trash-service.ts 의 휴지통 일소도 같은 상태이며 그쪽은 모듈이 다른 export 로 도달해 이 방벽이 못 잡는다 — 두 축을 한 주기 작업으로 함께 세워야 한다',
   ],
   [
-    'http/routes/documents.ts',
-    '문서 원문 서빙 라우터가 apiRouter 에 붙지 않았다. 그 자리는 워크스페이스+경로 축이며 workspace-api 의 노드 ID 축과 다르다 — 붙이는 wave 가 SEC-STORAGE-006 서빙 가드와 함께 판정한다',
-  ],
-  [
-    'http/guards/fail-closed.ts',
-    'SEC-STORAGE-006 · R55-b 의 fail-closed 서빙 가드. documents.ts 만이 이것을 쓰므로 그 라우터가 붙는 순간 함께 도달한다 — 두 줄은 한 작업이다',
+    'http/guards/dot-path-guard.ts',
+    'SEC-STORAGE-004 · R64 의 점 경로 거부 가드. documents.ts 에 한 겹 더 두어 봤으나 그 호출을 무력화해도 죽는 항이 없었다(2026-09-01 탐침) — isServable 이 같은 것을 이미 막는다. 이 모듈이 값을 하는 것은 EXEMPT_ENDPOINTS 가 채워질 때이며, 첨부 다운로드와 휴지통·버전 API 가 각자 자기를 등록하면서 함께 도달한다',
   ],
   [
     'app/search/index-node.ts',
@@ -55,10 +51,6 @@ const 아직_배선되지_않음: ReadonlyMap<string, string> = new Map([
   [
     'app/migration/migrate-content.ts',
     'MIG-AUTH-001 AC-3 의 일회성 콘텐츠 이행. 위와 같은 진입점을 공유하며 같은 항이 그 도달을 잰다',
-  ],
-  [
-    'http/guards/dot-path-guard.ts',
-    'SEC-STORAGE-004 · R64 의 점 경로 거부 가드. 이것을 부르는 제품 코드가 아직 없다 — documents.ts 배선이 이것을 자동으로 데려오지 않으므로 그 wave 가 호출부를 함께 세워야 한다',
   ],
 ]);
 

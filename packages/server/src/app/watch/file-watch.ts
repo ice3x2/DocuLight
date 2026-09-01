@@ -80,11 +80,13 @@ function nodeAt(
   workspaceId: string,
   path: string,
 ): { id: string } | undefined {
+  // 경로를 한 번에 판다 — 후보마다 `pathOf` 를 부르면 사건 하나에
+  // 노드 수만큼 재귀 질의가 난다 (`CON-ACL-001` AC-4).
+  const paths = stores.nodes.pathsIn(workspaceId);
   return stores.nodes
     .allIn(workspaceId)
     .find(
-      (one) =>
-        one.kind === 'file' && one.orphanedAt === null && stores.nodes.pathOf(one.id) === path,
+      (one) => one.kind === 'file' && one.orphanedAt === null && paths.get(one.id) === path,
     );
 }
 

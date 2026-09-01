@@ -57,6 +57,8 @@ beforeEach(async () => {
     files: new FsWorkspaceFiles(docsRoot),
     audit: new SqliteAuditLog(db),
     queue: new SqliteFindingQueue(db),
+    // 회차를 한 트랜잭션으로 묶는다 (`DR-STORAGE-002` AC-2).
+    transaction: <T,>(fn: () => T): T => db.transaction(fn),
   };
   ws = (await createWorkspace({ workspaces, files: new FsWorkspaceFiles(docsRoot) }, '기획팀')).id;
 

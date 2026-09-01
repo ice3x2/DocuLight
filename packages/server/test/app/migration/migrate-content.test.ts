@@ -38,6 +38,7 @@ let stores: ReturnType<typeof nodeStores> & {
   vectors: SqliteVectorIndex;
   legacy: FsLegacyContentImporter;
   docsRoot: string;
+  transaction: <T>(fn: () => T) => T;
 };
 let workspaceId: string;
 
@@ -60,6 +61,8 @@ beforeEach(async () => {
     documents: new FsDocumentStore(docsRoot),
     files: new FsWorkspaceFiles(docsRoot),
     queue: new SqliteFindingQueue(db),
+    // 회차를 한 트랜잭션으로 묶는다 (`DR-STORAGE-002` AC-2).
+    transaction: <T,>(fn: () => T): T => db.transaction(fn),
     vectors: new SqliteVectorIndex(db),
     legacy: new FsLegacyContentImporter(docsRoot),
     docsRoot,

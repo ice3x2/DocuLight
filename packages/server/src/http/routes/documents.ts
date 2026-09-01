@@ -51,6 +51,14 @@ export function documentsRouter({ stores, documents, actorOf }: DocumentRouteDep
       .map((segment) => decodeURIComponent(segment))
       .join('/');
 
+    // 점 경로는 `resolveServableNode` 안의 `isServable` 이 막는다
+    // (`SEC-STORAGE-004`). 여기에 `guardDotPath` 를 한 겹 더 두어 봤으나
+    // **그 호출을 무력화해도 죽는 항이 하나도 없었다**(2026-09-01 탐침) —
+    // 두 판정이 같은 것을 보기 때문이다. 시험할 수 없는 방어를 두면 그것이
+    // 도는지 아무도 모르고, 이 저장소는 같은 이유로 이미 한 번 방어를 뺐다
+    // (`reconcile.ts` 의 2026-08-27 기록). `guardDotPath` 가 값을 하는 것은
+    // 예외 허용목록이 실제로 채워질 때이며, 그 자리는 첨부 다운로드와
+    // 휴지통·버전 API 가 각자 세운다.
     const actor = actorOf(req);
     const found = resolveServableNode(stores.nodes, workspaceId, relativePath);
     // 요청자를 못 세우면 그 자리에서 닫힌다. `&&` 의 왼쪽이 거짓이면
