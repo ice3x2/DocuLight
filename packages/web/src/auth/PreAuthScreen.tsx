@@ -9,6 +9,7 @@
  * 뒤에야 뜻이 있는데, 인증 전에는 그 「누구」가 없다.
  */
 import { commitInstall, verifyInstallToken } from '../api/client.js';
+import { LoginForm } from './LoginForm.js';
 import { InstallWizard } from './InstallWizard.js';
 
 export type PreAuthScreenId = 'login' | 'signup' | 'install';
@@ -24,14 +25,21 @@ export const PRE_AUTH_SCREENS: readonly PreAuthScreenSpec[] = [
   { id: 'install', label: '설치 마법사' },
 ];
 
-export function PreAuthScreen({ screen }: { screen: PreAuthScreenId }) {
+export function PreAuthScreen({
+  screen,
+  onLogin,
+}: {
+  screen: PreAuthScreenId;
+  /** 로그인을 시도한다 (`IR-AUTH-001` AC-1). 거절되면 그 사유 문장이 돌아온다. */
+  onLogin?: (input: { name: string; password: string }) => Promise<string | undefined | void>;
+}) {
   const spec = PRE_AUTH_SCREENS.find((candidate) => candidate.id === screen)!;
 
   return (
     <main aria-label={spec.label} data-pre-auth={spec.id}>
       <h1>{spec.label}</h1>
-      {/* 설치만 화면 본체가 있다 — 로그인·가입은 아직 자리표다. 그 둘의
-          배선은 이 wave 의 범위 밖이며 조립 방벽 시험이 그 사실을 고정한다. */}
+      {/* 가입 신청은 아직 자리표다 — 로그인과 설치만 본체가 있다. */}
+      {spec.id === 'login' ? <LoginForm {...(onLogin === undefined ? {} : { onLogin })} /> : null}
       {spec.id === 'install' ? (
         <InstallWizard
           onVerifyToken={verifyInstallToken}

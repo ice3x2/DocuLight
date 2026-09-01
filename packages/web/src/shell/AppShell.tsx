@@ -3,6 +3,7 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { useCallback, useId, useState } from 'react';
 
 import { DocumentArea } from '../document/DocumentArea.js';
+import { PasswordChangeForm } from '../auth/PasswordChangeForm.js';
 import { FavoritesView, type Favorite } from '../favorites/FavoritesView.js';
 import { LinkPanel, type LinkRowView } from '../links/LinkPanel.js';
 import { SearchPanel } from '../search/SearchPanel.js';
@@ -129,6 +130,8 @@ function SettingsModal({
   onGroupRemove,
   onGroupAddMember,
   onRegisterUser,
+  onLogout,
+  onPasswordChange,
 }: {
   viewer: Viewer;
   trash?: readonly TrashRowView[];
@@ -156,8 +159,16 @@ function SettingsModal({
   onGroupAddMember?: (groupId: string, userId: string) => void;
   /** 슈퍼유저 직접 등록 (`FR-AUTH-003`). */
   onRegisterUser?: (input: { name: string; password: string }) => void;
+  /** 이 브라우저의 세션을 끊는다 (`SEC-AUTH-019` AC-1). */
+  onLogout?: () => void | Promise<void>;
+  /** 자기 비밀번호를 바꾼다 (`SEC-AUTH-018` AC-1). 거절되면 규칙 코드가 돌아온다. */
+  onPasswordChange?: (input: {
+    current: string;
+    next: string;
+  }) => Promise<string | undefined | void>;
 }) {
   const [open, setOpen] = useState(false);
+  const [비밀번호폼, set비밀번호폼] = useState(false);
   const titleId = useId();
   // 보이지 않는 카테고리는 **그리지 않는다.** 트리 컨텍스트 메뉴는 반대로
   // 비활성으로 남기는데(`FR-SHELL-003` AC-3), 그것은 권한을 얻으면 열리는
@@ -225,8 +236,20 @@ function SettingsModal({
                 ) : category.id === 'account' ? (
                   // 계정 카테고리가 담기로 확정된 두 조작 (`IR-SHELL-002` AC-3).
                   <>
-                    <button type="button">비밀번호 변경</button>
-                    <button type="button">로그아웃</button>
+                    {/* 폼은 눌렀을 때 편다 — 늘 펴 두면 설정을 열 때마다
+                        비밀번호 입력이 서서, 그 자리가 무엇을 하는 곳인지가
+                        「지금 무언가를 요구받고 있다」로 읽힌다. */}
+                    <button type="button" onClick={() => set비밀번호폼(true)}>
+                      비밀번호 변경
+                    </button>
+                    {비밀번호폼 ? (
+                      <PasswordChangeForm
+                        {...(onPasswordChange === undefined ? {} : { onSubmit: onPasswordChange })}
+                      />
+                    ) : null}
+                    <button type="button" onClick={() => void onLogout?.()}>
+                      로그아웃
+                    </button>
                   </>
                 ) : category.id === 'users' ? (
                   // 여기에 `PrincipalPicker` 를 두지 않는다 (`R163`). 그
@@ -315,6 +338,8 @@ export function AppShell({
   onCreate,
   onFavorite,
   onUnfavorite,
+  onLogout,
+  onPasswordChange,
   onDelete,
   onRename,
   onRelocate,
@@ -415,6 +440,13 @@ export function AppShell({
   onFavorite?: (nodeId: string) => void;
   /** 즐겨찾기에서 뺀다 (`FR-SHELL-001` AC-5). 목록과 트리 메뉴가 같은 것을 부른다. */
   onUnfavorite?: (nodeId: string) => void;
+  /** 이 브라우저의 세션을 끊는다 (`SEC-AUTH-019` AC-1). */
+  onLogout?: () => void | Promise<void>;
+  /** 자기 비밀번호를 바꾼다 (`SEC-AUTH-018` AC-1). */
+  onPasswordChange?: (input: {
+    current: string;
+    next: string;
+  }) => Promise<string | undefined | void>;
   onDelete?: (nodeId: string) => void;
   onRename?: (nodeId: string, name: string) => void;
   onRelocate?: (nodeId: string, kind: 'move' | 'copy', destinationId: string) => void;
@@ -610,6 +642,8 @@ export function AppShell({
           {...(onTrashRestore === undefined ? {} : { onTrashRestore })}
           personalSettings={personalSettings}
           {...(onPersonalSetting === undefined ? {} : { onPersonalSetting })}
+          {...(onLogout === undefined ? {} : { onLogout })}
+          {...(onPasswordChange === undefined ? {} : { onPasswordChange })}
           userRoster={userRoster}
           groupRoster={groupRoster}
           {...(aclAudit === undefined ? {} : { aclAudit })}

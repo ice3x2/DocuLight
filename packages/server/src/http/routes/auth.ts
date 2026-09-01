@@ -9,6 +9,7 @@ import {
   logOut,
   type AuthStores,
 } from '../../app/auth/login-service.js';
+import { changePassword } from '../../app/auth/password-service.js';
 
 /** 세션 쿠키의 이름. 두 곳에 적으면 한쪽 오타가 조용히 로그아웃을 무력화한다. */
 export const SESSION_COOKIE = 'doculight_session';
@@ -71,6 +72,46 @@ export function authRouter(stores: AuthStores): Router {
     const token = sessionTokenOf(req.headers.cookie);
     if (token !== undefined) logOut(stores, token);
 
+    res.clearCookie(SESSION_COOKIE, { path: '/' }).sendStatus(204);
+  });
+
+  /**
+   * 자기 비밀번호를 바꾼다 (`SEC-AUTH-018`).
+   *
+   * **대상을 본문으로 받지 않는다.** 대상은 언제나 지금 로그인한 사람이며,
+   * 그것이 「본인만」(AC-4)을 라우트 수준에서 성립시키는 방법이다 — 대상을
+   * 받으면 서비스의 `self-only` 판정 하나에 전부를 걸게 된다.
+   */
+  router.post('/auth/password', async (req, res) => {
+    const token = sessionTokenOf(req.headers.cookie);
+    const session = token === undefined ? undefined : authenticateSession(stores, token);
+    if (session === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const { current, next } = req.body as { current?: unknown; next?: unknown };
+    if (typeof current !== 'string' || typeof next !== 'string') {
+      res.sendStatus(400);
+      return;
+    }
+
+    const outcome = await changePassword(stores, session.userId, {
+      actor: session.userId,
+      current,
+      next,
+    });
+    if (!outcome.ok) {
+      // 사유를 담는다 — 화면이 「현재 비밀번호가 틀렸다」와 「빈 값이다」를
+      // 갈라 안내해야 사용자가 무엇을 고칠지 안다. 필드 이름이 `rule` 인
+      // 것은 이 값이 **코드**이기 때문이다 — 로그인의 `reason` 은 사람이
+      // 읽는 문장이라, 한 이름에 두 종류를 실으면 화면이 그것을 가릴 수 없다.
+      res.status(400).json({ rule: outcome.rule });
+      return;
+    }
+
+    // 이 요청을 보낸 세션도 함께 끊겼다. 쿠키를 남겨 두면 브라우저가 죽은
+    // 토큰을 계속 보내고, 사용자는 로그인 화면과 앱 화면 사이를 오간다.
     res.clearCookie(SESSION_COOKIE, { path: '/' }).sendStatus(204);
   });
 

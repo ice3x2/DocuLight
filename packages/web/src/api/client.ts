@@ -31,7 +31,7 @@ export class ApiError extends Error {
      * 자리에서 클라이언트가 그것을 버리면 그 결정이 아무 효용도 만들지
      * 못하고, 서로 다른 실패가 화면에서 한 문장으로 접힌다.
      */
-    readonly detail?: { rule?: string; state?: string },
+    readonly detail?: { rule?: string; state?: string; reason?: string },
   ) {
     super(`api ${status}`);
     this.name = 'ApiError';
@@ -58,11 +58,12 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
 
   if (!response.ok) {
     const failure = (await bodyOf(response)) as
-      | { current?: string; rule?: string; state?: string }
+      | { current?: string; rule?: string; state?: string; reason?: string }
       | undefined;
     throw new ApiError(response.status, failure?.current, {
       ...(failure?.rule === undefined ? {} : { rule: failure.rule }),
       ...(failure?.state === undefined ? {} : { state: failure.state }),
+      ...(failure?.reason === undefined ? {} : { reason: failure.reason }),
     });
   }
 
@@ -76,6 +77,36 @@ export interface SessionBody {
 }
 
 export const fetchSession = () => call<SessionBody>('/session');
+
+/**
+ * 로그인한다 (`SEC-AUTH-001` · R57).
+ *
+ * 세션 토큰은 쿠키로만 오므로 여기서 받을 것이 없다. 거절되면 서버가 준
+ * **사유 문장**이 `ApiError.detail.reason` 에 실린다 — 상태별 안내(R60 ·
+ * R60-b)를 서버가 소유하기 때문이다.
+ */
+export const logIn = (input: { name: string; password: string }) =>
+  call<void>('/auth/login', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+
+/** 로그아웃한다 (`SEC-AUTH-019`). 이 브라우저의 세션 하나만 끊는다. */
+export const logOut = () => call<void>('/auth/logout', { method: 'POST' });
+
+/**
+ * 자기 비밀번호를 바꾼다 (`SEC-AUTH-018`).
+ *
+ * 대상을 보내지 않는다 — 서버가 지금 세션의 주인만 바꿔 준다. 성공하면
+ * 그 계정의 **모든 세션이 끊기므로** 이 브라우저도 다시 로그인해야 한다.
+ */
+export const changePassword = (input: { current: string; next: string }) =>
+  call<void>('/auth/password', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(input),
+  });
 
 /**
  * 설치 토큰을 검증하고 **설치 세션**을 받는다 (`SEC-AUTH-015` AC-1).

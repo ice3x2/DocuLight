@@ -11,6 +11,9 @@ import {
   ApiError,
   addFavorite,
   removeFavorite,
+  logIn,
+  logOut,
+  changePassword,
   removeGroup,
   savePersonalSetting,
   createNode,
@@ -480,6 +483,66 @@ function AppBody() {
    * 다시 받으면 뺀 것이 화면에 그대로 남고, 사용자는 조작이 먹지 않았다고
    * 읽어 한 번 더 누른다.
    */
+  /**
+   * 로그인한다 (원장 §4 **수용 기준 14** · R57).
+   *
+   * 성공하면 세션을 **다시 받는다** — 받지 않으면 쿠키는 생겼는데 화면은
+   * 로그인 화면에 그대로 남고, 그 화면은 아무 말도 하지 않아 사용자에게는
+   * 로그인이 실패한 것으로 보인다.
+   *
+   * 거절되면 서버가 준 **사유 문장**을 그대로 돌려준다(R60 · R60-b) —
+   * 상태별 안내를 화면이 다시 지으면 계정 상태가 늘 때마다 두 곳이 갈린다.
+   */
+  const signIn = useCallback(
+    async (input: { name: string; password: string }) => {
+      try {
+        await logIn(input);
+      } catch (error) {
+        if (error instanceof ApiError) return error.detail?.reason ?? '로그인하지 못했습니다';
+        throw error;
+      }
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.session });
+      return undefined;
+    },
+    [queries],
+  );
+
+  /**
+   * 로그아웃한다 (`SEC-AUTH-019`).
+   *
+   * 세션만 무효화하지 않고 **캐시를 통째로 비운다** — 남겨 두면 다음
+   * 사용자가 같은 브라우저에서 로그인했을 때 앞 사람의 트리와 본문이
+   * 잠깐 보인다.
+   */
+  const signOut = useCallback(async () => {
+    await logOut().catch(() => undefined);
+    // 세션 **외**를 지운다. 통째로 비우면 세션 쿼리까지 사라져 화면이
+    // 「아직 안 왔다」 상태로 멎고, 그 자리에는 로딩만 남는다.
+    queries.removeQueries({ predicate: (query) => query.queryKey[0] !== 'session' });
+    await queries.invalidateQueries({ queryKey: QUERY_KEYS.session });
+  }, [queries]);
+
+  /**
+   * 자기 비밀번호를 바꾼다 (`SEC-AUTH-018`).
+   *
+   * 성공하면 서버가 그 계정의 **모든 세션을 끊으므로** 이 브라우저도
+   * 로그아웃된 상태가 된다. 그래서 로그아웃과 같은 뒷정리를 한다.
+   */
+  const changeOwnPassword = useCallback(
+    async (input: { current: string; next: string }) => {
+      try {
+        await changePassword(input);
+      } catch (error) {
+        if (error instanceof ApiError) return error.detail?.rule ?? 'unknown-account';
+        throw error;
+      }
+      queries.removeQueries({ predicate: (query) => query.queryKey[0] !== 'session' });
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.session });
+      return undefined;
+    },
+    [queries],
+  );
+
   const unfavorite = useCallback(
     async (nodeId: string) => {
       await removeFavorite(nodeId).catch(() => undefined);
@@ -702,7 +765,7 @@ function AppBody() {
   // 401 만 익명이다. 다른 실패를 익명으로 접으면 서버가 잠깐 죽은 것과
   // 로그아웃이 구별되지 않아 사용자가 다시 로그인하게 된다.
   if (session.error instanceof ApiError && session.error.status === 401)
-    return <PreAuthScreen screen="login" />;
+    return <PreAuthScreen screen="login" onLogin={signIn} />;
   // **트리가 올 때까지 셸을 세우지 않는다.** 빈 트리로 먼저 세우면 아직
   // 모르는 상태가 「접근 가능한 워크스페이스가 없다」로 그려지고
   // (`FR-AUTH-005` AC-1), 사용자는 권한을 잃었다고 읽는다.
@@ -749,6 +812,8 @@ function AppBody() {
       onCreate={create}
       onFavorite={favorite}
       onUnfavorite={unfavorite}
+      onLogout={signOut}
+      onPasswordChange={changeOwnPassword}
       onDelete={deleteNode}
       onRename={rename}
       onRelocate={relocate}

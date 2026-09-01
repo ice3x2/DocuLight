@@ -172,3 +172,53 @@ describe('SEC-AUTH-019 — 로그아웃', () => {
     expect((await fetch(`${origin}/api/auth/me`, { headers: { cookie } })).status).toBe(401);
   });
 });
+
+describe('SEC-AUTH-018 — 비밀번호 변경 라우트', () => {
+  const NEXT = 'y'.repeat(12);
+
+  const 로그인쿠키 = async (password = PASSWORD) => {
+    const login = await post('/api/auth/login', { name: '한범', password });
+    return (login.headers.get('set-cookie') ?? '').split(';')[0] ?? '';
+  };
+
+  it('AC-2 · AC-3: 바꾸면 새 것으로 로그인되고 이전 것으로는 안 된다', async () => {
+    const cookie = await 로그인쿠키();
+
+    const changed = await post('/api/auth/password', { current: PASSWORD, next: NEXT }, { cookie });
+    expect(changed.status).toBe(204);
+
+    // **실제 로그인으로 잰다.** 저장된 해시만 보면 검증 경로가 그것을 쓰지
+    // 않아도 통과한다.
+    expect((await post('/api/auth/login', { name: '한범', password: NEXT })).status).toBe(200);
+    expect((await post('/api/auth/login', { name: '한범', password: PASSWORD })).status).toBe(401);
+  });
+
+  it('현재 비밀번호가 틀리면 거절하고 아무것도 바꾸지 않는다', async () => {
+    const cookie = await 로그인쿠키();
+
+    const refused = await post('/api/auth/password', { current: '틀림', next: NEXT }, { cookie });
+    expect(refused.status).toBe(400);
+    expect(((await refused.json()) as { rule?: string }).rule).toBe('wrong-password');
+
+    // 거절만 재면 「거절하고 바꿔 버리는」 구현이 통과한다.
+    expect((await post('/api/auth/login', { name: '한범', password: PASSWORD })).status).toBe(200);
+    expect((await post('/api/auth/login', { name: '한범', password: NEXT })).status).toBe(401);
+  });
+
+  it('인증되지 않은 요청은 401 이고 아무것도 바꾸지 않는다', async () => {
+    const refused = await post('/api/auth/password', { current: PASSWORD, next: NEXT });
+    expect(refused.status).toBe(401);
+
+    expect((await post('/api/auth/login', { name: '한범', password: PASSWORD })).status).toBe(200);
+  });
+
+  it('AC-2 의 뒤끝 — 바꾸고 나면 그 계정의 기존 세션이 끊긴다', async () => {
+    const cookie = await 로그인쿠키();
+
+    await post('/api/auth/password', { current: PASSWORD, next: NEXT }, { cookie });
+
+    // 비밀번호를 바꾸는 이유가 대개 「누가 내 계정에 들어와 있다」이므로,
+    // 기존 세션이 살아 있으면 회전이 무의미하다.
+    expect((await fetch(`${origin}/api/auth/me`, { headers: { cookie } })).status).toBe(401);
+  });
+});

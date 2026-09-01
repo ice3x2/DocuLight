@@ -1,4 +1,5 @@
 import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { AppShell } from '../src/shell/AppShell.js';
@@ -38,6 +39,56 @@ describe('IR-AUTH-001 — 인증 전 화면은 모달이 아니라 전체 화면
 
     expect(screen.queryByRole('button', { name: '설정' })).toBeNull();
     expect(document.querySelector('[data-shell="settings-corner"]')).toBeNull();
+  });
+});
+
+describe('IR-AUTH-001 AC-1 — 로그인 화면에서 자격을 입력해 로그인한다', () => {
+  it('이름·비밀번호 입력과 제출 버튼이 선다', () => {
+    render(<PreAuthScreen screen="login" />);
+
+    expect(screen.getByLabelText('이름')).toBeDefined();
+    expect(screen.getByLabelText('비밀번호')).toBeDefined();
+    expect(screen.getByRole('button', { name: '로그인' })).toBeDefined();
+  });
+
+  it('비밀번호 입력은 가려진다 — 어깨너머로 읽히면 그 계정이 그대로 열린다', () => {
+    render(<PreAuthScreen screen="login" />);
+
+    expect(screen.getByLabelText('비밀번호').getAttribute('type')).toBe('password');
+  });
+
+  it('넣은 자격을 그대로 넘긴다', async () => {
+    const user = userEvent.setup();
+    const 받은것: { name: string; password: string }[] = [];
+    render(<PreAuthScreen screen="login" onLogin={async (input) => void 받은것.push(input)} />);
+
+    await user.type(screen.getByLabelText('이름'), '한범');
+    await user.type(screen.getByLabelText('비밀번호'), 'x'.repeat(10));
+    await user.click(screen.getByRole('button', { name: '로그인' }));
+
+    expect(받은것).toEqual([{ name: '한범', password: 'x'.repeat(10) }]);
+  });
+
+  it('R60 · R60-b: 거절 사유를 그대로 보인다 — 화면이 사유를 다시 짓지 않는다', async () => {
+    const user = userEvent.setup();
+    render(
+      <PreAuthScreen
+        screen="login"
+        onLogin={async () => '가입 신청이 아직 승인되지 않았습니다'}
+      />,
+    );
+
+    await user.type(screen.getByLabelText('이름'), '한범');
+    await user.type(screen.getByLabelText('비밀번호'), 'x'.repeat(10));
+    await user.click(screen.getByRole('button', { name: '로그인' }));
+
+    // 상태별 안내는 서버가 소유한다(`account-gate`). 화면이 자기 문구를
+    // 지어 두면 상태가 늘 때마다 두 곳이 갈리고, 갈린 쪽은 「이름 또는
+    // 비밀번호가 올바르지 않습니다」로 뭉개져 사용자가 무엇을 해야 할지
+    // 모르게 된다.
+    expect((await screen.findByRole('alert')).textContent).toContain(
+      '가입 신청이 아직 승인되지 않았습니다',
+    );
   });
 });
 
