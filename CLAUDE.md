@@ -107,7 +107,7 @@ Before starting work in a fresh session, read `docs/next/LATEST.md`. It points a
   절차(로그인·시험 문서 준비·트리에서 열기)만 `packages/web/test/_web-harness.mjs` 에
   있다. 검사는 자기 문서를 만들고 끝나면 지우므로 **개인 볼트에 기대지 않는다**.
   저장소 루트의 `npm run test:browser:all` 은 이제 editor 와 web 을 차례로 부른다.
-  web 쪽은 여덟이다. `focus-retention-check.mjs`(`FR-EDITOR-009`: 저장이 포커스·커서·
+  web 쪽은 아홉이다. `focus-retention-check.mjs`(`FR-EDITOR-009`: 저장이 포커스·커서·
   이어 쓰기를 끊지 않는다)와 `ime-composition-check.mjs`(원장 §4 **수용 기준 7**:
   한글 IME 조합이 편집 중 깨지지 않는다) — 뒤의 것은 CDP `Input.imeSetComposition` 으로
   조합 단계를 그대로 내므로 OS 입력기 없이도 그 축이 재어진다. 셋째는
@@ -137,10 +137,21 @@ Before starting work in a fresh session, read `docs/next/LATEST.md`. It points a
   `dispatchEvent` 로는 붙여넣기를 낼 수 없고 `page.evaluate` 안에서 `ClipboardEvent` 를
   직접 만들어야 하는데, **그 방식이 실제로 닿는다는 것을 이 검사가 확정했다**(2026-09-01).
   세 축을 한 검사에 묶은 이유는 로그인 제한이다.
-  **로그인은 15분 창에 10회로 제한되고 web 검사 여덟이 한 번에 9회를 쓴다**(다섯째가
-  둘을 쓴다) — 그래서 한 창에 두 번은 돌지 못한다. 짧은 사이에 다시 돌리면 429 가 나고, 그때 검사는
-  「계정이 틀렸다」가 아니라 그 사실을 안내한다. 창이 열릴 때까지 기다리거나 API 서버를
-  재기동하면 즉시 풀린다.
+  아홉째는 `auth-round-trip-check.mjs`(원장 §4 **수용 기준 14**: 로그인 · 상태 차단 ·
+  로그아웃 · 비밀번호 변경)이며, **`_web-harness.mjs` 의 `login` 지름길을 쓰지 않는
+  유일한 검사**다 — 그 함수는 API 로 세션을 세우는데 여기서는 로그인 화면 자체가
+  대상이라, API 로 붙으면 그 화면이 자리표여도 통과한다(2026-09-01 이전이 그랬다).
+  비밀번호를 바꾸는 대상은 이 검사가 만든 계정이다: 환경변수로 받은 계정의 비밀번호를
+  바꾸면 그 값이 검사를 돌린 사람의 손을 떠난다.
+  **로그인은 15분 창에 10회로 제한되고 web 검사 아홉이 한 번에 14회를 쓴다**(다섯째가
+  둘, 아홉째가 다섯) — **한 창에 전부를 돌리지 못한다.** 창이 열릴 때까지 기다리거나
+  API 서버를 재기동한다(limiter 는 메모리에 있고 계정은 DB 에 남으므로 재기동이 즉시
+  푼다). 짧은 사이에 다시 돌리면 429 가 나고, 그때 검사는 「계정이 틀렸다」가 아니라
+  그 사실을 안내한다.
+  **Git Bash 의 `curl` 로 한글을 보내면 깨진다.** 설치 계정 이름을 한글로 주면 DB 에
+  `U+FFFD` 로 저장되고, 그러면 브라우저에서만 로그인이 401 로 실패한다(curl 은 같은
+  방식으로 깨뜨려 보내므로 200 이 나와 원인이 가려진다). **설치 계정은 ASCII 로 만든다**
+  (2026-09-01 실측).
   **두 패키지의 검사를 한 자리에서 돌리려면 포트를 나눠야 한다** — 둘 다 기본으로
   3399 를 보므로, editor 데모를 다른 포트에 띄우고 `EDITOR_URL` 로 넘긴다:
   `npx vite --port 3401 --strictPort` 뒤 `EDITOR_URL=http://localhost:3401/ npm run test:browser:all`.
