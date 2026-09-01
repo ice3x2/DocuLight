@@ -12,10 +12,10 @@
 // 회차는 옛 값으로 붙지 못한다. 만든 계정은 삭제할 수단이 없으므로
 // (`R101` 이 계정 삭제를 폐기했다) 이름에 시각을 넣어 겹치지 않게 한다.
 //
-// **로그인 예산.** 로그인은 15분 창에 10회로 제한되고 이 검사가 그중 다섯을
-// 쓴다(준비 1 · 화면 로그인 1 · 잘못된 자격 1 · 새 계정 1 · 바뀐 비밀번호 1).
-// 나머지 web 검사 여덟이 아홉을 쓰므로 **한 창에 전부를 돌리지 못한다** —
-// 창이 열릴 때까지 기다리거나 API 서버를 재기동한다.
+// **로그인 예산.** 로그인은 15분 창에 10회로 제한되고 이 검사가 그중 일곱을
+// 쓴다(준비 1 · 화면 로그인 1 · 잘못된 자격 1 · 새 계정 1 · 바뀐 비밀번호 1 ·
+// 승인 확인 2). 나머지 web 검사 여덟이 아홉을 쓰므로 **한 창에 전부를 돌리지
+// 못한다** — 창이 열릴 때까지 기다리거나 API 서버를 재기동한다.
 //
 // 사용: 서버·web·계정을 갖춘 뒤
 //       DOCULIGHT_E2E_USER=<이름> DOCULIGHT_E2E_PASS=<비밀번호> \
@@ -152,5 +152,77 @@ await runBrowserChecks(async ({ page, check }) => {
     'R144 의 뒤끝 — 새 비밀번호로 다시 로그인된다',
     await page.evaluate(앱화면인가),
     '바뀐 값이 실제 검증 경로를 지난다',
+  );
+
+  // ── 가입 신청과 승인 (R7 · R60-b) ──────────────────────────────
+  //
+  // 로그인한 상태에서 시작한다 — 바로 위에서 새 비밀번호로 다시 들어왔다.
+  const 신청자 = { name: `signup-e2e-${시각}`, password: `sp-${시각}` };
+
+  // 가입 모드를 승인제로 돌린다. 이 계정은 슈퍼유저가 아니므로 환경변수
+  // 계정으로 잠시 갈아탄다 — 모드 설정은 슈퍼유저 전용이다.
+  await page.evaluate(() => fetch('/api/auth/logout', { method: 'POST' }));
+  await login(page);
+  const 모드 = await page.evaluate(async () => {
+    const res = await fetch('/api/instance/signup-mode', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ mode: 'approval' }),
+    });
+    return res.status;
+  });
+  check('가입 모드를 승인제로 바꿀 수 있다', 모드 === 204, `상태 ${모드}`);
+
+  await page.evaluate(() => fetch('/api/auth/logout', { method: 'POST' }));
+  await page.goto(WEB_URL, { waitUntil: 'domcontentloaded' });
+  await 기다린다(page, 로그인화면인가);
+
+  await page.click('button:has-text("가입 신청하기")');
+  await page.fill('input[name="name"]', 신청자.name);
+  await page.fill('input[name="password"]', 신청자.password);
+  await page.click('button:has-text("가입 신청")');
+
+  const 안내 = await waitUntil(
+    () => page.evaluate(() => document.querySelector('[role="status"]')?.textContent ?? ''),
+    (문구) => 문구.length > 0,
+    { timeout: 10_000 },
+  );
+  check(
+    'R7: 가입 화면에서 신청하면 승인을 기다리라고 알린다',
+    안내.includes('승인'),
+    안내 === '' ? '안내가 비었다' : `안내: ${안내}`,
+  );
+
+  // 승인 전에는 로그인되지 않는다.
+  await page.goto(WEB_URL, { waitUntil: 'domcontentloaded' });
+  await 기다린다(page, 로그인화면인가);
+  await 화면에서로그인(page, 신청자.name, 신청자.password);
+  await waitUntil(() => page.evaluate(경고문구), (문구) => 문구.length > 0, { timeout: 5_000 });
+  check(
+    'R60: 승인 전 계정은 로그인이 차단된다',
+    !(await page.evaluate(앱화면인가)),
+    '대기 상태로는 들어오지 못한다',
+  );
+
+  // 슈퍼유저가 가입 승인 화면에서 승인한다.
+  await page.goto(WEB_URL, { waitUntil: 'domcontentloaded' });
+  await login(page);
+  await page.goto(WEB_URL, { waitUntil: 'domcontentloaded' });
+  await 기다린다(page, 앱화면인가);
+  await page.click('[data-shell="settings-corner"] button');
+  await page.click('[role="tab"]:has-text("가입 승인")');
+  await page.click(`tr:has-text("${신청자.name}") button:has-text("승인")`);
+
+  // **화면에서 승인한 것이 실제로 로그인되는지로 잰다** — 목록에서 행이
+  // 사라지는 것만 보면 서버가 아무것도 안 해도 통과한다.
+  await page.evaluate(() => fetch('/api/auth/logout', { method: 'POST' }));
+  await page.goto(WEB_URL, { waitUntil: 'domcontentloaded' });
+  await 기다린다(page, 로그인화면인가);
+  await 화면에서로그인(page, 신청자.name, 신청자.password);
+  await 기다린다(page, 앱화면인가);
+  check(
+    'SEC-AUTH-004: 승인한 계정이 실제로 로그인된다',
+    await page.evaluate(앱화면인가),
+    '가입 승인 화면의 조작이 서버까지 닿는다',
   );
 });
