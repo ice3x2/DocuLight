@@ -78,6 +78,15 @@ const 담길자리의권한 = (node: TreeNodeView): Level =>
   node.kind === 'directory' ? node.level : node.parentLevel;
 
 /**
+ * 즐겨찾기 항목의 두 문면 (`FR-SHELL-003` AC-7).
+ *
+ * **같은 자리에서 라벨만 갈린다.** 항목을 하나 더 두면 메뉴가 노드마다
+ * 다른 모양이 되어 사용자가 자리를 외우지 못하고, 두 항목이 동시에 서면
+ * 어느 쪽이 지금 상태인지 화면이 답하지 못한다.
+ */
+export const FAVORITE_LABELS = { add: '즐겨찾기에 추가', remove: '즐겨찾기 해제' } as const;
+
+/**
  * 컨텍스트 메뉴 아홉 항목 (`FR-SHELL-003` AC-2).
  *
  * 각 항목의 필요 권한은 서버의 조작별 권한 표와 **같은 값**이다
@@ -95,7 +104,7 @@ export const CONTEXT_MENU_ITEMS: readonly ContextMenuItem[] = [
   { id: 'copy', label: '복사', target: 'view' },
   { id: 'delete', label: '삭제', target: 'edit' },
   { id: 'share', label: '공유', target: 'edit' },
-  { id: 'favorite', label: '즐겨찾기', target: 'view' },
+  { id: 'favorite', label: FAVORITE_LABELS.add, target: 'view' },
   { id: 'new-version', label: '새 버전 올리기', filesOnly: true, target: 'edit' },
 ];
 
@@ -122,9 +131,8 @@ export const CREATE_DEFAULTS = {
  * 뒤에도 찾지 못한다. 이 함수는 「열리는가」만 답하고 그리는 방식은
  * 컴포넌트가 정한다.
  */
-export function enabledMenuItems(node: TreeNodeView): ContextMenuItem[] {
-  return CONTEXT_MENU_ITEMS.filter((item) => {
-    if (item.filesOnly === true && node.kind !== 'file') return false;
+export function enabledMenuItems(node: TreeNodeView, favorited = false): ContextMenuItem[] {
+  return menuItemsFor(node, favorited).filter((item) => {
     if (item.target !== undefined && !permits(node.level, item.target)) return false;
     // 만들기는 **담길 자리**에 쓰는 조작이라 그 자리의 권한을 본다. 그 자리는
     // `containerFor` 가 고르는 자리와 같아야 한다 — 판정과 결과가 다른 자리를
@@ -134,6 +142,27 @@ export function enabledMenuItems(node: TreeNodeView): ContextMenuItem[] {
     if (item.container !== undefined && !permits(담길자리의권한(node), item.container)) return false;
     return true;
   });
+}
+
+/**
+ * 이 노드의 컨텍스트 메뉴에 **그릴** 항목들.
+ *
+ * `enabledMenuItems` 가 「열리는가」를 답한다면 이 함수는 「무엇이 보이는가」를
+ * 답한다. 둘이 갈리는 자리가 둘 있다 — 파일 전용 항목은 다른 노드에서 아예
+ * 빠지고(AC-4 · AC-5), 즐겨찾기 항목의 라벨은 지금 상태에 따라 `추가` 와
+ * `해제` 로 갈린다(AC-7). 두 규칙을 화면이 다시 적지 않도록 여기서 답한다.
+ */
+export function menuItemsFor(
+  node: TreeNodeView,
+  favorited = false,
+): readonly ContextMenuItem[] {
+  const 목록 = CONTEXT_MENU_ITEMS.filter(
+    (item) => item.filesOnly !== true || node.kind === 'file',
+  );
+  if (!favorited) return 목록;
+  return 목록.map((item) =>
+    item.id === 'favorite' ? { ...item, label: FAVORITE_LABELS.remove } : item,
+  );
 }
 
 /** 옮기거나 복사할 수 있는 자리 하나. `path` 는 사람이 읽는 조상 사슬이다. */
@@ -189,6 +218,33 @@ export function destinationsFor(
 /** 이 가지 안에 그 노드가 있는가. */
 function 안에있다(nodes: readonly TreeNodeView[], id: string): boolean {
   return nodes.some((node) => node.id === id || 안에있다(node.children, id));
+}
+
+/**
+ * 워크스페이스들을 가로질러 그 노드를 찾는다.
+ *
+ * **뿌리만 훑지 않는다.** 목록에서 고른 것(즐겨찾기·검색 결과)은 트리 어디에나
+ * 있을 수 있는데, 뿌리만 보면 깊은 자리의 문서는 골라도 열리지 않는다 — 그리고
+ * 화면은 아무 말도 하지 않으므로 사용자에게는 클릭이 먹지 않는 것으로 보인다.
+ */
+export function nodeById(
+  workspaces: readonly WorkspaceTreeView[],
+  nodeId: string,
+): TreeNodeView | undefined {
+  for (const entry of workspaces) {
+    const 찾은것 = 찾는다(entry.roots, nodeId);
+    if (찾은것 !== undefined) return 찾은것;
+  }
+  return undefined;
+}
+
+function 찾는다(nodes: readonly TreeNodeView[], id: string): TreeNodeView | undefined {
+  for (const node of nodes) {
+    if (node.id === id) return node;
+    const 아래 = 찾는다(node.children, id);
+    if (아래 !== undefined) return 아래;
+  }
+  return undefined;
 }
 
 /**

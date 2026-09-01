@@ -86,9 +86,23 @@ describe('FR-SHELL-003 — 트리 컨텍스트 메뉴와 새 노트 버튼', () 
       '복사',
       '삭제',
       '공유',
-      '즐겨찾기',
+      '즐겨찾기에 추가',
       '새 버전 올리기',
     ]);
+  });
+
+  it('AC-7: 이미 즐겨찾기한 노드에서는 그 항목이 해제로 바뀐다', () => {
+    const 안한것 = enabledMenuItems(node({ kind: 'file' })).map((i) => i.label);
+    const 한것 = enabledMenuItems(node({ kind: 'file' }), true).map((i) => i.label);
+
+    expect(안한것).toContain('즐겨찾기에 추가');
+    expect(안한것).not.toContain('즐겨찾기 해제');
+    expect(한것).toContain('즐겨찾기 해제');
+    expect(한것).not.toContain('즐겨찾기에 추가');
+    // 항목의 수와 자리는 그대로다 — 라벨만 갈린다. 하나가 더 생기거나
+    // 사라지면 메뉴가 노드마다 다른 모양이 되어 사용자가 자리를 못 외운다.
+    expect(한것.length).toBe(안한것.length);
+    expect(한것.indexOf('즐겨찾기 해제')).toBe(안한것.indexOf('즐겨찾기에 추가'));
   });
 
   it('AC-4 · AC-5: 새 버전 올리기는 파일에만 있다', () => {

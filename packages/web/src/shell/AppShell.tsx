@@ -30,7 +30,7 @@ import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
 import type { RosterGroup, RosterUser } from '../api/client.js';
-import { containerFor, destinationsFor } from '../tree/tree-contract.js';
+import { containerFor, destinationsFor, nodeById } from '../tree/tree-contract.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
   LEFT_TABS,
@@ -314,6 +314,7 @@ export function AppShell({
   onCreateNote,
   onCreate,
   onFavorite,
+  onUnfavorite,
   onDelete,
   onRename,
   onRelocate,
@@ -412,6 +413,8 @@ export function AppShell({
   ) => void;
   /** 즐겨찾기에 더한다 (`FR-SHELL-001` AC-3 · AC-4). */
   onFavorite?: (nodeId: string) => void;
+  /** 즐겨찾기에서 뺀다 (`FR-SHELL-001` AC-5). 목록과 트리 메뉴가 같은 것을 부른다. */
+  onUnfavorite?: (nodeId: string) => void;
   onDelete?: (nodeId: string) => void;
   onRename?: (nodeId: string, name: string) => void;
   onRelocate?: (nodeId: string, kind: 'move' | 'copy', destinationId: string) => void;
@@ -551,7 +554,9 @@ export function AppShell({
                   setNaming(null);
                 }}
                 onNamingCancel={() => setNaming(null)}
+                favorites={new Set(favorites.map((one) => one.nodeId))}
                 onFavorite={onFavorite}
+                {...(onUnfavorite === undefined ? {} : { onUnfavorite })}
                 onDelete={onDelete}
                 onRename={(node) => setNaming({ kind: 'rename', node })}
                 onShare={(node) => {
@@ -574,14 +579,22 @@ export function AppShell({
                 {...(onSearchAxes === undefined ? {} : { onAxes: onSearchAxes })}
                 {...(onQuery === undefined ? {} : { onQuery })}
                 onOpen={(nodeId) => {
-                  const found = workspaces
-                    .flatMap((entry) => entry.roots)
-                    .find((node) => node.id === nodeId);
+                  const found = nodeById(workspaces, nodeId);
                   if (found !== undefined) onOpen?.(found, false);
                 }}
               />
             );
-          if (tab.id === 'favorites') return <FavoritesView favorites={favorites} />;
+          if (tab.id === 'favorites')
+            return (
+              <FavoritesView
+                favorites={favorites}
+                onOpen={(nodeId) => {
+                  const found = nodeById(workspaces, nodeId);
+                  if (found !== undefined) onOpen?.(found, false);
+                }}
+                {...(onUnfavorite === undefined ? {} : { onUnfavorite })}
+              />
+            );
           return <p>{tab.label}</p>;
         }}
       </Sidebar>

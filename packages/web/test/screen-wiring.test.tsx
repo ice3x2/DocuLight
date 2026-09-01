@@ -125,7 +125,7 @@ describe('FR-SHELL-001 AC-3 · AC-4 — 즐겨찾기가 목록까지 닿는다',
       keys: '[MouseRight]',
       target: screen.getByRole('treeitem', { name: /회의록/ }),
     });
-    await user.click(within(await screen.findByRole('menu')).getByRole('menuitem', { name: '즐겨찾기' }));
+    await user.click(within(await screen.findByRole('menu')).getByRole('menuitem', { name: '즐겨찾기에 추가' }));
 
     await waitFor(() =>
       expect(sent).toContainEqual({
@@ -152,11 +152,61 @@ describe('FR-SHELL-001 AC-3 · AC-4 — 즐겨찾기가 목록까지 닿는다',
       keys: '[MouseRight]',
       target: screen.getByRole('treeitem', { name: /회의록/ }),
     });
-    await user.click(within(await screen.findByRole('menu')).getByRole('menuitem', { name: '즐겨찾기' }));
+    await user.click(within(await screen.findByRole('menu')).getByRole('menuitem', { name: '즐겨찾기에 추가' }));
     await user.click(screen.getByRole('tab', { name: '즐겨찾기' }));
 
     const list = await screen.findByRole('list', { name: '즐겨찾기' });
     await waitFor(() => expect(within(list).getByText('회의록.md')).toBeDefined());
+  });
+});
+
+describe('FR-SHELL-001 AC-5 · AC-6 — 즐겨찾기 목록에서 해제하고 연다', () => {
+  /**
+   * 즐겨찾기한 것 하나를 이미 갖고 있는 상태에서 연다.
+   *
+   * 더하는 조작을 거치지 않는 이유는 이 두 축이 **목록 쪽**의 것이기
+   * 때문이다 — 더하기를 통과해야 목록에 닿는다면 더하기가 깨질 때 이
+   * 둘도 함께 죽어, 무엇이 깨졌는지 가려지지 않는다.
+   */
+  const 즐겨찾기하나 = () => {
+    let 남았나 = true;
+    routes.set('/api/favorites', () =>
+      json(남았나 ? [{ nodeId: 'n1', name: '회의록.md', kind: 'file', workspaceName: '기획팀' }] : []),
+    );
+    routes.set('/api/favorites/n1', () => {
+      남았나 = false;
+      return json(null, 204);
+    });
+  };
+
+  it('AC-5: 해제하면 서버로 나가고 그 행이 목록에서 사라진다', async () => {
+    즐겨찾기하나();
+    const user = await openTree();
+    await user.click(screen.getByRole('tab', { name: '즐겨찾기' }));
+
+    const list = await screen.findByRole('list', { name: '즐겨찾기' });
+    await waitFor(() => expect(within(list).getByText('회의록.md')).toBeDefined());
+    await user.click(within(list).getByRole('button', { name: '회의록.md 즐겨찾기 해제' }));
+
+    await waitFor(() =>
+      expect(sent).toContainEqual({ path: '/api/favorites/n1', method: 'DELETE', body: undefined }),
+    );
+    // 나갔다는 것만으로는 부족하다 — 목록이 다시 그려지지 않으면 사용자는
+    // 해제한 것이 그대로 남아 있는 화면을 본다.
+    await waitFor(() => expect(within(list).queryByText('회의록.md')).toBeNull());
+  });
+
+  it('AC-6: 문서 행을 고르면 그 문서가 본문에 열린다', async () => {
+    즐겨찾기하나();
+    const user = await openTree();
+    await user.click(screen.getByRole('tab', { name: '즐겨찾기' }));
+
+    const list = await screen.findByRole('list', { name: '즐겨찾기' });
+    await user.click(within(list).getByRole('button', { name: '회의록.md' }));
+
+    // 중앙 본문의 탭에 그 문서가 서는 것으로 잰다 — 목록 안에서 강조만
+    // 바뀌는 구현은 「열렸다」가 아니다.
+    await waitFor(() => expect(screen.getByRole('tab', { name: /회의록\.md/ })).toBeDefined());
   });
 });
 

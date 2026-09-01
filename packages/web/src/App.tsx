@@ -10,6 +10,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ApiError,
   addFavorite,
+  removeFavorite,
   removeGroup,
   savePersonalSetting,
   createNode,
@@ -473,6 +474,21 @@ function AppBody() {
   );
 
   /**
+   * 즐겨찾기에서 뺀다 (`FR-SHELL-001` AC-5).
+   *
+   * 더하기와 **같은 자리에서 같은 방식으로** 목록을 무효화한다 — 한쪽만
+   * 다시 받으면 뺀 것이 화면에 그대로 남고, 사용자는 조작이 먹지 않았다고
+   * 읽어 한 번 더 누른다.
+   */
+  const unfavorite = useCallback(
+    async (nodeId: string) => {
+      await removeFavorite(nodeId).catch(() => undefined);
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.favorites });
+    },
+    [queries],
+  );
+
+  /**
    * 개인 설정 하나를 바꾼다 (`IR-SHELL-004` · `DR-SHELL-002`).
    *
    * 쓴 뒤 다시 받는다 — 화면이 고른 값을 자기 상태로 복사해 두면 서버가
@@ -732,6 +748,7 @@ function AppBody() {
       onCreateNote={createNote}
       onCreate={create}
       onFavorite={favorite}
+      onUnfavorite={unfavorite}
       onDelete={deleteNode}
       onRename={rename}
       onRelocate={relocate}

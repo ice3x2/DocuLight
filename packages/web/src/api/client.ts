@@ -417,6 +417,10 @@ export const addFavorite = (nodeId: string) =>
     body: JSON.stringify({ nodeId }),
   });
 
+/** 즐겨찾기에서 뺀다 (`FR-SHELL-001` AC-5). */
+export const removeFavorite = (nodeId: string) =>
+  call<void>(`/favorites/${encodeURIComponent(nodeId)}`, { method: 'DELETE' });
+
 /**
  * 기존 파일을 덮어쓴다 (`FR-SHELL-008` AC-2).
  *

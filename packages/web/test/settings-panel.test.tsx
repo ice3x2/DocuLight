@@ -179,7 +179,7 @@ describe('FR-SHELL-001 AC-3 · AC-4 — 즐겨찾기에 추가할 수 있다', (
       keys: '[MouseRight]',
       target: screen.getByRole('treeitem', { name: /회의록/ }),
     });
-    await user.click(await screen.findByRole('menuitem', { name: '즐겨찾기' }));
+    await user.click(await screen.findByRole('menuitem', { name: '즐겨찾기에 추가' }));
 
     // 항목이 렌더되기만 하고 아무 일도 안 하면 그 조작이 제품에 없는 것이다.
     expect(added).toEqual(['n1']);
@@ -208,7 +208,7 @@ describe('FR-SHELL-001 AC-3 · AC-4 — 즐겨찾기에 추가할 수 있다', (
     );
 
     await user.pointer({ keys: '[MouseRight]', target: screen.getByRole('treeitem', { name: /회의/ }) });
-    await user.click(await screen.findByRole('menuitem', { name: '즐겨찾기' }));
+    await user.click(await screen.findByRole('menuitem', { name: '즐겨찾기에 추가' }));
 
     // 문서만 담기면 디렉토리를 즐겨찾기한 사용자는 그것을 다시 찾지 못한다.
     expect(added).toEqual(['d1']);

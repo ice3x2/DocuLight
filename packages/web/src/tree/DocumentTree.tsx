@@ -10,9 +10,9 @@ import {
 
 import { acceptedDrop, type UploadRequest } from '../attachment/upload-contract.js';
 import {
-  CONTEXT_MENU_ITEMS,
   CREATE_DEFAULTS,
   enabledMenuItems,
+  menuItemsFor,
   type TreeNodeView,
   type WorkspaceTreeView,
 } from './tree-contract.js';
@@ -147,14 +147,17 @@ function NameField({
  */
 function NodeMenu({
   node,
+  favorited = false,
   children,
   onSelect,
 }: {
   node: TreeNodeView;
+  /** 이 노드가 이미 즐겨찾기에 있는가 (`FR-SHELL-003` AC-7). */
+  favorited?: boolean;
   children: React.ReactNode;
   onSelect?: (itemId: string, node: TreeNodeView) => void;
 }) {
-  const enabled = new Set(enabledMenuItems(node).map((item) => item.id));
+  const enabled = new Set(enabledMenuItems(node, favorited).map((item) => item.id));
 
   return (
     <ContextMenu.Root>
@@ -166,17 +169,15 @@ function NodeMenu({
             방금 초점을 잡은 입력에서 초점을 뺏는다 — 사용자는 메뉴를 고르고
             바로 치기 시작하는데 그 글자가 아무 데도 들어가지 않는다. */}
         <ContextMenu.Content onCloseAutoFocus={(event) => event.preventDefault()}>
-          {CONTEXT_MENU_ITEMS.filter((item) => item.filesOnly !== true || node.kind === 'file').map(
-            (item) => (
-              <ContextMenu.Item
-                key={item.id}
-                disabled={!enabled.has(item.id)}
-                onSelect={() => onSelect?.(item.id, node)}
-              >
-                {item.label}
-              </ContextMenu.Item>
-            ),
-          )}
+          {menuItemsFor(node, favorited).map((item) => (
+            <ContextMenu.Item
+              key={item.id}
+              disabled={!enabled.has(item.id)}
+              onSelect={() => onSelect?.(item.id, node)}
+            >
+              {item.label}
+            </ContextMenu.Item>
+          ))}
         </ContextMenu.Content>
       </ContextMenu.Portal>
     </ContextMenu.Root>
@@ -261,6 +262,7 @@ function TreeRow({
  */
 function TreeRowWrapper(
   { node, innerRef, attrs, children }: RowRendererProps<Row>,
+  favorited: ReadonlySet<string>,
   onUpload?: (request: UploadRequest) => void,
   onMenu?: (itemId: string, node: TreeNodeView) => void,
 ) {
@@ -287,7 +289,7 @@ function TreeRowWrapper(
   return view === undefined ? (
     line
   ) : (
-    <NodeMenu node={view} onSelect={onMenu}>
+    <NodeMenu node={view} favorited={favorited.has(view.id)} onSelect={onMenu}>
       {line}
     </NodeMenu>
   );
@@ -320,7 +322,9 @@ export function DocumentTree({
   onOpen,
   onCreateNote,
   onCreate,
+  favorites,
   onFavorite,
+  onUnfavorite,
   onDelete,
   onRename,
   onRelocate,
@@ -339,8 +343,17 @@ export function DocumentTree({
    * 담길 자리를 고르는 일과 이름을 묻는 일은 바깥이 한다.
    */
   onCreate?: (node: TreeNodeView, kind: 'file' | 'directory') => void;
+  /**
+   * 이미 즐겨찾기에 있는 노드들 (`FR-SHELL-003` AC-7).
+   *
+   * 트리가 이 집합으로 메뉴 문면을 정하고, 고른 것이 추가인지 해제인지도
+   * 여기서 갈린다 — 바깥은 「무엇을 하라」만 받는다.
+   */
+  favorites?: ReadonlySet<string>;
   /** 즐겨찾기에 더한다 (`FR-SHELL-001` AC-3 · AC-4). 문서와 디렉토리를 가리지 않는다. */
   onFavorite?: (nodeId: string) => void;
+  /** 즐겨찾기에서 뺀다 (`FR-SHELL-001` AC-5). */
+  onUnfavorite?: (nodeId: string) => void;
   /** 삭제 — 휴지통으로 보낸다 (`IR-SHELL-005` AC-1). */
   onDelete?: (nodeId: string) => void;
   /** 이름 변경 — 이름을 고를 자리를 연다 (`FR-SHELL-015` AC-1). */
@@ -357,6 +370,9 @@ export function DocumentTree({
   onNamed?: (name: string) => void;
   onNamingCancel?: () => void;
 }) {
+  // 없으면 빈 집합이다 — 아직 못 받았을 뿐 「하나도 아니다」와 같게 다룬다.
+  const 즐겨찾기 = favorites ?? new Set<string>();
+
   const tree = useRef<TreeApi<Row> | null>(null);
 
   const rows = useMemo<Row[]>(() => {
@@ -437,10 +453,13 @@ export function DocumentTree({
           disableDrag
           disableDrop
           renderRow={(props: RowRendererProps<Row>) =>
-            TreeRowWrapper(props, onUpload, (itemId, node) => {
+            TreeRowWrapper(props, 즐겨찾기, onUpload, (itemId, node) => {
               if (itemId === 'new-file') onCreate?.(node, 'file');
               if (itemId === 'new-directory') onCreate?.(node, 'directory');
-              if (itemId === 'favorite') onFavorite?.(node.id);
+              if (itemId === 'favorite') {
+                if (즐겨찾기.has(node.id)) onUnfavorite?.(node.id);
+                else onFavorite?.(node.id);
+              }
               if (itemId === 'delete') onDelete?.(node.id);
               if (itemId === 'rename') onRename?.(node);
               if (itemId === 'move') onRelocate?.(node, 'move');
