@@ -1,10 +1,10 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-08-31T23:42:12.463Z",
+  "generatedAt": "2026-09-01T04:04:25.688Z",
   "source": "speckiwi",
   "specFingerprint": {
     "algorithm": "sha256",
-    "value": "89d7ba8cc93ad960ea42dc91d9cb875189296cc1f6bbe79f8f1581e8c123860f",
+    "value": "110002266783ac5124cada9a06bda8deebe1279f929cf89c60c1aeae37884cd7",
     "files": [
       {
         "path": "docs/spec/00.index.md",
@@ -26,9 +26,9 @@
       },
       {
         "path": "docs/spec/08.app-shell.srs.md",
-        "sha256": "4c3fd90c9f6b305400bf6fbf7e28bd75edfa0eab0b4ed9431e45604ace9d0fcd",
-        "size": 164410,
-        "mtimeMs": 1788188560275.031
+        "sha256": "40d00423fda651be4e8edc75077aea0e418ef94303ab4f038bd261b041e6b669",
+        "size": 166045,
+        "mtimeMs": 1788235465648.8445
       },
       {
         "path": "docs/spec/09.auth.srs.md",

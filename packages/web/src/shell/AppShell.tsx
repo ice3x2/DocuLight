@@ -9,11 +9,10 @@ import { SearchPanel } from '../search/SearchPanel.js';
 import type { SearchAxis } from '../search/search-axes.js';
 import { TagPanel } from '../search/TagPanel.js';
 import type { SaveState, TabState } from '../document/tab-state.js';
-import { DocumentTree } from '../tree/DocumentTree.js';
+import { DocumentTree, type Naming } from '../tree/DocumentTree.js';
 import type { UploadRequest } from '../attachment/upload-contract.js';
 import { EmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
-import { NamePrompt } from '../tree/NamePrompt.js';
 import { RelocationDialog } from './RelocationDialog.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { PersonalSettings } from '../settings/PersonalSettings.js';
@@ -31,7 +30,7 @@ import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
 import type { RosterGroup, RosterUser } from '../api/client.js';
-import { containerFor, CREATE_DEFAULTS, destinationsFor } from '../tree/tree-contract.js';
+import { containerFor, destinationsFor } from '../tree/tree-contract.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
   LEFT_TABS,
@@ -457,8 +456,13 @@ export function AppShell({
   const [leftTab, setLeftTab] = useState(LEFT_TABS[0]!.id);
   /** 새 버전을 올릴 대상. 골라 둔 뒤 확인과 파일 고르기가 이어진다. */
   const [overwriting, setOverwriting] = useState<TreeNodeView | null>(null);
-  /** 이름을 바꾸는 중인 노드 (`FR-SHELL-015` AC-1). */
-  const [renaming, setRenaming] = useState<TreeNodeView | null>(null);
+  /**
+   * 지금 이름을 정하는 자리 (`FR-SHELL-015` AC-1 · `FR-SHELL-016` AC-3).
+   *
+   * 개명과 만들기가 **한 상태**다 — 둘 다 트리 안에서 이름 한 줄을 받는
+   * 같은 일이고, 따로 들면 둘이 동시에 열리는 상태를 표현할 수 있게 된다.
+   */
+  const [naming, setNaming] = useState<Naming | null>(null);
   /** 옮기거나 복사하는 중인 노드와 그 조작 (`FR-SHELL-015` AC-2 · AC-4). */
   const [relocating, setRelocating] = useState<{
     node: TreeNodeView;
@@ -468,17 +472,6 @@ export function AppShell({
   const [destinationId, setDestinationId] = useState('');
   /** 공유 화면을 연 노드 (`IR-ACL-002`). */
   const [sharing, setSharing] = useState<TreeNodeView | null>(null);
-  /**
-   * 만드는 중인 것 — 담길 자리와 종류 (`FR-SHELL-016` AC-1 · AC-3).
-   *
-   * 자리를 여기서 풀어 두는 이유는 이름을 정하는 동안 트리가 다시 올 수
-   * 있기 때문이다. 노드를 들고 있다가 나중에 풀면 그 사이에 사라진 노드의
-   * 자리를 묻게 된다.
-   */
-  const [creating, setCreating] = useState<{
-    container: { workspaceId: string; parentId: string | null };
-    kind: 'file' | 'directory';
-  } | null>(null);
 
   // **정체가 흔들리면 안 된다.** 이 둘은 편집기 확장 묶음에 들어가는데,
   // 렌더마다 새로 만들면 그때마다 편집기가 통째로 재구성되어 커서·되돌리기
@@ -546,11 +539,21 @@ export function AppShell({
                   // 자리를 **지금** 푼다 — 담길 자리를 고르는 규칙은 계약이
                   // 소유하고(`containerFor`) 화면은 그것을 부르기만 한다.
                   const container = containerFor(workspaces, node.id);
-                  if (container !== undefined) setCreating({ container, kind });
+                  if (container !== undefined) {
+                    setNaming({ kind: 'create', ...container, makes: kind });
+                  }
                 }}
+                {...(naming === null ? {} : { naming })}
+                onNamed={(name) => {
+                  if (naming === null) return;
+                  if (naming.kind === 'rename') onRename?.(naming.node.id, name);
+                  else onCreate?.(naming.workspaceId, naming.parentId, naming.makes, name);
+                  setNaming(null);
+                }}
+                onNamingCancel={() => setNaming(null)}
                 onFavorite={onFavorite}
                 onDelete={onDelete}
-                onRename={setRenaming}
+                onRename={(node) => setNaming({ kind: 'rename', node })}
                 onShare={(node) => {
                   share?.onOpen?.(node.id);
                   setSharing(node);
@@ -699,34 +702,6 @@ export function AppShell({
             setRelocating(null);
           }}
           onCancel={() => setRelocating(null)}
-        />
-      )}
-
-      {renaming !== null && (
-        <NamePrompt
-          title={`${renaming.name} 이름 바꾸기`}
-          fieldLabel={`${renaming.name} 새 이름`}
-          initialName={renaming.name}
-          submitLabel="이름 바꾸기"
-          onSubmit={(name) => {
-            onRename?.(renaming.id, name);
-            setRenaming(null);
-          }}
-          onCancel={() => setRenaming(null)}
-        />
-      )}
-
-      {creating !== null && (
-        <NamePrompt
-          title={CREATE_DEFAULTS[creating.kind].title}
-          fieldLabel={CREATE_DEFAULTS[creating.kind].fieldLabel}
-          initialName={CREATE_DEFAULTS[creating.kind].name}
-          submitLabel="만들기"
-          onSubmit={(name) => {
-            onCreate?.(creating.container.workspaceId, creating.container.parentId, creating.kind, name);
-            setCreating(null);
-          }}
-          onCancel={() => setCreating(null)}
         />
       )}
 

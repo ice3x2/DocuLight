@@ -1,10 +1,17 @@
 import * as ContextMenu from '@radix-ui/react-context-menu';
-import { useMemo } from 'react';
-import { Tree, type NodeApi, type NodeRendererProps, type RowRendererProps } from 'react-arborist';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Tree,
+  type NodeApi,
+  type NodeRendererProps,
+  type RowRendererProps,
+  type TreeApi,
+} from 'react-arborist';
 
 import { acceptedDrop, type UploadRequest } from '../attachment/upload-contract.js';
 import {
   CONTEXT_MENU_ITEMS,
+  CREATE_DEFAULTS,
   enabledMenuItems,
   type TreeNodeView,
   type WorkspaceTreeView,
@@ -27,6 +34,105 @@ interface Row {
 
 const ROW_HEIGHT = 28;
 const TREE_HEIGHT = 640;
+
+/**
+ * 아직 없는 노드의 자리 — 만들기가 이름을 정하는 동안만 선다.
+ *
+ * 실재하는 노드 ID 와 부딪히지 않는 값이어야 한다. UUID 가 아닌 문자열이므로
+ * 서버가 준 어떤 id 와도 같지 않다.
+ */
+const NAMING_ROW = '__naming__';
+
+/**
+ * 지금 이름을 정하는 자리 (`FR-SHELL-015` AC-1 · `FR-SHELL-016` AC-3).
+ *
+ * **트리 안에서 정한다** — 설계서 §2.2.4 가 「이름 입력은 트리 안 인라인
+ * 편집」을, §6.1 상태 표가 「해당 행이 입력 필드로 전환 · Enter 확정 ·
+ * Esc 취소」를 적는다. 모달로 띄우면 어느 노드를 고치는지와 어디에 만드는지가
+ * 화면에서 사라지고, 형제들의 이름을 보며 지을 수 없다.
+ */
+export type Naming =
+  | { kind: 'rename'; node: TreeNodeView }
+  | {
+      kind: 'create';
+      workspaceId: string;
+      /** `null` 이면 그 워크스페이스의 루트다. */
+      parentId: string | null;
+      makes: 'file' | 'directory';
+    };
+
+/** 그 자리에서 쓸 입력 이름표와 처음 채울 값. */
+const namingLabel = (naming: Naming): { label: string; initial: string } =>
+  naming.kind === 'rename'
+    ? { label: `${naming.node.name} 새 이름`, initial: naming.node.name }
+    : {
+        label: CREATE_DEFAULTS[naming.makes].fieldLabel,
+        initial: CREATE_DEFAULTS[naming.makes].name,
+      };
+
+/**
+ * 트리 안에서 이름 한 줄을 받는다.
+ *
+ * **이름 규칙을 여기서 판정하지 않는다.** 금지 문자와 길이 상한과 이름 충돌은
+ * 전부 서버가 소유하며(`validateNodeName` · `resolveNameCollision`), 화면이
+ * 그것을 다시 적으면 두 곳이 조용히 갈린다. 여기서 막는 것은 「입력이 비어
+ * 있다」 하나이고 그것은 판정이 아니라 부재다.
+ *
+ * 설계서 §2.2.4 는 클라이언트 1차 검증도 함께 요구하는데 그 축은 아직 열려
+ * 있다(§11-35) — 넣을 때 이 자리에 넣고, 입력 아래에 안내를 세운다.
+ */
+function NameField({
+  label,
+  initial,
+  onConfirm,
+  onCancel,
+}: {
+  label: string;
+  initial: string;
+  onConfirm: (name: string) => void;
+  onCancel: () => void;
+}) {
+  const input = useRef<HTMLInputElement>(null);
+  const [name, setName] = useState(initial);
+
+  // 열리면 초점을 옮기고 지금 값을 골라 둔다 — 옮기지 않으면 키보드
+  // 사용자는 방금 무엇이 열렸는지 모르고, 고르지 않으면 다르게 지으려는
+  // 사람이 먼저 지워야 한다.
+  useEffect(() => {
+    const 잡는다 = () => {
+      input.current?.focus();
+      input.current?.select();
+    };
+    잡는다();
+    // **트리가 행에 초점을 준 뒤에 한 번 더 잡는다.** arborist 는 키보드
+    // 이동을 위해 행 자체에 초점을 두는데 그것이 같은 틱에 일어나 이 입력의
+    // 초점을 덮는다 — 사용자는 메뉴를 고르고 바로 치기 시작하는데 그 글자가
+    // 아무 데도 들어가지 않는다.
+    const timer = setTimeout(잡는다, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <input
+      ref={input}
+      type="text"
+      aria-label={label}
+      value={name}
+      onChange={(event) => setName(event.target.value)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          const 다듬은 = name.trim();
+          if (다듬은 !== '') onConfirm(다듬은);
+        }
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          onCancel();
+        }
+      }}
+    />
+  );
+}
 
 /**
  * 한 노드의 컨텍스트 메뉴 (`FR-SHELL-003` AC-2 · AC-3).
@@ -55,7 +161,11 @@ function NodeMenu({
       <ContextMenu.Trigger asChild>{children}</ContextMenu.Trigger>
 
       <ContextMenu.Portal>
-        <ContextMenu.Content>
+        {/* **닫히면서 포커스를 되돌리지 않는다.** Radix 는 기본으로 트리거에
+            포커스를 돌려주는데, 고른 조작이 이름 입력을 세우는 경우 그 복원이
+            방금 초점을 잡은 입력에서 초점을 뺏는다 — 사용자는 메뉴를 고르고
+            바로 치기 시작하는데 그 글자가 아무 데도 들어가지 않는다. */}
+        <ContextMenu.Content onCloseAutoFocus={(event) => event.preventDefault()}>
           {CONTEXT_MENU_ITEMS.filter((item) => item.filesOnly !== true || node.kind === 'file').map(
             (item) => (
               <ContextMenu.Item
@@ -84,13 +194,39 @@ function TreeRow({
   row,
   api,
   onOpen,
+  naming,
+  onNamed,
+  onNamingCancel,
 }: {
   row: Row;
   api: NodeApi<Row>;
   onOpen?: (node: TreeNodeView, inNewTab: boolean) => void;
+  naming?: Naming;
+  onNamed?: (name: string) => void;
+  onNamingCancel?: () => void;
 }) {
   const node = row.node;
   const expandable = !api.isLeaf;
+
+  // 이 줄이 지금 이름을 정하는 자리인가. 개명은 그 노드의 줄이고, 만들기는
+  // 담을 자리 아래에 선 임시 줄이다.
+  const 이름짓는중 =
+    naming !== undefined &&
+    (naming.kind === 'rename' ? naming.node.id === row.id : row.id === NAMING_ROW);
+
+  if (이름짓는중) {
+    const { label, initial } = namingLabel(naming);
+    return (
+      <div>
+        <NameField
+          label={label}
+          initial={initial}
+          onConfirm={(name) => onNamed?.(name)}
+          onCancel={() => onNamingCancel?.()}
+        />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -190,6 +326,9 @@ export function DocumentTree({
   onRelocate,
   onShare,
   onNewVersion,
+  naming,
+  onNamed,
+  onNamingCancel,
 }: {
   workspaces: readonly WorkspaceTreeView[];
   onUpload?: (request: UploadRequest) => void;
@@ -212,24 +351,68 @@ export function DocumentTree({
   onShare?: (node: TreeNodeView) => void;
   /** 그 파일을 덮어쓰겠다 (`FR-SHELL-008` AC-2). 확인과 파일 고르기는 바깥이 한다. */
   onNewVersion?: (node: TreeNodeView) => void;
+  /** 지금 이름을 정하는 자리. 없으면 트리는 평소대로 선다. */
+  naming?: Naming;
+  /** 이름이 정해졌다. 그 이름으로 무엇을 할지는 바깥이 안다. */
+  onNamed?: (name: string) => void;
+  onNamingCancel?: () => void;
 }) {
-  const rows = useMemo<Row[]>(
-    () =>
-      workspaces.map((entry) => ({
-        id: entry.workspace.id,
-        name: entry.workspace.name,
-        children: entry.roots.map(toRow),
-      })),
-    [workspaces],
-  );
+  const tree = useRef<TreeApi<Row> | null>(null);
+
+  const rows = useMemo<Row[]>(() => {
+    const base: Row[] = workspaces.map((entry) => ({
+      id: entry.workspace.id,
+      name: entry.workspace.name,
+      children: entry.roots.map(toRow),
+    }));
+    if (naming?.kind !== 'create') return base;
+
+    // **담을 자리 아래에 임시 줄 하나를 끼운다** (설계서 §7.2 1단계).
+    // 그 줄이 곧 입력 필드가 되며, 사용자는 형제들의 이름을 보면서 짓는다.
+    const 자리: Row = { id: NAMING_ROW, name: '' };
+    const 끼운다 = (rows: readonly Row[]): boolean =>
+      rows.some((row) => {
+        if (row.id === naming.parentId) {
+          row.children = [...(row.children ?? []), 자리];
+          return true;
+        }
+        return row.children !== undefined && 끼운다(row.children);
+      });
+
+    if (naming.parentId === null) {
+      const 워크스페이스 = base.find((one) => one.id === naming.workspaceId);
+      if (워크스페이스 !== undefined) 워크스페이스.children = [...(워크스페이스.children ?? []), 자리];
+    } else {
+      끼운다(base);
+    }
+    return base;
+  }, [workspaces, naming]);
 
   // 워크스페이스만 펼친 채로 시작한다 — 접근 가능한 것이 **동시에**
   // 보여야 하고(`FR-WORKSPACE-003` AC-1), 그 아래까지 전부 펼치면 큰
   // 인스턴스에서 첫 화면이 수천 줄이 된다.
+  //
+  // **만들 자리는 함께 펼친다** — 접힌 채로 두면 입력 줄이 화면에 없고,
+  // 사용자에게는 아무 일도 일어나지 않은 것으로 보인다.
   const initialOpenState = useMemo(
-    () => Object.fromEntries(workspaces.map((entry) => [entry.workspace.id, true])),
-    [workspaces],
+    () =>
+      Object.fromEntries([
+        ...workspaces.map((entry) => [entry.workspace.id, true] as const),
+        ...(naming?.kind === 'create' && naming.parentId !== null
+          ? [[naming.parentId, true] as const]
+          : []),
+      ]),
+    [workspaces, naming],
   );
+
+  // **만들 자리를 펼친다.** `initialOpenState` 는 이름 그대로 처음 한 번이라,
+  // 이미 서 있는 트리에서 만들기를 고르면 접힌 디렉토리 아래의 입력 줄이
+  // 화면에 오지 않는다 — 사용자에게는 아무 일도 일어나지 않은 것으로 보인다.
+  useEffect(() => {
+    if (naming?.kind === 'create' && naming.parentId !== null) {
+      tree.current?.open(naming.parentId);
+    }
+  }, [naming]);
 
   return (
     <div>
@@ -239,6 +422,7 @@ export function DocumentTree({
 
       <div role="tree" aria-label="문서 트리">
         <Tree<Row>
+          ref={tree}
           data={rows}
           idAccessor="id"
           openByDefault={false}
@@ -268,7 +452,14 @@ export function DocumentTree({
         >
           {({ node, style }: NodeRendererProps<Row>) => (
             <div style={style}>
-              <TreeRow row={node.data} api={node} onOpen={onOpen} />
+              <TreeRow
+                row={node.data}
+                api={node}
+                onOpen={onOpen}
+                {...(naming === undefined ? {} : { naming })}
+                {...(onNamed === undefined ? {} : { onNamed })}
+                {...(onNamingCancel === undefined ? {} : { onNamingCancel })}
+              />
             </div>
           )}
         </Tree>

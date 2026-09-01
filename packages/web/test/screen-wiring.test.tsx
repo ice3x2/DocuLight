@@ -671,9 +671,14 @@ describe('FR-SHELL-015 — 이름 변경이 화면에서 서버까지 닿는다'
     const 입력 = await screen.findByRole('textbox', { name: /새 이름/ });
     expect((입력 as HTMLInputElement).value).toBe('회의록.md');
 
+    // **그 자리가 트리 안이어야 한다** (설계서 §2.2.4 · §6.1). 모달로 띄우면
+    // 사용자가 어느 노드를 고쳤는지 화면에서 잃고, 트리의 다른 줄과 견주며
+    // 이름을 정할 수 없다.
+    expect(screen.getByRole('tree', { name: '문서 트리' }).contains(입력), '이름 입력이 트리 밖에 섰다').toBe(true);
+
     await user.clear(입력);
     await user.type(입력, '바뀐이름.md');
-    await user.click(screen.getByRole('button', { name: '이름 바꾸기' }));
+    await user.keyboard('{Enter}');
 
     await waitFor(() =>
       expect(sent).toContainEqual({
@@ -694,7 +699,11 @@ describe('FR-SHELL-015 — 이름 변경이 화면에서 서버까지 닿는다'
     await user.click(
       within(await screen.findByRole('menu')).getByRole('menuitem', { name: '이름 변경' }),
     );
-    await user.click(await screen.findByRole('button', { name: '그만두기' }));
+    const 입력 = await screen.findByRole('textbox', { name: /새 이름/ });
+    // **자동 초점이 걸렸는가** — 메뉴를 고른 사람은 바로 치기 시작하고,
+    // 그때 초점이 없으면 그 글자가 아무 데도 들어가지 않는다.
+    expect(document.activeElement, '이름 입력에 초점이 서지 않았다').toBe(입력);
+    await user.keyboard('{Escape}');
 
     // 잘못 연 사용자가 빠져나갈 길이 없으면 아무 이름이나 넣게 된다.
     expect(screen.queryByRole('textbox', { name: /새 이름/ })).toBeNull();
@@ -712,7 +721,7 @@ describe('FR-SHELL-015 — 이름 변경이 화면에서 서버까지 닿는다'
       within(await screen.findByRole('menu')).getByRole('menuitem', { name: '이름 변경' }),
     );
     await user.clear(await screen.findByRole('textbox', { name: /새 이름/ }));
-    await user.click(screen.getByRole('button', { name: '이름 바꾸기' }));
+    await user.keyboard('{Enter}');
 
     // 이름 **규칙**은 서버가 소유한다. 화면이 막는 것은 입력이 아예 없는
     // 경우 하나뿐이고, 그것은 규칙 판정이 아니다.
@@ -998,7 +1007,12 @@ describe('FR-SHELL-016 — 트리에서 자리를 골라 만든다', () => {
     expect(입력.value).toBe('제목 없음.md');
     expect([입력.selectionStart,입력.selectionEnd]).toEqual([0, '제목 없음.md'.length]);
 
-    await user.click(screen.getByRole('button', { name: '만들기' }));
+    // **그 자리가 트리 안이어야 한다** (설계서 §2.2.4 · §7.2 — 「담을 자리
+    // 아래에 인라인 입력 행」). 모달로 띄우면 어디에 만들어지는지가 화면에서
+    // 사라지고, 사용자는 형제들의 이름을 보며 지을 수 없다.
+    expect(screen.getByRole('tree', { name: '문서 트리' }).contains(입력), '만들기 입력이 트리 밖에 섰다').toBe(true);
+
+    await user.keyboard('{Enter}');
 
     await waitFor(() =>
       expect(sent).toContainEqual({
@@ -1016,7 +1030,7 @@ describe('FR-SHELL-016 — 트리에서 자리를 골라 만든다', () => {
 
     await user.clear(await screen.findByRole('textbox', { name: '새 문서 이름' }));
     await user.type(screen.getByRole('textbox', { name: '새 문서 이름' }), '메모.md');
-    await user.click(screen.getByRole('button', { name: '만들기' }));
+    await user.keyboard('{Enter}');
 
     await waitFor(() =>
       expect(sent).toContainEqual({
@@ -1035,7 +1049,7 @@ describe('FR-SHELL-016 — 트리에서 자리를 골라 만든다', () => {
       'value',
       '새 디렉토리',
     );
-    await user.click(screen.getByRole('button', { name: '만들기' }));
+    await user.keyboard('{Enter}');
 
     await waitFor(() =>
       expect(sent).toContainEqual({
@@ -1049,7 +1063,9 @@ describe('FR-SHELL-016 — 트리에서 자리를 골라 만든다', () => {
   it('AC-3: 그만두면 아무것도 나가지 않는다', async () => {
     const user = await 만들기를고른다(/회의록/, '새 문서');
 
-    await user.click(await screen.findByRole('button', { name: '그만두기' }));
+    const 입력 = await screen.findByRole('textbox', { name: '새 문서 이름' });
+    expect(document.activeElement, '이름 입력에 초점이 서지 않았다').toBe(입력);
+    await user.keyboard('{Escape}');
 
     expect(screen.queryByRole('textbox', { name: '새 문서 이름' })).toBeNull();
     expect(sent.some((one) => one.path === '/api/nodes')).toBe(false);
@@ -1059,7 +1075,7 @@ describe('FR-SHELL-016 — 트리에서 자리를 골라 만든다', () => {
     const user = await 만들기를고른다(/회의록/, '새 문서');
 
     await user.clear(await screen.findByRole('textbox', { name: '새 문서 이름' }));
-    await user.click(screen.getByRole('button', { name: '만들기' }));
+    await user.keyboard('{Enter}');
 
     // 금지 문자와 길이 상한과 이름 충돌은 **서버가** 소유한다. 화면이 그것을
     // 다시 적으면 두 곳이 조용히 갈린다.
@@ -1095,7 +1111,7 @@ describe('FR-SHELL-016 — 트리에서 자리를 골라 만든다', () => {
     );
     const user = await 만들기를고른다(/회의록/, '새 문서');
 
-    await user.click(await screen.findByRole('button', { name: '만들기' }));
+    await user.keyboard('{Enter}');
 
     expect(await screen.findByRole('treeitem', { name: /메모\.md/ })).toBeTruthy();
   });
@@ -1110,7 +1126,7 @@ describe('FR-SHELL-016 — 트리에서 자리를 골라 만든다', () => {
     );
     const user = await 만들기를고른다(/회의록/, '새 문서');
 
-    await user.click(await screen.findByRole('button', { name: '만들기' }));
+    await user.keyboard('{Enter}');
 
     expect(await screen.findByRole('status', { name: '알림' })).toHaveProperty(
       'textContent',
