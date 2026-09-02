@@ -1,9 +1,13 @@
 import { chmod, cp, mkdir, mkdtemp, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { reconcile, startReconciliationLoop } from '../../../src/app/reconciliation/reconcile.js';
+import {
+  reconcile,
+  startReconciliationLoop,
+  type ReconciliationLoop,
+} from '../../../src/app/reconciliation/reconcile.js';
 import { createWorkspace } from '../../../src/app/workspace/create-workspace.js';
 import { QUARANTINE_DIRECTORY } from '../../../src/domain/workspace/quarantine.js';
 import type { ServerConfig } from '../../../src/config/config.js';
@@ -27,6 +31,7 @@ let files: FsWorkspaceFiles;
 let queue: SqliteFindingQueue;
 let stores: Parameters<typeof reconcile>[0];
 let ws: string;
+let loop: ReconciliationLoop | undefined;
 
 beforeEach(async () => {
   dir = await mkdtemp(join(tmpdir(), 'doculight-resilience-'));
@@ -51,6 +56,11 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
+  // 멈추지 않으면 다음 회차가 닫힌 DB 와 지워진 디렉토리를 건드린다. 시험
+  // 본문 끝의 `stop()` 은 단언이 던지면 도달하지 못하므로 여기가 정리의
+  // 책임을 진다 — `reconcile.test.ts` 가 같은 사유로 같은 형태다.
+  await loop?.stop();
+  loop = undefined;
   db.close();
   await chmod(docsRoot, 0o700).catch(() => undefined);
   await rm(dir, { recursive: true, force: true });
@@ -129,19 +139,27 @@ describe('REL-STORAGE-001 — 재조정은 되돌릴 수 있고 스스로를 망
 
   it('REL-STORAGE-001 AC-4 — 기동 시 전체 스캔은 한 번만 돈다.', async () => {
     const ran: number[] = [];
-    const loop = startReconciliationLoop(stores, {
-      intervalMs: 20,
+    // **간격을 200ms 로 둔다.** 이 시험은 창 둘을 **반대 방향으로** 걸므로
+    // 간격이 좁으면 앞의 창까지 좁아진다 — 20ms 였을 때 「아직 안 돌았다」에
+    // 남는 여유가 15ms 뿐이었다. 간격은 이 시험이 주입하는 값이고 운영
+    // 기본값은 바로 아래 시험이 `RECONCILE_INTERVAL_MS` 로 따로 재므로,
+    // 여기서 늘려도 재는 것은 바뀌지 않는다.
+    loop = startReconciliationLoop(stores, {
+      intervalMs: 200,
       runImmediately: false,
       onRun: () => ran.push(ran.length),
     });
 
-    await new Promise((resolve) => setTimeout(resolve, 5));
+    await new Promise((resolve) => setTimeout(resolve, 50));
     // 기동 회차는 호출자가 이미 돌렸다. 루프가 또 돌면 큰 볼트에서 기동
-    // 직후 스캔 비용이 두 배가 된다.
+    // 직후 스캔 비용이 두 배가 된다. 여유 150ms.
     expect(ran).toEqual([]);
 
-    await new Promise((resolve) => setTimeout(resolve, 60));
-    expect(ran.length).toBeGreaterThanOrEqual(1);
+    // **기다리는 창을 넓힌다 — 요구는 그대로 「적어도 한 회차는 돈다」이다.**
+    // 고정 60ms 로 한 번만 보면 부하 아래에서 타이머 콜백이 그 사이에 한
+    // 번도 실행되지 못해 죽는다(실측). 간격의 25배이자 절대 여유 4.8초를
+    // 두고, 돌자마자 통과하므로 통상 회차의 소요는 늘지 않는다.
+    await vi.waitFor(() => expect(ran.length).toBeGreaterThanOrEqual(1), { timeout: 5_000 });
     await loop.stop();
   });
 
