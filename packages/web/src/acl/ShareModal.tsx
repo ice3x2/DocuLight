@@ -6,6 +6,7 @@ import { GrantToast } from '../confirm/GrantToast.js';
 import { RevokeConfirm } from '../confirm/RevokeConfirm.js';
 
 import { PrincipalPicker } from '../principal/PrincipalPicker.js';
+import { ACL레벨이름 } from './level-name.js';
 import {
   BROKEN_INHERITANCE_NOTICE,
   inheritanceNotice,
@@ -258,7 +259,7 @@ function ShareEntry({ row, onRevoke }: { row: ShareRow; onRevoke?: () => void })
   return (
     <li data-inherited={row.inherited ? 'true' : 'false'}>
       <span>{row.principalName}</span>
-      <span>{row.level === 'edit' ? '편집' : row.level === 'admin' ? '관리' : '보기'}</span>
+      <span>{ACL레벨이름(row.level)}</span>
       {row.entryId === null ? (
         // 출처가 있어야 관리자가 어디를 고쳐야 하는지 안다 (AC-2).
         <span data-testid="share-source">{row.source} 에서 상속</span>

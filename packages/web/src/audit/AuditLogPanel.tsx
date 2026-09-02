@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { ACL레벨이름 } from '../acl/level-name.js';
 import type { AuditGroupBody, AuditViewBody, ReconciliationQueueBody } from '../api/client.js';
 
 /**
@@ -148,6 +149,22 @@ function AuditGroupRow({ group }: { group: AuditGroupBody }) {
                   세는 자리는 두지 않는다 (`SEC-AUDIT-009` AC-3~AC-5). */}
               {row.targetRole === undefined ? null : (
                 <span data-testid="audit-role">{row.targetRole === 'origin' ? '원본' : '사본'}</span>
+              )}
+              {/* 주체와 레벨을 **보인다** (`IR-AUDIT-004`). 서버가 두 값을
+                  실어 보내는데 여기가 그리지 않아, 목록이 「누가 언제 어느
+                  노드에」까지만 답하고 「누구에게 무엇을」을 답하지 못했다 —
+                  원장 `G15` 종결 판정이 Phase 1 잔여로 지목한 자리다.
+
+                  주체는 서버가 이미 이름으로 풀어서 준다 (AC-3) — 여기서
+                  풀려면 낱행마다 명부를 두드려야 하고, 그 창구가 곧 스코프
+                  없는 명부 경로가 된다.
+
+                  빈 칸은 자리표로 채우지 않는다 (AC-6) — 없는 사실을 그리게
+                  된다. 보이는 것과 축이 되는 것은 다르다: 거르거나 정렬하거나
+                  세는 자리는 두지 않는다 (AC-8 · AC-9). */}
+              {row.subject === undefined ? null : <span data-testid="audit-subject">{row.subject}</span>}
+              {row.level === undefined ? null : (
+                <span data-testid="audit-level">{ACL레벨이름(row.level)}</span>
               )}
               {row.beforeValue === undefined ? null : (
                 <span>

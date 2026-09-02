@@ -1,28 +1,28 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-09-02T06:42:52.234Z",
+  "generatedAt": "2026-09-02T07:31:40.260Z",
   "source": "speckiwi",
   "specFingerprint": {
     "algorithm": "sha256",
-    "value": "0dfab9a68f40c89b0e904c6bbf546566cf18fc74c04a6c6bab4ae062f299219c",
+    "value": "1851a6416a8a6fbfd9d0afab61894f18f396c162f2a28c9593160ffa5436492e",
     "files": [
       {
         "path": "docs/spec/00.index.md",
-        "sha256": "1fca64052bc28595c3310be29035f3b0f8da8c6d45a5fff794617d6179f1d450",
+        "sha256": "83984775c4f3fe1e05fef4fddb75eac01b39454c4ffd973fcaa72ba377122a72",
         "size": 7698,
-        "mtimeMs": 1788331372162.6035
+        "mtimeMs": 1788333752605.2131
       },
       {
         "path": "docs/spec/02.product-architecture.srs.md",
-        "sha256": "78c50e432cbbfeb973f1f8d660d69264f7567e00b730a28abcdc821fd4bf4958",
-        "size": 92354,
-        "mtimeMs": 1788329215259.8179
+        "sha256": "bfc9123d03d8752629d70846e6da46ca75e385edf578678a875daf995d8afdae",
+        "size": 93050,
+        "mtimeMs": 1788332372912.0347
       },
       {
         "path": "docs/spec/07.editor.srs.md",
-        "sha256": "a05808cc624d2a6de021d0a88fe27e8acf89e6c214c5304e3990324174b05c68",
-        "size": 97565,
-        "mtimeMs": 1788329175892.842
+        "sha256": "28670405031a83f0e590853b2c1e4d6bafbe2f52b123084716f2becdc54825cc",
+        "size": 98627,
+        "mtimeMs": 1788332316438.2097
       },
       {
         "path": "docs/spec/08.app-shell.srs.md",
@@ -32,27 +32,27 @@
       },
       {
         "path": "docs/spec/09.auth.srs.md",
-        "sha256": "d821e1e9c1049c08bb5d76f2129f23b72d3ad25560a824e6b8e2d3411e0cf5a1",
-        "size": 142605,
-        "mtimeMs": 1788328989420.1277
+        "sha256": "1cc94c64e93a3f3eadb68bed908ae391160c29ca5b0c6cfd563b1eff173475ba",
+        "size": 144800,
+        "mtimeMs": 1788334300195.0303
       },
       {
         "path": "docs/spec/10.access-control.srs.md",
-        "sha256": "8c1e13c7121e3e03fbeabd4a0eb674c6c857443bd5a31883fd5ec0b6f69d4956",
-        "size": 156046,
-        "mtimeMs": 1788329294058.8625
+        "sha256": "0beda4f194b56c0db0428465cb757740a53e0440bae8ee7754be2175cc53bf1e",
+        "size": 157056,
+        "mtimeMs": 1788332285875.1257
       },
       {
         "path": "docs/spec/11.confirmation-grades.srs.md",
-        "sha256": "a8e0af0bbd33bda0f68344e87caedd75c356261b2098018a3d38b7bc6098a8cf",
-        "size": 142652,
-        "mtimeMs": 1788329381438.545
+        "sha256": "812d261fe7587a165644c31fdb3359df09b79e1a7df186c2fefa81433d1f5b15",
+        "size": 143372,
+        "mtimeMs": 1788332305261.6624
       },
       {
         "path": "docs/spec/12.audit-log.srs.md",
-        "sha256": "9bc754ccb8b0029c092b38f0d3bfc3fc1147eafa2ec8a2fce7911de08a67a9d6",
-        "size": 180147,
-        "mtimeMs": 1788330583727.8706
+        "sha256": "8707ceb3200ae72c37b88df70382b44e0adb0f0f0e128ec807bc5b83dd859dc9",
+        "size": 193086,
+        "mtimeMs": 1788333752492.0896
       },
       {
         "path": "docs/spec/13.workspace.srs.md",
@@ -62,21 +62,21 @@
       },
       {
         "path": "docs/spec/14.storage.srs.md",
-        "sha256": "fd59106cd77fcfad8995f15f7ba40573b7346ebbba8589215ce2cfbe54b81993",
-        "size": 134344,
-        "mtimeMs": 1788329124014.5112
+        "sha256": "df74f2bfb7cdebac561a1c7ff452c4a502077c18dee8fb125d1976ab215f085a",
+        "size": 135127,
+        "mtimeMs": 1788332346753.1348
       },
       {
         "path": "docs/spec/15.attachments.srs.md",
-        "sha256": "9dfae43bb0235054e8ff0c4ec7f6d0b861dbeedf6d1ac052fdb6e4a6e07baf9d",
-        "size": 70734,
-        "mtimeMs": 1788331372091.6438
+        "sha256": "d31f0506f14f82032fd760d6e0f6c2365995a056e3dc12023a34c6f461516d05",
+        "size": 71830,
+        "mtimeMs": 1788332385351.0105
       },
       {
         "path": "docs/spec/16.principal.srs.md",
-        "sha256": "09213a742fdb0b126e4bcad830e6fe288574ad97fb03a638d2dbf4dcac2bcbd4",
-        "size": 103482,
-        "mtimeMs": 1788329361987.8074
+        "sha256": "e353fc6de6e3e1532ca59d787d52d065eba15c878e035cbb4c6dc57212134707",
+        "size": 104691,
+        "mtimeMs": 1788332435031.3306
       },
       {
         "path": "docs/spec/90.appendix.md",
@@ -132,7 +132,7 @@
       "AUTH": 2,
       "ACL": 3,
       "CONFIRM": 1,
-      "AUDIT": 3,
+      "AUDIT": 4,
       "STORAGE": 1
     },
     "data": {
