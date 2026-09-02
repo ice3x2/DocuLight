@@ -149,6 +149,20 @@ flowchart TB
 
 `.wt/code` (브랜치 `orch/code`) 를 세웠다. `G37` 판정과 `G15` 판정이 코드를 요구할 때 쓴다. 두 판정이 모두 「불필요」로 나오면 쓰지 않고 정리한다.
 
+### 8.4 `FR-PRINCIPAL-001` 중복 정의 의심은 실측으로 풀렸다 (2026-09-02)
+
+`FR-PRINCIPAL-001` 이 두 파일에서 잡혀 중복 정의가 의심됐으나 **중복이 아니다.**
+
+- 요구를 세우는 헤딩(`### FR-PRINCIPAL-001`)은 `docs/spec/16.principal.srs.md:232` **하나뿐**이다.
+- `docs/spec/09.auth.srs.md:1059` 는 `SEC-AUTH-010` 의 `Verification Evidence` 표에서 VE-3 의 비고 칸이 *"FR-PRINCIPAL-001 이 그 화면을 세우면 이 시험이 먼저 깨진다"* 로 **언급만 한 자리**이며 요구를 정의하지 않는다.
+- `mcp__speckiwi__validate_spec` 이 중복 Requirement ID 진단(`SRS-E002`)을 **0건**으로 낸다. 같은 실행의 유일한 진단은 알려진 예외인 `SRS-W072` 경고 1건이다.
+
+**적어 두는 이유** — `grep FR-PRINCIPAL-001 docs/spec/*.srs.md` 는 앞으로도 두 파일을 계속 낸다. 그 결과만 보면 같은 의심이 다시 서므로, 정의와 언급을 가르는 질의를 함께 남긴다. 이 질의는 위의 한 줄만 낸다.
+
+```
+grep -n "^### FR-PRINCIPAL-001" docs/spec/*.srs.md
+```
+
 ## 9. 진행 기록
 
 실행 중 갱신한다. 각 행은 그 이슈가 **닫힌** 시점에 선다.
