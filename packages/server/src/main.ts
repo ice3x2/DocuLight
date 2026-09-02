@@ -200,7 +200,14 @@ type RuntimeStores = { personalSettings: SqlitePersonalSettingStore } & Attachme
     auditRetention: SqliteAuditRetention;
     findingRetention: SqliteFindingRetention;
     /**
-     * 콘솔에 한 줄 낸다 (`SEC-AUTH-012` AC-1).
+     * 운영자 콘솔에 한 줄 낸다.
+     *
+     * 이 칸이 생긴 이유는 설치 토큰의 출력이지만(`SEC-AUTH-012` AC-1)
+     * 용도가 그것 하나는 아니다 — 설치 화면 주소 안내와 보존 일소의 실패
+     * (`REL-AUDIT-003`)도 같은 자리로 나간다. **사람의 조작이 아니어서
+     * 결과를 볼 화면이 없는 일**이 그 사실을 남길 자리가 이 저장소에는
+     * 여기뿐이다. 설치 전용으로 읽고 다른 용도를 다른 축으로 새로 세우면,
+     * 운영자가 봐야 할 줄이 두 군데로 갈린다.
      *
      * `docsRoot`·`clock` 과 같은 자리에 둔다 — 저장소가 아니라 **실행
      * 환경**을 나르는 값들이고, 여기 두어야 라우터가 사본이 아닌 원본을
@@ -307,10 +314,17 @@ export async function bootstrap(
   // 한 자리에서 돈다 — 나누면 타이머가 둘이 되고 한쪽 배선이 빠져도
   // 드러나지 않는다. 보존 기간을 설정할 수는 있는데 그 기간이 지나도 아무
   // 일도 일어나지 않던 것이 이 줄이 없던 상태다.
-  const retention = startRetentionLoop({
-    sweepAudit: () => sweepExpiredAudit(stores),
-    sweepTrash: () => sweepExpiredTrash(stores),
-  });
+  const retention = startRetentionLoop(
+    {
+      sweepAudit: () => sweepExpiredAudit(stores),
+      sweepTrash: () => sweepExpiredTrash(stores),
+    },
+    // 일소가 실패하면 **여기 말고는 드러날 자리가 없다.** 사람의 조작이
+    // 아니라 결과를 볼 화면이 없고, 감사 기록으로 남기면 그 행이 다시 만료
+    // 대상이 되어 자기를 참조한다. 그래서 설치 토큰과 **같은 출력처**로
+    // 낸다 — 운영자가 이미 읽고 있는 자리다.
+    { announce: stores.announce },
+  );
 
   return {
     reconciliation,
