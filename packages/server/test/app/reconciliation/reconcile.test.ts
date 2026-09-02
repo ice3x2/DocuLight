@@ -167,11 +167,18 @@ describe('REL-STORAGE-001 · DR-STORAGE-001 — 재조정이 정지 중의 변�
     const ran: number[] = [];
     loop = startReconciliationLoop(stores, { intervalMs: 20, onRun: () => ran.push(ran.length) });
 
+    // **기다리는 창을 명시해 넓힌다 — 요구 회차는 그대로 1 과 3 이다.**
+    // 한 회차가 실제 파일 I/O 를 하므로 부하 아래에서 회차 하나가 수백 ms 로
+    // 늘고, 그러면 `vi.waitFor` 의 기본 1초 안에 세 회차가 들어오지 못해
+    // 죽는다(실측: `expected 2 to be greater than or equal to 3`). 넓히는
+    // 것은 창이지 기준이 아니며, 회차가 차는 즉시 통과하므로 통상 회차의
+    // 소요는 늘지 않는다. 둘을 합쳐도 이 파일의 `testTimeout` 20초 안이다.
+
     // 기동 시 1회.
-    await vi.waitFor(() => expect(ran.length).toBeGreaterThanOrEqual(1));
+    await vi.waitFor(() => expect(ran.length).toBeGreaterThanOrEqual(1), { timeout: 5_000 });
 
     // 그 뒤 주기 반복.
-    await vi.waitFor(() => expect(ran.length).toBeGreaterThanOrEqual(3));
+    await vi.waitFor(() => expect(ran.length).toBeGreaterThanOrEqual(3), { timeout: 10_000 });
 
     await loop.stop();
     const afterStop = ran.length;

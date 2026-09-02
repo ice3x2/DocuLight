@@ -1,18 +1,26 @@
 import { describe, expect, it } from 'vitest';
 
 import { loadConfig } from '../src/config/config.js';
+// **파일 상단에서 정적으로 들인다.** 시험 본문 안에서 동적으로 들이면 서버
+// 조립 전체(SQLite 저장소·파일시스템 어댑터·HTTP 라우트·감시자·재조정 루프)를
+// 변환하고 로드하는 비용이 그 시험 하나의 `testTimeout` 에 잡힌다 — 실측에서
+// 무부하 14.8초, 부하 아래에서 20초를 넘겨 간헐 실패의 최다 원인이었다.
+// 정적으로 들이면 그 비용이 vitest 의 **파일 로드 단계**로 계산되어 시험
+// 타임아웃과 무관해진다. `src/main.js` 를 들이는 다른 여덟 시험 파일이 이미
+// 그 형태이고 같은 사유로 죽지 않는다.
+import { createApp } from '../src/main.js';
 
 // 진입점이 「프로세스를 띄우는 일」과 「앱을 만드는 일」을 분리해 두어야
 // 라우트를 서버 없이 시험할 수 있다. 이 분리를 나중에 하려면 진입점을
 // 쓰는 자리를 전부 고쳐야 한다.
 describe('server entry point', () => {
-  it('exports createApp without starting a listener', async () => {
-    const mod = await import('../src/main.js');
-    expect(typeof mod.createApp).toBe('function');
+  it('exports createApp without starting a listener', () => {
+    // 들이는 것만으로 리스너가 열리면 이 파일이 로드되는 자리에서 드러난다 —
+    // `src/main.ts` 하단의 `process.argv[1]` 가드가 그 성질을 세운다.
+    expect(typeof createApp).toBe('function');
   });
 
-  it('createApp returns an express request handler', async () => {
-    const { createApp } = await import('../src/main.js');
+  it('createApp returns an express request handler', () => {
     const app = createApp();
     expect(typeof app).toBe('function');
   });
