@@ -9,6 +9,9 @@ import {
   saveBody,
   uploadAttachment,
   fetchTrash,
+  fetchTokens,
+  issueToken,
+  revokeToken,
 } from '../src/api/client.js';
 
 const respond = (status: number, body?: unknown) =>
@@ -138,5 +141,40 @@ describe('거절의 형태', () => {
     );
 
     await expect(loadDocument('n1')).rejects.toMatchObject({ status: 500 });
+  });
+});
+
+describe('액세스 토큰 (SEC-AUTH-006 · SEC-AUTH-007)', () => {
+  it('목록은 대상을 싣지 않는다 — 대상은 언제나 세션의 주인이다', async () => {
+    const spy = stub(() => respond(200, []));
+
+    await fetchTokens();
+
+    expect(String(spy.mock.calls[0]![0])).toBe('/api/auth/tokens');
+    expect(spy.mock.calls[0]![1]?.method ?? 'GET').toBe('GET');
+  });
+
+  it('발급 요청에 owner 를 싣지 않는다 — 실으면 self-only 판정이 클라이언트 입력에 걸린다', async () => {
+    const spy = stub(() => respond(201, { id: 't1', token: 'dl_pat_x' }));
+
+    const issued = await issueToken({ name: 'CI', scope: 'read-only', expiresInDays: 90 });
+
+    expect(issued).toEqual({ id: 't1', token: 'dl_pat_x' });
+    const [, init] = spy.mock.calls[0]!;
+    expect(init?.method).toBe('POST');
+    expect(JSON.parse(String(init?.body))).toEqual({
+      name: 'CI',
+      scope: 'read-only',
+      expiresInDays: 90,
+    });
+  });
+
+  it('폐기는 DELETE 이며 id 를 경로에 싣는다', async () => {
+    const spy = stub(() => respond(204));
+
+    await revokeToken('t1');
+
+    expect(String(spy.mock.calls[0]![0])).toBe('/api/auth/tokens/t1');
+    expect(spy.mock.calls[0]![1]?.method).toBe('DELETE');
   });
 });

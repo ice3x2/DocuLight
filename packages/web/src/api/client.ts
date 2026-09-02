@@ -121,6 +121,47 @@ export const changePassword = (input: { current: string; next: string }) =>
   });
 
 /**
+ * 자기 PAT 목록 (`SEC-AUTH-007` AC-1 · `SEC-AUTH-006` AC-2).
+ *
+ * **대상을 싣지 않는다.** 서버가 세션의 주인 것만 돌려주며, 이쪽이 대상을
+ * 보내면 그 값이 곧 「본인만」 판정의 입력이 된다.
+ *
+ * **평문이 오지 않는다** — 돌아오는 레코드에 그 칸이 없다.
+ */
+export const fetchTokens = () => call<TokenRow[]>('/auth/tokens');
+
+/** 목록 한 행. 서버의 `TokenRecord` 에서 화면이 쓰는 칸만 온다. */
+export interface TokenRow {
+  id: string;
+  name: string;
+  scope: 'read-only' | 'read-write';
+  expiresAt: string;
+  lastUsedAt: string | null;
+  revokedAt: string | null;
+}
+
+/**
+ * PAT 를 발급한다 (`SEC-AUTH-007` AC-1).
+ *
+ * **평문이 실려 오는 유일한 왕복이다** (`SEC-AUTH-006` AC-2). 받은 값을
+ * 저장하거나 다른 상태로 흘리지 않는다 — 보여 준 뒤 버린다.
+ */
+export const issueToken = (input: {
+  name: string;
+  scope: 'read-only' | 'read-write';
+  expiresInDays: number;
+}) =>
+  call<{ id: string; token: string }>('/auth/tokens', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+
+/** PAT 를 폐기한다 (`SEC-AUTH-007` AC-2). 비가역이다 — 화면이 L2 확인을 받는다. */
+export const revokeToken = (id: string) =>
+  call<void>(`/auth/tokens/${encodeURIComponent(id)}`, { method: 'DELETE' });
+
+/**
  * 설치 토큰을 검증하고 **설치 세션**을 받는다 (`SEC-AUTH-015` AC-1).
  *
  * 돌려주는 값을 화면이 그대로 커밋 요청에 싣는다 — 화면이 지어내면

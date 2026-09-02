@@ -17,6 +17,8 @@ import {
   requestSignup,
   removeGroup,
   savePersonalSetting,
+  issueToken,
+  revokeToken,
   createNode,
   loadDocument,
   uploadAttachment,
@@ -54,6 +56,7 @@ import {
   useSignupMode,
   useGroupRoster,
   usePersonalSettings,
+  useTokens,
   useRevocation,
   useSimulation,
   useUserRoster,
@@ -203,6 +206,10 @@ function AppBody() {
   const trash = useTrash(trashLens, signedIn);
   const favorites = useFavorites(signedIn);
   const personal = usePersonalSettings(signedIn);
+  // PAT 목록은 설정 모달의 한 탭에서만 쓰이지만 다른 개인 설정과 같은
+  // 조건으로 받는다 — 탭을 열 때 받게 하면 그 자리에 로딩이 서고,
+  // 목록이 비어 있는 것과 아직 안 온 것이 화면에서 같아 보인다.
+  const tokens = useTokens(signedIn);
   // 슈퍼유저가 아니면 서버가 404 로 답한다 — 화면이 다시 판정하지 않는다.
   const users = useUserRoster(signedIn && session.data?.superuser === true);
   // 가입 승인 화면이 빈 대기열의 **원인**을 말하려면 모드를 알아야 한다.
@@ -705,6 +712,35 @@ function AppBody() {
   );
 
   /**
+   * PAT 를 발급한다 (`SEC-AUTH-007` AC-1 · `SEC-AUTH-006` AC-2).
+   *
+   * **평문을 여기 두지 않는다.** 화면에 그대로 넘겨 주고 이 자리에는
+   * 아무것도 남기지 않는다 — 상태로 들면 그 값이 앱의 수명을 갖게 되고,
+   * 그때 「1회 노출」이 화면 문구로만 남는다.
+   *
+   * 거절되면 `undefined` 다. 그러면 노출 화면이 서지 않는다.
+   */
+  const 토큰을발급한다 = useCallback(
+    async (input: { name: string; scope: 'read-only' | 'read-write'; expiresInDays: number }) => {
+      const issued = await issueToken(input).catch(() => undefined);
+      if (issued === undefined) return undefined;
+
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tokens });
+      return { token: issued.token };
+    },
+    [queries],
+  );
+
+  /** PAT 를 폐기한다 (`SEC-AUTH-007` AC-2). 화면이 L2 확인을 이미 받았다. */
+  const 토큰을폐기한다 = useCallback(
+    async (id: string) => {
+      await revokeToken(id).catch(() => undefined);
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tokens });
+    },
+    [queries],
+  );
+
+  /**
    * 기존 파일에 새 버전을 올린다 (`FR-SHELL-008` AC-2).
    *
    * 올린 뒤 그 문서를 무효화한다 — 열려 있는 탭이 옛 본문을 들고 있으면
@@ -860,6 +896,9 @@ function AppBody() {
       onTrashRestore={restoreTrash}
       personalSettings={personal.data ?? {}}
       onPersonalSetting={pickPersonalSetting}
+      tokens={tokens.data ?? []}
+      onIssueToken={토큰을발급한다}
+      onRevokeToken={(id) => void 토큰을폐기한다(id)}
       userRoster={users.data ?? []}
       groupRoster={groups.data ?? []}
       onGroupRemove={dropGroup}

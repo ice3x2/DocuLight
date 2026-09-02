@@ -13,6 +13,7 @@ import {
   fetchPersonalSettings,
   fetchUserRoster,
   fetchSession,
+  fetchTokens,
   fetchTrash,
   fetchTree,
   loadDocument,
@@ -32,6 +33,7 @@ import {
   type RosterGroup,
   type RosterUser,
   type SessionBody,
+  type TokenRow,
   type WorkspaceListRow,
 } from './client.js';
 import type { TrashRowView } from '../trash/TrashPanel.js';
@@ -56,6 +58,7 @@ export const QUERY_KEYS = {
   trash: (scope: 'mine' | 'all', workspaceId?: string) => ['trash', scope, workspaceId] as const,
   links: (nodeId: string) => ['links', nodeId] as const,
   personalSettings: ['personal-settings'] as const,
+  tokens: ['tokens'] as const,
   userRoster: ['roster', 'users'] as const,
   groupRoster: ['roster', 'groups'] as const,
   document: (nodeId: string) => ['document', nodeId] as const,
@@ -86,6 +89,15 @@ export const usePersonalSettings = (
   enabled: boolean,
 ): UseQueryResult<Record<string, string>> =>
   useQuery({ queryKey: QUERY_KEYS.personalSettings, queryFn: fetchPersonalSettings, enabled });
+
+/**
+ * 이 사용자의 PAT 목록 (`SEC-AUTH-007` AC-1).
+ *
+ * 로그인 전에는 읽을 대상이 정해지지 않는다 — 대상은 세션의 주인이고,
+ * 그것을 정하는 것이 서버다.
+ */
+export const useTokens = (enabled: boolean): UseQueryResult<TokenRow[]> =>
+  useQuery({ queryKey: QUERY_KEYS.tokens, queryFn: fetchTokens, enabled });
 
 /** 슈퍼유저 전용 명부 (`R163`). 슈퍼유저가 아니면 서버가 404 로 답한다. */
 export const useUserRoster = (enabled: boolean): UseQueryResult<RosterUser[]> =>

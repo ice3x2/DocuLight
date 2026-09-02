@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import express, { type Express } from 'express';
@@ -144,6 +144,61 @@ describe('MCP 호출은 인증을 통과해야 실행된다 (`SEC-ARCH-001`)', (
         .send(rpc('tools/call', { name: 'search_documents', arguments: { query: '가' } }));
       expect([401, 404], `${path} 가 무인증으로 응답했다`).toContain(res.status);
     }
+  });
+});
+
+describe('MCP 표면은 자격을 재생산하지 않는다 (`SEC-AUTH-007` AC-1 · `IR-AUTH-002`)', () => {
+  /**
+   * **PAT 로 PAT 를 만들 수 있으면 무효화가 우회된다.**
+   *
+   * 비밀번호 변경이 그 계정의 PAT 를 전부 끊는데(원장 `G33` ①), 이 표면은
+   * PAT 하나만으로 열린다. 그래서 발급·폐기·조회 중 하나라도 여기에 붙으면
+   * 침입자가 끊기기 전에 새 자격을 심어 그 무효화를 지나간다.
+   *
+   * **`auth.ts` 쪽의 짝과 다른 축이다.** 그쪽(`token-routes.test.ts` 의
+   * 「PAT 로는 이 경로가 열리지 않는다」)은 **발급 라우트가 PAT 를 받지
+   * 않음**을 잰다. 여기서 재는 것은 반대쪽, **MCP 표면에 발급 능력이 새로
+   * 서지 않음**이다. 앞의 것이 서 있어도 뒤의 것은 막지 못한다 — 실제로 이
+   * 항이 서기 전에는 MCP 에 발급을 붙여도 죽는 항이 하나도 없었다.
+   *
+   * **도구 목록을 전량으로 못박지 않았다.** 그 방법도 이 되돌림을 잡기는
+   * 하지만, 도구를 하나 더할 때마다 목록을 고쳐야 하고 고치는 사람이 하는
+   * 일은 목록을 맞추는 것뿐이라 자격 재생산 여부를 판단하지 않는다. 대신
+   * **능력이 이 표면의 소스에 닿는지**를 잰다 — 도구가 몇이 되든 이 항은
+   * 그대로 서고, 발급을 붙이려면 반드시 이 셋 중 하나를 불러야 한다.
+   *
+   * 실행이 아니라 소스를 재는 이유는 표면의 모양이 둘이기 때문이다. 새 RPC
+   * 메서드로 붙이는 것과 정식 도구로 붙이는 것은 실행 경로가 다르지만, 둘 다
+   * 이 셋 중 하나를 부른다.
+   */
+  it('MCP 쪽 소스가 토큰 발급·폐기·조회를 부르지 않는다', async () => {
+    const mcpApp = join(process.cwd(), 'src', 'app', 'mcp');
+    const paths = [
+      join(process.cwd(), 'src', 'http', 'routes', 'mcp.ts'),
+      ...(await readdir(mcpApp)).filter((one) => one.endsWith('.ts')).map((one) => join(mcpApp, one)),
+    ];
+    // 파일을 하나도 찾지 못하면 이 항은 공허하다 — 경로가 바뀌었는데
+    // 통과하는 상태를 만들지 않는다.
+    expect(paths.length, 'MCP 소스를 하나도 찾지 못했다').toBeGreaterThan(1);
+
+    let 인증을부르는파일 = 0;
+    for (const path of paths) {
+      const source = await readFile(path, 'utf8');
+
+      for (const 금지 of ['issueToken', 'revokeToken', 'listTokens']) {
+        expect(
+          new RegExp(`\\b${금지}\\b`).test(source),
+          `${path} 가 ${금지} 을(를) 부른다 — PAT 가 PAT 를 낳으면 비밀번호 변경의 일괄 무효화가 우회된다`,
+        ).toBe(false);
+      }
+
+      if (/\bauthenticateToken\b/.test(source)) 인증을부르는파일 += 1;
+    }
+
+    // **금지만 재면 이 항이 공허해질 수 있다.** 토큰을 아예 모르는 소스를
+    // 훑고 있어도 통과하기 때문이다. 이 표면은 PAT 를 **검증**해야 서므로,
+    // 그 호출이 실제로 여기 있다는 것으로 훑는 자리가 맞음을 확인한다.
+    expect(인증을부르는파일, 'PAT 를 검증하는 자리가 없다 — 엉뚱한 곳을 훑고 있다').toBeGreaterThan(0);
   });
 });
 
