@@ -32,3 +32,7 @@ kiwi/.pipeline-path
 
 # 기계별 지시 — 커밋하지 않는다
 CLAUDE.local.md
+
+# 오케스트레이션 작업 영역 (레인 워크트리·기준선 캡처)
+.wt/
+.orch/
