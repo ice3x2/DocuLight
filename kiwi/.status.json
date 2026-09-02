@@ -1,10 +1,10 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-09-02T07:51:21.752Z",
+  "generatedAt": "2026-09-02T08:24:06.129Z",
   "source": "speckiwi",
   "specFingerprint": {
     "algorithm": "sha256",
-    "value": "82e2548c9a9ea649b8461d597c93063587ede6565d0e5ad46720e6cc23b8c853",
+    "value": "8be1d3433a225e0b1499960612e2f6300c893a5298c563fabe280693b4808616",
     "files": [
       {
         "path": "docs/spec/00.index.md",
@@ -14,15 +14,15 @@
       },
       {
         "path": "docs/spec/02.product-architecture.srs.md",
-        "sha256": "bfc9123d03d8752629d70846e6da46ca75e385edf578678a875daf995d8afdae",
-        "size": 93050,
-        "mtimeMs": 1788332372912.0347
+        "sha256": "c7135eb619dcbc5d805ae44f471feb7b828bce9949a97f2d7949cca7efe23ba7",
+        "size": 93198,
+        "mtimeMs": 1788337443535.99
       },
       {
         "path": "docs/spec/07.editor.srs.md",
-        "sha256": "28670405031a83f0e590853b2c1e4d6bafbe2f52b123084716f2becdc54825cc",
-        "size": 98627,
-        "mtimeMs": 1788332316438.2097
+        "sha256": "767989db9ae6bb9bd6ed0816faa4609d896d64109b50d0d25cc3c0bbc48fa822",
+        "size": 99301,
+        "mtimeMs": 1788336490965.8877
       },
       {
         "path": "docs/spec/08.app-shell.srs.md",
@@ -32,9 +32,9 @@
       },
       {
         "path": "docs/spec/09.auth.srs.md",
-        "sha256": "86bc5db59c1023b558bf896bcf879032b1aa1092f0e85c174c2ef01b9a74dbae",
-        "size": 145402,
-        "mtimeMs": 1788335474262.4585
+        "sha256": "c73cbbcfb883ac7349bc5179deb2364047f16c572db494f8b5200b9a61c6b562",
+        "size": 154293,
+        "mtimeMs": 1788337116802.6958
       },
       {
         "path": "docs/spec/10.access-control.srs.md",
@@ -62,15 +62,15 @@
       },
       {
         "path": "docs/spec/14.storage.srs.md",
-        "sha256": "df74f2bfb7cdebac561a1c7ff452c4a502077c18dee8fb125d1976ab215f085a",
-        "size": 135127,
-        "mtimeMs": 1788332346753.1348
+        "sha256": "5b54af89e5d3b2fcb9b8092b65b05af663a435bfc17e9a6dc3a45dd695730ec3",
+        "size": 135733,
+        "mtimeMs": 1788336502620.6265
       },
       {
         "path": "docs/spec/15.attachments.srs.md",
-        "sha256": "0dbfc8d879632838a1b18b34d1f5af651c3f195b15555efc62da3be78e2a5e11",
-        "size": 72119,
-        "mtimeMs": 1788335481618.0479
+        "sha256": "7eee05327039707d3aee230e0fab29d0002302bb3ab73562a3119aa258080d3c",
+        "size": 72804,
+        "mtimeMs": 1788336519894.0852
       },
       {
         "path": "docs/spec/16.principal.srs.md",
