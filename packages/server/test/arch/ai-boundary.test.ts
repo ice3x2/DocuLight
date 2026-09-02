@@ -14,15 +14,30 @@ import { describe, expect, it } from 'vitest';
 
 const SRC = join(process.cwd(), 'src');
 
-/** `src` 아래 모든 `.ts` 파일. */
+/**
+ * `src` 아래 모든 `.ts` 파일.
+ *
+ * **훑기를 겹쳐서 한다.** 처음 쓴 판은 디렉터리도 파일도 한 번에 하나씩
+ * 기다렸는데, 그러면 이 항의 비용이 자료의 양이 아니라 **파일시스템 왕복의
+ * 횟수 × 그 지연**이 된다 — 폴더 52 개와 파일 165 개를 합쳐 왕복 217 번이다.
+ * 전체 회귀가 함께 도는 부하 아래에서는 왕복 하나가 수십 밀리초로 늘어나므로,
+ * 700KB 를 읽는 데 실측 10.3 초가 걸렸다 (2026-09-02 · 열두 번의 인구조사에서
+ * 86ms 부터 10,308ms 까지 흔들렸고 상한은 20 초다). 겹쳐서 읽으면 같은
+ * 부하에서 3~7 배 빨라진다 — 자료가 적어서가 아니라 왕복을 겹치기 때문이다.
+ *
+ * 목록의 순서는 그대로다. `Promise.all` 이 자리를 지키므로 아래 항의
+ * `toEqual` 이 순서에 기대도 된다.
+ */
 async function sources(root: string = SRC): Promise<string[]> {
-  const found: string[] = [];
-  for (const entry of await readdir(root, { withFileTypes: true })) {
-    const at = join(root, entry.name);
-    if (entry.isDirectory()) found.push(...(await sources(at)));
-    else if (entry.name.endsWith('.ts')) found.push(at);
-  }
-  return found;
+  const entries = await readdir(root, { withFileTypes: true });
+  const parts = await Promise.all(
+    entries.map(async (entry) => {
+      const at = join(root, entry.name);
+      if (entry.isDirectory()) return sources(at);
+      return entry.name.endsWith('.ts') ? [at] : [];
+    }),
+  );
+  return parts.flat();
 }
 
 /**
@@ -54,12 +69,11 @@ describe('의미 검색은 MCP 표면에서만 호출된다 (`CON-SHELL-002`)', 
     const files = await sources();
     expect(files.length, '훑을 파일이 없어 이 항이 공허하다').toBeGreaterThan(10);
 
-    const callers: string[] = [];
-    for (const file of files) {
-      if (reachesSemanticSearch(await readFile(file, 'utf8'))) {
-        callers.push(file.slice(SRC.length + 1).replace(/\\/g, '/'));
-      }
-    }
+    // 훑기와 같은 이유로 읽기도 겹친다. 판정도 목록의 순서도 그대로다.
+    const bodies = await Promise.all(files.map((file) => readFile(file, 'utf8')));
+    const callers = files
+      .filter((_, at) => reachesSemanticSearch(bodies[at]!))
+      .map((file) => file.slice(SRC.length + 1).replace(/\\/g, '/'));
 
     expect(callers, '의미 검색을 부르는 자리가 MCP 실행부 하나가 아니다').toEqual([
       'app/mcp/dispatch.ts',

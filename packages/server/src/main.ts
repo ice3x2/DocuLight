@@ -159,7 +159,7 @@ export interface ServerRuntime {
    * 다른 회차에 잡혀 짝을 이룰 수 없다.
    */
   fileWatch: FileWatch;
-  /** 보존 기간 일소 (`R84-a` · `FR-STORAGE-006`). */
+  /** 보존 기간 일소 (`R84-a` · `FR-STORAGE-007`). */
   retention: RetentionLoop;
   /** 라우트가 쓰는 저장소 전부. */
   stores: RuntimeStores;
@@ -310,7 +310,7 @@ export async function bootstrap(
   // 재조정이 첫 회차를 마친 **뒤에** 건다. 앞서 걸면 그 회차가 등재하는
   // 파일들을 감시자가 「방금 나타났다」로 읽는다.
   const fileWatch = await startFileWatch(stores, config.docsRoot);
-  // 보존 기간 일소 (`R84-a` · `REL-AUDIT-003` · `FR-STORAGE-006`). 두 축을
+  // 보존 기간 일소 (`R84-a` · `REL-AUDIT-003` · `FR-STORAGE-007`). 두 축을
   // 한 자리에서 돈다 — 나누면 타이머가 둘이 되고 한쪽 배선이 빠져도
   // 드러나지 않는다. 보존 기간을 설정할 수는 있는데 그 기간이 지나도 아무
   // 일도 일어나지 않던 것이 이 줄이 없던 상태다.

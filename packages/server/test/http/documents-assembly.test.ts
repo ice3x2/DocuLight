@@ -97,7 +97,7 @@ const 볼트에둔다 = async (path: string, body: string) => {
 const 원문을받는다 = (path: string, headers: Record<string, string> = {}) =>
   fetch(`${origin}/api/documents/${workspaceId}/${path}`, { headers });
 
-describe('R84-a · FR-STORAGE-006 — 운영 조립에 보존 일소가 물려 있다', () => {
+describe('R84-a · FR-STORAGE-007 — 운영 조립에 보존 일소가 물려 있다', () => {
   it('런타임이 보존 루프를 갖고 close 가 그것을 멈춘다', async () => {
     // **함수의 존재가 아니라 조립의 존재를 잰다.** 일소 함수 둘은 오래
     // 있었고 그것을 도는 자리만 없었다 — 그 상태에서는 보존 기간을 설정할

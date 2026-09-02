@@ -1,5 +1,5 @@
 /**
- * 보존 기간 일소의 주기 작업 (`R84-a` · `REL-AUDIT-003` · `FR-STORAGE-006`).
+ * 보존 기간 일소의 주기 작업 (`R84-a` · `REL-AUDIT-003` · `FR-STORAGE-007`).
  *
  * 감사 일소와 휴지통 일소를 **한 자리에서** 돈다. 같은 성질의 조작이고
  * (사람의 조작이 아니라 권한 판정도 감사 기록도 없다) 같은 주기로 충분하다 —
@@ -12,7 +12,7 @@
 export interface RetentionSweeps {
   /** 보존 기간이 지난 감사 행을 소멸시킨다 (`REL-AUDIT-003`). */
   sweepAudit: () => { purged: number };
-  /** 보존 기간이 지난 휴지통 항목을 영구 삭제한다 (`FR-STORAGE-006`). */
+  /** 보존 기간이 지난 휴지통 항목을 영구 삭제한다 (`FR-STORAGE-007`). */
   sweepTrash: () => Promise<{ purged: number }>;
 }
 
