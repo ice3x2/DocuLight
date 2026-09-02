@@ -171,6 +171,24 @@ describe('수용 기준 14 — 로그아웃 (R145) · 비밀번호 변경 (R144)
     await waitFor(() => expect(screen.getByLabelText('비밀번호')).toBeDefined());
   });
 
+  /**
+   * 원장 `G33` ① — 비밀번호 변경은 그 계정의 세션과 PAT 를 함께 끊는다.
+   *
+   * 그 파급을 **누르기 전에** 알려야 한다. 누른 뒤에 알면 사용자는 MCP
+   * 자동화가 죽고 나서야 그 사실을 알게 되고, 그때는 되돌릴 수 없다.
+   */
+  it('폼이 사후 파급을 미리 알린다 — 모든 세션과 모든 액세스 토큰이 끊긴다', async () => {
+    const user = await 로그인한채로연다();
+
+    await user.click(screen.getByRole('button', { name: '비밀번호 변경' }));
+    const 폼 = (await screen.findByLabelText('현재 비밀번호')).closest('form');
+
+    expect(폼?.textContent, '세션이 끊긴다는 사실이 화면에 없다').toContain('모든 세션');
+    expect(폼?.textContent, '액세스 토큰이 끊긴다는 사실이 화면에 없다').toContain(
+      '액세스 토큰',
+    );
+  });
+
   it('현재 비밀번호가 틀리면 그 사유를 보이고 화면에 머문다', async () => {
     routes.set('/api/auth/password', () => json({ rule: 'wrong-password' }, 400));
     const user = await 로그인한채로연다();
