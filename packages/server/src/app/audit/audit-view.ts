@@ -180,7 +180,7 @@ function grouped(views: readonly AuditRowView[], rows: readonly AuditRow[]): Aud
   const groups = new Map<string, AuditRowView[]>();
   for (const [index, view] of views.entries()) {
     const row = rows[index]!;
-    const key = `${row.correlationId ?? row.id} ${row.operation}`;
+    const key = `${row.correlationId ?? row.id}\u0000${row.operation}`;
     groups.set(key, [...(groups.get(key) ?? []), view]);
   }
 
