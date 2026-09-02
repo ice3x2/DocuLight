@@ -152,6 +152,20 @@ it('AC-5: X-API-Key 로 온 거부 응답이 PAT 재발급 안내를 싣는다',
   expect(guidance).toContain('유예');
 });
 
+it('AC-5: 안내가 발급할 곳을 가리킨다 — 「발급받으십시오」만으로는 수행 불가능한 지시다', async () => {
+  const res = await request(app)
+    .post('/api/mcp')
+    .set('X-API-Key', LEGACY_KEY)
+    .send(rpc('tools/list'));
+
+  // 그 화면이 서기 전에는 가리키지 **않는** 것이 옳았다 — 없는 화면을
+  // 가리키는 안내는 안내가 아니라 오도다. `SEC-AUTH-007` AC-1 의 발급
+  // 경로가 서면서 그 조건이 풀렸고, 그때부터는 가리키지 않는 쪽이 결함이다.
+  const guidance = JSON.stringify(res.body);
+  expect(guidance, '갈아탈 곳의 이름이 안내에 없다').toContain('액세스 토큰');
+  expect(guidance, '어디서 여는지가 안내에 없다').toContain('설정');
+});
+
 it('AC-5: 안내는 1.0 클라이언트에게만 간다 — PAT 로 인증된 요청에는 실리지 않는다', async () => {
   const res = await request(app)
     .post('/api/mcp')

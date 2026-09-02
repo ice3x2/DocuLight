@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, type Request } from 'express';
 import rateLimit from 'express-rate-limit';
 
 import { rateKeyOf, LOGIN_ATTEMPTS_PER_WINDOW, RATE_WINDOW_MS } from '../rate-key.js';
@@ -10,10 +10,38 @@ import {
   type AuthStores,
 } from '../../app/auth/login-service.js';
 import { changePassword } from '../../app/auth/password-service.js';
-import type { TokenStores } from '../../app/auth/token-service.js';
+import {
+  issueToken,
+  listTokens,
+  revokeToken,
+  type TokenRule,
+  type TokenStores,
+} from '../../app/auth/token-service.js';
+import {
+  DEFAULT_TOKEN_EXPIRY_DAYS,
+  isTokenExpiryChoice,
+} from '../../domain/auth/token-expiry.js';
+import type { PrincipalId } from '../../domain/principal/principal.js';
 
 /** 세션 쿠키의 이름. 두 곳에 적으면 한쪽 오타가 조용히 로그아웃을 무력화한다. */
 export const SESSION_COOKIE = 'doculight_session';
+
+/**
+ * 토큰 서비스의 거절 사유를 HTTP 상태로 옮긴다.
+ *
+ * **옮기기만 한다.** 라우트가 규칙을 다시 세우면 같은 책임을 두 곳이 나눠
+ * 갖고, 그때 한쪽만 고쳐진다 (`IR-AUTH-002` VE-1 이 MCP 쪽에 못박아 둔 것과
+ * 같은 규범이다).
+ *
+ * `account-not-active` 가 403 인 것은 이 표면에서 도달할 수 없는 값이라
+ * 형식을 갖추기 위한 것이다 — 세션 관문이 먼저 계정 상태를 보므로, 정지된
+ * 계정은 여기까지 오기 전에 401 로 걸린다.
+ */
+const STATUS_OF: Readonly<Record<TokenRule, number>> = {
+  'self-only': 403,
+  'unknown-token': 404,
+  'account-not-active': 403,
+};
 
 /**
  * 인증 라우트.
@@ -118,6 +146,110 @@ export function authRouter(stores: AuthStores & TokenStores): Router {
     // 이 요청을 보낸 세션도 함께 끊겼다. 쿠키를 남겨 두면 브라우저가 죽은
     // 토큰을 계속 보내고, 사용자는 로그인 화면과 앱 화면 사이를 오간다.
     res.clearCookie(SESSION_COOKIE, { path: '/' }).sendStatus(204);
+  });
+
+  /**
+   * 이 요청을 보낸 사람. **세션 쿠키만 본다.**
+   *
+   * `Authorization: Bearer <PAT>` 를 여기서 읽지 않는 것이 아래 세 경로의
+   * 성질을 정한다 — PAT 로 PAT 를 발급할 수 있으면 자격이 스스로를
+   * 재생산해, 비밀번호 변경이 그 계정의 PAT 를 전부 무효화하는 것(원장
+   * `G33` ①)을 침입자가 새 토큰으로 지나간다.
+   */
+  const 주체 = (req: Request): PrincipalId | undefined => {
+    const token = sessionTokenOf(req.headers.cookie);
+    return token === undefined ? undefined : authenticateSession(stores, token)?.userId;
+  };
+
+  /**
+   * 자기 PAT 목록 (`SEC-AUTH-007` AC-1 의 앞자리 · `04` §2.3).
+   *
+   * **평문이 없다.** `TokenRecord` 에 그 칸이 없어서이며, 여기서 골라
+   * 담지 않는 이유도 그것이다 — 고르기 시작하면 새 칸이 생겼을 때
+   * 무엇을 빼야 하는지가 이 자리의 판단이 된다.
+   */
+  router.get('/auth/tokens', (req, res) => {
+    const me = 주체(req);
+    if (me === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const outcome = listTokens(stores, me, me);
+    if (!outcome.ok) {
+      res.sendStatus(STATUS_OF[outcome.rule]);
+      return;
+    }
+    res.status(200).json(outcome.tokens);
+  });
+
+  /**
+   * PAT 를 발급한다 (`SEC-AUTH-007` AC-1 · `SEC-AUTH-006` AC-2).
+   *
+   * **`owner` 를 본문으로 받지 않는다.** 대상은 언제나 지금 로그인한
+   * 사람이며, 그것이 「본인만」(AC-3)을 라우트 수준에서 성립시키는 방법이다
+   * — 받으면 서비스의 `self-only` 판정 하나에 전부를 걸게 되고, 그 판정의
+   * 입력이 클라이언트가 정하는 값이 된다. `POST /auth/password` 가 대상을
+   * 받지 않기로 한 것(`SEC-AUTH-018`)과 같은 이유다.
+   */
+  router.post('/auth/tokens', (req, res) => {
+    const me = 주체(req);
+    if (me === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const { name, scope, expiresInDays } = req.body as {
+      name?: unknown;
+      scope?: unknown;
+      expiresInDays?: unknown;
+    };
+    if (typeof name !== 'string' || name.trim() === '') {
+      res.sendStatus(400);
+      return;
+    }
+    if (scope !== 'read-only' && scope !== 'read-write') {
+      res.sendStatus(400);
+      return;
+    }
+    // 안 보내면 기본값이다. 보냈으면 **고를 수 있는 값이어야** 한다 —
+    // 자유 정수를 받으면 사실상 만료되지 않는 토큰이 만들어져
+    // `SEC-AUTH-006` AC-4 가 무의미해진다.
+    const days = expiresInDays === undefined ? DEFAULT_TOKEN_EXPIRY_DAYS : expiresInDays;
+    if (!isTokenExpiryChoice(days)) {
+      res.sendStatus(400);
+      return;
+    }
+
+    const outcome = issueToken(stores, me, {
+      owner: me,
+      name: name.trim(),
+      scope,
+      expiresInDays: days,
+    });
+    if (!outcome.ok) {
+      res.status(STATUS_OF[outcome.rule]).json({ rule: outcome.rule });
+      return;
+    }
+
+    // **평문이 나가는 유일한 자리다** (`SEC-AUTH-006` AC-2).
+    res.status(201).json({ id: outcome.id, token: outcome.token });
+  });
+
+  /** 자기 PAT 를 폐기한다 (`SEC-AUTH-007` AC-2). 비가역이며 재발급뿐이다. */
+  router.delete('/auth/tokens/:id', (req, res) => {
+    const me = 주체(req);
+    if (me === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const outcome = revokeToken(stores, me, req.params.id);
+    if (!outcome.ok) {
+      res.sendStatus(STATUS_OF[outcome.rule]);
+      return;
+    }
+    res.sendStatus(204);
   });
 
   router.get('/auth/me', (req, res) => {

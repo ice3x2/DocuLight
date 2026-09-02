@@ -17,6 +17,8 @@ import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
 import { RelocationDialog } from './RelocationDialog.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { PersonalSettings } from '../settings/PersonalSettings.js';
+import { TokenPanel } from '../settings/TokenPanel.js';
+import type { TokenIssueInput, TokenRowView } from '../settings/token-contract.js';
 import { AclAuditPanel, type AclAuditProps } from '../acl/AclAuditPanel.js';
 import { ShareModal } from '../acl/ShareModal.js';
 import { AuditLogPanel } from '../audit/AuditLogPanel.js';
@@ -117,6 +119,9 @@ function SettingsModal({
   workspaces = [],
   trashLens,
   personalSettings = {},
+  tokens = [],
+  onIssueToken,
+  onRevokeToken,
   userRoster = [],
   groupRoster = [],
   aclAudit,
@@ -144,6 +149,12 @@ function SettingsModal({
   trashLens?: TrashLens;
   /** 이 사용자의 개인 설정 (`DR-SHELL-002`). 없는 항목은 기본값으로 그린다. */
   personalSettings?: Readonly<Record<string, string>>;
+  /** 이 사용자의 PAT 목록 (`SEC-AUTH-007` AC-1). 본인 것만 온다. */
+  tokens?: readonly TokenRowView[];
+  /** PAT 를 발급한다. **평문을 돌려주고**, 그 값은 화면 밖으로 나가지 않는다. */
+  onIssueToken?: (input: TokenIssueInput) => Promise<{ token: string } | undefined>;
+  /** PAT 를 폐기한다 (`SEC-AUTH-007` AC-2). 화면이 L2 확인을 먼저 받는다. */
+  onRevokeToken?: (id: string) => void;
   /** 슈퍼유저 전용 명부 (`R163`). 슈퍼유저가 아니면 비어 있다. */
   userRoster?: readonly RosterUser[];
   groupRoster?: readonly RosterGroup[];
@@ -246,6 +257,16 @@ function SettingsModal({
                     values={personalSettings}
                     {...(onPersonalSetting === undefined ? {} : { onPick: onPersonalSetting })}
                   />
+                ) : category.id === 'tokens' ? (
+                  // 이 카테고리는 계약(`shell-contract.ts`)에만 있고 본문이
+                  // 없었다 — 탭을 누르면 `<p>액세스 토큰</p>` 한 줄이 섰다.
+                  // 배열에만 있고 렌더되지 않으면 그 조작은 제품에 없는
+                  // 것이라는 `IR-SHELL-002` VE-3 의 선례가 이 자리다.
+                  <TokenPanel
+                    rows={tokens}
+                    {...(onIssueToken === undefined ? {} : { onIssue: onIssueToken })}
+                    {...(onRevokeToken === undefined ? {} : { onRevoke: onRevokeToken })}
+                  />
                 ) : category.id === 'account' ? (
                   // 계정 카테고리가 담기로 확정된 두 조작 (`IR-SHELL-002` AC-3).
                   <>
@@ -339,6 +360,9 @@ export function AppShell({
   trash = [],
   trashLens,
   personalSettings = {},
+  tokens = [],
+  onIssueToken,
+  onRevokeToken,
   userRoster = [],
   groupRoster = [],
   aclAudit,
@@ -422,6 +446,15 @@ export function AppShell({
    */
   personalSettings?: Readonly<Record<string, string>>;
   onPersonalSetting?: (key: string, value: string) => void;
+  /**
+   * 이 사용자의 PAT 목록 (`SEC-AUTH-006` · `SEC-AUTH-007`).
+   *
+   * **평문 칸이 없다.** 목록은 발급 뒤 언제든 다시 받을 수 있는 값이고,
+   * 평문은 발급 응답에만 실린다 (`SEC-AUTH-006` AC-2).
+   */
+  tokens?: readonly TokenRowView[];
+  onIssueToken?: (input: TokenIssueInput) => Promise<{ token: string } | undefined>;
+  onRevokeToken?: (id: string) => void;
   /** 슈퍼유저 전용 명부 (`R163`). 슈퍼유저가 아니면 서버가 주지 않는다. */
   userRoster?: readonly RosterUser[];
   groupRoster?: readonly RosterGroup[];
@@ -680,6 +713,9 @@ export function AppShell({
           {...(onTrashRestore === undefined ? {} : { onTrashRestore })}
           personalSettings={personalSettings}
           {...(onPersonalSetting === undefined ? {} : { onPersonalSetting })}
+          tokens={tokens}
+          {...(onIssueToken === undefined ? {} : { onIssueToken })}
+          {...(onRevokeToken === undefined ? {} : { onRevokeToken })}
           {...(onLogout === undefined ? {} : { onLogout })}
           {...(onPasswordChange === undefined ? {} : { onPasswordChange })}
           userRoster={userRoster}
