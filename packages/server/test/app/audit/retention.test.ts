@@ -13,6 +13,7 @@ import { SYSTEM_RECONCILER } from '../../../src/domain/ports/audit-sink.js';
 import { SqliteAuditLog } from '../../../src/infra/sqlite/audit-log-repository.js';
 import { SqliteAuditRetention } from '../../../src/infra/sqlite/audit-retention-repository.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
+import { SqliteFindingRetention } from '../../../src/infra/sqlite/finding-retention-repository.js';
 import { SqliteSettingStore } from '../../../src/infra/sqlite/setting-store.js';
 
 let dir: string;
@@ -40,8 +41,10 @@ beforeEach(async () => {
   audit = new SqliteAuditLog(db);
   stores = {
     auditRetention: new SqliteAuditRetention(db),
+    findingRetention: new SqliteFindingRetention(db),
     settings: new SqliteSettingStore(db),
     clock: () => new Date(),
+    transaction: <T,>(fn: () => T): T => db.transaction(fn),
   };
 });
 

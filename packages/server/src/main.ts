@@ -41,6 +41,7 @@ import { SqliteFavoriteRepository } from './infra/sqlite/favorite-repository.js'
 import { SqliteAuditLog } from './infra/sqlite/audit-log-repository.js';
 import { openDatabase } from './infra/sqlite/database.js';
 import { SqliteFindingQueue } from './infra/sqlite/finding-queue-repository.js';
+import { SqliteFindingRetention } from './infra/sqlite/finding-retention-repository.js';
 import { SqliteNodeRepository } from './infra/sqlite/node-repository.js';
 import { SqlitePrincipalRepository } from './infra/sqlite/principal-repository.js';
 import { BcryptPasswordHasher } from './infra/crypto/bcrypt-hasher.js';
@@ -197,6 +198,7 @@ type RuntimeStores = { personalSettings: SqlitePersonalSettingStore } & Attachme
      */
     vectors: SqliteVectorIndex;
     auditRetention: SqliteAuditRetention;
+    findingRetention: SqliteFindingRetention;
     /**
      * 콘솔에 한 줄 낸다 (`SEC-AUTH-012` AC-1).
      *
@@ -256,6 +258,10 @@ export async function bootstrap(
     // 감사 보존 일소가 쓰는 자리 (`REL-AUDIT-003`). 조립에 없으면 그
     // 일소가 도는 순간 주체를 얻지 못한다.
     auditRetention: new SqliteAuditRetention(db),
+    // 만료 감사 행을 참조하는 대기열 항목을 함께 걷는 자리 (`G37`).
+    // 조립에 없으면 참조가 걸린 만료 행이 하나 생기는 순간 감사 일소가
+    // 통째로 죽고, 그 사실이 아무 데도 드러나지 않는다.
+    findingRetention: new SqliteFindingRetention(db),
     trashFiles: new FsTrashFiles(config.docsRoot),
     files: new FsWorkspaceFiles(config.docsRoot),
     documents: new FsDocumentStore(config.docsRoot),
