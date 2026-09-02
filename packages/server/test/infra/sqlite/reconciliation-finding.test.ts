@@ -106,7 +106,7 @@ describe('REL-AUDIT-001 — 재조정 대기열은 감사 로그와 별개 저�
     );
   });
 
-  it('AC-8 — 대기열 항목이 보존 기간 만료로 사라지지 않고 해소될 때까지 남는다', () => {
+  it('AC-8 — 대기열 자신에게는 지우는 경로가 없고, 항목은 참조 감사 행이 살아 있는 동안 남는다', () => {
     const a1 = audit.append({
       operation: RECONCILE_OPERATION.create,
       actor: SYSTEM_RECONCILER,
@@ -114,7 +114,10 @@ describe('REL-AUDIT-001 — 재조정 대기열은 감사 로그와 별개 저�
     });
     const id = queue.open({ type: FINDING_TYPE.unregisteredFile, auditRefs: [a1] });
 
-    // **지우는 경로가 없다는 것**이 이 AC 의 실질이다. 앞서 이 자리는
+    // **대기열 자신에게 지우는 경로가 없다는 것**이 이 자리가 재는 축이다.
+    // 원장 `G37`(2026-09-02) 뒤로 지우는 경로 자체는 존재하지만 그것은
+    // `FindingRetention` 포트에 있고, 소멸의 방아쇠는 참조 감사 행의 만료다
+    // — 대기열이 스스로 자기 항목을 만료시키지는 않는다. 앞서 이 자리는
     // `Object.keys(queue)` 로 확인했는데 그것은 자기 열거 속성만 돌려주고
     // 메서드는 프로토타입에 있어 — 실제로 만료 메서드를 더해도 통과했다.
     // 프로토타입 사슬까지 훑어야 재는 것이 된다.
@@ -128,8 +131,9 @@ describe('REL-AUDIT-001 — 재조정 대기열은 감사 로그와 별개 저�
       `대기열에 지우는 경로가 생겼다: ${removal.join(', ')}. 해소만이 목록에서 빼야 한다`,
     ).toEqual([]);
 
-    // 감사 로그와 성질이 반대다 — 로그는 보존 기간으로 사라지지만 대기열은
-    // 남아야 하고, 사라지면 재조정 통지라는 완화책이 무너진다.
+    // 참조 감사 행이 살아 있는 동안은 항목도 남는다 — 그 사이에 사라지면
+    // 재조정 통지라는 완화책이 무너진다. 참조가 만료한 뒤의 동참 소멸은
+    // `test/app/audit/retention-finding.test.ts` 가 잰다.
     expect(queue.unresolved().map((f) => f.id)).toEqual([id]);
   });
 });
