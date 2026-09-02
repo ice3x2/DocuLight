@@ -10,6 +10,7 @@ import {
   type AuthStores,
 } from '../../app/auth/login-service.js';
 import { changePassword } from '../../app/auth/password-service.js';
+import type { TokenStores } from '../../app/auth/token-service.js';
 
 /** 세션 쿠키의 이름. 두 곳에 적으면 한쪽 오타가 조용히 로그아웃을 무력화한다. */
 export const SESSION_COOKIE = 'doculight_session';
@@ -20,8 +21,12 @@ export const SESSION_COOKIE = 'doculight_session';
  * 세션 토큰은 **쿠키로만** 나간다. 응답 본문에 실으면 `HttpOnly` 가
  * 무의미해진다 — 스크립트가 읽지 못하게 하려고 그 속성을 붙이는데,
  * 본문에 있으면 그냥 읽힌다.
+ *
+ * **토큰 저장소까지 받는다.** 비밀번호 변경이 그 계정의 PAT 를 함께
+ * 폐기하므로(원장 `G33` ①), 이 경계가 좁으면 그 조작이 닿을 자리 자체가
+ * 없다.
  */
-export function authRouter(stores: AuthStores): Router {
+export function authRouter(stores: AuthStores & TokenStores): Router {
   const router = Router();
 
   // rate limit 은 **소스 IP 별**이다 (`SEC-AUTH-001` AC-4 · AC-5).

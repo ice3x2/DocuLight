@@ -22,6 +22,11 @@ export const PASSWORD_REASONS: Readonly<Record<string, string>> = {
  * 빼앗을 수 있다 — 세션은 만료되지만 바뀐 비밀번호는 그렇지 않다. 서버도
  * 같은 값을 요구하며(`password-service`), 화면이 그것을 묻지 않으면 그
  * 요구가 곧 「바꿀 수 없다」가 된다.
+ *
+ * **사후 파급을 누르기 전에 알린다** (원장 `G33` ①). 성공하면 서버가 그
+ * 계정의 모든 세션과 폐기되지 않은 모든 PAT 를 끊는다. 그 사실을 누른
+ * 뒤에 알면 사용자는 MCP 자동화가 죽고 나서야 알게 되고, 그때는 되돌릴
+ * 방법이 없다.
  */
 export function PasswordChangeForm({
   onSubmit,
@@ -48,6 +53,11 @@ export function PasswordChangeForm({
           .finally(() => set보내는중(false));
       }}
     >
+      <p>
+        바꾸면 이 계정의 <strong>모든 세션과 모든 액세스 토큰이 끊깁니다.</strong> 다시
+        로그인해야 하고, 발급해 둔 액세스 토큰도 다시 발급해야 합니다.
+      </p>
+
       <label>
         현재 비밀번호
         <input

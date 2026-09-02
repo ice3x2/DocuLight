@@ -7,21 +7,27 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { registerAccount } from '../../src/app/auth/account-service.js';
 import type { AuthStores } from '../../src/app/auth/login-service.js';
-import express, { Router } from 'express';
+import { issueToken, type TokenStores } from '../../src/app/auth/token-service.js';
+import express, { Router, type Express } from 'express';
+import request from 'supertest';
 
 import { SESSION_COOKIE, authRouter } from '../../src/http/routes/auth.js';
+import { mcpRouter } from '../../src/http/routes/mcp.js';
 import { LOGIN_ATTEMPTS_PER_WINDOW } from '../../src/http/rate-key.js';
 import { createHttpServer } from '../../src/http/server.js';
 import { BcryptPasswordHasher } from '../../src/infra/crypto/bcrypt-hasher.js';
 import { openDatabase, type Database } from '../../src/infra/sqlite/database.js';
 import { SqliteSessionRepository } from '../../src/infra/sqlite/session-repository.js';
-import { nodeStores } from '../support/acl-fixture.js';
+import { SqliteTokenRepository } from '../../src/infra/sqlite/token-repository.js';
+import { SqliteVectorIndex } from '../../src/infra/sqlite/vector-index-repository.js';
+import { attachmentStores, nodeStores } from '../support/acl-fixture.js';
 
 let dir: string;
 let db: Database;
-let stores: AuthStores;
+let stores: AuthStores & TokenStores;
 let server: Server;
 let origin: string;
+let me: string;
 
 const PASSWORD = 'x'.repeat(10);
 
@@ -40,10 +46,16 @@ beforeEach(async () => {
   stores = {
     ...nodeStores(db),
     sessions: new SqliteSessionRepository(db),
+    tokens: new SqliteTokenRepository(db),
     passwords: new BcryptPasswordHasher(),
     clock: () => new Date('2026-08-22T09:00:00.000Z'),
   };
-  await registerAccount(stores, { name: '한범', password: PASSWORD, status: 'active' });
+  me = (
+    (await registerAccount(stores, { name: '한범', password: PASSWORD, status: 'active' })) as {
+      ok: true;
+      id: string;
+    }
+  ).id;
 
   // **제품과 같은 조립으로 세운다.** 본문 파서는 `apiRouter` 가 한 번만
   // 세우므로(라우터마다 세우면 먼저 선 것이 뒤따르는 한도를 죽인다) 이
@@ -220,5 +232,68 @@ describe('SEC-AUTH-018 — 비밀번호 변경 라우트', () => {
     // 비밀번호를 바꾸는 이유가 대개 「누가 내 계정에 들어와 있다」이므로,
     // 기존 세션이 살아 있으면 회전이 무의미하다.
     expect((await fetch(`${origin}/api/auth/me`, { headers: { cookie } })).status).toBe(401);
+  });
+
+  /**
+   * MCP 표면을 **같은 데이터베이스 위에** 세운다 (`IR-AUTH-002`).
+   *
+   * 시계를 이 시험의 것으로 맞춘다 — 실제 시각을 쓰면 토큰의 만료가 시험을
+   * 돌리는 날짜에 따라 갈린다.
+   */
+  const mcp표면 = async (): Promise<Express> => {
+    const docsRoot = join(dir, 'docs');
+    await mkdir(docsRoot, { recursive: true });
+
+    const app = express();
+    app.use(express.json({ limit: '1mb' }));
+    app.use(
+      '/api',
+      mcpRouter({
+        stores: {
+          ...attachmentStores(db, docsRoot),
+          tokens: stores.tokens,
+          vectors: new SqliteVectorIndex(db),
+          clock: stores.clock,
+        },
+      }),
+    );
+    return app;
+  };
+
+  const 도구목록 = (app: Express, pat: string) =>
+    request(app)
+      .post('/api/mcp')
+      .set('Authorization', `Bearer ${pat}`)
+      .send({ jsonrpc: '2.0', id: 1, method: 'tools/list' });
+
+  /**
+   * 원장 `G33` ① — 세션만 끊고 PAT 를 남기면 탈취된 세션 하나가 세션 일괄
+   * 종료를 살아 넘기는 장기 자격으로 승격한다.
+   *
+   * **라우트에서 잰다.** 서비스 함수만 재면 라우터가 넓어진 저장소 타입을
+   * 받지 못하는 조립 단절이 그대로 통과한다 — 2026-09-01 에 이미 그 부류의
+   * 결함을 한 번 겪었다(VE-4).
+   */
+  it('바꾸고 나면 그 계정의 PAT 로 MCP 표면이 서지 않는다', async () => {
+    const app = await mcp표면();
+    const pat = issueToken(stores, me, {
+      owner: me,
+      name: '노트북',
+      scope: 'read-only',
+      expiresInDays: 30,
+    }) as { ok: true; token: string };
+
+    // 지금 서는 것을 먼저 확인한다 — 그러지 않으면 이 항이 공허하다.
+    expect((await 도구목록(app, pat.token)).status).toBe(200);
+
+    const cookie = await 로그인쿠키();
+    expect(
+      (await post('/api/auth/password', { current: PASSWORD, next: NEXT }, { cookie })).status,
+    ).toBe(204);
+
+    expect(
+      (await 도구목록(app, pat.token)).status,
+      '비밀번호를 바꿨는데 예전 PAT 로 MCP 표면이 열린다',
+    ).toBe(401);
   });
 });
