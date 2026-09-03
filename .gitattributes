@@ -19,3 +19,13 @@
 *.woff binary
 *.woff2 binary
 *.ico binary
+
+# 셸 스크립트는 LF 로 못박는다.
+#
+# 이 저장소는 `core.autocrlf=true` 라 선언이 없으면 체크아웃에서 CRLF 가
+# 붙는다. 그러면 첫 줄이 `#!/usr/bin/env sh\r` 이 되어 Git Bash 가 해석기를
+# 찾지 못하고 실행 자체가 깨진다 — 바이너리와 달리 이쪽은 관용이 없다.
+*.sh text eol=lf
+
+# 배치 파일은 반대다 — cmd 는 CRLF 를 기대한다.
+*.bat text eol=crlf

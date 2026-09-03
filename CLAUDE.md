@@ -87,6 +87,28 @@ Before starting work in a fresh session, read `docs/next/LATEST.md`. It points a
 
 - Default dev-server port is **3399** (`packages/editor` and any later frontend package). Do not use another port without saying why.
 - Two different apps compete for port 3399, so name the one you mean. `npm run dev` from the repository root starts the **web** app (`@doculight/web`). The **editor demo** is a separate app started with `npm run dev --workspace @doculight/editor`, and that demo — not the web app — is what every browser check below drives. Only one of them can hold 3399 at a time, so a browser check run against the web app measures the wrong screen. Measured 2026-08-25.
+- **개발 서버 둘을 한 번에 띄우는 진입점이 있다** (2026-09-04 신설). 저장소 루트의
+  `./dev.sh`(POSIX·Git Bash)와 `dev.bat`(Windows cmd)이 API(3400)와 web(3399)을 함께
+  띄우며, `npm run dev:all` 도 같은 것을 부른다. 셋의 로직은 `scripts/dev.mjs` **하나**에
+  있고 두 셸 파일은 그것을 부르기만 한다. 루트 `npm run dev` 의 뜻은 바뀌지 않았다 —
+  그쪽은 여전히 web 만 띄운다. 바로 아래 web 브라우저 검사가 요구하는 「web 3399 와
+  API 3400 이 함께」라는 전제를 이 진입점 하나가 충족한다.
+  **Windows 에서는 `dev.bat` 을 쓴다.** 그것만 콘솔을 UTF-8 로 바꿨다 되돌리므로,
+  `npm run dev:all` 로 띄우면 한국어 안내가 깨질 수 있다. 그 준비가 실제로 필요한지는
+  **재지 못했다** — node 가 Windows 콘솔에 코드페이지와 무관하게 유니코드를 쓸 수도 있고,
+  이 세션에는 그것을 가릴 진짜 TTY 가 없었다.
+  실측으로 확인한 함정 셋을 그 스크립트가 막는다(2026-09-04). ① **셸에 `PORT` 가 박힌
+  기계에서는 `.env.development` 의 값이 무시된다** — Node 의 `--env-file` 은 이미 있는
+  환경변수를 덮어쓰지 않기 때문이다. 이 기계에는 `PORT=2002` 가 박혀 있어 문서가
+  안내하던 `npm run dev --workspace @doculight/server` 가 그 포트로 뜨려다 EADDRINUSE 로
+  죽었다. ② **API 포트를 브라우저로 열면 `packages/web/dist` 의 낡은 빌드 산출물이
+  나온다** — 서버가 내는 설치 안내가 API 포트를 가리키지만 개발에서 그 주소는 소스를
+  고쳐도 바뀌지 않으므로, 스크립트가 그 안내 뒤에 정정을 붙인다. ③ **데이터 디렉터리가
+  `cwd` 를 따른다** — 어디서 띄웠느냐에 따라 다른 자리에 생기므로 스크립트가
+  `packages/server/.doculight-data` 로 못박는다.
+  **Ctrl+C 는 두 프로세스와 그 자식까지 정리하지만 창을 강제로 닫으면 남는다** — Windows
+  에는 그 경로에 신호가 없다. 남은 것은 다음 기동이 포트 점유로 감지해 그 PID 와
+  `taskkill` 명령을 안내한다.
 - A real-browser check already exists as a precedent: `packages/editor/test/browser-check.mjs`, run via `npm run test:browser` or `npm run test:browser:headed` from `packages/editor` once the dev server is up. It drives Playwright's chromium against `http://localhost:3399/` and currently checks Mermaid live preview only — reuse its shape for other browser-only checks rather than inventing a new one. `playwright` 1.62.1 and its chromium binary **are** installed, in `packages/editor/node_modules` (not the repository-root `node_modules`). Import it by absolute path from scripts that live outside that workspace. Measured 2026-08-25.
 - The browser checks carry the live-preview acceptance criteria that only a real browser can measure — real gestures, computed style, widget geometry. They are **not** the only evidence: `npm test` also carries axes no browser check covers (the line-unit reveal rule, the table reveal state machine), so a live-preview change needs both. What is true is that **nothing runs the browser checks automatically**: `npm test` is vitest and its `include` does not match `.mjs`, and this repository has no CI at all (there is no `.github/` directory). Measured 2026-08-25. Run all six in one go with `npm run test:browser:all` from the repository root — it forwards to the same script name in `packages/editor`, which runs `browser-check.mjs` (Mermaid), `table-reveal-check.mjs` (table source reveal, `FR-EDITOR-007` AC-7), `heightmap-drift-check.mjs` (widget heightmap drift), `tag-chip-check.mjs` (body tags actually look like chips — computed style, not class names — plus the AC-10 reveal round trip) and `math-render-check.mjs` (`FR-EDITOR-010`: math actually stands on the KaTeX stylesheet — computed font, the folded MathML copy, and the superscript's real geometry), and `inline-preview-check.mjs` (원장 §4 **수용 기준 2**: 헤딩·강조·목록·링크·인용이 본문과 실제로 다르게 그려지고, 커진 헤딩 줄에서 클릭이 그 줄에 놓인다) in that order, stops at the first failure, and propagates its exit code (`1` = a check failed, `2` = could not measure — usually the dev server is not up, and each script prints how to start it). Whoever changes live preview (tables, code blocks, Mermaid, math), widget geometry, or the reveal rules runs it before committing, with the dev server already up. **연달아 돌릴 때 간헐 실패가 난다** — 2026-09-01 에 `math-render-check.mjs` 의 AC-3(지수 기하)이 전체 실행에서 한 번 죽었다가 단독으로도 전체로도 다시 돌리자 4/4 로 통과했다. 앞 검사가 남긴 스크롤 상태나 렌더 타이밍 탓으로 보인다. **회피**: 실패한 검사를 단독으로 한 번 더 돌려 재현되는지 먼저 본다.
 
