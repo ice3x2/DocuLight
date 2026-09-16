@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 
@@ -95,6 +95,70 @@ describe('FR-SHELL-004 — 우측 사이드바 세 탭', () => {
     await user.click(within(right).getByRole('tab', { name: '태그' }));
 
     expect(within(left).getByRole('tabpanel', { name: '문서 트리' })).toBeDefined();
+  });
+
+  it('중첩된 동일 이름 링크도 supplied node id로 정확히 열고 미해결은 열지 않는다', async () => {
+    const user = userEvent.setup();
+    const opened: Array<[string, boolean]> = [];
+    const leaf = (id: string) => ({ id, name: '같은이름.md', kind: 'file' as const, visibility: 'full' as const, level: 'edit' as const, parentLevel: 'edit' as const, children: [] });
+    const nested = leaf('nested-target');
+    const workspaces = [{ workspace: { id: 'ws', name: '작업공간' }, visibility: 'full' as const, roots: [leaf('root-same'), { id: 'dir', name: '폴더', kind: 'directory' as const, visibility: 'full' as const, level: 'edit' as const, parentLevel: 'edit' as const, children: [nested] }] }];
+    render(<AppShell viewer={ROOT} workspaces={workspaces} documents={{ tabs: [{ nodeId: 'root-same', name: '같은이름.md', breadcrumb: ['같은이름.md'], save: 'saved', level: 'edit' }], activeId: 'root-same' }} links={{ backlinks: [{ nodeId: nested.id, name: nested.name, workspaceName: '작업공간', resolved: true }], outgoing: [{ nodeId: nested.id, name: nested.name, workspaceName: '작업공간', resolved: true }, { nodeId: null, name: '같은이름.md', workspaceName: null, resolved: false }] }} onOpen={(node, fresh) => opened.push([node.id, fresh])} />);
+
+    const right = screen.getByRole('complementary', { name: '우측 사이드바' });
+    await user.click(within(right).getByRole('button', { name: /같은이름\.md/ }));
+    await user.click(within(right).getByRole('tab', { name: '아웃고잉 링크' }));
+    const button = within(right).getByRole('button', { name: /같은이름\.md/ });
+    button.focus();
+    await user.keyboard('{Enter}');
+    button.focus();
+    await user.keyboard(' ');
+    expect(opened).toEqual([['nested-target', false], ['nested-target', false], ['nested-target', false]]);
+    expect(within(right).getAllByRole('button', { name: /같은이름\.md/ })).toHaveLength(1);
+  });
+
+  it('링크 행이나 재시도 버튼이 상태·문서 전환으로 사라지면 활성 탭으로 초점을 복구한다', async () => {
+    const documents = { tabs: [{ nodeId: 'doc', name: '문서.md', breadcrumb: ['문서.md'], save: 'saved' as const, level: 'edit' as const }], activeId: 'doc' };
+    const links = { backlinks: [{ nodeId: 'doc', name: '문서.md', workspaceName: '작업공간', resolved: true }], outgoing: [] };
+    const { rerender } = render(<AppShell viewer={ROOT} documents={documents} links={links} />);
+    const right = screen.getByRole('complementary', { name: '우측 사이드바' });
+    within(right).getByRole('button', { name: /문서\.md/ }).focus();
+
+    rerender(<AppShell viewer={ROOT} documents={documents} links={links} linksState={{ state: 'loading' }} />);
+    await waitFor(() => expect(document.activeElement).toBe(within(right).getByRole('tab', { name: '백링크' })));
+
+    rerender(<AppShell viewer={ROOT} documents={documents} links={links} linksState={{ state: 'error', message: '안전한 오류', onRetry: () => {} }} />);
+    within(right).getByRole('button', { name: '다시 시도' }).focus();
+    rerender(<AppShell viewer={ROOT} documents={documents} links={links} linksState={{ state: 'loading' }} />);
+    await waitFor(() => expect(document.activeElement).toBe(within(right).getByRole('tab', { name: '백링크' })));
+
+    rerender(<AppShell viewer={ROOT} documents={{ tabs: documents.tabs, activeId: null }} links={links} />);
+    expect(within(right).getByText('문서를 선택하면 링크를 볼 수 있습니다.')).toBeDefined();
+    expect(document.activeElement).toBe(within(right).getByRole('tab', { name: '백링크' }));
+  });
+
+  it('태그 행이 범위 전환으로 사라지면 태그 탭으로 초점을 복구한다', async () => {
+    const tags = { basis: '서버 기준', tags: [{ name: '기획', documents: 2 }] };
+    const workspaces = [
+      { workspace: { id: 'ws-1', name: '기획팀' }, visibility: 'full' as const, roots: [] },
+      { workspace: { id: 'ws-2', name: '개발팀' }, visibility: 'full' as const, roots: [] },
+    ];
+    const { rerender } = render(<AppShell viewer={ROOT} workspaces={workspaces} tags={tags} tagScope="ws-1" />);
+    const right = screen.getByRole('complementary', { name: '우측 사이드바' });
+    await userEvent.setup().click(within(right).getByRole('tab', { name: '태그' }));
+    within(right).getByRole('button', { name: /기획/ }).focus();
+
+    rerender(<AppShell viewer={ROOT} workspaces={workspaces} tags={tags} tagScope="ws-2" tagsState={{ state: 'loading' }} />);
+    await waitFor(() => expect(document.activeElement).toBe(within(right).getByRole('tab', { name: '태그' })));
+  });
+
+  it('링크와 태그 query 상태를 loading/error/empty로 숨기지 않는다', async () => {
+    const user = userEvent.setup();
+    render(<AppShell viewer={ROOT} documents={{ tabs: [{ nodeId: 'doc', name: '문서.md', breadcrumb: ['문서.md'], save: 'saved', level: 'edit' }], activeId: 'doc' }} linksState={{ state: 'error', message: '안전한 오류' }} tagsState={{ state: 'loading' }} />);
+    expect(screen.getByRole('alert', { name: '백링크 오류' })).toBeDefined();
+    await user.click(screen.getByRole('tab', { name: '태그' }));
+    expect(screen.getByRole('status', { name: '태그 불러오는 중' })).toBeDefined();
+    expect(screen.getByRole('tabpanel', { name: '태그' }).getAttribute('aria-busy')).toBe('true');
   });
 });
 

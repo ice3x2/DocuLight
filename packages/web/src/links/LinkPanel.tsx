@@ -18,30 +18,35 @@ export interface LinkRowView {
 export function LinkPanel({
   label,
   rows,
+  empty,
   onOpen,
 }: {
   label: string;
   rows: readonly LinkRowView[];
+  empty?: string;
   onOpen?: (nodeId: string) => void;
 }) {
   return (
-    // 비어 있어도 목록 자체는 선다 — 사라지면 탭이 고장으로 읽힌다.
-    <ul aria-label={label}>
-      {rows.map((row) => (
-        <li key={row.nodeId ?? `미해결:${row.name}`} data-resolved={row.resolved}>
+    <div data-link-panel>
+      <ul aria-label={label} data-link-list>
+      {rows.map((row, index) => (
+        <li key={`${row.nodeId ?? `미해결:${row.name}`}:${index}`} data-resolved={row.resolved} data-link-row>
           {row.resolved && row.nodeId !== null ? (
             <button type="button" onClick={() => onOpen?.(row.nodeId!)}>
-              {row.name}
+              <span data-link-title>{row.name}</span>
+              {row.workspaceName !== null && <span data-link-workspace>{row.workspaceName}</span>}
             </button>
           ) : (
             // 아직 그 이름의 문서가 없다. 줄을 지우지 않는 이유는 사용자가
             // 적은 링크가 사라진 것으로 읽히기 때문이다 — 누를 것이 없을 뿐
             // 적은 것은 그대로 있다.
-            <span>{row.name}</span>
+            <span data-link-unresolved-row><span data-link-title>{row.name}</span><span data-link-unresolved>미해결</span></span>
           )}
-          {row.workspaceName !== null && <span>{row.workspaceName}</span>}
         </li>
       ))}
-    </ul>
+      </ul>
+      {rows.length === 0 && empty !== undefined && <EmptyState title={empty} />}
+    </div>
   );
 }
+import { EmptyState } from '../components/ui/states.js';

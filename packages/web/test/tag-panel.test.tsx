@@ -59,6 +59,34 @@ describe('FR-SHELL-009 — 태그 탭의 목록과 수치', () => {
     expect(고른것).toEqual(['ws-1']);
   });
 
+  it('고정 머리에 현재 범위와 서버 기준을 두고 목록만 별도 스크롤 표면에 둔다', () => {
+    render(<TagPanel index={색인()} workspaces={[{ id: 'ws-1', name: '아주 긴 워크스페이스 이름' }]} scope="ws-1" />);
+
+    expect(screen.getByTestId('tag-fixed').textContent).toContain('아주 긴 워크스페이스 이름');
+    expect(screen.getByTestId('tag-fixed').textContent).toContain(색인().basis);
+    expect(screen.getByRole('list', { name: '태그 목록' }).getAttribute('aria-describedby')).toBe('tag-basis');
+    expect(screen.getAllByTestId('tag-row')[0]?.querySelector('[data-tag-count]')?.textContent).toBe('3');
+  });
+
+  it('성공한 빈 색인은 기준을 유지하고 구체적인 빈 상태를 표시한다', () => {
+    render(<TagPanel index={색인({ tags: [] })} />);
+
+    expect(screen.getByTestId('tag-basis').textContent).toBe(색인().basis);
+    expect(screen.getByText('태그가 없습니다.')).toBeDefined();
+    expect(screen.getByText('태그가 없습니다.').closest('[data-slot="empty-state"]')).not.toBeNull();
+  });
+
+  it('로딩과 오류에서도 범위 조작은 고정 머리에 남고 stale 성공 행은 숨긴다', () => {
+    const { rerender } = render(<TagPanel index={색인()} state={{ state: 'loading' }} workspaces={[{ id: 'ws-1', name: '기획팀' }]} />);
+    expect(screen.getByLabelText('범위')).toBeDefined();
+    expect(screen.getByRole('status', { name: '태그 불러오는 중' })).toBeDefined();
+    expect(screen.queryAllByTestId('tag-row')).toHaveLength(0);
+    rerender(<TagPanel index={색인()} state={{ state: 'error', message: '안전한 오류' }} workspaces={[{ id: 'ws-1', name: '기획팀' }]} />);
+    expect(screen.getByLabelText('범위')).toBeDefined();
+    expect(screen.getByRole('alert', { name: '태그 오류' })).toBeDefined();
+    expect(screen.queryAllByTestId('tag-row')).toHaveLength(0);
+  });
+
   it('`FR-SHELL-010` AC-3: 태그 탭이 자체 문서 결과 목록을 갖지 않는다', () => {
     render(<TagPanel index={색인()} />);
 

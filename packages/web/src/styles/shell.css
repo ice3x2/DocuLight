@@ -55,6 +55,45 @@
   border-left: 1px solid var(--border-subtle);
 }
 
+[data-side='right'] > [data-orientation='horizontal'],
+[data-side='right'] [role='tabpanel'],
+[data-panel-focus-boundary],
+[data-link-panel],
+[data-tag-panel] {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+[data-link-list], [data-tag-list] {
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 4px;
+  overflow-y: auto;
+  list-style: none;
+  scroll-padding: 4px;
+}
+
+[data-link-row], [data-tag-row] { min-width: 0; border-bottom: 1px solid var(--border-subtle); }
+[data-link-row] > button, [data-link-unresolved-row], [data-tag-row] > button {
+  display: flex; width: 100%; min-width: 0; min-height: 40px; padding: 8px; box-sizing: border-box;
+}
+[data-link-row] > button, [data-link-unresolved-row] { flex-direction: column; align-items: flex-start; text-align: left; }
+[data-link-row] > button:hover, [data-tag-row] > button:hover { background: var(--surface-control); }
+[data-link-row] > button:focus-visible, [data-tag-row] > button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+[data-link-title] { font-size: 14px; line-height: 22px; overflow-wrap: anywhere; white-space: normal; }
+[data-link-row][data-resolved='true'] [data-link-title] { color: var(--action-primary); text-decoration: underline; }
+[data-link-workspace], [data-link-unresolved], [data-tag-scope-name], [data-testid='tag-basis'] { color: var(--text-secondary); font-size: 12px; line-height: 18px; overflow-wrap: anywhere; }
+[data-tag-fixed] { flex: 0 0 auto; min-width: 0; padding: 8px; }
+[data-tag-fixed] label { display:block; margin-bottom:4px; font-size:13px; line-height:20px; font-weight:600; }
+[data-tag-fixed] select { width:100%; min-width:0; min-height:36px; border-radius:4px; }
+[data-tag-fixed] p { margin:4px 0 0; }
+[data-tag-row] > button { display:grid; grid-template-columns:minmax(0, 1fr) auto; align-items:center; gap:8px; text-align:left; }
+[data-tag-name] { min-width:0; font-size:14px; line-height:22px; overflow-wrap:anywhere; }
+[data-tag-count] { padding:1px 4px; border-radius:3px; background:var(--surface-selected); color:var(--text-primary); font-variant-numeric:tabular-nums; }
 [data-shell='root'] > main {
   display: flex;
   flex-direction: column;

@@ -271,6 +271,11 @@ function AppBody() {
   const signupMode = useSignupMode(signedIn && session.data?.superuser === true);
   const groups = useGroupRoster(signedIn && session.data?.superuser === true);
   const links = useLinks(documents.activeId);
+  const linksState: ShellPanelState = links.isError
+    ? { state: 'error', message: '잠시 후 다시 시도하십시오.', onRetry: () => void links.refetch() }
+    : links.isFetching && documents.activeId !== null
+      ? { state: 'loading' }
+      : { state: 'ready' };
 
   /**
    * 열린 탭들의 본문.
@@ -733,6 +738,11 @@ function AppBody() {
   /** 태그 탭의 범위 (`FR-SHELL-009` AC-2). 빈 문자열이 「전체」다. */
   const [tagScope, setTagScope] = useState('');
   const tags = useTags(signedIn, tagScope);
+  const tagsState: ShellPanelState = tags.isError
+    ? { state: 'error', message: '잠시 후 다시 시도하십시오.', onRetry: () => void tags.refetch() }
+    : tags.isFetching
+      ? { state: 'loading' }
+      : { state: 'ready' };
   const searchResults = useSearch(signedIn ? query : '', searchAxes);
   const searchEnabled = signedIn && query.trim() !== '' && searchAxes.length > 0;
   const searchState = !searchEnabled
@@ -1037,6 +1047,7 @@ function AppBody() {
       favorites={favorites.data ?? []}
       favoritesState={favoritesState}
       links={links.data ?? { outgoing: [], backlinks: [] }}
+      linksState={linksState}
       query={query}
       onQuery={setQuery}
       onOpen={open}
@@ -1061,6 +1072,7 @@ function AppBody() {
       onAuditOperation={setAuditOperation}
       {...(queue.data === undefined ? {} : { queue: queue.data })}
       {...(tags.data === undefined ? {} : { tags: tags.data })}
+      tagsState={tagsState}
       tagScope={tagScope}
       onTagScope={setTagScope}
       searchResults={searchResults.data?.documents ?? []}

@@ -1,6 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Tabs from '@radix-ui/react-tabs';
-import { useCallback, useId, useRef, useState, type RefObject } from 'react';
+import { useCallback, useId, useLayoutEffect, useRef, useState, type RefObject } from 'react';
 
 import { DocumentArea } from '../document/DocumentArea.js';
 import { PasswordChangeForm } from '../auth/PasswordChangeForm.js';
@@ -12,7 +12,7 @@ import { TagPanel } from '../search/TagPanel.js';
 import type { SaveState, TabState } from '../document/tab-state.js';
 import { DocumentTree, type Naming } from '../tree/DocumentTree.js';
 import type { UploadRequest } from '../attachment/upload-contract.js';
-import { EmptyState } from '../tree/EmptyState.js';
+import { EmptyState as AccessEmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
 import { RelocationDialog } from './RelocationDialog.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
@@ -37,7 +37,7 @@ import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
 import { SignupApproval } from '../principal/SignupApproval.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
-import { ErrorState, LoadingState } from '../components/ui/states.js';
+import { EmptyState, ErrorState, LoadingState } from '../components/ui/states.js';
 import type { RosterGroup, RosterUser, RosterUserStatus } from '../api/client.js';
 import { containerFor, destinationsFor, nodeById } from '../tree/tree-contract.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
@@ -53,6 +53,40 @@ export type ShellPanelState =
   | { state: 'ready' }
   | { state: 'loading' }
   | { state: 'error'; message: string; onRetry?: () => void };
+
+function FocusRestoreBoundary({
+  identity,
+  fallback,
+  children,
+}: {
+  identity: string;
+  fallback: RefObject<HTMLButtonElement | null>;
+  children: React.ReactNode;
+}) {
+  const heldFocus = useRef(false);
+
+  useLayoutEffect(() => () => {
+    if (!heldFocus.current) return;
+    queueMicrotask(() => {
+      const active = document.activeElement;
+      if (active === null || active === document.body || !active.isConnected) fallback.current?.focus();
+    });
+  }, [fallback, identity]);
+
+  return (
+    <div
+      data-panel-focus-boundary
+      onFocusCapture={() => { heldFocus.current = true; }}
+      onBlurCapture={(event) => {
+        if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) {
+          heldFocus.current = false;
+        }
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 /**
  * 사이드바 하나 — 탭 줄과 그 아래 본문.
@@ -381,6 +415,7 @@ export function AppShell({
   treeState = { state: 'ready' },
   favoritesState = { state: 'ready' },
   links = { outgoing: [], backlinks: [] },
+  linksState = { state: 'ready' },
   notice,
   bodies = {},
   hashes = {},
@@ -400,6 +435,7 @@ export function AppShell({
   auditLog,
   queue,
   tags,
+  tagsState = { state: 'ready' },
   tagScope,
   onTagScope,
   auditOperation,
@@ -458,6 +494,7 @@ export function AppShell({
   onSearchAxes?: (axes: readonly SearchAxis[]) => void;
   /** 활성 문서의 링크 양쪽 (`CON-EDITOR-002` AC-2 · AC-3). */
   links?: { outgoing: readonly LinkRowView[]; backlinks: readonly LinkRowView[] };
+  linksState?: ShellPanelState;
   /** 휴지통 행. 서버가 행마다 권한을 붙여 준다. */
   trash?: readonly TrashRowView[];
   /**
@@ -521,6 +558,7 @@ export function AppShell({
   queue?: ReconciliationQueueBody;
   /** 태그 색인 (`FR-SHELL-009`). 서버가 이미 거르고 정렬한 것이다. */
   tags?: TagIndexBody;
+  tagsState?: ShellPanelState;
   /** 태그 탭의 범위. 빈 문자열이 「전체」다. */
   tagScope?: string;
   onTagScope?: (workspaceId: string) => void;
@@ -599,6 +637,8 @@ export function AppShell({
    */
   const [leftTab, setLeftTab] = useState(LEFT_TABS[0]!.id);
   const favoritesTab = useRef<HTMLButtonElement>(null);
+  const [rightTab, setRightTab] = useState(RIGHT_TABS[0]!.id);
+  const rightTabTrigger = useRef<HTMLButtonElement>(null);
   /** 새 버전을 올릴 대상. 골라 둔 뒤 확인과 파일 고르기가 이어진다. */
   const [overwriting, setOverwriting] = useState<TreeNodeView | null>(null);
   /**
@@ -725,7 +765,7 @@ export function AppShell({
                 {...(treeState.onRetry === undefined ? {} : { onRetry: treeState.onRetry })}
               />
             ) : workspaces.length === 0 ? (
-              <EmptyState />
+              <AccessEmptyState />
             ) : (
               <DocumentTree
                 workspaces={workspaces}
@@ -873,33 +913,44 @@ export function AppShell({
         />
       </main>
 
-      <Sidebar label="우측 사이드바" tabs={RIGHT_TABS} side="right">
+      <Sidebar label="우측 사이드바" tabs={RIGHT_TABS} side="right" active={rightTab} onActivate={setRightTab} focusTarget={{ tabId: rightTab, ref: rightTabTrigger }} busyTabs={[
+        ...(linksState.state === 'loading' && documents.activeId !== null ? ['backlinks', 'outgoing'] : []),
+        ...(tagsState.state === 'loading' ? ['tags'] : []),
+      ]}>
         {(tab) => {
           // 링크 줄을 누르면 그 문서를 연다 — 목록이 열 수 없는 이름의
           // 나열이면 그 탭은 읽을거리일 뿐 이동 수단이 되지 못한다.
           const openById = (nodeId: string) => {
-            const found = workspaces
-              .flatMap((entry) => entry.roots)
-              .find((node) => node.id === nodeId);
+            const found = nodeById(workspaces, nodeId);
             if (found !== undefined) onOpen?.(found, false);
           };
 
-          if (tab.id === 'backlinks')
-            return <LinkPanel label="백링크" rows={links.backlinks} onOpen={openById} />;
-          if (tab.id === 'outgoing')
-            return <LinkPanel label="아웃고잉 링크" rows={links.outgoing} onOpen={openById} />;
+          if (tab.id === 'backlinks' || tab.id === 'outgoing') {
+            const label = tab.id === 'backlinks' ? '백링크' : '아웃고잉 링크';
+            const content = documents.activeId === null
+              ? <EmptyState title="문서를 선택하면 링크를 볼 수 있습니다." />
+              : linksState.state === 'error'
+                ? <ErrorState label={`${label} 오류`} title={`${label}를 불러오지 못했습니다.`} description={linksState.message} {...(linksState.onRetry === undefined ? {} : { onRetry: linksState.onRetry })} />
+                : linksState.state === 'loading'
+                  ? <LoadingState label={`${label} 불러오는 중`} />
+                  : <LinkPanel label={label} rows={tab.id === 'backlinks' ? links.backlinks : links.outgoing} empty={`${label}가 없습니다.`} onOpen={openById} />;
+            return <FocusRestoreBoundary identity={`${tab.id}:${documents.activeId ?? 'none'}:${linksState.state}`} fallback={rightTabTrigger}>{content}</FocusRestoreBoundary>;
+          }
           if (tab.id === 'tags')
             return (
-              <TagPanel
-                {...(tags === undefined ? {} : { index: tags })}
-                workspaces={workspaces.map((entry) => entry.workspace)}
-                {...(tagScope === undefined ? {} : { scope: tagScope })}
-                {...(onTagScope === undefined ? {} : { onScope: onTagScope })}
-                // 검색 탭을 여는 자리는 `searchForTag` 하나다 — 밖에서 또
-                // 받으면 태그 클릭과 본문 태그 클릭이 서로 다른 경로로
-                // 같은 일을 하게 된다 (`FR-SHELL-010` AC-1 · AC-2).
-                onPick={searchForTag}
-              />
+              <FocusRestoreBoundary identity={`tags:${tagScope ?? ''}:${tagsState.state}`} fallback={rightTabTrigger}>
+                <TagPanel
+                  {...(tags === undefined ? {} : { index: tags })}
+                  state={tagsState}
+                  workspaces={workspaces.map((entry) => entry.workspace)}
+                  {...(tagScope === undefined ? {} : { scope: tagScope })}
+                  {...(onTagScope === undefined ? {} : { onScope: onTagScope })}
+                  // 검색 탭을 여는 자리는 `searchForTag` 하나다 — 밖에서 또
+                  // 받으면 태그 클릭과 본문 태그 클릭이 서로 다른 경로로
+                  // 같은 일을 하게 된다 (`FR-SHELL-010` AC-1 · AC-2).
+                  onPick={searchForTag}
+                />
+              </FocusRestoreBoundary>
             );
           return <p>{tab.label}</p>;
         }}

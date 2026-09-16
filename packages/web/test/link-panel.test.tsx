@@ -68,6 +68,24 @@ describe('SEC-WORKSPACE-005 · SEC-WORKSPACE-006 — 미해결 줄의 모양', (
 
     expect(screen.getAllByRole('button')).toHaveLength(1);
   });
+
+  it('신문지 링크 행은 풀린 제목·워크스페이스와 미해결 공통 표식을 구조로 구분한다', () => {
+    render(<LinkPanel label="아웃고잉 링크" rows={[풀린것, 권한없음]} />);
+
+    const rows = screen.getAllByRole('listitem');
+    expect(rows[0]?.querySelector('[data-link-title]')?.textContent).toBe('설계.md');
+    expect(rows[0]?.querySelector('[data-link-workspace]')?.textContent).toBe('기획팀');
+    expect(rows[1]?.querySelector('[data-link-unresolved]')?.textContent).toBe('미해결');
+    expect(rows[1]?.querySelector('[data-link-workspace]')).toBeNull();
+  });
+
+  it('성공한 빈 목록은 이름을 유지하면서 구체적인 빈 상태를 표시한다', () => {
+    render(<LinkPanel label="백링크" rows={[]} empty="백링크가 없습니다." />);
+
+    expect(screen.getByRole('list', { name: '백링크' })).toBeDefined();
+    expect(screen.getByText('백링크가 없습니다.')).toBeDefined();
+    expect(screen.getByText('백링크가 없습니다.').closest('[data-slot="empty-state"]')).not.toBeNull();
+  });
 });
 
 describe('SEC-ACL-016 — 존재가 구별되지 않는 표면에 권한 요청 버튼이 없다', () => {

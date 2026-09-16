@@ -1,0 +1,14 @@
+Issue #53 review-fix RED — 2026-09-17
+
+Command:
+  npm test -- --run test/link-panel.test.tsx test/tag-panel.test.tsx test/shell.test.tsx
+
+Result: exit 1; 4 failed, 32 passed.
+
+Expected failures observed before the fixer implementation:
+- LinkPanel successful-empty output had no shared [data-slot="empty-state"] ancestor.
+- TagPanel successful-empty output had no shared [data-slot="empty-state"] ancestor.
+- Removing a focused link row during ready -> loading left focus on document.body instead of the active Backlinks tab.
+- Removing a focused tag row during scope/loading transition left focus on document.body instead of the active Tags tab.
+
+The failures were at link-panel.test.tsx:87, tag-panel.test.tsx:76, and the two new shell.test.tsx focus assertions. No product source was changed between adding these tests and this RED run.
