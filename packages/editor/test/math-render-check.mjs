@@ -30,6 +30,10 @@ async function bringMathIntoView(page) {
     const scroller = document.querySelector('.cm-scroller');
     if (scroller !== null) scroller.scrollTop = scroller.scrollHeight;
   });
+  // KaTeX geometry is font-dependent. Measuring the fallback-font frame can
+  // report the exponent below the base even though the settled KaTeX layout
+  // is correct, so synchronize on the browser's actual font readiness.
+  await page.evaluate(() => document.fonts.ready);
 }
 
 /**

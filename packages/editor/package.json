@@ -27,8 +27,9 @@
     "test:browser:math": "node test/math-render-check.mjs",
     "test:browser:math:headed": "node test/math-render-check.mjs --headed",
     "test:browser:inline": "node test/inline-preview-check.mjs",
+    "test:browser:issue55": "node test/issue55-browser-check.mjs",
     "test:browser:inline:headed": "node test/inline-preview-check.mjs --headed",
-    "test:browser:all": "npm run test:browser && npm run test:browser:table && npm run test:browser:drift && npm run test:browser:tag && npm run test:browser:math && npm run test:browser:inline"
+    "test:browser:all": "npm run test:browser && npm run test:browser:table && npm run test:browser:drift && npm run test:browser:tag && npm run test:browser:math && npm run test:browser:inline && npm run test:browser:issue55"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.0",

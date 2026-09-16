@@ -112,7 +112,7 @@
  * quotes even though each line is an independent DOM element. */
 .cm-line.cm-atomic-blockquote {
   padding-left: 1rem;
-  border-left: 3px solid var(--atomic-editor-accent-soft, color-mix(in srgb, #7c3aed 72%, white 28%));
+  border-left: 2px solid var(--atomic-editor-accent-soft, color-mix(in srgb, #7c3aed 72%, white 28%));
   color: var(--atomic-editor-fg-muted, #888);
 }
 

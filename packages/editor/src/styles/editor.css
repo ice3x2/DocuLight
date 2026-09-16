@@ -46,9 +46,7 @@
 }
 
 .dl-mermaid {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: block;
   padding: 1em;
   border: 1px solid var(--atomic-editor-border, #d0d7de);
   border-radius: var(--atomic-editor-radius, 6px);
@@ -56,9 +54,18 @@
   overflow-x: auto;
 }
 
+.dl-mermaid:focus-visible,
+.cm-atomic-table:focus-visible,
+.dl-tag:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--atomic-editor-accent));
+  outline-offset: 2px;
+}
+
 .dl-mermaid svg {
-  max-width: 100%;
+  display: block;
+  max-width: none;
   height: auto;
+  margin-inline: auto;
 }
 
 /* 코드블록 위젯 (`core/code-blocks.ts` 의 `CodeWidget`).
@@ -90,6 +97,13 @@
 
 .dl-code > pre {
   margin: 0;
+  overflow-x: auto;
+  padding: 0.75rem;
+  border-radius: 4px;
+  background: var(--surface-app, var(--atomic-editor-bg-panel)) !important;
+  color: var(--text-primary, var(--atomic-editor-fg)) !important;
+  font: 400 0.875rem/1.375rem var(--atomic-editor-font-mono, ui-monospace, monospace);
+  white-space: pre;
 }
 
 /* 본문 태그 칩 (`core/tag-decoration.ts` 의 `TagWidget`).
@@ -115,11 +129,13 @@
  * DOM 높이가 둘 다 28.89px 로 같고, 칩이 없는 이웃 문단과도 같다. */
 .dl-tag {
   color: var(--atomic-editor-accent-bright, #8250df);
-  background: color-mix(in srgb, var(--atomic-editor-accent, #6639ba) 12%, transparent);
-  border-radius: 0.75em;
+  background: var(--surface-selected, color-mix(in srgb, var(--atomic-editor-accent, #6639ba) 12%, transparent));
+  border-radius: 3px;
   padding: 0.08em 0.5em;
   font-size: 0.9em;
 }
+
+.dl-tag:hover { color: var(--action-primary-hover, var(--atomic-editor-link-hover)); }
 
 .dl-mermaid-error {
   display: block;
@@ -130,3 +146,9 @@
   color: var(--atomic-editor-hl-invalid, #82071e);
   border-color: var(--atomic-editor-hl-invalid, #82071e);
 }
+
+.dl-mermaid-error details { width: 100%; }
+.dl-mermaid-error pre,
+.dl-math-error-block code { display: block; overflow-x: auto; white-space: pre-wrap; user-select: text; }
+.dl-math-error { color: var(--status-danger, var(--atomic-editor-hl-invalid)); background: var(--surface-danger, transparent); }
+.dl-math-error-inline code { display: inline; white-space: pre-wrap; user-select: text; }

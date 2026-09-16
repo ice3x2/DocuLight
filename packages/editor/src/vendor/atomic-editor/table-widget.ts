@@ -654,6 +654,7 @@ function getAllCells(wrap: HTMLElement): HTMLElement[] {
 // ---- widget ---------------------------------------------------------
 
 class TableWidget extends WidgetType {
+  private resizeObservers = new WeakMap<HTMLElement, ResizeObserver>();
   constructor(readonly model: TableModel, readonly readOnly: boolean) {
     super();
   }
@@ -677,6 +678,9 @@ class TableWidget extends WidgetType {
   toDOM(view: EditorView): HTMLElement {
     const wrap = document.createElement('div');
     wrap.className = 'cm-atomic-table';
+    wrap.tabIndex = -1;
+    wrap.setAttribute('role', 'region');
+    wrap.setAttribute('aria-label', '표');
 
     const table = document.createElement('table');
     wrap.appendChild(table);
@@ -700,7 +704,18 @@ class TableWidget extends WidgetType {
     }
     table.appendChild(tbody);
 
+    const updateTabStop = () => { wrap.tabIndex = wrap.scrollWidth > wrap.clientWidth ? 0 : -1; };
+    const resize = new ResizeObserver(updateTabStop);
+    resize.observe(wrap);
+    this.resizeObservers.set(wrap, resize);
+    requestAnimationFrame(updateTabStop);
+
     return wrap;
+  }
+
+  destroy(dom: HTMLElement): void {
+    this.resizeObservers.get(dom)?.disconnect();
+    this.resizeObservers.delete(dom);
   }
 
   // `mousedown` in edit mode goes to CM6; every other event stays inside

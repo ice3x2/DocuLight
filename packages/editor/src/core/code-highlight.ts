@@ -1,4 +1,14 @@
-import { codeToHtml } from 'shiki';
+import { codeToHtml, createCssVariablesTheme } from 'shiki';
+
+const newspaperCodeTheme = createCssVariablesTheme({
+  name: 'doculight-css-variables',
+  variablePrefix: '--shiki-',
+  variableDefaults: {
+    foreground: 'var(--text-primary)',
+    background: 'var(--surface-app)',
+  },
+  fontStyle: false,
+});
 
 /**
  * 코드 하이라이팅 (`CON-ARCH-005` AC-6).
@@ -30,7 +40,7 @@ export async function highlightCode(code: string, language: string): Promise<str
   if (!isHighlightable(language)) return escape(code);
 
   try {
-    return await codeToHtml(code, { lang: language, theme: 'github-light' });
+    return await codeToHtml(code, { lang: language, theme: newspaperCodeTheme });
   } catch {
     return escape(code);
   }

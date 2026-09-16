@@ -38,6 +38,36 @@
   --atomic-editor-hl-comment: var(--text-secondary);
   --atomic-editor-hl-variable: var(--text-primary);
   --atomic-editor-hl-invalid: var(--status-danger);
+  --shiki-foreground: var(--text-primary);
+  --shiki-background: var(--surface-app);
+  --shiki-token-constant: var(--status-warning);
+  --shiki-token-string: var(--status-success);
+  --shiki-token-comment: var(--text-secondary);
+  --shiki-token-keyword: var(--action-primary);
+  --shiki-token-parameter: var(--text-primary);
+  --shiki-token-function: var(--action-primary);
+  --shiki-token-string-expression: var(--status-success);
+  --shiki-token-inserted: var(--status-success);
+  --shiki-token-changed: var(--status-warning);
+  --shiki-token-deleted: var(--status-danger);
+  --shiki-token-punctuation: var(--text-secondary);
+  --shiki-token-link: var(--action-primary);
+  --shiki-ansi-black: var(--text-primary);
+  --shiki-ansi-white: var(--text-primary);
+  --shiki-ansi-bright-black: var(--text-secondary);
+  --shiki-ansi-bright-white: var(--text-primary);
+  --shiki-ansi-red: var(--status-danger);
+  --shiki-ansi-bright-red: var(--status-danger);
+  --shiki-ansi-green: var(--status-success);
+  --shiki-ansi-bright-green: var(--status-success);
+  --shiki-ansi-yellow: var(--status-warning);
+  --shiki-ansi-bright-yellow: var(--status-warning);
+  --shiki-ansi-blue: var(--action-primary);
+  --shiki-ansi-bright-blue: var(--action-primary);
+  --shiki-ansi-magenta: var(--action-primary);
+  --shiki-ansi-bright-magenta: var(--action-primary);
+  --shiki-ansi-cyan: var(--action-primary);
+  --shiki-ansi-bright-cyan: var(--action-primary);
 }
 
 .atomic-cm-editor { color: var(--text-primary); background: var(--surface-document); }
@@ -62,7 +92,13 @@
 [data-document-body] .cm-line.cm-atomic-h4 { font: 600 1.125rem/1.75rem var(--atomic-editor-font-serif); }
 [data-document-body] .cm-line.cm-atomic-h5,
 [data-document-body] .cm-line.cm-atomic-h6 { font: 600 1rem/1.75rem var(--atomic-editor-font-serif); }
-[data-document-body] .cm-line.cm-atomic-blockquote { font: 400 1.125rem/1.875rem var(--atomic-editor-font-serif); color: var(--text-primary); }
+[data-document-body] .cm-line.cm-atomic-blockquote { border-left-width: 2px; padding-left: 1rem; font: 400 1.125rem/1.875rem var(--atomic-editor-font-serif); color: var(--text-primary); }
+
+[data-document-body] .cm-atomic-table { max-width: 100%; }
+[data-document-body] .cm-atomic-table th { background: var(--surface-app); }
+[data-document-body] .cm-atomic-table td { background: var(--surface-document); }
+[data-document-body] .cm-atomic-table th,
+[data-document-body] .cm-atomic-table td { border-color: var(--border-subtle); padding: 0.5rem 0.75rem; }
 [data-document-body] .cm-atomic-inline-code { font: 400 0.875rem/1.375rem var(--atomic-editor-font-mono); }
 .cm-searchMatch.cm-searchMatch-selected { outline: 2px solid var(--action-primary); outline-offset: 0; }
 .cm-panel.cm-search input,
@@ -79,3 +115,9 @@
 .cm-mergeView .cm-content ::selection { background: var(--surface-selected); color: var(--text-primary); }
 .cm-mergeView .cm-insertedLine { background: var(--surface-success); }
 .cm-mergeView .cm-deletedLine { background: var(--surface-danger); }
+.cm-mergeViewEditor { position: relative; }
+.cm-mergeViewEditor .cm-scroller { padding-inline-start: 3.75rem; }
+.cm-mergeView .dl-diff-cue-layer { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.cm-mergeView .dl-diff-cue { position: absolute; inset-inline-start: 0.25rem; display: inline-block; padding-inline: 0.25rem; border: 1px solid currentColor; border-radius: 3px; background: var(--surface-document); font: 600 0.75rem/1.125rem var(--atomic-editor-font); user-select: none; }
+.cm-mergeView .dl-diff-cue-a { color: var(--status-danger); background: var(--surface-danger); }
+.cm-mergeView .dl-diff-cue-b { color: var(--status-success); background: var(--surface-success); }

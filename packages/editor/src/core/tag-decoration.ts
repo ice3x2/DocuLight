@@ -43,7 +43,10 @@ class TagWidget extends WidgetType {
     const fire = () => this.onClick?.(this.name);
     chip.addEventListener('click', fire);
     chip.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') fire();
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        fire();
+      }
     });
 
     return chip;

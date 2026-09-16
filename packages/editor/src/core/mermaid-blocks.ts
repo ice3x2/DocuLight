@@ -24,8 +24,10 @@ import {
 import {
   defaultMermaidRenderer,
   getCachedSize,
+  mermaidConfigSignature,
   renderMermaid,
   setCachedSize,
+  subscribeMermaidTheme,
   type MermaidRenderer,
 } from './mermaid-render';
 import { selectionTouches } from './selection-touches.js';
@@ -85,6 +87,8 @@ export function findMermaidBlocks(state: EditorState): MermaidBlock[] {
 let widgetSeq = 0;
 
 class MermaidWidget extends WidgetType {
+  private paintSequence = 0;
+  private cleanups = new WeakMap<HTMLElement, () => void>();
   constructor(
     readonly code: string,
     readonly readOnly: boolean,
@@ -113,32 +117,94 @@ class MermaidWidget extends WidgetType {
 
     const box = document.createElement('div');
     box.className = 'dl-mermaid';
+    box.tabIndex = -1;
+    box.setAttribute('role', 'region');
+    box.setAttribute('aria-label', '다이어그램');
     host.append(box);
 
     // 마운트 시점에 이전 렌더 크기를 잡아 둔다 — 렌더 완료 후 높이가 자라면
     // 스크롤 앵커와 충돌한다.
-    const cached = getCachedSize(this.code);
+    let identity = this.cacheIdentity(box, view);
+    const cached = getCachedSize(this.code, identity);
     if (cached) box.style.minHeight = `${cached.h}px`;
 
-    void this.paint(box, view.state.facet(mermaidRendererFacet));
+    const renderer = view.state.facet(mermaidRendererFacet);
+    void this.paint(box, view, renderer, identity);
+    const repaint = () => {
+      const next = this.cacheIdentity(box, view);
+      if (next === identity) return;
+      identity = next;
+      void this.paint(box, view, renderer, identity);
+    };
+    const unsubscribe = subscribeMermaidTheme(repaint);
+    let width = Math.round(box.clientWidth || view.contentDOM.clientWidth);
+    const resize = new ResizeObserver(() => {
+      const next = Math.round(box.clientWidth);
+      if (next === width) return;
+      width = next;
+      repaint();
+    });
+    resize.observe(box);
+    this.cleanups.set(host, () => { unsubscribe(); resize.disconnect(); });
     return host;
   }
 
-  private async paint(box: HTMLElement, renderer: MermaidRenderer): Promise<void> {
+  destroy(dom: HTMLElement): void {
+    this.paintSequence += 1;
+    this.cleanups.get(dom)?.();
+    this.cleanups.delete(dom);
+  }
+
+  private cacheIdentity(box: HTMLElement, view: EditorView): string {
+    return mermaidConfigSignature(box.clientWidth || view.contentDOM.clientWidth);
+  }
+
+  private async paint(box: HTMLElement, view: EditorView, renderer: MermaidRenderer, identity: string): Promise<void> {
+    const sequence = ++this.paintSequence;
+    const previousDetails = box.querySelector<HTMLDetailsElement>('details');
+    const disclosureOpen = previousDetails?.open ?? false;
+    const disclosureFocused = previousDetails?.contains(document.activeElement) ?? false;
     const result = await renderMermaid(this.code, `dl-mermaid-${widgetSeq++}`, renderer);
+    if (sequence !== this.paintSequence || !box.isConnected) return;
 
     if ('error' in result) {
       box.classList.add('dl-mermaid-error');
-      box.textContent = result.error;
+      const message = document.createElement('strong');
+      message.textContent = '다이어그램을 표시할 수 없습니다.';
+      const details = document.createElement('details');
+      const summary = document.createElement('summary');
+      summary.textContent = '원문 보기';
+      const source = document.createElement('pre');
+      source.textContent = this.code;
+      details.append(summary, source);
+      details.open = disclosureOpen;
+      details.addEventListener('toggle', () => view.requestMeasure());
+      box.replaceChildren(message, details);
+      box.style.minHeight = '';
+      view.requestMeasure();
+      if (disclosureFocused) summary.focus();
       return;
     }
 
+    box.classList.remove('dl-mermaid-error');
     box.innerHTML = result.svg;
+    box.style.minHeight = '';
 
     const svg = box.querySelector('svg');
     if (!svg) return;
+    const intrinsicWidth = svg.viewBox.baseVal.width;
+    if (intrinsicWidth > 0) svg.style.width = `${intrinsicWidth}px`;
+    box.tabIndex = box.scrollWidth > box.clientWidth ? 0 : -1;
     const rect = svg.getBoundingClientRect();
-    if (rect.height > 0) setCachedSize(this.code, { w: rect.width, h: rect.height });
+    if (rect.height > 0) setCachedSize(this.code, { w: rect.width, h: rect.height }, identity);
+    view.requestMeasure();
+    if (document.fonts?.status === 'loading') {
+      void document.fonts.ready.then(() => {
+        if (sequence === this.paintSequence && box.isConnected) {
+          void this.paint(box, view, renderer, this.cacheIdentity(box, view));
+        }
+      });
+    }
   }
 
   /**
@@ -149,6 +215,9 @@ class MermaidWidget extends WidgetType {
    * (반환값 `true` 가 "에디터는 이 이벤트에서 손을 뗀다"는 뜻이다.)
    */
   ignoreEvent(event: Event): boolean {
+    if (event.target instanceof Element && event.target.closest('.dl-mermaid-error details')) {
+      return true;
+    }
     if (!this.readOnly) return false;
     return event.type === 'mousedown' || event.type === 'click';
   }

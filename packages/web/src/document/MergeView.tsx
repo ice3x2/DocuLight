@@ -1,5 +1,5 @@
 import { MergeView as CodeMirrorMergeView } from '@codemirror/merge';
-import { EditorState } from '@codemirror/state';
+import { EditorState, type Extension } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
 import { useEffect, useRef } from 'react';
 
@@ -14,6 +14,43 @@ import { useEffect, useRef } from 'react';
 /** 이 화면이 서 있는 엔진. 조항이 이름으로 지목한 패키지다. */
 export function mergeEngine(): string {
   return '@codemirror/merge';
+}
+
+export function diffCueText(side: 'a' | 'b'): string {
+  return side === 'a' ? '− 삭제' : '+ 추가';
+}
+
+function renderDiffCueLayer(merge: CodeMirrorMergeView, side: 'a' | 'b'): void {
+  const editor = side === 'a' ? merge.a : merge.b;
+  let layer = editor.dom.querySelector<HTMLElement>(':scope > .dl-diff-cue-layer');
+  if (!layer) {
+    layer = document.createElement('div');
+    layer.className = 'dl-diff-cue-layer';
+    editor.dom.append(layer);
+  }
+  const root = editor.dom.getBoundingClientRect();
+  layer.replaceChildren();
+  for (const chunk of merge.chunks) {
+    const from = side === 'a' ? chunk.fromA : chunk.fromB;
+    const to = side === 'a' ? chunk.toA : chunk.toB;
+    if (to <= from) continue;
+    const coords = editor.coordsAtPos(Math.min(from, editor.state.doc.length));
+    if (!coords) continue;
+    const cue = document.createElement('span');
+    cue.className = `dl-diff-cue dl-diff-cue-${side}`;
+    cue.setAttribute('role', 'note');
+    cue.setAttribute('aria-label', diffCueText(side));
+    cue.textContent = diffCueText(side);
+    cue.style.top = `${coords.top - root.top}px`;
+    layer.append(cue);
+  }
+}
+
+function diffCueExtension(side: 'a' | 'b', getMerge: () => CodeMirrorMergeView | null): Extension {
+  return EditorView.updateListener.of(() => {
+    const merge = getMerge();
+    if (merge) queueMicrotask(() => renderDiffCueLayer(merge, side));
+  });
 }
 
 export function MergeView({
@@ -34,12 +71,13 @@ export function MergeView({
 
   useEffect(() => {
     if (host.current === null) return;
-
     view.current = new CodeMirrorMergeView({
-      a: { doc: left, extensions: [EditorState.readOnly.of(true)] },
-      b: { doc: right, extensions: [EditorView.editable.of(true)] },
+      a: { doc: left, extensions: [EditorState.readOnly.of(true), diffCueExtension('a', () => view.current)] },
+      b: { doc: right, extensions: [EditorView.editable.of(true), diffCueExtension('b', () => view.current)] },
       parent: host.current,
     });
+    renderDiffCueLayer(view.current, 'a');
+    renderDiffCueLayer(view.current, 'b');
 
     return () => {
       view.current?.destroy();

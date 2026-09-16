@@ -93,9 +93,27 @@ export function findMathBlocks(state: EditorState): MathBlock[] {
  * 깨진 동안에는 원문을 그대로 보여 주는 것이 사용자가 기대하는 바다.
  */
 export function renderMath(tex: string, display: boolean): string {
+  let rendered: string;
   try {
-    return katex.renderToString(tex, { displayMode: display, throwOnError: false });
+    rendered = katex.renderToString(tex, {
+      displayMode: display,
+      throwOnError: false,
+      errorColor: '#cc0000',
+    });
+    const comparison = katex.renderToString(tex, {
+      displayMode: display,
+      throwOnError: false,
+      errorColor: '#00cc00',
+    });
+    if (rendered === comparison) return rendered;
   } catch {
-    return tex;
+    // KaTeX contains ordinary parse failures when throwOnError is false.
+    // Reaching this branch therefore means the renderer itself failed.
   }
+  const escaped = tex
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+  return `<span class="dl-math-error ${display ? 'dl-math-error-block' : 'dl-math-error-inline'}"><strong>수식 오류</strong><code>${escaped}</code></span>`;
 }

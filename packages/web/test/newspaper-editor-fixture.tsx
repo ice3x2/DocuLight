@@ -11,7 +11,10 @@ const markdown = [
   '# 매우 긴 한국어 신문 제목과줄바꿈없는ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
   '', '## 둘째 제목', '', '### 셋째 제목', '', '#### 넷째 제목', '', '##### 다섯째 제목', '', '###### 여섯째 제목',
   '', '> 신문지 인용문입니다.', '', '- [x] 완료한 일', '- [ ] 남은 일', '',
-  '본문과 `inline code`가 있습니다.', '', '| 열 | 값 |', '| --- | --- |', '| 하나 | 둘 |', '',
+  '본문과 `inline code`가 있습니다.', '', '| 열하나 | 열둘 | 열셋 | 열넷 | 열다섯 | 열여섯 | 열일곱 | 열여덟 |', '| --- | --- | --- | --- | --- | --- | --- | --- |', '| 매우긴표값ABCDEFGHIJKLMN | 둘 | 셋 | 넷 | 다섯 | 여섯 | 일곱 | 여덟 |', '',
+  '```ts', 'const answer = 42;', '```', '', '$$E = mc^2$$', '', '#신문지', '',
+  '```mermaid', 'graph LR; A[긴 노드 A]-->B[긴 노드 B]-->C[긴 노드 C]-->D[긴 노드 D]-->E[긴 노드 E]-->F[긴 노드 F]-->G[긴 노드 G]-->H[긴 노드 H]-->I[긴 노드 I]-->J[긴 노드 J]-->K[긴 노드 K]-->L[긴 노드 L]-->M[긴 노드 M]-->N[긴 노드 N]-->O[긴 노드 O]-->P[긴 노드 P];', '```', '',
+  '```mermaid', 'graph LR; A[긴 노드 A]-->B[긴 노드 B]-->C[긴 노드 C]-->D[긴 노드 D]-->E[긴 노드 E]-->F[긴 노드 F]-->G[긴 노드 G]-->H[긴 노드 H]-->I[긴 노드 I]-->J[긴 노드 J]-->K[긴 노드 K]-->L[긴 노드 L]-->M[긴 노드 M]-->N[긴 노드 N]-->O[긴 노드 O]-->P[긴 노드 P];', '```', '',
   '[^각주]: 각주 정의 😀  ', '', '마지막 공백을 보존합니다.  ',
   ...Array.from({ length: 30 }, (_, i) => `문단 ${i + 1} 긴 본문 내용입니다.`),
 ].join('\n');
@@ -43,6 +46,8 @@ function Fixture() {
       <DocumentSurface file={{ nodeId: 'issue54', name: '신문지.md', level: 'edit' }} body={markdown} baseHash="h1" initialMode="read" />
       <aside data-merge-fixture style={{ position: 'fixed', right: 0, bottom: 0, width: 420, height: 150, overflow: 'auto', background: 'var(--surface-document)' }}>
         <MergeView label="테마 병합" left={'# 이전\n'} right={'# 현재\n초안'} />
+        <div data-pure-insert><MergeView label="순수 추가" left={'같음\n'} right={'같음\n추가\n'} /></div>
+        <div data-pure-delete><MergeView label="순수 삭제" left={'같음\n삭제\n'} right={'같음\n'} /></div>
       </aside>
     </main>
   </>;

@@ -84,8 +84,11 @@ class CodeWidget extends WidgetType {
     // 동안 코드가 사라져 보이고, 느린 환경에서는 그것이 깜빡임이 아니라
     // 「내용이 없다」로 읽힌다.
     host.textContent = this.code;
+    const highlightKey = `${this.language}\u0000${this.code}`;
+    host.dataset.highlightKey = highlightKey;
 
     void highlightCode(this.code, this.language).then((html) => {
+      if (!host.isConnected || host.dataset.highlightKey !== highlightKey) return;
       host.innerHTML = html;
     });
 

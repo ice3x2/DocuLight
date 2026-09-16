@@ -27,16 +27,18 @@ let moduleLoaded = false;
 // 마운트 시점에 크기를 미리 잡아 그 변화를 없앤다.
 const sizeCache = new Map<string, RenderedSize>();
 
+const sizeKey = (code: string, identity = '') => `${identity}\u0000${code}`;
+
 export function isMermaidModuleLoaded(): boolean {
   return moduleLoaded;
 }
 
-export function getCachedSize(code: string): RenderedSize | undefined {
-  return sizeCache.get(code);
+export function getCachedSize(code: string, identity = ''): RenderedSize | undefined {
+  return sizeCache.get(sizeKey(code, identity));
 }
 
-export function setCachedSize(code: string, size: RenderedSize): void {
-  sizeCache.set(code, size);
+export function setCachedSize(code: string, size: RenderedSize, identity = ''): void {
+  sizeCache.set(sizeKey(code, identity), size);
 }
 
 /**
@@ -49,10 +51,6 @@ export function setCachedSize(code: string, size: RenderedSize): void {
  * 한계: mermaid 초기화는 1회뿐이라 실행 중 테마를 바꿔도 이미 적재된 뒤에는
  * 반영되지 않는다. 런타임 테마 전환을 붙일 때 함께 해결해야 한다.
  */
-function isLightDocument(): boolean {
-  return document.documentElement.dataset.theme === 'light';
-}
-
 /**
  * DocuLight 다이어그램 팔레트.
  *
@@ -60,70 +58,109 @@ function isLightDocument(): boolean {
  * 여럿일 때 서로 구분되지 않는다. 1·2·3차 색을 실제로 다른 계열로 벌려
  * 노드 종류가 눈으로 구분되게 한다.
  */
-function paletteFor(light: boolean): Record<string, string> {
-  return light
-    ? {
-        primaryColor: '#dbeafe',
-        primaryTextColor: '#0f2e4d',
-        primaryBorderColor: '#3b82f6',
-        secondaryColor: '#fef3c7',
-        secondaryTextColor: '#4a3208',
-        secondaryBorderColor: '#f59e0b',
-        tertiaryColor: '#dcfce7',
-        tertiaryTextColor: '#0f3d24',
-        tertiaryBorderColor: '#22c55e',
-        lineColor: '#64748b',
-        textColor: '#1f2937',
-        noteBkgColor: '#fae8ff',
-        noteBorderColor: '#c026d3',
-        noteTextColor: '#4a044e',
-      }
-    : {
-        primaryColor: '#1e3a5f',
-        primaryTextColor: '#dbeafe',
-        primaryBorderColor: '#60a5fa',
-        secondaryColor: '#4a3208',
-        secondaryTextColor: '#fef3c7',
-        secondaryBorderColor: '#fbbf24',
-        tertiaryColor: '#14532d',
-        tertiaryTextColor: '#dcfce7',
-        tertiaryBorderColor: '#4ade80',
-        lineColor: '#94a3b8',
-        textColor: '#e5e7eb',
-        noteBkgColor: '#4a044e',
-        noteBorderColor: '#e879f9',
-        noteTextColor: '#fae8ff',
-      };
+interface MermaidRenderConfig {
+  themeVariables: Record<string, string>;
+  fontFamily: string;
+  fontSize: number;
+  securityLevel: 'strict';
 }
+
+function captureMermaidConfig(): MermaidRenderConfig {
+  const css = getComputedStyle(document.documentElement);
+  const value = (name: string, fallback: string) => css.getPropertyValue(name).trim() || fallback;
+  const documentSurface = value('--surface-document', '#ffffff');
+  const appSurface = value('--surface-app', '#f6f8fa');
+  const controlSurface = value('--surface-control', '#eef0f2');
+  const selected = value('--surface-selected', '#dbeafe');
+  const warningSurface = value('--surface-warning', '#fff4cc');
+  const text = value('--text-primary', '#1f2937');
+  const border = value('--border-control', '#b8bec6');
+  const warning = value('--status-warning', '#8a5a00');
+  return {
+    securityLevel: 'strict',
+    fontFamily: value('--font-sans', '"Malgun Gothic", system-ui, sans-serif'),
+    fontSize: 16,
+    themeVariables: {
+      background: documentSurface,
+      primaryColor: selected,
+      primaryTextColor: text,
+      primaryBorderColor: border,
+      secondaryColor: controlSurface,
+      secondaryTextColor: text,
+      secondaryBorderColor: border,
+      tertiaryColor: appSurface,
+      tertiaryTextColor: text,
+      tertiaryBorderColor: border,
+      lineColor: border,
+      textColor: text,
+      edgeLabelBackground: documentSurface,
+      noteBkgColor: warningSurface,
+      noteBorderColor: warning,
+      noteTextColor: warning,
+      fontFamily: value('--font-sans', '"Malgun Gothic", system-ui, sans-serif'),
+      fontSize: '16px',
+    },
+  };
+}
+
+export function mermaidConfigSignature(width: number): string {
+  return JSON.stringify({ ...captureMermaidConfig(), width: Math.round(width) });
+}
+
+const themeSubscribers = new Set<() => void>();
+let themeObserver: MutationObserver | undefined;
+export function subscribeMermaidTheme(callback: () => void): () => void {
+  themeSubscribers.add(callback);
+  if (!themeObserver) {
+    themeObserver = new MutationObserver(() => themeSubscribers.forEach((subscriber) => subscriber()));
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme', 'class', 'style'],
+    });
+  }
+  return () => {
+    themeSubscribers.delete(callback);
+    if (themeSubscribers.size === 0) {
+      themeObserver?.disconnect();
+      themeObserver = undefined;
+    }
+  };
+}
+
+let renderQueue: Promise<unknown> = Promise.resolve();
 
 /** 동적 import 기본 구현. mermaid 는 최초 렌더 시점에만 적재된다. */
 export const defaultMermaidRenderer: MermaidRenderer = async (code, id) => {
+  const config = captureMermaidConfig();
   const { default: mermaid } = await import('mermaid');
-  if (!moduleLoaded) {
-    const light = isLightDocument();
+  const task = async () => {
     mermaid.initialize({
       startOnLoad: false,
-      securityLevel: 'strict',
+      securityLevel: config.securityLevel,
       // `base` 는 themeVariables 를 그대로 받는 유일한 테마다. 다른 테마는
       // 자기 색을 먼저 깔아서 일부만 덮인다.
       theme: 'base',
-      themeVariables: paletteFor(light),
+      themeVariables: config.themeVariables,
+      fontFamily: config.fontFamily,
+      fontSize: config.fontSize,
       // 파싱에 실패하면 mermaid 는 "Syntax error in text" 그래픽을 문서에
       // 직접 붙인다. 우리는 오류를 위젯 안에서 표시하므로 그 경로를 끈다.
       // 끄지 않으면 에디터 바깥에 폭탄 아이콘이 떠서 남는다.
       suppressErrorRendering: true,
     });
     moduleLoaded = true;
-  }
-
-  try {
-    const { svg } = await mermaid.render(id, code);
-    return svg;
-  } finally {
+    try {
+      const { svg } = await mermaid.render(id, code);
+      return svg;
+    } finally {
     // mermaid 는 렌더용 임시 컨테이너를 문서에 붙였다가 성공 경로에서만
     // 치운다. 실패해도 남지 않게 우리가 확실히 제거한다.
     document.getElementById(id)?.remove();
-  }
+    }
+  };
+  const result = renderQueue.then(task, task);
+  renderQueue = result.then(() => undefined, () => undefined);
+  return result;
 };
 
 export async function renderMermaid(
