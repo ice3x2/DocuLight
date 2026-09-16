@@ -1,0 +1,272 @@
+{
+  "phase": "red",
+  "command": "node .kiwi/sessions/newspaper-20260916/evidence/dark-fix/hover-check.cjs red",
+  "artifact": "docs/decision/newspaper-theme-dark.html",
+  "browser": "151.0.7922.34",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "lightArtifactSha256": "cecfe19ec6747c41271306b52dd5e59e69c3084caba2ad5f3257182c6d29edf3",
+  "defaultState": {
+    "geometry": {
+      ".frame": {
+        "x": 0,
+        "y": 32,
+        "width": 1440,
+        "height": 1298.125
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 32,
+        "width": 236,
+        "height": 1298.125
+      },
+      ".main": {
+        "x": 236,
+        "y": 32,
+        "width": 944,
+        "height": 1298.125
+      },
+      ".inspector": {
+        "x": 1180,
+        "y": 32,
+        "width": 260,
+        "height": 1298.125
+      },
+      ".tabs": {
+        "x": 236,
+        "y": 32,
+        "width": 944,
+        "height": 49
+      },
+      ".toolbar": {
+        "x": 236,
+        "y": 81,
+        "width": 944,
+        "height": 58
+      },
+      ".article-wrap": {
+        "x": 313,
+        "y": 139,
+        "width": 790,
+        "height": 1191.125
+      }
+    },
+    "anchors": [
+      {
+        "text": "빈 페이지에서 시작합니다",
+        "className": "here",
+        "rect": {
+          "x": 1201,
+          "y": 139.140625,
+          "width": 219,
+          "height": 19.796875
+        },
+        "color": "rgb(168, 196, 211)",
+        "textDecorationLine": "underline",
+        "textDecorationColor": "rgb(168, 196, 211)",
+        "textDecorationThickness": "auto",
+        "textUnderlineOffset": "3px",
+        "outline": "3px none rgb(168, 196, 211)",
+        "outlineOffset": "0px"
+      },
+      {
+        "text": "함께 쓰기 위한 작은 원칙",
+        "className": "",
+        "rect": {
+          "x": 1201,
+          "y": 171.9375,
+          "width": 219,
+          "height": 19.796875
+        },
+        "color": "rgb(233, 231, 223)",
+        "textDecorationLine": "none",
+        "textDecorationColor": "rgb(233, 231, 223)",
+        "textDecorationThickness": "auto",
+        "textUnderlineOffset": "auto",
+        "outline": "3px none rgb(233, 231, 223)",
+        "outlineOffset": "0px"
+      },
+      {
+        "text": "처음 오셨나요?",
+        "className": "",
+        "rect": {
+          "x": 1201,
+          "y": 204.734375,
+          "width": 219,
+          "height": 19.796875
+        },
+        "color": "rgb(233, 231, 223)",
+        "textDecorationLine": "none",
+        "textDecorationColor": "rgb(233, 231, 223)",
+        "textDecorationThickness": "auto",
+        "textUnderlineOffset": "auto",
+        "outline": "3px none rgb(233, 231, 223)",
+        "outlineOffset": "0px"
+      }
+    ]
+  },
+  "hoverRuns": [
+    {
+      "index": 0,
+      "text": "빈 페이지에서 시작합니다",
+      "default": {
+        "text": "빈 페이지에서 시작합니다",
+        "className": "here",
+        "rect": {
+          "x": 1201,
+          "y": 139.140625,
+          "width": 219,
+          "height": 19.796875
+        },
+        "color": "rgb(168, 196, 211)",
+        "textDecorationLine": "underline",
+        "textDecorationColor": "rgb(168, 196, 211)",
+        "textDecorationThickness": "auto",
+        "textUnderlineOffset": "3px",
+        "outline": "3px none rgb(168, 196, 211)",
+        "outlineOffset": "0px"
+      },
+      "hovered": {
+        "color": "rgb(168, 196, 211)",
+        "textDecorationLine": "underline",
+        "textDecorationColor": "rgb(168, 196, 211)",
+        "textDecorationThickness": "auto",
+        "textUnderlineOffset": "3px",
+        "outline": "3px none rgb(168, 196, 211)",
+        "outlineOffset": "0px",
+        "rect": {
+          "x": 1201,
+          "y": 139.140625,
+          "width": 219,
+          "height": 19.796875
+        }
+      },
+      "restored": {
+        "color": "rgb(168, 196, 211)",
+        "textDecorationLine": "underline",
+        "textDecorationColor": "rgb(168, 196, 211)",
+        "textDecorationThickness": "auto",
+        "textUnderlineOffset": "3px"
+      },
+      "exactHoverDecoration": false,
+      "hoverGeometryUnchanged": true,
+      "mouseleaveRestored": true
+    },
+    {
+      "index": 1,
+      "text": "함께 쓰기 위한 작은 원칙",
+      "default": {
+        "text": "함께 쓰기 위한 작은 원칙",
+        "className": "",
+        "rect": {
+          "x": 1201,
+          "y": 171.9375,
+          "width": 219,
+          "height": 19.796875
+        },
+        "color": "rgb(233, 231, 223)",
+        "textDecorationLine": "none",
+        "textDecorationColor": "rgb(233, 231, 223)",
+        "textDecorationThickness": "auto",
+        "textUnderlineOffset": "auto",
+        "outline": "3px none rgb(233, 231, 223)",
+        "outlineOffset": "0px"
+      },
+      "hovered": {
+        "color": "rgb(233, 231, 223)",
+        "textDecorationLine": "none",
+        "textDecorationColor": "rgb(233, 231, 223)",
+        "textDecorationThickness": "auto",
+        "textUnderlineOffset": "auto",
+        "outline": "3px none rgb(233, 231, 223)",
+        "outlineOffset": "0px",
+        "rect": {
+          "x": 1201,
+          "y": 171.9375,
+          "width": 219,
+          "height": 19.796875
+        }
+      },
+      "restored": {
+        "color": "rgb(233, 231, 223)",
+        "textDecorationLine": "none",
+        "textDecorationColor": "rgb(233, 231, 223)",
+        "textDecorationThickness": "auto",
+        "textUnderlineOffset": "auto"
+      },
+      "exactHoverDecoration": false,
+      "hoverGeometryUnchanged": true,
+      "mouseleaveRestored": true
+    },
+    {
+      "index": 2,
+      "text": "처음 오셨나요?",
+      "default": {
+        "text": "처음 오셨나요?",
+        "className": "",
+        "rect": {
+          "x": 1201,
+          "y": 204.734375,
+          "width": 219,
+          "height": 19.796875
+        },
+        "color": "rgb(233, 231, 223)",
+        "textDecorationLine": "none",
+        "textDecorationColor": "rgb(233, 231, 223)",
+        "textDecorationThickness": "auto",
+        "textUnderlineOffset": "auto",
+        "outline": "3px none rgb(233, 231, 223)",
+        "outlineOffset": "0px"
+      },
+      "hovered": {
+        "color": "rgb(233, 231, 223)",
+        "textDecorationLine": "none",
+        "textDecorationColor": "rgb(233, 231, 223)",
+        "textDecorationThickness": "auto",
+        "textUnderlineOffset": "auto",
+        "outline": "3px none rgb(233, 231, 223)",
+        "outlineOffset": "0px",
+        "rect": {
+          "x": 1201,
+          "y": 204.734375,
+          "width": 219,
+          "height": 19.796875
+        }
+      },
+      "restored": {
+        "color": "rgb(233, 231, 223)",
+        "textDecorationLine": "none",
+        "textDecorationColor": "rgb(233, 231, 223)",
+        "textDecorationThickness": "auto",
+        "textUnderlineOffset": "auto"
+      },
+      "exactHoverDecoration": false,
+      "hoverGeometryUnchanged": true,
+      "mouseleaveRestored": true
+    }
+  ],
+  "keyboardFocus": {
+    "beforeHover": {
+      "tag": "A",
+      "text": "빈 페이지에서 시작합니다",
+      "outline": "2px solid rgb(168, 196, 211)",
+      "outlineOffset": "4px"
+    },
+    "duringHover": {
+      "tag": "A",
+      "text": "빈 페이지에서 시작합니다",
+      "outline": "2px solid rgb(168, 196, 211)",
+      "outlineOffset": "4px",
+      "color": "rgb(168, 196, 211)",
+      "textDecorationLine": "underline",
+      "textDecorationColor": "rgb(168, 196, 211)",
+      "textDecorationThickness": "auto",
+      "textUnderlineOffset": "3px"
+    },
+    "maintained": true,
+    "exactHoverDecorationDuringFocus": false
+  },
+  "pass": false
+}

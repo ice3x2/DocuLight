@@ -1,0 +1,450 @@
+{
+  "artifact": "docs/decision/newspaper-theme-dark.html",
+  "artifactSha256": "8a0359f6fa0dfe5f287347c1288dce8da505de360a1faaf73b2cd6518252dc02",
+  "lightArtifactSha256": "cecfe19ec6747c41271306b52dd5e59e69c3084caba2ad5f3257182c6d29edf3",
+  "browser": "151.0.7922.34",
+  "method": {
+    "type": "Full Chromium extension chrome.tabs.setZoom in isolated temporary profile with off-screen browser window",
+    "temporaryProfile": true,
+    "extensionTemporary": true,
+    "localFixture": {
+      "host": "127.0.0.1",
+      "port": 54810,
+      "credentials": false
+    },
+    "physicalWindowRequest": {
+      "width": 1440,
+      "height": 900
+    },
+    "usedCssZoom": false,
+    "usedCdpPageScale": false,
+    "usedManualViewportHalving": false,
+    "usedManualDeviceScaleFactor": false,
+    "note": "CDP Page.getLayoutMetrics was read only after rendering; no Emulation command was sent."
+  },
+  "browserZoom": {
+    "baseline": 1,
+    "requested": 2,
+    "returnedAfterSet": 2,
+    "final": 2
+  },
+  "palette": {
+    "expected": {
+      "--surface-app": "#20221F",
+      "--surface-document": "#292C27",
+      "--surface-sidebar": "#1A1D19",
+      "--surface-control": "#30352E",
+      "--text-primary": "#E9E7DF",
+      "--text-secondary": "#B5B8AE",
+      "--text-sidebar-secondary": "#B5B8AE",
+      "--border-subtle": "#484D44",
+      "--border-control": "#87917F",
+      "--action-primary": "#A8C4D3",
+      "--action-primary-hover": "#BBD1DC",
+      "--action-primary-active": "#CADBE3",
+      "--text-on-primary": "#19231F",
+      "--surface-selected": "#344650",
+      "--focus-ring": "#A8C4D3",
+      "--status-danger": "#F0ABA3",
+      "--surface-danger": "#482C29",
+      "--status-warning": "#E2C084",
+      "--surface-warning": "#423720",
+      "--status-success": "#A8CFB0",
+      "--surface-success": "#293D2E",
+      "--surface-disabled": "#353A32",
+      "--text-disabled": "#939B8A",
+      "--overlay": "rgb(0 0 0 / 60%)"
+    },
+    "computed": {
+      "--surface-app": "#20221F",
+      "--surface-document": "#292C27",
+      "--surface-sidebar": "#1A1D19",
+      "--surface-control": "#30352E",
+      "--text-primary": "#E9E7DF",
+      "--text-secondary": "#B5B8AE",
+      "--text-sidebar-secondary": "#B5B8AE",
+      "--border-subtle": "#484D44",
+      "--border-control": "#87917F",
+      "--action-primary": "#A8C4D3",
+      "--action-primary-hover": "#BBD1DC",
+      "--action-primary-active": "#CADBE3",
+      "--text-on-primary": "#19231F",
+      "--surface-selected": "#344650",
+      "--focus-ring": "#A8C4D3",
+      "--status-danger": "#F0ABA3",
+      "--surface-danger": "#482C29",
+      "--status-warning": "#E2C084",
+      "--surface-warning": "#423720",
+      "--status-success": "#A8CFB0",
+      "--surface-success": "#293D2E",
+      "--surface-disabled": "#353A32",
+      "--text-disabled": "#939B8A",
+      "--overlay": "rgb(0 0 0 / 60%)"
+    },
+    "exactMatch": true
+  },
+  "anchors": {
+    "runs": [
+      {
+        "index": 0,
+        "before": {
+          "text": "빈 페이지에서 시작합니다",
+          "className": "here",
+          "rect": {
+            "x": 1185.5999755859375,
+            "y": 139.15000915527344,
+            "width": 219.1999969482422,
+            "height": 19.80000114440918
+          },
+          "color": "rgb(168, 196, 211)",
+          "textDecorationLine": "underline",
+          "textDecorationColor": "rgb(168, 196, 211)",
+          "textDecorationThickness": "auto",
+          "textUnderlineOffset": "3px",
+          "outline": "2.4px none rgb(168, 196, 211)",
+          "outlineOffset": "0px"
+        },
+        "hovered": {
+          "text": "빈 페이지에서 시작합니다",
+          "className": "here",
+          "rect": {
+            "x": 1185.5999755859375,
+            "y": 139.15000915527344,
+            "width": 219.1999969482422,
+            "height": 19.80000114440918
+          },
+          "color": "rgb(168, 196, 211)",
+          "textDecorationLine": "underline",
+          "textDecorationColor": "rgb(168, 196, 211)",
+          "textDecorationThickness": "1px",
+          "textUnderlineOffset": "3px",
+          "outline": "2.4px none rgb(168, 196, 211)",
+          "outlineOffset": "0px"
+        },
+        "restored": {
+          "text": "빈 페이지에서 시작합니다",
+          "className": "here",
+          "rect": {
+            "x": 1185.5999755859375,
+            "y": 139.15000915527344,
+            "width": 219.1999969482422,
+            "height": 19.80000114440918
+          },
+          "color": "rgb(168, 196, 211)",
+          "textDecorationLine": "underline",
+          "textDecorationColor": "rgb(168, 196, 211)",
+          "textDecorationThickness": "auto",
+          "textUnderlineOffset": "3px",
+          "outline": "1.6px solid rgb(168, 196, 211)",
+          "outlineOffset": "4px"
+        },
+        "hoverDecorationExact": true,
+        "geometryUnchanged": true,
+        "defaultRestored": true
+      },
+      {
+        "index": 1,
+        "before": {
+          "text": "함께 쓰기 위한 작은 원칙",
+          "className": "",
+          "rect": {
+            "x": 1185.5999755859375,
+            "y": 171.9499969482422,
+            "width": 219.1999969482422,
+            "height": 19.80000114440918
+          },
+          "color": "rgb(233, 231, 223)",
+          "textDecorationLine": "none",
+          "textDecorationColor": "rgb(233, 231, 223)",
+          "textDecorationThickness": "auto",
+          "textUnderlineOffset": "auto",
+          "outline": "2.4px none rgb(233, 231, 223)",
+          "outlineOffset": "0px"
+        },
+        "hovered": {
+          "text": "함께 쓰기 위한 작은 원칙",
+          "className": "",
+          "rect": {
+            "x": 1185.5999755859375,
+            "y": 171.9499969482422,
+            "width": 219.1999969482422,
+            "height": 19.80000114440918
+          },
+          "color": "rgb(233, 231, 223)",
+          "textDecorationLine": "underline",
+          "textDecorationColor": "rgb(233, 231, 223)",
+          "textDecorationThickness": "1px",
+          "textUnderlineOffset": "3px",
+          "outline": "2.4px none rgb(233, 231, 223)",
+          "outlineOffset": "0px"
+        },
+        "restored": {
+          "text": "함께 쓰기 위한 작은 원칙",
+          "className": "",
+          "rect": {
+            "x": 1185.5999755859375,
+            "y": 171.9499969482422,
+            "width": 219.1999969482422,
+            "height": 19.80000114440918
+          },
+          "color": "rgb(233, 231, 223)",
+          "textDecorationLine": "none",
+          "textDecorationColor": "rgb(233, 231, 223)",
+          "textDecorationThickness": "auto",
+          "textUnderlineOffset": "auto",
+          "outline": "2.4px none rgb(233, 231, 223)",
+          "outlineOffset": "0px"
+        },
+        "hoverDecorationExact": true,
+        "geometryUnchanged": true,
+        "defaultRestored": true
+      },
+      {
+        "index": 2,
+        "before": {
+          "text": "처음 오셨나요?",
+          "className": "",
+          "rect": {
+            "x": 1185.5999755859375,
+            "y": 204.75,
+            "width": 219.1999969482422,
+            "height": 19.80000114440918
+          },
+          "color": "rgb(233, 231, 223)",
+          "textDecorationLine": "none",
+          "textDecorationColor": "rgb(233, 231, 223)",
+          "textDecorationThickness": "auto",
+          "textUnderlineOffset": "auto",
+          "outline": "2.4px none rgb(233, 231, 223)",
+          "outlineOffset": "0px"
+        },
+        "hovered": {
+          "text": "처음 오셨나요?",
+          "className": "",
+          "rect": {
+            "x": 1185.5999755859375,
+            "y": 204.75,
+            "width": 219.1999969482422,
+            "height": 19.80000114440918
+          },
+          "color": "rgb(233, 231, 223)",
+          "textDecorationLine": "underline",
+          "textDecorationColor": "rgb(233, 231, 223)",
+          "textDecorationThickness": "1px",
+          "textUnderlineOffset": "3px",
+          "outline": "2.4px none rgb(233, 231, 223)",
+          "outlineOffset": "0px"
+        },
+        "restored": {
+          "text": "처음 오셨나요?",
+          "className": "",
+          "rect": {
+            "x": 1185.5999755859375,
+            "y": 204.75,
+            "width": 219.1999969482422,
+            "height": 19.80000114440918
+          },
+          "color": "rgb(233, 231, 223)",
+          "textDecorationLine": "none",
+          "textDecorationColor": "rgb(233, 231, 223)",
+          "textDecorationThickness": "auto",
+          "textUnderlineOffset": "auto",
+          "outline": "2.4px none rgb(233, 231, 223)",
+          "outlineOffset": "0px"
+        },
+        "hoverDecorationExact": true,
+        "geometryUnchanged": true,
+        "defaultRestored": true
+      }
+    ],
+    "focus": {
+      "text": "빈 페이지에서 시작합니다",
+      "className": "here",
+      "rect": {
+        "x": 1185.5999755859375,
+        "y": 139.15000915527344,
+        "width": 219.1999969482422,
+        "height": 19.80000114440918
+      },
+      "color": "rgb(168, 196, 211)",
+      "textDecorationLine": "underline",
+      "textDecorationColor": "rgb(168, 196, 211)",
+      "textDecorationThickness": "auto",
+      "textUnderlineOffset": "3px",
+      "outline": "1.6px solid rgb(168, 196, 211)",
+      "outlineOffset": "4px"
+    },
+    "focusOutlinePhysicalPixels": 2,
+    "pass": true
+  },
+  "baseline100Percent": {
+    "innerWidth": 1440,
+    "innerHeight": 814,
+    "outerWidth": 1441,
+    "outerHeight": 901,
+    "devicePixelRatio": 1.25,
+    "visualViewport": {
+      "width": 1424.800048828125,
+      "height": 813.5999755859375,
+      "scale": 1
+    },
+    "document": {
+      "scrollWidth": 1425,
+      "scrollHeight": 2779,
+      "horizontalOverflow": false,
+      "htmlComputedZoom": "1",
+      "bodyComputedZoom": "1",
+      "htmlInlineStyle": null,
+      "bodyInlineStyle": null
+    },
+    "responsiveState": {
+      "sidebarDisplay": "flex",
+      "inspectorDisplay": "block",
+      "specimenGridColumns": "600px 600px"
+    },
+    "geometry": {
+      "frame": {
+        "x": 0,
+        "y": 32,
+        "width": 1424.800048828125,
+        "height": 1295.8499755859375
+      },
+      "main": {
+        "x": 236,
+        "y": 32,
+        "width": 928.7999877929688,
+        "height": 1295.8499755859375
+      },
+      "article": {
+        "x": 359.3999938964844,
+        "y": 260.1499938964844,
+        "width": 682,
+        "height": 941.4000244140625
+      }
+    },
+    "cdpReadOnly": {
+      "layoutViewport": {
+        "pageX": 0,
+        "pageY": 0,
+        "clientWidth": 1781,
+        "clientHeight": 1017
+      },
+      "cssLayoutViewport": {
+        "pageX": 0,
+        "pageY": 0,
+        "clientWidth": 1424,
+        "clientHeight": 813
+      },
+      "contentSize": {
+        "x": 0,
+        "y": 0,
+        "width": 1781,
+        "height": 3474
+      },
+      "cssContentSize": {
+        "x": 0,
+        "y": 0,
+        "width": 1424,
+        "height": 2779
+      }
+    }
+  },
+  "zoom200Percent": {
+    "innerWidth": 720,
+    "innerHeight": 407,
+    "outerWidth": 1441,
+    "outerHeight": 901,
+    "devicePixelRatio": 2.5,
+    "visualViewport": {
+      "width": 712.4000244140625,
+      "height": 406.79998779296875,
+      "scale": 1
+    },
+    "document": {
+      "scrollWidth": 712,
+      "scrollHeight": 3737,
+      "horizontalOverflow": false,
+      "htmlComputedZoom": "1",
+      "bodyComputedZoom": "1",
+      "htmlInlineStyle": null,
+      "bodyInlineStyle": null
+    },
+    "responsiveState": {
+      "sidebarDisplay": "none",
+      "inspectorDisplay": "none",
+      "specimenGridColumns": "676.4px"
+    },
+    "geometry": {
+      "frame": {
+        "x": 0,
+        "y": 32.95000076293945,
+        "width": 712.4000244140625,
+        "height": 1269.6500244140625
+      },
+      "main": {
+        "x": 0,
+        "y": 32.95000076293945,
+        "width": 712.4000244140625,
+        "height": 1269.6500244140625
+      },
+      "article": {
+        "x": 22,
+        "y": 241.5,
+        "width": 668.4000244140625,
+        "height": 967.7999877929688
+      }
+    },
+    "cdpReadOnly": {
+      "layoutViewport": {
+        "pageX": 0,
+        "pageY": 0,
+        "clientWidth": 1781,
+        "clientHeight": 1017
+      },
+      "cssLayoutViewport": {
+        "pageX": 0,
+        "pageY": 0,
+        "clientWidth": 712,
+        "clientHeight": 406
+      },
+      "contentSize": {
+        "x": 0,
+        "y": 0,
+        "width": 1781,
+        "height": 9344
+      },
+      "cssContentSize": {
+        "x": 0,
+        "y": 0,
+        "width": 712,
+        "height": 3737
+      }
+    }
+  },
+  "screenshots": {
+    "baseline100Percent": {
+      "file": "actual-browser-zoom-100.png",
+      "pixels": {
+        "width": 1800,
+        "height": 1018
+      }
+    },
+    "zoom200Percent": {
+      "file": "actual-browser-zoom-200.png",
+      "pixels": {
+        "width": 900,
+        "height": 509
+      }
+    }
+  },
+  "independentEffect": {
+    "widthRatio": 2,
+    "heightRatio": 2,
+    "frameWidthRatio": 2,
+    "outerWidthUnchanged": true,
+    "outerHeightUnchanged": true,
+    "screenshotPhysicalSizeUnchanged": false,
+    "screenshotCaptureNote": "Playwright page screenshots capture the zoomed content surface, not browser chrome; the 200% PNG pixel dimensions are therefore smaller even though outerWidth/outerHeight are unchanged."
+  },
+  "actualBrowserZoom200Confirmed": true
+}
