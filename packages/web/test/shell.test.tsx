@@ -26,6 +26,16 @@ describe('IR-SHELL-002 · CON-ARCH-004 — 셸 골격', () => {
     expect(screen.getByRole('main')).toBeDefined();
     expect(screen.getByRole('complementary', { name: '우측 사이드바' })).toBeDefined();
   });
+
+  it('IR-SHELL-009 AC-1: 설정 진입점은 좌측 사이드바의 독립된 마지막 행이다', () => {
+    render(<AppShell viewer={ROOT} />);
+
+    const sidebar = screen.getByRole('complementary', { name: '좌측 사이드바' });
+    const settings = within(sidebar).getByRole('button', { name: '설정' });
+
+    expect(settings.closest('[data-shell="settings-corner"]')?.parentElement).toBe(sidebar);
+    expect(sidebar.lastElementChild?.contains(settings)).toBe(true);
+  });
 });
 
 describe('FR-SHELL-001 — 좌측 사이드바 뷰 전환 탭 세 가지', () => {

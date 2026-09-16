@@ -65,6 +65,7 @@ function Sidebar({
   side,
   active,
   onActivate,
+  footer,
   children,
 }: {
   label: string;
@@ -79,6 +80,7 @@ function Sidebar({
    */
   active?: string;
   onActivate?: (tabId: string) => void;
+  footer?: React.ReactNode;
   children?: (tab: ShellTab) => React.ReactNode;
 }) {
   const first = tabs[0]!;
@@ -92,7 +94,11 @@ function Sidebar({
       >
         <Tabs.List aria-label={label}>
           {tabs.map((tab) => (
-            <Tabs.Trigger key={tab.id} value={tab.id}>
+            <Tabs.Trigger
+              key={tab.id}
+              value={tab.id}
+              onFocus={(event) => event.currentTarget.scrollIntoView({ block: 'nearest', inline: 'nearest' })}
+            >
               {tab.label}
             </Tabs.Trigger>
           ))}
@@ -106,6 +112,7 @@ function Sidebar({
           </Tabs.Content>
         ))}
       </Tabs.Root>
+      {footer}
     </aside>
   );
 }
@@ -638,6 +645,40 @@ export function AppShell({
         side="left"
         active={leftTab}
         onActivate={setLeftTab}
+        footer={
+          <SettingsModal
+            viewer={viewer}
+            trash={trash}
+            workspaces={workspaces.map((entry) => entry.workspace)}
+            {...(trashLens === undefined ? {} : { trashLens })}
+            {...(onTrashLens === undefined ? {} : { onTrashLens })}
+            {...(onTrashPurge === undefined ? {} : { onTrashPurge })}
+            {...(onTrashRestore === undefined ? {} : { onTrashRestore })}
+            personalSettings={personalSettings}
+            {...(themeLoadState === undefined ? {} : { themeLoadState })}
+            {...(themeSaveState === undefined ? {} : { themeSaveState })}
+            {...(onPersonalSetting === undefined ? {} : { onPersonalSetting })}
+            tokens={tokens}
+            {...(onIssueToken === undefined ? {} : { onIssueToken })}
+            {...(onRevokeToken === undefined ? {} : { onRevokeToken })}
+            {...(onLogout === undefined ? {} : { onLogout })}
+            {...(onPasswordChange === undefined ? {} : { onPasswordChange })}
+            userRoster={userRoster}
+            groupRoster={groupRoster}
+            {...(aclAudit === undefined ? {} : { aclAudit })}
+            {...(auditLog === undefined ? {} : { auditLog })}
+            {...(queue === undefined ? {} : { queue })}
+            {...(auditOperation === undefined ? {} : { auditOperation })}
+            {...(onAuditOperation === undefined ? {} : { onAuditOperation })}
+            {...(onGroupRemove === undefined ? {} : { onGroupRemove })}
+            {...(onGroupAddMember === undefined ? {} : { onGroupAddMember })}
+            {...(signupMode === undefined ? {} : { signupMode })}
+            {...(onApproveUser === undefined ? {} : { onApproveUser })}
+            {...(onReopenUser === undefined ? {} : { onReopenUser })}
+            {...(onUserStatus === undefined ? {} : { onUserStatus })}
+            {...(onRegisterUser === undefined ? {} : { onRegisterUser })}
+          />
+        }
         // 트리만 내용을 갖는다. 검색·즐겨찾기는 그것을 소유한 요구가 서는
         // 자리에서 채워진다 — 여기서 함께 만들면 셸 구조와 그 안의 기능이
         // 한 파일에서 얽힌다.
@@ -717,38 +758,6 @@ export function AppShell({
       </Sidebar>
 
       <main>
-        <SettingsModal
-          viewer={viewer}
-          trash={trash}
-          workspaces={workspaces.map((entry) => entry.workspace)}
-          {...(trashLens === undefined ? {} : { trashLens })}
-          {...(onTrashLens === undefined ? {} : { onTrashLens })}
-          {...(onTrashPurge === undefined ? {} : { onTrashPurge })}
-          {...(onTrashRestore === undefined ? {} : { onTrashRestore })}
-          personalSettings={personalSettings}
-          {...(themeLoadState === undefined ? {} : { themeLoadState })}
-          {...(themeSaveState === undefined ? {} : { themeSaveState })}
-          {...(onPersonalSetting === undefined ? {} : { onPersonalSetting })}
-          tokens={tokens}
-          {...(onIssueToken === undefined ? {} : { onIssueToken })}
-          {...(onRevokeToken === undefined ? {} : { onRevokeToken })}
-          {...(onLogout === undefined ? {} : { onLogout })}
-          {...(onPasswordChange === undefined ? {} : { onPasswordChange })}
-          userRoster={userRoster}
-          groupRoster={groupRoster}
-          {...(aclAudit === undefined ? {} : { aclAudit })}
-          {...(auditLog === undefined ? {} : { auditLog })}
-          {...(queue === undefined ? {} : { queue })}
-          {...(auditOperation === undefined ? {} : { auditOperation })}
-          {...(onAuditOperation === undefined ? {} : { onAuditOperation })}
-          {...(onGroupRemove === undefined ? {} : { onGroupRemove })}
-          {...(onGroupAddMember === undefined ? {} : { onGroupAddMember })}
-          {...(signupMode === undefined ? {} : { signupMode })}
-          {...(onApproveUser === undefined ? {} : { onApproveUser })}
-          {...(onReopenUser === undefined ? {} : { onReopenUser })}
-          {...(onUserStatus === undefined ? {} : { onUserStatus })}
-          {...(onRegisterUser === undefined ? {} : { onRegisterUser })}
-        />
         {notice !== undefined && (
           // `status` 인 이유는 이것이 사용자의 조작을 막지 않기 때문이다 —
           // 알림은 이미 끝난 일을 알리는 것이고, 대화상자로 세우면 확인

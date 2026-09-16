@@ -37,8 +37,10 @@ function DocumentHeader({
   if (tab === undefined) return null;
 
   return (
-    <header aria-label="문서 헤더">
-      <nav aria-label="브레드크럼">{tab.breadcrumb.join(' / ')}</nav>
+    <header aria-label="문서 헤더" data-document-header="">
+      <nav aria-label="브레드크럼" tabIndex={0}>
+        {tab.breadcrumb.join(' / ')}
+      </nav>
       <span role="status">{SAVE_LABEL[tab.save]}</span>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger aria-label={`${tab.name} 문서 메뉴`}>⋯</DropdownMenu.Trigger>
@@ -134,14 +136,19 @@ export function DocumentArea({
   }
 
   return (
-    <div>
+    <div data-document-area="">
       <Tabs.Root
+        data-document-tabs=""
         value={state.activeId ?? undefined}
         onValueChange={(activeId) => onState({ ...state, activeId })}
       >
-        <Tabs.List aria-label="열린 문서">
+        <Tabs.List aria-label="열린 문서" data-document-tab-strip="">
           {state.tabs.map((tab) => (
-            <Tabs.Trigger key={tab.nodeId} value={tab.nodeId}>
+            <Tabs.Trigger
+              key={tab.nodeId}
+              value={tab.nodeId}
+              onFocus={(event) => event.currentTarget.scrollIntoView({ block: 'nearest', inline: 'nearest' })}
+            >
               {tab.name}
             </Tabs.Trigger>
           ))}
@@ -159,7 +166,7 @@ export function DocumentArea({
         />
 
         {state.tabs.map((tab) => (
-          <Tabs.Content key={tab.nodeId} value={tab.nodeId}>
+          <Tabs.Content key={tab.nodeId} value={tab.nodeId} data-document-content="">
             <button type="button" onClick={() => onState(closeTab(state, tab.nodeId))}>
               {tab.name} 닫기
             </button>

@@ -139,6 +139,18 @@ describe('IR-SHELL-003 — 탭 스트립과 문서 헤더는 2단으로 분리�
     expect(within(header).getByRole('status')).toBeDefined();
   });
 
+  it('IR-SHELL-009 AC-1: 긴 전체 경로는 제목으로 축약되지 않고 키보드로 스크롤할 수 있다', () => {
+    const long = {
+      ...doc('n1', '최종문서.md'),
+      breadcrumb: ['워크스페이스', '아주 긴 한글 경로', '하위 폴더', '최종문서.md'],
+    };
+    render(<DocumentArea initial={stateOf(long)} />);
+
+    const breadcrumb = screen.getByRole('navigation', { name: '브레드크럼' });
+    expect(breadcrumb.textContent).toBe('워크스페이스 / 아주 긴 한글 경로 / 하위 폴더 / 최종문서.md');
+    expect(breadcrumb.getAttribute('tabindex')).toBe('0');
+  });
+
   it('AC-4: 헤더의 ⋯ 메뉴가 활성 문서를 대상으로 한다', async () => {
     const user = userEvent.setup();
     render(<DocumentArea initial={stateOf(doc('n1', '가.md'), doc('n2', '나.md'))} />);

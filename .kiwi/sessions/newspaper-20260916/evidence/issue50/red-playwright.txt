@@ -1,0 +1,17 @@
+Command: node test/newspaper-shell-layout-check.cjs
+Exit code: 1
+
+AssertionError [ERR_ASSERTION]: header height 22
+    at assertGeometry (packages/web/test/newspaper-shell-layout-check.cjs:77:3)
+    at runMatrix (packages/web/test/newspaper-shell-layout-check.cjs:104:5)
+
+The Playwright Chromium check reached the actual AppShell fixture at 1280x720 and failed before implementation because the separate document header was 22px instead of the required minimum 52px.
+
+Follow-up RED after adding the exact fixed-row assertion:
+Command: npm run test:browser:shell
+Exit code: 1
+
+AssertionError [ERR_ASSERTION]: settings row height 320.5
+    at assertGeometry (packages/web/test/newspaper-shell-layout-check.cjs:81:3)
+
+This exposed a cascade conflict: the generic sidebar flex child rule expanded the settings footer instead of reserving one 52px bottom row.
