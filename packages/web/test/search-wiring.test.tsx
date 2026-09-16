@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
@@ -26,9 +26,11 @@ const json = (body: unknown, status = 200) =>
 
 /** 이 렌더에서 `/api/search` 로 나간 주소들. 순서대로 쌓인다. */
 let 검색요청: string[];
+let 검색응답: (url: string) => Promise<Response>;
 
 beforeEach(() => {
   검색요청 = [];
+  검색응답 = async () => json({ documents: [] });
   localStorage.clear();
 
   vi.stubGlobal(
@@ -38,7 +40,7 @@ beforeEach(() => {
       const path = full.split('?')[0]!;
       if (path === '/api/search') {
         검색요청.push(full);
-        return Promise.resolve(json({ documents: [] }));
+        return 검색응답(full);
       }
       if (path === '/api/session') {
         return Promise.resolve(
@@ -62,7 +64,7 @@ async function 검색한다(user: ReturnType<typeof userEvent.setup>): Promise<v
   await user.click(await screen.findByRole('tab', { name: '검색' }));
   // cmdk 의 Command.Input 이라 role 이 combobox 다. placeholder 로 집는 것이
   // 그 부품 교체에 덜 흔들린다.
-  await user.type(screen.getByPlaceholderText(/문서 제목/), '설계');
+  await user.type(screen.getByPlaceholderText(/이름 · 본문/), '설계');
 }
 
 /** 그 요청이 실은 축들. 순서는 보지 않는다 — 조합이 같으면 같은 질의다. */
@@ -120,4 +122,44 @@ it('AC-8: 축을 끄면 그 축이 검색 요청에서 빠진다', async () => {
   await user.click(screen.getByRole('checkbox', { name: AXIS_LABELS.body }));
 
   await waitFor(() => expect(축들(검색요청.at(-1)!), '끈 축이 요청에 남았다').toEqual(['name']));
+});
+
+it('IR-SHELL-009 AC-3: 실제 search query의 loading/error와 refetch를 화면에 전달한다', async () => {
+  let resolve!: (response: Response) => void;
+  검색응답 = () => new Promise<Response>((done) => { resolve = done; });
+  const user = userEvent.setup();
+  render(<App />);
+  await 검색한다(user);
+  expect(await screen.findByRole('status', { name: '검색 중…' })).toBeDefined();
+
+  resolve(json({}, 500));
+  const alert = await screen.findByRole('alert', { name: '검색 오류' });
+  expect(alert.textContent).not.toContain('500');
+
+  const beforeRetry = 검색요청.length;
+  검색응답 = async () => json({ documents: [] });
+  await user.click(screen.getByRole('button', { name: '다시 시도' }));
+  expect(await screen.findByText('검색 결과가 없습니다.')).toBeDefined();
+  expect(검색요청).toHaveLength(beforeRetry + 1);
+});
+
+it('IR-SHELL-009 AC-3: 이전 query의 늦은 응답이 새 query 결과를 덮지 않는다', async () => {
+  const pending = new Map<string, (response: Response) => void>();
+  검색응답 = (url) => new Promise<Response>((done) => {
+    pending.set(new URL(url, 'http://x').searchParams.get('q') ?? '', done);
+  });
+  const user = userEvent.setup();
+  render(<App />);
+  await user.click(await screen.findByRole('tab', { name: '검색' }));
+  const input = screen.getByRole('combobox', { name: '검색' });
+  fireEvent.change(input, { target: { value: '이전질의' } });
+  await waitFor(() => expect(pending.has('이전질의')).toBe(true));
+  fireEvent.change(input, { target: { value: '현재질의' } });
+  await waitFor(() => expect(pending.has('현재질의')).toBe(true));
+
+  pending.get('현재질의')!(json({ documents: [{ nodeId: 'new', name: '현재.md', workspaceName: '기획팀', excerpts: [] }] }));
+  expect(await screen.findByText('현재.md')).toBeDefined();
+  pending.get('이전질의')!(json({ documents: [{ nodeId: 'old', name: '이전.md', workspaceName: '기획팀', excerpts: [] }] }));
+  await waitFor(() => expect(screen.queryByText('이전.md')).toBeNull());
+  expect(screen.getByText('현재.md')).toBeDefined();
 });

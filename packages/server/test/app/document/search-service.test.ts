@@ -164,6 +164,60 @@ describe('FR-SHELL-013 — 결과의 모양', () => {
   });
 });
 
+describe('FR-SHELL-014 — 실제 검색 서비스의 AND/OR 문법', () => {
+  it('OR 묶음 중 하나가 맞으면 찾고, AND 묶음은 모든 항이 같은 문서에 맞아야 한다', async () => {
+    await 문서('회의록.md', '분기 계획과 예산 검토\n');
+    await 문서('규정.md', '보안 지침\n');
+
+    expect(이름들(await search(stores, root, { query: '회의록 | 존재없음', axes: ['name'] }))).toEqual(['회의록.md']);
+    expect(이름들(await search(stores, root, { query: '회의록 계획', axes: ['name', 'body'] }))).toEqual(['회의록.md']);
+    expect(이름들(await search(stores, root, { query: '회의록 보안', axes: ['name', 'body'] }))).toEqual([]);
+    expect(이름들(await search(stores, root, { query: '회의록 계획 | 규정 지침', axes: ['name', 'body'] }))).toEqual(['회의록.md', '규정.md']);
+  });
+
+  it('거부된 한 글자/빈 pipe 질의는 결과가 없고 괄호는 일반 문자다', async () => {
+    await 문서('(회의).md', '분기 계획\n');
+    expect(이름들(await search(stores, root, { query: '회', axes: ['name'] }))).toEqual([]);
+    expect(이름들(await search(stores, root, { query: '회의 | 나', axes: ['name'] }))).toEqual([]);
+    expect(이름들(await search(stores, root, { query: '||', axes: ['name'] }))).toEqual([]);
+    expect(이름들(await search(stores, root, { query: '(회의)', axes: ['name'] }))).toEqual(['(회의).md']);
+  });
+
+  it('여러 항의 서로 다른 실제 위치는 같은 문자열 발췌여도 유지한다', async () => {
+    await 문서('회의계획.md', '회의 계획\n');
+    const found = await search(stores, root, { query: '회의 | 계획', axes: ['name', 'body'] });
+    expect(found.documents).toHaveLength(1);
+    expect(found.documents[0]!.excerpts).toHaveLength(4);
+  });
+
+  it('같은 본문 위치를 공유하는 OR 항은 발췌 하나이며 다른 위치는 각각 유지한다', async () => {
+    await 문서('중첩.md', '0123456789012345678901234alphaABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 alpha');
+    const found = await search(stores, root, { query: 'alpha | alph', axes: ['body'] });
+    const reversed = await search(stores, root, { query: 'alph | alpha', axes: ['body'] });
+    expect(found.documents).toHaveLength(1);
+    expect(found.documents[0]!.excerpts).toHaveLength(2);
+    expect(found.documents[0]!.excerpts.every((one) => one.text.includes('alpha'))).toBe(true);
+    expect(reversed).toEqual(found);
+  });
+
+  it('복합 질의도 PDF를 문서당 한 번만 추출하고 거부 질의·축0은 추출하지 않는다', async () => {
+    const id = await 문서('비용.pdf', 'dummy');
+    let calls = 0;
+    const searchable = { ...stores, pdf: {
+      extract: async () => {
+        calls += 1;
+        return [{ page: 1, text: 'alpha beta' }];
+      },
+    } };
+
+    expect((await search(searchable, root, { query: 'alpha beta', axes: ['body'] })).documents[0]?.nodeId).toBe(id);
+    expect(calls).toBe(1);
+    await search(searchable, root, { query: 'a', axes: ['body'] });
+    await search(searchable, root, { query: 'alpha', axes: [] });
+    expect(calls).toBe(1);
+  });
+});
+
 describe('SEC-WORKSPACE-004 — 검색 결과의 권한 필터', () => {
   it('AC-3: 볼 수 없는 문서가 결과에 나타나지 않는다', async () => {
     const 다른곳 = (

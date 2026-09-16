@@ -734,6 +734,14 @@ function AppBody() {
   const [tagScope, setTagScope] = useState('');
   const tags = useTags(signedIn, tagScope);
   const searchResults = useSearch(signedIn ? query : '', searchAxes);
+  const searchEnabled = signedIn && query.trim() !== '' && searchAxes.length > 0;
+  const searchState = !searchEnabled
+    ? { state: 'idle' as const }
+    : searchResults.isFetching
+      ? { state: 'loading' as const }
+      : searchResults.isError
+        ? { state: 'error' as const, onRetry: () => void searchResults.refetch() }
+        : { state: 'success' as const };
   // 지금은 첫 주체의 것만 묻는다 — 다건 조회의 합산 규칙을 정한 요구가
   // 아직 없어, 없는 규칙을 화면이 지어내지 않는다.
   const revocation = useRevocation(회수주체[0]?.id ?? null);
@@ -1056,6 +1064,7 @@ function AppBody() {
       tagScope={tagScope}
       onTagScope={setTagScope}
       searchResults={searchResults.data?.documents ?? []}
+      searchState={searchState}
       searchAxes={searchAxes}
       onSearchAxes={pickAxes}
       {...(notice === undefined ? {} : { notice })}

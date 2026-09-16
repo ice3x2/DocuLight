@@ -121,7 +121,7 @@ describe('FR-SHELL-010 — 태그를 누르면 검색 탭이 그 질의를 든�
     const 좌측 = screen.getByRole('complementary', { name: '좌측 사이드바' });
     expect(within(좌측).getByRole('tab', { name: '검색' }).getAttribute('aria-selected')).toBe('true');
     await waitFor(() =>
-      expect((within(좌측).getByPlaceholderText(/문서 제목/) as HTMLInputElement).value).toBe('#기획'),
+      expect((within(좌측).getByPlaceholderText(/이름 · 본문/) as HTMLInputElement).value).toBe('#기획'),
     );
   });
 });

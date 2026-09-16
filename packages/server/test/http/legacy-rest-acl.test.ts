@@ -137,6 +137,38 @@ it('CON-ARCH-002 AC-7 — search 는 못 보는 문서를 결과에 싣지 않�
   expect(닫힌것.body.documents, '못 보는 문서가 검색 결과에 나왔다').toEqual([]);
 });
 
+it('FR-SHELL-014 — 실제 HTTP search가 AND/OR·최소 길이 계약을 사용한다', async () => {
+  const or = await request(app).get('/api/search').query({ q: '회의록 | 존재없음', axes: 'name' });
+  expect(or.status).toBe(200);
+  expect(or.body.documents.map((one: { nodeId: string }) => one.nodeId)).toContain(회의록);
+
+  const crossAxisAnd = await request(app).get('/api/search').query({ q: '회의록 계획', axes: 'name,body' });
+  expect(crossAxisAnd.status).toBe(200);
+  expect(crossAxisAnd.body.documents.map((one: { nodeId: string }) => one.nodeId)).toEqual([회의록]);
+
+  const short = await request(app).get('/api/search').query({ q: '회', axes: 'name' });
+  expect(short.status).toBe(200);
+  expect(short.body.documents).toEqual([]);
+});
+
+it('FR-SHELL-014 — HTTP search는 같은 위치를 공유하는 OR 발췌를 중복하지 않는다', async () => {
+  const nodeId = idOf(
+    createNode(stores, root, { workspaceId: ws, parentId: 열린방, kind: 'file', name: '중첩.md' }),
+  );
+  await 본문을둔다(
+    join('열린방', '중첩.md'),
+    '0123456789012345678901234alphaABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 alpha',
+  );
+  const res = await request(app).get('/api/search').query({ q: 'alpha | alph', axes: 'body' });
+  const reversed = await request(app).get('/api/search').query({ q: 'alph | alpha', axes: 'body' });
+  expect(res.status).toBe(200);
+  expect(reversed.status).toBe(200);
+  const document = res.body.documents.find((one: { nodeId: string }) => one.nodeId === nodeId);
+  const reversedDocument = reversed.body.documents.find((one: { nodeId: string }) => one.nodeId === nodeId);
+  expect(document.excerpts).toHaveLength(2);
+  expect(reversedDocument).toEqual(document);
+});
+
 it('SEC-ACL-006 AC-1 · AC-2 — 권한 없는 노드와 없는 노드의 응답이 구별되지 않는다', async () => {
   const 권한없음 = await request(app).get(`/api/documents/${대외비}`);
   const 존재없음 = await request(app).get('/api/documents/node-that-never-existed');

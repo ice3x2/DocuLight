@@ -1,6 +1,7 @@
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it } from 'vitest';
+import type { FormEvent } from 'react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { SearchPanel } from '../src/search/SearchPanel.js';
 import {
@@ -69,6 +70,64 @@ describe('FR-SHELL-013 — 필터 팝오버', () => {
 });
 
 describe('FR-SHELL-013 — 결과의 모양', () => {
+  it('IR-SHELL-009 AC-3: 검색 라벨·문법 안내와 결과 계층을 그대로 표시한다', async () => {
+    render(<SearchPanel documents={결과} query="설계" state={{ state: 'success' }} />);
+
+    expect(screen.getByLabelText('검색').getAttribute('aria-describedby')).toBe('search-query-help');
+    const visibleLabel = screen.getByText('검색', { selector: '[data-search=label]' }) as HTMLLabelElement;
+    expect(visibleLabel.htmlFor).toBe(screen.getByRole('combobox', { name: '검색' }).id);
+    expect(screen.getByText('2자 이상 낱말을 포함해 입력하세요.')).toBeDefined();
+    const 문서 = screen.getByTestId('search-document');
+    expect(within(문서).getByText('회의록.md').hasAttribute('data-search-result-title')).toBe(true);
+    expect(within(문서).getByText('기획팀').hasAttribute('data-search-result-workspace')).toBe(true);
+    expect(문서.textContent).not.toContain('/');
+
+    await userEvent.setup().click(screen.getByRole('button', { name: '검색 대상' }));
+    expect(screen.getByText('검색 대상', { selector: '[data-search-filter-title]' })).toBeDefined();
+    expect(screen.getByText(/공백은 AND, \|는 OR입니다/)).toBeDefined();
+  });
+
+  it('IR-SHELL-009 AC-3: idle/loading/empty/error를 실제 요청 상태로 구분한다', async () => {
+    const { rerender } = render(<SearchPanel query="" state={{ state: 'idle' }} />);
+    const region = screen.getByRole('region', { name: '검색 결과' });
+    expect(screen.getByText('검색어를 입력하세요.')).toBeDefined();
+    expect(region.getAttribute('aria-busy')).not.toBe('true');
+
+    rerender(<SearchPanel query="설계" state={{ state: 'loading' }} />);
+    expect(screen.getByRole('status', { name: '검색 중…' })).toBeDefined();
+    expect(region.getAttribute('aria-busy')).toBe('true');
+
+    rerender(<SearchPanel query="설계" state={{ state: 'success' }} />);
+    expect(screen.getByText('검색 결과가 없습니다.')).toBeDefined();
+    expect(region.getAttribute('aria-busy')).not.toBe('true');
+
+    const retry = vi.fn();
+    rerender(<SearchPanel query="설계" state={{ state: 'error', onRetry: retry }} />);
+    expect(screen.getByRole('alert', { name: '검색 오류' }).textContent).toContain('검색 결과를 불러오지 못했습니다.');
+    await userEvent.setup().click(screen.getByRole('button', { name: '다시 시도' }));
+    expect(retry).toHaveBeenCalledOnce();
+  });
+
+  it('IR-SHELL-009 AC-3: 선택 축이 없으면 요청 상태 대신 대상 안내를 표시한다', () => {
+    render(<SearchPanel query="설계" axes={[]} state={{ state: 'idle' }} />);
+    expect(screen.getByText('검색 대상을 선택하세요.')).toBeDefined();
+    expect(screen.getByText('필터에서 검색할 대상을 선택하세요.')).toBeDefined();
+  });
+
+  it('IR-SHELL-006 AC-10: IME 조합 Enter는 결과 열기와 외부 submit을 일으키지 않는다', () => {
+    const open = vi.fn();
+    const submit = vi.fn((event: FormEvent) => event.preventDefault());
+    render(<form onSubmit={submit}><SearchPanel documents={결과} query="설계" state={{ state: 'success' }} onOpen={open} /></form>);
+    const input = screen.getByLabelText('검색');
+
+    fireEvent.compositionStart(input);
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', isComposing: true });
+    fireEvent.compositionEnd(input);
+
+    expect(open).not.toHaveBeenCalled();
+    expect(submit).not.toHaveBeenCalled();
+  });
+
   it('AC-9 · AC-10: 문서 제목 머리행 하나 아래에 발췌가 쌓인다', () => {
     render(<SearchPanel documents={결과} />);
 

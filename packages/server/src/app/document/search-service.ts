@@ -7,6 +7,7 @@ import { findTags } from '../../domain/document/tag.js';
 import { isVersioned } from '../../domain/document/version-layout.js';
 import type { NodeId } from '../../domain/node/node-id.js';
 import { isServable } from '../../domain/serving/servable.js';
+import { parseQuery } from '../../domain/search/query.js';
 import type { AttachmentRepository } from '../../domain/ports/attachment-repository.js';
 import type { PdfTextExtractor } from '../../domain/ports/pdf-text.js';
 import { pdfjsTextExtractor } from '../../infra/pdf/pdfjs-text.js';
@@ -96,17 +97,16 @@ export async function search(
   actor: Actor,
   input: { query: string; axes: readonly SearchAxis[] },
 ): Promise<SearchResult> {
-  const wanted = input.query.trim().toLowerCase();
-  // 빈 질의로 전 문서를 나열하지 않는다 — 그것은 검색이 아니라 목록이고,
-  // 그 목록은 트리가 이미 소유한다.
-  if (wanted === '' || input.axes.length === 0) return { documents: [] };
+  const parsed = parseQuery(input.query);
+  if (!parsed.ok || input.axes.length === 0) return { documents: [] };
+  const groups = parsed.groups.map((group) => group.map((term) => term.toLowerCase()));
 
   const on = new Set(input.axes);
   const documents: SearchDocument[] = [];
 
   for (const entry of visibleWorkspacesOf(stores, actor)) {
     for (const node of servableIn(stores, actor, entry.workspace.id)) {
-      const excerpts = await matchesOf(stores, node, wanted, on);
+      const excerpts = await matchesOf(stores, node, groups, on);
       if (excerpts.length > 0) {
         documents.push({
           nodeId: node.id,
@@ -173,19 +173,30 @@ function servableIn(
 async function matchesOf(
   stores: SearchStores,
   node: { id: NodeId; name: string; path: string; workspaceId: string },
-  wanted: string,
+  groups: readonly (readonly string[])[],
   on: ReadonlySet<SearchAxis>,
 ): Promise<SearchExcerpt[]> {
-  const found: SearchExcerpt[] = [];
+  type Match = { excerpt: SearchExcerpt; identity: string; sourceOrder: number; matchLength: number };
+  const terms = [...new Set(groups.flat())];
+  const hits = new Map(terms.map((term) => [term, [] as Match[]]));
+  const add = (term: string, excerpt: SearchExcerpt, identity: string, sourceOrder: number) =>
+    hits.get(term)!.push({ excerpt, identity, sourceOrder, matchLength: term.length });
 
-  if (on.has('name') && node.name.toLowerCase().includes(wanted)) {
-    found.push({ axis: 'name', text: node.name });
+  if (on.has('name')) {
+    const name = node.name.toLowerCase();
+    for (const term of terms) {
+      const at = name.indexOf(term);
+      if (at !== -1) add(term, { axis: 'name', text: node.name }, `name:${at}`, at);
+    }
   }
 
   if (on.has('attachment')) {
-    for (const one of stores.attachments.listOf(node.id)) {
-      if (one.originalName.toLowerCase().includes(wanted)) {
-        found.push({ axis: 'attachment', text: one.originalName });
+    for (const [attachmentAt, one] of stores.attachments.listOf(node.id).entries()) {
+      const name = one.originalName.toLowerCase();
+      for (const term of terms) {
+        const at = name.indexOf(term);
+        if (at !== -1)
+          add(term, { axis: 'attachment', text: one.originalName }, `attachment:${attachmentAt}:${at}`, 1_000_000 + attachmentAt * 10_000 + at);
       }
     }
   }
@@ -193,22 +204,46 @@ async function matchesOf(
   // PDF 는 **본문 축의 확장**이다 (AC-4) — 다섯째 축이 아니다. 태그 축은
   // 타지 않는다: 태그는 마크다운 문법이고 PDF 에는 그 문법이 없다.
   if (on.has('body') && isPdf(node.name)) {
-    found.push(...(await pdfExcerpts(stores, node, wanted)));
-    return found;
+    for (const [term, match] of await pdfExcerpts(stores, node, terms))
+      add(term, match.excerpt, match.identity, match.sourceOrder);
+    return matchedExcerpts(groups, hits);
   }
 
   // 본문을 읽는 두 축은 함께 판정한다 — 축마다 파일을 다시 읽으면 같은
   // 문서를 두 번 읽는다.
   if (on.has('body') || on.has('tag')) {
     const body = isVersioned(node.name) ? await bodyOf(stores, node) : '';
+    const tags = on.has('tag') ? findTags(body).map((tag) => tag.toLowerCase()) : [];
 
-    if (on.has('tag') && findTags(body).some((tag) => tag.toLowerCase().includes(wanted))) {
-      found.push({ axis: 'tag', text: `#${wanted}` });
+    for (const term of terms) {
+      for (const [tagAt, tag] of tags.entries()) {
+        const at = tag.indexOf(term);
+        if (at !== -1) add(term, { axis: 'tag', text: `#${term}` }, `tag:${tagAt}:${at}`, 2_000_000 + tagAt * 10_000 + at);
+      }
+      if (on.has('body'))
+        for (const match of bodyMatches(body, term))
+          add(term, match.excerpt, `body:${match.start}`, 3_000_000 + match.start);
     }
-    if (on.has('body')) found.push(...bodyExcerpts(body, wanted));
   }
 
-  return found;
+  return matchedExcerpts(groups, hits);
+}
+
+function matchedExcerpts(
+  groups: readonly (readonly string[])[],
+  hits: ReadonlyMap<string, readonly { excerpt: SearchExcerpt; identity: string; sourceOrder: number; matchLength: number }[]>,
+): SearchExcerpt[] {
+  const matchedTerms = new Set(
+    groups.filter((group) => group.every((term) => (hits.get(term)?.length ?? 0) > 0)).flat(),
+  );
+  if (matchedTerms.size === 0) return [];
+  const found = new Map<string, { excerpt: SearchExcerpt; sourceOrder: number; matchLength: number }>();
+  for (const term of matchedTerms)
+    for (const match of hits.get(term) ?? []) {
+      const previous = found.get(match.identity);
+      if (previous === undefined || match.matchLength > previous.matchLength) found.set(match.identity, match);
+    }
+  return [...found.values()].sort((left, right) => left.sourceOrder - right.sourceOrder).map((match) => match.excerpt);
 }
 
 /**
@@ -221,8 +256,8 @@ async function matchesOf(
 async function pdfExcerpts(
   stores: SearchStores,
   node: { path: string; workspaceId: string },
-  wanted: string,
-): Promise<SearchExcerpt[]> {
+  terms: readonly string[],
+): Promise<[string, { excerpt: SearchExcerpt; identity: string; sourceOrder: number }][]> {
   let bytes: Uint8Array;
   try {
     // `Buffer` 를 그대로 넘기지 않는다 — 하위 타입이라 타입 검사는 통과하지만
@@ -236,24 +271,34 @@ async function pdfExcerpts(
   }
 
   const extractor = stores.pdf ?? pdfjsTextExtractor;
-  const found: SearchExcerpt[] = [];
+  const found: [string, { excerpt: SearchExcerpt; identity: string; sourceOrder: number }][] = [];
   for (const one of await extractor.extract(bytes)) {
-    for (const excerpt of bodyExcerpts(one.text, wanted)) {
-      found.push({ ...excerpt, page: one.page });
-    }
+    for (const term of terms)
+      for (const match of bodyMatches(one.text, term))
+        found.push([
+          term,
+          {
+            excerpt: { ...match.excerpt, page: one.page },
+            identity: `body:${one.page}:${match.start}`,
+            sourceOrder: 3_000_000 + one.page * 100_000 + match.start,
+          },
+        ]);
   }
   return found;
 }
 
 /** 본문의 일치 지점마다 앞뒤를 조금 붙여 잘라 낸다 (`FR-SHELL-013` AC-9). */
-function bodyExcerpts(body: string, wanted: string): SearchExcerpt[] {
-  const found: SearchExcerpt[] = [];
+function bodyMatches(body: string, wanted: string): { excerpt: SearchExcerpt; start: number }[] {
+  const found: { excerpt: SearchExcerpt; start: number }[] = [];
   const haystack = body.toLowerCase();
 
   for (let at = haystack.indexOf(wanted); at !== -1; at = haystack.indexOf(wanted, at + wanted.length)) {
     found.push({
-      axis: 'body',
-      text: body.slice(Math.max(0, at - AROUND), at + wanted.length + AROUND).trim(),
+      start: at,
+      excerpt: {
+        axis: 'body',
+        text: body.slice(Math.max(0, at - AROUND), at + wanted.length + AROUND).trim(),
+      },
     });
   }
   return found;

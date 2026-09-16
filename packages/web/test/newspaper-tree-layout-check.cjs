@@ -11,6 +11,26 @@ const url = 'http://127.0.0.1:3418/test/newspaper-tree-fixture.html';
 fs.mkdirSync(output, { recursive: true });
 const start = () => spawn(process.execPath, [path.join(root, 'node_modules/vite/bin/vite.js'), '--host', '127.0.0.1', '--port', '3418', '--strictPort'], { cwd: path.join(root, 'packages/web'), stdio: ['ignore','pipe','pipe'], windowsHide: true });
 const wait = async () => { for(let i=0;i<80;i++){ try { if((await fetch(url)).ok)return; } catch {} await new Promise(r=>setTimeout(r,250)); } throw new Error('server timeout'); };
+async function visibleTreeRow(page, index) {
+  let row = page.getByRole('treeitem').nth(index);
+  await row.waitFor({ state: 'attached' });
+  if (!(await row.isVisible())) await row.scrollIntoViewIfNeeded();
+  await page.waitForFunction(async (at) => {
+    const findVisible = () => {
+      const current = document.querySelectorAll('[role="treeitem"]')[at];
+      if (!(current instanceof HTMLElement) || !current.isConnected) return null;
+      const box = current.getBoundingClientRect();
+      return box.width > 0 && box.height > 0 && getComputedStyle(current).visibility !== 'hidden' ? current : null;
+    };
+    const current = findVisible();
+    if (current === null) return false;
+    await new Promise(requestAnimationFrame);
+    return findVisible() === current;
+  }, index);
+  row = page.getByRole('treeitem').nth(index);
+  await row.waitFor({ state: 'visible' });
+  return row;
+}
 async function inspect(page) {
   const tree = page.getByRole('tree', { name: '문서 트리' });
   const rows = tree.getByRole('treeitem');
@@ -58,7 +78,7 @@ async function inspect(page) {
   assert.equal(await page.locator('body').getAttribute('data-renamed'), '조합 뒤 확정.md');
   return page.evaluate(() => ({ viewport:{width:innerWidth,height:innerHeight}, tree:document.querySelector('[aria-label="문서 트리"]')?.getBoundingClientRect().toJSON() }));
 }
-async function matrix(browser){ const out=[]; for(const theme of ['light','dark']) for(const [width,height] of [[1280,720],[1440,900],[1920,1080]]) { const c=await browser.newContext({viewport:{width,height}}); const p=await c.newPage(); await p.goto(url,{waitUntil:'networkidle'}); await p.evaluate(t=>document.documentElement.dataset.theme=t,theme); out.push({theme,...await inspect(p)}); await p.getByRole('textbox').waitFor({state:'detached'}); const treeRows=p.getByRole('treeitem'); await treeRows.nth(2).waitFor({state:'visible'}); await treeRows.nth(2).click({force:true}); await treeRows.nth(1).focus(); await p.screenshot({path:path.join(output,`green-tree-selected-focus-${theme}-${width}x${height}.png`),fullPage:true}); await p.getByRole('tab',{name:'즐겨찾기'}).click(); await p.screenshot({path:path.join(output,`green-favorites-rows-${theme}-${width}x${height}.png`),fullPage:true}); let removes=p.getByRole('button',{name:/즐겨찾기 해제/}); await removes.first().click(); await p.waitForTimeout(160); removes=p.getByRole('button',{name:/즐겨찾기 해제/}); assert.equal(await removes.first().evaluate(e=>e===document.activeElement),true,'delayed removal did not focus the next remove control'); await removes.first().click(); await p.waitForTimeout(160); assert.equal(await p.getByRole('tab',{name:'즐겨찾기'}).evaluate(e=>e===document.activeElement),true,'delayed final removal did not focus Favorites tab'); assert.notEqual(await p.evaluate(()=>document.activeElement?.tagName),'BODY'); assert.equal(await p.getByText('즐겨찾기한 항목이 없습니다.').count(),1); await p.screenshot({path:path.join(output,`green-favorites-empty-${theme}-${width}x${height}.png`),fullPage:true}); await c.close(); } return out; }
+async function matrix(browser){ const out=[]; for(const theme of ['light','dark']) for(const [width,height] of [[1280,720],[1440,900],[1920,1080]]) { const c=await browser.newContext({viewport:{width,height}}); const p=await c.newPage(); await p.goto(url,{waitUntil:'networkidle'}); await p.evaluate(t=>document.documentElement.dataset.theme=t,theme); out.push({theme,...await inspect(p)}); await p.getByRole('textbox').waitFor({state:'detached'}); await p.getByRole('tree').focus(); await (await visibleTreeRow(p,2)).click(); await (await visibleTreeRow(p,1)).focus(); await p.screenshot({path:path.join(output,`green-tree-selected-focus-${theme}-${width}x${height}.png`),fullPage:true}); await p.getByRole('tab',{name:'즐겨찾기'}).click(); await p.screenshot({path:path.join(output,`green-favorites-rows-${theme}-${width}x${height}.png`),fullPage:true}); let removes=p.getByRole('button',{name:/즐겨찾기 해제/}); await removes.first().click(); await p.waitForTimeout(160); removes=p.getByRole('button',{name:/즐겨찾기 해제/}); assert.equal(await removes.first().evaluate(e=>e===document.activeElement),true,'delayed removal did not focus the next remove control'); await removes.first().click(); await p.waitForTimeout(160); assert.equal(await p.getByRole('tab',{name:'즐겨찾기'}).evaluate(e=>e===document.activeElement),true,'delayed final removal did not focus Favorites tab'); assert.notEqual(await p.evaluate(()=>document.activeElement?.tagName),'BODY'); assert.equal(await p.getByText('즐겨찾기한 항목이 없습니다.').count(),1); await p.screenshot({path:path.join(output,`green-favorites-empty-${theme}-${width}x${height}.png`),fullPage:true}); await c.close(); } return out; }
 async function stateEvidence(browser) {
   const context = await browser.newContext({ viewport: { width: 1280, height: 720 } });
   const page = await context.newPage();
@@ -86,7 +106,7 @@ async function stateEvidence(browser) {
     await page.screenshot({ path: path.join(output, `green-state-${state}.png`), fullPage: true });
   }
   await page.goto(`${url}?state=naming-error`, { waitUntil: 'networkidle' });
-  const row = page.getByRole('treeitem').nth(2);
+  const row = await visibleTreeRow(page, 2);
   await row.click({ button: 'right' });
   await page.getByRole('menuitem', { name: '이름 변경' }).click();
   let input = page.getByRole('textbox', { name: /새 이름/ });

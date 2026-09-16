@@ -6,7 +6,7 @@ import { DocumentArea } from '../document/DocumentArea.js';
 import { PasswordChangeForm } from '../auth/PasswordChangeForm.js';
 import { FavoritesView, type Favorite } from '../favorites/FavoritesView.js';
 import { LinkPanel, type LinkRowView } from '../links/LinkPanel.js';
-import { SearchPanel } from '../search/SearchPanel.js';
+import { SearchPanel, type SearchPanelState } from '../search/SearchPanel.js';
 import type { SearchAxis } from '../search/search-axes.js';
 import { TagPanel } from '../search/TagPanel.js';
 import type { SaveState, TabState } from '../document/tab-state.js';
@@ -385,6 +385,7 @@ export function AppShell({
   bodies = {},
   hashes = {},
   searchResults = [],
+  searchState,
   searchAxes,
   onSearchAxes,
   trash = [],
@@ -451,6 +452,7 @@ export function AppShell({
   hashes?: Readonly<Record<string, string>>;
   /** 검색 결과. 서버가 이미 거르고 발췌까지 만든 것이다 (`FR-SHELL-013`). */
   searchResults?: readonly SearchDocumentBody[];
+  searchState?: SearchPanelState;
   /** 켜진 검색 대상 (`FR-SHELL-013` AC-6 · AC-7). 되살리는 일은 바깥의 것이다. */
   searchAxes?: readonly SearchAxis[];
   onSearchAxes?: (axes: readonly SearchAxis[]) => void;
@@ -803,6 +805,7 @@ export function AppShell({
               <SearchPanel
                 documents={searchResults}
                 query={query}
+                {...(searchState === undefined ? {} : { state: searchState })}
                 {...(searchAxes === undefined ? {} : { axes: searchAxes })}
                 {...(onSearchAxes === undefined ? {} : { onAxes: onSearchAxes })}
                 {...(onQuery === undefined ? {} : { onQuery })}
