@@ -78,3 +78,9 @@ Merge-time duplicate Requirement ID repair workflow:
 The Completed Work Log — inline in `docs/spec/00.index.md` §7 and its split history file `docs/spec/91.completed-work-log.md` — is a read-only summary for agents. Requirement Block status, Acceptance Criteria, Verification Evidence, and Change Notes remain the source of truth for completion.
 
 <!-- /SpecKiwi SRS workflow -->
+
+# Process safety
+
+- 테스트 프로세스를 강제 종료할 때 `node.exe` 또는 `nodex.exe` 프로세스를 이름 기준으로 일괄 종료하지 않는다. `taskkill /IM node.exe`, `taskkill /F /IM node.exe`, `Stop-Process -Name node`, `pkill node` 및 이와 동등한 명령은 금지한다. 이러한 명령은 살아 있는 운영 Node.js 프로세스까지 종료할 수 있다.
+- 종료 전에 테스트 실행기가 직접 생성한 프로세스의 PID와 부모-자식 관계를 확인한다. 소유권이 확인된 테스트 PID와 그 하위 프로세스만 대상으로 종료한다.
+- 프로세스 소유권을 확인할 수 없으면 종료하지 않는다. 포트, 실행 명령줄, 작업 디렉터리, 부모 PID 또는 실행 시 기록한 PID로 대상을 먼저 식별한다.
