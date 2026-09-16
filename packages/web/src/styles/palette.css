@@ -22,4 +22,26 @@
   --paper-disabled: #e3e2db;
   --ink-disabled: #74766d;
   --ink-overlay: rgb(36 37 33 / 38%);
+  --charcoal-app: #20221f;
+  --charcoal-document: #292c27;
+  --charcoal-sidebar: #1a1d19;
+  --charcoal-control: #30352e;
+  --chalk-primary: #e9e7df;
+  --chalk-secondary: #b5b8ae;
+  --charcoal-line-subtle: #484d44;
+  --charcoal-line-control: #87917f;
+  --blue-dark-primary: #a8c4d3;
+  --blue-dark-primary-hover: #bbd1dc;
+  --blue-dark-primary-active: #cadbe3;
+  --ink-dark-on-primary: #19231f;
+  --blue-dark-selected: #344650;
+  --red-dark-status: #f0aba3;
+  --red-dark-surface: #482c29;
+  --amber-dark-status: #e2c084;
+  --amber-dark-surface: #423720;
+  --green-dark-status: #a8cfb0;
+  --green-dark-surface: #293d2e;
+  --charcoal-disabled: #353a32;
+  --chalk-disabled: #939b8a;
+  --charcoal-overlay: rgb(0 0 0 / 60%);
 }

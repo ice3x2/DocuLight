@@ -16,7 +16,11 @@ import { EmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
 import { RelocationDialog } from './RelocationDialog.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
-import { PersonalSettings } from '../settings/PersonalSettings.js';
+import {
+  PersonalSettings,
+  type ThemeLoadState,
+  type ThemeSaveState,
+} from '../settings/PersonalSettings.js';
 import { TokenPanel } from '../settings/TokenPanel.js';
 import type { TokenIssueInput, TokenRowView } from '../settings/token-contract.js';
 import { AclAuditPanel, type AclAuditProps } from '../acl/AclAuditPanel.js';
@@ -133,6 +137,8 @@ function SettingsModal({
   onTrashPurge,
   onTrashRestore,
   onPersonalSetting,
+  themeLoadState,
+  themeSaveState,
   onGroupRemove,
   onGroupAddMember,
   onRegisterUser,
@@ -171,6 +177,8 @@ function SettingsModal({
   onTrashPurge?: (nodeId: string) => void;
   onTrashRestore?: (nodeId: string) => void;
   onPersonalSetting?: (key: string, value: string) => void;
+  themeLoadState?: ThemeLoadState;
+  themeSaveState?: ThemeSaveState;
   onGroupRemove?: (groupId: string) => void;
   onGroupAddMember?: (groupId: string, userId: string) => void;
   /** 슈퍼유저 직접 등록 (`FR-AUTH-003`). */
@@ -255,6 +263,8 @@ function SettingsModal({
                   <PersonalSettings
                     category={category.id}
                     values={personalSettings}
+                    {...(themeLoadState === undefined ? {} : { themeLoadState })}
+                    {...(themeSaveState === undefined ? {} : { themeSaveState })}
                     {...(onPersonalSetting === undefined ? {} : { onPick: onPersonalSetting })}
                   />
                 ) : category.id === 'tokens' ? (
@@ -377,6 +387,8 @@ export function AppShell({
   onTrashPurge,
   onTrashRestore,
   onPersonalSetting,
+  themeLoadState,
+  themeSaveState,
   onGroupRemove,
   onGroupAddMember,
   onRegisterUser,
@@ -446,6 +458,8 @@ export function AppShell({
    */
   personalSettings?: Readonly<Record<string, string>>;
   onPersonalSetting?: (key: string, value: string) => void;
+  themeLoadState?: ThemeLoadState;
+  themeSaveState?: ThemeSaveState;
   /**
    * 이 사용자의 PAT 목록 (`SEC-AUTH-006` · `SEC-AUTH-007`).
    *
@@ -712,6 +726,8 @@ export function AppShell({
           {...(onTrashPurge === undefined ? {} : { onTrashPurge })}
           {...(onTrashRestore === undefined ? {} : { onTrashRestore })}
           personalSettings={personalSettings}
+          {...(themeLoadState === undefined ? {} : { themeLoadState })}
+          {...(themeSaveState === undefined ? {} : { themeSaveState })}
           {...(onPersonalSetting === undefined ? {} : { onPersonalSetting })}
           tokens={tokens}
           {...(onIssueToken === undefined ? {} : { onIssueToken })}

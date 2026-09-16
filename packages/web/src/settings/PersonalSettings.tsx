@@ -2,6 +2,17 @@ import { useId } from 'react';
 
 import { personalFieldsOf, type PersonalSettingField } from '../shell/shell-contract.js';
 
+export type ThemeSaveState =
+  | { state: 'idle' }
+  | { state: 'saving' }
+  | { state: 'saved' }
+  | { state: 'error'; onRetry: () => void };
+
+export type ThemeLoadState =
+  | { state: 'loading' }
+  | { state: 'ready' }
+  | { state: 'error'; onRetry: () => void };
+
 /**
  * `에디터`·`외모(테마)` 카테고리의 내용 (`IR-SHELL-004`).
  *
@@ -17,13 +28,18 @@ export function PersonalSettings({
   category,
   values = {},
   onPick,
+  themeLoadState = { state: 'ready' },
+  themeSaveState = { state: 'idle' },
 }: {
   category: PersonalSettingField['category'];
   /** 서버가 준 값. 없는 항목은 그 설정의 기본값으로 그린다. */
   values?: Readonly<Record<string, string>>;
   onPick?: (key: string, value: string) => void;
+  themeLoadState?: ThemeLoadState;
+  themeSaveState?: ThemeSaveState;
 }) {
   const prefix = useId();
+  const themeLoadId = `${prefix}-theme-load`;
 
   return (
     <>
@@ -33,6 +49,10 @@ export function PersonalSettings({
           <select
             id={`${prefix}-${field.key}`}
             value={values[field.key] ?? field.fallback}
+            disabled={category === 'appearance' && themeLoadState.state !== 'ready'}
+            aria-describedby={category === 'appearance' && themeLoadState.state !== 'ready'
+              ? themeLoadId
+              : undefined}
             onChange={(event) => onPick?.(field.key, event.target.value)}
           >
             {field.options.map((option) => (
@@ -43,6 +63,27 @@ export function PersonalSettings({
           </select>
         </p>
       ))}
+      {category === 'appearance' && themeLoadState.state === 'loading' && (
+        <p id={themeLoadId} role="status">테마 설정을 불러오는 중…</p>
+      )}
+      {category === 'appearance' && themeLoadState.state === 'error' && (
+        <p id={themeLoadId} role="alert">
+          테마 설정을 불러오지 못했습니다.{' '}
+          <button type="button" onClick={themeLoadState.onRetry}>다시 불러오기</button>
+        </p>
+      )}
+      {category === 'appearance' && themeSaveState.state === 'saving' && (
+        <p role="status">테마 저장 중…</p>
+      )}
+      {category === 'appearance' && themeSaveState.state === 'saved' && (
+        <p role="status">테마 저장됨</p>
+      )}
+      {category === 'appearance' && themeSaveState.state === 'error' && (
+        <p role="alert">
+          테마를 저장하지 못했습니다. 마지막 저장값으로 복원했습니다.{' '}
+          <button type="button" onClick={themeSaveState.onRetry}>테마 저장 다시 시도</button>
+        </p>
+      )}
     </>
   );
 }

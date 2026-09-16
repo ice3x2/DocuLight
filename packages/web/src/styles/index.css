@@ -4,5 +4,6 @@
 @import './palette.css';
 @import './tokens.css';
 @import './themes/newspaper-light.css';
+@import './themes/newspaper-dark.css';
 @import './base.css';
 @import './components.css';

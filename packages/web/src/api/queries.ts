@@ -10,6 +10,7 @@ import {
   fetchWorkspaceList,
   fetchLinks,
   fetchGroupRoster,
+  fetchIdentity,
   fetchPersonalSettings,
   fetchUserRoster,
   fetchSession,
@@ -52,12 +53,13 @@ import type { WorkspaceTreeView } from '../tree/tree-contract.js';
  */
 export const QUERY_KEYS = {
   session: ['session'] as const,
+  identity: ['identity'] as const,
   tree: ['tree'] as const,
   favorites: ['favorites'] as const,
   signupMode: ['signup-mode'] as const,
   trash: (scope: 'mine' | 'all', workspaceId?: string) => ['trash', scope, workspaceId] as const,
   links: (nodeId: string) => ['links', nodeId] as const,
-  personalSettings: ['personal-settings'] as const,
+  personalSettings: (userId: string) => ['personal-settings', userId] as const,
   tokens: ['tokens'] as const,
   userRoster: ['roster', 'users'] as const,
   groupRoster: ['roster', 'groups'] as const,
@@ -81,14 +83,22 @@ export const useSession = (): UseQueryResult<SessionBody> =>
     retry: false,
   });
 
+export const useIdentity = (enabled: boolean): UseQueryResult<{ userId: string }> =>
+  useQuery({ queryKey: QUERY_KEYS.identity, queryFn: fetchIdentity, enabled, retry: false });
+
 export const useTree = (enabled: boolean): UseQueryResult<WorkspaceTreeView[]> =>
   useQuery({ queryKey: QUERY_KEYS.tree, queryFn: () => fetchTree<WorkspaceTreeView[]>(), enabled });
 
 /** 이 사용자의 개인 설정. 로그인 전에는 읽을 행이 정해지지 않는다. */
 export const usePersonalSettings = (
-  enabled: boolean,
+  userId: string | undefined,
 ): UseQueryResult<Record<string, string>> =>
-  useQuery({ queryKey: QUERY_KEYS.personalSettings, queryFn: fetchPersonalSettings, enabled });
+  useQuery({
+    queryKey: QUERY_KEYS.personalSettings(userId ?? ''),
+    queryFn: fetchPersonalSettings,
+    enabled: userId !== undefined,
+    retry: false,
+  });
 
 /**
  * 이 사용자의 PAT 목록 (`SEC-AUTH-007` AC-1).

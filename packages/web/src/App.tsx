@@ -5,7 +5,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   ApiError,
@@ -55,6 +55,7 @@ import {
   useFavorites,
   useSignupMode,
   useGroupRoster,
+  useIdentity,
   usePersonalSettings,
   useTokens,
   useRevocation,
@@ -82,6 +83,8 @@ import type { SaveState } from './document/tab-state.js';
 import type { TrashLens } from './trash/TrashPanel.js';
 import { CREATE_DEFAULTS } from './tree/tree-contract.js';
 import type { WorkspaceTreeView, TreeNodeView } from './tree/tree-contract.js';
+import { rememberTheme, useThemeRuntime, type ThemePreference } from './theme/runtime.js';
+import type { ThemeLoadState, ThemeSaveState } from './settings/PersonalSettings.js';
 
 /** 트리에서 그 노드를 찾는다 — 문서를 열 때 이름과 권한이 필요하다. */
 function findNode(workspaces: readonly WorkspaceTreeView[], nodeId: string): TreeNodeView | undefined {
@@ -127,10 +130,10 @@ const newQueryClient = () =>
  * 자리마다 그 조립을 따라 적어야 하고, 하나를 빠뜨리면 그 자리에서만 서버
  * 상태가 캐시 없이 돈다 — 화면은 도는데 같은 것을 계속 다시 받는다.
  */
-export function App() {
+export function App({ queryClient }: { queryClient?: QueryClient } = {}) {
   // 마운트마다 새로 만든다 — 앱이 두 번 서는 자리(시험)가 앞의 캐시를
   // 물려받으면 앞 시험의 응답이 뒤 시험의 첫 화면이 된다.
-  const [client] = useState(newQueryClient);
+  const [client] = useState(() => queryClient ?? newQueryClient());
 
   return (
     <QueryClientProvider client={client}>
@@ -148,7 +151,10 @@ export function App() {
 function AppBody() {
   const queries = useQueryClient();
   const session = useSession();
-  const signedIn = session.data !== undefined;
+  const sessionUnauthorized = session.error instanceof ApiError && session.error.status === 401;
+  const signedIn = session.data !== undefined && !sessionUnauthorized;
+  const identity = useIdentity(signedIn);
+  const userId = signedIn ? identity.data?.userId : undefined;
 
   const tree = useTree(signedIn);
   const workspaces: readonly WorkspaceTreeView[] = tree.data ?? [];
@@ -205,7 +211,40 @@ function AppBody() {
   // 온다고 앱을 못 쓰게 만들 이유가 없다.
   const trash = useTrash(trashLens, signedIn);
   const favorites = useFavorites(signedIn);
-  const personal = usePersonalSettings(signedIn);
+  const personal = usePersonalSettings(userId);
+  const [optimisticTheme, setOptimisticTheme] = useState<ThemePreference | undefined>();
+  const [themeSaveState, setThemeSaveState] = useState<ThemeSaveState>({ state: 'idle' });
+  const themeRequest = useRef(0);
+  const currentUser = useRef<string | undefined>(userId);
+  currentUser.current = userId;
+  const resolvedTheme = optimisticTheme ?? personal.data?.theme;
+  const themeLoadState: ThemeLoadState = userId === undefined
+    ? identity.isFetching
+      ? { state: 'loading' }
+      : identity.isError
+        ? { state: 'error', onRetry: () => void identity.refetch() }
+        : { state: 'loading' }
+    : personal.data !== undefined
+      ? { state: 'ready' }
+      : personal.isError
+        ? { state: 'error', onRetry: () => void personal.refetch() }
+        : { state: 'loading' };
+  useThemeRuntime({
+    ...(userId === undefined ? {} : { userId }),
+    ...(resolvedTheme === undefined ? {} : { preference: resolvedTheme }),
+    settingsResolved: personal.data !== undefined,
+  });
+
+  useEffect(() => {
+    themeRequest.current += 1;
+    setOptimisticTheme(undefined);
+    setThemeSaveState({ state: 'idle' });
+  }, [userId]);
+
+  useEffect(() => {
+    if (!sessionUnauthorized) return;
+    queries.removeQueries({ predicate: (query) => query.queryKey[0] !== 'session' });
+  }, [queries, sessionUnauthorized]);
   // PAT 목록은 설정 모달의 한 탭에서만 쓰이지만 다른 개인 설정과 같은
   // 조건으로 받는다 — 탭을 열 때 받게 하면 그 자리에 로딩이 서고,
   // 목록이 비어 있는 것과 아직 안 온 것이 화면에서 같아 보인다.
@@ -552,6 +591,7 @@ function AppBody() {
         if (error instanceof ApiError) return error.detail?.reason ?? '로그인하지 못했습니다';
         throw error;
       }
+      queries.removeQueries({ predicate: (query) => query.queryKey[0] !== 'session' });
       await queries.invalidateQueries({ queryKey: QUERY_KEYS.session });
       return undefined;
     },
@@ -703,12 +743,47 @@ function AppBody() {
     [queries],
   );
 
+  const saveTheme = useCallback(
+    async function persistTheme(value: ThemePreference) {
+      if (userId === undefined || personal.data === undefined) return;
+      const owner = userId;
+      const request = ++themeRequest.current;
+      await queries.cancelQueries({ queryKey: QUERY_KEYS.personalSettings(owner) });
+      setOptimisticTheme(value);
+      setThemeSaveState({ state: 'saving' });
+
+      try {
+        await savePersonalSetting('theme', value);
+        if (currentUser.current !== owner || themeRequest.current !== request) return;
+        await queries.cancelQueries({ queryKey: QUERY_KEYS.personalSettings(owner) });
+        if (currentUser.current !== owner || themeRequest.current !== request) return;
+        queries.setQueryData<Record<string, string>>(
+          QUERY_KEYS.personalSettings(owner),
+          (was) => ({ ...(was ?? {}), theme: value }),
+        );
+        rememberTheme(owner, value);
+        setOptimisticTheme(undefined);
+        setThemeSaveState({ state: 'saved' });
+      } catch {
+        if (currentUser.current !== owner || themeRequest.current !== request) return;
+        setOptimisticTheme(undefined);
+        setThemeSaveState({ state: 'error', onRetry: () => void persistTheme(value) });
+      }
+    },
+    [personal.data, queries, userId],
+  );
+
   const pickPersonalSetting = useCallback(
     async (key: string, value: string) => {
+      if (key === 'theme' && (value === 'light' || value === 'dark' || value === 'system')) {
+        await saveTheme(value);
+        return;
+      }
+      if (userId === undefined) return;
       await savePersonalSetting(key, value).catch(() => undefined);
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.personalSettings });
+      await queries.invalidateQueries({ queryKey: QUERY_KEYS.personalSettings(userId) });
     },
-    [queries],
+    [queries, saveTheme, userId],
   );
 
   /**
@@ -894,7 +969,12 @@ function AppBody() {
       onTrashLens={setTrashLens}
       onTrashPurge={purgeTrash}
       onTrashRestore={restoreTrash}
-      personalSettings={personal.data ?? {}}
+      personalSettings={{
+        ...(personal.data ?? {}),
+        ...(optimisticTheme === undefined ? {} : { theme: optimisticTheme }),
+      }}
+      themeSaveState={themeSaveState}
+      themeLoadState={themeLoadState}
       onPersonalSetting={pickPersonalSetting}
       tokens={tokens.data ?? []}
       onIssueToken={토큰을발급한다}

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Theme runtime fixture</title>
+    <script src="/theme-bootstrap.js"></script>
+    <link rel="stylesheet" href="/src/styles/index.css" />
+  </head>
+  <body>
+    <aside id="sidebar" data-slot="sidebar"><p>보조 글자</p></aside>
+    <main id="document" data-slot="document">
+      <button id="primary" data-slot="button" data-variant="primary">저장</button>
+      <input id="input" data-slot="input" aria-label="이름" />
+      <div id="selected" data-slot="row" data-state="selected">선택됨</div>
+      <div id="react-root"></div>
+    </main>
+    <div id="portal" data-slot="popover-content">포털 내용</div>
+    <script type="module" src="/test/theme-runtime-browser-fixture.tsx"></script>
+  </body>
+</html>
