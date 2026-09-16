@@ -1,8 +1,57 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+
+const DISTRIBUTED_LICENSES = [
+  ['class-variance-authority', 'LICENSE'],
+  ['clsx', 'license'],
+  ['tailwind-merge', 'LICENSE.md'],
+  ['tailwindcss', 'LICENSE'],
+  ['@tailwindcss/vite', 'LICENSE'],
+] as const;
+
+function thirdPartyLicenses() {
+  const webRoot = fileURLToPath(new URL('.', import.meta.url));
+  const modulesRoot = fileURLToPath(new URL('../../node_modules/', import.meta.url));
+
+  return {
+    name: 'doculight-third-party-licenses',
+    apply: 'build' as const,
+    generateBundle(this: { emitFile: (asset: { type: 'asset'; fileName: string; source: string | Buffer }) => void }) {
+      for (const [packageName, licenseName] of DISTRIBUTED_LICENSES) {
+        const packageRoot = `${modulesRoot}/${packageName}`;
+        this.emitFile({
+          type: 'asset',
+          fileName: `licenses/${packageName}/LICENSE`,
+          source: readFileSync(`${packageRoot}/${licenseName}`),
+        });
+
+        const noticeName = readdirSync(packageRoot).find((name) => /^NOTICE(?:\.|$)/i.test(name));
+        if (noticeName !== undefined && existsSync(`${packageRoot}/${noticeName}`)) {
+          this.emitFile({
+            type: 'asset',
+            fileName: `licenses/${packageName}/NOTICE`,
+            source: readFileSync(`${packageRoot}/${noticeName}`),
+          });
+        }
+      }
+
+      this.emitFile({
+        type: 'asset',
+        fileName: 'licenses/shadcn/LICENSE',
+        source: readFileSync(`${webRoot}/src/components/ui/LICENSE`),
+      });
+      this.emitFile({
+        type: 'asset',
+        fileName: 'THIRD_PARTY_NOTICES.md',
+        source: readFileSync(`${webRoot}/THIRD_PARTY_NOTICES.md`),
+      });
+    },
+  };
+}
 
 // dev 서버 포트는 3399 다 (C-09).
 //
@@ -39,7 +88,7 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-  plugins: [react()],
+  plugins: [react(), tailwindcss(), thirdPartyLicenses()],
   server: {
     port: 3399,
     open: false,

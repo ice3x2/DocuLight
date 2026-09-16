@@ -1,0 +1,1470 @@
+{
+  "scope": "unauthenticated foundation fixture; not an authenticated product-screen claim",
+  "dev": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "screenshot": "dev-1280x720.png",
+      "screenshotPixels": {
+        "width": 1280,
+        "height": 720
+      },
+      "measurements": {
+        "viewport": {
+          "innerWidth": 1280,
+          "innerHeight": 720,
+          "outerWidth": 1280,
+          "outerHeight": 720,
+          "devicePixelRatio": 1,
+          "visualWidth": 1280,
+          "visualHeight": 720,
+          "visualScale": 1
+        },
+        "cssZoom": {
+          "html": "1",
+          "body": "1"
+        },
+        "body": {
+          "background": "rgb(233, 231, 226)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 14,
+            "width": 1280,
+            "height": 538
+          },
+          "scrollWidth": 1280,
+          "clientWidth": 1280,
+          "scrollHeight": 538
+        },
+        "document": {
+          "background": "rgb(245, 244, 239)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 50,
+            "width": 320,
+            "height": 456
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 456
+        },
+        "sidebar": {
+          "background": "rgb(222, 221, 214)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 14,
+            "width": 1280,
+            "height": 22
+          },
+          "scrollWidth": 1280,
+          "clientWidth": 1280,
+          "scrollHeight": 22
+        },
+        "input": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(122, 123, 113)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 78,
+            "width": 320,
+            "height": 38
+          },
+          "scrollWidth": 318,
+          "clientWidth": 318,
+          "scrollHeight": 36
+        },
+        "invalidInput": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(150, 63, 56)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 164,
+            "width": 320,
+            "height": 38
+          },
+          "scrollWidth": 318,
+          "clientWidth": 318,
+          "scrollHeight": 36
+        },
+        "button": {
+          "background": "rgb(54, 91, 112)",
+          "color": "rgb(250, 249, 245)",
+          "border": "rgb(54, 91, 112)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 470,
+            "width": 62,
+            "height": 36
+          },
+          "scrollWidth": 60,
+          "clientWidth": 60,
+          "scrollHeight": 34
+        },
+        "portal": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(204, 203, 195)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 506,
+            "width": 1280,
+            "height": 24
+          },
+          "scrollWidth": 1278,
+          "clientWidth": 1278,
+          "scrollHeight": 22
+        },
+        "help": {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(101, 102, 95)",
+          "border": "rgb(101, 102, 95)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "auto",
+          "rect": {
+            "x": 0,
+            "y": 210,
+            "width": 320,
+            "height": 36
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 36
+        },
+        "selected": {
+          "background": "rgb(223, 231, 233)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 388,
+            "width": 320,
+            "height": 44
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 44
+        },
+        "pageOverflow": false
+      },
+      "pass": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "screenshot": "dev-1440x900.png",
+      "screenshotPixels": {
+        "width": 1440,
+        "height": 900
+      },
+      "measurements": {
+        "viewport": {
+          "innerWidth": 1440,
+          "innerHeight": 900,
+          "outerWidth": 1440,
+          "outerHeight": 900,
+          "devicePixelRatio": 1,
+          "visualWidth": 1440,
+          "visualHeight": 900,
+          "visualScale": 1
+        },
+        "cssZoom": {
+          "html": "1",
+          "body": "1"
+        },
+        "body": {
+          "background": "rgb(233, 231, 226)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 14,
+            "width": 1440,
+            "height": 538
+          },
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "scrollHeight": 538
+        },
+        "document": {
+          "background": "rgb(245, 244, 239)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 50,
+            "width": 320,
+            "height": 456
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 456
+        },
+        "sidebar": {
+          "background": "rgb(222, 221, 214)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 14,
+            "width": 1440,
+            "height": 22
+          },
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "scrollHeight": 22
+        },
+        "input": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(122, 123, 113)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 78,
+            "width": 320,
+            "height": 38
+          },
+          "scrollWidth": 318,
+          "clientWidth": 318,
+          "scrollHeight": 36
+        },
+        "invalidInput": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(150, 63, 56)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 164,
+            "width": 320,
+            "height": 38
+          },
+          "scrollWidth": 318,
+          "clientWidth": 318,
+          "scrollHeight": 36
+        },
+        "button": {
+          "background": "rgb(54, 91, 112)",
+          "color": "rgb(250, 249, 245)",
+          "border": "rgb(54, 91, 112)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 470,
+            "width": 62,
+            "height": 36
+          },
+          "scrollWidth": 60,
+          "clientWidth": 60,
+          "scrollHeight": 34
+        },
+        "portal": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(204, 203, 195)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 506,
+            "width": 1440,
+            "height": 24
+          },
+          "scrollWidth": 1438,
+          "clientWidth": 1438,
+          "scrollHeight": 22
+        },
+        "help": {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(101, 102, 95)",
+          "border": "rgb(101, 102, 95)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "auto",
+          "rect": {
+            "x": 0,
+            "y": 210,
+            "width": 320,
+            "height": 36
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 36
+        },
+        "selected": {
+          "background": "rgb(223, 231, 233)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 388,
+            "width": 320,
+            "height": 44
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 44
+        },
+        "pageOverflow": false
+      },
+      "pass": true
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "screenshot": "dev-1920x1080.png",
+      "screenshotPixels": {
+        "width": 1920,
+        "height": 1080
+      },
+      "measurements": {
+        "viewport": {
+          "innerWidth": 1920,
+          "innerHeight": 1080,
+          "outerWidth": 1920,
+          "outerHeight": 1080,
+          "devicePixelRatio": 1,
+          "visualWidth": 1920,
+          "visualHeight": 1080,
+          "visualScale": 1
+        },
+        "cssZoom": {
+          "html": "1",
+          "body": "1"
+        },
+        "body": {
+          "background": "rgb(233, 231, 226)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 14,
+            "width": 1920,
+            "height": 538
+          },
+          "scrollWidth": 1920,
+          "clientWidth": 1920,
+          "scrollHeight": 538
+        },
+        "document": {
+          "background": "rgb(245, 244, 239)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 50,
+            "width": 320,
+            "height": 456
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 456
+        },
+        "sidebar": {
+          "background": "rgb(222, 221, 214)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 14,
+            "width": 1920,
+            "height": 22
+          },
+          "scrollWidth": 1920,
+          "clientWidth": 1920,
+          "scrollHeight": 22
+        },
+        "input": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(122, 123, 113)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 78,
+            "width": 320,
+            "height": 38
+          },
+          "scrollWidth": 318,
+          "clientWidth": 318,
+          "scrollHeight": 36
+        },
+        "invalidInput": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(150, 63, 56)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 164,
+            "width": 320,
+            "height": 38
+          },
+          "scrollWidth": 318,
+          "clientWidth": 318,
+          "scrollHeight": 36
+        },
+        "button": {
+          "background": "rgb(54, 91, 112)",
+          "color": "rgb(250, 249, 245)",
+          "border": "rgb(54, 91, 112)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 470,
+            "width": 62,
+            "height": 36
+          },
+          "scrollWidth": 60,
+          "clientWidth": 60,
+          "scrollHeight": 34
+        },
+        "portal": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(204, 203, 195)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 506,
+            "width": 1920,
+            "height": 24
+          },
+          "scrollWidth": 1918,
+          "clientWidth": 1918,
+          "scrollHeight": 22
+        },
+        "help": {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(101, 102, 95)",
+          "border": "rgb(101, 102, 95)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "auto",
+          "rect": {
+            "x": 0,
+            "y": 210,
+            "width": 320,
+            "height": 36
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 36
+        },
+        "selected": {
+          "background": "rgb(223, 231, 233)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 388,
+            "width": 320,
+            "height": 44
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 44
+        },
+        "pageOverflow": false
+      },
+      "pass": true
+    }
+  ],
+  "production": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "screenshot": "production-1280x720.png",
+      "screenshotPixels": {
+        "width": 1280,
+        "height": 720
+      },
+      "measurements": {
+        "viewport": {
+          "innerWidth": 1280,
+          "innerHeight": 720,
+          "outerWidth": 1280,
+          "outerHeight": 720,
+          "devicePixelRatio": 1,
+          "visualWidth": 1280,
+          "visualHeight": 720,
+          "visualScale": 1
+        },
+        "cssZoom": {
+          "html": "1",
+          "body": "1"
+        },
+        "body": {
+          "background": "rgb(233, 231, 226)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 14,
+            "width": 1280,
+            "height": 538
+          },
+          "scrollWidth": 1280,
+          "clientWidth": 1280,
+          "scrollHeight": 538
+        },
+        "document": {
+          "background": "rgb(245, 244, 239)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 50,
+            "width": 320,
+            "height": 456
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 456
+        },
+        "sidebar": {
+          "background": "rgb(222, 221, 214)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 14,
+            "width": 1280,
+            "height": 22
+          },
+          "scrollWidth": 1280,
+          "clientWidth": 1280,
+          "scrollHeight": 22
+        },
+        "input": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(122, 123, 113)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 78,
+            "width": 320,
+            "height": 38
+          },
+          "scrollWidth": 318,
+          "clientWidth": 318,
+          "scrollHeight": 36
+        },
+        "invalidInput": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(150, 63, 56)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 164,
+            "width": 320,
+            "height": 38
+          },
+          "scrollWidth": 318,
+          "clientWidth": 318,
+          "scrollHeight": 36
+        },
+        "button": {
+          "background": "rgb(54, 91, 112)",
+          "color": "rgb(250, 249, 245)",
+          "border": "rgb(54, 91, 112)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 470,
+            "width": 62,
+            "height": 36
+          },
+          "scrollWidth": 60,
+          "clientWidth": 60,
+          "scrollHeight": 34
+        },
+        "portal": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(204, 203, 195)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 506,
+            "width": 1280,
+            "height": 24
+          },
+          "scrollWidth": 1278,
+          "clientWidth": 1278,
+          "scrollHeight": 22
+        },
+        "help": {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(101, 102, 95)",
+          "border": "rgb(101, 102, 95)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "auto",
+          "rect": {
+            "x": 0,
+            "y": 210,
+            "width": 320,
+            "height": 36
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 36
+        },
+        "selected": {
+          "background": "rgb(223, 231, 233)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 388,
+            "width": 320,
+            "height": 44
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 44
+        },
+        "pageOverflow": false
+      },
+      "pass": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "screenshot": "production-1440x900.png",
+      "screenshotPixels": {
+        "width": 1440,
+        "height": 900
+      },
+      "measurements": {
+        "viewport": {
+          "innerWidth": 1440,
+          "innerHeight": 900,
+          "outerWidth": 1440,
+          "outerHeight": 900,
+          "devicePixelRatio": 1,
+          "visualWidth": 1440,
+          "visualHeight": 900,
+          "visualScale": 1
+        },
+        "cssZoom": {
+          "html": "1",
+          "body": "1"
+        },
+        "body": {
+          "background": "rgb(233, 231, 226)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 14,
+            "width": 1440,
+            "height": 538
+          },
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "scrollHeight": 538
+        },
+        "document": {
+          "background": "rgb(245, 244, 239)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 50,
+            "width": 320,
+            "height": 456
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 456
+        },
+        "sidebar": {
+          "background": "rgb(222, 221, 214)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 14,
+            "width": 1440,
+            "height": 22
+          },
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "scrollHeight": 22
+        },
+        "input": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(122, 123, 113)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 78,
+            "width": 320,
+            "height": 38
+          },
+          "scrollWidth": 318,
+          "clientWidth": 318,
+          "scrollHeight": 36
+        },
+        "invalidInput": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(150, 63, 56)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 164,
+            "width": 320,
+            "height": 38
+          },
+          "scrollWidth": 318,
+          "clientWidth": 318,
+          "scrollHeight": 36
+        },
+        "button": {
+          "background": "rgb(54, 91, 112)",
+          "color": "rgb(250, 249, 245)",
+          "border": "rgb(54, 91, 112)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 470,
+            "width": 62,
+            "height": 36
+          },
+          "scrollWidth": 60,
+          "clientWidth": 60,
+          "scrollHeight": 34
+        },
+        "portal": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(204, 203, 195)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 506,
+            "width": 1440,
+            "height": 24
+          },
+          "scrollWidth": 1438,
+          "clientWidth": 1438,
+          "scrollHeight": 22
+        },
+        "help": {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(101, 102, 95)",
+          "border": "rgb(101, 102, 95)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "auto",
+          "rect": {
+            "x": 0,
+            "y": 210,
+            "width": 320,
+            "height": 36
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 36
+        },
+        "selected": {
+          "background": "rgb(223, 231, 233)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 388,
+            "width": 320,
+            "height": 44
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 44
+        },
+        "pageOverflow": false
+      },
+      "pass": true
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "screenshot": "production-1920x1080.png",
+      "screenshotPixels": {
+        "width": 1920,
+        "height": 1080
+      },
+      "measurements": {
+        "viewport": {
+          "innerWidth": 1920,
+          "innerHeight": 1080,
+          "outerWidth": 1920,
+          "outerHeight": 1080,
+          "devicePixelRatio": 1,
+          "visualWidth": 1920,
+          "visualHeight": 1080,
+          "visualScale": 1
+        },
+        "cssZoom": {
+          "html": "1",
+          "body": "1"
+        },
+        "body": {
+          "background": "rgb(233, 231, 226)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 14,
+            "width": 1920,
+            "height": 538
+          },
+          "scrollWidth": 1920,
+          "clientWidth": 1920,
+          "scrollHeight": 538
+        },
+        "document": {
+          "background": "rgb(245, 244, 239)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 50,
+            "width": 320,
+            "height": 456
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 456
+        },
+        "sidebar": {
+          "background": "rgb(222, 221, 214)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 14,
+            "width": 1920,
+            "height": 22
+          },
+          "scrollWidth": 1920,
+          "clientWidth": 1920,
+          "scrollHeight": 22
+        },
+        "input": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(122, 123, 113)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 78,
+            "width": 320,
+            "height": 38
+          },
+          "scrollWidth": 318,
+          "clientWidth": 318,
+          "scrollHeight": 36
+        },
+        "invalidInput": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(150, 63, 56)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 164,
+            "width": 320,
+            "height": 38
+          },
+          "scrollWidth": 318,
+          "clientWidth": 318,
+          "scrollHeight": 36
+        },
+        "button": {
+          "background": "rgb(54, 91, 112)",
+          "color": "rgb(250, 249, 245)",
+          "border": "rgb(54, 91, 112)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 470,
+            "width": 62,
+            "height": 36
+          },
+          "scrollWidth": 60,
+          "clientWidth": 60,
+          "scrollHeight": 34
+        },
+        "portal": {
+          "background": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(204, 203, 195)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "0px",
+          "rect": {
+            "x": 0,
+            "y": 506,
+            "width": 1920,
+            "height": 24
+          },
+          "scrollWidth": 1918,
+          "clientWidth": 1918,
+          "scrollHeight": 22
+        },
+        "help": {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(101, 102, 95)",
+          "border": "rgb(101, 102, 95)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "auto",
+          "rect": {
+            "x": 0,
+            "y": 210,
+            "width": 320,
+            "height": 36
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 36
+        },
+        "selected": {
+          "background": "rgb(223, 231, 233)",
+          "color": "rgb(36, 37, 33)",
+          "border": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "minHeight": "36px",
+          "rect": {
+            "x": 0,
+            "y": 388,
+            "width": 320,
+            "height": 44
+          },
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 44
+        },
+        "pageOverflow": false
+      },
+      "pass": true
+    }
+  ],
+  "actualZoom": {
+    "technique": "isolated full Chromium temporary profile and extension chrome.tabs.setZoom=2",
+    "cssZoomUsed": false,
+    "viewportEmulationUsed": false,
+    "baselineZoom": 1,
+    "requestedZoom": 2,
+    "finalZoom": 2,
+    "baseline": {
+      "viewport": {
+        "innerWidth": 1440,
+        "innerHeight": 814,
+        "outerWidth": 1441,
+        "outerHeight": 901,
+        "devicePixelRatio": 1.25,
+        "visualWidth": 1440,
+        "visualHeight": 813.5999755859375,
+        "visualScale": 1
+      },
+      "cssZoom": {
+        "html": "1",
+        "body": "1"
+      },
+      "body": {
+        "background": "rgb(233, 231, 226)",
+        "color": "rgb(36, 37, 33)",
+        "border": "rgb(36, 37, 33)",
+        "outlineWidth": "2.4px",
+        "outlineOffset": "0px",
+        "minHeight": "0px",
+        "rect": {
+          "x": 0,
+          "y": 14,
+          "width": 1440,
+          "height": 536.4000244140625
+        },
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "scrollHeight": 536
+      },
+      "document": {
+        "background": "rgb(245, 244, 239)",
+        "color": "rgb(36, 37, 33)",
+        "border": "rgb(36, 37, 33)",
+        "outlineWidth": "2.4px",
+        "outlineOffset": "0px",
+        "minHeight": "0px",
+        "rect": {
+          "x": 0,
+          "y": 50,
+          "width": 320,
+          "height": 454.8000183105469
+        },
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "scrollHeight": 455
+      },
+      "sidebar": {
+        "background": "rgb(222, 221, 214)",
+        "color": "rgb(36, 37, 33)",
+        "border": "rgb(36, 37, 33)",
+        "outlineWidth": "2.4px",
+        "outlineOffset": "0px",
+        "minHeight": "0px",
+        "rect": {
+          "x": 0,
+          "y": 14,
+          "width": 1440,
+          "height": 22
+        },
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "scrollHeight": 22
+      },
+      "input": {
+        "background": "rgb(250, 249, 245)",
+        "color": "rgb(36, 37, 33)",
+        "border": "rgb(122, 123, 113)",
+        "outlineWidth": "2.4px",
+        "outlineOffset": "0px",
+        "minHeight": "36px",
+        "rect": {
+          "x": 0,
+          "y": 78,
+          "width": 320,
+          "height": 37.60000228881836
+        },
+        "scrollWidth": 318,
+        "clientWidth": 318,
+        "scrollHeight": 36
+      },
+      "invalidInput": {
+        "background": "rgb(250, 249, 245)",
+        "color": "rgb(36, 37, 33)",
+        "border": "rgb(150, 63, 56)",
+        "outlineWidth": "1.6px",
+        "outlineOffset": "1.6px",
+        "minHeight": "36px",
+        "rect": {
+          "x": 0,
+          "y": 163.60000610351562,
+          "width": 320,
+          "height": 37.60000228881836
+        },
+        "scrollWidth": 318,
+        "clientWidth": 318,
+        "scrollHeight": 36
+      },
+      "button": {
+        "background": "rgb(54, 91, 112)",
+        "color": "rgb(250, 249, 245)",
+        "border": "rgb(54, 91, 112)",
+        "outlineWidth": "2.4px",
+        "outlineOffset": "0px",
+        "minHeight": "36px",
+        "rect": {
+          "x": 0,
+          "y": 468.8000183105469,
+          "width": 61.60000228881836,
+          "height": 36
+        },
+        "scrollWidth": 60,
+        "clientWidth": 60,
+        "scrollHeight": 34
+      },
+      "portal": {
+        "background": "rgb(250, 249, 245)",
+        "color": "rgb(36, 37, 33)",
+        "border": "rgb(204, 203, 195)",
+        "outlineWidth": "2.4px",
+        "outlineOffset": "0px",
+        "minHeight": "0px",
+        "rect": {
+          "x": 0,
+          "y": 504.8000183105469,
+          "width": 1440,
+          "height": 23.600000381469727
+        },
+        "scrollWidth": 1438,
+        "clientWidth": 1438,
+        "scrollHeight": 22
+      },
+      "help": {
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(101, 102, 95)",
+        "border": "rgb(101, 102, 95)",
+        "outlineWidth": "2.4px",
+        "outlineOffset": "0px",
+        "minHeight": "auto",
+        "rect": {
+          "x": 0,
+          "y": 209.1999969482422,
+          "width": 320,
+          "height": 36
+        },
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "scrollHeight": 36
+      },
+      "selected": {
+        "background": "rgb(223, 231, 233)",
+        "color": "rgb(36, 37, 33)",
+        "border": "rgb(36, 37, 33)",
+        "outlineWidth": "2.4px",
+        "outlineOffset": "0px",
+        "minHeight": "36px",
+        "rect": {
+          "x": 0,
+          "y": 387.20001220703125,
+          "width": 320,
+          "height": 44
+        },
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "scrollHeight": 44
+      },
+      "pageOverflow": false
+    },
+    "zoomed": {
+      "viewport": {
+        "innerWidth": 720,
+        "innerHeight": 407,
+        "outerWidth": 1441,
+        "outerHeight": 901,
+        "devicePixelRatio": 2.5,
+        "visualWidth": 712.4000244140625,
+        "visualHeight": 406.79998779296875,
+        "visualScale": 1
+      },
+      "cssZoom": {
+        "html": "1",
+        "body": "1"
+      },
+      "body": {
+        "background": "rgb(233, 231, 226)",
+        "color": "rgb(36, 37, 33)",
+        "border": "rgb(36, 37, 33)",
+        "outlineWidth": "2.8px",
+        "outlineOffset": "0px",
+        "minHeight": "0px",
+        "rect": {
+          "x": 0,
+          "y": 14,
+          "width": 712.4000244140625,
+          "height": 536.4000244140625
+        },
+        "scrollWidth": 712,
+        "clientWidth": 712,
+        "scrollHeight": 536
+      },
+      "document": {
+        "background": "rgb(245, 244, 239)",
+        "color": "rgb(36, 37, 33)",
+        "border": "rgb(36, 37, 33)",
+        "outlineWidth": "2.8px",
+        "outlineOffset": "0px",
+        "minHeight": "0px",
+        "rect": {
+          "x": 0,
+          "y": 50,
+          "width": 320,
+          "height": 454.8000183105469
+        },
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "scrollHeight": 455
+      },
+      "sidebar": {
+        "background": "rgb(222, 221, 214)",
+        "color": "rgb(36, 37, 33)",
+        "border": "rgb(36, 37, 33)",
+        "outlineWidth": "2.8px",
+        "outlineOffset": "0px",
+        "minHeight": "0px",
+        "rect": {
+          "x": 0,
+          "y": 14,
+          "width": 712.4000244140625,
+          "height": 22
+        },
+        "scrollWidth": 712,
+        "clientWidth": 712,
+        "scrollHeight": 22
+      },
+      "input": {
+        "background": "rgb(250, 249, 245)",
+        "color": "rgb(36, 37, 33)",
+        "border": "rgb(122, 123, 113)",
+        "outlineWidth": "2.8px",
+        "outlineOffset": "0px",
+        "minHeight": "36px",
+        "rect": {
+          "x": 0,
+          "y": 78,
+          "width": 320,
+          "height": 37.60000228881836
+        },
+        "scrollWidth": 318,
+        "clientWidth": 318,
+        "scrollHeight": 36
+      },
+      "invalidInput": {
+        "background": "rgb(250, 249, 245)",
+        "color": "rgb(36, 37, 33)",
+        "border": "rgb(150, 63, 56)",
+        "outlineWidth": "2px",
+        "outlineOffset": "2px",
+        "minHeight": "36px",
+        "rect": {
+          "x": 0,
+          "y": 163.60000610351562,
+          "width": 320,
+          "height": 37.60000228881836
+        },
+        "scrollWidth": 318,
+        "clientWidth": 318,
+        "scrollHeight": 36
+      },
+      "button": {
+        "background": "rgb(54, 91, 112)",
+        "color": "rgb(250, 249, 245)",
+        "border": "rgb(54, 91, 112)",
+        "outlineWidth": "2.8px",
+        "outlineOffset": "0px",
+        "minHeight": "36px",
+        "rect": {
+          "x": 0,
+          "y": 468.8000183105469,
+          "width": 61.60000228881836,
+          "height": 36
+        },
+        "scrollWidth": 60,
+        "clientWidth": 60,
+        "scrollHeight": 34
+      },
+      "portal": {
+        "background": "rgb(250, 249, 245)",
+        "color": "rgb(36, 37, 33)",
+        "border": "rgb(204, 203, 195)",
+        "outlineWidth": "2.8px",
+        "outlineOffset": "0px",
+        "minHeight": "0px",
+        "rect": {
+          "x": 0,
+          "y": 504.8000183105469,
+          "width": 712.4000244140625,
+          "height": 23.600000381469727
+        },
+        "scrollWidth": 711,
+        "clientWidth": 711,
+        "scrollHeight": 22
+      },
+      "help": {
+        "background": "rgba(0, 0, 0, 0)",
+        "color": "rgb(101, 102, 95)",
+        "border": "rgb(101, 102, 95)",
+        "outlineWidth": "2.8px",
+        "outlineOffset": "0px",
+        "minHeight": "auto",
+        "rect": {
+          "x": 0,
+          "y": 209.1999969482422,
+          "width": 320,
+          "height": 36
+        },
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "scrollHeight": 36
+      },
+      "selected": {
+        "background": "rgb(223, 231, 233)",
+        "color": "rgb(36, 37, 33)",
+        "border": "rgb(36, 37, 33)",
+        "outlineWidth": "2.8px",
+        "outlineOffset": "0px",
+        "minHeight": "36px",
+        "rect": {
+          "x": 0,
+          "y": 387.20001220703125,
+          "width": 320,
+          "height": 44
+        },
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "scrollHeight": 44
+      },
+      "pageOverflow": false
+    },
+    "widthRatio": 2,
+    "heightRatio": 2,
+    "dprRatio": 2,
+    "outerWidthUnchanged": true,
+    "outerHeightUnchanged": true,
+    "screenshots": {
+      "baseline": {
+        "file": "actual-zoom-100.png",
+        "pixels": {
+          "width": 1800,
+          "height": 1018
+        }
+      },
+      "zoomed": {
+        "file": "actual-zoom-200.png",
+        "pixels": {
+          "width": 900,
+          "height": 509
+        }
+      }
+    },
+    "pass": true
+  },
+  "pass": true
+}

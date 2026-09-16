@@ -1,0 +1,16 @@
+COMMAND
+  cd packages/web
+  npx vitest run test/newspaper-foundation.test.tsx
+
+EXIT
+  1
+
+RED
+  FAIL  test/newspaper-foundation.test.tsx [ test/newspaper-foundation.test.tsx ]
+  Error: Failed to resolve import "../src/components/ui/index.js" from "test/newspaper-foundation.test.tsx". Does the file exist?
+    File: C:/Work/git/DocuLight2.0/packages/web/test/newspaper-foundation.test.tsx:5:55
+
+  Test Files  1 failed (1)
+       Tests  no tests
+
+Interpretation: the existing component unit contract remains genuinely RED at its missing public product barrel. Its label/help/error association, aria-invalid, native semantics, composition, and submit-side-effect assertions were not weakened or replaced.

@@ -1,0 +1,31 @@
+BUILD COMMAND
+  npm run build --workspace @doculight/web
+
+BUILD EXIT
+  0
+
+BUILD RESULT
+  vite v8.2.2 building client environment for production...
+  2957 modules transformed.
+  dist/index.html 0.39 kB | gzip 0.26 kB
+  dist/assets/index-BBhhhhIC.css 44.61 kB | gzip 11.62 kB
+  dist/assets/index-ZgZPu6Ex.js 1,748.96 kB | gzip 550.45 kB
+  built in 1.43s
+
+ARTIFACT COMMAND
+  cd packages/web
+  node test/newspaper-foundation-dist.mjs
+
+ARTIFACT EXIT
+  1
+
+CORRECTED LICENSE ASSERTIONS
+  PASS frozen shadcn@4.21.0 license fixture matches official tarball hash — bytes=1063, sha256=1564074e13439397221ffd522e2e504d56561994a23d371aa5e3ad43e4f5423f, expected-sha256=1564074e13439397221ffd522e2e504d56561994a23d371aa5e3ad43e4f5423f
+  FAIL copied official shadcn@4.21.0 license bytes and provenance — license=false, bytes=0/1063, sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855, expected-sha256=1564074e13439397221ffd522e2e504d56561994a23d371aa5e3ad43e4f5423f, provenance=false, MIT=false
+
+FINAL
+  PASS production HTML connects generated CSS.
+  FAIL built CSS produces the light control contract.
+  FAIL: 17 failed assertions
+
+Interpretation: the expected license fixture is the exact official tarball content, while the actual distribution has no shadcn license bytes or provenance notice. An arbitrary or empty file cannot satisfy the corrected check.

@@ -1,0 +1,17 @@
+COMMAND
+  cd packages/web
+  node test/newspaper-foundation-styles.mjs
+
+EXIT
+  1
+
+CORRECTED ASSERTIONS (the same results occurred at all four viewport cases)
+  FAIL exact light text and interaction colors — normal-input-border=rgb(118, 118, 118), invalid-input-border=rgb(118, 118, 118); expected #7A7B71 and #963F38 respectively.
+  PASS invalid field communicates without color alone — aria-invalid=true, described-by=name-help,name-error, error text is present, icon=!/aria-hidden=true/4.625x21.
+  FAIL actual contrast pairs meet the contract — normal-input-boundary=4.54, invalid-input-boundary=4.54; the current identical native borders prove that the danger state is not implemented.
+  FAIL IME composition keeps focus/style and does not submit — active=name, submits=0, border=rgb(118, 118, 118); the interaction behavior is preserved but the invalid danger border is absent.
+
+FINAL
+  FAIL: 4 viewport cases; 23 failed assertions
+
+Interpretation: the fixture is usable and its non-color error semantics execute. RED now distinguishes the normal input boundary from the invalid danger boundary instead of requiring an invalid input to look normal.

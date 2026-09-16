@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Newspaper foundation contract fixture</title>
+    <link rel="stylesheet" href="/src/styles/index.css" />
+  </head>
+  <body>
+    <aside id="sidebar" data-slot="sidebar">
+      <p id="sidebar-secondary">보조 설명</p>
+    </aside>
+
+    <main id="document" data-slot="document" style="width: 20rem">
+      <form id="contract-form">
+        <div id="section-stack" data-slot="section-stack">
+        <div id="field-stack" data-slot="field-stack">
+          <div data-slot="field">
+            <label for="normal-name">정상 문서 이름</label>
+            <input
+              id="normal-name"
+              data-slot="input"
+              tabindex="-1"
+              value="정상 경계 확인"
+            />
+          </div>
+
+          <div data-slot="field">
+            <label id="name-label" for="name">문서 이름</label>
+            <input
+              id="name"
+              data-slot="input"
+              aria-describedby="name-help name-error"
+              aria-invalid="true"
+              value="조합 전"
+            />
+            <p id="name-help" data-slot="field-description">
+              목록과 권한 화면에서도 잘리지 않고 여러 줄로 자연스럽게 이어져야 하는 매우 긴 한글 도움말입니다.
+            </p>
+            <p id="name-error" data-slot="field-error">
+              <span data-slot="field-error-icon" aria-hidden="true">!</span>
+              <span>문서 이름을 확인하세요.</span>
+            </p>
+          </div>
+
+          <div data-slot="field">
+            <label for="choice">문서 종류</label>
+            <select id="choice" data-slot="select">
+              <option>일반 문서</option>
+              <option>긴 한글 이름을 가진 보존 문서</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="selected-row" data-slot="row" data-state="selected">
+          <span>긴 한글 이름을 가진 선택된 문서가 좁은 화면에서도 잘리지 않고 다음 줄로 이어집니다.</span>
+          <strong>선택됨</strong>
+        </div>
+        </div>
+
+        <input id="readonly-value" data-slot="input" readonly value="복사 가능한 읽기 전용 값" />
+        <button id="disabled-action" data-slot="button" data-variant="secondary" disabled>비활성</button>
+        <button id="primary-action" data-slot="button" data-variant="primary" type="button">저장</button>
+      </form>
+    </main>
+
+    <div id="portal" data-slot="popover-content" role="dialog" aria-label="도움말 포털">
+      포털도 같은 라이트 테마를 사용합니다.
+    </div>
+    <output id="activation-count">0</output>
+    <output id="submit-count">0</output>
+
+    <script>
+      const form = document.querySelector('#contract-form');
+      const name = document.querySelector('#name');
+      const activation = document.querySelector('#activation-count');
+      const submissions = document.querySelector('#submit-count');
+      let composing = false;
+
+      name.addEventListener('compositionstart', () => {
+        composing = true;
+      });
+      name.addEventListener('compositionend', () => {
+        composing = false;
+      });
+      form.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && (composing || event.isComposing)) event.preventDefault();
+      });
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        submissions.value = String(Number(submissions.value) + 1);
+      });
+      document.querySelector('#primary-action').addEventListener('click', () => {
+        activation.value = String(Number(activation.value) + 1);
+      });
+    </script>
+  </body>
+</html>

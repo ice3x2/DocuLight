@@ -1,0 +1,29 @@
+{
+  "phase": "red",
+  "result": "FAIL",
+  "requirement": "IR-SHELL-006 AC-7",
+  "fixture": "packages/web/test/newspaper-field-component-fixture.tsx",
+  "assertions": [
+    {
+      "name": "fixture renders the shipped Input component",
+      "passed": true,
+      "details": "slot=input, value=Kept value"
+    },
+    {
+      "name": "invalid Field has one visible non-color marker hidden from accessibility APIs",
+      "passed": false,
+      "details": "count=0, visible=false, aria-hidden=null"
+    },
+    {
+      "name": "help and error remain the exact accessible description without marker text",
+      "passed": true,
+      "details": "invalid=true, texts=[\"Use a name that distinguishes this document.\",\"Enter a document name.\"], marker-inside-description=false"
+    },
+    {
+      "name": "keyboard focus reaches the invalid input with a separated visible outline",
+      "passed": true,
+      "details": "active=actual-field-input, outline=2px/2px/solid"
+    }
+  ],
+  "liveHandlesAfterCleanup": "none owned by this runner"
+}

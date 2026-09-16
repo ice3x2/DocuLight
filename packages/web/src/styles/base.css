@@ -1,0 +1,27 @@
+body {
+  margin: 0;
+  background: var(--surface-app);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-ui-size);
+  line-height: var(--text-ui-line);
+}
+
+[data-slot='document'] {
+  background: var(--surface-document);
+}
+
+[data-slot='sidebar'] {
+  background: var(--surface-sidebar);
+}
+
+[data-slot='sidebar'] p {
+  color: var(--text-sidebar-secondary);
+}
+
+[data-slot='popover-content'] {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-overlay);
+  background: var(--surface-control);
+  color: var(--text-primary);
+}

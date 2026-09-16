@@ -1,0 +1,169 @@
+[data-slot='button'],
+[data-slot='input'],
+[data-slot='textarea'],
+[data-slot='select'] {
+  box-sizing: border-box;
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-control);
+  font: inherit;
+  font-size: var(--text-ui-size);
+  line-height: var(--text-ui-line);
+}
+
+[data-slot='button'],
+[data-slot='input'],
+[data-slot='select'] {
+  min-height: var(--control-height);
+}
+
+[data-slot='input'],
+[data-slot='textarea'],
+[data-slot='select'] {
+  background: var(--surface-control);
+  color: var(--text-primary);
+}
+
+[data-slot='input'],
+[data-slot='textarea'] {
+  padding: calc(var(--space-2) - 1px) var(--space-3);
+}
+
+[data-slot='select'] {
+  padding: calc(var(--space-1) - 1px) var(--space-8) calc(var(--space-1) - 1px) var(--space-3);
+}
+
+[data-slot='button'] {
+  padding: calc(var(--space-1) - 1px) var(--space-4);
+  cursor: pointer;
+}
+
+[data-slot='button'][data-size='auth'] {
+  min-height: var(--control-auth-height);
+}
+
+[data-slot='button'][data-size='icon'] {
+  width: var(--control-icon-size);
+  min-width: var(--control-icon-size);
+  padding: 0;
+}
+
+[data-slot='button'][data-variant='primary'] {
+  border-color: var(--action-primary);
+  background: var(--action-primary);
+  color: var(--text-on-primary);
+}
+
+[data-slot='button'][data-variant='primary']:hover:not(:disabled) {
+  border-color: var(--action-primary-hover);
+  background: var(--action-primary-hover);
+}
+
+[data-slot='button'][data-variant='primary']:active:not(:disabled) {
+  border-color: var(--action-primary-active);
+  background: var(--action-primary-active);
+}
+
+[data-slot='button'][data-variant='secondary'] {
+  background: var(--surface-control);
+  color: var(--text-primary);
+}
+
+[data-slot='button'][data-variant='ghost'] {
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-primary);
+}
+
+[data-slot='button'][data-variant='destructive'] {
+  border-color: var(--status-danger);
+  background: var(--status-danger);
+  color: var(--surface-control);
+}
+
+[data-slot='button']:focus-visible,
+[data-slot='input']:focus-visible,
+[data-slot='textarea']:focus-visible,
+[data-slot='select']:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+[data-slot='input'][aria-invalid='true'],
+[data-slot='textarea'][aria-invalid='true'],
+[data-slot='select'][aria-invalid='true'] {
+  border-color: var(--status-danger);
+}
+
+[data-slot='button']:disabled,
+[data-slot='input']:disabled,
+[data-slot='textarea']:disabled,
+[data-slot='select']:disabled {
+  border-color: var(--border-control);
+  background: var(--surface-disabled);
+  color: var(--text-disabled);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+[data-slot='input'][readonly],
+[data-slot='textarea'][readonly] {
+  user-select: text;
+}
+
+[data-slot='field'] {
+  display: grid;
+  gap: var(--space-2);
+}
+
+[data-slot='field'] > label {
+  font-size: var(--text-label-size);
+  line-height: var(--text-label-line);
+}
+
+[data-slot='field-description'],
+[data-slot='field-error'] {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--text-help-size);
+  line-height: var(--text-help-line);
+}
+
+[data-slot='field-description'] {
+  color: var(--text-secondary);
+}
+
+[data-slot='field-error'] {
+  display: flex;
+  gap: var(--space-1);
+  align-items: baseline;
+  color: var(--status-danger);
+}
+
+[data-slot='field-error-icon'] {
+  display: inline-block;
+  flex: none;
+  min-width: 0.5rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+[data-slot='field-stack'] {
+  display: grid;
+  gap: var(--field-gap);
+}
+
+[data-slot='section-stack'] {
+  display: grid;
+  gap: var(--section-gap);
+}
+
+[data-slot='row'] {
+  min-height: var(--control-height);
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+[data-slot='row'][data-state='selected'] {
+  background: var(--surface-selected);
+  color: var(--text-primary);
+}

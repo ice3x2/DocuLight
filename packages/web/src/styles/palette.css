@@ -1,0 +1,25 @@
+:root {
+  --paper-app: #e9e7e2;
+  --paper-document: #f5f4ef;
+  --paper-sidebar: #deddd6;
+  --paper-control: #faf9f5;
+  --ink-primary: #242521;
+  --ink-secondary: #65665f;
+  --ink-sidebar-secondary: #5e5f58;
+  --line-subtle: #cccbc3;
+  --line-control: #7a7b71;
+  --blue-primary: #365b70;
+  --blue-primary-hover: #2c4b5d;
+  --blue-primary-active: #233d4d;
+  --ink-on-primary: #faf9f5;
+  --blue-selected: #dfe7e9;
+  --red-status: #963f38;
+  --red-surface: #f3e5e1;
+  --amber-status: #79571f;
+  --amber-surface: #f0e8d7;
+  --green-status: #3e6049;
+  --green-surface: #e4eae2;
+  --paper-disabled: #e3e2db;
+  --ink-disabled: #74766d;
+  --ink-overlay: rgb(36 37 33 / 38%);
+}

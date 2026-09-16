@@ -1,0 +1,42 @@
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --surface-app: var(--paper-app);
+  --surface-document: var(--paper-document);
+  --surface-sidebar: var(--paper-sidebar);
+  --surface-control: var(--paper-control);
+  --text-primary: var(--ink-primary);
+  --text-secondary: var(--ink-secondary);
+  --text-sidebar-secondary: var(--ink-sidebar-secondary);
+  --border-subtle: var(--line-subtle);
+  --border-control: var(--line-control);
+  --action-primary: var(--blue-primary);
+  --action-primary-hover: var(--blue-primary-hover);
+  --action-primary-active: var(--blue-primary-active);
+  --text-on-primary: var(--ink-on-primary);
+  --surface-selected: var(--blue-selected);
+  --focus-ring: var(--blue-primary);
+  --status-danger: var(--red-status);
+  --surface-danger: var(--red-surface);
+  --status-warning: var(--amber-status);
+  --surface-warning: var(--amber-surface);
+  --status-success: var(--green-status);
+  --surface-success: var(--green-surface);
+  --surface-disabled: var(--paper-disabled);
+  --text-disabled: var(--ink-disabled);
+  --overlay: var(--ink-overlay);
+  --background: var(--surface-app);
+  --foreground: var(--text-primary);
+  --card: var(--surface-control);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface-control);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--action-primary);
+  --primary-foreground: var(--text-on-primary);
+  --accent: var(--surface-selected);
+  --accent-foreground: var(--text-primary);
+  --muted-foreground: var(--text-secondary);
+  --border: var(--border-subtle);
+  --input: var(--border-control);
+  --ring: var(--focus-ring);
+}

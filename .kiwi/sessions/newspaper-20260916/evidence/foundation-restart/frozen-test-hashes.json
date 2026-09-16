@@ -1,0 +1,18 @@
+﻿[
+    {
+        "path":  "packages/web/test/newspaper-foundation.test.tsx",
+        "sha256":  "51EDCABD7D55D57D1D39333987D22898E7FEEC612C123D3C654A9949B43F825A"
+    },
+    {
+        "path":  "packages/web/test/newspaper-foundation-fixture.html",
+        "sha256":  "CEF6D9E43D1FB6FBA7C59176E38833A11990A7DFB3940B0AB7F4AD2696EB4442"
+    },
+    {
+        "path":  "packages/web/test/newspaper-foundation-styles.mjs",
+        "sha256":  "6D9864FA6EEB54A7A1A65055FDBF3D052461E7133CB4C0A485D89C080DBF5CF3"
+    },
+    {
+        "path":  "packages/web/test/newspaper-foundation-dist.mjs",
+        "sha256":  "367A794B2F26873E7972F297D9002DE38BBA099FE02C26A344BDEA13AAA89FC7"
+    }
+]

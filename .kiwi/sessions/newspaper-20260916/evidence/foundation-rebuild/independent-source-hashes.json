@@ -1,0 +1,94 @@
+[
+    {
+        "path":  "package-lock.json",
+        "sha256":  "2BE4EBE61CDBDD9406E2FDAA9585D7C3AA72446761923BAE680178A414134100"
+    },
+    {
+        "path":  "packages/web/package.json",
+        "sha256":  "30BAA9E4BA8D72E9E025FF09230E0DE5E2029EE2F0AFA5CC65F87EEAF8F42C94"
+    },
+    {
+        "path":  "packages/web/vite.config.ts",
+        "sha256":  "6625BBA6975B7DC63E02337BD1CA97D3CD788BF81AF15D8BBD0F4A770D5BA49E"
+    },
+    {
+        "path":  "packages/web/THIRD_PARTY_NOTICES.md",
+        "sha256":  "94FA6202986CE55D7B2853632DFB989080D6B3A1915BEAD118AEA8AC38C7C67C"
+    },
+    {
+        "path":  "packages/web/components.json",
+        "sha256":  "7272809E024958E8FB1DE8C0B732B12AE33A51C14837452C1B2CB5C08637F045"
+    },
+    {
+        "path":  "packages/web/src/main.tsx",
+        "sha256":  "0811F33FB238BBBFED1925D63895188A70A802D5B166AB3117AEEF4259CAE7AB"
+    },
+    {
+        "path":  "packages/web/src/lib/utils.ts",
+        "sha256":  "D6CF1D2C25E92EBA18C73F11C9676F0A7099020F1010396B94FA4C0356E7FC9A"
+    },
+    {
+        "path":  "packages/web/src/components/ui/LICENSE",
+        "sha256":  "1564074E13439397221FFD522E2E504D56561994A23D371AA5E3AD43E4F5423F"
+    },
+    {
+        "path":  "packages/web/src/components/ui/index.ts",
+        "sha256":  "2D96CEDE3B28F8DE322BE826B370CB0E62BC92E7111E0F9A73DA45ECF6BBE293"
+    },
+    {
+        "path":  "packages/web/src/components/ui/button.tsx",
+        "sha256":  "F9B0625489C82AD61061EDD731A704B1D0BB26582ADA33618857FC8B166EE7FD"
+    },
+    {
+        "path":  "packages/web/src/components/ui/input.tsx",
+        "sha256":  "F9D237D5878A9EB911F6FE1B3729C576B29DE5666204BFFACF56AEDD65780454"
+    },
+    {
+        "path":  "packages/web/src/components/ui/textarea.tsx",
+        "sha256":  "839265D63295B542229311080ECB0562EB392D1A71D2F08273CBCF35489FDDE4"
+    },
+    {
+        "path":  "packages/web/src/components/ui/select.tsx",
+        "sha256":  "2FB9BA3520BC90053F6CC48B65DB2C5907E809EFE0132F2D7931657B4E257432"
+    },
+    {
+        "path":  "packages/web/src/components/ui/field.tsx",
+        "sha256":  "41483675BBAD8E376B5EBD51EC17508DDFE42A3E21616C7426D65E49955E7D7F"
+    },
+    {
+        "path":  "packages/web/src/styles/palette.css",
+        "sha256":  "1C92511A1747A2B0F8F6584455C39D36F9B8A016FE41C4865E8A26F06C546C0E"
+    },
+    {
+        "path":  "packages/web/src/styles/tokens.css",
+        "sha256":  "C2F4F50EE08AA450DAF0827CACB21D6B858BFF552F6A4E87B0FBE207A6F42507"
+    },
+    {
+        "path":  "packages/web/src/styles/themes/newspaper-light.css",
+        "sha256":  "2BA11AC0080E0B84861F93809A5A869DF5E5A30BBEACECC96D0F967445046661"
+    },
+    {
+        "path":  "packages/web/src/styles/base.css",
+        "sha256":  "5964AF4AE9DDC2924574E106B60B3D6221591100AF7634B00268A9A278A8C223"
+    },
+    {
+        "path":  "packages/web/src/styles/components.css",
+        "sha256":  "53AB861095B9F89D7781BCF7C8CE6B0D672B735BB3988464236BC27233CE65B8"
+    },
+    {
+        "path":  "packages/web/src/styles/index.css",
+        "sha256":  "0FC9750B79C7688A19A37231CF6D03A05DA2F6E81121EEF0505ECDCB70FA0002"
+    },
+    {
+        "path":  "packages/web/test/newspaper-field-component-fixture.html",
+        "sha256":  "E9E161077A9ABA8FE0592281E1D8240D03F1D76A263F52C6C9EA939EFB534A80"
+    },
+    {
+        "path":  "packages/web/test/newspaper-field-component-fixture.tsx",
+        "sha256":  "7B7E2496811A7DD747201982EF79267FD271CDA7B61A32479CADB970108EAB3C"
+    },
+    {
+        "path":  "packages/web/test/newspaper-field-component-check.mjs",
+        "sha256":  "1CF725B4F9962DD34274EA181F8B1CEAABED21A51278EE65BF98878863EEDD56"
+    }
+]
