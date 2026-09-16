@@ -306,6 +306,7 @@
 
 [data-slot='inline-notice'],
 [data-slot='empty-state'],
+[data-slot='error-state'],
 [data-slot='loading-state'] {
   padding: var(--space-4);
   border: 1px solid var(--border-subtle);
@@ -343,13 +344,19 @@
 }
 
 [data-slot='notice-description'],
-[data-slot='empty-state-description'] {
+[data-slot='empty-state-description'],
+[data-slot='error-state-description'] {
   margin: var(--space-1) 0 0;
 }
 
 [data-slot='empty-state'] {
   background: var(--surface-control);
   text-align: center;
+}
+
+[data-slot='error-state'] {
+  border-color: var(--status-danger);
+  background: var(--surface-danger);
 }
 
 [data-slot='empty-state-action'] {

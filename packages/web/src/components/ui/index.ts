@@ -25,9 +25,11 @@ export { Radio, type RadioProps } from './radio.js';
 export { Select, type SelectProps } from './select.js';
 export {
   EmptyState,
+  ErrorState,
   InlineNotice,
   LoadingState,
   type EmptyStateProps,
+  type ErrorStateProps,
   type InlineNoticeProps,
   type LoadingStateProps,
   type NoticeVariant,

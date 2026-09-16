@@ -1,6 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Tabs from '@radix-ui/react-tabs';
-import { useCallback, useId, useState } from 'react';
+import { useCallback, useId, useRef, useState, type RefObject } from 'react';
 
 import { DocumentArea } from '../document/DocumentArea.js';
 import { PasswordChangeForm } from '../auth/PasswordChangeForm.js';
@@ -37,6 +37,7 @@ import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
 import { SignupApproval } from '../principal/SignupApproval.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
+import { ErrorState, LoadingState } from '../components/ui/states.js';
 import type { RosterGroup, RosterUser, RosterUserStatus } from '../api/client.js';
 import { containerFor, destinationsFor, nodeById } from '../tree/tree-contract.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
@@ -47,6 +48,11 @@ import {
   type ShellTab,
   type Viewer,
 } from './shell-contract.js';
+
+export type ShellPanelState =
+  | { state: 'ready' }
+  | { state: 'loading' }
+  | { state: 'error'; message: string; onRetry?: () => void };
 
 /**
  * 사이드바 하나 — 탭 줄과 그 아래 본문.
@@ -66,6 +72,8 @@ function Sidebar({
   active,
   onActivate,
   footer,
+  focusTarget,
+  busyTabs = [],
   children,
 }: {
   label: string;
@@ -81,6 +89,8 @@ function Sidebar({
   active?: string;
   onActivate?: (tabId: string) => void;
   footer?: React.ReactNode;
+  focusTarget?: { tabId: string; ref: RefObject<HTMLButtonElement | null> };
+  busyTabs?: readonly string[];
   children?: (tab: ShellTab) => React.ReactNode;
 }) {
   const first = tabs[0]!;
@@ -95,6 +105,7 @@ function Sidebar({
         <Tabs.List aria-label={label}>
           {tabs.map((tab) => (
             <Tabs.Trigger
+              ref={focusTarget?.tabId === tab.id ? focusTarget.ref : undefined}
               key={tab.id}
               value={tab.id}
               onFocus={(event) => event.currentTarget.scrollIntoView({ block: 'nearest', inline: 'nearest' })}
@@ -107,7 +118,7 @@ function Sidebar({
         {tabs.map((tab) => (
           // 고른 탭의 본문만 DOM 에 남긴다 — 전부 렌더해 두고 숨기면
           // 「교체된다」(AC-2)가 화면에서만 참이고 접근성 트리에서는 거짓이다.
-          <Tabs.Content key={tab.id} value={tab.id}>
+          <Tabs.Content key={tab.id} value={tab.id} aria-busy={busyTabs.includes(tab.id) || undefined}>
             {children?.(tab) ?? <p>{tab.label}</p>}
           </Tabs.Content>
         ))}
@@ -367,6 +378,8 @@ export function AppShell({
   documents = { tabs: [], activeId: null },
   missingDocument = false,
   favorites = [],
+  treeState = { state: 'ready' },
+  favoritesState = { state: 'ready' },
   links = { outgoing: [], backlinks: [] },
   notice,
   bodies = {},
@@ -430,6 +443,8 @@ export function AppShell({
   /** 주소가 가리킨 문서에 닿지 못했다 (`SEC-ACL-006` AC-6). 문서 영역이 그린다. */
   missingDocument?: boolean;
   favorites?: readonly Favorite[];
+  treeState?: ShellPanelState;
+  favoritesState?: ShellPanelState;
   /** 노드 ID → 서버에서 받아 온 본문. 아직 안 온 것은 없다. */
   bodies?: Readonly<Record<string, string>>;
   /** 노드 ID → 그 본문의 기준 해시. */
@@ -527,7 +542,7 @@ export function AppShell({
     parentId: string | null,
     kind: 'file' | 'directory',
     name: string,
-  ) => void;
+  ) => void | Promise<string | undefined>;
   /** 즐겨찾기에 더한다 (`FR-SHELL-001` AC-3 · AC-4). */
   onFavorite?: (nodeId: string) => void;
   /** 즐겨찾기에서 뺀다 (`FR-SHELL-001` AC-5). 목록과 트리 메뉴가 같은 것을 부른다. */
@@ -540,7 +555,7 @@ export function AppShell({
     next: string;
   }) => Promise<string | undefined | void>;
   onDelete?: (nodeId: string) => void;
-  onRename?: (nodeId: string, name: string) => void;
+  onRename?: (nodeId: string, name: string) => void | Promise<string | undefined>;
   onRelocate?: (nodeId: string, kind: 'move' | 'copy', destinationId: string) => void;
   /**
    * 공유 화면의 배선 (`IR-ACL-002` · `IR-ACL-003`).
@@ -581,6 +596,7 @@ export function AppShell({
    * 직접 누르는 것과 본문 태그를 누르는 것(`FR-EDITOR-007` AC-11).
    */
   const [leftTab, setLeftTab] = useState(LEFT_TABS[0]!.id);
+  const favoritesTab = useRef<HTMLButtonElement>(null);
   /** 새 버전을 올릴 대상. 골라 둔 뒤 확인과 파일 고르기가 이어진다. */
   const [overwriting, setOverwriting] = useState<TreeNodeView | null>(null);
   /**
@@ -590,6 +606,10 @@ export function AppShell({
    * 같은 일이고, 따로 들면 둘이 동시에 열리는 상태를 표현할 수 있게 된다.
    */
   const [naming, setNaming] = useState<Naming | null>(null);
+  const [namingError, setNamingError] = useState<string | undefined>();
+  const [namingPending, setNamingPending] = useState(false);
+  const namingAttempt = useRef(0);
+  const namingRequestPending = useRef(false);
   /** 옮기거나 복사하는 중인 노드와 그 조작 (`FR-SHELL-015` AC-2 · AC-4). */
   const [relocating, setRelocating] = useState<{
     node: TreeNodeView;
@@ -645,6 +665,11 @@ export function AppShell({
         side="left"
         active={leftTab}
         onActivate={setLeftTab}
+        busyTabs={[
+          ...(treeState.state === 'loading' ? ['tree'] : []),
+          ...(favoritesState.state === 'loading' ? ['favorites'] : []),
+        ]}
+        focusTarget={{ tabId: 'favorites', ref: favoritesTab }}
         footer={
           <SettingsModal
             viewer={viewer}
@@ -688,7 +713,16 @@ export function AppShell({
           // (`FR-AUTH-005` AC-1) — 아무 말 없는 빈 화면은 「권한이 없다」가
           // 아니라 「고장났다」로 읽힌다.
           if (tab.id === 'tree')
-            return workspaces.length === 0 ? (
+            return treeState.state === 'loading' ? (
+              <LoadingState label="문서 트리 불러오는 중" />
+            ) : treeState.state === 'error' ? (
+              <ErrorState
+                label="문서 트리 오류"
+                title="문서 트리를 불러오지 못했습니다."
+                description={treeState.message}
+                {...(treeState.onRetry === undefined ? {} : { onRetry: treeState.onRetry })}
+              />
+            ) : workspaces.length === 0 ? (
               <EmptyState />
             ) : (
               <DocumentTree
@@ -701,22 +735,58 @@ export function AppShell({
                   // 소유하고(`containerFor`) 화면은 그것을 부르기만 한다.
                   const container = containerFor(workspaces, node.id);
                   if (container !== undefined) {
+                    namingAttempt.current += 1;
+                    namingRequestPending.current = false;
+                    setNamingPending(false);
+                    setNamingError(undefined);
                     setNaming({ kind: 'create', ...container, makes: kind });
                   }
                 }}
                 {...(naming === null ? {} : { naming })}
-                onNamed={(name) => {
-                  if (naming === null) return;
-                  if (naming.kind === 'rename') onRename?.(naming.node.id, name);
-                  else onCreate?.(naming.workspaceId, naming.parentId, naming.makes, name);
+                onNamed={async (name) => {
+                  if (naming === null || namingRequestPending.current) return;
+                  const attempt = namingAttempt.current;
+                  namingRequestPending.current = true;
+                  setNamingPending(true);
+                  setNamingError(undefined);
+                  try {
+                    const error = naming.kind === 'rename'
+                      ? await onRename?.(naming.node.id, name)
+                      : await onCreate?.(naming.workspaceId, naming.parentId, naming.makes, name);
+                    if (attempt !== namingAttempt.current) return;
+                    if (typeof error === 'string') {
+                      setNamingError(error);
+                      return;
+                    }
+                    setNaming(null);
+                  } finally {
+                    if (attempt === namingAttempt.current) {
+                      namingRequestPending.current = false;
+                      setNamingPending(false);
+                    }
+                  }
+                }}
+                onNamingCancel={() => {
+                  namingAttempt.current += 1;
+                  namingRequestPending.current = false;
+                  setNamingPending(false);
+                  setNamingError(undefined);
                   setNaming(null);
                 }}
-                onNamingCancel={() => setNaming(null)}
+                onNamingEdit={() => setNamingError(undefined)}
+                namingPending={namingPending}
+                {...(namingError === undefined ? {} : { namingError })}
                 favorites={new Set(favorites.map((one) => one.nodeId))}
                 onFavorite={onFavorite}
                 {...(onUnfavorite === undefined ? {} : { onUnfavorite })}
                 onDelete={onDelete}
-                onRename={(node) => setNaming({ kind: 'rename', node })}
+                onRename={(node) => {
+                  namingAttempt.current += 1;
+                  namingRequestPending.current = false;
+                  setNamingPending(false);
+                  setNamingError(undefined);
+                  setNaming({ kind: 'rename', node });
+                }}
                 onShare={(node) => {
                   share?.onOpen?.(node.id);
                   setSharing(node);
@@ -743,7 +813,16 @@ export function AppShell({
               />
             );
           if (tab.id === 'favorites')
-            return (
+            return favoritesState.state === 'loading' ? (
+              <LoadingState label="즐겨찾기 불러오는 중" />
+            ) : favoritesState.state === 'error' ? (
+              <ErrorState
+                label="즐겨찾기 오류"
+                title="즐겨찾기를 불러오지 못했습니다."
+                description={favoritesState.message}
+                {...(favoritesState.onRetry === undefined ? {} : { onRetry: favoritesState.onRetry })}
+              />
+            ) : (
               <FavoritesView
                 favorites={favorites}
                 onOpen={(nodeId) => {
@@ -751,6 +830,7 @@ export function AppShell({
                   if (found !== undefined) onOpen?.(found, false);
                 }}
                 {...(onUnfavorite === undefined ? {} : { onUnfavorite })}
+                onEmptyFocus={() => favoritesTab.current?.focus()}
               />
             );
           return <p>{tab.label}</p>;

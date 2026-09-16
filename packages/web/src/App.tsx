@@ -70,7 +70,8 @@ import {
 import { axesFrom, axesTo, readAxes, writeAxes, type SearchAxis } from './search/search-axes.js';
 import type { UploadRequest } from './attachment/upload-contract.js';
 import { PreAuthScreen, type PreAuthScreenId } from './auth/PreAuthScreen.js';
-import { AppShell } from './shell/AppShell.js';
+import { AppShell, type ShellPanelState } from './shell/AppShell.js';
+import { LoadingState } from './components/ui/states.js';
 import {
   activeTab,
   needsConfirmBeforeReplace,
@@ -111,6 +112,11 @@ const toTab = (node: TreeNodeView) => ({
   save: 'saved' as const,
   level: node.level,
 });
+
+const namingFailureMessage = (error: unknown) =>
+  error instanceof ApiError && typeof error.detail?.reason === 'string' && error.detail.reason.trim() !== ''
+    ? error.detail.reason
+    : '이름을 저장하지 못했습니다. 잠시 후 다시 시도하십시오.';
 
 /**
  * 서버 상태의 단일 클라이언트 (`CON-ARCH-004` AC-5).
@@ -158,6 +164,11 @@ function AppBody() {
 
   const tree = useTree(signedIn);
   const workspaces: readonly WorkspaceTreeView[] = tree.data ?? [];
+  const treeState: ShellPanelState = tree.data !== undefined
+    ? { state: 'ready' }
+    : tree.isError
+      ? { state: 'error', message: '잠시 후 다시 시도하십시오.', onRetry: () => void tree.refetch() }
+      : { state: 'loading' };
 
   const [documents, setDocuments] = useState<TabState>({ tabs: [], activeId: null });
   /**
@@ -211,6 +222,11 @@ function AppBody() {
   // 온다고 앱을 못 쓰게 만들 이유가 없다.
   const trash = useTrash(trashLens, signedIn);
   const favorites = useFavorites(signedIn);
+  const favoritesState: ShellPanelState = favorites.data !== undefined
+    ? { state: 'ready' }
+    : favorites.isError
+      ? { state: 'error', message: '잠시 후 다시 시도하십시오.', onRetry: () => void favorites.refetch() }
+      : { state: 'loading' };
   const personal = usePersonalSettings(userId);
   const [optimisticTheme, setOptimisticTheme] = useState<ThemePreference | undefined>();
   const [themeSaveState, setThemeSaveState] = useState<ThemeSaveState>({ state: 'idle' });
@@ -408,8 +424,13 @@ function AppBody() {
    */
   const rename = useCallback(
     async (nodeId: string, name: string) => {
-      await renameNode(nodeId, name).catch(() => undefined);
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
+      try {
+        await renameNode(nodeId, name);
+        await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
+        return undefined;
+      } catch (error) {
+        return namingFailureMessage(error);
+      }
     },
     [queries],
   );
@@ -527,13 +548,18 @@ function AppBody() {
       kind: 'file' | 'directory',
       name: string,
     ) => {
-      const made = await createNode({ workspaceId, parentId, kind, name }).catch(() => null);
-      if (made === null) return;
+      let made: Awaited<ReturnType<typeof createNode>>;
+      try {
+        made = await createNode({ workspaceId, parentId, kind, name });
+      } catch (error) {
+        return namingFailureMessage(error);
+      }
 
       // 접미사가 붙었을 때만 말이 온다 — 늘 말하면 사용자가 그 자리를 읽지
       // 않게 되고, 정작 이름이 바뀐 때도 지나친다.
       setNotice(made.notice);
       await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
+      return undefined;
     },
     [queries],
   );
@@ -954,12 +980,13 @@ function AppBody() {
   // **트리가 올 때까지 셸을 세우지 않는다.** 빈 트리로 먼저 세우면 아직
   // 모르는 상태가 「접근 가능한 워크스페이스가 없다」로 그려지고
   // (`FR-AUTH-005` AC-1), 사용자는 권한을 잃었다고 읽는다.
-  if (session.data === undefined || !tree.isSuccess) return <div data-state="loading" />;
+  if (session.data === undefined) return <LoadingState label="애플리케이션 불러오는 중" data-state="loading" />;
 
   return (
     <AppShell
       viewer={session.data}
       workspaces={workspaces}
+      treeState={treeState}
       documents={documents}
       missingDocument={missingDocument}
       bodies={bodies}
@@ -1000,6 +1027,7 @@ function AppBody() {
         onRestore: restoreNodeInheritance,
       }}
       favorites={favorites.data ?? []}
+      favoritesState={favoritesState}
       links={links.data ?? { outgoing: [], backlinks: [] }}
       query={query}
       onQuery={setQuery}

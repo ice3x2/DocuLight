@@ -252,3 +252,124 @@
   min-height: 0;
   flex: 1 1 auto;
 }
+
+/* #51: left-panel document tree and favorites. */
+[data-document-tree] {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+[data-tree-toolbar] {
+  flex: 0 0 auto;
+  padding: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+[data-tree-toolbar] > button { width: 100%; }
+
+[data-tree-naming-help] {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  padding: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--text-secondary);
+}
+[data-tree-naming-error] { flex-basis: 100%; color: var(--status-danger); }
+
+[data-tree-viewport] {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: auto;
+}
+
+.document-tree-list { overflow-x: auto !important; }
+
+[role='treeitem'] { box-sizing: border-box; }
+
+[role='treeitem'] > div,
+[data-tree-row] {
+  height: 40px;
+  min-width: 0;
+}
+
+[data-tree-row] {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 8px;
+  box-sizing: border-box;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+[data-tree-row][data-kind='workspace'] { font-weight: 600; }
+[data-tree-row][data-level='view'] { color: var(--text-sidebar-secondary); }
+[data-tree-row][data-visibility='pass-through'] { color: var(--text-disabled); }
+[role='treeitem']:hover [data-tree-row] { background: var(--surface-control); }
+[role='treeitem']:focus [data-tree-row] { outline: 2px solid var(--focus-ring); outline-offset: -2px; }
+[role='treeitem'][aria-selected='true'] [data-tree-row] { background: var(--surface-selected); }
+
+[role='treeitem'][aria-selected='true'] [data-tree-row]::before {
+  position: absolute; inset: 4px auto 4px 0; width: 2px; background: var(--action-primary); content: '';
+}
+
+[data-tree-row] > button { flex: 0 0 auto; }
+[data-tree-row] > button:has([data-tree-expander]) {
+  display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 0; background: transparent;
+}
+[data-tree-expander] { width: 8px; height: 8px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg); }
+[role='treeitem'][aria-expanded='true'] [data-tree-expander] { transform: rotate(45deg); }
+
+[data-tree-icon], [data-favorite-icon] { display: inline-block; flex: 0 0 16px; width: 16px; height: 16px; color: currentColor; }
+[data-tree-icon='file'], [data-favorite-icon='file'] { border: 1px solid currentColor; box-sizing: border-box; }
+[data-tree-icon='directory'], [data-favorite-icon='directory'], [data-tree-icon='workspace'] { border: 1px solid currentColor; border-top-width: 5px; box-sizing: border-box; }
+[data-tree-name] { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+[data-tree-row] > button:not(:has([data-tree-expander])) { min-width: 0; overflow: hidden; border: 0; background: transparent; color: inherit; text-align: left; }
+
+[data-tree-name-description] {
+  position: absolute; z-index: 20; top: calc(100% - 2px); left: 8px; display: none; max-width: min(28rem, calc(100vw - 48px));
+  padding: 4px 8px; border: 1px solid var(--border-control); border-radius: 4px; background: var(--surface-control);
+  color: var(--text-primary); font-size: 12px; line-height: 18px; overflow-wrap: anywhere; box-shadow: 0 4px 12px var(--overlay);
+}
+[role='treeitem']:hover [data-tree-name-description], [role='treeitem']:focus [data-tree-name-description] { display: block; }
+
+[data-upload-drop-label] { display: none; }
+[role='treeitem'][data-upload-drop='active'] [data-tree-row] { background: var(--surface-selected); outline: 2px dashed var(--action-primary); outline-offset: -2px; }
+[role='treeitem'][data-upload-drop='active'] [data-upload-drop-label] {
+  position: absolute; right: 8px; top: 9px; display: block; padding: 1px 4px; background: var(--surface-selected); font-size: 12px; line-height: 18px;
+}
+
+[data-tree-row] input {
+  width: 100%; min-width: 0; height: 36px; padding: 6px 8px; box-sizing: border-box; border: 1px solid var(--border-control);
+  border-radius: 4px; font: inherit; line-height: 22px; background: var(--surface-control); color: var(--text-primary);
+}
+[data-tree-row] input[aria-invalid='true'] { border-color: var(--status-danger); }
+
+[data-tree-menu] {
+  z-index: 300; width: 240px; max-width: calc(100vw - 48px); max-height: min(var(--radix-context-menu-content-available-height), calc(100dvh - 48px));
+  padding: 4px; box-sizing: border-box; overflow-y: auto; border: 1px solid var(--border-control); border-radius: 6px;
+  background: var(--surface-control); color: var(--text-primary); box-shadow: 0 8px 24px var(--overlay);
+}
+[data-tree-menu-item] { display: flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 4px; box-sizing: border-box; outline: none; font-size: 14px; }
+[data-tree-menu-item][data-highlighted] { background: var(--surface-selected); }
+[data-tree-menu-item][data-destructive] { color: var(--status-danger); }
+[data-tree-menu-item][data-disabled] { color: var(--text-disabled); background: transparent; }
+
+[aria-label='즐겨찾기'] { min-height: 0; margin: 0; padding: 0; overflow-y: auto; list-style: none; }
+[data-favorite-row] {
+  display: grid; grid-template-columns: minmax(0, 1fr) 36px; grid-template-rows: auto auto; align-items: center;
+  min-height: 52px; padding: 6px 8px; box-sizing: border-box; border-bottom: 1px solid var(--border-subtle);
+}
+[data-favorite-name] { display: flex; min-width: 0; align-items: center; gap: 8px; border: 0; background: transparent; color: inherit; font-size: 14px; line-height: 22px; overflow-wrap: anywhere; text-align: left; }
+[data-favorite-workspace] { grid-column: 1; font-size: 12px; line-height: 18px; color: var(--text-secondary); overflow-wrap: anywhere; }
+[data-favorite-row] > [aria-label$='즐겨찾기 해제'] { grid-column: 2; grid-row: 1 / 3; width: 36px; height: 36px; }
+[data-favorite-remove-icon]::before { content: '×'; font-size: 20px; line-height: 1; }

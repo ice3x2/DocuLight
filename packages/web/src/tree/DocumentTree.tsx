@@ -9,6 +9,7 @@ import {
 } from 'react-arborist';
 
 import { acceptedDrop, type UploadRequest } from '../attachment/upload-contract.js';
+import { Button } from '../components/ui/button.js';
 import {
   CREATE_DEFAULTS,
   enabledMenuItems,
@@ -32,8 +33,8 @@ interface Row {
   children?: Row[];
 }
 
-const ROW_HEIGHT = 28;
-const TREE_HEIGHT = 640;
+const ROW_HEIGHT = 40;
+const TREE_INDENT = 16;
 
 /**
  * 아직 없는 노드의 자리 — 만들기가 이름을 정하는 동안만 선다.
@@ -86,13 +87,24 @@ function NameField({
   initial,
   onConfirm,
   onCancel,
+  describedBy,
+  invalid,
+  pending,
+  onEdit,
+  onEmpty,
 }: {
   label: string;
   initial: string;
   onConfirm: (name: string) => void;
   onCancel: () => void;
+  describedBy: string;
+  invalid: boolean;
+  pending: boolean;
+  onEdit: () => void;
+  onEmpty: () => void;
 }) {
   const input = useRef<HTMLInputElement>(null);
+  const composing = useRef(false);
   const [name, setName] = useState(initial);
 
   // 열리면 초점을 옮기고 지금 값을 골라 둔다 — 옮기지 않으면 키보드
@@ -117,13 +129,24 @@ function NameField({
       ref={input}
       type="text"
       aria-label={label}
+      aria-describedby={describedBy}
+      aria-invalid={invalid || undefined}
+      aria-busy={pending || undefined}
+      disabled={pending}
       value={name}
-      onChange={(event) => setName(event.target.value)}
+      onChange={(event) => {
+        setName(event.target.value);
+        onEdit();
+      }}
+      onCompositionStart={() => { composing.current = true; }}
+      onCompositionEnd={() => { composing.current = false; }}
       onKeyDown={(event) => {
         if (event.key === 'Enter') {
+          if (composing.current || event.nativeEvent.isComposing) return;
           event.preventDefault();
           const 다듬은 = name.trim();
-          if (다듬은 !== '') onConfirm(다듬은);
+          if (다듬은 === '') onEmpty();
+          else onConfirm(다듬은);
         }
         if (event.key === 'Escape') {
           event.preventDefault();
@@ -168,11 +191,13 @@ function NodeMenu({
             포커스를 돌려주는데, 고른 조작이 이름 입력을 세우는 경우 그 복원이
             방금 초점을 잡은 입력에서 초점을 뺏는다 — 사용자는 메뉴를 고르고
             바로 치기 시작하는데 그 글자가 아무 데도 들어가지 않는다. */}
-        <ContextMenu.Content onCloseAutoFocus={(event) => event.preventDefault()}>
+        <ContextMenu.Content data-tree-menu="" onCloseAutoFocus={(event) => event.preventDefault()}>
           {menuItemsFor(node, favorited).map((item) => (
             <ContextMenu.Item
               key={item.id}
               disabled={!enabled.has(item.id)}
+              data-tree-menu-item=""
+              data-destructive={item.id === 'delete' ? '' : undefined}
               onSelect={() => onSelect?.(item.id, node)}
             >
               {item.label}
@@ -198,6 +223,11 @@ function TreeRow({
   naming,
   onNamed,
   onNamingCancel,
+  namingHelpId,
+  namingError,
+  namingPending,
+  onNamingEdit,
+  onNamingEmpty,
 }: {
   row: Row;
   api: NodeApi<Row>;
@@ -205,6 +235,11 @@ function TreeRow({
   naming?: Naming;
   onNamed?: (name: string) => void;
   onNamingCancel?: () => void;
+  namingHelpId: string;
+  namingError?: string;
+  namingPending: boolean;
+  onNamingEdit: () => void;
+  onNamingEmpty: () => void;
 }) {
   const node = row.node;
   const expandable = !api.isLeaf;
@@ -224,28 +259,36 @@ function TreeRow({
           initial={initial}
           onConfirm={(name) => onNamed?.(name)}
           onCancel={() => onNamingCancel?.()}
+          describedBy={namingHelpId}
+          invalid={namingError !== undefined}
+          pending={namingPending}
+          onEdit={onNamingEdit}
+          onEmpty={onNamingEmpty}
         />
       </div>
     );
   }
 
   return (
-    <div>
+    <div data-tree-row="" data-kind={node?.kind ?? 'workspace'} data-visibility={node?.visibility} data-level={node?.level ?? undefined}>
       {expandable && (
-        <button type="button" onClick={() => api.toggle()}>
-          {row.name} {api.isOpen ? '접기' : '펼치기'}
+        <button type="button" aria-label={`${row.name} ${api.isOpen ? '접기' : '펼치기'}`} onClick={() => api.toggle()}>
+          <span data-tree-expander="" aria-hidden="true" />
         </button>
       )}
+
+      <span data-tree-icon={node?.kind ?? 'workspace'} aria-hidden="true" />
 
       {node?.kind === 'file' ? (
         // 클릭은 활성 탭을 교체하고 `Ctrl`+클릭이 새 탭이다
         // (`FR-SHELL-012` AC-1 · AC-2).
         <button type="button" onClick={(event) => onOpen?.(node, event.ctrlKey || event.metaKey)}>
-          {row.name}
+          <span data-tree-name="">{row.name}</span>
         </button>
       ) : (
-        <span>{row.name}</span>
+        <span data-tree-name="">{row.name}</span>
       )}
+      <span id={`tree-name-${row.id}`} role="tooltip" data-tree-name-description="">{row.name}</span>
     </div>
   );
 }
@@ -268,21 +311,34 @@ function TreeRowWrapper(
 ) {
   const view = node.data.node;
 
+  const clearDrop = (element: HTMLElement) => element.removeAttribute('data-upload-drop');
+  const markDrop = (element: HTMLElement, files: readonly File[]) => {
+    if (view !== undefined && acceptedDrop(view, files).ok) element.setAttribute('data-upload-drop', 'active');
+    else clearDrop(element);
+  };
+
   const line = (
     <div
       ref={innerRef}
       {...attrs}
+      aria-describedby={`tree-name-${node.data.id}`}
       // 업로드는 **현재 화면에서 완결된다** (`FR-ATTACH-001` AC-3) —
       // 별도 업로드 화면·모드로 보내지 않는다.
-      onDragOver={(event) => event.preventDefault()}
+      onDragEnter={(event) => markDrop(event.currentTarget, [...event.dataTransfer.files])}
+      onDragOver={(event) => { event.preventDefault(); markDrop(event.currentTarget, [...event.dataTransfer.files]); }}
+      onDragLeave={(event) => {
+        if (!(event.relatedTarget instanceof Node) || !event.currentTarget.contains(event.relatedTarget)) clearDrop(event.currentTarget);
+      }}
       onDrop={(event) => {
         event.preventDefault();
+        clearDrop(event.currentTarget);
         if (view === undefined) return;
         const accepted = acceptedDrop(view, [...event.dataTransfer.files]);
         if (accepted.ok) onUpload?.(accepted.request);
       }}
     >
       {children}
+      <span data-upload-drop-label="" aria-hidden="true">파일 업로드</span>
     </div>
   );
 
@@ -333,6 +389,9 @@ export function DocumentTree({
   naming,
   onNamed,
   onNamingCancel,
+  namingError,
+  namingPending = false,
+  onNamingEdit,
 }: {
   workspaces: readonly WorkspaceTreeView[];
   onUpload?: (request: UploadRequest) => void;
@@ -369,11 +428,32 @@ export function DocumentTree({
   /** 이름이 정해졌다. 그 이름으로 무엇을 할지는 바깥이 안다. */
   onNamed?: (name: string) => void;
   onNamingCancel?: () => void;
+  /** 실제 create/rename 요청이 안전한 사용자 문구로 돌려준 실패. */
+  namingError?: string;
+  namingPending?: boolean;
+  onNamingEdit?: () => void;
 }) {
   // 없으면 빈 집합이다 — 아직 못 받았을 뿐 「하나도 아니다」와 같게 다룬다.
   const 즐겨찾기 = favorites ?? new Set<string>();
 
   const tree = useRef<TreeApi<Row> | null>(null);
+  const viewport = useRef<HTMLDivElement>(null);
+  const [treeHeight, setTreeHeight] = useState(1);
+  const namingHelpId = 'document-tree-naming-help';
+  const [emptyNamingError, setEmptyNamingError] = useState(false);
+
+  useEffect(() => setEmptyNamingError(false), [naming]);
+
+  useEffect(() => {
+    const element = viewport.current;
+    if (element === null) return;
+    const treeElement = element.querySelector('[role="tree"]');
+    treeElement?.setAttribute('data-row-height', String(ROW_HEIGHT));
+    treeElement?.setAttribute('data-indent', String(TREE_INDENT));
+    const observer = new ResizeObserver(([entry]) => setTreeHeight(Math.max(1, Math.floor(entry?.contentRect.height ?? element.clientHeight))));
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
 
   const rows = useMemo<Row[]>(() => {
     const base: Row[] = workspaces.map((entry) => ({
@@ -431,20 +511,37 @@ export function DocumentTree({
   }, [naming]);
 
   return (
-    <div>
-      <button type="button" onClick={() => onCreateNote?.()}>
+    <div data-document-tree="">
+      <div data-tree-toolbar="">
+      <Button variant="primary" onClick={() => onCreateNote?.()}>
         새 노트
-      </button>
+      </Button>
+      </div>
 
-      <div role="tree" aria-label="문서 트리">
+      {naming !== undefined ? (
+        <div id={namingHelpId} data-tree-naming-help="">
+          <strong>{namingLabel(naming).label}</strong>
+          <span>Enter로 확정 · Esc로 취소</span>
+          {emptyNamingError ? (
+            <span role="alert" data-tree-naming-error="">이름을 입력하십시오.</span>
+          ) : namingError === undefined ? null : (
+            <span role="alert" data-tree-naming-error="">{namingError}</span>
+          )}
+        </div>
+      ) : null}
+
+      <div ref={viewport} data-tree-viewport="">
         <Tree<Row>
           ref={tree}
           data={rows}
           idAccessor="id"
           openByDefault={false}
           initialOpenState={initialOpenState}
-          height={TREE_HEIGHT}
+          aria-label="문서 트리"
+          height={treeHeight}
           rowHeight={ROW_HEIGHT}
+          indent={TREE_INDENT}
+          className="document-tree-list"
           // 화면 밖 줄을 그리지 않는 것이 이 패키지를 쓰는 이유다. 시험
           // 환경은 높이를 못 재므로 넉넉히 잡아 전부 그리게 둔다 — 0 으로
           // 접히면 목록이 통째로 사라지고, 그것은 「비어 있다」와 구별되지
@@ -478,6 +575,14 @@ export function DocumentTree({
                 {...(naming === undefined ? {} : { naming })}
                 {...(onNamed === undefined ? {} : { onNamed })}
                 {...(onNamingCancel === undefined ? {} : { onNamingCancel })}
+                namingHelpId={namingHelpId}
+                {...(emptyNamingError ? { namingError: 'empty' } : namingError === undefined ? {} : { namingError })}
+                namingPending={namingPending}
+                onNamingEdit={() => {
+                  setEmptyNamingError(false);
+                  onNamingEdit?.();
+                }}
+                onNamingEmpty={() => setEmptyNamingError(true)}
               />
             </div>
           )}

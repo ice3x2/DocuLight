@@ -1,6 +1,7 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 
 import { cn } from '../../lib/utils.js';
+import { Button } from './button.js';
 
 export type NoticeVariant = 'info' | 'success' | 'warning' | 'error';
 
@@ -48,6 +49,24 @@ export function EmptyState({ action, className, description, title, ...props }: 
       <strong data-slot="empty-state-title">{title}</strong>
       {description === undefined ? null : <p data-slot="empty-state-description">{description}</p>}
       {action === undefined ? null : <div data-slot="empty-state-action">{action}</div>}
+    </div>
+  );
+}
+
+export interface ErrorStateProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
+  description?: ReactNode;
+  label: string;
+  onRetry?: () => void;
+  title: ReactNode;
+}
+
+// @req IR-SHELL-006
+export function ErrorState({ className, description, label, onRetry, title, ...props }: ErrorStateProps) {
+  return (
+    <div role="alert" aria-label={label} data-slot="error-state" className={cn('dl-error-state', className)} {...props}>
+      <strong data-slot="error-state-title">{title}</strong>
+      {description === undefined ? null : <p data-slot="error-state-description">{description}</p>}
+      {onRetry === undefined ? null : <Button variant="secondary" onClick={onRetry}>다시 시도</Button>}
     </div>
   );
 }

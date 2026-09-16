@@ -120,7 +120,7 @@ describe('FR-SHELL-003 AC-1 — 새 노트 버튼이 실제로 문서를 만든�
 
     render(<App />);
     const sidebar = await screen.findByRole('complementary', { name: '좌측 사이드바' });
-    await user.click(within(sidebar).getByRole('button', { name: '새 노트' }));
+    await user.click(await within(sidebar).findByRole('button', { name: '새 노트' }));
 
     await waitFor(() => expect(created).toHaveLength(1));
   });
