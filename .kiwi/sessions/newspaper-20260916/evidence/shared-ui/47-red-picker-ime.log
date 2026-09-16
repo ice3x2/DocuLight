@@ -1,0 +1,7 @@
+COMMAND: cd packages/web && npx vitest run test/newspaper-shared-controls.test.tsx -t "search selection Enter"
+EXIT_CODE: 1
+
+Test Files  1 failed (1)
+Tests       1 failed | 2 skipped (3)
+
+Failure: ordinary Enter was contained by cmdk, but composing Enter was not default-prevented and could escape to an outer form.

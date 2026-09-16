@@ -1,0 +1,9 @@
+COMMAND: cd packages/web && node test/newspaper-shared-controls-check.mjs
+EXIT_CODE: 1
+
+FAIL selection targets and native indicators have shared geometry: {"checkbox":{"width":13,"height":13,"borderRadius":"0px","accentColor":"auto"},"checkboxTarget":{"width":480,"height":22,"borderRadius":"0px","accentColor":"auto"},"radio":{"width":13,"height":13,"borderRadius":"0px","accentColor":"auto"},"radioTarget":{"width":480,"height":22,"borderRadius":"0px","accentColor":"auto"},"loading":{"width":480,"height":36,"borderRadius":"4px","accentColor":"auto"},"spinner":{"width":0,"height":18,"borderRadius":"0px","accentColor":"auto"}}
+FAIL loading state keeps control geometry and a visible progress marker: {"loading":{"width":480,"height":36,"borderRadius":"4px","accentColor":"auto"},"spinner":{"width":0,"height":18,"borderRadius":"0px","accentColor":"auto"}}
+FAIL keyboard reaches selection controls with separated focus: {"active":"shared-checkbox","width":"1px","offset":"2px","kind":"auto"}
+FAIL: 3 failed assertions
+
+Runner cleanup: Chromium and the Vite server were closed in finally.

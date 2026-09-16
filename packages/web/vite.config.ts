@@ -6,6 +6,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 const DISTRIBUTED_LICENSES = [
+  ['@radix-ui/react-alert-dialog', 'LICENSE'],
   ['class-variance-authority', 'LICENSE'],
   ['clsx', 'license'],
   ['tailwind-merge', 'LICENSE.md'],

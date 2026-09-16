@@ -1,5 +1,5 @@
 import { Command } from 'cmdk';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type KeyboardEvent } from 'react';
 
 import {
   fetchPrincipals,
@@ -40,6 +40,15 @@ const MINIMUM_QUERY = 2;
  * 스물한 번째를 이어 받는 경로를 만들면 상한이 없는 것과 같아진다.
  */
 const RESULT_LIMIT = 20;
+
+// @req IR-SHELL-006
+function keepEnterInsidePicker(event: KeyboardEvent<HTMLInputElement>) {
+  if (event.key !== 'Enter') return;
+  event.preventDefault();
+  if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) {
+    event.stopPropagation();
+  }
+}
 
 /**
  * 상태 배지 문구 (`SEC-PRINCIPAL-002` AC-4 · AC-5).
@@ -106,6 +115,7 @@ export function PrincipalPicker({
         aria-label="사용자·그룹 검색"
         value={query}
         onValueChange={setQuery}
+        onKeyDown={keepEnterInsidePicker}
         placeholder="사용자 또는 그룹 이름"
       />
 

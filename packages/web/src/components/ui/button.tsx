@@ -25,19 +25,27 @@ const buttonVariants = cva('dl-button', {
 
 export interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {}
+    VariantProps<typeof buttonVariants> {
+  loading?: boolean;
+}
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'default', type = 'button', ...props }, ref) => (
+  ({ children, className, disabled, loading = false, variant = 'primary', size = 'default', type = 'button', ...props }, ref) => (
     <button
       ref={ref}
       type={type}
+      aria-busy={loading || undefined}
+      disabled={disabled || loading}
       data-slot="button"
+      data-loading={loading || undefined}
       data-variant={variant}
       data-size={size}
       className={cn(buttonVariants({ variant, size }), className)}
       {...props}
-    />
+    >
+      {loading ? <span data-slot="button-spinner" aria-hidden="true" /> : null}
+      {children}
+    </button>
   ),
 );
 Button.displayName = 'Button';

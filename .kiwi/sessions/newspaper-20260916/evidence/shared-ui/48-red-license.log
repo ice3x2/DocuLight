@@ -1,0 +1,7 @@
+COMMAND: cd packages/web && npx vitest run test/newspaper-overlays.test.tsx -t "ships the inspected"
+EXIT_CODE: 1
+
+Test Files  1 failed (1)
+Tests       1 failed | 5 skipped (6)
+
+Failure: vite.config.ts did not include ['@radix-ui/react-alert-dialog', 'LICENSE']; production attribution was missing.

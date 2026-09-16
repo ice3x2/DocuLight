@@ -1,0 +1,9 @@
+COMMAND: cd packages/web && node test/newspaper-shared-controls-check.mjs
+EXIT_CODE: 0
+
+PASS selection targets and native indicators have shared geometry: checkbox=18x18, checkbox target=36px, radio=18x18, radio target=36px, accent=rgb(54, 91, 112)
+PASS loading state keeps control geometry and a visible progress marker: button=36px, marker visible
+PASS keyboard reaches selection controls with separated focus: active=shared-checkbox, outline=2px solid, offset=2px
+PASS: 0 failed assertions
+
+Runner cleanup: Chromium and the Vite server were closed in finally.

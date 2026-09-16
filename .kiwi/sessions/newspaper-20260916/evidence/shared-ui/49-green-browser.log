@@ -1,0 +1,10 @@
+COMMAND: cd packages/web && node test/newspaper-data-display-check.mjs
+EXIT_CODE: 0
+
+PASS table rows are at least 40px and numeric cells align right: rows=[56.5,105,57], numeric=right
+PASS long path wraps fully and selected row has a non-color edge marker: path white-space=normal, overflow-wrap=anywhere, selected edge=3px
+PASS badge and common states have visible presentation: badge radius=3px, loading marker visible, loading/empty/error states visible
+PASS keyboard reaches the complete path value: C:/문서보관함/아주-긴-한글-워크스페이스/회의자료/2026년-운영계획-최종본.md
+PASS: 0 failed assertions
+
+Runner cleanup: Chromium and the Vite server were closed in finally.

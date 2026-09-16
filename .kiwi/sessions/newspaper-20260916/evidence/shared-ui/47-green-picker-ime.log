@@ -1,0 +1,8 @@
+COMMAND: cd packages/web && npx vitest run test/newspaper-shared-controls.test.tsx test/principal-picker.test.tsx
+EXIT_CODE: 0
+
+Test Files  2 passed (2)
+Tests       14 passed (14)
+Duration    1.85s
+
+Ordinary Enter remains available to cmdk selection while its browser default is contained; composing Enter is also stopped before it can select or submit an outer form.

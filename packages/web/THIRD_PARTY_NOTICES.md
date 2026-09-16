@@ -4,6 +4,7 @@ The DocuLight web distribution includes or derives build output from the followi
 
 | Package and version | License |
 | --- | --- |
+| @radix-ui/react-alert-dialog@1.1.23 | MIT |
 | class-variance-authority@0.7.1 | Apache-2.0 |
 | clsx@2.1.1 | MIT |
 | tailwind-merge@3.7.0 | MIT |

@@ -1,0 +1,10 @@
+COMMAND: cd packages/web && node test/newspaper-data-display-check.mjs
+EXIT_CODE: 1
+
+FAIL table rows are at least 40px and numeric cells align right: rows=[24,46,24], numeric=start
+FAIL long path wraps fully and selected row has a non-color edge marker: path height=40px, selected border-left=0px
+FAIL badge and common states have visible presentation: badge radius=0px, loading marker width=0px
+PASS keyboard reaches the complete path value: C:/문서보관함/아주-긴-한글-워크스페이스/회의자료/2026년-운영계획-최종본.md
+FAIL: 3 failed assertions
+
+Runner cleanup: Chromium and the Vite server were closed in finally.

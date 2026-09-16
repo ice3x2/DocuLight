@@ -1,0 +1,372 @@
+{
+  "browser": "Chromium",
+  "viewports": [
+    {
+      "name": "1280x720",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "name": "1440x900",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "name": "1920x1080",
+      "width": 1920,
+      "height": 1080
+    }
+  ],
+  "zoomEvidence": {
+    "method": "Playwright persistent Chromium with an isolated extension calling chrome.tabs.setZoom(tabId, 2)",
+    "usedCssZoom": false,
+    "usedCdpEmulation": false,
+    "baseline": {
+      "innerWidth": 1427,
+      "innerHeight": 807,
+      "cssZoom": "1",
+      "visualScale": 1
+    },
+    "zoomed": {
+      "innerWidth": 713,
+      "innerHeight": 403,
+      "cssZoom": "1",
+      "visualScale": 1,
+      "overflow": false,
+      "dialog": {
+        "left": 76.80000305175781,
+        "right": 76.19999694824219,
+        "top": 123,
+        "bottom": 122.39999389648438,
+        "width": 560,
+        "height": 157.60000610351562
+      }
+    },
+    "widthRatio": 2.0014025245441793,
+    "heightRatio": 2.002481389578164
+  },
+  "assertions": [
+    {
+      "viewport": "1280x720",
+      "fixture": "controls",
+      "name": "geometry and long Korean wrapping",
+      "passed": true,
+      "details": {
+        "input": {
+          "width": 480,
+          "height": 38,
+          "radius": "4px",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px"
+        },
+        "select": {
+          "width": 480,
+          "height": 36,
+          "radius": "4px",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px"
+        },
+        "checkboxTarget": {
+          "width": 480,
+          "height": 36,
+          "radius": "0px",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px"
+        },
+        "radioTarget": {
+          "width": 480,
+          "height": 36,
+          "radius": "0px",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px"
+        },
+        "loading": {
+          "width": 480,
+          "height": 36,
+          "radius": "4px",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px"
+        },
+        "help": {
+          "scrollWidth": 480,
+          "clientWidth": 480,
+          "scrollHeight": 18
+        },
+        "overflow": false
+      }
+    },
+    {
+      "viewport": "1280x720",
+      "fixture": "controls",
+      "name": "IME Enter separation",
+      "passed": true,
+      "details": {
+        "active": "shared-name",
+        "submits": "0"
+      }
+    },
+    {
+      "viewport": "1280x720",
+      "fixture": "data-display",
+      "name": "rows, alignment, selection and complete path reachability",
+      "passed": true,
+      "details": {
+        "rows": [
+          56.5,
+          105,
+          57
+        ],
+        "numeric": "right",
+        "selectedEdge": "3px",
+        "pathText": "C:/문서보관함/아주-긴-한글-워크스페이스/회의자료/2026년-운영계획-최종본.md",
+        "overflow": false,
+        "pathFocus": {
+          "id": "full-path",
+          "text": "C:/문서보관함/아주-긴-한글-워크스페이스/회의자료/2026년-운영계획-최종본.md"
+        }
+      }
+    },
+    {
+      "viewport": "1280x720",
+      "fixture": "overlays",
+      "name": "dialog viewport geometry",
+      "passed": true,
+      "details": {
+        "width": 560,
+        "height": 158,
+        "left": 360,
+        "right": 360,
+        "top": 281,
+        "bottom": 281,
+        "padding": "24px",
+        "radius": "6px"
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "fixture": "controls",
+      "name": "geometry and long Korean wrapping",
+      "passed": true,
+      "details": {
+        "input": {
+          "width": 480,
+          "height": 38,
+          "radius": "4px",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px"
+        },
+        "select": {
+          "width": 480,
+          "height": 36,
+          "radius": "4px",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px"
+        },
+        "checkboxTarget": {
+          "width": 480,
+          "height": 36,
+          "radius": "0px",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px"
+        },
+        "radioTarget": {
+          "width": 480,
+          "height": 36,
+          "radius": "0px",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px"
+        },
+        "loading": {
+          "width": 480,
+          "height": 36,
+          "radius": "4px",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px"
+        },
+        "help": {
+          "scrollWidth": 480,
+          "clientWidth": 480,
+          "scrollHeight": 18
+        },
+        "overflow": false
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "fixture": "controls",
+      "name": "IME Enter separation",
+      "passed": true,
+      "details": {
+        "active": "shared-name",
+        "submits": "0"
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "fixture": "data-display",
+      "name": "rows, alignment, selection and complete path reachability",
+      "passed": true,
+      "details": {
+        "rows": [
+          56.5,
+          105,
+          57
+        ],
+        "numeric": "right",
+        "selectedEdge": "3px",
+        "pathText": "C:/문서보관함/아주-긴-한글-워크스페이스/회의자료/2026년-운영계획-최종본.md",
+        "overflow": false,
+        "pathFocus": {
+          "id": "full-path",
+          "text": "C:/문서보관함/아주-긴-한글-워크스페이스/회의자료/2026년-운영계획-최종본.md"
+        }
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "fixture": "overlays",
+      "name": "dialog viewport geometry",
+      "passed": true,
+      "details": {
+        "width": 560,
+        "height": 158,
+        "left": 440,
+        "right": 440,
+        "top": 371,
+        "bottom": 371,
+        "padding": "24px",
+        "radius": "6px"
+      }
+    },
+    {
+      "viewport": "1920x1080",
+      "fixture": "controls",
+      "name": "geometry and long Korean wrapping",
+      "passed": true,
+      "details": {
+        "input": {
+          "width": 480,
+          "height": 38,
+          "radius": "4px",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px"
+        },
+        "select": {
+          "width": 480,
+          "height": 36,
+          "radius": "4px",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px"
+        },
+        "checkboxTarget": {
+          "width": 480,
+          "height": 36,
+          "radius": "0px",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px"
+        },
+        "radioTarget": {
+          "width": 480,
+          "height": 36,
+          "radius": "0px",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px"
+        },
+        "loading": {
+          "width": 480,
+          "height": 36,
+          "radius": "4px",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px"
+        },
+        "help": {
+          "scrollWidth": 480,
+          "clientWidth": 480,
+          "scrollHeight": 18
+        },
+        "overflow": false
+      }
+    },
+    {
+      "viewport": "1920x1080",
+      "fixture": "controls",
+      "name": "IME Enter separation",
+      "passed": true,
+      "details": {
+        "active": "shared-name",
+        "submits": "0"
+      }
+    },
+    {
+      "viewport": "1920x1080",
+      "fixture": "data-display",
+      "name": "rows, alignment, selection and complete path reachability",
+      "passed": true,
+      "details": {
+        "rows": [
+          56.5,
+          105,
+          57
+        ],
+        "numeric": "right",
+        "selectedEdge": "3px",
+        "pathText": "C:/문서보관함/아주-긴-한글-워크스페이스/회의자료/2026년-운영계획-최종본.md",
+        "overflow": false,
+        "pathFocus": {
+          "id": "full-path",
+          "text": "C:/문서보관함/아주-긴-한글-워크스페이스/회의자료/2026년-운영계획-최종본.md"
+        }
+      }
+    },
+    {
+      "viewport": "1920x1080",
+      "fixture": "overlays",
+      "name": "dialog viewport geometry",
+      "passed": true,
+      "details": {
+        "width": 560,
+        "height": 158,
+        "left": 680,
+        "right": 680,
+        "top": 461,
+        "bottom": 461,
+        "padding": "24px",
+        "radius": "6px"
+      }
+    },
+    {
+      "viewport": "200% browser zoom",
+      "fixture": "overlays",
+      "name": "genuine zoom and reachable geometry",
+      "passed": true,
+      "details": {
+        "method": "Playwright persistent Chromium with an isolated extension calling chrome.tabs.setZoom(tabId, 2)",
+        "usedCssZoom": false,
+        "usedCdpEmulation": false,
+        "baseline": {
+          "innerWidth": 1427,
+          "innerHeight": 807,
+          "cssZoom": "1",
+          "visualScale": 1
+        },
+        "zoomed": {
+          "innerWidth": 713,
+          "innerHeight": 403,
+          "cssZoom": "1",
+          "visualScale": 1,
+          "overflow": false,
+          "dialog": {
+            "left": 76.80000305175781,
+            "right": 76.19999694824219,
+            "top": 123,
+            "bottom": 122.39999389648438,
+            "width": 560,
+            "height": 157.60000610351562
+          }
+        },
+        "widthRatio": 2.0014025245441793,
+        "heightRatio": 2.002481389578164
+      }
+    }
+  ]
+}

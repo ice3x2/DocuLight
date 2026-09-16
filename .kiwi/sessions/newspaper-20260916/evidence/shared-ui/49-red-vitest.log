@@ -1,0 +1,12 @@
+COMMAND: cd packages/web && npx vitest run test/newspaper-data-display.test.tsx
+EXIT_CODE: 1
+
+test/newspaper-data-display.test.tsx (3 tests | 3 failed)
+  x keeps native table structure and numeric alignment intent
+  x communicates badge and notice states with text and live-region semantics
+  x distinguishes loading and empty states
+
+Failure signature: Element type is invalid; the shared table, badge, notice, loading, and empty-state exports are undefined.
+
+Test Files  1 failed (1)
+Tests       3 failed (3)
