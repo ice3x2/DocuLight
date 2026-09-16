@@ -1,0 +1,81 @@
+.atomic-cm-editor.atomic-cm-editor,
+.cm-mergeView.cm-mergeView {
+  --atomic-editor-fg: var(--text-primary);
+  --atomic-editor-fg-muted: var(--text-secondary);
+  --atomic-editor-fg-faint: var(--text-secondary);
+  --atomic-editor-bg: var(--surface-document);
+  --atomic-editor-bg-panel: var(--surface-app);
+  --atomic-editor-bg-surface: var(--surface-control);
+  --atomic-editor-border: var(--border-subtle);
+  --atomic-editor-accent: var(--action-primary);
+  --atomic-editor-accent-bright: var(--action-primary);
+  --atomic-editor-accent-soft: var(--action-primary);
+  --atomic-editor-link: var(--action-primary);
+  --atomic-editor-link-hover: var(--action-primary-hover);
+  --atomic-editor-code-bg: var(--surface-app);
+  --atomic-editor-selection-bg: var(--surface-selected);
+  --atomic-editor-search-bg: var(--surface-warning);
+  --atomic-editor-search-bg-active: var(--surface-selected);
+  --atomic-editor-initial-reveal-bg: var(--surface-warning);
+  --atomic-editor-initial-reveal-bg-strong: var(--surface-selected);
+  --atomic-editor-font: "Malgun Gothic", system-ui, sans-serif;
+  --atomic-editor-font-serif: Batang, Georgia, serif;
+  --atomic-editor-font-mono: Consolas, monospace;
+  --atomic-editor-body-size: 1rem;
+  --atomic-editor-body-leading: 1.75rem;
+  --atomic-editor-measure: 45rem;
+  --atomic-editor-task-glyph: var(--text-on-primary);
+  --atomic-editor-hl-keyword: var(--action-primary);
+  --atomic-editor-hl-function: var(--action-primary);
+  --atomic-editor-hl-property: var(--action-primary);
+  --atomic-editor-hl-escape: var(--action-primary);
+  --atomic-editor-hl-operator: var(--action-primary);
+  --atomic-editor-hl-string: var(--status-success);
+  --atomic-editor-hl-regexp: var(--status-success);
+  --atomic-editor-hl-tag: var(--status-success);
+  --atomic-editor-hl-number: var(--status-warning);
+  --atomic-editor-hl-type: var(--status-warning);
+  --atomic-editor-hl-comment: var(--text-secondary);
+  --atomic-editor-hl-variable: var(--text-primary);
+  --atomic-editor-hl-invalid: var(--status-danger);
+}
+
+.atomic-cm-editor { color: var(--text-primary); background: var(--surface-document); }
+
+[data-document-surface] { container: document-editor / inline-size; display: flex; flex: 1 1 auto; flex-direction: column; min-width: 0; min-height: 0; overflow: hidden; }
+[data-document-surface] > [role='group'] { flex: 0 0 auto; flex-wrap: wrap; }
+[data-document-body] { display: flex; flex: 1 1 auto; min-width: 0; min-height: 0; overflow: hidden; }
+[data-document-body] > .atomic-cm-editor { min-width: 0; min-height: 0; }
+[data-document-body] .cm-content { box-sizing: border-box; width: 100%; max-width: 50rem; padding-block: 1rem 40vh; padding-inline: 2.5rem; font: 400 1rem/1.75rem var(--atomic-editor-font); text-wrap: wrap; }
+@container document-editor (max-width: 799px) {
+  [data-document-body] .cm-content { max-width: 48rem; padding-inline: 1.5rem; }
+  [data-source-editor] { padding-inline: 1.5rem; }
+}
+[data-source-editor] { box-sizing: border-box; flex: 1 1 auto; width: 100%; min-width: 0; min-height: 0; resize: none; overflow: auto; padding-block: 1rem; padding-inline: 2.5rem; border: 0; background: var(--surface-document); color: var(--text-primary); caret-color: var(--text-primary); white-space: pre; font: 400 0.875rem/1.375rem var(--atomic-editor-font-mono); }
+[data-source-editor]::selection,
+[data-document-body] .cm-content ::selection { background: var(--surface-selected); color: var(--text-primary); }
+.atomic-cm-editor:focus-within,
+[data-source-editor]:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -4px; box-shadow: inset 0 0 0 2px var(--surface-document); }
+[data-document-body] .cm-line.cm-atomic-h1 { font: 700 2.25rem/3.125rem var(--atomic-editor-font-serif); }
+[data-document-body] .cm-line.cm-atomic-h2 { font: 700 1.5rem/2.25rem var(--atomic-editor-font-serif); }
+[data-document-body] .cm-line.cm-atomic-h3 { font: 700 1.25rem/1.875rem var(--atomic-editor-font-serif); }
+[data-document-body] .cm-line.cm-atomic-h4 { font: 600 1.125rem/1.75rem var(--atomic-editor-font-serif); }
+[data-document-body] .cm-line.cm-atomic-h5,
+[data-document-body] .cm-line.cm-atomic-h6 { font: 600 1rem/1.75rem var(--atomic-editor-font-serif); }
+[data-document-body] .cm-line.cm-atomic-blockquote { font: 400 1.125rem/1.875rem var(--atomic-editor-font-serif); color: var(--text-primary); }
+[data-document-body] .cm-atomic-inline-code { font: 400 0.875rem/1.375rem var(--atomic-editor-font-mono); }
+.cm-searchMatch.cm-searchMatch-selected { outline: 2px solid var(--action-primary); outline-offset: 0; }
+.cm-panel.cm-search input,
+.cm-panel.cm-search button { min-height: 2.25rem; border-color: var(--border-control); border-radius: 4px; }
+.cm-cursor, .cm-dropCursor { border-left-color: var(--text-primary) !important; border-left-width: 2px !important; }
+.cm-atomic-task-checkbox { border-color: var(--border-control); }
+.cm-atomic-task-checkbox:hover { background: var(--surface-control); }
+.cm-atomic-task-checkbox:checked { border-color: var(--action-primary); background: var(--action-primary); }
+.cm-atomic-task-checkbox:checked:hover { border-color: var(--action-primary-hover); background: var(--action-primary-hover); }
+.cm-atomic-task-checkbox::after { border-color: var(--atomic-editor-task-glyph); }
+.cm-atomic-task-checkbox:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; box-shadow: none; }
+.cm-mergeView { color: var(--text-primary); background: var(--surface-document); font: 400 0.875rem/1.375rem var(--atomic-editor-font-mono); }
+.cm-mergeView .cm-selectionBackground { background: var(--surface-selected); }
+.cm-mergeView .cm-content ::selection { background: var(--surface-selected); color: var(--text-primary); }
+.cm-mergeView .cm-insertedLine { background: var(--surface-success); }
+.cm-mergeView .cm-deletedLine { background: var(--surface-danger); }

@@ -15,6 +15,9 @@
  * 감추는 것도 이 시트가 한다. 없으면 같은 수식이 두 벌 겹쳐 보인다. */
 @import 'katex/dist/katex.min.css';
 
+/* Semantic bridge shared by the product and demo. */
+@import './newspaper-integration.css';
+
 /* 블록 수식의 세로 여백은 **바깥 컨테이너가 padding 으로** 갖는다.
  *
  * KaTeX 는 `.katex-display` 에 `margin: 1em 0` 을 준다. 그 margin 은 CM6 가

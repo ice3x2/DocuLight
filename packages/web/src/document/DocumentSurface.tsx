@@ -331,7 +331,7 @@ export function DocumentSurface({
   }
 
   return (
-    <div>
+    <div data-document-surface data-editor-mode={mode}>
       <ModeToggle file={file} mode={mode} onChange={change} />
 
       {shown === 'rejected' && (
@@ -363,7 +363,7 @@ export function DocumentSurface({
         </>
       )}
 
-      <div role="region" aria-label={MODE_LABEL[mode]} data-node={file.nodeId}>
+      <div role="region" aria-label={MODE_LABEL[mode]} data-node={file.nodeId} data-document-body>
         {documentText === undefined ? null : mode === 'source' ? (
           // 소스는 **원문 그대로**다 — 마크다운 편집기를 쓰면 그 편집기가
           // 기호를 숨기므로 소스가 아니게 된다. 읽기 전용도 아니다:
@@ -371,6 +371,7 @@ export function DocumentSurface({
           // (`FR-EDITOR-003` AC-2).
           <textarea
             aria-label="원문"
+            data-source-editor
             defaultValue={documentText}
             onChange={(event) => {
               lastBody.current = event.target.value;

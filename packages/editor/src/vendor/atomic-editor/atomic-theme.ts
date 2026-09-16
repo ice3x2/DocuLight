@@ -9,7 +9,7 @@ import type { Extension } from '@codemirror/state';
 // deliberately unscoped so the package is usable standalone without
 // forcing the consumer to theme it first.
 
-export const atomicEditorTheme: Extension = EditorView.theme(
+export const atomicEditorTheme = (isDark: boolean): Extension => EditorView.theme(
   {
     '&': {
       color: 'var(--atomic-editor-fg, #dcddde)',
@@ -121,7 +121,7 @@ export const atomicEditorTheme: Extension = EditorView.theme(
       outline: '1px solid var(--atomic-editor-accent-bright, #a78bfa)',
     },
   },
-  { dark: true },
+  { dark: isDark },
 );
 
 // Markdown syntax tinting plus highlight colors for tokens emitted by

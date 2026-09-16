@@ -58,6 +58,13 @@ import { tables } from './table-widget';
 const EMPTY_CODE_LANGUAGES: readonly LanguageDescription[] = [];
 const EMPTY_EXTENSIONS: readonly Extension[] = [];
 
+function resolvedDarkTheme(): boolean {
+  const theme = document.documentElement.dataset.theme;
+  if (theme === 'dark') return true;
+  if (theme === 'light') return false;
+  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+}
+
 function defaultOpenLink(url: string): void {
   try {
     window.open(url, '_blank', 'noopener,noreferrer');
@@ -276,6 +283,7 @@ export function AtomicCodeMirrorEditor({
   // current prop at mount; kept in sync by the effect below and the
   // imperative `setReadOnly` handle.
   const readOnlyCompartmentRef = useRef(new Compartment());
+  const themeCompartmentRef = useRef(new Compartment());
   // Latest `readOnly` for the mount effect, which doesn't list it as a
   // dependency (toggling must reconfigure, not remount).
   const readOnlyRef = useRef(readOnly);
@@ -297,6 +305,7 @@ export function AtomicCodeMirrorEditor({
     const root = rootRef.current;
     if (!root) return;
 
+    const initialDark = resolvedDarkTheme();
     const view = new EditorView({
       parent: root,
       state: EditorState.create({
@@ -342,7 +351,7 @@ export function AtomicCodeMirrorEditor({
             closeBrackets: { brackets: ['(', '[', '{', "'", '"', '*', '_', '`'] },
           }),
           atomicMarkdownSyntax,
-          atomicEditorTheme,
+          themeCompartmentRef.current.of(atomicEditorTheme(initialDark)),
           keymap.of([
             ...closeBracketsKeymap,
             ...historyKeymap,
@@ -379,6 +388,7 @@ export function AtomicCodeMirrorEditor({
       }),
     });
     viewRef.current = view;
+    root.dataset.editorTheme = view.state.facet(EditorView.darkTheme) ? 'dark' : 'light';
 
     if (initialSearchText) {
       // Defer by a tick so the panel mounts after the view's initial
@@ -408,6 +418,45 @@ export function AtomicCodeMirrorEditor({
       viewRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editorIdentity]);
+
+  useEffect(() => {
+    const view = viewRef.current;
+    const root = rootRef.current;
+    if (!view || !root) return;
+    let pending = false;
+    let composing = false;
+    const apply = () => {
+      if (viewRef.current !== view || rootRef.current !== root) return;
+      if (view.composing || composing) {
+        pending = true;
+        return;
+      }
+      pending = false;
+      const dark = resolvedDarkTheme();
+      view.dispatch({ effects: themeCompartmentRef.current.reconfigure(atomicEditorTheme(dark)) });
+      root.dataset.editorTheme = view.state.facet(EditorView.darkTheme) ? 'dark' : 'light';
+    };
+    const startComposition = () => { composing = true; };
+    const finishComposition = () => {
+      composing = false;
+      if (pending) apply();
+    };
+    const media = window.matchMedia?.('(prefers-color-scheme: dark)');
+    const mediaChanged = () => {
+      if (document.documentElement.dataset.theme === 'system') apply();
+    };
+    const observer = new MutationObserver(apply);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    media?.addEventListener('change', mediaChanged);
+    view.contentDOM.addEventListener('compositionstart', startComposition);
+    view.contentDOM.addEventListener('compositionend', finishComposition);
+    return () => {
+      observer.disconnect();
+      media?.removeEventListener('change', mediaChanged);
+      view.contentDOM.removeEventListener('compositionstart', startComposition);
+      view.contentDOM.removeEventListener('compositionend', finishComposition);
+    };
   }, [editorIdentity]);
 
   // If a reveal query was passed, scroll the first match into view

@@ -1,0 +1,27 @@
+Issue #54 review-fix final verification
+Date: 2026-09-17
+
+Focused
+- editor assembly: 2/2 PASS
+- issue54 Playwright: PASS built production App/AppShell smoke, dynamic state, and 12 environments
+- focused fresh-dist rerun: `node test/newspaper-editor-layout-check.cjs --production-smoke` PASS
+
+Full
+- editor Vitest: 22 files, 255 passed, 1 skipped
+- web Vitest: 66 files, 721 passed
+- editor typecheck: PASS
+- web typecheck: PASS
+- editor build: PASS (existing chunk-size advisory)
+- web build: PASS (existing chunk-size advisory)
+
+Editor browser baseline comparison
+- general 12/12 PASS
+- table 4/4 PASS
+- drift 7/7 PASS
+- tag 2/2 PASS
+- KaTeX 3/4: unchanged known AC-3 failure, superscript top 178 vs base top 177
+- aggregate stops at the same KaTeX point in baseline and final run
+- inline run separately after the stop: 6/6 PASS
+
+Web browser aggregate
+- not executed past preflight: exit 2 because a running authenticated product/API pair and DOCULIGHT_E2E_USER/PASS were not available.

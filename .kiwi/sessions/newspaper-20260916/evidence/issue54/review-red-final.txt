@@ -1,0 +1,22 @@
+Issue #54 independent-review TDD redo — RED
+Date: 2026-09-17
+
+State: all #54 product implementation removed; finalized tests and fixture retained.
+
+packages/editor: npm test -- --run test/newspaper-editor-contract.test.ts
+  FAIL 3/3
+  - missing newspaper-integration.css import
+  - missing integration stylesheet
+  - unconditional { dark: true }
+
+packages/web: npm test -- --run test/document-newspaper.test.tsx
+  FAIL 2/2
+  - missing product surface hooks
+  - missing integration stylesheet
+
+packages/web: node test/newspaper-editor-layout-check.cjs
+  FAIL exit 1
+  page.waitForFunction: Timeout 30000ms exceeded
+  at setTheme (.../newspaper-editor-layout-check.cjs)
+
+The Playwright failure is the intended behavioral RED: the stable outer `.atomic-cm-editor` host never acquired the new resolved theme state on a runtime theme change.

@@ -3,6 +3,10 @@ import { createRoot } from 'react-dom/client';
 
 // 편집기 스타일은 진입점 하나로 얹는다 (`IR-EDITOR-001` AC-3) — 데모가
 // 자기 목록을 따로 갖고 있으면 제품과 갈린다.
+import '../../web/src/styles/palette.css';
+import '../../web/src/styles/tokens.css';
+import '../../web/src/styles/themes/newspaper-light.css';
+import '../../web/src/styles/themes/newspaper-dark.css';
 import '../src/styles/editor.css';
 import './demo.css';
 
