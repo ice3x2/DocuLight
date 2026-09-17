@@ -1,5 +1,5 @@
 import { Command } from 'cmdk';
-import { useEffect, useState, type KeyboardEvent } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 
 import {
   fetchPrincipals,
@@ -44,8 +44,8 @@ const RESULT_LIMIT = 20;
 // @req IR-SHELL-006
 function keepEnterInsidePicker(event: KeyboardEvent<HTMLInputElement>) {
   if (event.key !== 'Enter') return;
-  event.preventDefault();
   if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) {
+    event.preventDefault();
     event.stopPropagation();
   }
 }
@@ -75,6 +75,7 @@ const BADGE: Record<PrincipalStatus, string> = {
 export function PrincipalPicker({
   scope,
   onPick,
+  onSelectionInvalidated,
 }: {
   /**
    * 무엇에 부여하려는가 (`R162`). **필수다** — 기본값을 두면 스코프가
@@ -82,49 +83,99 @@ export function PrincipalPicker({
    */
   scope: PrincipalScope;
   onPick?: (row: PrincipalRow) => void;
+  onSelectionInvalidated?: () => void;
 }) {
   const [query, setQuery] = useState('');
   const [rows, setRows] = useState<readonly PrincipalRow[]>([]);
+  const [state, setState] = useState<'threshold' | 'loading' | 'ready' | 'error'>('threshold');
+  const [attempt, setAttempt] = useState(0);
+  const selected = useRef<string | null>(null);
+  const generation = useRef(0);
+  const previousScope = useRef(scope);
+
+  useEffect(() => {
+    if (previousScope.current === scope) return;
+    previousScope.current = scope;
+    generation.current += 1;
+    setQuery('');
+    setRows([]);
+    setState('threshold');
+    if (selected.current !== null) {
+      selected.current = null;
+      onSelectionInvalidated?.();
+    }
+  }, [onSelectionInvalidated, scope]);
 
   useEffect(() => {
     // 짧은 질의는 **묻지도 않는다**. 서버가 거절하더라도 한 글자씩 묻는
     // 것 자체가 열거 시도를 반복할 수 있게 만든다.
     if (query.trim().length < MINIMUM_QUERY) {
       setRows([]);
+      setState('threshold');
       return;
     }
 
+    const request = ++generation.current;
     let live = true;
+    setRows([]);
+    setState('loading');
     void fetchPrincipals(query, scope)
       .then((found) => {
         // 늦게 온 응답이 새 질의의 결과를 덮지 않게 한다 — 덮이면 사용자가
         // 방금 친 글자와 무관한 목록이 남는다.
-        if (live) setRows(found.slice(0, RESULT_LIMIT));
+        if (live && generation.current === request) {
+          const accepted = found.slice(0, RESULT_LIMIT);
+          setRows(accepted);
+          setState('ready');
+          if (selected.current !== null && !accepted.some((row) => row.id === selected.current)) {
+            selected.current = null;
+            onSelectionInvalidated?.();
+          }
+        }
       })
       .catch(() => {
-        if (live) setRows([]);
+        if (live && generation.current === request) {
+          setRows([]);
+          setState('error');
+        }
       });
     return () => {
       live = false;
     };
-  }, [query, scope]);
+  }, [attempt, onSelectionInvalidated, query, scope]);
+
+  const changeQuery = (next: string) => {
+    if (next !== query && selected.current !== null) {
+      selected.current = null;
+      onSelectionInvalidated?.();
+    }
+    setQuery(next);
+  };
 
   return (
     <Command label="사용자·그룹 검색" shouldFilter={false}>
       <Command.Input
         aria-label="사용자·그룹 검색"
         value={query}
-        onValueChange={setQuery}
+        onValueChange={changeQuery}
         onKeyDown={keepEnterInsidePicker}
         placeholder="사용자 또는 그룹 이름"
       />
 
       <Command.List>
-        {rows.length === 0 ? (
-          <Command.Empty>결과가 없습니다.</Command.Empty>
-        ) : (
+        {state === 'threshold' ? <p>두 글자 이상 입력하세요.</p> : null}
+        {state === 'loading' ? <p role="status">검색 중…</p> : null}
+        {state === 'error' ? <div role="alert">
+          <span>검색하지 못했습니다.</span>
+          <button type="button" onClick={() => setAttempt((current) => current + 1)}>검색 다시 시도</button>
+        </div> : null}
+        {state === 'ready' && rows.length === 0 ? <Command.Empty>검색 결과가 없습니다.</Command.Empty> : null}
+        {state === 'ready' && rows.length > 0 ? (
           rows.map((row) => (
-            <Command.Item key={row.id} value={row.id} onSelect={() => onPick?.(row)}>
+            <Command.Item key={row.id} value={row.id} onSelect={() => {
+              selected.current = row.id;
+              onPick?.(row);
+            }}>
               <span>{row.name}</span>
               {/* 종류를 함께 보인다 — 같은 이름의 사용자와 그룹이 있을 때
                   이름만으로는 무엇에 권한을 주는지 알 수 없다. */}
@@ -132,7 +183,7 @@ export function PrincipalPicker({
               <span data-testid="principal-status">{BADGE[row.status]}</span>
             </Command.Item>
           ))
-        )}
+        ) : null}
       </Command.List>
     </Command>
   );

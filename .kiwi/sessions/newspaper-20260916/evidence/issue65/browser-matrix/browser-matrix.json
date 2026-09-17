@@ -1,0 +1,304 @@
+{
+  "environments": 12,
+  "forcedColors": {
+    "at100": true,
+    "at200": true
+  },
+  "matrix": [
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "zoom": 1,
+      "owner": "fresh isolated context",
+      "l2": true,
+      "l3": true,
+      "compositionSubmitGuard": true,
+      "nativeKeyboardSelection": true,
+      "focusTrap": true,
+      "overlay": true,
+      "privacy": true,
+      "computedFocus": {
+        "outlineWidth": 2,
+        "outlineOffset": 2,
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(55, 0, 110)",
+        "backgroundColor": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "zoom": 1,
+      "owner": "fresh isolated context",
+      "l2": true,
+      "l3": true,
+      "compositionSubmitGuard": true,
+      "nativeKeyboardSelection": true,
+      "focusTrap": true,
+      "overlay": true,
+      "privacy": true,
+      "computedFocus": {
+        "outlineWidth": 2,
+        "outlineOffset": 2,
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(54, 91, 112)",
+        "backgroundColor": "rgb(250, 249, 245)"
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 1,
+      "owner": "fresh isolated context",
+      "l2": true,
+      "l3": true,
+      "compositionSubmitGuard": true,
+      "nativeKeyboardSelection": true,
+      "focusTrap": true,
+      "overlay": true,
+      "privacy": true,
+      "computedFocus": {
+        "outlineWidth": 2,
+        "outlineOffset": 2,
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(54, 91, 112)",
+        "backgroundColor": "rgb(250, 249, 245)"
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "zoom": 1,
+      "owner": "fresh isolated context",
+      "l2": true,
+      "l3": true,
+      "compositionSubmitGuard": true,
+      "nativeKeyboardSelection": true,
+      "focusTrap": true,
+      "overlay": true,
+      "privacy": true,
+      "computedFocus": {
+        "outlineWidth": 2,
+        "outlineOffset": 2,
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(168, 196, 211)",
+        "backgroundColor": "rgb(48, 53, 46)"
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "zoom": 1,
+      "owner": "fresh isolated context",
+      "l2": true,
+      "l3": true,
+      "compositionSubmitGuard": true,
+      "nativeKeyboardSelection": true,
+      "focusTrap": true,
+      "overlay": true,
+      "privacy": true,
+      "computedFocus": {
+        "outlineWidth": 2,
+        "outlineOffset": 2,
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(168, 196, 211)",
+        "backgroundColor": "rgb(48, 53, 46)"
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 1,
+      "owner": "fresh isolated context",
+      "l2": true,
+      "l3": true,
+      "compositionSubmitGuard": true,
+      "nativeKeyboardSelection": true,
+      "focusTrap": true,
+      "overlay": true,
+      "privacy": true,
+      "computedFocus": {
+        "outlineWidth": 2,
+        "outlineOffset": 2,
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(168, 196, 211)",
+        "backgroundColor": "rgb(48, 53, 46)"
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "zoom": 2,
+      "owner": "fresh disposable persistent context",
+      "getZoom": 2,
+      "transitions": [
+        1,
+        2,
+        1,
+        2
+      ],
+      "l2": true,
+      "l3": true,
+      "compositionSubmitGuard": true,
+      "nativeKeyboardSelection": true,
+      "focusTrap": true,
+      "overlay": true,
+      "privacy": true,
+      "computedFocus": {
+        "outlineWidth": 2,
+        "outlineOffset": 2,
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(55, 0, 110)",
+        "backgroundColor": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "zoom": 2,
+      "owner": "fresh disposable persistent context",
+      "getZoom": 2,
+      "transitions": [
+        1,
+        2,
+        1,
+        2
+      ],
+      "l2": true,
+      "l3": true,
+      "compositionSubmitGuard": true,
+      "nativeKeyboardSelection": true,
+      "focusTrap": true,
+      "overlay": true,
+      "privacy": true,
+      "computedFocus": {
+        "outlineWidth": 2,
+        "outlineOffset": 2,
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(54, 91, 112)",
+        "backgroundColor": "rgb(250, 249, 245)"
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 2,
+      "owner": "fresh disposable persistent context",
+      "getZoom": 2,
+      "transitions": [
+        1,
+        2,
+        1,
+        2
+      ],
+      "l2": true,
+      "l3": true,
+      "compositionSubmitGuard": true,
+      "nativeKeyboardSelection": true,
+      "focusTrap": true,
+      "overlay": true,
+      "privacy": true,
+      "computedFocus": {
+        "outlineWidth": 2,
+        "outlineOffset": 2,
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(54, 91, 112)",
+        "backgroundColor": "rgb(250, 249, 245)"
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "zoom": 2,
+      "owner": "fresh disposable persistent context",
+      "getZoom": 2,
+      "transitions": [
+        1,
+        2,
+        1,
+        2
+      ],
+      "l2": true,
+      "l3": true,
+      "compositionSubmitGuard": true,
+      "nativeKeyboardSelection": true,
+      "focusTrap": true,
+      "overlay": true,
+      "privacy": true,
+      "computedFocus": {
+        "outlineWidth": 2,
+        "outlineOffset": 2,
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(168, 196, 211)",
+        "backgroundColor": "rgb(48, 53, 46)"
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "zoom": 2,
+      "owner": "fresh disposable persistent context",
+      "getZoom": 2,
+      "transitions": [
+        1,
+        2,
+        1,
+        2
+      ],
+      "l2": true,
+      "l3": true,
+      "compositionSubmitGuard": true,
+      "nativeKeyboardSelection": true,
+      "focusTrap": true,
+      "overlay": true,
+      "privacy": true,
+      "computedFocus": {
+        "outlineWidth": 2,
+        "outlineOffset": 2,
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(168, 196, 211)",
+        "backgroundColor": "rgb(48, 53, 46)"
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 2,
+      "owner": "fresh disposable persistent context",
+      "getZoom": 2,
+      "transitions": [
+        1,
+        2,
+        1,
+        2
+      ],
+      "l2": true,
+      "l3": true,
+      "compositionSubmitGuard": true,
+      "nativeKeyboardSelection": true,
+      "focusTrap": true,
+      "overlay": true,
+      "privacy": true,
+      "computedFocus": {
+        "outlineWidth": 2,
+        "outlineOffset": 2,
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(168, 196, 211)",
+        "backgroundColor": "rgb(48, 53, 46)"
+      }
+    }
+  ],
+  "ownedServerPid": 57836
+}

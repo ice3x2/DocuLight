@@ -926,6 +926,7 @@ describe('IR-ACL-002 · IR-ACL-003 — 공유가 화면에서 서버까지 닿�
   };
 
   const 공유를연다 = async () => {
+    routes.set('/api/grant-warnings', () => json([]));
     routes.set('/api/nodes/n1/share', (init) =>
       init?.method === 'POST' ? json(null, 204) : json(공유상태),
     );
@@ -992,19 +993,19 @@ describe('IR-ACL-002 · IR-ACL-003 — 공유가 화면에서 서버까지 닿�
     expect(await screen.findByText(/접근 가능 3명/)).toBeTruthy();
   });
 
-  it('FR-CONFIRM-014: 부여 뒤 되돌리기 토스트가 서고 그 버튼이 회수로 나간다', async () => {
+  it('FR-CONFIRM-014: 부여 뒤 refreshed 목록의 authoritative entry ID로 회수한다', async () => {
     routes.set('/api/principals', () =>
       json([{ id: 'p9', name: '새사람', kind: 'user', status: 'active' }]),
     );
-    routes.set('/api/acl-entries/e9', () => json(null, 204));
     const user = await 공유를연다();
+    routes.set('/api/acl-entries/e9', () => json(null, 204));
 
     await user.type(await screen.findByRole('combobox', { name: '사용자·그룹 검색' }), '새사');
     await waitFor(() => expect(screen.getByText('새사람')).toBeTruthy());
     await user.click(screen.getByText('새사람'));
 
-    // 부여가 나간 뒤 목록에 그 줄이 생긴 것으로 서버 갱신을 흉내 낸다 —
-    // 토스트의 회수 버튼은 그 줄의 항목 ID 를 써야 한다.
+    // 부여 뒤 목록에 같은 주체가 보여도 POST 응답이 그 entry ID 와 이번
+    // 작업을 연결하지 않으므로 그 줄을 추정해 회수에 쓰지 않는다.
     routes.set('/api/nodes/n1/share', (init) =>
       init?.method === 'POST'
         ? json(null, 204)
@@ -1026,22 +1027,16 @@ describe('IR-ACL-002 · IR-ACL-003 — 공유가 화면에서 서버까지 닿�
     );
     await user.click(screen.getByRole('button', { name: '추가' }));
 
-    // 넓히는 조작은 미리 묻지 않고 **사후에 물릴 길**을 준다.
     const 토스트 = await screen.findByRole('status');
     expect(within(토스트).getByText(/새사람 에게 권한을 부여했습니다/)).toBeTruthy();
-
-    await user.click(within(토스트).getByRole('button'));
-    await waitFor(() =>
-      expect(sent).toContainEqual({
-        path: '/api/acl-entries/e9',
-        method: 'DELETE',
-        body: undefined,
-      }),
-    );
+    await user.click(within(토스트).getByRole('button', { name: '회수' }));
+    await waitFor(() => expect(sent).toContainEqual({ path: '/api/acl-entries/e9', method: 'DELETE', body: undefined }));
+    expect(토스트.textContent).toContain('이미 열람된 내용은 회수되지 않습니다');
   });
 
   it('FR-CONFIRM-018: 디렉토리 항목의 회수는 확인을 거친다', async () => {
     routes.set('/api/nodes/n1/share', () => json({ ...공유상태, nodeKind: 'directory' }));
+    routes.set('/api/grant-warnings', () => json([]));
     routes.set('/api/acl-entries/e1', () => json(null, 204));
     const user = await openTree();
 
@@ -1080,6 +1075,31 @@ describe('IR-ACL-002 · IR-ACL-003 — 공유가 화면에서 서버까지 닿�
         body: undefined,
       }),
     );
+  });
+
+  it('issue #65: 공유 조회 실패를 빈 값이나 로딩으로 숨기지 않고 실제 재시도를 제공한다', async () => {
+    routes.set('/api/nodes/n1/share', () => json({ message: 'failed' }, 500));
+    const user = await openTree();
+    await user.pointer({ keys: '[MouseRight]', target: screen.getByRole('treeitem', { name: /회의록/ }) });
+    await user.click(within(await screen.findByRole('menu')).getByRole('menuitem', { name: '공유' }));
+    expect((await screen.findByRole('alert', undefined, { timeout: 5_000 })).textContent).toContain('공유 정보를 불러오지 못했습니다.');
+    expect(screen.queryByText(/접근 가능 0명/)).toBeNull();
+    expect(screen.getByRole('button', { name: '다시 시도' })).toBeDefined();
+  });
+
+  it('issue #65: 실패한 부여를 성공으로 알리지 않고 같은 선택으로 재시도할 수 있다', async () => {
+    routes.set('/api/principals', () => json([{ id: 'p9', name: '새사람', kind: 'user', status: 'active', system: false }]));
+    routes.set('/api/grant-warnings', () => json([]));
+    routes.set('/api/nodes/n1/share', (init) => init?.method === 'POST' ? json({ message: 'failed' }, 500) : json(공유상태));
+    const user = await openTree();
+    await user.pointer({ keys: '[MouseRight]', target: screen.getByRole('treeitem', { name: /회의록/ }) });
+    await user.click(within(await screen.findByRole('menu')).getByRole('menuitem', { name: '공유' }));
+    await user.type(await screen.findByRole('combobox', { name: '사용자·그룹 검색' }), '새사');
+    await user.click(await screen.findByRole('option', { name: /새사람/ }));
+    await user.click(screen.getByRole('button', { name: '추가' }));
+    expect((await screen.findByRole('alert')).textContent).toContain('권한을 부여하지 못했습니다.');
+    expect(screen.queryByText(/권한을 부여했습니다/)).toBeNull();
+    expect((screen.getByRole('button', { name: '추가' }) as HTMLButtonElement).disabled).toBe(false);
   });
 });
 

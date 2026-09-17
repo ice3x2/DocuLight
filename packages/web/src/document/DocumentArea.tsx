@@ -3,7 +3,8 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { useState } from 'react';
 
 import { DocumentSurface } from './DocumentSurface.js';
-import { ShareModal } from '../acl/ShareModal.js';
+import { ShareModal, type ShareActionResult, type ShareQueryState } from '../acl/ShareModal.js';
+import type { GrantWarning } from '../acl/GrantConfirm.js';
 import type { ShareViewBody } from '../api/client.js';
 import { VersionHistory } from './VersionHistory.js';
 import { DOCUMENT_MENU_ITEMS } from './document-menu.js';
@@ -109,12 +110,15 @@ export function DocumentArea({
    * 이 부품은 API 를 직접 부르지 않는다.
    */
   share?: {
-    view?: ShareViewBody;
+    contextKey?: string;
+    query?: ShareQueryState;
     onOpen?: (nodeId: string) => void;
-    onGrant?: (nodeId: string, principalId: string, level: 'view' | 'edit') => void;
-    onRevoke?: (entryId: string) => void;
-    onBreakInheritance?: (nodeId: string) => void;
-    onInheritFromParent?: (nodeId: string) => void;
+    onGrant?: (nodeId: string, principalId: string, level: 'view' | 'edit') => Promise<ShareActionResult>;
+    onRevoke?: (nodeId: string, entryId: string) => Promise<ShareActionResult>;
+    onBreakInheritance?: (nodeId: string) => Promise<ShareActionResult>;
+    onInheritFromParent?: (nodeId: string) => Promise<ShareActionResult>;
+    refreshView?: (nodeId: string) => Promise<ShareViewBody | undefined>;
+    onWarnings?: (input: { principalId?: string; entryId?: string }) => Promise<readonly GrantWarning[] | undefined>;
   };
   missing?: boolean;
 }) {
@@ -184,13 +188,16 @@ export function DocumentArea({
               nodeId={tab.nodeId}
               nodeName={tab.name}
               nodeKind="file"
+              {...(share?.contextKey === undefined ? {} : { contextKey: share.contextKey })}
               open={panel === 'share'}
               onOpenChange={(next) => setPanel(next ? 'share' : null)}
-              {...(share?.view === undefined ? {} : { view: share.view })}
-              onGrant={(principalId, level) => share?.onGrant?.(tab.nodeId, principalId, level)}
-              {...(share?.onRevoke === undefined ? {} : { onRevoke: share.onRevoke })}
-              onBreakInheritance={() => share?.onBreakInheritance?.(tab.nodeId)}
-              onInheritFromParent={() => share?.onInheritFromParent?.(tab.nodeId)}
+              {...(share?.query === undefined ? {} : { query: share.query })}
+              {...(share?.onGrant === undefined ? {} : { onGrant: (principalId: string, level: 'view' | 'edit') => share.onGrant!(tab.nodeId, principalId, level) })}
+              {...(share?.onRevoke === undefined ? {} : { onRevoke: (entryId: string) => share.onRevoke!(tab.nodeId, entryId) })}
+              {...(share?.onBreakInheritance === undefined ? {} : { onBreakInheritance: () => share.onBreakInheritance!(tab.nodeId) })}
+              {...(share?.onInheritFromParent === undefined ? {} : { onInheritFromParent: () => share.onInheritFromParent!(tab.nodeId) })}
+              refreshView={() => share?.refreshView?.(tab.nodeId) ?? Promise.resolve(undefined)}
+              {...(share?.onWarnings === undefined ? {} : { onWarnings: share.onWarnings })}
             />
             <DocumentSurface
               file={{ nodeId: tab.nodeId, name: tab.name, level: tab.level ?? null }}

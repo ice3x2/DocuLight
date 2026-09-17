@@ -24,7 +24,8 @@ import type { EditorPreferenceLoadState, EditorPreferenceSaveStates } from '../s
 import { TokenPanel, type TokenLeaveGuard, type TokenOwner, type TokenQueryState } from '../settings/TokenPanel.js';
 import type { TokenIssueInput, TokenRowView } from '../settings/token-contract.js';
 import { AclAuditPanel, type AclAuditProps } from '../acl/AclAuditPanel.js';
-import { ShareModal } from '../acl/ShareModal.js';
+import { ShareModal, type ShareActionResult, type ShareQueryState } from '../acl/ShareModal.js';
+import type { GrantWarning } from '../acl/GrantConfirm.js';
 import { AuditLogPanel } from '../audit/AuditLogPanel.js';
 import type {
   AuditViewBody,
@@ -770,13 +771,15 @@ export function AppShell({
    * 방식과 같다. 낱개로 두면 하나를 빠뜨린 호출이 타입을 통과한다.
    */
   share?: {
-    /** 서버가 준 것. 아직 안 왔으면 `undefined`. */
-    view?: ShareViewBody;
+    contextKey?: string;
+    query?: ShareQueryState;
     onOpen?: (nodeId: string) => void;
-    onGrant?: (nodeId: string, principalId: string, level: 'view' | 'edit') => void;
-    onRevoke?: (entryId: string) => void;
-    onBreakInheritance?: (nodeId: string) => void;
-    onInheritFromParent?: (nodeId: string) => void;
+    onGrant?: (nodeId: string, principalId: string, level: 'view' | 'edit') => Promise<ShareActionResult>;
+    onRevoke?: (nodeId: string, entryId: string) => Promise<ShareActionResult>;
+    onBreakInheritance?: (nodeId: string) => Promise<ShareActionResult>;
+    onInheritFromParent?: (nodeId: string) => Promise<ShareActionResult>;
+    refreshView?: (nodeId: string) => Promise<ShareViewBody | undefined>;
+    onWarnings?: (input: { principalId?: string; entryId?: string }) => Promise<readonly GrantWarning[] | undefined>;
   };
   /** 그 파일에 새 버전을 올린다 (`FR-SHELL-008` AC-2). */
   onNewVersion?: (node: TreeNodeView, file: File) => Promise<NewVersionResult>;
@@ -1166,15 +1169,18 @@ export function AppShell({
           nodeId={sharing.id}
           nodeName={sharing.name}
           nodeKind={sharing.kind}
+          {...(share?.contextKey === undefined ? {} : { contextKey: share.contextKey })}
           open
           onOpenChange={(next) => {
             if (!next) setSharing(null);
           }}
-          {...(share?.view === undefined ? {} : { view: share.view })}
-          onGrant={(principalId, level) => share?.onGrant?.(sharing.id, principalId, level)}
-          {...(share?.onRevoke === undefined ? {} : { onRevoke: share.onRevoke })}
-          onBreakInheritance={() => share?.onBreakInheritance?.(sharing.id)}
-          onInheritFromParent={() => share?.onInheritFromParent?.(sharing.id)}
+          {...(share?.query === undefined ? {} : { query: share.query })}
+          {...(share?.onGrant === undefined ? {} : { onGrant: (principalId: string, level: 'view' | 'edit') => share.onGrant!(sharing.id, principalId, level) })}
+          {...(share?.onRevoke === undefined ? {} : { onRevoke: (entryId: string) => share.onRevoke!(sharing.id, entryId) })}
+          {...(share?.onBreakInheritance === undefined ? {} : { onBreakInheritance: () => share.onBreakInheritance!(sharing.id) })}
+          {...(share?.onInheritFromParent === undefined ? {} : { onInheritFromParent: () => share.onInheritFromParent!(sharing.id) })}
+          refreshView={() => share?.refreshView?.(sharing.id) ?? Promise.resolve(undefined)}
+          {...(share?.onWarnings === undefined ? {} : { onWarnings: share.onWarnings })}
         />
       )}
 

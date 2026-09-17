@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 
 import { ConfirmGate } from './ConfirmGate.js';
 import { ATTACHMENT_REVOKE_NOTICE } from './notices.js';
@@ -21,19 +21,31 @@ export function RevokeConfirm({
   open,
   targetKind,
   subjectName,
+  forceConfirm = false,
+  children,
   onConfirm,
   onCancel,
 }: {
   open: boolean;
   targetKind: RevokeTarget;
   subjectName: string;
-  onConfirm?: () => void;
+  forceConfirm?: boolean;
+  children?: ReactNode;
+  onConfirm?: () => void | Promise<void>;
   onCancel?: () => void;
 }) {
-  const 확인필요 = targetKind !== 'file';
+  const 확인필요 = targetKind !== 'file' || forceConfirm;
+  const activated = useRef(false);
 
   useEffect(() => {
-    if (open && !확인필요) onConfirm?.();
+    if (!open) {
+      activated.current = false;
+      return;
+    }
+    if (!확인필요 && !activated.current) {
+      activated.current = true;
+      void onConfirm?.();
+    }
   }, [open, 확인필요, onConfirm]);
 
   if (!open || !확인필요) return null;
@@ -43,9 +55,10 @@ export function RevokeConfirm({
       open
       grade="L2"
       title={`${subjectName} 의 권한을 회수합니다`}
-      onConfirm={() => onConfirm?.()}
+      onConfirm={async () => { await onConfirm?.(); }}
       onCancel={() => onCancel?.()}
     >
+      {children}
       <p data-testid="attachment-notice">{ATTACHMENT_REVOKE_NOTICE}</p>
     </ConfirmGate>
   );

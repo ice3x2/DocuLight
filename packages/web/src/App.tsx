@@ -31,6 +31,7 @@ import {
   breakInheritance,
   inheritFromParent,
   fetchShareView,
+  fetchGrantWarnings,
   grantShare,
   revokeShare,
   renameNode,
@@ -85,6 +86,7 @@ import {
 import { nodeIdOf, urlForNode } from './routing/deep-link.js';
 import type { SaveState } from './document/tab-state.js';
 import type { TrashLens } from './trash/TrashPanel.js';
+import type { ShareQueryState } from './acl/ShareModal.js';
 import { CREATE_DEFAULTS } from './tree/tree-contract.js';
 import type { WorkspaceTreeView, TreeNodeView } from './tree/tree-contract.js';
 import { rememberTheme, useThemeRuntime, type ThemePreference } from './theme/runtime.js';
@@ -499,7 +501,15 @@ function AppBody() {
     queryKey: ['share', sharingId],
     queryFn: () => fetchShareView(sharingId as string),
     enabled: sharingId !== null,
+    retry: false,
   });
+  const shareState: ShareQueryState | undefined = sharingId === null
+    ? undefined
+    : shareQuery.isError
+      ? { state: 'error', nodeId: sharingId, onRetry: () => void shareQuery.refetch() }
+      : shareQuery.data === undefined
+        ? { state: 'loading', nodeId: sharingId }
+        : { state: 'ready', nodeId: sharingId, view: shareQuery.data };
 
   /** 부여·회수·상속 조작 뒤에 그 노드의 공유 화면을 다시 받는다. */
   const afterShareChange = useCallback(
@@ -513,28 +523,41 @@ function AppBody() {
 
   const share = useMemo(
     () => ({
-      ...(shareQuery.data === undefined ? {} : { view: shareQuery.data }),
+      contextKey: `${userId ?? 'anonymous'}:${authGeneration}`,
+      ...(shareState === undefined ? {} : { query: shareState }),
       onOpen: setSharingId,
       onGrant: async (nodeId: string, principalId: string, level: 'view' | 'edit') => {
-        await grantShare(nodeId, principalId, level).catch(() => undefined);
-        await afterShareChange(nodeId);
+        try {
+          await grantShare(nodeId, principalId, level);
+        } catch {
+          return { ok: false as const };
+        }
+        void afterShareChange(nodeId);
+        return { ok: true as const };
       },
-      onRevoke: async (entryId: string) => {
-        await revokeShare(entryId).catch(() => undefined);
-        // 회수는 항목 ID 로 나가므로 어느 노드의 것인지 여기서 알 수 없다 —
-        // 지금 열려 있는 노드를 다시 받는다.
-        if (sharingId !== null) await afterShareChange(sharingId);
+      onRevoke: async (nodeId: string, entryId: string) => {
+        try {
+          await revokeShare(entryId);
+        } catch {
+          return { ok: false as const };
+        }
+        void afterShareChange(nodeId);
+        return { ok: true as const };
       },
       onBreakInheritance: async (nodeId: string) => {
-        await breakInheritance(nodeId).catch(() => undefined);
-        await afterShareChange(nodeId);
+        try { await breakInheritance(nodeId); } catch { return { ok: false as const }; }
+        void afterShareChange(nodeId);
+        return { ok: true as const };
       },
       onInheritFromParent: async (nodeId: string) => {
-        await inheritFromParent(nodeId).catch(() => undefined);
-        await afterShareChange(nodeId);
+        try { await inheritFromParent(nodeId); } catch { return { ok: false as const }; }
+        void afterShareChange(nodeId);
+        return { ok: true as const };
       },
+      refreshView: async (nodeId: string) => fetchShareView(nodeId).catch(() => undefined),
+      onWarnings: fetchGrantWarnings,
     }),
-    [shareQuery.data, sharingId, afterShareChange],
+    [shareState, afterShareChange, userId, authGeneration],
   );
 
   const purgeTrash = useCallback(

@@ -23,7 +23,7 @@ const view = (over: Partial<ShareViewBody> = {}): ShareViewBody => ({
 });
 
 const 열기 = async (kind: 'file' | 'directory' | 'workspace') => {
-  render(<ShareModal nodeId="n1" nodeName="설계" nodeKind={kind} view={view()} />);
+  render(<ShareModal nodeId="n1" nodeName="설계" nodeKind={kind} view={view({ nodeKind: kind })} />);
   await userEvent.setup().click(screen.getByRole('button', { name: '설계 공유' }));
   return screen.getByRole('dialog');
 };
@@ -62,7 +62,7 @@ describe('SEC-CONFIRM-004 — 상속 끊김 고지는 끊긴 노드 유무와 �
       { rows: null, level: 'edit' as const },
     ]) {
       cleanup();
-      render(<ShareModal nodeId="n1" nodeName="설계" nodeKind="directory" view={view(over)} />);
+      render(<ShareModal nodeId="n1" nodeName="설계" nodeKind="directory" view={view({ ...over, nodeKind: 'directory' })} />);
       await userEvent.setup().click(screen.getByRole('button', { name: '설계 공유' }));
       문구들.push(
         screen.getByRole('dialog').querySelector('[data-testid="broken-inheritance-notice"]')
@@ -86,10 +86,10 @@ describe('SEC-CONFIRM-005 — 도달 못 하는 하위를 열거하거나 거부
 });
 
 describe('FR-CONFIRM-014 — 넓히기 L1 의 토스트는 실행취소가 아니라 회수다', () => {
-  it('AC-1: 버튼 라벨이 회수다', () => {
+  it('AC-1: authoritative entry ID가 없으면 회수 동작을 만들지 않는다', () => {
     render(<GrantToast subjectName="한범" />);
 
-    expect(screen.getByRole('button').textContent).toBe('회수');
+    expect(screen.queryByRole('button')).toBeNull();
   });
 
   it('AC-3: 실행취소 라는 라벨을 쓰지 않는다', () => {

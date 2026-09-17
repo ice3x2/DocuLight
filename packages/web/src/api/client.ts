@@ -453,6 +453,15 @@ export const inheritFromParent = (nodeId: string) =>
 export const fetchShareView = (nodeId: string) =>
   call<ShareViewBody>(`/nodes/${encodeURIComponent(nodeId)}/share`);
 
+export const fetchGrantWarnings = (input: { principalId?: string; entryId?: string }) => {
+  const query = new URLSearchParams();
+  if (input.principalId !== undefined) query.set('principalId', input.principalId);
+  if (input.entryId !== undefined) query.set('entryId', input.entryId);
+  return call<('suspended-subject' | 'open-signup-edit' | 'last-administrator')[]>(
+    `/grant-warnings?${query.toString()}`,
+  );
+};
+
 export const grantShare = (nodeId: string, principalId: string, level: 'view' | 'edit') =>
   call<void>(`/nodes/${encodeURIComponent(nodeId)}/share`, {
     method: 'POST',

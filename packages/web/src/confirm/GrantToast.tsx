@@ -11,21 +11,22 @@ export function GrantToast({
   subjectName,
   entryId,
   onRevoke,
+  limitation,
 }: {
   subjectName: string;
   entryId?: string;
   onRevoke?: (entryId: string) => void;
+  limitation?: string;
 }) {
   return (
     <div role="status">
       <span>{subjectName} 에게 권한을 부여했습니다.</span>
       <span>{WIDENING_UNDO_NOTICE}</span>
-      <button
+      {limitation === undefined ? null : <span>{limitation}</span>}
+      {entryId === undefined || onRevoke === undefined ? null : <button
         type="button"
-        onClick={() => (entryId === undefined ? undefined : onRevoke?.(entryId))}
-      >
-        {WIDENING_UNDO_LABEL}
-      </button>
+        onClick={() => onRevoke(entryId)}
+      >{WIDENING_UNDO_LABEL}</button>}
     </div>
   );
 }
