@@ -1,6 +1,11 @@
 import { useState } from 'react';
 
 import type { RosterUser, RosterUserStatus } from '../api/client.js';
+import { Badge, type BadgeVariant } from '../components/ui/badge.js';
+import { Button } from '../components/ui/button.js';
+import { Field } from '../components/ui/field.js';
+import { Input } from '../components/ui/input.js';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table.js';
 
 /**
  * 슈퍼유저 전용 사용자 관리 명부 (`FR-PRINCIPAL-001` AC-1 · `FR-PRINCIPAL-009`).
@@ -21,6 +26,13 @@ const LABEL: Record<RosterUserStatus, string> = {
   rejected: '거절',
 };
 
+const BADGE: Record<RosterUserStatus, BadgeVariant> = {
+  active: 'success',
+  pending: 'warning',
+  suspended: 'neutral',
+  rejected: 'danger',
+};
+
 export function UserRoster({
   users = [],
   onRegister,
@@ -37,58 +49,79 @@ export function UserRoster({
 }) {
   const [이름, set이름] = useState('');
   const [비밀번호, set비밀번호] = useState('');
-  const 보낼수있다 = 이름 !== '' && 비밀번호 !== '';
+  const 보낼수있다 = onRegister !== undefined && 이름 !== '' && 비밀번호 !== '';
 
   return (
-    <>
-    <table>
-      <caption>사용자 관리</caption>
-      <thead>
-        <tr>
-          <th scope="col">이름</th>
-          <th scope="col">상태</th>
-        </tr>
-      </thead>
-      <tbody>
-        {users.map((user) => (
-          <tr key={user.id}>
-            <td>{user.name}</td>
-            {/* 네 상태를 그대로 — 뭉치면 어느 계정에 무엇을 해야 하는지
+    <section data-principal-panel="roster" aria-label="사용자 관리">
+      <h2 data-principal-title>사용자 관리</h2>
+      <div data-principal-table-wrap>
+        <Table>
+          <caption>사용자 관리</caption>
+          <TableHeader>
+            <TableRow>
+              <TableHead scope="col">이름</TableHead>
+              <TableHead scope="col">상태</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {users.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell>{user.name}</TableCell>
+                {/* 네 상태를 그대로 — 뭉치면 어느 계정에 무엇을 해야 하는지
                 판단할 수 없다 (`FR-PRINCIPAL-009` AC-4). */}
-            <td data-testid="roster-status">{LABEL[user.status]}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+                <TableCell>
+                  <Badge data-testid="roster-status" variant={BADGE[user.status]}>{LABEL[user.status]}</Badge>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+      {users.length === 0 ? (
+        <p role="note" aria-label="빈 상태 안내" data-principal-empty>표시할 사용자 항목이 없습니다.</p>
+      ) : null}
 
       {/* 등록 자리는 명부가 비어 있어도 선다 — 첫 사용자를 넣을 자리가
           없으면 그 인스턴스는 설치 마법사 밖에서 사람을 못 늘린다. */}
-      <label htmlFor="roster-new-name">새 사용자 이름</label>
-      <input id="roster-new-name" value={이름} onChange={(event) => set이름(event.target.value)} />
+      <section data-principal-registration aria-labelledby="roster-registration-title">
+        <h3 id="roster-registration-title">사용자 직접 등록</h3>
+        <div data-slot="field-stack">
+          <Field label="새 사용자 이름">
+            <Input id="roster-new-name" autoComplete="username" value={이름} onChange={(event) => set이름(event.target.value)} />
+          </Field>
 
-      {/* 가린다 — 어깨너머로 읽히면 그 계정이 그대로 열린다. */}
-      <label htmlFor="roster-new-password">임시 비밀번호</label>
-      <input
-        id="roster-new-password"
-        type="password"
-        value={비밀번호}
-        onChange={(event) => set비밀번호(event.target.value)}
-      />
+          {/* 가린다 — 어깨너머로 읽히면 그 계정이 그대로 열린다. */}
+          <Field label="임시 비밀번호">
+            <Input
+              id="roster-new-password"
+              autoComplete="new-password"
+              type="password"
+              value={비밀번호}
+              onChange={(event) => set비밀번호(event.target.value)}
+            />
+          </Field>
+        </div>
 
-      <button
-        type="button"
-        // 서버가 거절할 요청을 보내지 않는다 — 거절을 눌러 보고 아는 것과
-        // 누를 수 없는 것은 사용자에게 다른 일이다.
-        disabled={!보낼수있다}
-        onClick={() => {
-          if (!보낼수있다) return;
-          onRegister?.({ name: 이름, password: 비밀번호 });
-          set이름('');
-          set비밀번호('');
-        }}
-      >
-        등록
-      </button>
-    </>
+        <div data-principal-actions>
+          <Button
+            aria-describedby={onRegister === undefined ? 'roster-register-unavailable' : undefined}
+            // 서버가 거절할 요청을 보내지 않는다 — 거절을 눌러 보고 아는 것과
+            // 누를 수 없는 것은 사용자에게 다른 일이다.
+            disabled={!보낼수있다}
+            onClick={() => {
+              if (!보낼수있다) return;
+              onRegister({ name: 이름, password: 비밀번호 });
+              set이름('');
+              set비밀번호('');
+            }}
+          >
+            등록
+          </Button>
+          {onRegister === undefined ? (
+            <p id="roster-register-unavailable">등록 기능을 사용할 수 없습니다.</p>
+          ) : null}
+        </div>
+      </section>
+    </section>
   );
 }

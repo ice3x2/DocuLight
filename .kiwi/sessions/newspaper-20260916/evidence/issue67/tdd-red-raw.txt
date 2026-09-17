@@ -1,0 +1,785 @@
+ISSUE67_TDD_STARTED_AT_UTC=2026-09-17T17:50:57.997Z
+WORKDIR=C:\Work\git\DocuLight2.0\packages\web
+PRODUCT_TRACKED_DIFF_NUMSTAT_BEGIN
+PRODUCT_TRACKED_DIFF_NUMSTAT_END
+PRINCIPAL_CSS_EXISTS=false
+CONTRACT_SHA256_BEGIN
+a7cda6e46f3397dc636b09b6ec529c5eeaf9d0bd631364dd4c662e40dd0d3b69  test/issue67-tdd-contract-runner.cjs
+8d47e60052ec22e6ac1030ea7c6811b43f2900cd6adf0a15e9095ebe3952d26f  test/issue67-principal-browser-check.cjs
+c44289ee285253437822eb09cdfcc1d961039e8f5a6edbdeb190d18b51222d38  test/issue67-principal-fixture.tsx
+d01253bf7d2cc0697944fc36aadb9b5fac30a1af076b267bbfcb03e95fa82490  test/issue67-principal-fixture.html
+304f8cab32e309019a84ffb24ae9d542f6b860425ca5212675de9e8dd121e0fd  test/user-roster-register.test.tsx
+3502ec7ae0be19222954598bfadb9095480c14a57a157088ff142a6b60fb5dab  test/signup-approval.test.tsx
+4d8543a836ddff49e383795b049cbe80ea572665815c1c48ce7e1101687c4824  test/roster.test.tsx
+59678603868be8447b9b758c3f81902853ac5960b5dbb1646d3573a1cbaebd7a  test/settings-categories.test.tsx
+CONTRACT_SHA256_END
+
+COMMAND_STARTED_AT_UTC=2026-09-17T17:50:58.071Z
+COMMAND=npm test -- --run test/user-roster-register.test.tsx test/signup-approval.test.tsx test/roster.test.tsx test/settings-categories.test.tsx
+
+> @doculight/web@0.1.0 test
+> vitest run --run test/user-roster-register.test.tsx test/signup-approval.test.tsx test/roster.test.tsx test/settings-categories.test.tsx
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+ ❯ test/user-roster-register.test.tsx (10 tests | 4 failed) 992ms
+     × AC-1: 명부와 같은 자리에 등록 자리가 선다 39ms
+     × 네 상태를 의미 배지로 표시하고 명부가 비면 중립 안내를 표시한다 8ms
+     × 비밀번호 칸이 가려진다 — 어깨너머로 읽히면 그 계정이 열린다 3ms
+     × 등록 handler가 없으면 사용할 수 없는 이유를 설명하고 값을 보내지 않는다 318ms
+ ❯ test/signup-approval.test.tsx (16 tests | 5 failed) 402ms
+     × 대기 중 · 거절됨 두 탭으로 갈린다 43ms
+     × 승인하면 그 계정 id 가 밖으로 나간다 9ms
+     × 거절하면 상태 전환이 나간다 8ms
+     × 거절됨 탭에는 `rejected` 만 서고 재심사가 붙는다 69ms
+     × 탭 건수·선택 상태와 대기 표의 이름/조작 계약을 유지한다 8ms
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  9 failed | 43 passed (52)
+   Start at  02:50:58
+   Duration  3.01s (transform 1.39s, setup 75ms, import 3.01s, tests 2.50s, environment 1.54s)
+
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+stderr | test/signup-approval.test.tsx
+Warning: KaTeX doesn't work in quirks mode. Make sure your website has a suitable doctype.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/signup-approval.test.tsx > 설계서 §2.10 — 가입 승인은 자기 카테고리를 갖는다 > 대기 중 · 거절됨 두 탭으로 갈린다
+TestingLibraryElementError: Unable to find an accessible element with the role "heading" and name "가입 승인"
+
+Here are the accessible roles:
+
+  tablist:
+
+  Name "":
+  [36m<div[39m
+    [33maria-orientation[39m=[32m"horizontal"[39m
+    [33mdata-orientation[39m=[32m"horizontal"[39m
+    [33mrole[39m=[32m"tablist"[39m
+    [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  tab:
+
+  Name "대기 중 (1)":
+  [36m<button[39m
+    [33maria-controls[39m=[32m"radix-_r_0_-content-pending"[39m
+    [33maria-selected[39m=[32m"true"[39m
+    [33mdata-orientation[39m=[32m"horizontal"[39m
+    [33mdata-radix-collection-item[39m=[32m""[39m
+    [33mdata-state[39m=[32m"active"[39m
+    [33mid[39m=[32m"radix-_r_0_-trigger-pending"[39m
+    [33mrole[39m=[32m"tab"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "거절됨 (1)":
+  [36m<button[39m
+    [33maria-controls[39m=[32m"radix-_r_0_-content-rejected"[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mdata-orientation[39m=[32m"horizontal"[39m
+    [33mdata-radix-collection-item[39m=[32m""[39m
+    [33mdata-state[39m=[32m"inactive"[39m
+    [33mid[39m=[32m"radix-_r_0_-trigger-rejected"[39m
+    [33mrole[39m=[32m"tab"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  tabpanel:
+
+  Name "대기 중 (1)":
+  [36m<div[39m
+    [33maria-labelledby[39m=[32m"radix-_r_0_-trigger-pending"[39m
+    [33mdata-orientation[39m=[32m"horizontal"[39m
+    [33mdata-state[39m=[32m"active"[39m
+    [33mid[39m=[32m"radix-_r_0_-content-pending"[39m
+    [33mrole[39m=[32m"tabpanel"[39m
+    [33mstyle[39m=[32m"animation-duration: 0s;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  table:
+
+  Name "승인 대기":
+  [36m<table />[39m
+
+  --------------------------------------------------
+  caption:
+
+  Name "승인 대기":
+  [36m<caption />[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "이름 조작":
+  [36m<tr />[39m
+
+  Name "대기자":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "이름":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "조작":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "대기자":
+  [36m<td />[39m
+
+  Name "":
+  [36m<td />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mdata-orientation[39m=[32m"horizontal"[39m
+      [33mdir[39m=[32m"ltr"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-orientation[39m=[32m"horizontal"[39m
+        [33mdata-orientation[39m=[32m"horizontal"[39m
+        [33mrole[39m=[32m"tablist"[39m
+        [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+        [33mtabindex[39m=[32m"0"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-controls[39m=[32m"radix-_r_0_-content-pending"[39m
+          [33maria-selected[39m=[32m"true"[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdata-radix-collection-item[39m=[32m""[39m
+          [33mdata-state[39m=[32m"active"[39m
+          [33mid[39m=[32m"radix-_r_0_-trigger-pending"[39m
+          [33mrole[39m=[32m"tab"[39m
+          [33mtabindex[39m=[32m"-1"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m대기 중 ([0m
+          [0m1[0m
+          [0m)[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-controls[39m=[32m"radix-_r_0_-content-rejected"[39m
+          [33maria-selected[39m=[32m"false"[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdata-radix-collection-item[39m=[32m""[39m
+          [33mdata-state[39m=[32m"inactive"[39m
+          [33mid[39m=[32m"radix-_r_0_-trigger-rejected"[39m
+          [33mrole[39m=[32m"tab"[39m
+          [33mtabindex[39m=[32m"-1"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m거절됨 ([0m
+          [0m1[0m
+          [0m)[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_0_-trigger-pending"[39m
+        [33mdata-orientation[39m=[32m"horizontal"[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_0_-content-pending"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mstyle[39m=[32m"animation-duration: 0s;"[39m
+        [33mtabindex[39m=[32m"0"[39m
+      [36m>[39m
+        [36m<table>[39m
+          [36m<caption>[39m
+            [0m승인 대기[0m
+          [36m</caption>[39m
+          [36m<thead>[39m
+            [36m<tr>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0m이름[0m
+              [36m</th>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0m조작[0m
+              [36m</th>[39m
+            [36m</tr>[39m
+          [36m</thead>[39m
+          [36m<tbody>[39m
+            [36m<tr>[39m
+              [36m<td>[39m
+                [0m대기자[0m
+              [36m</td>[39m
+              [36m<td />[39m
+            [36m</tr>[39m
+          [36m</tbody>[39m
+        [36m</table>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_0_-trigger-rejected"[39m
+        [33mdata-orientation[39m=[32m"horizontal"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_0_-content-rejected"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"0"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/signup-approval.test.tsx:40:19
+     38|
+     39|     // 한 목록에 뭉치면 지금 무엇을 해야 하는 건지 화면이 답하지 못한다.
+     40|     expect(screen.getByRole('heading', { name: '가입 승인' })).toBeDefined…
+       |                   ^
+     41|     expect(screen.getByRole('tab', { name: /대기 중/ })).toBeDefined();
+     42|     expect(screen.getByRole('tab', { name: /거절됨/ })).toBeDefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  test/signup-approval.test.tsx > SEC-AUTH-004 — 승인과 거절 > 승인하면 그 계정 id 가 밖으로 나간다
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "대기자 승인"
+
+Here are the accessible roles:
+
+  cell:
+
+  Name "대기자":
+  [36m<td />[39m
+
+  --------------------------------------------------cell:
+
+  Name "승인":
+  [36m<td />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "승인":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<tr>[39m
+  [36m<td>[39m
+    [0m대기자[0m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<button[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m승인[0m
+    [36m</button>[39m
+  [36m</td>[39m
+[36m</tr>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/signup-approval.test.tsx:67:52
+     65|     render(<SignupApproval users={넷} onApprove={(id) => 승인한것.push(id)}…
+     66|
+     67|     await userEvent.setup().click(within(행('대기자')).getByRole('button',…
+       |                                                    ^
+     68|
+     69|     expect(승인한것).toEqual(['u2']);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  test/signup-approval.test.tsx > SEC-AUTH-004 — 승인과 거절 > 거절하면 상태 전환이 나간다
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "대기자 거절"
+
+Here are the accessible roles:
+
+  cell:
+
+  Name "대기자":
+  [36m<td />[39m
+
+  --------------------------------------------------cell:
+
+  Name "거절":
+  [36m<td />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "거절":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<tr>[39m
+  [36m<td>[39m
+    [0m대기자[0m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<button[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m거절[0m
+    [36m</button>[39m
+  [36m</td>[39m
+[36m</tr>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/signup-approval.test.tsx:76:52
+     74|     render(<SignupApproval users={넷} onStatus={(id, status) => 바꾼것.pus…
+     75|
+     76|     await userEvent.setup().click(within(행('대기자')).getByRole('button',…
+       |                                                    ^
+     77|
+     78|     // 계정과 이력은 보존된다 — 삭제가 아니라 상태 전환이다 (`R60`).
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  test/signup-approval.test.tsx > FR-AUTH-002 — 거절됨 탭에서 재심사한다 > 거절됨 탭에는 `rejected` 만 서고 재심사가 붙는다
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "거절자 재심사"
+
+Here are the accessible roles:
+
+  cell:
+
+  Name "거절자":
+  [36m<td />[39m
+
+  --------------------------------------------------cell:
+
+  Name "재심사":
+  [36m<td />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "재심사":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<tr>[39m
+  [36m<td>[39m
+    [0m거절자[0m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<button[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m재심사[0m
+    [36m</button>[39m
+  [36m</td>[39m
+[36m</tr>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/signup-approval.test.tsx:103:39
+    101|
+    102|     expect(screen.queryByRole('row', { name: /대기자/ })).toBeNull();
+    103|     await user.click(within(행('거절자')).getByRole('button', { name: '거절자…
+       |                                       ^
+    104|
+    105|     expect(되돌린것).toEqual(['u4']);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  test/signup-approval.test.tsx > IR-SHELL-006 — 승인 목록의 공통 표·탭 표현 > 탭 건수·선택 상태와 대기 표의 이름/조작 계약을 유지한다
+AssertionError: expected null to be 'table' // Object.is equality
+
+- Expected:
+"table"
+
++ Received:
+null
+
+ ❯ test/signup-approval.test.tsx:162:84
+    160|     expect(pending.getAttribute('data-state')).toBe('active');
+    161|     expect(rejected.getAttribute('data-state')).toBe('inactive');
+    162|     expect(screen.getByRole('table', { name: '승인 대기' }).getAttribute('…
+       |                                                                                    ^
+    163|     expect(within(행('대기자')).getByRole('button', { name: '대기자 승인' })).t…
+    164|     expect(within(행('대기자')).getByRole('button', { name: '대기자 거절' })).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  test/user-roster-register.test.tsx > FR-AUTH-003 — 직접 등록은 사용자 관리 안의 조작이다 > AC-1: 명부와 같은 자리에 등록 자리가 선다
+TestingLibraryElementError: Unable to find an accessible element with the role "heading" and name "사용자 관리"
+
+Here are the accessible roles:
+
+  table:
+
+  Name "사용자 관리":
+  [36m<table />[39m
+
+  --------------------------------------------------
+  caption:
+
+  Name "사용자 관리":
+  [36m<caption />[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "이름 상태":
+  [36m<tr />[39m
+
+  Name "활성자 활성":
+  [36m<tr />[39m
+
+  Name "대기자 대기":
+  [36m<tr />[39m
+
+  Name "정지자 정지":
+  [36m<tr />[39m
+
+  Name "거절자 거절":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "이름":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "상태":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "활성자":
+  [36m<td />[39m
+
+  Name "활성":
+  [36m<td[39m
+    [33mdata-testid[39m=[32m"roster-status"[39m
+  [36m/>[39m
+
+  Name "대기자":
+  [36m<td />[39m
+
+  Name "대기":
+  [36m<td[39m
+    [33mdata-testid[39m=[32m"roster-status"[39m
+  [36m/>[39m
+
+  Name "정지자":
+  [36m<td />[39m
+
+  Name "정지":
+  [36m<td[39m
+    [33mdata-testid[39m=[32m"roster-status"[39m
+  [36m/>[39m
+
+  Name "거절자":
+  [36m<td />[39m
+
+  Name "거절":
+  [36m<td[39m
+    [33mdata-testid[39m=[32m"roster-status"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "새 사용자 이름":
+  [36m<input[39m
+    [33mid[39m=[32m"roster-new-name"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "등록":
+  [36m<button[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<table>[39m
+      [36m<caption>[39m
+        [0m사용자 관리[0m
+      [36m</caption>[39m
+      [36m<thead>[39m
+        [36m<tr>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0m이름[0m
+          [36m</th>[39m
+          [36m<th[39m
+            [33mscope[39m=[32m"col"[39m
+          [36m>[39m
+            [0m상태[0m
+          [36m</th>[39m
+        [36m</tr>[39m
+      [36m</thead>[39m
+      [36m<tbody>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0m활성자[0m
+          [36m</td>[39m
+          [36m<td[39m
+            [33mdata-testid[39m=[32m"roster-status"[39m
+          [36m>[39m
+            [0m활성[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0m대기자[0m
+          [36m</td>[39m
+          [36m<td[39m
+            [33mdata-testid[39m=[32m"roster-status"[39m
+          [36m>[39m
+            [0m대기[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0m정지자[0m
+          [36m</td>[39m
+          [36m<td[39m
+            [33mdata-testid[39m=[32m"roster-status"[39m
+          [36m>[39m
+            [0m정지[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+        [36m<tr>[39m
+          [36m<td>[39m
+            [0m거절자[0m
+          [36m</td>[39m
+          [36m<td[39m
+            [33mdata-testid[39m=[32m"roster-status"[39m
+          [36m>[39m
+            [0m거절[0m
+          [36m</td>[39m
+        [36m</tr>[39m
+      [36m</tbody>[39m
+    [36m</table>[39m
+    [36m<label[39m
+      [33mfor[39m=[32m"roster-new-name"[39m
+    [36m>[39m
+      [0m새 사용자 이름[0m
+    [36m</label>[39m
+    [36m<input[39m
+      [33mid[39m=[32m"roster-new-name"[39m
+      [33mvalue[39m=[32m""[39m
+    [36m/>[39m
+    [36m<label[39m
+      [33mfor[39m=[32m"roster-new-password"[39m
+    [36m>[39m
+      [0m임시 비밀번호[0m
+    [36m</label>[39m
+    [36m<input[39m
+      [33mid[39m=[32m"roster-new-password"[39m
+      [33mtype[39m=[32m"password"[39m
+      [33mvalue[39m=[32m""[39m
+    [36m/>[39m
+    [36m<button[39m
+      [33mdisabled[39m=[32m""[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m등록[0m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/user-roster-register.test.tsx:29:19
+     27|     // 두 번째 화면이다.
+     28|     expect(screen.getByRole('table')).toBeDefined();
+     29|     expect(screen.getByRole('heading', { name: '사용자 관리' })).toBeDefine…
+       |                   ^
+     30|     expect(screen.getByLabelText('새 사용자 이름')).toBeDefined();
+     31|     expect(screen.getByLabelText('임시 비밀번호')).toBeDefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  test/user-roster-register.test.tsx > FR-AUTH-003 — 직접 등록은 사용자 관리 안의 조작이다 > 네 상태를 의미 배지로 표시하고 명부가 비면 중립 안내를 표시한다
+AssertionError: expected [ Array(4) ] to deeply equal [ [ '활성', 'success' ], …(3) ]
+
+- Expected
++ Received
+
+  [
+    [
+      "활성",
+-     "success",
++     null,
+    ],
+    [
+      "대기",
+-     "warning",
++     null,
+    ],
+    [
+      "정지",
+-     "neutral",
++     null,
+    ],
+    [
+      "거절",
+-     "danger",
++     null,
+    ],
+  ]
+
+ ❯ test/user-roster-register.test.tsx:38:124
+     36|     const { rerender } = render(<UserRoster users={명부} onRegister={() …
+     37|
+     38|     expect(screen.getAllByTestId('roster-status').map((badge) => [badg…
+       |                                                                                                                            ^
+     39|       ['활성', 'success'],
+     40|       ['대기', 'warning'],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  test/user-roster-register.test.tsx > FR-AUTH-003 — 직접 등록은 사용자 관리 안의 조작이다 > 비밀번호 칸이 가려진다 — 어깨너머로 읽히면 그 계정이 열린다
+AssertionError: expected '' to be 'username' // Object.is equality
+
+- Expected
++ Received
+
+- username
+
+ ❯ test/user-roster-register.test.tsx:83:82
+     81|     render(<UserRoster users={명부} />);
+     82|
+     83|     expect((screen.getByLabelText('새 사용자 이름') as HTMLInputElement).aut…
+       |                                                                                  ^
+     84|     const password = screen.getByLabelText('임시 비밀번호') as HTMLInputElem…
+     85|     expect(password.type).toBe('password');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  test/user-roster-register.test.tsx > FR-AUTH-003 — 직접 등록은 사용자 관리 안의 조작이다 > 등록 handler가 없으면 사용할 수 없는 이유를 설명하고 값을 보내지 않는다
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ test/user-roster-register.test.tsx:98:88
+     96|     await user.type(screen.getByLabelText('임시 비밀번호'), 합성비밀번호);
+     97|
+     98|     expect((screen.getByRole('button', { name: '등록' }) as HTMLButtonEl…
+       |                                                                                        ^
+     99|     expect(screen.getByText('등록 기능을 사용할 수 없습니다.')).toBeDefined();
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Work\git\DocuLight2.0\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --run test/user-roster-register.test.tsx test/signup-approval.test.tsx test/roster.test.tsx test/settings-categories.test.tsx
+COMMAND_FINISHED_AT_UTC=2026-09-17T17:51:01.789Z
+EXIT_CODE=1
+
+COMMAND_STARTED_AT_UTC=2026-09-17T17:51:01.789Z
+COMMAND=npm run test:browser:principal67
+
+> @doculight/web@0.1.0 test:browser:principal67
+> node test/issue67-principal-browser-check.cjs
+
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('dialog', { name: '설정' }).locator('[data-principal-panel="roster"]') to be visible[22m
+
+    at inspectSuperuser (C:\Work\git\DocuLight2.0\packages\web\test\issue67-principal-browser-check.cjs:104:16)
+    at async exerciseEnvironment (C:\Work\git\DocuLight2.0\packages\web\test\issue67-principal-browser-check.cjs:317:21)
+    at async regularMatrix (C:\Work\git\DocuLight2.0\packages\web\test\issue67-principal-browser-check.cjs:333:19)
+    at async C:\Work\git\DocuLight2.0\packages\web\test\issue67-principal-browser-check.cjs:437:21 {
+  log: [
+    `  - waiting for getByRole('dialog', { name: '설정' }).locator('[data-principal-panel="roster"]') to be visible`
+  ],
+  name: 'TimeoutError'
+}
+npm error Lifecycle script `test:browser:principal67` failed with error:
+npm error code 1
+npm error path C:\Work\git\DocuLight2.0\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c node test/issue67-principal-browser-check.cjs
+COMMAND_FINISHED_AT_UTC=2026-09-17T17:51:34.643Z
+EXIT_CODE=1
+
+PRIVACY_SCAN_FILES=32
+PRIVACY_GENERATED_PASSWORD_MATCHES=0
+PRIVACY_LEGACY_LITERAL_MATCHES=0
+
+ISSUE67_TDD_FINISHED_AT_UTC=2026-09-17T17:51:34.652Z
+RESULT=FAIL

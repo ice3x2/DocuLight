@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { SignupApproval } from '../src/principal/SignupApproval.js';
+import { AppShell } from '../src/shell/AppShell.js';
 import { SETTINGS_CATEGORIES } from '../src/shell/shell-contract.js';
 
 afterEach(cleanup);
@@ -36,6 +37,7 @@ describe('설계서 §2.10 — 가입 승인은 자기 카테고리를 갖는다
     render(<SignupApproval users={넷} />);
 
     // 한 목록에 뭉치면 지금 무엇을 해야 하는 건지 화면이 답하지 못한다.
+    expect(screen.getByRole('heading', { name: '가입 승인' })).toBeDefined();
     expect(screen.getByRole('tab', { name: /대기 중/ })).toBeDefined();
     expect(screen.getByRole('tab', { name: /거절됨/ })).toBeDefined();
   });
@@ -62,7 +64,7 @@ describe('SEC-AUTH-004 — 승인과 거절', () => {
     const 승인한것: string[] = [];
     render(<SignupApproval users={넷} onApprove={(id) => 승인한것.push(id)} />);
 
-    await userEvent.setup().click(within(행('대기자')).getByRole('button', { name: '승인' }));
+    await userEvent.setup().click(within(행('대기자')).getByRole('button', { name: '대기자 승인' }));
 
     expect(승인한것).toEqual(['u2']);
   });
@@ -71,7 +73,7 @@ describe('SEC-AUTH-004 — 승인과 거절', () => {
     const 바꾼것: { id: string; status: string }[] = [];
     render(<SignupApproval users={넷} onStatus={(id, status) => 바꾼것.push({ id, status })} />);
 
-    await userEvent.setup().click(within(행('대기자')).getByRole('button', { name: '거절' }));
+    await userEvent.setup().click(within(행('대기자')).getByRole('button', { name: '대기자 거절' }));
 
     // 계정과 이력은 보존된다 — 삭제가 아니라 상태 전환이다 (`R60`).
     expect(바꾼것).toEqual([{ id: 'u2', status: 'rejected' }]);
@@ -80,8 +82,8 @@ describe('SEC-AUTH-004 — 승인과 거절', () => {
   it('조작을 넘기지 않으면 그 버튼이 서지 않는다 — 눌러도 아무 일이 없는 자리를 두지 않는다', () => {
     render(<SignupApproval users={넷} />);
 
-    expect(screen.queryByRole('button', { name: '승인' })).toBeNull();
-    expect(screen.queryByRole('button', { name: '거절' })).toBeNull();
+    expect(screen.queryByRole('button', { name: /승인/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: /거절/ })).toBeNull();
   });
 });
 
@@ -98,7 +100,7 @@ describe('FR-AUTH-002 — 거절됨 탭에서 재심사한다', () => {
     const user = await 거절됨탭으로();
 
     expect(screen.queryByRole('row', { name: /대기자/ })).toBeNull();
-    await user.click(within(행('거절자')).getByRole('button', { name: '재심사' }));
+    await user.click(within(행('거절자')).getByRole('button', { name: '거절자 재심사' }));
 
     expect(되돌린것).toEqual(['u4']);
   });
@@ -109,7 +111,7 @@ describe('FR-AUTH-002 — 거절됨 탭에서 재심사한다', () => {
 
     // `R60-b` 는 `rejected → pending → active` 를 정한다. 여기서 바로
     // 승인하면 거절 이력을 건너뛰고 그 사실이 아무 데도 남지 않는다.
-    expect(screen.queryByRole('button', { name: '승인' })).toBeNull();
+    expect(screen.queryByRole('button', { name: /승인/ })).toBeNull();
   });
 });
 
@@ -131,10 +133,56 @@ describe('설계서 §2.10 — 빈 상태는 원인을 설명한다', () => {
     expect(안내.textContent).toContain('신청');
   });
 
+  it('직접 등록 모드와 알 수 없는 모드의 현재 문구를 정확히 구분한다', () => {
+    const { rerender } = render(<SignupApproval users={[]} signupMode="invite-only" />);
+
+    expect(screen.getByRole('note', { name: '빈 상태 안내' }).textContent).toBe(
+      '현재 슈퍼유저 직접 등록 모드라 가입 신청을 받지 않습니다. 가입 모드는 인스턴스 설정에서 볼 수 있습니다.',
+    );
+    rerender(<SignupApproval users={[]} signupMode="future-mode" />);
+    expect(screen.getByRole('note', { name: '빈 상태 안내' }).textContent).toBe('승인 대기 중인 계정이 없습니다.');
+  });
+
   it('모드를 모르면 원인을 지어내지 않는다', () => {
     render(<SignupApproval users={[]} />);
 
     const 안내 = screen.getByRole('note', { name: '빈 상태 안내' });
     expect(안내.textContent).not.toContain('자유 가입');
+  });
+});
+
+describe('IR-SHELL-006 — 승인 목록의 공통 표·탭 표현', () => {
+  it('탭 건수·선택 상태와 대기 표의 이름/조작 계약을 유지한다', () => {
+    render(<SignupApproval users={넷} onApprove={() => undefined} onStatus={() => undefined} />);
+
+    const pending = screen.getByRole('tab', { name: '대기 중 (1)' });
+    const rejected = screen.getByRole('tab', { name: '거절됨 (1)' });
+    expect(pending.getAttribute('data-state')).toBe('active');
+    expect(rejected.getAttribute('data-state')).toBe('inactive');
+    expect(screen.getByRole('table', { name: '승인 대기' }).getAttribute('data-slot')).toBe('table');
+    expect(within(행('대기자')).getByRole('button', { name: '대기자 승인' })).toBeDefined();
+    expect(within(행('대기자')).getByRole('button', { name: '대기자 거절' })).toBeDefined();
+  });
+
+  it('비어 있는 거절 탭도 접근 가능하고 정확한 문구를 표시한다', async () => {
+    render(<SignupApproval users={[]} />);
+
+    await userEvent.setup().click(screen.getByRole('tab', { name: '거절됨 (0)' }));
+    expect(screen.getByRole('note', { name: '빈 상태 안내' }).textContent).toBe('거절된 계정이 없습니다.');
+  });
+
+  it('설정의 중첩 탭에서 화살표가 승인 탭만 바꾸고 바깥 카테고리를 바꾸지 않는다', async () => {
+    render(<AppShell viewer={{ superuser: true, workspaceCount: 1, adminWorkspaceCount: 1 }} userRoster={넷} />);
+    const user = userEvent.setup();
+
+    await user.click(screen.getByRole('button', { name: '설정' }));
+    const dialog = await screen.findByRole('dialog', { name: '설정' });
+    await user.click(within(dialog).getByRole('tab', { name: '가입 승인' }));
+    const pending = within(dialog).getByRole('tab', { name: '대기 중 (1)' });
+    pending.focus();
+    await user.keyboard('{ArrowRight}');
+
+    expect(within(dialog).getByRole('tab', { name: '가입 승인' }).getAttribute('data-state')).toBe('active');
+    expect(within(dialog).getByRole('tab', { name: '거절됨 (1)' }).getAttribute('data-state')).toBe('active');
   });
 });

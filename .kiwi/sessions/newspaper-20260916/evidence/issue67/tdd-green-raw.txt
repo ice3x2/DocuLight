@@ -1,0 +1,57 @@
+ISSUE67_TDD_STARTED_AT_UTC=2026-09-17T17:53:26.035Z
+WORKDIR=C:\Work\git\DocuLight2.0\packages\web
+PRODUCT_TRACKED_DIFF_NUMSTAT_BEGIN
+53	46	packages/web/src/principal/SignupApproval.tsx
+78	45	packages/web/src/principal/UserRoster.tsx
+1	0	packages/web/src/styles/index.css
+PRODUCT_TRACKED_DIFF_NUMSTAT_END
+PRINCIPAL_CSS_EXISTS=true
+CONTRACT_SHA256_BEGIN
+a7cda6e46f3397dc636b09b6ec529c5eeaf9d0bd631364dd4c662e40dd0d3b69  test/issue67-tdd-contract-runner.cjs
+8d47e60052ec22e6ac1030ea7c6811b43f2900cd6adf0a15e9095ebe3952d26f  test/issue67-principal-browser-check.cjs
+c44289ee285253437822eb09cdfcc1d961039e8f5a6edbdeb190d18b51222d38  test/issue67-principal-fixture.tsx
+d01253bf7d2cc0697944fc36aadb9b5fac30a1af076b267bbfcb03e95fa82490  test/issue67-principal-fixture.html
+304f8cab32e309019a84ffb24ae9d542f6b860425ca5212675de9e8dd121e0fd  test/user-roster-register.test.tsx
+3502ec7ae0be19222954598bfadb9095480c14a57a157088ff142a6b60fb5dab  test/signup-approval.test.tsx
+4d8543a836ddff49e383795b049cbe80ea572665815c1c48ce7e1101687c4824  test/roster.test.tsx
+59678603868be8447b9b758c3f81902853ac5960b5dbb1646d3573a1cbaebd7a  test/settings-categories.test.tsx
+CONTRACT_SHA256_END
+
+COMMAND_STARTED_AT_UTC=2026-09-17T17:53:26.089Z
+COMMAND=npm test -- --run test/user-roster-register.test.tsx test/signup-approval.test.tsx test/roster.test.tsx test/settings-categories.test.tsx
+
+> @doculight/web@0.1.0 test
+> vitest run --run test/user-roster-register.test.tsx test/signup-approval.test.tsx test/roster.test.tsx test/settings-categories.test.tsx
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+
+ Test Files  4 passed (4)
+      Tests  52 passed (52)
+   Start at  02:53:26
+   Duration  2.93s (transform 1.37s, setup 70ms, import 2.96s, tests 2.65s, environment 1.58s)
+
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+COMMAND_FINISHED_AT_UTC=2026-09-17T17:53:29.709Z
+EXIT_CODE=0
+
+COMMAND_STARTED_AT_UTC=2026-09-17T17:53:29.709Z
+COMMAND=npm run test:browser:principal67
+
+> @doculight/web@0.1.0 test:browser:principal67
+> node test/issue67-principal-browser-check.cjs
+
+PASS issue67 production AppShell role gates and principal components (12 environments; forced colors 100/200)
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+COMMAND_FINISHED_AT_UTC=2026-09-17T17:54:20.644Z
+EXIT_CODE=0
+
+PRIVACY_SCAN_FILES=33
+PRIVACY_GENERATED_PASSWORD_MATCHES=0
+PRIVACY_LEGACY_LITERAL_MATCHES=0
+
+ISSUE67_TDD_FINISHED_AT_UTC=2026-09-17T17:54:20.654Z
+RESULT=PASS

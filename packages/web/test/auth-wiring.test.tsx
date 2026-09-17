@@ -454,7 +454,7 @@ describe('SEC-AUTH-004 · FR-AUTH-002 — 가입 승인이 서버까지 닿는�
     const user = await 명부를연다();
 
     await user.click(
-      within(await screen.findByRole('row', { name: /대기자/ })).getByRole('button', { name: '승인' }),
+      within(await screen.findByRole('row', { name: /대기자/ })).getByRole('button', { name: '대기자 승인' }),
     );
 
     await waitFor(() =>
@@ -473,7 +473,7 @@ describe('SEC-AUTH-004 · FR-AUTH-002 — 가입 승인이 서버까지 닿는�
     // 거절됨 탭으로 건너간다 — 대기 중 탭에는 그 행이 없다.
     await user.click(screen.getByRole('tab', { name: /거절됨/ }));
     await user.click(
-      within(await screen.findByRole('row', { name: /거절자/ })).getByRole('button', { name: '재심사' }),
+      within(await screen.findByRole('row', { name: /거절자/ })).getByRole('button', { name: '거절자 재심사' }),
     );
 
     await waitFor(() =>
@@ -490,7 +490,7 @@ describe('SEC-AUTH-004 · FR-AUTH-002 — 가입 승인이 서버까지 닿는�
     const user = await 명부를연다();
 
     await user.click(
-      within(await screen.findByRole('row', { name: /대기자/ })).getByRole('button', { name: '거절' }),
+      within(await screen.findByRole('row', { name: /대기자/ })).getByRole('button', { name: '대기자 거절' }),
     );
 
     await waitFor(() =>

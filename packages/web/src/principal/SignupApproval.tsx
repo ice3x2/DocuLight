@@ -2,6 +2,8 @@ import { useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 
 import type { RosterUser, RosterUserStatus } from '../api/client.js';
+import { Button } from '../components/ui/button.js';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table.js';
 
 /**
  * 가입 승인 (`SEC-AUTH-004` · `FR-AUTH-002` · 설계서 `04` §2.10).
@@ -45,80 +47,85 @@ export function SignupApproval({
   const 거절 = users.filter((one) => one.status === 'rejected');
 
   return (
-    <Tabs.Root value={탭} onValueChange={set탭}>
+    <Tabs.Root value={탭} onValueChange={set탭} data-principal-panel="approval">
+      <h2 data-principal-title>가입 승인</h2>
       {/* 건수를 이름에 실어 둔다 (`R139-f`) — 열어 보지 않고도 할 일이
           있는지 알 수 있어야 한다. */}
-      <Tabs.List>
+      <Tabs.List aria-label="가입 승인 목록" data-principal-tabs>
         <Tabs.Trigger value="pending">대기 중 ({대기.length})</Tabs.Trigger>
         <Tabs.Trigger value="rejected">거절됨 ({거절.length})</Tabs.Trigger>
       </Tabs.List>
 
       <Tabs.Content value="pending">
         {대기.length === 0 ? (
-          <p role="note" aria-label="빈 상태 안내">
+          <p role="note" aria-label="빈 상태 안내" data-principal-empty>
             {signupMode === undefined ? 모드를모를때 : (가입모드문구[signupMode] ?? 모드를모를때)}
           </p>
         ) : (
-          <table>
-            <caption>승인 대기</caption>
-            <thead>
-              <tr>
-                <th scope="col">이름</th>
-                <th scope="col">조작</th>
-              </tr>
-            </thead>
-            <tbody>
-              {대기.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.name}</td>
-                  <td>
+          <div data-principal-table-wrap>
+            <Table>
+              <caption>승인 대기</caption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead scope="col">이름</TableHead>
+                  <TableHead scope="col">조작</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {대기.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell><div data-principal-row-actions>
                     {onApprove === undefined ? null : (
-                      <button type="button" onClick={() => onApprove(user.id)}>
+                      <Button variant="secondary" aria-label={`${user.name} 승인`} onClick={() => onApprove(user.id)}>
                         승인
-                      </button>
+                      </Button>
                     )}
                     {onStatus === undefined ? null : (
-                      <button type="button" onClick={() => onStatus(user.id, 'rejected')}>
+                      <Button variant="destructive" aria-label={`${user.name} 거절`} onClick={() => onStatus(user.id, 'rejected')}>
                         거절
-                      </button>
+                      </Button>
                     )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    </div></TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </Tabs.Content>
 
       <Tabs.Content value="rejected">
         {거절.length === 0 ? (
-          <p role="note" aria-label="빈 상태 안내">
+          <p role="note" aria-label="빈 상태 안내" data-principal-empty>
             거절된 계정이 없습니다.
           </p>
         ) : (
-          <table>
-            <caption>거절됨</caption>
-            <thead>
-              <tr>
-                <th scope="col">이름</th>
-                <th scope="col">조작</th>
-              </tr>
-            </thead>
-            <tbody>
-              {거절.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.name}</td>
-                  <td>
+          <div data-principal-table-wrap>
+            <Table>
+              <caption>거절됨</caption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead scope="col">이름</TableHead>
+                  <TableHead scope="col">조작</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {거절.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell>
                     {onReopen === undefined ? null : (
-                      <button type="button" onClick={() => onReopen(user.id)}>
+                      <Button variant="secondary" aria-label={`${user.name} 재심사`} onClick={() => onReopen(user.id)}>
                         재심사
-                      </button>
+                      </Button>
                     )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </Tabs.Content>
     </Tabs.Root>
