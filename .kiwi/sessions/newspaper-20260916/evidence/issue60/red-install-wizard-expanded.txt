@@ -1,0 +1,24 @@
+Command (implementation removed; tests retained/expanded):
+npm test -- --run test/install-wizard-newspaper.test.tsx --reporter=dot
+
+RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Failed Tests 27
+
+Representative direct failures:
+- L2 pending contract: Unable to find button "설치하고 부여"; only the old "실행" button existed.
+- Five-stage flow: Unable to find heading "설치 토큰" after InstallWizard implementation removal.
+- Stale token response, signup enum, permission enum, open+edit warning, token invalid/transport/429 mapping, value preservation, password mismatch, pending commit dismissal, session 401, commit rule mapping, and empty-password focus all failed with the implementation absent.
+
+Test Files  1 failed (1)
+Tests       27 failed (27)
+Exit code   1
+Start at    15:08:48
+Duration    1.08s
+
+This RED was captured after removing the affected InstallWizard behavior and the ConfirmGate pending/label behavior, before their minimal reimplementation. The final, unchanged test file SHA-256 was `E1C8A1EC0ACCBB7B916806ED2B34FF8108F16FA9FDFBCB18004807D904388A0D` for both runs. Machine-raw Vitest reports preserve all 27 assertion results, failure messages, locations, and timing:
+
+- `red-install-wizard-expanded.raw.json` — SHA-256 `871537AED148CF371753C0765B0DAC2A5BCAEAD1EB84BBB7C356933D9A3D195C`; `success=false`, 27 failed, 0 passed.
+- `green-install-wizard-expanded.raw.json` — SHA-256 `DDA7D56E928AD6FDB548A188A79BEE766324E2DE8573BF83FE20EFC68D916C15`; `success=true`, 0 failed, 27 passed.

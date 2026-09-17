@@ -22,23 +22,36 @@ afterEach(() => {
  */
 
 const 채운다 = async (user: ReturnType<typeof userEvent.setup>) => {
-  await user.type(screen.getByLabelText('설치 토큰'), 'token-value');
+  await user.type(screen.getByLabelText('설치 토큰', { selector: 'input' }), 'token-value');
+  await user.click(screen.getByRole('button', { name: '다음' }));
   await user.type(screen.getByLabelText('슈퍼유저 이름'), '설치자');
   await user.type(screen.getByLabelText('비밀번호'), 'x'.repeat(10));
-  await user.type(screen.getByLabelText('기본 워크스페이스 이름'), '기본');
+  await user.type(screen.getByLabelText('비밀번호 확인'), 'x'.repeat(10));
+  await user.click(screen.getByRole('button', { name: '다음' }));
+  await user.click(screen.getByRole('button', { name: '다음' }));
+};
+
+const 정책까지 = async (user: ReturnType<typeof userEvent.setup>) => {
+  await user.type(screen.getByLabelText('설치 토큰', { selector: 'input' }), 'token-value');
+  await user.click(screen.getByRole('button', { name: '다음' }));
+  await user.type(screen.getByLabelText('비밀번호'), 'x');
+  await user.type(screen.getByLabelText('비밀번호 확인'), 'x');
+  await user.click(screen.getByRole('button', { name: '다음' }));
 };
 
 describe('SEC-AUTH-017 — 초기 권한을 마법사에서 고른다', () => {
-  it('AC-1: 없음 · 보기 · 편집 셋을 고를 수 있다', () => {
-    render(<InstallWizard onVerifyToken={vi.fn()} onCommit={vi.fn()} />);
+  it('AC-1: 없음 · 보기 · 편집 셋을 고를 수 있다', async () => {
+    render(<InstallWizard onVerifyToken={vi.fn().mockResolvedValue('s')} onCommit={vi.fn()} />);
+    await 정책까지(userEvent.setup());
 
     const 선택 = screen.getByLabelText('기본 그룹 초기 권한') as HTMLSelectElement;
 
     expect([...선택.options].map((one) => one.value)).toEqual(['none', 'view', 'edit']);
   });
 
-  it('AC-2: 기본값이 편집이다', () => {
-    render(<InstallWizard onVerifyToken={vi.fn()} onCommit={vi.fn()} />);
+  it('AC-2: 기본값이 편집이다', async () => {
+    render(<InstallWizard onVerifyToken={vi.fn().mockResolvedValue('s')} onCommit={vi.fn()} />);
+    await 정책까지(userEvent.setup());
 
     // 기본값의 정본은 도메인(`DEFAULT_GROUP_LEVEL`)이고 화면은 그것을
     // 따른다 — 화면이 자기 값을 들면 둘이 갈리고 아무도 눈치채지 못한다.
@@ -48,6 +61,9 @@ describe('SEC-AUTH-017 — 초기 권한을 마법사에서 고른다', () => {
   it('AC-4: 자유 가입 + 편집 조합에 경고가 붙는다', async () => {
     render(<InstallWizard onVerifyToken={vi.fn()} onCommit={vi.fn()} />);
     const user = userEvent.setup();
+    cleanup();
+    render(<InstallWizard onVerifyToken={vi.fn().mockResolvedValue('s')} onCommit={vi.fn()} />);
+    await 정책까지(user);
 
     await user.selectOptions(screen.getByLabelText('가입 모드'), 'open');
 
@@ -57,6 +73,9 @@ describe('SEC-AUTH-017 — 초기 권한을 마법사에서 고른다', () => {
   it('AC-4: 보기로 낮추면 그 경고가 사라진다 — 조합이 아니라 값 하나로 뜨면 안 된다', async () => {
     render(<InstallWizard onVerifyToken={vi.fn()} onCommit={vi.fn()} />);
     const user = userEvent.setup();
+    cleanup();
+    render(<InstallWizard onVerifyToken={vi.fn().mockResolvedValue('s')} onCommit={vi.fn()} />);
+    await 정책까지(user);
 
     await user.selectOptions(screen.getByLabelText('가입 모드'), 'open');
     await user.selectOptions(screen.getByLabelText('기본 그룹 초기 권한'), 'view');
@@ -71,27 +90,30 @@ describe('SEC-AUTH-012 — 토큰 입력 자리가 있고 오타 뒤에도 다�
     // 않으므로 그 단언은 구성상 참이라 절대 실패하지 못한다 — 거절 처리를
     // 통째로 지워도 통과한다. 재야 하는 것은 관측 가능한 둘이다:
     // 사유가 뜨는가, 그리고 다시 칠 수 있는가.
-    const 검증 = vi.fn().mockRejectedValueOnce(new Error('bad-token')).mockResolvedValue('세션-2');
+    const 검증 = vi.fn().mockRejectedValueOnce(new ApiError(401)).mockResolvedValue('세션-2');
     render(<InstallWizard onVerifyToken={검증} onCommit={vi.fn()} />);
     const user = userEvent.setup();
 
-    await 채운다(user);
-    await user.click(screen.getByRole('button', { name: '설치' }));
+    await user.type(screen.getByLabelText('설치 토큰', { selector: 'input' }), 'token-value');
+    await user.click(screen.getByRole('button', { name: '다음' }));
 
     // 문단이 조용히 붙으면 스크린리더 사용자는 버튼이 죽었다고 읽는다.
-    expect((await screen.findByRole('alert')).textContent).toMatch(/토큰/);
-    expect(screen.getByLabelText('설치 토큰').getAttribute('aria-invalid')).toBe('true');
+    expect(await screen.findByText('설치 토큰이 올바르지 않습니다. 서버 콘솔의 값을 다시 확인하십시오.')).toBeDefined();
+    expect(screen.getByLabelText('설치 토큰', { selector: 'input' }).getAttribute('aria-invalid')).toBe('true');
     expect(screen.queryByRole('alertdialog')).toBeNull();
 
     // 오타 한 번에 서버를 재기동해야 하는 상태가 되면 안 된다.
-    await user.click(screen.getByRole('button', { name: '설치' }));
+    await user.click(screen.getByRole('button', { name: '다음' }));
 
     expect(검증).toHaveBeenCalledTimes(2);
-    expect(await screen.findByRole('alertdialog')).toBeDefined();
+    expect(await screen.findByRole('heading', { name: '최초 슈퍼유저 계정' })).toBeDefined();
   });
 
-  it('비밀번호 칸이 가려진다', () => {
-    render(<InstallWizard onVerifyToken={vi.fn()} onCommit={vi.fn()} />);
+  it('비밀번호 칸이 가려진다', async () => {
+    render(<InstallWizard onVerifyToken={vi.fn().mockResolvedValue('s')} onCommit={vi.fn()} />);
+    const user = userEvent.setup();
+    await user.type(screen.getByLabelText('설치 토큰', { selector: 'input' }), 'token-value');
+    await user.click(screen.getByRole('button', { name: '다음' }));
 
     expect((screen.getByLabelText('비밀번호') as HTMLInputElement).type).toBe('password');
   });
@@ -105,7 +127,7 @@ describe('FR-CONFIRM-019 AC-6 — 설치의 초기 권한도 확인 다이얼로
     const user = userEvent.setup();
 
     await 채운다(user);
-    await user.click(screen.getByRole('button', { name: '설치' }));
+    await user.click(screen.getByRole('button', { name: '설치 완료' }));
 
     // 제출 버튼은 관문이 아니다 (`FR-CONFIRM-005`) — 그것을 관문으로 치면
     // 규칙 전체가 무력화된다.
@@ -118,7 +140,7 @@ describe('FR-CONFIRM-019 AC-6 — 설치의 초기 권한도 확인 다이얼로
     const user = userEvent.setup();
 
     await 채운다(user);
-    await user.click(screen.getByRole('button', { name: '설치' }));
+    await user.click(screen.getByRole('button', { name: '설치 완료' }));
 
     const 요약 = (await screen.findByTestId('install-summary')).textContent ?? '';
 
@@ -131,7 +153,7 @@ describe('FR-CONFIRM-019 AC-6 — 설치의 초기 권한도 확인 다이얼로
     const user = userEvent.setup();
 
     await 채운다(user);
-    await user.click(screen.getByRole('button', { name: '설치' }));
+    await user.click(screen.getByRole('button', { name: '설치 완료' }));
 
     const 관문 = (await screen.findByRole('alertdialog')).textContent ?? '';
 
@@ -151,8 +173,8 @@ describe('FR-CONFIRM-019 AC-6 — 설치의 초기 권한도 확인 다이얼로
     const user = userEvent.setup();
 
     await 채운다(user);
-    await user.click(screen.getByRole('button', { name: '설치' }));
-    await user.click(await screen.findByRole('button', { name: '실행' }));
+    await user.click(screen.getByRole('button', { name: '설치 완료' }));
+    await user.click(await screen.findByRole('button', { name: '설치하고 부여' }));
 
     expect(커밋).toHaveBeenCalledTimes(1);
   });
@@ -165,14 +187,14 @@ describe('SEC-AUTH-015 — 설치 세션이 커밋 요청에 실린다', () => {
     const user = userEvent.setup();
 
     await 채운다(user);
-    await user.click(screen.getByRole('button', { name: '설치' }));
-    await user.click(await screen.findByRole('button', { name: '실행' }));
+    await user.click(screen.getByRole('button', { name: '설치 완료' }));
+    await user.click(await screen.findByRole('button', { name: '설치하고 부여' }));
 
     expect(커밋).toHaveBeenCalledWith(
       expect.objectContaining({
         installSession: '세션-1',
         superuserName: '설치자',
-        workspaceName: '기본',
+        workspaceName: 'workspace',
         defaultGroupLevel: 'edit',
       }),
     );
@@ -182,14 +204,14 @@ describe('SEC-AUTH-015 — 설치 세션이 커밋 요청에 실린다', () => {
     const 커밋 = vi.fn();
     render(
       <InstallWizard
-        onVerifyToken={vi.fn().mockRejectedValue(new Error('bad-token'))}
+        onVerifyToken={vi.fn().mockRejectedValue(new ApiError(401))}
         onCommit={커밋}
       />,
     );
     const user = userEvent.setup();
 
-    await 채운다(user);
-    await user.click(screen.getByRole('button', { name: '설치' }));
+    await user.type(screen.getByLabelText('설치 토큰', { selector: 'input' }), 'token-value');
+    await user.click(screen.getByRole('button', { name: '다음' }));
 
     expect(커밋).not.toHaveBeenCalled();
     expect(screen.queryByRole('alertdialog')).toBeNull();
@@ -230,7 +252,7 @@ describe('SEC-AUTH-010 AC-1 — 설치 전 인스턴스가 설치 화면에 닿�
     설치전();
     render(<App />);
 
-    expect(await screen.findByLabelText('설치 토큰')).toBeDefined();
+    expect(await screen.findByLabelText('설치 토큰', { selector: 'input' })).toBeDefined();
   });
 
   it('표식 없는 503 은 설치 화면이 아니다 — 잠깐 죽은 서버가 초기화로 읽히면 안 된다', async () => {
@@ -251,10 +273,13 @@ describe('커밋 실패가 화면에 나온다 — 되돌릴 수 없어 보이�
     const user = userEvent.setup();
 
     await 채운다(user);
-    await user.click(screen.getByRole('button', { name: '설치' }));
-    await user.click(await screen.findByRole('button', { name: '실행' }));
+    await user.click(screen.getByRole('button', { name: '설치 완료' }));
+    await user.click(await screen.findByRole('button', { name: '설치하고 부여' }));
 
-    return (await screen.findByRole('alert')).textContent ?? '';
+    await screen.findByText((_, element) =>
+      element?.matches('[data-slot="field-error"], [role="alert"]') === true,
+    );
+    return document.querySelector('[data-slot="field-error"], [role="alert"]')?.textContent ?? '';
   };
 
   it('사유를 아는 거절은 그 사유대로 안내한다', async () => {
@@ -277,7 +302,7 @@ describe('커밋 실패가 화면에 나온다 — 되돌릴 수 없어 보이�
     // 문구는 「비밀번호를 입력하십시오」인데 보조기술에는 토큰 칸이
     // 틀렸다고 통보되던 자리다. 화면 문구와 표식이 서로 다른 칸을 가리키면
     // 스크린리더 사용자는 표식을 믿는다.
-    expect(screen.getByLabelText('설치 토큰').getAttribute('aria-invalid')).not.toBe('true');
+    expect(screen.queryByLabelText('설치 토큰', { selector: 'input' })?.getAttribute('aria-invalid')).not.toBe('true');
     expect(screen.getByLabelText('비밀번호').getAttribute('aria-invalid')).toBe('true');
   });
 

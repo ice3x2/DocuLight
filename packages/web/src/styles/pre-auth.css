@@ -1,10 +1,104 @@
 [data-pre-auth='login'],
-[data-pre-auth='signup'] {
+[data-pre-auth='signup'],
+[data-pre-auth='install'] {
   box-sizing: border-box;
   display: flex;
   min-height: 100dvh;
   padding: var(--space-12) var(--space-6);
   background: var(--surface-app);
+}
+
+[data-pre-auth='install'] {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+[data-pre-auth='install'] > h1,
+[data-pre-auth='install'] > [data-install-wizard] {
+  box-sizing: border-box;
+  width: min(100%, 40rem);
+  margin-inline: auto;
+}
+
+[data-pre-auth='install'] > h1 {
+  margin-block: auto 0;
+  padding-bottom: var(--space-6);
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  line-height: 2.375rem;
+  font-weight: 700;
+}
+
+[data-pre-auth='install'] > [data-install-wizard] {
+  margin-block: 0 auto;
+}
+
+[data-install-wizard] {
+  display: grid;
+  gap: var(--space-6);
+}
+
+[data-install-progress] {
+  color: var(--text-muted);
+  font: 600 var(--text-help-size)/var(--text-help-line) var(--font-sans);
+}
+
+[data-install-wizard] section,
+[data-install-wizard] form {
+  min-width: 0;
+}
+
+[data-install-wizard] h2 {
+  margin: 0 0 var(--space-6);
+  font: 600 1.125rem/1.625rem var(--font-sans);
+}
+
+[data-install-wizard] [data-slot='field'] + [data-slot='field'] {
+  margin-top: var(--field-gap);
+}
+
+[data-install-wizard] [data-slot='input'],
+[data-install-wizard] [data-slot='select'] {
+  width: 100%;
+  min-height: var(--control-auth-height);
+}
+
+[data-install-workspace] {
+  display: grid;
+  gap: var(--space-1);
+}
+
+[data-install-workspace] span,
+[data-install-summary] dt {
+  color: var(--text-muted);
+  font: 600 var(--text-help-size)/var(--text-help-line) var(--font-sans);
+}
+
+[data-install-summary] {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+}
+
+[data-install-summary] div {
+  display: grid;
+  gap: var(--space-1);
+}
+
+[data-install-summary] dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+[data-install-actions] {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+[data-install-actions] [data-slot='button'] {
+  min-height: var(--control-auth-height);
 }
 
 [data-pre-auth-column] {

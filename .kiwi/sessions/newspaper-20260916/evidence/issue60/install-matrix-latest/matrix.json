@@ -1,0 +1,3582 @@
+{
+  "execution": "Playwright only; all Chromium processes launched and owned by this checker",
+  "environments": 12,
+  "evidence": [
+    {
+      "runner": "Playwright-owned fresh isolated Chromium",
+      "profile": "ephemeral context",
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "zoom": 1,
+      "dpr": {
+        "before": 1,
+        "after": 1
+      },
+      "stages": [
+        {
+          "step": "1",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "page": {
+            "clientWidth": 1280,
+            "scrollWidth": 1280
+          },
+          "wizard": {
+            "x": 320,
+            "y": 257,
+            "width": 640,
+            "height": 268,
+            "top": 257,
+            "right": 960,
+            "bottom": 525,
+            "left": 320
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 720,
+            "top": 0,
+            "right": 1280,
+            "bottom": 720,
+            "left": 0
+          },
+          "control": {
+            "x": 320,
+            "y": 377,
+            "width": 640,
+            "height": 40,
+            "top": 377,
+            "right": 960,
+            "bottom": 417,
+            "left": 320
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "1"
+        },
+        {
+          "step": "2",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "page": {
+            "clientWidth": 1280,
+            "scrollWidth": 1280
+          },
+          "wizard": {
+            "x": 320,
+            "y": 191,
+            "width": 640,
+            "height": 400,
+            "top": 191,
+            "right": 960,
+            "bottom": 591,
+            "left": 320
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 720,
+            "top": 0,
+            "right": 1280,
+            "bottom": 720,
+            "left": 0
+          },
+          "control": {
+            "x": 320,
+            "y": 311,
+            "width": 640,
+            "height": 40,
+            "top": 311,
+            "right": 960,
+            "bottom": 351,
+            "left": 320
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "2"
+        },
+        {
+          "step": "3",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "page": {
+            "clientWidth": 1280,
+            "scrollWidth": 1280
+          },
+          "wizard": {
+            "x": 320,
+            "y": 206,
+            "width": 640,
+            "height": 370,
+            "top": 206,
+            "right": 960,
+            "bottom": 576,
+            "left": 320
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 720,
+            "top": 0,
+            "right": 1280,
+            "bottom": 720,
+            "left": 0
+          },
+          "control": {
+            "x": 320,
+            "y": 384,
+            "width": 640,
+            "height": 40,
+            "top": 384,
+            "right": 960,
+            "bottom": 424,
+            "left": 320
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "3"
+        },
+        {
+          "step": "4",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "page": {
+            "clientWidth": 1280,
+            "scrollWidth": 1280
+          },
+          "wizard": {
+            "x": 320,
+            "y": 147,
+            "width": 640,
+            "height": 488,
+            "top": 147,
+            "right": 960,
+            "bottom": 635,
+            "left": 320
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 720,
+            "top": 0,
+            "right": 1280,
+            "bottom": 720,
+            "left": 0
+          },
+          "control": {
+            "x": 791.078125,
+            "y": 595,
+            "width": 62,
+            "height": 40,
+            "top": 595,
+            "right": 853.078125,
+            "bottom": 635,
+            "left": 791.078125
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "4"
+        },
+        {
+          "step": "complete",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "page": {
+            "clientWidth": 1280,
+            "scrollWidth": 1280
+          },
+          "wizard": {
+            "x": 320,
+            "y": 297,
+            "width": 640,
+            "height": 188,
+            "top": 297,
+            "right": 960,
+            "bottom": 485,
+            "left": 320
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 720,
+            "top": 0,
+            "right": 1280,
+            "bottom": 720,
+            "left": 0
+          },
+          "control": {
+            "x": 870,
+            "y": 445,
+            "width": 90,
+            "height": 40,
+            "top": 445,
+            "right": 960,
+            "bottom": 485,
+            "left": 870
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "complete"
+        }
+      ],
+      "focus": {
+        "outlineWidth": "2px",
+        "outlineOffset": "2px",
+        "outlineColor": "rgb(54, 91, 112)",
+        "background": "rgb(233, 231, 226)",
+        "bounds": {
+          "x": 320,
+          "y": 377,
+          "width": 640,
+          "height": 40,
+          "top": 377,
+          "right": 960,
+          "bottom": 417,
+          "left": 320
+        },
+        "extent": 4,
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "errors": {
+        "token": {
+          "text": "설치 토큰이 올바르지 않습니다. 서버 콘솔의 값을 다시 확인하십시오.",
+          "invalid": "true"
+        },
+        "passwordMismatch": {
+          "text": "비밀번호가 일치하지 않습니다.",
+          "step": "2",
+          "invalid": "true"
+        },
+        "commit": "기본 워크스페이스를 만들지 못했습니다. 서버 로그를 확인하십시오."
+      },
+      "inputs": {
+        "nativeAutofillTokenExtracted": true,
+        "syntheticCompositionNameExtracted": true,
+        "composingEnterSuppressed": true,
+        "deliberateEnterAdvanced": true
+      },
+      "completion": {
+        "visible": true,
+        "noBack": true,
+        "startHandoff": true
+      }
+    },
+    {
+      "runner": "Playwright-owned fresh isolated Chromium",
+      "profile": "ephemeral context",
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "zoom": 1,
+      "dpr": {
+        "before": 1,
+        "after": 1
+      },
+      "stages": [
+        {
+          "step": "1",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "page": {
+            "clientWidth": 1440,
+            "scrollWidth": 1440
+          },
+          "wizard": {
+            "x": 400,
+            "y": 347,
+            "width": 640,
+            "height": 268,
+            "top": 347,
+            "right": 1040,
+            "bottom": 615,
+            "left": 400
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 900,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "left": 0
+          },
+          "control": {
+            "x": 400,
+            "y": 467,
+            "width": 640,
+            "height": 40,
+            "top": 467,
+            "right": 1040,
+            "bottom": 507,
+            "left": 400
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "1"
+        },
+        {
+          "step": "2",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "page": {
+            "clientWidth": 1440,
+            "scrollWidth": 1440
+          },
+          "wizard": {
+            "x": 400,
+            "y": 281,
+            "width": 640,
+            "height": 400,
+            "top": 281,
+            "right": 1040,
+            "bottom": 681,
+            "left": 400
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 900,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "left": 0
+          },
+          "control": {
+            "x": 400,
+            "y": 401,
+            "width": 640,
+            "height": 40,
+            "top": 401,
+            "right": 1040,
+            "bottom": 441,
+            "left": 400
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "2"
+        },
+        {
+          "step": "3",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "page": {
+            "clientWidth": 1440,
+            "scrollWidth": 1440
+          },
+          "wizard": {
+            "x": 400,
+            "y": 296,
+            "width": 640,
+            "height": 370,
+            "top": 296,
+            "right": 1040,
+            "bottom": 666,
+            "left": 400
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 900,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "left": 0
+          },
+          "control": {
+            "x": 400,
+            "y": 474,
+            "width": 640,
+            "height": 40,
+            "top": 474,
+            "right": 1040,
+            "bottom": 514,
+            "left": 400
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "3"
+        },
+        {
+          "step": "4",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "page": {
+            "clientWidth": 1440,
+            "scrollWidth": 1440
+          },
+          "wizard": {
+            "x": 400,
+            "y": 237,
+            "width": 640,
+            "height": 488,
+            "top": 237,
+            "right": 1040,
+            "bottom": 725,
+            "left": 400
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 900,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "left": 0
+          },
+          "control": {
+            "x": 871.078125,
+            "y": 685,
+            "width": 62,
+            "height": 40,
+            "top": 685,
+            "right": 933.078125,
+            "bottom": 725,
+            "left": 871.078125
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "4"
+        },
+        {
+          "step": "complete",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "page": {
+            "clientWidth": 1440,
+            "scrollWidth": 1440
+          },
+          "wizard": {
+            "x": 400,
+            "y": 387,
+            "width": 640,
+            "height": 188,
+            "top": 387,
+            "right": 1040,
+            "bottom": 575,
+            "left": 400
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 900,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "left": 0
+          },
+          "control": {
+            "x": 950,
+            "y": 535,
+            "width": 90,
+            "height": 40,
+            "top": 535,
+            "right": 1040,
+            "bottom": 575,
+            "left": 950
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "complete"
+        }
+      ],
+      "focus": {
+        "outlineWidth": "2px",
+        "outlineOffset": "2px",
+        "outlineColor": "rgb(54, 91, 112)",
+        "background": "rgb(233, 231, 226)",
+        "bounds": {
+          "x": 400,
+          "y": 467,
+          "width": 640,
+          "height": 40,
+          "top": 467,
+          "right": 1040,
+          "bottom": 507,
+          "left": 400
+        },
+        "extent": 4,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      "errors": {
+        "token": {
+          "text": "설치 토큰이 올바르지 않습니다. 서버 콘솔의 값을 다시 확인하십시오.",
+          "invalid": "true"
+        },
+        "passwordMismatch": {
+          "text": "비밀번호가 일치하지 않습니다.",
+          "step": "2",
+          "invalid": "true"
+        },
+        "commit": "기본 워크스페이스를 만들지 못했습니다. 서버 로그를 확인하십시오."
+      },
+      "inputs": {
+        "nativeAutofillTokenExtracted": true,
+        "syntheticCompositionNameExtracted": true,
+        "composingEnterSuppressed": true,
+        "deliberateEnterAdvanced": true
+      },
+      "completion": {
+        "visible": true,
+        "noBack": true,
+        "startHandoff": true
+      }
+    },
+    {
+      "runner": "Playwright-owned fresh isolated Chromium",
+      "profile": "ephemeral context",
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 1,
+      "dpr": {
+        "before": 1,
+        "after": 1
+      },
+      "stages": [
+        {
+          "step": "1",
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          },
+          "page": {
+            "clientWidth": 1920,
+            "scrollWidth": 1920
+          },
+          "wizard": {
+            "x": 640,
+            "y": 437,
+            "width": 640,
+            "height": 268,
+            "top": 437,
+            "right": 1280,
+            "bottom": 705,
+            "left": 640
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080,
+            "top": 0,
+            "right": 1920,
+            "bottom": 1080,
+            "left": 0
+          },
+          "control": {
+            "x": 640,
+            "y": 557,
+            "width": 640,
+            "height": 40,
+            "top": 557,
+            "right": 1280,
+            "bottom": 597,
+            "left": 640
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "1"
+        },
+        {
+          "step": "2",
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          },
+          "page": {
+            "clientWidth": 1920,
+            "scrollWidth": 1920
+          },
+          "wizard": {
+            "x": 640,
+            "y": 371,
+            "width": 640,
+            "height": 400,
+            "top": 371,
+            "right": 1280,
+            "bottom": 771,
+            "left": 640
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080,
+            "top": 0,
+            "right": 1920,
+            "bottom": 1080,
+            "left": 0
+          },
+          "control": {
+            "x": 640,
+            "y": 491,
+            "width": 640,
+            "height": 40,
+            "top": 491,
+            "right": 1280,
+            "bottom": 531,
+            "left": 640
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "2"
+        },
+        {
+          "step": "3",
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          },
+          "page": {
+            "clientWidth": 1920,
+            "scrollWidth": 1920
+          },
+          "wizard": {
+            "x": 640,
+            "y": 386,
+            "width": 640,
+            "height": 370,
+            "top": 386,
+            "right": 1280,
+            "bottom": 756,
+            "left": 640
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080,
+            "top": 0,
+            "right": 1920,
+            "bottom": 1080,
+            "left": 0
+          },
+          "control": {
+            "x": 640,
+            "y": 564,
+            "width": 640,
+            "height": 40,
+            "top": 564,
+            "right": 1280,
+            "bottom": 604,
+            "left": 640
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "3"
+        },
+        {
+          "step": "4",
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          },
+          "page": {
+            "clientWidth": 1920,
+            "scrollWidth": 1920
+          },
+          "wizard": {
+            "x": 640,
+            "y": 327,
+            "width": 640,
+            "height": 488,
+            "top": 327,
+            "right": 1280,
+            "bottom": 815,
+            "left": 640
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080,
+            "top": 0,
+            "right": 1920,
+            "bottom": 1080,
+            "left": 0
+          },
+          "control": {
+            "x": 1111.078125,
+            "y": 775,
+            "width": 62,
+            "height": 40,
+            "top": 775,
+            "right": 1173.078125,
+            "bottom": 815,
+            "left": 1111.078125
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "4"
+        },
+        {
+          "step": "complete",
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          },
+          "page": {
+            "clientWidth": 1920,
+            "scrollWidth": 1920
+          },
+          "wizard": {
+            "x": 640,
+            "y": 477,
+            "width": 640,
+            "height": 188,
+            "top": 477,
+            "right": 1280,
+            "bottom": 665,
+            "left": 640
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080,
+            "top": 0,
+            "right": 1920,
+            "bottom": 1080,
+            "left": 0
+          },
+          "control": {
+            "x": 1190,
+            "y": 625,
+            "width": 90,
+            "height": 40,
+            "top": 625,
+            "right": 1280,
+            "bottom": 665,
+            "left": 1190
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "complete"
+        }
+      ],
+      "focus": {
+        "outlineWidth": "2px",
+        "outlineOffset": "2px",
+        "outlineColor": "rgb(54, 91, 112)",
+        "background": "rgb(233, 231, 226)",
+        "bounds": {
+          "x": 640,
+          "y": 557,
+          "width": 640,
+          "height": 40,
+          "top": 557,
+          "right": 1280,
+          "bottom": 597,
+          "left": 640
+        },
+        "extent": 4,
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      "errors": {
+        "token": {
+          "text": "설치 토큰이 올바르지 않습니다. 서버 콘솔의 값을 다시 확인하십시오.",
+          "invalid": "true"
+        },
+        "passwordMismatch": {
+          "text": "비밀번호가 일치하지 않습니다.",
+          "step": "2",
+          "invalid": "true"
+        },
+        "commit": "기본 워크스페이스를 만들지 못했습니다. 서버 로그를 확인하십시오."
+      },
+      "inputs": {
+        "nativeAutofillTokenExtracted": true,
+        "syntheticCompositionNameExtracted": true,
+        "composingEnterSuppressed": true,
+        "deliberateEnterAdvanced": true
+      },
+      "completion": {
+        "visible": true,
+        "noBack": true,
+        "startHandoff": true
+      }
+    },
+    {
+      "runner": "Playwright-owned fresh isolated Chromium",
+      "profile": "ephemeral context",
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "zoom": 1,
+      "dpr": {
+        "before": 1,
+        "after": 1
+      },
+      "stages": [
+        {
+          "step": "1",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "page": {
+            "clientWidth": 1280,
+            "scrollWidth": 1280
+          },
+          "wizard": {
+            "x": 320,
+            "y": 257,
+            "width": 640,
+            "height": 268,
+            "top": 257,
+            "right": 960,
+            "bottom": 525,
+            "left": 320
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 720,
+            "top": 0,
+            "right": 1280,
+            "bottom": 720,
+            "left": 0
+          },
+          "control": {
+            "x": 320,
+            "y": 377,
+            "width": 640,
+            "height": 40,
+            "top": 377,
+            "right": 960,
+            "bottom": 417,
+            "left": 320
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "1"
+        },
+        {
+          "step": "2",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "page": {
+            "clientWidth": 1280,
+            "scrollWidth": 1280
+          },
+          "wizard": {
+            "x": 320,
+            "y": 191,
+            "width": 640,
+            "height": 400,
+            "top": 191,
+            "right": 960,
+            "bottom": 591,
+            "left": 320
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 720,
+            "top": 0,
+            "right": 1280,
+            "bottom": 720,
+            "left": 0
+          },
+          "control": {
+            "x": 320,
+            "y": 311,
+            "width": 640,
+            "height": 40,
+            "top": 311,
+            "right": 960,
+            "bottom": 351,
+            "left": 320
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "2"
+        },
+        {
+          "step": "3",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "page": {
+            "clientWidth": 1280,
+            "scrollWidth": 1280
+          },
+          "wizard": {
+            "x": 320,
+            "y": 206,
+            "width": 640,
+            "height": 370,
+            "top": 206,
+            "right": 960,
+            "bottom": 576,
+            "left": 320
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 720,
+            "top": 0,
+            "right": 1280,
+            "bottom": 720,
+            "left": 0
+          },
+          "control": {
+            "x": 320,
+            "y": 384,
+            "width": 640,
+            "height": 40,
+            "top": 384,
+            "right": 960,
+            "bottom": 424,
+            "left": 320
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "3"
+        },
+        {
+          "step": "4",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "page": {
+            "clientWidth": 1280,
+            "scrollWidth": 1280
+          },
+          "wizard": {
+            "x": 320,
+            "y": 147,
+            "width": 640,
+            "height": 488,
+            "top": 147,
+            "right": 960,
+            "bottom": 635,
+            "left": 320
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 720,
+            "top": 0,
+            "right": 1280,
+            "bottom": 720,
+            "left": 0
+          },
+          "control": {
+            "x": 791.078125,
+            "y": 595,
+            "width": 62,
+            "height": 40,
+            "top": 595,
+            "right": 853.078125,
+            "bottom": 635,
+            "left": 791.078125
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "4"
+        },
+        {
+          "step": "complete",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "page": {
+            "clientWidth": 1280,
+            "scrollWidth": 1280
+          },
+          "wizard": {
+            "x": 320,
+            "y": 297,
+            "width": 640,
+            "height": 188,
+            "top": 297,
+            "right": 960,
+            "bottom": 485,
+            "left": 320
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 720,
+            "top": 0,
+            "right": 1280,
+            "bottom": 720,
+            "left": 0
+          },
+          "control": {
+            "x": 870,
+            "y": 445,
+            "width": 90,
+            "height": 40,
+            "top": 445,
+            "right": 960,
+            "bottom": 485,
+            "left": 870
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "complete"
+        }
+      ],
+      "focus": {
+        "outlineWidth": "2px",
+        "outlineOffset": "2px",
+        "outlineColor": "rgb(168, 196, 211)",
+        "background": "rgb(32, 34, 31)",
+        "bounds": {
+          "x": 320,
+          "y": 377,
+          "width": 640,
+          "height": 40,
+          "top": 377,
+          "right": 960,
+          "bottom": 417,
+          "left": 320
+        },
+        "extent": 4,
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        }
+      },
+      "errors": {
+        "token": {
+          "text": "설치 토큰이 올바르지 않습니다. 서버 콘솔의 값을 다시 확인하십시오.",
+          "invalid": "true"
+        },
+        "passwordMismatch": {
+          "text": "비밀번호가 일치하지 않습니다.",
+          "step": "2",
+          "invalid": "true"
+        },
+        "commit": "기본 워크스페이스를 만들지 못했습니다. 서버 로그를 확인하십시오."
+      },
+      "inputs": {
+        "nativeAutofillTokenExtracted": true,
+        "syntheticCompositionNameExtracted": true,
+        "composingEnterSuppressed": true,
+        "deliberateEnterAdvanced": true
+      },
+      "completion": {
+        "visible": true,
+        "noBack": true,
+        "startHandoff": true
+      }
+    },
+    {
+      "runner": "Playwright-owned fresh isolated Chromium",
+      "profile": "ephemeral context",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "zoom": 1,
+      "dpr": {
+        "before": 1,
+        "after": 1
+      },
+      "stages": [
+        {
+          "step": "1",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "page": {
+            "clientWidth": 1440,
+            "scrollWidth": 1440
+          },
+          "wizard": {
+            "x": 400,
+            "y": 347,
+            "width": 640,
+            "height": 268,
+            "top": 347,
+            "right": 1040,
+            "bottom": 615,
+            "left": 400
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 900,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "left": 0
+          },
+          "control": {
+            "x": 400,
+            "y": 467,
+            "width": 640,
+            "height": 40,
+            "top": 467,
+            "right": 1040,
+            "bottom": 507,
+            "left": 400
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "1"
+        },
+        {
+          "step": "2",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "page": {
+            "clientWidth": 1440,
+            "scrollWidth": 1440
+          },
+          "wizard": {
+            "x": 400,
+            "y": 281,
+            "width": 640,
+            "height": 400,
+            "top": 281,
+            "right": 1040,
+            "bottom": 681,
+            "left": 400
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 900,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "left": 0
+          },
+          "control": {
+            "x": 400,
+            "y": 401,
+            "width": 640,
+            "height": 40,
+            "top": 401,
+            "right": 1040,
+            "bottom": 441,
+            "left": 400
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "2"
+        },
+        {
+          "step": "3",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "page": {
+            "clientWidth": 1440,
+            "scrollWidth": 1440
+          },
+          "wizard": {
+            "x": 400,
+            "y": 296,
+            "width": 640,
+            "height": 370,
+            "top": 296,
+            "right": 1040,
+            "bottom": 666,
+            "left": 400
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 900,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "left": 0
+          },
+          "control": {
+            "x": 400,
+            "y": 474,
+            "width": 640,
+            "height": 40,
+            "top": 474,
+            "right": 1040,
+            "bottom": 514,
+            "left": 400
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "3"
+        },
+        {
+          "step": "4",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "page": {
+            "clientWidth": 1440,
+            "scrollWidth": 1440
+          },
+          "wizard": {
+            "x": 400,
+            "y": 237,
+            "width": 640,
+            "height": 488,
+            "top": 237,
+            "right": 1040,
+            "bottom": 725,
+            "left": 400
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 900,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "left": 0
+          },
+          "control": {
+            "x": 871.078125,
+            "y": 685,
+            "width": 62,
+            "height": 40,
+            "top": 685,
+            "right": 933.078125,
+            "bottom": 725,
+            "left": 871.078125
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "4"
+        },
+        {
+          "step": "complete",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "page": {
+            "clientWidth": 1440,
+            "scrollWidth": 1440
+          },
+          "wizard": {
+            "x": 400,
+            "y": 387,
+            "width": 640,
+            "height": 188,
+            "top": 387,
+            "right": 1040,
+            "bottom": 575,
+            "left": 400
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 900,
+            "top": 0,
+            "right": 1440,
+            "bottom": 900,
+            "left": 0
+          },
+          "control": {
+            "x": 950,
+            "y": 535,
+            "width": 90,
+            "height": 40,
+            "top": 535,
+            "right": 1040,
+            "bottom": 575,
+            "left": 950
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "complete"
+        }
+      ],
+      "focus": {
+        "outlineWidth": "2px",
+        "outlineOffset": "2px",
+        "outlineColor": "rgb(168, 196, 211)",
+        "background": "rgb(32, 34, 31)",
+        "bounds": {
+          "x": 400,
+          "y": 467,
+          "width": 640,
+          "height": 40,
+          "top": 467,
+          "right": 1040,
+          "bottom": 507,
+          "left": 400
+        },
+        "extent": 4,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      "errors": {
+        "token": {
+          "text": "설치 토큰이 올바르지 않습니다. 서버 콘솔의 값을 다시 확인하십시오.",
+          "invalid": "true"
+        },
+        "passwordMismatch": {
+          "text": "비밀번호가 일치하지 않습니다.",
+          "step": "2",
+          "invalid": "true"
+        },
+        "commit": "기본 워크스페이스를 만들지 못했습니다. 서버 로그를 확인하십시오."
+      },
+      "inputs": {
+        "nativeAutofillTokenExtracted": true,
+        "syntheticCompositionNameExtracted": true,
+        "composingEnterSuppressed": true,
+        "deliberateEnterAdvanced": true
+      },
+      "completion": {
+        "visible": true,
+        "noBack": true,
+        "startHandoff": true
+      }
+    },
+    {
+      "runner": "Playwright-owned fresh isolated Chromium",
+      "profile": "ephemeral context",
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 1,
+      "dpr": {
+        "before": 1,
+        "after": 1
+      },
+      "stages": [
+        {
+          "step": "1",
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          },
+          "page": {
+            "clientWidth": 1920,
+            "scrollWidth": 1920
+          },
+          "wizard": {
+            "x": 640,
+            "y": 437,
+            "width": 640,
+            "height": 268,
+            "top": 437,
+            "right": 1280,
+            "bottom": 705,
+            "left": 640
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080,
+            "top": 0,
+            "right": 1920,
+            "bottom": 1080,
+            "left": 0
+          },
+          "control": {
+            "x": 640,
+            "y": 557,
+            "width": 640,
+            "height": 40,
+            "top": 557,
+            "right": 1280,
+            "bottom": 597,
+            "left": 640
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "1"
+        },
+        {
+          "step": "2",
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          },
+          "page": {
+            "clientWidth": 1920,
+            "scrollWidth": 1920
+          },
+          "wizard": {
+            "x": 640,
+            "y": 371,
+            "width": 640,
+            "height": 400,
+            "top": 371,
+            "right": 1280,
+            "bottom": 771,
+            "left": 640
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080,
+            "top": 0,
+            "right": 1920,
+            "bottom": 1080,
+            "left": 0
+          },
+          "control": {
+            "x": 640,
+            "y": 491,
+            "width": 640,
+            "height": 40,
+            "top": 491,
+            "right": 1280,
+            "bottom": 531,
+            "left": 640
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "2"
+        },
+        {
+          "step": "3",
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          },
+          "page": {
+            "clientWidth": 1920,
+            "scrollWidth": 1920
+          },
+          "wizard": {
+            "x": 640,
+            "y": 386,
+            "width": 640,
+            "height": 370,
+            "top": 386,
+            "right": 1280,
+            "bottom": 756,
+            "left": 640
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080,
+            "top": 0,
+            "right": 1920,
+            "bottom": 1080,
+            "left": 0
+          },
+          "control": {
+            "x": 640,
+            "y": 564,
+            "width": 640,
+            "height": 40,
+            "top": 564,
+            "right": 1280,
+            "bottom": 604,
+            "left": 640
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "3"
+        },
+        {
+          "step": "4",
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          },
+          "page": {
+            "clientWidth": 1920,
+            "scrollWidth": 1920
+          },
+          "wizard": {
+            "x": 640,
+            "y": 327,
+            "width": 640,
+            "height": 488,
+            "top": 327,
+            "right": 1280,
+            "bottom": 815,
+            "left": 640
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080,
+            "top": 0,
+            "right": 1920,
+            "bottom": 1080,
+            "left": 0
+          },
+          "control": {
+            "x": 1111.078125,
+            "y": 775,
+            "width": 62,
+            "height": 40,
+            "top": 775,
+            "right": 1173.078125,
+            "bottom": 815,
+            "left": 1111.078125
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "4"
+        },
+        {
+          "step": "complete",
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          },
+          "page": {
+            "clientWidth": 1920,
+            "scrollWidth": 1920
+          },
+          "wizard": {
+            "x": 640,
+            "y": 477,
+            "width": 640,
+            "height": 188,
+            "top": 477,
+            "right": 1280,
+            "bottom": 665,
+            "left": 640
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080,
+            "top": 0,
+            "right": 1920,
+            "bottom": 1080,
+            "left": 0
+          },
+          "control": {
+            "x": 1190,
+            "y": 625,
+            "width": 90,
+            "height": 40,
+            "top": 625,
+            "right": 1280,
+            "bottom": 665,
+            "left": 1190
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "complete"
+        }
+      ],
+      "focus": {
+        "outlineWidth": "2px",
+        "outlineOffset": "2px",
+        "outlineColor": "rgb(168, 196, 211)",
+        "background": "rgb(32, 34, 31)",
+        "bounds": {
+          "x": 640,
+          "y": 557,
+          "width": 640,
+          "height": 40,
+          "top": 557,
+          "right": 1280,
+          "bottom": 597,
+          "left": 640
+        },
+        "extent": 4,
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      "errors": {
+        "token": {
+          "text": "설치 토큰이 올바르지 않습니다. 서버 콘솔의 값을 다시 확인하십시오.",
+          "invalid": "true"
+        },
+        "passwordMismatch": {
+          "text": "비밀번호가 일치하지 않습니다.",
+          "step": "2",
+          "invalid": "true"
+        },
+        "commit": "기본 워크스페이스를 만들지 못했습니다. 서버 로그를 확인하십시오."
+      },
+      "inputs": {
+        "nativeAutofillTokenExtracted": true,
+        "syntheticCompositionNameExtracted": true,
+        "composingEnterSuppressed": true,
+        "deliberateEnterAdvanced": true
+      },
+      "completion": {
+        "visible": true,
+        "noBack": true,
+        "startHandoff": true
+      }
+    },
+    {
+      "runner": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "profile": "C:\\Users\\beom\\AppData\\Local\\Temp\\doculight-issue60-zoom-o1sgjC",
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "zoom": 2,
+      "before": {
+        "width": 1280,
+        "height": 722,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 640,
+        "height": 361,
+        "dpr": 2.5
+      },
+      "dpr": {
+        "before": 1.25,
+        "after": 2.5
+      },
+      "stages": [
+        {
+          "step": "1",
+          "viewport": {
+            "width": 640,
+            "height": 361
+          },
+          "page": {
+            "clientWidth": 632,
+            "scrollWidth": 632
+          },
+          "wizard": {
+            "x": 24,
+            "y": 110,
+            "width": 584.4000244140625,
+            "height": 268,
+            "top": 110,
+            "right": 608.4000244140625,
+            "bottom": 378,
+            "left": 24
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 632.4000244140625,
+            "height": 426,
+            "top": 0,
+            "right": 632.4000244140625,
+            "bottom": 426,
+            "left": 0
+          },
+          "control": {
+            "x": 24,
+            "y": 230,
+            "width": 584.4000244140625,
+            "height": 40,
+            "top": 230,
+            "right": 608.4000244140625,
+            "bottom": 270,
+            "left": 24
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "1"
+        },
+        {
+          "step": "2",
+          "viewport": {
+            "width": 640,
+            "height": 361
+          },
+          "page": {
+            "clientWidth": 632,
+            "scrollWidth": 632
+          },
+          "wizard": {
+            "x": 24,
+            "y": 92.80000305175781,
+            "width": 584.4000244140625,
+            "height": 400,
+            "top": 92.80000305175781,
+            "right": 608.4000244140625,
+            "bottom": 492.8000030517578,
+            "left": 24
+          },
+          "main": {
+            "x": 0,
+            "y": -17.200000762939453,
+            "width": 632.4000244140625,
+            "height": 558,
+            "top": -17.200000762939453,
+            "right": 632.4000244140625,
+            "bottom": 540.7999992370605,
+            "left": 0
+          },
+          "control": {
+            "x": 24,
+            "y": 212.8000030517578,
+            "width": 584.4000244140625,
+            "height": 40,
+            "top": 212.8000030517578,
+            "right": 608.4000244140625,
+            "bottom": 252.8000030517578,
+            "left": 24
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "2"
+        },
+        {
+          "step": "3",
+          "viewport": {
+            "width": 640,
+            "height": 361
+          },
+          "page": {
+            "clientWidth": 632,
+            "scrollWidth": 632
+          },
+          "wizard": {
+            "x": 24,
+            "y": -42,
+            "width": 584.4000244140625,
+            "height": 370,
+            "top": -42,
+            "right": 608.4000244140625,
+            "bottom": 328,
+            "left": 24
+          },
+          "main": {
+            "x": 0,
+            "y": -152,
+            "width": 632.4000244140625,
+            "height": 528,
+            "top": -152,
+            "right": 632.4000244140625,
+            "bottom": 376,
+            "left": 0
+          },
+          "control": {
+            "x": 24,
+            "y": 136,
+            "width": 584.4000244140625,
+            "height": 40,
+            "top": 136,
+            "right": 608.4000244140625,
+            "bottom": 176,
+            "left": 24
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "3"
+        },
+        {
+          "step": "4",
+          "viewport": {
+            "width": 640,
+            "height": 361
+          },
+          "page": {
+            "clientWidth": 632,
+            "scrollWidth": 632
+          },
+          "wizard": {
+            "x": 24,
+            "y": 110,
+            "width": 584.4000244140625,
+            "height": 488,
+            "top": 110,
+            "right": 608.4000244140625,
+            "bottom": 598,
+            "left": 24
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 632.4000244140625,
+            "height": 646,
+            "top": 0,
+            "right": 632.4000244140625,
+            "bottom": 646,
+            "left": 0
+          },
+          "control": {
+            "x": 440.2749938964844,
+            "y": 558,
+            "width": 61.60000228881836,
+            "height": 40,
+            "top": 558,
+            "right": 501.87499618530273,
+            "bottom": 598,
+            "left": 440.2749938964844
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "4"
+        },
+        {
+          "step": "complete",
+          "viewport": {
+            "width": 640,
+            "height": 361
+          },
+          "page": {
+            "clientWidth": 640,
+            "scrollWidth": 640
+          },
+          "wizard": {
+            "x": 24,
+            "y": 117.4000015258789,
+            "width": 592,
+            "height": 188,
+            "top": 117.4000015258789,
+            "right": 616,
+            "bottom": 305.4000015258789,
+            "left": 24
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 640,
+            "height": 360.8000183105469,
+            "top": 0,
+            "right": 640,
+            "bottom": 360.8000183105469,
+            "left": 0
+          },
+          "control": {
+            "x": 526.4000244140625,
+            "y": 265.3999938964844,
+            "width": 89.5999984741211,
+            "height": 40,
+            "top": 265.3999938964844,
+            "right": 616.0000228881836,
+            "bottom": 305.3999938964844,
+            "left": 526.4000244140625
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "complete"
+        }
+      ],
+      "focus": {
+        "outlineWidth": "2px",
+        "outlineOffset": "2px",
+        "outlineColor": "rgb(54, 91, 112)",
+        "background": "rgb(233, 231, 226)",
+        "bounds": {
+          "x": 24,
+          "y": 230,
+          "width": 584.4000244140625,
+          "height": 40,
+          "top": 230,
+          "right": 608.4000244140625,
+          "bottom": 270,
+          "left": 24
+        },
+        "extent": 4,
+        "viewport": {
+          "width": 640,
+          "height": 361
+        }
+      },
+      "errors": {
+        "token": {
+          "text": "설치 토큰이 올바르지 않습니다. 서버 콘솔의 값을 다시 확인하십시오.",
+          "invalid": "true"
+        },
+        "passwordMismatch": {
+          "text": "비밀번호가 일치하지 않습니다.",
+          "step": "2",
+          "invalid": "true"
+        },
+        "commit": "기본 워크스페이스를 만들지 못했습니다. 서버 로그를 확인하십시오."
+      },
+      "inputs": {
+        "nativeAutofillTokenExtracted": true,
+        "syntheticCompositionNameExtracted": true,
+        "composingEnterSuppressed": true,
+        "deliberateEnterAdvanced": true
+      },
+      "completion": {
+        "visible": true,
+        "noBack": true,
+        "startHandoff": true
+      }
+    },
+    {
+      "runner": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "profile": "C:\\Users\\beom\\AppData\\Local\\Temp\\doculight-issue60-zoom-O6OmFC",
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "zoom": 2,
+      "before": {
+        "width": 1440,
+        "height": 902,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 720,
+        "height": 451,
+        "dpr": 2.5
+      },
+      "dpr": {
+        "before": 1.25,
+        "after": 2.5
+      },
+      "stages": [
+        {
+          "step": "1",
+          "viewport": {
+            "width": 720,
+            "height": 451
+          },
+          "page": {
+            "clientWidth": 720,
+            "scrollWidth": 720
+          },
+          "wizard": {
+            "x": 40,
+            "y": 122.4000015258789,
+            "width": 640,
+            "height": 268,
+            "top": 122.4000015258789,
+            "right": 680,
+            "bottom": 390.4000015258789,
+            "left": 40
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 720,
+            "height": 450.8000183105469,
+            "top": 0,
+            "right": 720,
+            "bottom": 450.8000183105469,
+            "left": 0
+          },
+          "control": {
+            "x": 40,
+            "y": 242.40000915527344,
+            "width": 640,
+            "height": 40,
+            "top": 242.40000915527344,
+            "right": 680,
+            "bottom": 282.40000915527344,
+            "left": 40
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "1"
+        },
+        {
+          "step": "2",
+          "viewport": {
+            "width": 720,
+            "height": 451
+          },
+          "page": {
+            "clientWidth": 712,
+            "scrollWidth": 712
+          },
+          "wizard": {
+            "x": 36.20000076293945,
+            "y": 110,
+            "width": 640,
+            "height": 400,
+            "top": 110,
+            "right": 676.2000007629395,
+            "bottom": 510,
+            "left": 36.20000076293945
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 712.4000244140625,
+            "height": 558,
+            "top": 0,
+            "right": 712.4000244140625,
+            "bottom": 558,
+            "left": 0
+          },
+          "control": {
+            "x": 36.20000076293945,
+            "y": 230,
+            "width": 640,
+            "height": 40,
+            "top": 230,
+            "right": 676.2000007629395,
+            "bottom": 270,
+            "left": 36.20000076293945
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "2"
+        },
+        {
+          "step": "3",
+          "viewport": {
+            "width": 720,
+            "height": 451
+          },
+          "page": {
+            "clientWidth": 712,
+            "scrollWidth": 712
+          },
+          "wizard": {
+            "x": 36.20000076293945,
+            "y": 32.79999923706055,
+            "width": 640,
+            "height": 370,
+            "top": 32.79999923706055,
+            "right": 676.2000007629395,
+            "bottom": 402.79999923706055,
+            "left": 36.20000076293945
+          },
+          "main": {
+            "x": 0,
+            "y": -77.20000457763672,
+            "width": 712.4000244140625,
+            "height": 528,
+            "top": -77.20000457763672,
+            "right": 712.4000244140625,
+            "bottom": 450.7999954223633,
+            "left": 0
+          },
+          "control": {
+            "x": 36.20000076293945,
+            "y": 210.8000030517578,
+            "width": 640,
+            "height": 40,
+            "top": 210.8000030517578,
+            "right": 676.2000007629395,
+            "bottom": 250.8000030517578,
+            "left": 36.20000076293945
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "3"
+        },
+        {
+          "step": "4",
+          "viewport": {
+            "width": 720,
+            "height": 451
+          },
+          "page": {
+            "clientWidth": 712,
+            "scrollWidth": 712
+          },
+          "wizard": {
+            "x": 36.20000076293945,
+            "y": 8.800000190734863,
+            "width": 640,
+            "height": 488,
+            "top": 8.800000190734863,
+            "right": 676.2000007629395,
+            "bottom": 496.80000019073486,
+            "left": 36.20000076293945
+          },
+          "main": {
+            "x": 0,
+            "y": -101.20000457763672,
+            "width": 712.4000244140625,
+            "height": 646,
+            "top": -101.20000457763672,
+            "right": 712.4000244140625,
+            "bottom": 544.7999954223633,
+            "left": 0
+          },
+          "control": {
+            "x": 508.07501220703125,
+            "y": 456.8000183105469,
+            "width": 61.60000228881836,
+            "height": 40,
+            "top": 456.8000183105469,
+            "right": 569.6750144958496,
+            "bottom": 496.8000183105469,
+            "left": 508.07501220703125
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "4"
+        },
+        {
+          "step": "complete",
+          "viewport": {
+            "width": 720,
+            "height": 451
+          },
+          "page": {
+            "clientWidth": 720,
+            "scrollWidth": 720
+          },
+          "wizard": {
+            "x": 40,
+            "y": 162.40000915527344,
+            "width": 640,
+            "height": 188,
+            "top": 162.40000915527344,
+            "right": 680,
+            "bottom": 350.40000915527344,
+            "left": 40
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 720,
+            "height": 450.8000183105469,
+            "top": 0,
+            "right": 720,
+            "bottom": 450.8000183105469,
+            "left": 0
+          },
+          "control": {
+            "x": 590.4000244140625,
+            "y": 310.3999938964844,
+            "width": 89.5999984741211,
+            "height": 40,
+            "top": 310.3999938964844,
+            "right": 680.0000228881836,
+            "bottom": 350.3999938964844,
+            "left": 590.4000244140625
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "complete"
+        }
+      ],
+      "focus": {
+        "outlineWidth": "2px",
+        "outlineOffset": "2px",
+        "outlineColor": "rgb(54, 91, 112)",
+        "background": "rgb(233, 231, 226)",
+        "bounds": {
+          "x": 40,
+          "y": 242.40000915527344,
+          "width": 640,
+          "height": 40,
+          "top": 242.40000915527344,
+          "right": 680,
+          "bottom": 282.40000915527344,
+          "left": 40
+        },
+        "extent": 4,
+        "viewport": {
+          "width": 720,
+          "height": 451
+        }
+      },
+      "errors": {
+        "token": {
+          "text": "설치 토큰이 올바르지 않습니다. 서버 콘솔의 값을 다시 확인하십시오.",
+          "invalid": "true"
+        },
+        "passwordMismatch": {
+          "text": "비밀번호가 일치하지 않습니다.",
+          "step": "2",
+          "invalid": "true"
+        },
+        "commit": "기본 워크스페이스를 만들지 못했습니다. 서버 로그를 확인하십시오."
+      },
+      "inputs": {
+        "nativeAutofillTokenExtracted": true,
+        "syntheticCompositionNameExtracted": true,
+        "composingEnterSuppressed": true,
+        "deliberateEnterAdvanced": true
+      },
+      "completion": {
+        "visible": true,
+        "noBack": true,
+        "startHandoff": true
+      }
+    },
+    {
+      "runner": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "profile": "C:\\Users\\beom\\AppData\\Local\\Temp\\doculight-issue60-zoom-DY3IzC",
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 2,
+      "before": {
+        "width": 1920,
+        "height": 1082,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 960,
+        "height": 541,
+        "dpr": 2.5
+      },
+      "dpr": {
+        "before": 1.25,
+        "after": 2.5
+      },
+      "stages": [
+        {
+          "step": "1",
+          "viewport": {
+            "width": 960,
+            "height": 541
+          },
+          "page": {
+            "clientWidth": 960,
+            "scrollWidth": 960
+          },
+          "wizard": {
+            "x": 160,
+            "y": 167.40000915527344,
+            "width": 640,
+            "height": 268,
+            "top": 167.40000915527344,
+            "right": 800,
+            "bottom": 435.40000915527344,
+            "left": 160
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 960,
+            "height": 540.7999877929688,
+            "top": 0,
+            "right": 960,
+            "bottom": 540.7999877929688,
+            "left": 0
+          },
+          "control": {
+            "x": 160,
+            "y": 287.3999938964844,
+            "width": 640,
+            "height": 40,
+            "top": 287.3999938964844,
+            "right": 800,
+            "bottom": 327.3999938964844,
+            "left": 160
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "1"
+        },
+        {
+          "step": "2",
+          "viewport": {
+            "width": 960,
+            "height": 541
+          },
+          "page": {
+            "clientWidth": 952,
+            "scrollWidth": 952
+          },
+          "wizard": {
+            "x": 156.1999969482422,
+            "y": 110,
+            "width": 640,
+            "height": 400,
+            "top": 110,
+            "right": 796.1999969482422,
+            "bottom": 510,
+            "left": 156.1999969482422
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 952.4000244140625,
+            "height": 558,
+            "top": 0,
+            "right": 952.4000244140625,
+            "bottom": 558,
+            "left": 0
+          },
+          "control": {
+            "x": 156.1999969482422,
+            "y": 230,
+            "width": 640,
+            "height": 40,
+            "top": 230,
+            "right": 796.1999969482422,
+            "bottom": 270,
+            "left": 156.1999969482422
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "2"
+        },
+        {
+          "step": "3",
+          "viewport": {
+            "width": 960,
+            "height": 541
+          },
+          "page": {
+            "clientWidth": 960,
+            "scrollWidth": 960
+          },
+          "wizard": {
+            "x": 160,
+            "y": 116.4000015258789,
+            "width": 640,
+            "height": 370,
+            "top": 116.4000015258789,
+            "right": 800,
+            "bottom": 486.4000015258789,
+            "left": 160
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 960,
+            "height": 540.7999877929688,
+            "top": 0,
+            "right": 960,
+            "bottom": 540.7999877929688,
+            "left": 0
+          },
+          "control": {
+            "x": 160,
+            "y": 294.3999938964844,
+            "width": 640,
+            "height": 40,
+            "top": 294.3999938964844,
+            "right": 800,
+            "bottom": 334.3999938964844,
+            "left": 160
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "3"
+        },
+        {
+          "step": "4",
+          "viewport": {
+            "width": 960,
+            "height": 541
+          },
+          "page": {
+            "clientWidth": 952,
+            "scrollWidth": 952
+          },
+          "wizard": {
+            "x": 156.1999969482422,
+            "y": 98.80000305175781,
+            "width": 640,
+            "height": 488,
+            "top": 98.80000305175781,
+            "right": 796.1999969482422,
+            "bottom": 586.8000030517578,
+            "left": 156.1999969482422
+          },
+          "main": {
+            "x": 0,
+            "y": -11.199999809265137,
+            "width": 952.4000244140625,
+            "height": 646,
+            "top": -11.199999809265137,
+            "right": 952.4000244140625,
+            "bottom": 634.8000001907349,
+            "left": 0
+          },
+          "control": {
+            "x": 628.0750122070312,
+            "y": 546.7999877929688,
+            "width": 61.60000228881836,
+            "height": 40,
+            "top": 546.7999877929688,
+            "right": 689.6750144958496,
+            "bottom": 586.7999877929688,
+            "left": 628.0750122070312
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "4"
+        },
+        {
+          "step": "complete",
+          "viewport": {
+            "width": 960,
+            "height": 541
+          },
+          "page": {
+            "clientWidth": 960,
+            "scrollWidth": 960
+          },
+          "wizard": {
+            "x": 160,
+            "y": 207.40000915527344,
+            "width": 640,
+            "height": 188,
+            "top": 207.40000915527344,
+            "right": 800,
+            "bottom": 395.40000915527344,
+            "left": 160
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 960,
+            "height": 540.7999877929688,
+            "top": 0,
+            "right": 960,
+            "bottom": 540.7999877929688,
+            "left": 0
+          },
+          "control": {
+            "x": 710.4000244140625,
+            "y": 355.3999938964844,
+            "width": 89.5999984741211,
+            "height": 40,
+            "top": 355.3999938964844,
+            "right": 800.0000228881836,
+            "bottom": 395.3999938964844,
+            "left": 710.4000244140625
+          },
+          "colors": {
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(233, 231, 226)"
+          },
+          "theme": "light",
+          "expectedStep": "complete"
+        }
+      ],
+      "focus": {
+        "outlineWidth": "2px",
+        "outlineOffset": "2px",
+        "outlineColor": "rgb(54, 91, 112)",
+        "background": "rgb(233, 231, 226)",
+        "bounds": {
+          "x": 160,
+          "y": 287.3999938964844,
+          "width": 640,
+          "height": 40,
+          "top": 287.3999938964844,
+          "right": 800,
+          "bottom": 327.3999938964844,
+          "left": 160
+        },
+        "extent": 4,
+        "viewport": {
+          "width": 960,
+          "height": 541
+        }
+      },
+      "errors": {
+        "token": {
+          "text": "설치 토큰이 올바르지 않습니다. 서버 콘솔의 값을 다시 확인하십시오.",
+          "invalid": "true"
+        },
+        "passwordMismatch": {
+          "text": "비밀번호가 일치하지 않습니다.",
+          "step": "2",
+          "invalid": "true"
+        },
+        "commit": "기본 워크스페이스를 만들지 못했습니다. 서버 로그를 확인하십시오."
+      },
+      "inputs": {
+        "nativeAutofillTokenExtracted": true,
+        "syntheticCompositionNameExtracted": true,
+        "composingEnterSuppressed": true,
+        "deliberateEnterAdvanced": true
+      },
+      "completion": {
+        "visible": true,
+        "noBack": true,
+        "startHandoff": true
+      }
+    },
+    {
+      "runner": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "profile": "C:\\Users\\beom\\AppData\\Local\\Temp\\doculight-issue60-zoom-IWbNYv",
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "zoom": 2,
+      "before": {
+        "width": 1280,
+        "height": 722,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 640,
+        "height": 361,
+        "dpr": 2.5
+      },
+      "dpr": {
+        "before": 1.25,
+        "after": 2.5
+      },
+      "stages": [
+        {
+          "step": "1",
+          "viewport": {
+            "width": 640,
+            "height": 361
+          },
+          "page": {
+            "clientWidth": 632,
+            "scrollWidth": 632
+          },
+          "wizard": {
+            "x": 24,
+            "y": 110,
+            "width": 584.4000244140625,
+            "height": 268,
+            "top": 110,
+            "right": 608.4000244140625,
+            "bottom": 378,
+            "left": 24
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 632.4000244140625,
+            "height": 426,
+            "top": 0,
+            "right": 632.4000244140625,
+            "bottom": 426,
+            "left": 0
+          },
+          "control": {
+            "x": 24,
+            "y": 230,
+            "width": 584.4000244140625,
+            "height": 40,
+            "top": 230,
+            "right": 608.4000244140625,
+            "bottom": 270,
+            "left": 24
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "1"
+        },
+        {
+          "step": "2",
+          "viewport": {
+            "width": 640,
+            "height": 361
+          },
+          "page": {
+            "clientWidth": 632,
+            "scrollWidth": 632
+          },
+          "wizard": {
+            "x": 24,
+            "y": 92.80000305175781,
+            "width": 584.4000244140625,
+            "height": 400,
+            "top": 92.80000305175781,
+            "right": 608.4000244140625,
+            "bottom": 492.8000030517578,
+            "left": 24
+          },
+          "main": {
+            "x": 0,
+            "y": -17.200000762939453,
+            "width": 632.4000244140625,
+            "height": 558,
+            "top": -17.200000762939453,
+            "right": 632.4000244140625,
+            "bottom": 540.7999992370605,
+            "left": 0
+          },
+          "control": {
+            "x": 24,
+            "y": 212.8000030517578,
+            "width": 584.4000244140625,
+            "height": 40,
+            "top": 212.8000030517578,
+            "right": 608.4000244140625,
+            "bottom": 252.8000030517578,
+            "left": 24
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "2"
+        },
+        {
+          "step": "3",
+          "viewport": {
+            "width": 640,
+            "height": 361
+          },
+          "page": {
+            "clientWidth": 632,
+            "scrollWidth": 632
+          },
+          "wizard": {
+            "x": 24,
+            "y": -42,
+            "width": 584.4000244140625,
+            "height": 370,
+            "top": -42,
+            "right": 608.4000244140625,
+            "bottom": 328,
+            "left": 24
+          },
+          "main": {
+            "x": 0,
+            "y": -152,
+            "width": 632.4000244140625,
+            "height": 528,
+            "top": -152,
+            "right": 632.4000244140625,
+            "bottom": 376,
+            "left": 0
+          },
+          "control": {
+            "x": 24,
+            "y": 136,
+            "width": 584.4000244140625,
+            "height": 40,
+            "top": 136,
+            "right": 608.4000244140625,
+            "bottom": 176,
+            "left": 24
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "3"
+        },
+        {
+          "step": "4",
+          "viewport": {
+            "width": 640,
+            "height": 361
+          },
+          "page": {
+            "clientWidth": 632,
+            "scrollWidth": 632
+          },
+          "wizard": {
+            "x": 24,
+            "y": 110,
+            "width": 584.4000244140625,
+            "height": 488,
+            "top": 110,
+            "right": 608.4000244140625,
+            "bottom": 598,
+            "left": 24
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 632.4000244140625,
+            "height": 646,
+            "top": 0,
+            "right": 632.4000244140625,
+            "bottom": 646,
+            "left": 0
+          },
+          "control": {
+            "x": 440.2749938964844,
+            "y": 558,
+            "width": 61.60000228881836,
+            "height": 40,
+            "top": 558,
+            "right": 501.87499618530273,
+            "bottom": 598,
+            "left": 440.2749938964844
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "4"
+        },
+        {
+          "step": "complete",
+          "viewport": {
+            "width": 640,
+            "height": 361
+          },
+          "page": {
+            "clientWidth": 640,
+            "scrollWidth": 640
+          },
+          "wizard": {
+            "x": 24,
+            "y": 117.4000015258789,
+            "width": 592,
+            "height": 188,
+            "top": 117.4000015258789,
+            "right": 616,
+            "bottom": 305.4000015258789,
+            "left": 24
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 640,
+            "height": 360.8000183105469,
+            "top": 0,
+            "right": 640,
+            "bottom": 360.8000183105469,
+            "left": 0
+          },
+          "control": {
+            "x": 526.4000244140625,
+            "y": 265.3999938964844,
+            "width": 89.5999984741211,
+            "height": 40,
+            "top": 265.3999938964844,
+            "right": 616.0000228881836,
+            "bottom": 305.3999938964844,
+            "left": 526.4000244140625
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "complete"
+        }
+      ],
+      "focus": {
+        "outlineWidth": "2px",
+        "outlineOffset": "2px",
+        "outlineColor": "rgb(168, 196, 211)",
+        "background": "rgb(32, 34, 31)",
+        "bounds": {
+          "x": 24,
+          "y": 230,
+          "width": 584.4000244140625,
+          "height": 40,
+          "top": 230,
+          "right": 608.4000244140625,
+          "bottom": 270,
+          "left": 24
+        },
+        "extent": 4,
+        "viewport": {
+          "width": 640,
+          "height": 361
+        }
+      },
+      "errors": {
+        "token": {
+          "text": "설치 토큰이 올바르지 않습니다. 서버 콘솔의 값을 다시 확인하십시오.",
+          "invalid": "true"
+        },
+        "passwordMismatch": {
+          "text": "비밀번호가 일치하지 않습니다.",
+          "step": "2",
+          "invalid": "true"
+        },
+        "commit": "기본 워크스페이스를 만들지 못했습니다. 서버 로그를 확인하십시오."
+      },
+      "inputs": {
+        "nativeAutofillTokenExtracted": true,
+        "syntheticCompositionNameExtracted": true,
+        "composingEnterSuppressed": true,
+        "deliberateEnterAdvanced": true
+      },
+      "completion": {
+        "visible": true,
+        "noBack": true,
+        "startHandoff": true
+      }
+    },
+    {
+      "runner": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "profile": "C:\\Users\\beom\\AppData\\Local\\Temp\\doculight-issue60-zoom-rgJEqo",
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "zoom": 2,
+      "before": {
+        "width": 1440,
+        "height": 902,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 720,
+        "height": 451,
+        "dpr": 2.5
+      },
+      "dpr": {
+        "before": 1.25,
+        "after": 2.5
+      },
+      "stages": [
+        {
+          "step": "1",
+          "viewport": {
+            "width": 720,
+            "height": 451
+          },
+          "page": {
+            "clientWidth": 720,
+            "scrollWidth": 720
+          },
+          "wizard": {
+            "x": 40,
+            "y": 122.4000015258789,
+            "width": 640,
+            "height": 268,
+            "top": 122.4000015258789,
+            "right": 680,
+            "bottom": 390.4000015258789,
+            "left": 40
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 720,
+            "height": 450.8000183105469,
+            "top": 0,
+            "right": 720,
+            "bottom": 450.8000183105469,
+            "left": 0
+          },
+          "control": {
+            "x": 40,
+            "y": 242.40000915527344,
+            "width": 640,
+            "height": 40,
+            "top": 242.40000915527344,
+            "right": 680,
+            "bottom": 282.40000915527344,
+            "left": 40
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "1"
+        },
+        {
+          "step": "2",
+          "viewport": {
+            "width": 720,
+            "height": 451
+          },
+          "page": {
+            "clientWidth": 712,
+            "scrollWidth": 712
+          },
+          "wizard": {
+            "x": 36.20000076293945,
+            "y": 110,
+            "width": 640,
+            "height": 400,
+            "top": 110,
+            "right": 676.2000007629395,
+            "bottom": 510,
+            "left": 36.20000076293945
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 712.4000244140625,
+            "height": 558,
+            "top": 0,
+            "right": 712.4000244140625,
+            "bottom": 558,
+            "left": 0
+          },
+          "control": {
+            "x": 36.20000076293945,
+            "y": 230,
+            "width": 640,
+            "height": 40,
+            "top": 230,
+            "right": 676.2000007629395,
+            "bottom": 270,
+            "left": 36.20000076293945
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "2"
+        },
+        {
+          "step": "3",
+          "viewport": {
+            "width": 720,
+            "height": 451
+          },
+          "page": {
+            "clientWidth": 712,
+            "scrollWidth": 712
+          },
+          "wizard": {
+            "x": 36.20000076293945,
+            "y": 32.79999923706055,
+            "width": 640,
+            "height": 370,
+            "top": 32.79999923706055,
+            "right": 676.2000007629395,
+            "bottom": 402.79999923706055,
+            "left": 36.20000076293945
+          },
+          "main": {
+            "x": 0,
+            "y": -77.20000457763672,
+            "width": 712.4000244140625,
+            "height": 528,
+            "top": -77.20000457763672,
+            "right": 712.4000244140625,
+            "bottom": 450.7999954223633,
+            "left": 0
+          },
+          "control": {
+            "x": 36.20000076293945,
+            "y": 210.8000030517578,
+            "width": 640,
+            "height": 40,
+            "top": 210.8000030517578,
+            "right": 676.2000007629395,
+            "bottom": 250.8000030517578,
+            "left": 36.20000076293945
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "3"
+        },
+        {
+          "step": "4",
+          "viewport": {
+            "width": 720,
+            "height": 451
+          },
+          "page": {
+            "clientWidth": 712,
+            "scrollWidth": 712
+          },
+          "wizard": {
+            "x": 36.20000076293945,
+            "y": 8.800000190734863,
+            "width": 640,
+            "height": 488,
+            "top": 8.800000190734863,
+            "right": 676.2000007629395,
+            "bottom": 496.80000019073486,
+            "left": 36.20000076293945
+          },
+          "main": {
+            "x": 0,
+            "y": -101.20000457763672,
+            "width": 712.4000244140625,
+            "height": 646,
+            "top": -101.20000457763672,
+            "right": 712.4000244140625,
+            "bottom": 544.7999954223633,
+            "left": 0
+          },
+          "control": {
+            "x": 508.07501220703125,
+            "y": 456.8000183105469,
+            "width": 61.60000228881836,
+            "height": 40,
+            "top": 456.8000183105469,
+            "right": 569.6750144958496,
+            "bottom": 496.8000183105469,
+            "left": 508.07501220703125
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "4"
+        },
+        {
+          "step": "complete",
+          "viewport": {
+            "width": 720,
+            "height": 451
+          },
+          "page": {
+            "clientWidth": 720,
+            "scrollWidth": 720
+          },
+          "wizard": {
+            "x": 40,
+            "y": 162.40000915527344,
+            "width": 640,
+            "height": 188,
+            "top": 162.40000915527344,
+            "right": 680,
+            "bottom": 350.40000915527344,
+            "left": 40
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 720,
+            "height": 450.8000183105469,
+            "top": 0,
+            "right": 720,
+            "bottom": 450.8000183105469,
+            "left": 0
+          },
+          "control": {
+            "x": 590.4000244140625,
+            "y": 310.3999938964844,
+            "width": 89.5999984741211,
+            "height": 40,
+            "top": 310.3999938964844,
+            "right": 680.0000228881836,
+            "bottom": 350.3999938964844,
+            "left": 590.4000244140625
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "complete"
+        }
+      ],
+      "focus": {
+        "outlineWidth": "2px",
+        "outlineOffset": "2px",
+        "outlineColor": "rgb(168, 196, 211)",
+        "background": "rgb(32, 34, 31)",
+        "bounds": {
+          "x": 40,
+          "y": 242.40000915527344,
+          "width": 640,
+          "height": 40,
+          "top": 242.40000915527344,
+          "right": 680,
+          "bottom": 282.40000915527344,
+          "left": 40
+        },
+        "extent": 4,
+        "viewport": {
+          "width": 720,
+          "height": 451
+        }
+      },
+      "errors": {
+        "token": {
+          "text": "설치 토큰이 올바르지 않습니다. 서버 콘솔의 값을 다시 확인하십시오.",
+          "invalid": "true"
+        },
+        "passwordMismatch": {
+          "text": "비밀번호가 일치하지 않습니다.",
+          "step": "2",
+          "invalid": "true"
+        },
+        "commit": "기본 워크스페이스를 만들지 못했습니다. 서버 로그를 확인하십시오."
+      },
+      "inputs": {
+        "nativeAutofillTokenExtracted": true,
+        "syntheticCompositionNameExtracted": true,
+        "composingEnterSuppressed": true,
+        "deliberateEnterAdvanced": true
+      },
+      "completion": {
+        "visible": true,
+        "noBack": true,
+        "startHandoff": true
+      }
+    },
+    {
+      "runner": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "profile": "C:\\Users\\beom\\AppData\\Local\\Temp\\doculight-issue60-zoom-xqQlIP",
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 2,
+      "before": {
+        "width": 1920,
+        "height": 1082,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 960,
+        "height": 541,
+        "dpr": 2.5
+      },
+      "dpr": {
+        "before": 1.25,
+        "after": 2.5
+      },
+      "stages": [
+        {
+          "step": "1",
+          "viewport": {
+            "width": 960,
+            "height": 541
+          },
+          "page": {
+            "clientWidth": 960,
+            "scrollWidth": 960
+          },
+          "wizard": {
+            "x": 160,
+            "y": 167.40000915527344,
+            "width": 640,
+            "height": 268,
+            "top": 167.40000915527344,
+            "right": 800,
+            "bottom": 435.40000915527344,
+            "left": 160
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 960,
+            "height": 540.7999877929688,
+            "top": 0,
+            "right": 960,
+            "bottom": 540.7999877929688,
+            "left": 0
+          },
+          "control": {
+            "x": 160,
+            "y": 287.3999938964844,
+            "width": 640,
+            "height": 40,
+            "top": 287.3999938964844,
+            "right": 800,
+            "bottom": 327.3999938964844,
+            "left": 160
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "1"
+        },
+        {
+          "step": "2",
+          "viewport": {
+            "width": 960,
+            "height": 541
+          },
+          "page": {
+            "clientWidth": 952,
+            "scrollWidth": 952
+          },
+          "wizard": {
+            "x": 156.1999969482422,
+            "y": 110,
+            "width": 640,
+            "height": 400,
+            "top": 110,
+            "right": 796.1999969482422,
+            "bottom": 510,
+            "left": 156.1999969482422
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 952.4000244140625,
+            "height": 558,
+            "top": 0,
+            "right": 952.4000244140625,
+            "bottom": 558,
+            "left": 0
+          },
+          "control": {
+            "x": 156.1999969482422,
+            "y": 230,
+            "width": 640,
+            "height": 40,
+            "top": 230,
+            "right": 796.1999969482422,
+            "bottom": 270,
+            "left": 156.1999969482422
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "2"
+        },
+        {
+          "step": "3",
+          "viewport": {
+            "width": 960,
+            "height": 541
+          },
+          "page": {
+            "clientWidth": 960,
+            "scrollWidth": 960
+          },
+          "wizard": {
+            "x": 160,
+            "y": 116.4000015258789,
+            "width": 640,
+            "height": 370,
+            "top": 116.4000015258789,
+            "right": 800,
+            "bottom": 486.4000015258789,
+            "left": 160
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 960,
+            "height": 540.7999877929688,
+            "top": 0,
+            "right": 960,
+            "bottom": 540.7999877929688,
+            "left": 0
+          },
+          "control": {
+            "x": 160,
+            "y": 294.3999938964844,
+            "width": 640,
+            "height": 40,
+            "top": 294.3999938964844,
+            "right": 800,
+            "bottom": 334.3999938964844,
+            "left": 160
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "3"
+        },
+        {
+          "step": "4",
+          "viewport": {
+            "width": 960,
+            "height": 541
+          },
+          "page": {
+            "clientWidth": 952,
+            "scrollWidth": 952
+          },
+          "wizard": {
+            "x": 156.1999969482422,
+            "y": 98.80000305175781,
+            "width": 640,
+            "height": 488,
+            "top": 98.80000305175781,
+            "right": 796.1999969482422,
+            "bottom": 586.8000030517578,
+            "left": 156.1999969482422
+          },
+          "main": {
+            "x": 0,
+            "y": -11.199999809265137,
+            "width": 952.4000244140625,
+            "height": 646,
+            "top": -11.199999809265137,
+            "right": 952.4000244140625,
+            "bottom": 634.8000001907349,
+            "left": 0
+          },
+          "control": {
+            "x": 628.0750122070312,
+            "y": 546.7999877929688,
+            "width": 61.60000228881836,
+            "height": 40,
+            "top": 546.7999877929688,
+            "right": 689.6750144958496,
+            "bottom": 586.7999877929688,
+            "left": 628.0750122070312
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "4"
+        },
+        {
+          "step": "complete",
+          "viewport": {
+            "width": 960,
+            "height": 541
+          },
+          "page": {
+            "clientWidth": 960,
+            "scrollWidth": 960
+          },
+          "wizard": {
+            "x": 160,
+            "y": 207.40000915527344,
+            "width": 640,
+            "height": 188,
+            "top": 207.40000915527344,
+            "right": 800,
+            "bottom": 395.40000915527344,
+            "left": 160
+          },
+          "main": {
+            "x": 0,
+            "y": 0,
+            "width": 960,
+            "height": 540.7999877929688,
+            "top": 0,
+            "right": 960,
+            "bottom": 540.7999877929688,
+            "left": 0
+          },
+          "control": {
+            "x": 710.4000244140625,
+            "y": 355.3999938964844,
+            "width": 89.5999984741211,
+            "height": 40,
+            "top": 355.3999938964844,
+            "right": 800.0000228881836,
+            "bottom": 395.3999938964844,
+            "left": 710.4000244140625
+          },
+          "colors": {
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(32, 34, 31)"
+          },
+          "theme": "dark",
+          "expectedStep": "complete"
+        }
+      ],
+      "focus": {
+        "outlineWidth": "2px",
+        "outlineOffset": "2px",
+        "outlineColor": "rgb(168, 196, 211)",
+        "background": "rgb(32, 34, 31)",
+        "bounds": {
+          "x": 160,
+          "y": 287.3999938964844,
+          "width": 640,
+          "height": 40,
+          "top": 287.3999938964844,
+          "right": 800,
+          "bottom": 327.3999938964844,
+          "left": 160
+        },
+        "extent": 4,
+        "viewport": {
+          "width": 960,
+          "height": 541
+        }
+      },
+      "errors": {
+        "token": {
+          "text": "설치 토큰이 올바르지 않습니다. 서버 콘솔의 값을 다시 확인하십시오.",
+          "invalid": "true"
+        },
+        "passwordMismatch": {
+          "text": "비밀번호가 일치하지 않습니다.",
+          "step": "2",
+          "invalid": "true"
+        },
+        "commit": "기본 워크스페이스를 만들지 못했습니다. 서버 로그를 확인하십시오."
+      },
+      "inputs": {
+        "nativeAutofillTokenExtracted": true,
+        "syntheticCompositionNameExtracted": true,
+        "composingEnterSuppressed": true,
+        "deliberateEnterAdvanced": true
+      },
+      "completion": {
+        "visible": true,
+        "noBack": true,
+        "startHandoff": true
+      }
+    }
+  ]
+}

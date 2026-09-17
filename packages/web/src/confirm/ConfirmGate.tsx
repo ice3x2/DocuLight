@@ -31,6 +31,8 @@ export interface ConfirmGateProps {
   onConfirm: () => void | Promise<void>;
   onCancel: () => void;
   restoreFocusRef?: RefObject<HTMLElement | null>;
+  confirmLabel?: string;
+  pendingLabel?: string;
   children?: ReactNode;
 }
 
@@ -47,14 +49,22 @@ export function ConfirmGate({
   onConfirm,
   onCancel,
   restoreFocusRef,
+  confirmLabel = '실행',
+  pendingLabel,
   children,
 }: ConfirmGateProps) {
   const cancelRef = useRef<HTMLButtonElement>(null);
+  const wasOpenRef = useRef(open);
   const l1Confirmed = useRef(false);
   const [typed, setTyped] = useState('');
   const [seen, setSeen] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const currentCounts = JSON.stringify(counts ?? {});
+
+  useEffect(() => {
+    if (wasOpenRef.current && !open) restoreFocusRef?.current?.focus();
+    wasOpenRef.current = open;
+  }, [open, restoreFocusRef]);
 
   useEffect(() => {
     if (!open) {
@@ -103,7 +113,7 @@ export function ConfirmGate({
   };
 
   return (
-    <AlertDialog open onOpenChange={(nextOpen) => { if (!nextOpen) onCancel(); }}>
+    <AlertDialog open onOpenChange={(nextOpen) => { if (!nextOpen && !submitting) onCancel(); }}>
       <AlertDialogContent
         data-grade={grade}
         onOpenAutoFocus={(event) => {
@@ -146,7 +156,7 @@ export function ConfirmGate({
         ) : null}
 
         <div data-slot="alert-dialog-actions">
-          <AlertDialogCancel ref={cancelRef} type="button">취소</AlertDialogCancel>
+          <AlertDialogCancel ref={cancelRef} type="button" disabled={submitting}>취소</AlertDialogCancel>
           <Button
             type="button"
             variant="destructive"
@@ -154,7 +164,7 @@ export function ConfirmGate({
             disabled={locked || !tokenMatches}
             onClick={() => { void handleConfirm(); }}
           >
-            실행
+            {submitting && pendingLabel !== undefined ? pendingLabel : confirmLabel}
           </Button>
         </div>
       </AlertDialogContent>

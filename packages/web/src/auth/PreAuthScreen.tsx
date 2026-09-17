@@ -2,6 +2,7 @@ import { commitInstall, verifyInstallToken } from '../api/client.js';
 import { Button } from '../components/ui/button.js';
 import { CredentialForm } from './CredentialForm.js';
 import { InstallWizard } from './InstallWizard.js';
+import type { InstallInput } from './InstallWizard.js';
 
 export type PreAuthScreenId = 'login' | 'signup' | 'install';
 
@@ -21,11 +22,17 @@ export function PreAuthScreen({
   onLogin,
   onSignup,
   onScreen,
+  onInstallVerify = verifyInstallToken,
+  onInstallCommit = async (input) => { await commitInstall({ ...input }); },
+  onInstallStart = () => window.location.assign('/'),
 }: {
   screen: PreAuthScreenId;
   onScreen?: (screen: PreAuthScreenId) => void;
   onLogin?: (input: { name: string; password: string }) => Promise<string | undefined | void>;
   onSignup?: (input: { name: string; password: string }) => Promise<string | undefined | void>;
+  onInstallVerify?: (token: string) => Promise<string>;
+  onInstallCommit?: (input: InstallInput) => Promise<void>;
+  onInstallStart?: () => void;
 }) {
   const spec = PRE_AUTH_SCREENS.find((candidate) => candidate.id === screen)!;
 
@@ -34,11 +41,9 @@ export function PreAuthScreen({
       <main aria-label={spec.label} data-pre-auth={spec.id}>
         <h1>{spec.label}</h1>
         <InstallWizard
-          onVerifyToken={verifyInstallToken}
-          onCommit={async (input) => {
-            await commitInstall({ ...input });
-            window.location.assign('/');
-          }}
+          onVerifyToken={onInstallVerify}
+          onCommit={onInstallCommit}
+          onStart={onInstallStart}
         />
       </main>
     );
