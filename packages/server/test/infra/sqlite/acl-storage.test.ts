@@ -29,6 +29,20 @@ beforeEach(async () => {
   team = principals.createGroup('기획팀원').id;
 });
 
+describe('IR-ACL-004 repository identity invariants', () => {
+  it('returns the stored ID without changing grant ownership and keeps view/edit tuples separate', () => {
+    const doc = mkNode('file', 'receipt.md', null);
+    const original = acl.grant({ nodeId: doc, principalId: me, level: 'view', grantedBy: team });
+    const duplicate = acl.grant({ nodeId: doc, principalId: me, level: 'view', grantedBy: me });
+    const edit = acl.grant({ nodeId: doc, principalId: me, level: 'edit', grantedBy: me });
+
+    expect(duplicate.id).toBe(original.id);
+    expect(duplicate.grantedBy).toBe(team);
+    expect(edit.id).not.toBe(original.id);
+    expect(acl.entriesOn(doc)).toHaveLength(2);
+  });
+});
+
 afterEach(async () => {
   db.close();
   await rm(dir, { recursive: true, force: true });

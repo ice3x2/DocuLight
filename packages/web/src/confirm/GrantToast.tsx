@@ -12,11 +12,13 @@ export function GrantToast({
   entryId,
   onRevoke,
   limitation,
+  disabled = false,
 }: {
   subjectName: string;
   entryId?: string;
   onRevoke?: (entryId: string) => void;
   limitation?: string;
+  disabled?: boolean;
 }) {
   return (
     <div role="status">
@@ -25,6 +27,7 @@ export function GrantToast({
       {limitation === undefined ? null : <span>{limitation}</span>}
       {entryId === undefined || onRevoke === undefined ? null : <button
         type="button"
+        disabled={disabled}
         onClick={() => onRevoke(entryId)}
       >{WIDENING_UNDO_LABEL}</button>}
     </div>

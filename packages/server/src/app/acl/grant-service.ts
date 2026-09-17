@@ -29,6 +29,25 @@ export type GrantFailure = GrantRule | 'unknown-target' | 'unknown-entry';
 
 export type GrantOutcome = { ok: true; entryId: string } | { ok: false; rule: GrantFailure };
 export type PlainOutcome = { ok: true } | { ok: false; rule: GrantFailure };
+export type GrantCapabilityReceipt = { readonly entryId: string; readonly canRevoke: boolean };
+
+/** Minimal operation receipt; DELETE still recalculates the same policy at execution time. */
+export function grantCapabilityReceipt(
+  stores: AclStores,
+  actor: Actor,
+  entryId: string,
+): GrantCapabilityReceipt | undefined {
+  const entry = stores.acl.findEntry(entryId);
+  if (entry === undefined) return undefined;
+  return {
+    entryId,
+    canRevoke: canRevoke({
+      actorId: actor.id,
+      actorLevel: permissionOf(stores, actor, entry.nodeId),
+      entry,
+    }).allowed,
+  };
+}
 
 /**
  * 대상이 워크스페이스 노드인가.

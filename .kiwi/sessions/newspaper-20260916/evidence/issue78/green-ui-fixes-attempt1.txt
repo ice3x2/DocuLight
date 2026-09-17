@@ -1,0 +1,412 @@
+node.exe : npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:al
+ways-auth). This will stop working in the next major version of npm.
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\beom\AppData\Roaming\n ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn Unknow...version of npm.:String) [], RemoteExc
+   eption
+    + FullyQualifiedErrorId : NativeCommandError
+
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working
+ in the next major version of npm.
+
+> @doculight/web@0.1.0 test
+> vitest run --run test/issue78-share-receipt.test.tsx
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+ ❯ test/issue78-share-receipt.test.tsx (6 tests | 1 failed) 2289ms
+     × locks a receipt action while warnings resolve so duplicate activation cannot send two DELETEs 1200ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/issue78-share-receipt.test.tsx > IR-ACL-004 editor grant receipt lifecycle > locks a rece
+ipt action while warnings resolve so duplicate activation cannot send two DELETEs
+TestingLibraryElementError: Unable to find role="status"
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-share-overlay[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-describedby[39m=[32m"radix-_r_1p_"[39m
+    [33maria-labelledby[39m=[32m"_r_1m_"[39m
+    [33mdata-share-dialog[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mid[39m=[32m"radix-_r_1n_"[39m
+    [33mrole[39m=[32m"dialog"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+  [36m>[39m
+    [36m<header[39m
+      [33mdata-share-header[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mid[39m=[32m"_r_1m_"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [0meditor.md[0m
+        [0m 공유[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mid[39m=[32m"radix-_r_1p_"[39m
+      [36m>[39m
+        [0m이 노드의 직접 권한과 상속 권한을 확인하고 변경합니다.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"공유 닫기"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m×[0m
+      [36m</button>[39m
+    [36m</header>[39m
+    [36m<div[39m
+      [33mdata-share-body[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mdata-testid[39m=[32m"share-metrics"[39m
+      [36m>[39m
+        [0m접근 가능 [0m
+        [0m2[0m
+        [0m명[0m
+      [36m</p>[39m
+      [36m<section[39m
+        [33mdata-share-grant[39m=[32m"true"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mcmdk-root[39m=[32m""[39m
+          [33mtabindex[39m=[32m"-1"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mcmdk-label[39m=[32m""[39m
+            [33mfor[39m=[32m"radix-_r_1s_"[39m
+            [33mid[39m=[32m"radix-_r_1r_"[39m
+            [33mstyle[39m=[32m"position: absolute; width: 1px; height: 1px; padding: 0px; margin:
+-1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0px;"[39m
+          [36m>[39m
+            [0m사용자·그룹 검색[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33maria-autocomplete[39m=[32m"list"[39m
+            [33maria-controls[39m=[32m"radix-_r_1q_"[39m
+            [33maria-expanded[39m=[32m"true"[39m
+            [33maria-label[39m=[32m"사용자·그룹 검색"[39m
+            [33maria-labelledby[39m=[32m"radix-_r_1r_"[39m
+            [33mautocomplete[39m=[32m"off"[39m
+            [33mautocorrect[39m=[32m"off"[39m
+            [33mcmdk-input[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_1s_"[39m
+            [33mplaceholder[39m=[32m"사용자 또는 그룹 이름"[39m
+            [33mrole[39m=[32m"combobox"[39m
+            [33mspellcheck[39m=[32m"false"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Re"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Suggestions"[39m
+            [33mcmdk-list[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_1q_"[39m
+            [33mrole[39m=[32m"listbox"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mcmdk-list-sizer[39m=[32m""[39m
+            [36m>[39m
+              [36m<div[39m
+                [33maria-disabled[39m=[32m"false"[39m
+                [33maria-selected[39m=[32m"true"[39m
+                [33mcmdk-item[39m=[32m""[39m
+                [33mdata-disabled[39m=[32m"false"[39m
+                [33mdata-selected[39m=[32m"true"[39m
+                [33mdata-value[39m=[32m"receipt-target"[39m
+                [33mid[39m=[32m"radix-_r_1v_"[39m
+                [33mrole[39m=[32m"option"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mReceipt target[0m
+                [36m</span>[39m
+                [36m<span>[39m
+                  [0m사용자[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mdata-testid[39m=[32m"principal-status"[39m
+                [36m>[39m
+                  [0m활성[0m
+                [36m</span>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mdata-testid[39m=[32m"selected-principal"[39m
+        [36m>[39m
+          [0mReceipt target[0m
+          [0m · [0m
+          [0m사용자[0m
+          [0m · [0m
+          [0m활성[0m
+        [36m</p>[39m
+        [36m<label[39m
+          [33mfor[39m=[32m"_r_1m_-level"[39m
+        [36m>[39m
+          [0m권한[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mid[39m=[32m"_r_1m_-level"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"view"[39m
+          [36m>[39m
+            [0m보기[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"edit"[39m
+          [36m>[39m
+            [0m편집[0m
+          [36m</option>[39m
+        [36m</select>[39m
+        [36m<button[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m추가 중…[0m
+        [36m</button>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-share-overlay[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-describedby[39m=[32m"radix-_r_1p_"[39m
+    [33maria-labelledby[39m=[32m"_r_1m_"[39m
+    [33mdata-share-dialog[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mid[39m=[32m"radix-_r_1n_"[39m
+    [33mrole[39m=[32m"dialog"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+  [36m>[39m
+    [36m<header[39m
+      [33mdata-share-header[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mid[39m=[32m"_r_1m_"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [0meditor.md[0m
+        [0m 공유[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mid[39m=[32m"radix-_r_1p_"[39m
+      [36m>[39m
+        [0m이 노드의 직접 권한과 상속 권한을 확인하고 변경합니다.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"공유 닫기"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m×[0m
+      [36m</button>[39m
+    [36m</header>[39m
+    [36m<div[39m
+      [33mdata-share-body[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mdata-testid[39m=[32m"share-metrics"[39m
+      [36m>[39m
+        [0m접근 가능 [0m
+        [0m2[0m
+        [0m명[0m
+      [36m</p>[39m
+      [36m<section[39m
+        [33mdata-share-grant[39m=[32m"true"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mcmdk-root[39m=[32m""[39m
+          [33mtabindex[39m=[32m"-1"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mcmdk-label[39m=[32m""[39m
+            [33mfor[39m=[32m"radix-_r_1s_"[39m
+            [33mid[39m=[32m"radix-_r_1r_"[39m
+            [33mstyle[39m=[32m"position: absolute; width: 1px; height: 1px; padding: 0px; margin:
+-1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0px;"[39m
+          [36m>[39m
+            [0m사용자·그룹 검색[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33maria-autocomplete[39m=[32m"list"[39m
+            [33maria-controls[39m=[32m"radix-_r_1q_"[39m
+            [33maria-expanded[39m=[32m"true"[39m
+            [33maria-label[39m=[32m"사용자·그룹 검색"[39m
+            [33maria-labelledby[39m=[32m"radix-_r_1r_"[39m
+            [33mautocomplete[39m=[32m"off"[39m
+            [33mautocorrect[39m=[32m"off"[39m
+            [33mcmdk-input[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_1s_"[39m
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  23:54:55
+   Duration  3.32s (transform 210ms, setup 23ms, import 500ms, tests 2.29s, environment 349ms)
+
+            [33mplaceholder[39m=[32m"사용자 또는 그룹 이름"[39m
+            [33mrole[39m=[32m"combobox"[39m
+            [33mspellcheck[39m=[32m"false"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Re"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Suggestions"[39m
+            [33mcmdk-list[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_1q_"[39m
+            [33mrole[39m=[32m"listbox"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mcmdk-list-sizer[39m=[32m""[39m
+            [36m>[39m
+              [36m<div[39m
+                [33maria-disabled[39m=[32m"false"[39m
+                [33maria-selected[39m=[32m"true"[39m
+                [33mcmdk-item[39m=[32m""[39m
+                [33mdata-disabled[39m=[32m"false"[39m
+                [33mdata-selected[39m=[32m"true"[39m
+                [33mdata-value[39m=[32m"receipt-target"[39m
+                [33mid[39m=[32m"radix-_r_1v_"[39m
+                [33mrole[39m=[32m"option"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mReceipt target[0m
+                [36m</span>[39m
+                [36m<span>[39m
+                  [0m사용자[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mdata-testid[39m=[32m"principal-status"[39m
+                [36m>[39m
+                  [0m활성[0m
+                [36m</span>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mdata-testid[39m=[32m"selected-principal"[39m
+        [36m>[39m
+          [0mReceipt target[0m
+          [0m · [0m
+          [0m사용자[0m
+          [0m · [0m
+          [0m활성[0m
+        [36m</p>[39m
+        [36m<label[39m
+          [33mfor[39m=[32m"_r_1m_-level"[39m
+        [36m>[39m
+          [0m권한[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mid[39m=[32m"_r_1m_-level"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"view"[39m
+          [36m>[39m
+            [0m보기[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"edit"[39m
+          [36m>[39m
+            [0m편집[0m
+          [36m</option>[39m
+        [36m</select>[39m
+        [36m<button[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m추가 중…[0m
+        [36m</button>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ test/issue78-share-receipt.test.tsx:95:38
+     93|       onRevoke={onRevoke} onWarnings={() => warnings.promise} />);
+     94|     await pickAndGrant(user);
+     95|     const undo = within(await screen.findByRole('status')).getByRole('…
+       |                                      ^
+     96|     await user.dblClick(undo);
+     97|     expect(undo).toHaveProperty('disabled', true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Work\git\DocuLight2.0\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --run test/issue78-share-receipt.te
+st.tsx

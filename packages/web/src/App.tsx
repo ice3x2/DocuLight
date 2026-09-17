@@ -528,12 +528,12 @@ function AppBody() {
       onOpen: setSharingId,
       onGrant: async (nodeId: string, principalId: string, level: 'view' | 'edit') => {
         try {
-          await grantShare(nodeId, principalId, level);
+          const grantReceipt = await grantShare(nodeId, principalId, level);
+          void afterShareChange(nodeId);
+          return { ok: true as const, ...(grantReceipt === undefined ? {} : { grantReceipt }) };
         } catch {
           return { ok: false as const };
         }
-        void afterShareChange(nodeId);
-        return { ok: true as const };
       },
       onRevoke: async (nodeId: string, entryId: string) => {
         try {

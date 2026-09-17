@@ -47,6 +47,7 @@ import {
 } from '../../app/workspace/admin-presence.js';
 import {
   breakInheritance,
+  grantCapabilityReceipt,
   grantPermission,
   inheritFromParent,
   restoreInheritance,
@@ -818,7 +819,23 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       principalId: one(req.body?.principalId) ?? '',
       level: one(req.body?.level) === 'edit' ? 'edit' : 'view',
     });
-    res.sendStatus(granted.ok ? 204 : 404);
+    if (!granted.ok) {
+      res.sendStatus(404);
+      return;
+    }
+    const wantsReceipt = (req.get('prefer') ?? '')
+      .split(',')
+      .some((token) => token.trim().toLowerCase() === 'return=representation');
+    if (!wantsReceipt) {
+      res.sendStatus(204);
+      return;
+    }
+    const receipt = grantCapabilityReceipt(stores, actor, granted.entryId);
+    if (receipt === undefined) {
+      res.sendStatus(500);
+      return;
+    }
+    res.status(200).json(receipt);
   });
 
   /**

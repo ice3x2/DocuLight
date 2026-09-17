@@ -1,0 +1,536 @@
+node.exe : npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:al
+ways-auth). This will stop working in the next major version of npm.
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\beom\AppData\Roaming\n ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn Unknow...version of npm.:String) [], RemoteExc
+   eption
+    + FullyQualifiedErrorId : NativeCommandError
+
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working
+ in the next major version of npm.
+
+> @doculight/web@0.1.0 test
+> vitest run --run test/issue78-share-receipt.test.tsx
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+ ❯ test/issue78-share-receipt.test.tsx (6 tests | 5 failed) 2108ms
+     × uses an editor-owned receipt directly for one guarded DELETE without requesting a roster 230ms
+     × accepts a foreign duplicate receipt without exposing or enabling a revoke action 170ms
+     × keeps the receipt action after a failed DELETE and retries only when the user asks 186ms
+     × locks a receipt action while warnings resolve so duplicate activation cannot send two DELETEs 1174ms
+     × keeps a usable receipt visible when the independent share refetch fails 173ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/issue78-share-receipt.test.tsx > IR-ACL-004 editor grant receipt lifecycle > uses an edit
+or-owned receipt directly for one guarded DELETE without requesting a roster
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "회수"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them
+, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/doc
+s/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mrole[39m=[32m"status"[39m
+[36m>[39m
+  [36m<span>[39m
+    [0mReceipt target[0m
+    [0m 에게 권한을 부여했습니다.[0m
+  [36m</span>[39m
+  [36m<span>[39m
+    [0m되돌려도 이미 열람된 내용은 회수되지 않습니다.[0m
+  [36m</span>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue78-share-receipt.test.tsx:40:39
+     38|     const toast = await screen.findByRole('status');
+     39|     expect(toast.textContent).not.toContain('opaque-entry');
+     40|     await user.dblClick(within(toast).getByRole('button', { name: '회수'…
+       |                                       ^
+     41|     await waitFor(() => expect(onRevoke).toHaveBeenCalledTimes(1));
+     42|     expect(onRevoke).toHaveBeenCalledWith('opaque-entry');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  test/issue78-share-receipt.test.tsx > IR-ACL-004 editor grant receipt lifecycle > accepts a fo
+reign duplicate receipt without exposing or enabling a revoke action
+AssertionError: expected 'Receipt target 에게 권한을 부여했습니다.되돌려도 이미 …' to contain '현재 권한으로는 이 항목을 회수할 수 없습
+니다.'
+
+Expected: "현재 권한으로는 이 항목을 회수할 수 없습니다."
+Received: "Receipt target 에게 권한을 부여했습니다.되돌려도 이미 열람된 내용은 회수되지 않습니다."
+
+ ❯ test/issue78-share-receipt.test.tsx:54:31
+     52|     await pickAndGrant(user);
+     53|     const toast = await screen.findByRole('status');
+     54|     expect(toast.textContent).toContain('현재 권한으로는 이 항목을 회수할 수 없습니다.');
+       |                               ^
+     55|     expect(within(toast).queryByRole('button', { name: '회수' })).toBeNu…
+     56|     expect(toast.textContent).not.toContain('foreign-entry');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  test/issue78-share-receipt.test.tsx > IR-ACL-004 editor grant receipt lifecycle > keeps the re
+ceipt action after a failed DELETE and retries only when the user asks
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "회수"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them
+, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/doc
+s/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mrole[39m=[32m"status"[39m
+[36m>[39m
+  [36m<span>[39m
+    [0mReceipt target[0m
+    [0m 에게 권한을 부여했습니다.[0m
+  [36m</span>[39m
+  [36m<span>[39m
+    [0m되돌려도 이미 열람된 내용은 회수되지 않습니다.[0m
+  [36m</span>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue78-share-receipt.test.tsx:80:64
+     78|       onRevoke={onRevoke} onWarnings={async () => []} />);
+     79|     await pickAndGrant(user);
+     80|     await user.click(within(await screen.findByRole('status')).getByRo…
+       |                                                                ^
+     81|     expect((await screen.findByRole('alert')).textContent).toContain('…
+     82|     await user.click(within(screen.getByRole('status')).getByRole('but…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  test/issue78-share-receipt.test.tsx > IR-ACL-004 editor grant receipt lifecycle > locks a rece
+ipt action while warnings resolve so duplicate activation cannot send two DELETEs
+TestingLibraryElementError: Unable to find role="status"
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-share-overlay[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-describedby[39m=[32m"radix-_r_1g_"[39m
+    [33maria-labelledby[39m=[32m"_r_1d_"[39m
+    [33mdata-share-dialog[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mid[39m=[32m"radix-_r_1e_"[39m
+    [33mrole[39m=[32m"dialog"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+  [36m>[39m
+    [36m<header[39m
+      [33mdata-share-header[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mid[39m=[32m"_r_1d_"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [0meditor.md[0m
+        [0m 공유[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mid[39m=[32m"radix-_r_1g_"[39m
+      [36m>[39m
+        [0m이 노드의 직접 권한과 상속 권한을 확인하고 변경합니다.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"공유 닫기"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m×[0m
+      [36m</button>[39m
+    [36m</header>[39m
+    [36m<div[39m
+      [33mdata-share-body[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mdata-testid[39m=[32m"share-metrics"[39m
+      [36m>[39m
+        [0m접근 가능 [0m
+        [0m2[0m
+        [0m명[0m
+      [36m</p>[39m
+      [36m<section[39m
+        [33mdata-share-grant[39m=[32m"true"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mcmdk-root[39m=[32m""[39m
+          [33mtabindex[39m=[32m"-1"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mcmdk-label[39m=[32m""[39m
+            [33mfor[39m=[32m"radix-_r_1j_"[39m
+            [33mid[39m=[32m"radix-_r_1i_"[39m
+            [33mstyle[39m=[32m"position: absolute; width: 1px; height: 1px; padding: 0px; margin:
+-1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0px;"[39m
+          [36m>[39m
+            [0m사용자·그룹 검색[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33maria-autocomplete[39m=[32m"list"[39m
+            [33maria-controls[39m=[32m"radix-_r_1h_"[39m
+            [33maria-expanded[39m=[32m"true"[39m
+            [33maria-label[39m=[32m"사용자·그룹 검색"[39m
+            [33maria-labelledby[39m=[32m"radix-_r_1i_"[39m
+            [33mautocomplete[39m=[32m"off"[39m
+            [33mautocorrect[39m=[32m"off"[39m
+            [33mcmdk-input[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_1j_"[39m
+            [33mplaceholder[39m=[32m"사용자 또는 그룹 이름"[39m
+            [33mrole[39m=[32m"combobox"[39m
+            [33mspellcheck[39m=[32m"false"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Re"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Suggestions"[39m
+            [33mcmdk-list[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_1h_"[39m
+            [33mrole[39m=[32m"listbox"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mcmdk-list-sizer[39m=[32m""[39m
+            [36m>[39m
+              [36m<div[39m
+                [33maria-disabled[39m=[32m"false"[39m
+                [33maria-selected[39m=[32m"true"[39m
+                [33mcmdk-item[39m=[32m""[39m
+                [33mdata-disabled[39m=[32m"false"[39m
+                [33mdata-selected[39m=[32m"true"[39m
+                [33mdata-value[39m=[32m"receipt-target"[39m
+                [33mid[39m=[32m"radix-_r_1m_"[39m
+                [33mrole[39m=[32m"option"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mReceipt target[0m
+                [36m</span>[39m
+                [36m<span>[39m
+                  [0m사용자[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mdata-testid[39m=[32m"principal-status"[39m
+                [36m>[39m
+                  [0m활성[0m
+                [36m</span>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mdata-testid[39m=[32m"selected-principal"[39m
+        [36m>[39m
+          [0mReceipt target[0m
+          [0m · [0m
+          [0m사용자[0m
+          [0m · [0m
+          [0m활성[0m
+        [36m</p>[39m
+        [36m<label[39m
+          [33mfor[39m=[32m"_r_1d_-level"[39m
+        [36m>[39m
+          [0m권한[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mid[39m=[32m"_r_1d_-level"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"view"[39m
+          [36m>[39m
+            [0m보기[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"edit"[39m
+          [36m>[39m
+            [0m편집[0m
+          [36m</option>[39m
+        [36m</select>[39m
+        [36m<button[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m추가 중…[0m
+        [36m</button>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-share-overlay[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-describedby[39m=[32m"radix-_r_1g_"[39m
+    [33maria-labelledby[39m=[32m"_r_1d_"[39m
+    [33mdata-share-dialog[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mid[39m=[32m"radix-_r_1e_"[39m
+    [33mrole[39m=[32m"dialog"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+  [36m>[39m
+    [36m<header[39m
+      [33mdata-share-header[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mid[39m=[32m"_r_1d_"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [0meditor.md[0m
+        [0m 공유[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mid[39m=[32m"radix-_r_1g_"[39m
+      [36m>[39m
+        [0m이 노드의 직접 권한과 상속 권한을 확인하고 변경합니다.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"공유 닫기"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m×[0m
+      [36m</button>[39m
+    [36m</header>[39m
+    [36m<div[39m
+      [33mdata-share-body[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mdata-testid[39m=[32m"share-metrics"[39m
+      [36m>[39m
+        [0m접근 가능 [0m
+        [0m2[0m
+        [0m명[0m
+      [36m</p>[39m
+      [36m<section[39m
+        [33mdata-share-grant[39m=[32m"true"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mcmdk-root[39m=[32m""[39m
+          [33mtabindex[39m=[32m"-1"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mcmdk-label[39m=[32m""[39m
+            [33mfor[39m=[32m"radix-_r_1j_"[39m
+            [33mid[39m=[32m"radix-_r_1i_"[39m
+            [33mstyle[39m=[32m"position: absolute; width: 1px; height: 1px; padding: 0px; margin:
+-1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0px;"[39m
+          [36m>[39m
+            [0m사용자·그룹 검색[0m
+          [36m</label>[39m
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 1 passed (6)
+   Start at  23:53:57
+   Duration  3.08s (transform 191ms, setup 23ms, import 458ms, tests 2.11s, environment 337ms)
+
+          [36m<input[39m
+            [33maria-autocomplete[39m=[32m"list"[39m
+            [33maria-controls[39m=[32m"radix-_r_1h_"[39m
+            [33maria-expanded[39m=[32m"true"[39m
+            [33maria-label[39m=[32m"사용자·그룹 검색"[39m
+            [33maria-labelledby[39m=[32m"radix-_r_1i_"[39m
+            [33mautocomplete[39m=[32m"off"[39m
+            [33mautocorrect[39m=[32m"off"[39m
+            [33mcmdk-input[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_1j_"[39m
+            [33mplaceholder[39m=[32m"사용자 또는 그룹 이름"[39m
+            [33mrole[39m=[32m"combobox"[39m
+            [33mspellcheck[39m=[32m"false"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Re"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Suggestions"[39m
+            [33mcmdk-list[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_1h_"[39m
+            [33mrole[39m=[32m"listbox"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mcmdk-list-sizer[39m=[32m""[39m
+            [36m>[39m
+              [36m<div[39m
+                [33maria-disabled[39m=[32m"false"[39m
+                [33maria-selected[39m=[32m"true"[39m
+                [33mcmdk-item[39m=[32m""[39m
+                [33mdata-disabled[39m=[32m"false"[39m
+                [33mdata-selected[39m=[32m"true"[39m
+                [33mdata-value[39m=[32m"receipt-target"[39m
+                [33mid[39m=[32m"radix-_r_1m_"[39m
+                [33mrole[39m=[32m"option"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mReceipt target[0m
+                [36m</span>[39m
+                [36m<span>[39m
+                  [0m사용자[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mdata-testid[39m=[32m"principal-status"[39m
+                [36m>[39m
+                  [0m활성[0m
+                [36m</span>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mdata-testid[39m=[32m"selected-principal"[39m
+        [36m>[39m
+          [0mReceipt target[0m
+          [0m · [0m
+          [0m사용자[0m
+          [0m · [0m
+          [0m활성[0m
+        [36m</p>[39m
+        [36m<label[39m
+          [33mfor[39m=[32m"_r_1d_-level"[39m
+        [36m>[39m
+          [0m권한[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mid[39m=[32m"_r_1d_-level"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"view"[39m
+          [36m>[39m
+            [0m보기[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"edit"[39m
+          [36m>[39m
+            [0m편집[0m
+          [36m</option>[39m
+        [36m</select>[39m
+        [36m<button[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m추가 중…[0m
+        [36m</button>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ test/issue78-share-receipt.test.tsx:95:38
+     93|       onRevoke={onRevoke} onWarnings={() => warnings.promise} />);
+     94|     await pickAndGrant(user);
+     95|     const undo = within(await screen.findByRole('status')).getByRole('…
+       |                                      ^
+     96|     await user.dblClick(undo);
+     97|     expect(undo).toHaveProperty('disabled', true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  test/issue78-share-receipt.test.tsx > IR-ACL-004 editor grant receipt lifecycle > keeps a usab
+le receipt visible when the independent share refetch fails
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "회수"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them
+, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/doc
+s/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mrole[39m=[32m"status"[39m
+[36m>[39m
+  [36m<span>[39m
+    [0mReceipt target[0m
+    [0m 에게 권한을 부여했습니다.[0m
+  [36m</span>[39m
+  [36m<span>[39m
+    [0m되돌려도 이미 열람된 내용은 회수되지 않습니다.[0m
+  [36m</span>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue78-share-receipt.test.tsx:109:54
+    107|     const { rerender } = render(<ShareModal {...props} query={ready} /…
+    108|     await pickAndGrant(user);
+    109|     expect(within(await screen.findByRole('status')).getByRole('button…
+       |                                                      ^
+    110|     rerender(<ShareModal {...props} query={{ state: 'error', nodeId: '…
+    111|     expect(screen.getByRole('alert').textContent).toContain('공유 정보를 불러…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Work\git\DocuLight2.0\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --run test/issue78-share-receipt.te
+st.tsx

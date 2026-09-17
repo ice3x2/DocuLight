@@ -1,0 +1,68 @@
+{
+  "ownedBrowserCount": 2,
+  "isolatedContextCount": 2,
+  "isolatedPersistentContextCount": 1,
+  "zoomTransitions": [
+    1,
+    2,
+    1
+  ],
+  "getZoomAt200": 2,
+  "finalGetZoom": 1,
+  "mountedDialogAt200": true,
+  "editorRowsBefore": null,
+  "editorRowsAfter": null,
+  "requests": [
+    {
+      "pathname": "/api/nodes/da066863-0914-4564-85dc-4f2baa24d3f7/share",
+      "prefer": "return=representation",
+      "method": "POST"
+    },
+    {
+      "pathname": "/api/acl-entries/21a56f00-e637-4117-a364-8b100f8518ed",
+      "method": "DELETE"
+    },
+    {
+      "pathname": "/api/nodes/da066863-0914-4564-85dc-4f2baa24d3f7/share",
+      "prefer": "return=representation",
+      "method": "POST"
+    }
+  ],
+  "receipts": [
+    {
+      "status": 200,
+      "keys": [
+        "canRevoke",
+        "entryId"
+      ],
+      "canRevoke": true
+    },
+    {
+      "status": 200,
+      "keys": [
+        "canRevoke",
+        "entryId"
+      ],
+      "canRevoke": false
+    }
+  ],
+  "admin": {
+    "rosterVisible": true,
+    "receiptKeys": [
+      "canRevoke",
+      "entryId"
+    ],
+    "canRevoke": true,
+    "requests": [
+      {
+        "method": "POST",
+        "pathname": "/api/nodes/da066863-0914-4564-85dc-4f2baa24d3f7/share",
+        "prefer": "return=representation"
+      },
+      {
+        "method": "DELETE",
+        "pathname": "/api/acl-entries/2b2d14c1-a425-4916-803b-95af9e33b345"
+      }
+    ]
+  }
+}

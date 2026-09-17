@@ -1,0 +1,794 @@
+node.exe : npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:al
+ways-auth). This will stop working in the next major version of npm.
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\beom\AppData\Roaming\n ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn Unknow...version of npm.:String) [], RemoteExc
+   eption
+    + FullyQualifiedErrorId : NativeCommandError
+
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working
+ in the next major version of npm.
+
+> @doculight/web@0.1.0 test
+> vitest run --run test/issue78-share-receipt.test.tsx
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+ ❯ test/issue78-share-receipt.test.tsx (10 tests | 3 failed) 4666ms
+     × keeps the receipt action when revoke warning lookup fails and retries only that revoke flow 235ms
+     × uses the captured container kind for L2 revoke while the share query is in error 1297ms
+     × closes the file revoke attempt after failure during query error so the receipt can retry 1196ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/issue78-share-receipt.test.tsx > IR-ACL-004 editor grant receipt lifecycle > keeps the re
+ceipt action when revoke warning lookup fails and retries only that revoke flow
+TestingLibraryElementError: Unable to find an accessible element with the role "status"
+
+Here are the accessible roles:
+
+  dialog:
+
+  Name "editor.md 공유":
+  [36m<div[39m
+    [33maria-describedby[39m=[32m"radix-_r_2i_"[39m
+    [33maria-labelledby[39m=[32m"_r_2f_"[39m
+    [33mdata-share-dialog[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mid[39m=[32m"radix-_r_2g_"[39m
+    [33mrole[39m=[32m"dialog"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mdata-share-header[39m=[32m"true"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "editor.md 공유":
+  [36m<h2[39m
+    [33mid[39m=[32m"_r_2f_"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mid[39m=[32m"radix-_r_2i_"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mdata-testid[39m=[32m"share-metrics"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "공유 닫기":
+  [36m<button[39m
+    [33maria-label[39m=[32m"공유 닫기"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "추가":
+  [36m<button[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "사용자·그룹 검색":
+  [36m<input[39m
+    [33maria-autocomplete[39m=[32m"list"[39m
+    [33maria-controls[39m=[32m"radix-_r_2j_"[39m
+    [33maria-expanded[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"사용자·그룹 검색"[39m
+    [33maria-labelledby[39m=[32m"radix-_r_2k_"[39m
+    [33mautocomplete[39m=[32m"off"[39m
+    [33mautocorrect[39m=[32m"off"[39m
+    [33mcmdk-input[39m=[32m""[39m
+    [33mid[39m=[32m"radix-_r_2l_"[39m
+    [33mplaceholder[39m=[32m"사용자 또는 그룹 이름"[39m
+    [33mrole[39m=[32m"combobox"[39m
+    [33mspellcheck[39m=[32m"false"[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m"Re"[39m
+  [36m/>[39m
+
+  Name "권한":
+  [36m<select[39m
+    [33mid[39m=[32m"_r_2f_-level"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listbox:
+
+  Name "Suggestions":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Suggestions"[39m
+    [33mcmdk-list[39m=[32m""[39m
+    [33mid[39m=[32m"radix-_r_2j_"[39m
+    [33mrole[39m=[32m"listbox"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Receipt target 사용자 활성":
+  [36m<div[39m
+    [33maria-disabled[39m=[32m"false"[39m
+    [33maria-selected[39m=[32m"true"[39m
+    [33mcmdk-item[39m=[32m""[39m
+    [33mdata-disabled[39m=[32m"false"[39m
+    [33mdata-selected[39m=[32m"true"[39m
+    [33mdata-value[39m=[32m"receipt-target"[39m
+    [33mid[39m=[32m"radix-_r_2r_"[39m
+    [33mrole[39m=[32m"option"[39m
+  [36m/>[39m
+
+  Name "보기":
+  [36m<option[39m
+    [33mvalue[39m=[32m"view"[39m
+  [36m/>[39m
+
+  Name "편집":
+  [36m<option[39m
+    [33mvalue[39m=[32m"edit"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  alert:
+
+  Name "":
+  [36m<p[39m
+    [33mrole[39m=[32m"alert"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-share-overlay[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-describedby[39m=[32m"radix-_r_2i_"[39m
+    [33maria-labelledby[39m=[32m"_r_2f_"[39m
+    [33mdata-share-dialog[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mid[39m=[32m"radix-_r_2g_"[39m
+    [33mrole[39m=[32m"dialog"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+  [36m>[39m
+    [36m<header[39m
+      [33mdata-share-header[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mid[39m=[32m"_r_2f_"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [0meditor.md[0m
+        [0m 공유[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mid[39m=[32m"radix-_r_2i_"[39m
+      [36m>[39m
+        [0m이 노드의 직접 권한과 상속 권한을 확인하고 변경합니다.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"공유 닫기"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m×[0m
+      [36m</button>[39m
+    [36m</header>[39m
+    [36m<div[39m
+      [33mdata-share-body[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mdata-testid[39m=[32m"share-metrics"[39m
+      [36m>[39m
+        [0m접근 가능 [0m
+        [0m2[0m
+        [0m명[0m
+      [36m</p>[39m
+      [36m<section[39m
+        [33mdata-share-grant[39m=[32m"true"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mcmdk-root[39m=[32m""[39m
+          [33mtabindex[39m=[32m"-1"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mcmdk-label[39m=[32m""[39m
+            [33mfor[39m=[32m"radix-_r_2l_"[39m
+            [33mid[39m=[32m"radix-_r_2k_"[39m
+            [33mstyle[39m=[32m"position: absolute; width: 1px; height: 1px; padding: 0px; margin:
+-1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0px;"[39m
+          [36m>[39m
+            [0m사용자·그룹 검색[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33maria-autocomplete[39m=[32m"list"[39m
+            [33maria-controls[39m=[32m"radix-_r_2j_"[39m
+            [33maria-expanded[39m=[32m"true"[39m
+            [33maria-label[39m=[32m"사용자·그룹 검색"[39m
+            [33maria-labelledby[39m=[32m"radix-_r_2k_"[39m
+            [33mautocomplete[39m=[32m"off"[39m
+            [33mautocorrect[39m=[32m"off"[39m
+            [33mcmdk-input[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_2l_"[39m
+            [33mplaceholder[39m=[32m"사용자 또는 그룹 이름"[39m
+            [33mrole[39m=[32m"combobox"[39m
+            [33mspellcheck[39m=[32m"false"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Re"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Suggestions"[39m
+            [33mcmdk-list[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_2j_"[39m
+            [33mrole[39m=[32m"listbox"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mcmdk-list-sizer[39m=[32m""[39m
+            [36m>[39m
+              [36m<div[39m
+                [33maria-disabled[39m=[32m"false"[39m
+                [33maria-selected[39m=[32m"true"[39m
+                [33mcmdk-item[39m=[32m""[39m
+                [33mdata-disabled[39m=[32m"false"[39m
+                [33mdata-selected[39m=[32m"true"[39m
+                [33mdata-value[39m=[32m"receipt-target"[39m
+                [33mid[39m=[32m"radix-_r_2r_"[39m
+                [33mrole[39m=[32m"option"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mReceipt target[0m
+                [36m</span>[39m
+                [36m<span>[39m
+                  [0m사용자[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mdata-testid[39m=[32m"principal-status"[39m
+                [36m>[39m
+                  [0m활성[0m
+                [36m</span>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<label[39m
+          [33mfor[39m=[32m"_r_2f_-level"[39m
+        [36m>[39m
+          [0m권한[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mid[39m=[32m"_r_2f_-level"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"view"[39m
+          [36m>[39m
+            [0m보기[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"edit"[39m
+          [36m>[39m
+            [0m편집[0m
+          [36m</option>[39m
+        [36m</select>[39m
+        [36m<button[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m추가[0m
+        [36m</button>[39m
+      [36m</section>[39m
+      [36m<p[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0m권한을 회수하지 못했습니다.[0m
+        [0m 다시 시도하십시오.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue78-share-receipt.test.tsx:128:36
+    126|     await user.click(within(await screen.findByRole('status')).getByRo…
+    127|     expect((await screen.findByRole('alert')).textContent).toContain('…
+    128|     await user.click(within(screen.getByRole('status')).getByRole('but…
+       |                                    ^
+    129|     await waitFor(() => expect(onRevoke).toHaveBeenCalledTimes(1));
+    130|     expect(entryWarnings).toBe(2);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  test/issue78-share-receipt.test.tsx > IR-ACL-004 editor grant receipt lifecycle > uses the cap
+tured container kind for L2 revoke while the share query is in error
+TestingLibraryElementError: Unable to find role="alertdialog"
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-share-overlay[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-describedby[39m=[32m"radix-_r_3i_"[39m
+    [33maria-labelledby[39m=[32m"_r_3f_"[39m
+    [33mdata-share-dialog[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mid[39m=[32m"radix-_r_3g_"[39m
+    [33mrole[39m=[32m"dialog"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+  [36m>[39m
+    [36m<header[39m
+      [33mdata-share-header[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mid[39m=[32m"_r_3f_"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [0mfolder[0m
+        [0m 공유[0m
+        [0m (디렉토리)[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mid[39m=[32m"radix-_r_3i_"[39m
+      [36m>[39m
+        [0m이 노드의 직접 권한과 상속 권한을 확인하고 변경합니다.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"공유 닫기"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m×[0m
+      [36m</button>[39m
+    [36m</header>[39m
+    [36m<div[39m
+      [33mdata-share-body[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0m공유 정보를 불러오지 못했습니다.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m다시 시도[0m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-share-overlay[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-describedby[39m=[32m"radix-_r_3i_"[39m
+    [33maria-labelledby[39m=[32m"_r_3f_"[39m
+    [33mdata-share-dialog[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mid[39m=[32m"radix-_r_3g_"[39m
+    [33mrole[39m=[32m"dialog"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+  [36m>[39m
+    [36m<header[39m
+      [33mdata-share-header[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mid[39m=[32m"_r_3f_"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [0mfolder[0m
+        [0m 공유[0m
+        [0m (디렉토리)[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mid[39m=[32m"radix-_r_3i_"[39m
+      [36m>[39m
+        [0m이 노드의 직접 권한과 상속 권한을 확인하고 변경합니다.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"공유 닫기"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m×[0m
+      [36m</button>[39m
+    [36m</header>[39m
+    [36m<div[39m
+      [33mdata-share-body[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0m공유 정보를 불러오지 못했습니다.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m다시 시도[0m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ test/issue78-share-receipt.test.tsx:156:25
+    154|     rerender(<ShareModal {...props} query={{ state: 'error', nodeId: '…
+    155|     await user.click(within(screen.getByRole('status')).getByRole('but…
+    156|     expect(await screen.findByRole('alertdialog')).toBeDefined(); expe…
+       |                         ^
+    157|   });
+    158|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  test/issue78-share-receipt.test.tsx > IR-ACL-004 editor grant receipt lifecycle > closes the f
+ile revoke attempt after failure during query error so the receipt can retry
+TestingLibraryElementError: Found multiple elements with the role "alert"
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mrole[39m=[32m"alert"[39m
+[36m>[39m
+  [36m<p>[39m
+    [0m공유 정보를 불러오지 못했습니다.[0m
+  [36m</p>[39m
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [0m다시 시도[0m
+  [36m</button>[39m
+[36m</div>[39m
+
+Ignored nodes: comments, script, style
+[36m<p[39m
+  [33mrole[39m=[32m"alert"[39m
+[36m>[39m
+  [0m권한을 회수하지 못했습니다. 다시 시도하십시오.[0m
+[36m</p>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllB
+yText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-share-overlay[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-describedby[39m=[32m"radix-_r_42_"[39m
+    [33maria-labelledby[39m=[32m"_r_3v_"[39m
+    [33mdata-share-dialog[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mid[39m=[32m"radix-_r_40_"[39m
+    [33mrole[39m=[32m"dialog"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+  [36m>[39m
+    [36m<header[39m
+      [33mdata-share-header[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mid[39m=[32m"_r_3v_"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [0meditor.md[0m
+        [0m 공유[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mid[39m=[32m"radix-_r_42_"[39m
+      [36m>[39m
+        [0m이 노드의 직접 권한과 상속 권한을 확인하고 변경합니다.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"공유 닫기"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m×[0m
+      [36m</button>[39m
+    [36m</header>[39m
+    [36m<div[39m
+      [33mdata-share-body[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0m공유 정보를 불러오지 못했습니다.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m다시 시도[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mrole[39m=[32m"status"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mReceipt target[0m
+          [0m 에게 권한을 부여했습니다.[0m
+        [36m</span>[39m
+        [36m<span>[39m
+          [0m되돌려도 이미 열람된 내용은 회수되지 않습니다.[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m회수[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<p[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0m권한을 회수하지 못했습니다. 다시 시도하십시오.[0m
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 7 passed (10)
+   Start at  00:00:59
+   Duration  5.66s (transform 199ms, setup 21ms, import 481ms, tests 4.67s, environment 337ms)
+
+      [36m</p>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-share-overlay[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-describedby[39m=[32m"radix-_r_42_"[39m
+    [33maria-labelledby[39m=[32m"_r_3v_"[39m
+    [33mdata-share-dialog[39m=[32m"true"[39m
+    [33mdata-state[39m=[32m"open"[39m
+    [33mid[39m=[32m"radix-_r_40_"[39m
+    [33mrole[39m=[32m"dialog"[39m
+    [33mstyle[39m=[32m"pointer-events: auto;"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+  [36m>[39m
+    [36m<header[39m
+      [33mdata-share-header[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mid[39m=[32m"_r_3v_"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [0meditor.md[0m
+        [0m 공유[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mid[39m=[32m"radix-_r_42_"[39m
+      [36m>[39m
+        [0m이 노드의 직접 권한과 상속 권한을 확인하고 변경합니다.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"공유 닫기"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m×[0m
+      [36m</button>[39m
+    [36m</header>[39m
+    [36m<div[39m
+      [33mdata-share-body[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0m공유 정보를 불러오지 못했습니다.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m다시 시도[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mrole[39m=[32m"status"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mReceipt target[0m
+          [0m 에게 권한을 부여했습니다.[0m
+        [36m</span>[39m
+        [36m<span>[39m
+          [0m되돌려도 이미 열람된 내용은 회수되지 않습니다.[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m회수[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<p[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0m권한을 회수하지 못했습니다. 다시 시도하십시오.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; out
+line-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ test/issue78-share-receipt.test.tsx:163:108
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Work\git\DocuLight2.0\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --run test/issue78-share-receipt.te
+st.tsx

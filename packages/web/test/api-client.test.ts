@@ -12,6 +12,7 @@ import {
   fetchTokens,
   issueToken,
   revokeToken,
+  grantShare,
 } from '../src/api/client.js';
 
 const respond = (status: number, body?: unknown) =>
@@ -27,6 +28,34 @@ const stub = (impl: (url: string, init?: RequestInit) => Response | Promise<Resp
 };
 
 afterEach(() => vi.unstubAllGlobals());
+
+describe('IR-ACL-004 grant receipt client', () => {
+  it('opts into a representation and accepts only the minimal typed receipt', async () => {
+    const spy = stub(() => respond(200, { entryId: 'entry-1', canRevoke: true }));
+    await expect(grantShare('node-1', 'person-1', 'view')).resolves.toEqual({ entryId: 'entry-1', canRevoke: true });
+    const [, init] = spy.mock.calls[0]!;
+    expect(new Headers(init?.headers).get('Prefer')).toBe('return=representation');
+    expect(JSON.parse(String(init?.body))).toEqual({ principalId: 'person-1', level: 'view' });
+  });
+
+  it.each([
+    [204, undefined],
+    [200, {}],
+    [200, { entryId: '', canRevoke: true }],
+    [200, { entryId: 'entry-1', canRevoke: 'yes' }],
+    [200, { entryId: 'entry-1', canRevoke: true, grantedBy: 'secret' }],
+  ])('classifies status %s malformed response as accepted without receipt and never repeats POST', async (status, body) => {
+    const spy = stub(() => respond(status, body));
+    await expect(grantShare('node-1', 'person-1', 'view')).resolves.toBeUndefined();
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('propagates failed or uncertain writes and never manufactures success or retries', async () => {
+    const spy = stub(() => respond(503));
+    await expect(grantShare('node-1', 'person-1', 'view')).rejects.toBeInstanceOf(ApiError);
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+});
 
 describe('세션', () => {
   it('서버가 준 값을 그대로 돌려준다 — 화면이 더 계산하지 않는다', async () => {

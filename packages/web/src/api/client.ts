@@ -462,12 +462,22 @@ export const fetchGrantWarnings = (input: { principalId?: string; entryId?: stri
   );
 };
 
-export const grantShare = (nodeId: string, principalId: string, level: 'view' | 'edit') =>
-  call<void>(`/nodes/${encodeURIComponent(nodeId)}/share`, {
+export interface GrantReceipt {
+  readonly entryId: string;
+  readonly canRevoke: boolean;
+}
+
+export const grantShare = async (nodeId: string, principalId: string, level: 'view' | 'edit'): Promise<GrantReceipt | undefined> => {
+  const value = await call<unknown>(`/nodes/${encodeURIComponent(nodeId)}/share`, {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
+    headers: { 'content-type': 'application/json', Prefer: 'return=representation' },
     body: JSON.stringify({ principalId, level }),
   });
+  if (typeof value !== 'object' || value === null) return undefined;
+  const record = value as Record<string, unknown>;
+  if (Object.keys(record).length !== 2 || typeof record.entryId !== 'string' || record.entryId.length === 0 || typeof record.canRevoke !== 'boolean') return undefined;
+  return { entryId: record.entryId, canRevoke: record.canRevoke };
+};
 
 export const revokeShare = (entryId: string) =>
   call<void>(`/acl-entries/${encodeURIComponent(entryId)}`, { method: 'DELETE' });
