@@ -1,0 +1,68 @@
+[data-pre-auth='login'],
+[data-pre-auth='signup'] {
+  box-sizing: border-box;
+  display: flex;
+  min-height: 100dvh;
+  padding: var(--space-12) var(--space-6);
+  background: var(--surface-app);
+}
+
+[data-pre-auth-column] {
+  box-sizing: border-box;
+  width: min(100%, 25rem);
+  margin: auto;
+}
+
+[data-pre-auth-product] {
+  font-family: var(--font-sans);
+  font-size: var(--text-ui-size);
+  line-height: var(--text-ui-line);
+  font-weight: 600;
+}
+
+[data-pre-auth='login'] h1,
+[data-pre-auth='signup'] h1 {
+  margin: var(--space-2) 0 var(--space-6);
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  line-height: 2.375rem;
+  font-weight: 700;
+}
+
+[data-pre-auth-form] {
+  display: grid;
+}
+
+[data-pre-auth-form] [data-slot='input'] {
+  width: 100%;
+  min-height: var(--control-auth-height);
+}
+
+[data-pre-auth-form] [data-slot='inline-notice'] {
+  margin-top: var(--space-5);
+}
+
+[data-pre-auth-form] [data-slot='inline-notice'] [data-slot='inline-notice'] {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+[data-pre-auth-submit] {
+  width: 100%;
+  margin-top: var(--space-6);
+}
+
+[data-pre-auth-submit][data-loading] {
+  color: var(--text-primary);
+}
+
+[data-pre-auth-alternate] {
+  width: 100%;
+  margin-top: var(--space-4);
+  text-decoration: underline;
+  text-underline-offset: 0.1875rem;
+}

@@ -1,0 +1,10 @@
+Command: npm test --workspace @doculight/web -- --run test/newspaper-pre-auth.test.tsx
+Exit code: 1
+
+FAIL test/newspaper-pre-auth.test.tsx > IR-SHELL-006 AC-5..7 — 인증 폼 상태와 제출 > composition keyup 뒤 첫 deliberate Enter를 허용한다
+AssertionError: expected true to be false
+
+Test Files  1 failed (1)
+Tests       1 failed | 17 passed (18)
+
+The failure reproduces the real Chromium ordering gap: composition-ending keydown is followed by compositionend and keyup, so the next deliberate keydown must not consume a stale suppression flag.

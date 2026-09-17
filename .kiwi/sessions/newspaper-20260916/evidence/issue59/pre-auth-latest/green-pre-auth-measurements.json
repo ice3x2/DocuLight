@@ -1,0 +1,6341 @@
+{
+  "generatedAt": "2026-09-17T05:25:47.283Z",
+  "limitations": [
+    "Synthetic/CDP composition evidence is not native Windows Korean IME evidence.",
+    "DOM autofill simulation is not real Chromium or third-party password-manager evidence."
+  ],
+  "normal": [
+    {
+      "zoom": 1,
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "screen": "login",
+      "state": "initial",
+      "result": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "page": {
+          "clientWidth": 1280,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "top": 0,
+          "right": 1280,
+          "bottom": 720,
+          "left": 0
+        },
+        "column": {
+          "x": 440,
+          "y": 178,
+          "width": 400,
+          "height": 364,
+          "top": 178,
+          "right": 840,
+          "bottom": 542,
+          "left": 440
+        },
+        "name": {
+          "x": 440,
+          "y": 298,
+          "width": 400,
+          "height": 40,
+          "top": 298,
+          "right": 840,
+          "bottom": 338,
+          "left": 440
+        },
+        "password": {
+          "x": 440,
+          "y": 386,
+          "width": 400,
+          "height": 40,
+          "top": 386,
+          "right": 840,
+          "bottom": 426,
+          "left": 440
+        },
+        "submit": {
+          "x": 440,
+          "y": 450,
+          "width": 400,
+          "height": 40,
+          "top": 450,
+          "right": 840,
+          "bottom": 490,
+          "left": 440
+        },
+        "alternate": {
+          "x": 440,
+          "y": 506,
+          "width": 400,
+          "height": 36,
+          "top": 506,
+          "right": 840,
+          "bottom": 542,
+          "left": 440
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "screen": "login",
+      "state": "pending",
+      "result": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "page": {
+          "clientWidth": 1280,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "top": 0,
+          "right": 1280,
+          "bottom": 720,
+          "left": 0
+        },
+        "column": {
+          "x": 440,
+          "y": 178,
+          "width": 400,
+          "height": 364,
+          "top": 178,
+          "right": 840,
+          "bottom": 542,
+          "left": 440
+        },
+        "name": {
+          "x": 440,
+          "y": 298,
+          "width": 400,
+          "height": 40,
+          "top": 298,
+          "right": 840,
+          "bottom": 338,
+          "left": 440
+        },
+        "password": {
+          "x": 440,
+          "y": 386,
+          "width": 400,
+          "height": 40,
+          "top": 386,
+          "right": 840,
+          "bottom": 426,
+          "left": 440
+        },
+        "submit": {
+          "x": 440,
+          "y": 450,
+          "width": 400,
+          "height": 40,
+          "top": 450,
+          "right": 840,
+          "bottom": 490,
+          "left": 440
+        },
+        "alternate": {
+          "x": 440,
+          "y": 506,
+          "width": 400,
+          "height": 36,
+          "top": 506,
+          "right": 840,
+          "bottom": 542,
+          "left": 440
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(227, 226, 219)",
+          "submitColor": "rgb(36, 37, 33)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "screen": "login",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "page": {
+          "clientWidth": 1280,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "top": 0,
+          "right": 1280,
+          "bottom": 720,
+          "left": 0
+        },
+        "column": {
+          "x": 440,
+          "y": 139,
+          "width": 400,
+          "height": 442,
+          "top": 139,
+          "right": 840,
+          "bottom": 581,
+          "left": 440
+        },
+        "name": {
+          "x": 440,
+          "y": 259,
+          "width": 400,
+          "height": 40,
+          "top": 259,
+          "right": 840,
+          "bottom": 299,
+          "left": 440
+        },
+        "password": {
+          "x": 440,
+          "y": 347,
+          "width": 400,
+          "height": 40,
+          "top": 347,
+          "right": 840,
+          "bottom": 387,
+          "left": 440
+        },
+        "submit": {
+          "x": 440,
+          "y": 489,
+          "width": 400,
+          "height": 40,
+          "top": 489,
+          "right": 840,
+          "bottom": 529,
+          "left": 440
+        },
+        "alternate": {
+          "x": 440,
+          "y": 545,
+          "width": 400,
+          "height": 36,
+          "top": 545,
+          "right": 840,
+          "bottom": 581,
+          "left": 440
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(243, 229, 225)",
+          "noticeColor": "rgb(150, 63, 56)",
+          "noticeBorder": "rgb(150, 63, 56)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "screen": "signup",
+      "state": "success",
+      "result": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "page": {
+          "clientWidth": 1280,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "top": 0,
+          "right": 1280,
+          "bottom": 720,
+          "left": 0
+        },
+        "column": {
+          "x": 440,
+          "y": 139,
+          "width": 400,
+          "height": 442,
+          "top": 139,
+          "right": 840,
+          "bottom": 581,
+          "left": 440
+        },
+        "name": {
+          "x": 440,
+          "y": 259,
+          "width": 400,
+          "height": 40,
+          "top": 259,
+          "right": 840,
+          "bottom": 299,
+          "left": 440
+        },
+        "password": {
+          "x": 440,
+          "y": 347,
+          "width": 400,
+          "height": 40,
+          "top": 347,
+          "right": 840,
+          "bottom": 387,
+          "left": 440
+        },
+        "submit": {
+          "x": 440,
+          "y": 489,
+          "width": 400,
+          "height": 40,
+          "top": 489,
+          "right": 840,
+          "bottom": 529,
+          "left": 440
+        },
+        "alternate": {
+          "x": 440,
+          "y": 545,
+          "width": 400,
+          "height": 36,
+          "top": 545,
+          "right": 840,
+          "bottom": 581,
+          "left": 440
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(228, 234, 226)",
+          "noticeColor": "rgb(62, 96, 73)",
+          "noticeBorder": "rgb(62, 96, 73)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "screen": "signup",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "page": {
+          "clientWidth": 1280,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "top": 0,
+          "right": 1280,
+          "bottom": 720,
+          "left": 0
+        },
+        "column": {
+          "x": 440,
+          "y": 139,
+          "width": 400,
+          "height": 442,
+          "top": 139,
+          "right": 840,
+          "bottom": 581,
+          "left": 440
+        },
+        "name": {
+          "x": 440,
+          "y": 259,
+          "width": 400,
+          "height": 40,
+          "top": 259,
+          "right": 840,
+          "bottom": 299,
+          "left": 440
+        },
+        "password": {
+          "x": 440,
+          "y": 347,
+          "width": 400,
+          "height": 40,
+          "top": 347,
+          "right": 840,
+          "bottom": 387,
+          "left": 440
+        },
+        "submit": {
+          "x": 440,
+          "y": 489,
+          "width": 400,
+          "height": 40,
+          "top": 489,
+          "right": 840,
+          "bottom": 529,
+          "left": 440
+        },
+        "alternate": {
+          "x": 440,
+          "y": 545,
+          "width": 400,
+          "height": 36,
+          "top": 545,
+          "right": 840,
+          "bottom": 581,
+          "left": 440
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(44, 75, 93)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(243, 229, 225)",
+          "noticeColor": "rgb(150, 63, 56)",
+          "noticeBorder": "rgb(150, 63, 56)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "screen": "login",
+      "state": "initial",
+      "result": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "page": {
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "scrollHeight": 900
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "top": 0,
+          "right": 1440,
+          "bottom": 900,
+          "left": 0
+        },
+        "column": {
+          "x": 520,
+          "y": 268,
+          "width": 400,
+          "height": 364,
+          "top": 268,
+          "right": 920,
+          "bottom": 632,
+          "left": 520
+        },
+        "name": {
+          "x": 520,
+          "y": 388,
+          "width": 400,
+          "height": 40,
+          "top": 388,
+          "right": 920,
+          "bottom": 428,
+          "left": 520
+        },
+        "password": {
+          "x": 520,
+          "y": 476,
+          "width": 400,
+          "height": 40,
+          "top": 476,
+          "right": 920,
+          "bottom": 516,
+          "left": 520
+        },
+        "submit": {
+          "x": 520,
+          "y": 540,
+          "width": 400,
+          "height": 40,
+          "top": 540,
+          "right": 920,
+          "bottom": 580,
+          "left": 520
+        },
+        "alternate": {
+          "x": 520,
+          "y": 596,
+          "width": 400,
+          "height": 36,
+          "top": 596,
+          "right": 920,
+          "bottom": 632,
+          "left": 520
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "screen": "login",
+      "state": "pending",
+      "result": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "page": {
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "scrollHeight": 900
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "top": 0,
+          "right": 1440,
+          "bottom": 900,
+          "left": 0
+        },
+        "column": {
+          "x": 520,
+          "y": 268,
+          "width": 400,
+          "height": 364,
+          "top": 268,
+          "right": 920,
+          "bottom": 632,
+          "left": 520
+        },
+        "name": {
+          "x": 520,
+          "y": 388,
+          "width": 400,
+          "height": 40,
+          "top": 388,
+          "right": 920,
+          "bottom": 428,
+          "left": 520
+        },
+        "password": {
+          "x": 520,
+          "y": 476,
+          "width": 400,
+          "height": 40,
+          "top": 476,
+          "right": 920,
+          "bottom": 516,
+          "left": 520
+        },
+        "submit": {
+          "x": 520,
+          "y": 540,
+          "width": 400,
+          "height": 40,
+          "top": 540,
+          "right": 920,
+          "bottom": 580,
+          "left": 520
+        },
+        "alternate": {
+          "x": 520,
+          "y": 596,
+          "width": 400,
+          "height": 36,
+          "top": 596,
+          "right": 920,
+          "bottom": 632,
+          "left": 520
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(227, 226, 219)",
+          "submitColor": "rgb(36, 37, 33)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "screen": "login",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "page": {
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "scrollHeight": 900
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "top": 0,
+          "right": 1440,
+          "bottom": 900,
+          "left": 0
+        },
+        "column": {
+          "x": 520,
+          "y": 229,
+          "width": 400,
+          "height": 442,
+          "top": 229,
+          "right": 920,
+          "bottom": 671,
+          "left": 520
+        },
+        "name": {
+          "x": 520,
+          "y": 349,
+          "width": 400,
+          "height": 40,
+          "top": 349,
+          "right": 920,
+          "bottom": 389,
+          "left": 520
+        },
+        "password": {
+          "x": 520,
+          "y": 437,
+          "width": 400,
+          "height": 40,
+          "top": 437,
+          "right": 920,
+          "bottom": 477,
+          "left": 520
+        },
+        "submit": {
+          "x": 520,
+          "y": 579,
+          "width": 400,
+          "height": 40,
+          "top": 579,
+          "right": 920,
+          "bottom": 619,
+          "left": 520
+        },
+        "alternate": {
+          "x": 520,
+          "y": 635,
+          "width": 400,
+          "height": 36,
+          "top": 635,
+          "right": 920,
+          "bottom": 671,
+          "left": 520
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(243, 229, 225)",
+          "noticeColor": "rgb(150, 63, 56)",
+          "noticeBorder": "rgb(150, 63, 56)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "screen": "signup",
+      "state": "success",
+      "result": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "page": {
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "scrollHeight": 900
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "top": 0,
+          "right": 1440,
+          "bottom": 900,
+          "left": 0
+        },
+        "column": {
+          "x": 520,
+          "y": 229,
+          "width": 400,
+          "height": 442,
+          "top": 229,
+          "right": 920,
+          "bottom": 671,
+          "left": 520
+        },
+        "name": {
+          "x": 520,
+          "y": 349,
+          "width": 400,
+          "height": 40,
+          "top": 349,
+          "right": 920,
+          "bottom": 389,
+          "left": 520
+        },
+        "password": {
+          "x": 520,
+          "y": 437,
+          "width": 400,
+          "height": 40,
+          "top": 437,
+          "right": 920,
+          "bottom": 477,
+          "left": 520
+        },
+        "submit": {
+          "x": 520,
+          "y": 579,
+          "width": 400,
+          "height": 40,
+          "top": 579,
+          "right": 920,
+          "bottom": 619,
+          "left": 520
+        },
+        "alternate": {
+          "x": 520,
+          "y": 635,
+          "width": 400,
+          "height": 36,
+          "top": 635,
+          "right": 920,
+          "bottom": 671,
+          "left": 520
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(228, 234, 226)",
+          "noticeColor": "rgb(62, 96, 73)",
+          "noticeBorder": "rgb(62, 96, 73)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "screen": "signup",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "page": {
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "scrollHeight": 900
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "top": 0,
+          "right": 1440,
+          "bottom": 900,
+          "left": 0
+        },
+        "column": {
+          "x": 520,
+          "y": 229,
+          "width": 400,
+          "height": 442,
+          "top": 229,
+          "right": 920,
+          "bottom": 671,
+          "left": 520
+        },
+        "name": {
+          "x": 520,
+          "y": 349,
+          "width": 400,
+          "height": 40,
+          "top": 349,
+          "right": 920,
+          "bottom": 389,
+          "left": 520
+        },
+        "password": {
+          "x": 520,
+          "y": 437,
+          "width": 400,
+          "height": 40,
+          "top": 437,
+          "right": 920,
+          "bottom": 477,
+          "left": 520
+        },
+        "submit": {
+          "x": 520,
+          "y": 579,
+          "width": 400,
+          "height": 40,
+          "top": 579,
+          "right": 920,
+          "bottom": 619,
+          "left": 520
+        },
+        "alternate": {
+          "x": 520,
+          "y": 635,
+          "width": 400,
+          "height": 36,
+          "top": 635,
+          "right": 920,
+          "bottom": 671,
+          "left": 520
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(243, 229, 225)",
+          "noticeColor": "rgb(150, 63, 56)",
+          "noticeBorder": "rgb(150, 63, 56)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "screen": "login",
+      "state": "initial",
+      "result": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "page": {
+          "clientWidth": 1920,
+          "scrollWidth": 1920,
+          "scrollHeight": 1080
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "left": 0
+        },
+        "column": {
+          "x": 760,
+          "y": 358,
+          "width": 400,
+          "height": 364,
+          "top": 358,
+          "right": 1160,
+          "bottom": 722,
+          "left": 760
+        },
+        "name": {
+          "x": 760,
+          "y": 478,
+          "width": 400,
+          "height": 40,
+          "top": 478,
+          "right": 1160,
+          "bottom": 518,
+          "left": 760
+        },
+        "password": {
+          "x": 760,
+          "y": 566,
+          "width": 400,
+          "height": 40,
+          "top": 566,
+          "right": 1160,
+          "bottom": 606,
+          "left": 760
+        },
+        "submit": {
+          "x": 760,
+          "y": 630,
+          "width": 400,
+          "height": 40,
+          "top": 630,
+          "right": 1160,
+          "bottom": 670,
+          "left": 760
+        },
+        "alternate": {
+          "x": 760,
+          "y": 686,
+          "width": 400,
+          "height": 36,
+          "top": 686,
+          "right": 1160,
+          "bottom": 722,
+          "left": 760
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "screen": "login",
+      "state": "pending",
+      "result": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "page": {
+          "clientWidth": 1920,
+          "scrollWidth": 1920,
+          "scrollHeight": 1080
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "left": 0
+        },
+        "column": {
+          "x": 760,
+          "y": 358,
+          "width": 400,
+          "height": 364,
+          "top": 358,
+          "right": 1160,
+          "bottom": 722,
+          "left": 760
+        },
+        "name": {
+          "x": 760,
+          "y": 478,
+          "width": 400,
+          "height": 40,
+          "top": 478,
+          "right": 1160,
+          "bottom": 518,
+          "left": 760
+        },
+        "password": {
+          "x": 760,
+          "y": 566,
+          "width": 400,
+          "height": 40,
+          "top": 566,
+          "right": 1160,
+          "bottom": 606,
+          "left": 760
+        },
+        "submit": {
+          "x": 760,
+          "y": 630,
+          "width": 400,
+          "height": 40,
+          "top": 630,
+          "right": 1160,
+          "bottom": 670,
+          "left": 760
+        },
+        "alternate": {
+          "x": 760,
+          "y": 686,
+          "width": 400,
+          "height": 36,
+          "top": 686,
+          "right": 1160,
+          "bottom": 722,
+          "left": 760
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(227, 226, 219)",
+          "submitColor": "rgb(36, 37, 33)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "screen": "login",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "page": {
+          "clientWidth": 1920,
+          "scrollWidth": 1920,
+          "scrollHeight": 1080
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "left": 0
+        },
+        "column": {
+          "x": 760,
+          "y": 319,
+          "width": 400,
+          "height": 442,
+          "top": 319,
+          "right": 1160,
+          "bottom": 761,
+          "left": 760
+        },
+        "name": {
+          "x": 760,
+          "y": 439,
+          "width": 400,
+          "height": 40,
+          "top": 439,
+          "right": 1160,
+          "bottom": 479,
+          "left": 760
+        },
+        "password": {
+          "x": 760,
+          "y": 527,
+          "width": 400,
+          "height": 40,
+          "top": 527,
+          "right": 1160,
+          "bottom": 567,
+          "left": 760
+        },
+        "submit": {
+          "x": 760,
+          "y": 669,
+          "width": 400,
+          "height": 40,
+          "top": 669,
+          "right": 1160,
+          "bottom": 709,
+          "left": 760
+        },
+        "alternate": {
+          "x": 760,
+          "y": 725,
+          "width": 400,
+          "height": 36,
+          "top": 725,
+          "right": 1160,
+          "bottom": 761,
+          "left": 760
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(243, 229, 225)",
+          "noticeColor": "rgb(150, 63, 56)",
+          "noticeBorder": "rgb(150, 63, 56)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "screen": "signup",
+      "state": "success",
+      "result": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "page": {
+          "clientWidth": 1920,
+          "scrollWidth": 1920,
+          "scrollHeight": 1080
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "left": 0
+        },
+        "column": {
+          "x": 760,
+          "y": 319,
+          "width": 400,
+          "height": 442,
+          "top": 319,
+          "right": 1160,
+          "bottom": 761,
+          "left": 760
+        },
+        "name": {
+          "x": 760,
+          "y": 439,
+          "width": 400,
+          "height": 40,
+          "top": 439,
+          "right": 1160,
+          "bottom": 479,
+          "left": 760
+        },
+        "password": {
+          "x": 760,
+          "y": 527,
+          "width": 400,
+          "height": 40,
+          "top": 527,
+          "right": 1160,
+          "bottom": 567,
+          "left": 760
+        },
+        "submit": {
+          "x": 760,
+          "y": 669,
+          "width": 400,
+          "height": 40,
+          "top": 669,
+          "right": 1160,
+          "bottom": 709,
+          "left": 760
+        },
+        "alternate": {
+          "x": 760,
+          "y": 725,
+          "width": 400,
+          "height": 36,
+          "top": 725,
+          "right": 1160,
+          "bottom": 761,
+          "left": 760
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(228, 234, 226)",
+          "noticeColor": "rgb(62, 96, 73)",
+          "noticeBorder": "rgb(62, 96, 73)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "screen": "signup",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "page": {
+          "clientWidth": 1920,
+          "scrollWidth": 1920,
+          "scrollHeight": 1080
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "left": 0
+        },
+        "column": {
+          "x": 760,
+          "y": 319,
+          "width": 400,
+          "height": 442,
+          "top": 319,
+          "right": 1160,
+          "bottom": 761,
+          "left": 760
+        },
+        "name": {
+          "x": 760,
+          "y": 439,
+          "width": 400,
+          "height": 40,
+          "top": 439,
+          "right": 1160,
+          "bottom": 479,
+          "left": 760
+        },
+        "password": {
+          "x": 760,
+          "y": 527,
+          "width": 400,
+          "height": 40,
+          "top": 527,
+          "right": 1160,
+          "bottom": 567,
+          "left": 760
+        },
+        "submit": {
+          "x": 760,
+          "y": 669,
+          "width": 400,
+          "height": 40,
+          "top": 669,
+          "right": 1160,
+          "bottom": 709,
+          "left": 760
+        },
+        "alternate": {
+          "x": 760,
+          "y": 725,
+          "width": 400,
+          "height": 36,
+          "top": 725,
+          "right": 1160,
+          "bottom": 761,
+          "left": 760
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(44, 75, 93)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(243, 229, 225)",
+          "noticeColor": "rgb(150, 63, 56)",
+          "noticeBorder": "rgb(150, 63, 56)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "screen": "login",
+      "state": "initial",
+      "result": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "page": {
+          "clientWidth": 1280,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "top": 0,
+          "right": 1280,
+          "bottom": 720,
+          "left": 0
+        },
+        "column": {
+          "x": 440,
+          "y": 178,
+          "width": 400,
+          "height": 364,
+          "top": 178,
+          "right": 840,
+          "bottom": 542,
+          "left": 440
+        },
+        "name": {
+          "x": 440,
+          "y": 298,
+          "width": 400,
+          "height": 40,
+          "top": 298,
+          "right": 840,
+          "bottom": 338,
+          "left": 440
+        },
+        "password": {
+          "x": 440,
+          "y": 386,
+          "width": 400,
+          "height": 40,
+          "top": 386,
+          "right": 840,
+          "bottom": 426,
+          "left": 440
+        },
+        "submit": {
+          "x": 440,
+          "y": 450,
+          "width": 400,
+          "height": 40,
+          "top": 450,
+          "right": 840,
+          "bottom": 490,
+          "left": 440
+        },
+        "alternate": {
+          "x": 440,
+          "y": 506,
+          "width": 400,
+          "height": 36,
+          "top": 506,
+          "right": 840,
+          "bottom": 542,
+          "left": 440
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "screen": "login",
+      "state": "pending",
+      "result": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "page": {
+          "clientWidth": 1280,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "top": 0,
+          "right": 1280,
+          "bottom": 720,
+          "left": 0
+        },
+        "column": {
+          "x": 440,
+          "y": 178,
+          "width": 400,
+          "height": 364,
+          "top": 178,
+          "right": 840,
+          "bottom": 542,
+          "left": 440
+        },
+        "name": {
+          "x": 440,
+          "y": 298,
+          "width": 400,
+          "height": 40,
+          "top": 298,
+          "right": 840,
+          "bottom": 338,
+          "left": 440
+        },
+        "password": {
+          "x": 440,
+          "y": 386,
+          "width": 400,
+          "height": 40,
+          "top": 386,
+          "right": 840,
+          "bottom": 426,
+          "left": 440
+        },
+        "submit": {
+          "x": 440,
+          "y": 450,
+          "width": 400,
+          "height": 40,
+          "top": 450,
+          "right": 840,
+          "bottom": 490,
+          "left": 440
+        },
+        "alternate": {
+          "x": 440,
+          "y": 506,
+          "width": 400,
+          "height": 36,
+          "top": 506,
+          "right": 840,
+          "bottom": 542,
+          "left": 440
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(53, 58, 50)",
+          "submitColor": "rgb(233, 231, 223)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "screen": "login",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "page": {
+          "clientWidth": 1280,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "top": 0,
+          "right": 1280,
+          "bottom": 720,
+          "left": 0
+        },
+        "column": {
+          "x": 440,
+          "y": 139,
+          "width": 400,
+          "height": 442,
+          "top": 139,
+          "right": 840,
+          "bottom": 581,
+          "left": 440
+        },
+        "name": {
+          "x": 440,
+          "y": 259,
+          "width": 400,
+          "height": 40,
+          "top": 259,
+          "right": 840,
+          "bottom": 299,
+          "left": 440
+        },
+        "password": {
+          "x": 440,
+          "y": 347,
+          "width": 400,
+          "height": 40,
+          "top": 347,
+          "right": 840,
+          "bottom": 387,
+          "left": 440
+        },
+        "submit": {
+          "x": 440,
+          "y": 489,
+          "width": 400,
+          "height": 40,
+          "top": 489,
+          "right": 840,
+          "bottom": 529,
+          "left": 440
+        },
+        "alternate": {
+          "x": 440,
+          "y": 545,
+          "width": 400,
+          "height": 36,
+          "top": 545,
+          "right": 840,
+          "bottom": 581,
+          "left": 440
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(72, 44, 41)",
+          "noticeColor": "rgb(240, 171, 163)",
+          "noticeBorder": "rgb(240, 171, 163)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "screen": "signup",
+      "state": "success",
+      "result": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "page": {
+          "clientWidth": 1280,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "top": 0,
+          "right": 1280,
+          "bottom": 720,
+          "left": 0
+        },
+        "column": {
+          "x": 440,
+          "y": 139,
+          "width": 400,
+          "height": 442,
+          "top": 139,
+          "right": 840,
+          "bottom": 581,
+          "left": 440
+        },
+        "name": {
+          "x": 440,
+          "y": 259,
+          "width": 400,
+          "height": 40,
+          "top": 259,
+          "right": 840,
+          "bottom": 299,
+          "left": 440
+        },
+        "password": {
+          "x": 440,
+          "y": 347,
+          "width": 400,
+          "height": 40,
+          "top": 347,
+          "right": 840,
+          "bottom": 387,
+          "left": 440
+        },
+        "submit": {
+          "x": 440,
+          "y": 489,
+          "width": 400,
+          "height": 40,
+          "top": 489,
+          "right": 840,
+          "bottom": 529,
+          "left": 440
+        },
+        "alternate": {
+          "x": 440,
+          "y": 545,
+          "width": 400,
+          "height": 36,
+          "top": 545,
+          "right": 840,
+          "bottom": 581,
+          "left": 440
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(41, 61, 46)",
+          "noticeColor": "rgb(168, 207, 176)",
+          "noticeBorder": "rgb(168, 207, 176)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "screen": "signup",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "page": {
+          "clientWidth": 1280,
+          "scrollWidth": 1280,
+          "scrollHeight": 720
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "top": 0,
+          "right": 1280,
+          "bottom": 720,
+          "left": 0
+        },
+        "column": {
+          "x": 440,
+          "y": 139,
+          "width": 400,
+          "height": 442,
+          "top": 139,
+          "right": 840,
+          "bottom": 581,
+          "left": 440
+        },
+        "name": {
+          "x": 440,
+          "y": 259,
+          "width": 400,
+          "height": 40,
+          "top": 259,
+          "right": 840,
+          "bottom": 299,
+          "left": 440
+        },
+        "password": {
+          "x": 440,
+          "y": 347,
+          "width": 400,
+          "height": 40,
+          "top": 347,
+          "right": 840,
+          "bottom": 387,
+          "left": 440
+        },
+        "submit": {
+          "x": 440,
+          "y": 489,
+          "width": 400,
+          "height": 40,
+          "top": 489,
+          "right": 840,
+          "bottom": 529,
+          "left": 440
+        },
+        "alternate": {
+          "x": 440,
+          "y": 545,
+          "width": 400,
+          "height": 36,
+          "top": 545,
+          "right": 840,
+          "bottom": 581,
+          "left": 440
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(187, 209, 220)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(72, 44, 41)",
+          "noticeColor": "rgb(240, 171, 163)",
+          "noticeBorder": "rgb(240, 171, 163)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "screen": "login",
+      "state": "initial",
+      "result": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "page": {
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "scrollHeight": 900
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "top": 0,
+          "right": 1440,
+          "bottom": 900,
+          "left": 0
+        },
+        "column": {
+          "x": 520,
+          "y": 268,
+          "width": 400,
+          "height": 364,
+          "top": 268,
+          "right": 920,
+          "bottom": 632,
+          "left": 520
+        },
+        "name": {
+          "x": 520,
+          "y": 388,
+          "width": 400,
+          "height": 40,
+          "top": 388,
+          "right": 920,
+          "bottom": 428,
+          "left": 520
+        },
+        "password": {
+          "x": 520,
+          "y": 476,
+          "width": 400,
+          "height": 40,
+          "top": 476,
+          "right": 920,
+          "bottom": 516,
+          "left": 520
+        },
+        "submit": {
+          "x": 520,
+          "y": 540,
+          "width": 400,
+          "height": 40,
+          "top": 540,
+          "right": 920,
+          "bottom": 580,
+          "left": 520
+        },
+        "alternate": {
+          "x": 520,
+          "y": 596,
+          "width": 400,
+          "height": 36,
+          "top": 596,
+          "right": 920,
+          "bottom": 632,
+          "left": 520
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "screen": "login",
+      "state": "pending",
+      "result": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "page": {
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "scrollHeight": 900
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "top": 0,
+          "right": 1440,
+          "bottom": 900,
+          "left": 0
+        },
+        "column": {
+          "x": 520,
+          "y": 268,
+          "width": 400,
+          "height": 364,
+          "top": 268,
+          "right": 920,
+          "bottom": 632,
+          "left": 520
+        },
+        "name": {
+          "x": 520,
+          "y": 388,
+          "width": 400,
+          "height": 40,
+          "top": 388,
+          "right": 920,
+          "bottom": 428,
+          "left": 520
+        },
+        "password": {
+          "x": 520,
+          "y": 476,
+          "width": 400,
+          "height": 40,
+          "top": 476,
+          "right": 920,
+          "bottom": 516,
+          "left": 520
+        },
+        "submit": {
+          "x": 520,
+          "y": 540,
+          "width": 400,
+          "height": 40,
+          "top": 540,
+          "right": 920,
+          "bottom": 580,
+          "left": 520
+        },
+        "alternate": {
+          "x": 520,
+          "y": 596,
+          "width": 400,
+          "height": 36,
+          "top": 596,
+          "right": 920,
+          "bottom": 632,
+          "left": 520
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(53, 58, 50)",
+          "submitColor": "rgb(233, 231, 223)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "screen": "login",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "page": {
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "scrollHeight": 900
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "top": 0,
+          "right": 1440,
+          "bottom": 900,
+          "left": 0
+        },
+        "column": {
+          "x": 520,
+          "y": 229,
+          "width": 400,
+          "height": 442,
+          "top": 229,
+          "right": 920,
+          "bottom": 671,
+          "left": 520
+        },
+        "name": {
+          "x": 520,
+          "y": 349,
+          "width": 400,
+          "height": 40,
+          "top": 349,
+          "right": 920,
+          "bottom": 389,
+          "left": 520
+        },
+        "password": {
+          "x": 520,
+          "y": 437,
+          "width": 400,
+          "height": 40,
+          "top": 437,
+          "right": 920,
+          "bottom": 477,
+          "left": 520
+        },
+        "submit": {
+          "x": 520,
+          "y": 579,
+          "width": 400,
+          "height": 40,
+          "top": 579,
+          "right": 920,
+          "bottom": 619,
+          "left": 520
+        },
+        "alternate": {
+          "x": 520,
+          "y": 635,
+          "width": 400,
+          "height": 36,
+          "top": 635,
+          "right": 920,
+          "bottom": 671,
+          "left": 520
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(72, 44, 41)",
+          "noticeColor": "rgb(240, 171, 163)",
+          "noticeBorder": "rgb(240, 171, 163)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "screen": "signup",
+      "state": "success",
+      "result": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "page": {
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "scrollHeight": 900
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "top": 0,
+          "right": 1440,
+          "bottom": 900,
+          "left": 0
+        },
+        "column": {
+          "x": 520,
+          "y": 229,
+          "width": 400,
+          "height": 442,
+          "top": 229,
+          "right": 920,
+          "bottom": 671,
+          "left": 520
+        },
+        "name": {
+          "x": 520,
+          "y": 349,
+          "width": 400,
+          "height": 40,
+          "top": 349,
+          "right": 920,
+          "bottom": 389,
+          "left": 520
+        },
+        "password": {
+          "x": 520,
+          "y": 437,
+          "width": 400,
+          "height": 40,
+          "top": 437,
+          "right": 920,
+          "bottom": 477,
+          "left": 520
+        },
+        "submit": {
+          "x": 520,
+          "y": 579,
+          "width": 400,
+          "height": 40,
+          "top": 579,
+          "right": 920,
+          "bottom": 619,
+          "left": 520
+        },
+        "alternate": {
+          "x": 520,
+          "y": 635,
+          "width": 400,
+          "height": 36,
+          "top": 635,
+          "right": 920,
+          "bottom": 671,
+          "left": 520
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(41, 61, 46)",
+          "noticeColor": "rgb(168, 207, 176)",
+          "noticeBorder": "rgb(168, 207, 176)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "screen": "signup",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "page": {
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "scrollHeight": 900
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "top": 0,
+          "right": 1440,
+          "bottom": 900,
+          "left": 0
+        },
+        "column": {
+          "x": 520,
+          "y": 229,
+          "width": 400,
+          "height": 442,
+          "top": 229,
+          "right": 920,
+          "bottom": 671,
+          "left": 520
+        },
+        "name": {
+          "x": 520,
+          "y": 349,
+          "width": 400,
+          "height": 40,
+          "top": 349,
+          "right": 920,
+          "bottom": 389,
+          "left": 520
+        },
+        "password": {
+          "x": 520,
+          "y": 437,
+          "width": 400,
+          "height": 40,
+          "top": 437,
+          "right": 920,
+          "bottom": 477,
+          "left": 520
+        },
+        "submit": {
+          "x": 520,
+          "y": 579,
+          "width": 400,
+          "height": 40,
+          "top": 579,
+          "right": 920,
+          "bottom": 619,
+          "left": 520
+        },
+        "alternate": {
+          "x": 520,
+          "y": 635,
+          "width": 400,
+          "height": 36,
+          "top": 635,
+          "right": 920,
+          "bottom": 671,
+          "left": 520
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(187, 209, 220)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(72, 44, 41)",
+          "noticeColor": "rgb(240, 171, 163)",
+          "noticeBorder": "rgb(240, 171, 163)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "screen": "login",
+      "state": "initial",
+      "result": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "page": {
+          "clientWidth": 1920,
+          "scrollWidth": 1920,
+          "scrollHeight": 1080
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "left": 0
+        },
+        "column": {
+          "x": 760,
+          "y": 358,
+          "width": 400,
+          "height": 364,
+          "top": 358,
+          "right": 1160,
+          "bottom": 722,
+          "left": 760
+        },
+        "name": {
+          "x": 760,
+          "y": 478,
+          "width": 400,
+          "height": 40,
+          "top": 478,
+          "right": 1160,
+          "bottom": 518,
+          "left": 760
+        },
+        "password": {
+          "x": 760,
+          "y": 566,
+          "width": 400,
+          "height": 40,
+          "top": 566,
+          "right": 1160,
+          "bottom": 606,
+          "left": 760
+        },
+        "submit": {
+          "x": 760,
+          "y": 630,
+          "width": 400,
+          "height": 40,
+          "top": 630,
+          "right": 1160,
+          "bottom": 670,
+          "left": 760
+        },
+        "alternate": {
+          "x": 760,
+          "y": 686,
+          "width": 400,
+          "height": 36,
+          "top": 686,
+          "right": 1160,
+          "bottom": 722,
+          "left": 760
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "screen": "login",
+      "state": "pending",
+      "result": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "page": {
+          "clientWidth": 1920,
+          "scrollWidth": 1920,
+          "scrollHeight": 1080
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "left": 0
+        },
+        "column": {
+          "x": 760,
+          "y": 358,
+          "width": 400,
+          "height": 364,
+          "top": 358,
+          "right": 1160,
+          "bottom": 722,
+          "left": 760
+        },
+        "name": {
+          "x": 760,
+          "y": 478,
+          "width": 400,
+          "height": 40,
+          "top": 478,
+          "right": 1160,
+          "bottom": 518,
+          "left": 760
+        },
+        "password": {
+          "x": 760,
+          "y": 566,
+          "width": 400,
+          "height": 40,
+          "top": 566,
+          "right": 1160,
+          "bottom": 606,
+          "left": 760
+        },
+        "submit": {
+          "x": 760,
+          "y": 630,
+          "width": 400,
+          "height": 40,
+          "top": 630,
+          "right": 1160,
+          "bottom": 670,
+          "left": 760
+        },
+        "alternate": {
+          "x": 760,
+          "y": 686,
+          "width": 400,
+          "height": 36,
+          "top": 686,
+          "right": 1160,
+          "bottom": 722,
+          "left": 760
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(53, 58, 50)",
+          "submitColor": "rgb(233, 231, 223)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "screen": "login",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "page": {
+          "clientWidth": 1920,
+          "scrollWidth": 1920,
+          "scrollHeight": 1080
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "left": 0
+        },
+        "column": {
+          "x": 760,
+          "y": 319,
+          "width": 400,
+          "height": 442,
+          "top": 319,
+          "right": 1160,
+          "bottom": 761,
+          "left": 760
+        },
+        "name": {
+          "x": 760,
+          "y": 439,
+          "width": 400,
+          "height": 40,
+          "top": 439,
+          "right": 1160,
+          "bottom": 479,
+          "left": 760
+        },
+        "password": {
+          "x": 760,
+          "y": 527,
+          "width": 400,
+          "height": 40,
+          "top": 527,
+          "right": 1160,
+          "bottom": 567,
+          "left": 760
+        },
+        "submit": {
+          "x": 760,
+          "y": 669,
+          "width": 400,
+          "height": 40,
+          "top": 669,
+          "right": 1160,
+          "bottom": 709,
+          "left": 760
+        },
+        "alternate": {
+          "x": 760,
+          "y": 725,
+          "width": 400,
+          "height": 36,
+          "top": 725,
+          "right": 1160,
+          "bottom": 761,
+          "left": 760
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(72, 44, 41)",
+          "noticeColor": "rgb(240, 171, 163)",
+          "noticeBorder": "rgb(240, 171, 163)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "screen": "signup",
+      "state": "success",
+      "result": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "page": {
+          "clientWidth": 1920,
+          "scrollWidth": 1920,
+          "scrollHeight": 1080
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "left": 0
+        },
+        "column": {
+          "x": 760,
+          "y": 319,
+          "width": 400,
+          "height": 442,
+          "top": 319,
+          "right": 1160,
+          "bottom": 761,
+          "left": 760
+        },
+        "name": {
+          "x": 760,
+          "y": 439,
+          "width": 400,
+          "height": 40,
+          "top": 439,
+          "right": 1160,
+          "bottom": 479,
+          "left": 760
+        },
+        "password": {
+          "x": 760,
+          "y": 527,
+          "width": 400,
+          "height": 40,
+          "top": 527,
+          "right": 1160,
+          "bottom": 567,
+          "left": 760
+        },
+        "submit": {
+          "x": 760,
+          "y": 669,
+          "width": 400,
+          "height": 40,
+          "top": 669,
+          "right": 1160,
+          "bottom": 709,
+          "left": 760
+        },
+        "alternate": {
+          "x": 760,
+          "y": 725,
+          "width": 400,
+          "height": 36,
+          "top": 725,
+          "right": 1160,
+          "bottom": 761,
+          "left": 760
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(41, 61, 46)",
+          "noticeColor": "rgb(168, 207, 176)",
+          "noticeBorder": "rgb(168, 207, 176)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "zoom": 1,
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "screen": "signup",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "page": {
+          "clientWidth": 1920,
+          "scrollWidth": 1920,
+          "scrollHeight": 1080
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "left": 0
+        },
+        "column": {
+          "x": 760,
+          "y": 319,
+          "width": 400,
+          "height": 442,
+          "top": 319,
+          "right": 1160,
+          "bottom": 761,
+          "left": 760
+        },
+        "name": {
+          "x": 760,
+          "y": 439,
+          "width": 400,
+          "height": 40,
+          "top": 439,
+          "right": 1160,
+          "bottom": 479,
+          "left": 760
+        },
+        "password": {
+          "x": 760,
+          "y": 527,
+          "width": 400,
+          "height": 40,
+          "top": 527,
+          "right": 1160,
+          "bottom": 567,
+          "left": 760
+        },
+        "submit": {
+          "x": 760,
+          "y": 669,
+          "width": 400,
+          "height": 40,
+          "top": 669,
+          "right": 1160,
+          "bottom": 709,
+          "left": 760
+        },
+        "alternate": {
+          "x": 760,
+          "y": 725,
+          "width": 400,
+          "height": 36,
+          "top": 725,
+          "right": 1160,
+          "bottom": 761,
+          "left": 760
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(187, 209, 220)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(72, 44, 41)",
+          "noticeColor": "rgb(240, 171, 163)",
+          "noticeBorder": "rgb(240, 171, 163)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    }
+  ],
+  "actualZoom": [
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "light",
+      "requestedOuterWindow": {
+        "width": 1280,
+        "height": 720
+      },
+      "before": {
+        "width": 1280,
+        "height": 722,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 640,
+        "height": 361,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "initial",
+      "result": {
+        "viewport": {
+          "width": 640,
+          "height": 361
+        },
+        "page": {
+          "clientWidth": 632,
+          "scrollWidth": 632,
+          "scrollHeight": 460
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 632.4000244140625,
+          "height": 460,
+          "top": 0,
+          "right": 632.4000244140625,
+          "bottom": 460,
+          "left": 0
+        },
+        "column": {
+          "x": 116.20000457763672,
+          "y": 48,
+          "width": 400,
+          "height": 364,
+          "top": 48,
+          "right": 516.2000045776367,
+          "bottom": 412,
+          "left": 116.20000457763672
+        },
+        "name": {
+          "x": 116.20000457763672,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 516.2000045776367,
+          "bottom": 208,
+          "left": 116.20000457763672
+        },
+        "password": {
+          "x": 116.20000457763672,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 516.2000045776367,
+          "bottom": 296,
+          "left": 116.20000457763672
+        },
+        "submit": {
+          "x": 116.20000457763672,
+          "y": 320,
+          "width": 400,
+          "height": 40,
+          "top": 320,
+          "right": 516.2000045776367,
+          "bottom": 360,
+          "left": 116.20000457763672
+        },
+        "alternate": {
+          "x": 116.20000457763672,
+          "y": 376,
+          "width": 400,
+          "height": 36,
+          "top": 376,
+          "right": 516.2000045776367,
+          "bottom": 412,
+          "left": 116.20000457763672
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "light",
+      "requestedOuterWindow": {
+        "width": 1280,
+        "height": 720
+      },
+      "before": {
+        "width": 1282,
+        "height": 720,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 641,
+        "height": 360,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "pending",
+      "result": {
+        "viewport": {
+          "width": 641,
+          "height": 360
+        },
+        "page": {
+          "clientWidth": 633,
+          "scrollWidth": 633,
+          "scrollHeight": 460
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 633.2000122070312,
+          "height": 460,
+          "top": 0,
+          "right": 633.2000122070312,
+          "bottom": 460,
+          "left": 0
+        },
+        "column": {
+          "x": 116.5999984741211,
+          "y": 48,
+          "width": 400,
+          "height": 364,
+          "top": 48,
+          "right": 516.5999984741211,
+          "bottom": 412,
+          "left": 116.5999984741211
+        },
+        "name": {
+          "x": 116.5999984741211,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 516.5999984741211,
+          "bottom": 208,
+          "left": 116.5999984741211
+        },
+        "password": {
+          "x": 116.5999984741211,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 516.5999984741211,
+          "bottom": 296,
+          "left": 116.5999984741211
+        },
+        "submit": {
+          "x": 116.5999984741211,
+          "y": 320,
+          "width": 400,
+          "height": 40,
+          "top": 320,
+          "right": 516.5999984741211,
+          "bottom": 360,
+          "left": 116.5999984741211
+        },
+        "alternate": {
+          "x": 116.5999984741211,
+          "y": 376,
+          "width": 400,
+          "height": 36,
+          "top": 376,
+          "right": 516.5999984741211,
+          "bottom": 412,
+          "left": 116.5999984741211
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(227, 226, 219)",
+          "submitColor": "rgb(36, 37, 33)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "light",
+      "requestedOuterWindow": {
+        "width": 1280,
+        "height": 720
+      },
+      "before": {
+        "width": 1280,
+        "height": 722,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 640,
+        "height": 361,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 640,
+          "height": 361
+        },
+        "page": {
+          "clientWidth": 632,
+          "scrollWidth": 632,
+          "scrollHeight": 537
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 632.4000244140625,
+          "height": 537.6000366210938,
+          "top": 0,
+          "right": 632.4000244140625,
+          "bottom": 537.6000366210938,
+          "left": 0
+        },
+        "column": {
+          "x": 116.20000457763672,
+          "y": 48,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 48,
+          "right": 516.2000045776367,
+          "bottom": 489.6000061035156,
+          "left": 116.20000457763672
+        },
+        "name": {
+          "x": 116.20000457763672,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 516.2000045776367,
+          "bottom": 208,
+          "left": 116.20000457763672
+        },
+        "password": {
+          "x": 116.20000457763672,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 516.2000045776367,
+          "bottom": 296,
+          "left": 116.20000457763672
+        },
+        "submit": {
+          "x": 116.20000457763672,
+          "y": 397.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 397.6000061035156,
+          "right": 516.2000045776367,
+          "bottom": 437.6000061035156,
+          "left": 116.20000457763672
+        },
+        "alternate": {
+          "x": 116.20000457763672,
+          "y": 453.6000061035156,
+          "width": 400,
+          "height": 36,
+          "top": 453.6000061035156,
+          "right": 516.2000045776367,
+          "bottom": 489.6000061035156,
+          "left": 116.20000457763672
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(243, 229, 225)",
+          "noticeColor": "rgb(150, 63, 56)",
+          "noticeBorder": "rgb(150, 63, 56)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "light",
+      "requestedOuterWindow": {
+        "width": 1280,
+        "height": 720
+      },
+      "before": {
+        "width": 1282,
+        "height": 720,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 641,
+        "height": 360,
+        "dpr": 2.5
+      },
+      "screen": "signup",
+      "state": "success",
+      "result": {
+        "viewport": {
+          "width": 641,
+          "height": 360
+        },
+        "page": {
+          "clientWidth": 633,
+          "scrollWidth": 633,
+          "scrollHeight": 537
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 633.2000122070312,
+          "height": 537.6000366210938,
+          "top": 0,
+          "right": 633.2000122070312,
+          "bottom": 537.6000366210938,
+          "left": 0
+        },
+        "column": {
+          "x": 116.5999984741211,
+          "y": 48,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 48,
+          "right": 516.5999984741211,
+          "bottom": 489.6000061035156,
+          "left": 116.5999984741211
+        },
+        "name": {
+          "x": 116.5999984741211,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 516.5999984741211,
+          "bottom": 208,
+          "left": 116.5999984741211
+        },
+        "password": {
+          "x": 116.5999984741211,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 516.5999984741211,
+          "bottom": 296,
+          "left": 116.5999984741211
+        },
+        "submit": {
+          "x": 116.5999984741211,
+          "y": 397.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 397.6000061035156,
+          "right": 516.5999984741211,
+          "bottom": 437.6000061035156,
+          "left": 116.5999984741211
+        },
+        "alternate": {
+          "x": 116.5999984741211,
+          "y": 453.6000061035156,
+          "width": 400,
+          "height": 36,
+          "top": 453.6000061035156,
+          "right": 516.5999984741211,
+          "bottom": 489.6000061035156,
+          "left": 116.5999984741211
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(228, 234, 226)",
+          "noticeColor": "rgb(62, 96, 73)",
+          "noticeBorder": "rgb(62, 96, 73)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "light",
+      "requestedOuterWindow": {
+        "width": 1280,
+        "height": 720
+      },
+      "before": {
+        "width": 1280,
+        "height": 722,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 640,
+        "height": 361,
+        "dpr": 2.5
+      },
+      "screen": "signup",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 640,
+          "height": 361
+        },
+        "page": {
+          "clientWidth": 632,
+          "scrollWidth": 632,
+          "scrollHeight": 537
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 632.4000244140625,
+          "height": 537.6000366210938,
+          "top": 0,
+          "right": 632.4000244140625,
+          "bottom": 537.6000366210938,
+          "left": 0
+        },
+        "column": {
+          "x": 116.20000457763672,
+          "y": 48,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 48,
+          "right": 516.2000045776367,
+          "bottom": 489.6000061035156,
+          "left": 116.20000457763672
+        },
+        "name": {
+          "x": 116.20000457763672,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 516.2000045776367,
+          "bottom": 208,
+          "left": 116.20000457763672
+        },
+        "password": {
+          "x": 116.20000457763672,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 516.2000045776367,
+          "bottom": 296,
+          "left": 116.20000457763672
+        },
+        "submit": {
+          "x": 116.20000457763672,
+          "y": 397.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 397.6000061035156,
+          "right": 516.2000045776367,
+          "bottom": 437.6000061035156,
+          "left": 116.20000457763672
+        },
+        "alternate": {
+          "x": 116.20000457763672,
+          "y": 453.6000061035156,
+          "width": 400,
+          "height": 36,
+          "top": 453.6000061035156,
+          "right": 516.2000045776367,
+          "bottom": 489.6000061035156,
+          "left": 116.20000457763672
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(44, 75, 93)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(243, 229, 225)",
+          "noticeColor": "rgb(150, 63, 56)",
+          "noticeBorder": "rgb(150, 63, 56)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "light",
+      "requestedOuterWindow": {
+        "width": 1440,
+        "height": 900
+      },
+      "before": {
+        "width": 1440,
+        "height": 902,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 720,
+        "height": 451,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "initial",
+      "result": {
+        "viewport": {
+          "width": 720,
+          "height": 451
+        },
+        "page": {
+          "clientWidth": 712,
+          "scrollWidth": 712,
+          "scrollHeight": 460
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 712.4000244140625,
+          "height": 460,
+          "top": 0,
+          "right": 712.4000244140625,
+          "bottom": 460,
+          "left": 0
+        },
+        "column": {
+          "x": 156.1999969482422,
+          "y": 48,
+          "width": 400,
+          "height": 364,
+          "top": 48,
+          "right": 556.1999969482422,
+          "bottom": 412,
+          "left": 156.1999969482422
+        },
+        "name": {
+          "x": 156.1999969482422,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 556.1999969482422,
+          "bottom": 208,
+          "left": 156.1999969482422
+        },
+        "password": {
+          "x": 156.1999969482422,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 556.1999969482422,
+          "bottom": 296,
+          "left": 156.1999969482422
+        },
+        "submit": {
+          "x": 156.1999969482422,
+          "y": 320,
+          "width": 400,
+          "height": 40,
+          "top": 320,
+          "right": 556.1999969482422,
+          "bottom": 360,
+          "left": 156.1999969482422
+        },
+        "alternate": {
+          "x": 156.1999969482422,
+          "y": 376,
+          "width": 400,
+          "height": 36,
+          "top": 376,
+          "right": 556.1999969482422,
+          "bottom": 412,
+          "left": 156.1999969482422
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "light",
+      "requestedOuterWindow": {
+        "width": 1440,
+        "height": 900
+      },
+      "before": {
+        "width": 1442,
+        "height": 900,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 721,
+        "height": 450,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "pending",
+      "result": {
+        "viewport": {
+          "width": 721,
+          "height": 450
+        },
+        "page": {
+          "clientWidth": 713,
+          "scrollWidth": 713,
+          "scrollHeight": 460
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 713.2000122070312,
+          "height": 460,
+          "top": 0,
+          "right": 713.2000122070312,
+          "bottom": 460,
+          "left": 0
+        },
+        "column": {
+          "x": 156.60000610351562,
+          "y": 48,
+          "width": 400,
+          "height": 364,
+          "top": 48,
+          "right": 556.6000061035156,
+          "bottom": 412,
+          "left": 156.60000610351562
+        },
+        "name": {
+          "x": 156.60000610351562,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 556.6000061035156,
+          "bottom": 208,
+          "left": 156.60000610351562
+        },
+        "password": {
+          "x": 156.60000610351562,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 556.6000061035156,
+          "bottom": 296,
+          "left": 156.60000610351562
+        },
+        "submit": {
+          "x": 156.60000610351562,
+          "y": 320,
+          "width": 400,
+          "height": 40,
+          "top": 320,
+          "right": 556.6000061035156,
+          "bottom": 360,
+          "left": 156.60000610351562
+        },
+        "alternate": {
+          "x": 156.60000610351562,
+          "y": 376,
+          "width": 400,
+          "height": 36,
+          "top": 376,
+          "right": 556.6000061035156,
+          "bottom": 412,
+          "left": 156.60000610351562
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(227, 226, 219)",
+          "submitColor": "rgb(36, 37, 33)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "light",
+      "requestedOuterWindow": {
+        "width": 1440,
+        "height": 900
+      },
+      "before": {
+        "width": 1440,
+        "height": 902,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 720,
+        "height": 451,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 720,
+          "height": 451
+        },
+        "page": {
+          "clientWidth": 712,
+          "scrollWidth": 712,
+          "scrollHeight": 537
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 712.4000244140625,
+          "height": 537.6000366210938,
+          "top": 0,
+          "right": 712.4000244140625,
+          "bottom": 537.6000366210938,
+          "left": 0
+        },
+        "column": {
+          "x": 156.1999969482422,
+          "y": 48,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 48,
+          "right": 556.1999969482422,
+          "bottom": 489.6000061035156,
+          "left": 156.1999969482422
+        },
+        "name": {
+          "x": 156.1999969482422,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 556.1999969482422,
+          "bottom": 208,
+          "left": 156.1999969482422
+        },
+        "password": {
+          "x": 156.1999969482422,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 556.1999969482422,
+          "bottom": 296,
+          "left": 156.1999969482422
+        },
+        "submit": {
+          "x": 156.1999969482422,
+          "y": 397.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 397.6000061035156,
+          "right": 556.1999969482422,
+          "bottom": 437.6000061035156,
+          "left": 156.1999969482422
+        },
+        "alternate": {
+          "x": 156.1999969482422,
+          "y": 453.6000061035156,
+          "width": 400,
+          "height": 36,
+          "top": 453.6000061035156,
+          "right": 556.1999969482422,
+          "bottom": 489.6000061035156,
+          "left": 156.1999969482422
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(243, 229, 225)",
+          "noticeColor": "rgb(150, 63, 56)",
+          "noticeBorder": "rgb(150, 63, 56)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "light",
+      "requestedOuterWindow": {
+        "width": 1440,
+        "height": 900
+      },
+      "before": {
+        "width": 1442,
+        "height": 900,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 721,
+        "height": 450,
+        "dpr": 2.5
+      },
+      "screen": "signup",
+      "state": "success",
+      "result": {
+        "viewport": {
+          "width": 721,
+          "height": 450
+        },
+        "page": {
+          "clientWidth": 713,
+          "scrollWidth": 713,
+          "scrollHeight": 537
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 713.2000122070312,
+          "height": 537.6000366210938,
+          "top": 0,
+          "right": 713.2000122070312,
+          "bottom": 537.6000366210938,
+          "left": 0
+        },
+        "column": {
+          "x": 156.60000610351562,
+          "y": 48,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 48,
+          "right": 556.6000061035156,
+          "bottom": 489.6000061035156,
+          "left": 156.60000610351562
+        },
+        "name": {
+          "x": 156.60000610351562,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 556.6000061035156,
+          "bottom": 208,
+          "left": 156.60000610351562
+        },
+        "password": {
+          "x": 156.60000610351562,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 556.6000061035156,
+          "bottom": 296,
+          "left": 156.60000610351562
+        },
+        "submit": {
+          "x": 156.60000610351562,
+          "y": 397.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 397.6000061035156,
+          "right": 556.6000061035156,
+          "bottom": 437.6000061035156,
+          "left": 156.60000610351562
+        },
+        "alternate": {
+          "x": 156.60000610351562,
+          "y": 453.6000061035156,
+          "width": 400,
+          "height": 36,
+          "top": 453.6000061035156,
+          "right": 556.6000061035156,
+          "bottom": 489.6000061035156,
+          "left": 156.60000610351562
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(228, 234, 226)",
+          "noticeColor": "rgb(62, 96, 73)",
+          "noticeBorder": "rgb(62, 96, 73)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "light",
+      "requestedOuterWindow": {
+        "width": 1440,
+        "height": 900
+      },
+      "before": {
+        "width": 1440,
+        "height": 902,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 720,
+        "height": 451,
+        "dpr": 2.5
+      },
+      "screen": "signup",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 720,
+          "height": 451
+        },
+        "page": {
+          "clientWidth": 712,
+          "scrollWidth": 712,
+          "scrollHeight": 537
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 712.4000244140625,
+          "height": 537.6000366210938,
+          "top": 0,
+          "right": 712.4000244140625,
+          "bottom": 537.6000366210938,
+          "left": 0
+        },
+        "column": {
+          "x": 156.1999969482422,
+          "y": 48,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 48,
+          "right": 556.1999969482422,
+          "bottom": 489.6000061035156,
+          "left": 156.1999969482422
+        },
+        "name": {
+          "x": 156.1999969482422,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 556.1999969482422,
+          "bottom": 208,
+          "left": 156.1999969482422
+        },
+        "password": {
+          "x": 156.1999969482422,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 556.1999969482422,
+          "bottom": 296,
+          "left": 156.1999969482422
+        },
+        "submit": {
+          "x": 156.1999969482422,
+          "y": 397.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 397.6000061035156,
+          "right": 556.1999969482422,
+          "bottom": 437.6000061035156,
+          "left": 156.1999969482422
+        },
+        "alternate": {
+          "x": 156.1999969482422,
+          "y": 453.6000061035156,
+          "width": 400,
+          "height": 36,
+          "top": 453.6000061035156,
+          "right": 556.1999969482422,
+          "bottom": 489.6000061035156,
+          "left": 156.1999969482422
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(243, 229, 225)",
+          "noticeColor": "rgb(150, 63, 56)",
+          "noticeBorder": "rgb(150, 63, 56)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "light",
+      "requestedOuterWindow": {
+        "width": 1920,
+        "height": 1080
+      },
+      "before": {
+        "width": 1920,
+        "height": 1082,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 960,
+        "height": 541,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "initial",
+      "result": {
+        "viewport": {
+          "width": 960,
+          "height": 541
+        },
+        "page": {
+          "clientWidth": 960,
+          "scrollWidth": 960,
+          "scrollHeight": 541
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 960,
+          "height": 540.7999877929688,
+          "top": 0,
+          "right": 960,
+          "bottom": 540.7999877929688,
+          "left": 0
+        },
+        "column": {
+          "x": 280,
+          "y": 88.4000015258789,
+          "width": 400,
+          "height": 364,
+          "top": 88.4000015258789,
+          "right": 680,
+          "bottom": 452.4000015258789,
+          "left": 280
+        },
+        "name": {
+          "x": 280,
+          "y": 208.40000915527344,
+          "width": 400,
+          "height": 40,
+          "top": 208.40000915527344,
+          "right": 680,
+          "bottom": 248.40000915527344,
+          "left": 280
+        },
+        "password": {
+          "x": 280,
+          "y": 296.3999938964844,
+          "width": 400,
+          "height": 40,
+          "top": 296.3999938964844,
+          "right": 680,
+          "bottom": 336.3999938964844,
+          "left": 280
+        },
+        "submit": {
+          "x": 280,
+          "y": 360.3999938964844,
+          "width": 400,
+          "height": 40,
+          "top": 360.3999938964844,
+          "right": 680,
+          "bottom": 400.3999938964844,
+          "left": 280
+        },
+        "alternate": {
+          "x": 280,
+          "y": 416.3999938964844,
+          "width": 400,
+          "height": 36,
+          "top": 416.3999938964844,
+          "right": 680,
+          "bottom": 452.3999938964844,
+          "left": 280
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "light",
+      "requestedOuterWindow": {
+        "width": 1920,
+        "height": 1080
+      },
+      "before": {
+        "width": 1922,
+        "height": 1080,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 961,
+        "height": 540,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "pending",
+      "result": {
+        "viewport": {
+          "width": 961,
+          "height": 540
+        },
+        "page": {
+          "clientWidth": 961,
+          "scrollWidth": 961,
+          "scrollHeight": 540
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 960.7999877929688,
+          "height": 540,
+          "top": 0,
+          "right": 960.7999877929688,
+          "bottom": 540,
+          "left": 0
+        },
+        "column": {
+          "x": 280.3999938964844,
+          "y": 88,
+          "width": 400,
+          "height": 364,
+          "top": 88,
+          "right": 680.3999938964844,
+          "bottom": 452,
+          "left": 280.3999938964844
+        },
+        "name": {
+          "x": 280.3999938964844,
+          "y": 208,
+          "width": 400,
+          "height": 40,
+          "top": 208,
+          "right": 680.3999938964844,
+          "bottom": 248,
+          "left": 280.3999938964844
+        },
+        "password": {
+          "x": 280.3999938964844,
+          "y": 296,
+          "width": 400,
+          "height": 40,
+          "top": 296,
+          "right": 680.3999938964844,
+          "bottom": 336,
+          "left": 280.3999938964844
+        },
+        "submit": {
+          "x": 280.3999938964844,
+          "y": 360,
+          "width": 400,
+          "height": 40,
+          "top": 360,
+          "right": 680.3999938964844,
+          "bottom": 400,
+          "left": 280.3999938964844
+        },
+        "alternate": {
+          "x": 280.3999938964844,
+          "y": 416,
+          "width": 400,
+          "height": 36,
+          "top": 416,
+          "right": 680.3999938964844,
+          "bottom": 452,
+          "left": 280.3999938964844
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(227, 226, 219)",
+          "submitColor": "rgb(36, 37, 33)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "light",
+      "requestedOuterWindow": {
+        "width": 1920,
+        "height": 1080
+      },
+      "before": {
+        "width": 1920,
+        "height": 1082,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 960,
+        "height": 541,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 960,
+          "height": 541
+        },
+        "page": {
+          "clientWidth": 960,
+          "scrollWidth": 960,
+          "scrollHeight": 541
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 960,
+          "height": 540.7999877929688,
+          "top": 0,
+          "right": 960,
+          "bottom": 540.7999877929688,
+          "left": 0
+        },
+        "column": {
+          "x": 280,
+          "y": 49.60000228881836,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 49.60000228881836,
+          "right": 680,
+          "bottom": 491.200008392334,
+          "left": 280
+        },
+        "name": {
+          "x": 280,
+          "y": 169.60000610351562,
+          "width": 400,
+          "height": 40,
+          "top": 169.60000610351562,
+          "right": 680,
+          "bottom": 209.60000610351562,
+          "left": 280
+        },
+        "password": {
+          "x": 280,
+          "y": 257.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 257.6000061035156,
+          "right": 680,
+          "bottom": 297.6000061035156,
+          "left": 280
+        },
+        "submit": {
+          "x": 280,
+          "y": 399.20001220703125,
+          "width": 400,
+          "height": 40,
+          "top": 399.20001220703125,
+          "right": 680,
+          "bottom": 439.20001220703125,
+          "left": 280
+        },
+        "alternate": {
+          "x": 280,
+          "y": 455.20001220703125,
+          "width": 400,
+          "height": 36,
+          "top": 455.20001220703125,
+          "right": 680,
+          "bottom": 491.20001220703125,
+          "left": 280
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(243, 229, 225)",
+          "noticeColor": "rgb(150, 63, 56)",
+          "noticeBorder": "rgb(150, 63, 56)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "light",
+      "requestedOuterWindow": {
+        "width": 1920,
+        "height": 1080
+      },
+      "before": {
+        "width": 1922,
+        "height": 1080,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 961,
+        "height": 540,
+        "dpr": 2.5
+      },
+      "screen": "signup",
+      "state": "success",
+      "result": {
+        "viewport": {
+          "width": 961,
+          "height": 540
+        },
+        "page": {
+          "clientWidth": 961,
+          "scrollWidth": 961,
+          "scrollHeight": 540
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 960.7999877929688,
+          "height": 540,
+          "top": 0,
+          "right": 960.7999877929688,
+          "bottom": 540,
+          "left": 0
+        },
+        "column": {
+          "x": 280.3999938964844,
+          "y": 49.20000076293945,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 49.20000076293945,
+          "right": 680.3999938964844,
+          "bottom": 490.8000068664551,
+          "left": 280.3999938964844
+        },
+        "name": {
+          "x": 280.3999938964844,
+          "y": 169.1999969482422,
+          "width": 400,
+          "height": 40,
+          "top": 169.1999969482422,
+          "right": 680.3999938964844,
+          "bottom": 209.1999969482422,
+          "left": 280.3999938964844
+        },
+        "password": {
+          "x": 280.3999938964844,
+          "y": 257.20001220703125,
+          "width": 400,
+          "height": 40,
+          "top": 257.20001220703125,
+          "right": 680.3999938964844,
+          "bottom": 297.20001220703125,
+          "left": 280.3999938964844
+        },
+        "submit": {
+          "x": 280.3999938964844,
+          "y": 398.8000183105469,
+          "width": 400,
+          "height": 40,
+          "top": 398.8000183105469,
+          "right": 680.3999938964844,
+          "bottom": 438.8000183105469,
+          "left": 280.3999938964844
+        },
+        "alternate": {
+          "x": 280.3999938964844,
+          "y": 454.8000183105469,
+          "width": 400,
+          "height": 36,
+          "top": 454.8000183105469,
+          "right": 680.3999938964844,
+          "bottom": 490.8000183105469,
+          "left": 280.3999938964844
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(54, 91, 112)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(228, 234, 226)",
+          "noticeColor": "rgb(62, 96, 73)",
+          "noticeBorder": "rgb(62, 96, 73)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "light",
+      "requestedOuterWindow": {
+        "width": 1920,
+        "height": 1080
+      },
+      "before": {
+        "width": 1920,
+        "height": 1082,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 960,
+        "height": 541,
+        "dpr": 2.5
+      },
+      "screen": "signup",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 960,
+          "height": 541
+        },
+        "page": {
+          "clientWidth": 960,
+          "scrollWidth": 960,
+          "scrollHeight": 541
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 960,
+          "height": 540.7999877929688,
+          "top": 0,
+          "right": 960,
+          "bottom": 540.7999877929688,
+          "left": 0
+        },
+        "column": {
+          "x": 280,
+          "y": 49.60000228881836,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 49.60000228881836,
+          "right": 680,
+          "bottom": 491.200008392334,
+          "left": 280
+        },
+        "name": {
+          "x": 280,
+          "y": 169.60000610351562,
+          "width": 400,
+          "height": 40,
+          "top": 169.60000610351562,
+          "right": 680,
+          "bottom": 209.60000610351562,
+          "left": 280
+        },
+        "password": {
+          "x": 280,
+          "y": 257.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 257.6000061035156,
+          "right": 680,
+          "bottom": 297.6000061035156,
+          "left": 280
+        },
+        "submit": {
+          "x": 280,
+          "y": 399.20001220703125,
+          "width": 400,
+          "height": 40,
+          "top": 399.20001220703125,
+          "right": 680,
+          "bottom": 439.20001220703125,
+          "left": 280
+        },
+        "alternate": {
+          "x": 280,
+          "y": 455.20001220703125,
+          "width": 400,
+          "height": 36,
+          "top": 455.20001220703125,
+          "right": 680,
+          "bottom": 491.20001220703125,
+          "left": 280
+        },
+        "styles": {
+          "mainBackground": "rgb(233, 231, 226)",
+          "bodyBackground": "rgb(233, 231, 226)",
+          "inputBackground": "rgb(250, 249, 245)",
+          "inputBorder": "rgb(122, 123, 113)",
+          "inputColor": "rgb(36, 37, 33)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(54, 91, 112)",
+          "submitBackground": "rgb(44, 75, 93)",
+          "submitColor": "rgb(250, 249, 245)",
+          "alternateColor": "rgb(36, 37, 33)",
+          "noticeBackground": "rgb(243, 229, 225)",
+          "noticeColor": "rgb(150, 63, 56)",
+          "noticeBorder": "rgb(150, 63, 56)"
+        },
+        "theme": "light",
+        "colorScheme": "light",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "dark",
+      "requestedOuterWindow": {
+        "width": 1280,
+        "height": 720
+      },
+      "before": {
+        "width": 1280,
+        "height": 722,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 640,
+        "height": 361,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "initial",
+      "result": {
+        "viewport": {
+          "width": 640,
+          "height": 361
+        },
+        "page": {
+          "clientWidth": 632,
+          "scrollWidth": 632,
+          "scrollHeight": 460
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 632.4000244140625,
+          "height": 460,
+          "top": 0,
+          "right": 632.4000244140625,
+          "bottom": 460,
+          "left": 0
+        },
+        "column": {
+          "x": 116.20000457763672,
+          "y": 48,
+          "width": 400,
+          "height": 364,
+          "top": 48,
+          "right": 516.2000045776367,
+          "bottom": 412,
+          "left": 116.20000457763672
+        },
+        "name": {
+          "x": 116.20000457763672,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 516.2000045776367,
+          "bottom": 208,
+          "left": 116.20000457763672
+        },
+        "password": {
+          "x": 116.20000457763672,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 516.2000045776367,
+          "bottom": 296,
+          "left": 116.20000457763672
+        },
+        "submit": {
+          "x": 116.20000457763672,
+          "y": 320,
+          "width": 400,
+          "height": 40,
+          "top": 320,
+          "right": 516.2000045776367,
+          "bottom": 360,
+          "left": 116.20000457763672
+        },
+        "alternate": {
+          "x": 116.20000457763672,
+          "y": 376,
+          "width": 400,
+          "height": 36,
+          "top": 376,
+          "right": 516.2000045776367,
+          "bottom": 412,
+          "left": 116.20000457763672
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "dark",
+      "requestedOuterWindow": {
+        "width": 1280,
+        "height": 720
+      },
+      "before": {
+        "width": 1282,
+        "height": 720,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 641,
+        "height": 360,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "pending",
+      "result": {
+        "viewport": {
+          "width": 641,
+          "height": 360
+        },
+        "page": {
+          "clientWidth": 633,
+          "scrollWidth": 633,
+          "scrollHeight": 460
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 633.2000122070312,
+          "height": 460,
+          "top": 0,
+          "right": 633.2000122070312,
+          "bottom": 460,
+          "left": 0
+        },
+        "column": {
+          "x": 116.5999984741211,
+          "y": 48,
+          "width": 400,
+          "height": 364,
+          "top": 48,
+          "right": 516.5999984741211,
+          "bottom": 412,
+          "left": 116.5999984741211
+        },
+        "name": {
+          "x": 116.5999984741211,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 516.5999984741211,
+          "bottom": 208,
+          "left": 116.5999984741211
+        },
+        "password": {
+          "x": 116.5999984741211,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 516.5999984741211,
+          "bottom": 296,
+          "left": 116.5999984741211
+        },
+        "submit": {
+          "x": 116.5999984741211,
+          "y": 320,
+          "width": 400,
+          "height": 40,
+          "top": 320,
+          "right": 516.5999984741211,
+          "bottom": 360,
+          "left": 116.5999984741211
+        },
+        "alternate": {
+          "x": 116.5999984741211,
+          "y": 376,
+          "width": 400,
+          "height": 36,
+          "top": 376,
+          "right": 516.5999984741211,
+          "bottom": 412,
+          "left": 116.5999984741211
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(53, 58, 50)",
+          "submitColor": "rgb(233, 231, 223)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "dark",
+      "requestedOuterWindow": {
+        "width": 1280,
+        "height": 720
+      },
+      "before": {
+        "width": 1280,
+        "height": 722,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 640,
+        "height": 361,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 640,
+          "height": 361
+        },
+        "page": {
+          "clientWidth": 632,
+          "scrollWidth": 632,
+          "scrollHeight": 537
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 632.4000244140625,
+          "height": 537.6000366210938,
+          "top": 0,
+          "right": 632.4000244140625,
+          "bottom": 537.6000366210938,
+          "left": 0
+        },
+        "column": {
+          "x": 116.20000457763672,
+          "y": 48,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 48,
+          "right": 516.2000045776367,
+          "bottom": 489.6000061035156,
+          "left": 116.20000457763672
+        },
+        "name": {
+          "x": 116.20000457763672,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 516.2000045776367,
+          "bottom": 208,
+          "left": 116.20000457763672
+        },
+        "password": {
+          "x": 116.20000457763672,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 516.2000045776367,
+          "bottom": 296,
+          "left": 116.20000457763672
+        },
+        "submit": {
+          "x": 116.20000457763672,
+          "y": 397.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 397.6000061035156,
+          "right": 516.2000045776367,
+          "bottom": 437.6000061035156,
+          "left": 116.20000457763672
+        },
+        "alternate": {
+          "x": 116.20000457763672,
+          "y": 453.6000061035156,
+          "width": 400,
+          "height": 36,
+          "top": 453.6000061035156,
+          "right": 516.2000045776367,
+          "bottom": 489.6000061035156,
+          "left": 116.20000457763672
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(72, 44, 41)",
+          "noticeColor": "rgb(240, 171, 163)",
+          "noticeBorder": "rgb(240, 171, 163)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "dark",
+      "requestedOuterWindow": {
+        "width": 1280,
+        "height": 720
+      },
+      "before": {
+        "width": 1282,
+        "height": 720,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 641,
+        "height": 360,
+        "dpr": 2.5
+      },
+      "screen": "signup",
+      "state": "success",
+      "result": {
+        "viewport": {
+          "width": 641,
+          "height": 360
+        },
+        "page": {
+          "clientWidth": 633,
+          "scrollWidth": 633,
+          "scrollHeight": 537
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 633.2000122070312,
+          "height": 537.6000366210938,
+          "top": 0,
+          "right": 633.2000122070312,
+          "bottom": 537.6000366210938,
+          "left": 0
+        },
+        "column": {
+          "x": 116.5999984741211,
+          "y": 48,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 48,
+          "right": 516.5999984741211,
+          "bottom": 489.6000061035156,
+          "left": 116.5999984741211
+        },
+        "name": {
+          "x": 116.5999984741211,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 516.5999984741211,
+          "bottom": 208,
+          "left": 116.5999984741211
+        },
+        "password": {
+          "x": 116.5999984741211,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 516.5999984741211,
+          "bottom": 296,
+          "left": 116.5999984741211
+        },
+        "submit": {
+          "x": 116.5999984741211,
+          "y": 397.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 397.6000061035156,
+          "right": 516.5999984741211,
+          "bottom": 437.6000061035156,
+          "left": 116.5999984741211
+        },
+        "alternate": {
+          "x": 116.5999984741211,
+          "y": 453.6000061035156,
+          "width": 400,
+          "height": 36,
+          "top": 453.6000061035156,
+          "right": 516.5999984741211,
+          "bottom": 489.6000061035156,
+          "left": 116.5999984741211
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(41, 61, 46)",
+          "noticeColor": "rgb(168, 207, 176)",
+          "noticeBorder": "rgb(168, 207, 176)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "dark",
+      "requestedOuterWindow": {
+        "width": 1280,
+        "height": 720
+      },
+      "before": {
+        "width": 1280,
+        "height": 722,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 640,
+        "height": 361,
+        "dpr": 2.5
+      },
+      "screen": "signup",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 640,
+          "height": 361
+        },
+        "page": {
+          "clientWidth": 632,
+          "scrollWidth": 632,
+          "scrollHeight": 537
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 632.4000244140625,
+          "height": 537.6000366210938,
+          "top": 0,
+          "right": 632.4000244140625,
+          "bottom": 537.6000366210938,
+          "left": 0
+        },
+        "column": {
+          "x": 116.20000457763672,
+          "y": 48,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 48,
+          "right": 516.2000045776367,
+          "bottom": 489.6000061035156,
+          "left": 116.20000457763672
+        },
+        "name": {
+          "x": 116.20000457763672,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 516.2000045776367,
+          "bottom": 208,
+          "left": 116.20000457763672
+        },
+        "password": {
+          "x": 116.20000457763672,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 516.2000045776367,
+          "bottom": 296,
+          "left": 116.20000457763672
+        },
+        "submit": {
+          "x": 116.20000457763672,
+          "y": 397.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 397.6000061035156,
+          "right": 516.2000045776367,
+          "bottom": 437.6000061035156,
+          "left": 116.20000457763672
+        },
+        "alternate": {
+          "x": 116.20000457763672,
+          "y": 453.6000061035156,
+          "width": 400,
+          "height": 36,
+          "top": 453.6000061035156,
+          "right": 516.2000045776367,
+          "bottom": 489.6000061035156,
+          "left": 116.20000457763672
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(187, 209, 220)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(72, 44, 41)",
+          "noticeColor": "rgb(240, 171, 163)",
+          "noticeBorder": "rgb(240, 171, 163)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "dark",
+      "requestedOuterWindow": {
+        "width": 1440,
+        "height": 900
+      },
+      "before": {
+        "width": 1440,
+        "height": 902,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 720,
+        "height": 451,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "initial",
+      "result": {
+        "viewport": {
+          "width": 720,
+          "height": 451
+        },
+        "page": {
+          "clientWidth": 712,
+          "scrollWidth": 712,
+          "scrollHeight": 460
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 712.4000244140625,
+          "height": 460,
+          "top": 0,
+          "right": 712.4000244140625,
+          "bottom": 460,
+          "left": 0
+        },
+        "column": {
+          "x": 156.1999969482422,
+          "y": 48,
+          "width": 400,
+          "height": 364,
+          "top": 48,
+          "right": 556.1999969482422,
+          "bottom": 412,
+          "left": 156.1999969482422
+        },
+        "name": {
+          "x": 156.1999969482422,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 556.1999969482422,
+          "bottom": 208,
+          "left": 156.1999969482422
+        },
+        "password": {
+          "x": 156.1999969482422,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 556.1999969482422,
+          "bottom": 296,
+          "left": 156.1999969482422
+        },
+        "submit": {
+          "x": 156.1999969482422,
+          "y": 320,
+          "width": 400,
+          "height": 40,
+          "top": 320,
+          "right": 556.1999969482422,
+          "bottom": 360,
+          "left": 156.1999969482422
+        },
+        "alternate": {
+          "x": 156.1999969482422,
+          "y": 376,
+          "width": 400,
+          "height": 36,
+          "top": 376,
+          "right": 556.1999969482422,
+          "bottom": 412,
+          "left": 156.1999969482422
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "dark",
+      "requestedOuterWindow": {
+        "width": 1440,
+        "height": 900
+      },
+      "before": {
+        "width": 1442,
+        "height": 900,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 721,
+        "height": 450,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "pending",
+      "result": {
+        "viewport": {
+          "width": 721,
+          "height": 450
+        },
+        "page": {
+          "clientWidth": 713,
+          "scrollWidth": 713,
+          "scrollHeight": 460
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 713.2000122070312,
+          "height": 460,
+          "top": 0,
+          "right": 713.2000122070312,
+          "bottom": 460,
+          "left": 0
+        },
+        "column": {
+          "x": 156.60000610351562,
+          "y": 48,
+          "width": 400,
+          "height": 364,
+          "top": 48,
+          "right": 556.6000061035156,
+          "bottom": 412,
+          "left": 156.60000610351562
+        },
+        "name": {
+          "x": 156.60000610351562,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 556.6000061035156,
+          "bottom": 208,
+          "left": 156.60000610351562
+        },
+        "password": {
+          "x": 156.60000610351562,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 556.6000061035156,
+          "bottom": 296,
+          "left": 156.60000610351562
+        },
+        "submit": {
+          "x": 156.60000610351562,
+          "y": 320,
+          "width": 400,
+          "height": 40,
+          "top": 320,
+          "right": 556.6000061035156,
+          "bottom": 360,
+          "left": 156.60000610351562
+        },
+        "alternate": {
+          "x": 156.60000610351562,
+          "y": 376,
+          "width": 400,
+          "height": 36,
+          "top": 376,
+          "right": 556.6000061035156,
+          "bottom": 412,
+          "left": 156.60000610351562
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(53, 58, 50)",
+          "submitColor": "rgb(233, 231, 223)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "dark",
+      "requestedOuterWindow": {
+        "width": 1440,
+        "height": 900
+      },
+      "before": {
+        "width": 1440,
+        "height": 902,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 720,
+        "height": 451,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 720,
+          "height": 451
+        },
+        "page": {
+          "clientWidth": 712,
+          "scrollWidth": 712,
+          "scrollHeight": 537
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 712.4000244140625,
+          "height": 537.6000366210938,
+          "top": 0,
+          "right": 712.4000244140625,
+          "bottom": 537.6000366210938,
+          "left": 0
+        },
+        "column": {
+          "x": 156.1999969482422,
+          "y": 48,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 48,
+          "right": 556.1999969482422,
+          "bottom": 489.6000061035156,
+          "left": 156.1999969482422
+        },
+        "name": {
+          "x": 156.1999969482422,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 556.1999969482422,
+          "bottom": 208,
+          "left": 156.1999969482422
+        },
+        "password": {
+          "x": 156.1999969482422,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 556.1999969482422,
+          "bottom": 296,
+          "left": 156.1999969482422
+        },
+        "submit": {
+          "x": 156.1999969482422,
+          "y": 397.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 397.6000061035156,
+          "right": 556.1999969482422,
+          "bottom": 437.6000061035156,
+          "left": 156.1999969482422
+        },
+        "alternate": {
+          "x": 156.1999969482422,
+          "y": 453.6000061035156,
+          "width": 400,
+          "height": 36,
+          "top": 453.6000061035156,
+          "right": 556.1999969482422,
+          "bottom": 489.6000061035156,
+          "left": 156.1999969482422
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(72, 44, 41)",
+          "noticeColor": "rgb(240, 171, 163)",
+          "noticeBorder": "rgb(240, 171, 163)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "dark",
+      "requestedOuterWindow": {
+        "width": 1440,
+        "height": 900
+      },
+      "before": {
+        "width": 1442,
+        "height": 900,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 721,
+        "height": 450,
+        "dpr": 2.5
+      },
+      "screen": "signup",
+      "state": "success",
+      "result": {
+        "viewport": {
+          "width": 721,
+          "height": 450
+        },
+        "page": {
+          "clientWidth": 713,
+          "scrollWidth": 713,
+          "scrollHeight": 537
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 713.2000122070312,
+          "height": 537.6000366210938,
+          "top": 0,
+          "right": 713.2000122070312,
+          "bottom": 537.6000366210938,
+          "left": 0
+        },
+        "column": {
+          "x": 156.60000610351562,
+          "y": 48,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 48,
+          "right": 556.6000061035156,
+          "bottom": 489.6000061035156,
+          "left": 156.60000610351562
+        },
+        "name": {
+          "x": 156.60000610351562,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 556.6000061035156,
+          "bottom": 208,
+          "left": 156.60000610351562
+        },
+        "password": {
+          "x": 156.60000610351562,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 556.6000061035156,
+          "bottom": 296,
+          "left": 156.60000610351562
+        },
+        "submit": {
+          "x": 156.60000610351562,
+          "y": 397.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 397.6000061035156,
+          "right": 556.6000061035156,
+          "bottom": 437.6000061035156,
+          "left": 156.60000610351562
+        },
+        "alternate": {
+          "x": 156.60000610351562,
+          "y": 453.6000061035156,
+          "width": 400,
+          "height": 36,
+          "top": 453.6000061035156,
+          "right": 556.6000061035156,
+          "bottom": 489.6000061035156,
+          "left": 156.60000610351562
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(41, 61, 46)",
+          "noticeColor": "rgb(168, 207, 176)",
+          "noticeBorder": "rgb(168, 207, 176)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "dark",
+      "requestedOuterWindow": {
+        "width": 1440,
+        "height": 900
+      },
+      "before": {
+        "width": 1440,
+        "height": 902,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 720,
+        "height": 451,
+        "dpr": 2.5
+      },
+      "screen": "signup",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 720,
+          "height": 451
+        },
+        "page": {
+          "clientWidth": 712,
+          "scrollWidth": 712,
+          "scrollHeight": 537
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 712.4000244140625,
+          "height": 537.6000366210938,
+          "top": 0,
+          "right": 712.4000244140625,
+          "bottom": 537.6000366210938,
+          "left": 0
+        },
+        "column": {
+          "x": 156.1999969482422,
+          "y": 48,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 48,
+          "right": 556.1999969482422,
+          "bottom": 489.6000061035156,
+          "left": 156.1999969482422
+        },
+        "name": {
+          "x": 156.1999969482422,
+          "y": 168,
+          "width": 400,
+          "height": 40,
+          "top": 168,
+          "right": 556.1999969482422,
+          "bottom": 208,
+          "left": 156.1999969482422
+        },
+        "password": {
+          "x": 156.1999969482422,
+          "y": 256,
+          "width": 400,
+          "height": 40,
+          "top": 256,
+          "right": 556.1999969482422,
+          "bottom": 296,
+          "left": 156.1999969482422
+        },
+        "submit": {
+          "x": 156.1999969482422,
+          "y": 397.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 397.6000061035156,
+          "right": 556.1999969482422,
+          "bottom": 437.6000061035156,
+          "left": 156.1999969482422
+        },
+        "alternate": {
+          "x": 156.1999969482422,
+          "y": 453.6000061035156,
+          "width": 400,
+          "height": 36,
+          "top": 453.6000061035156,
+          "right": 556.1999969482422,
+          "bottom": 489.6000061035156,
+          "left": 156.1999969482422
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(72, 44, 41)",
+          "noticeColor": "rgb(240, 171, 163)",
+          "noticeBorder": "rgb(240, 171, 163)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "dark",
+      "requestedOuterWindow": {
+        "width": 1920,
+        "height": 1080
+      },
+      "before": {
+        "width": 1920,
+        "height": 1082,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 960,
+        "height": 541,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "initial",
+      "result": {
+        "viewport": {
+          "width": 960,
+          "height": 541
+        },
+        "page": {
+          "clientWidth": 960,
+          "scrollWidth": 960,
+          "scrollHeight": 541
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 960,
+          "height": 540.7999877929688,
+          "top": 0,
+          "right": 960,
+          "bottom": 540.7999877929688,
+          "left": 0
+        },
+        "column": {
+          "x": 280,
+          "y": 88.4000015258789,
+          "width": 400,
+          "height": 364,
+          "top": 88.4000015258789,
+          "right": 680,
+          "bottom": 452.4000015258789,
+          "left": 280
+        },
+        "name": {
+          "x": 280,
+          "y": 208.40000915527344,
+          "width": 400,
+          "height": 40,
+          "top": 208.40000915527344,
+          "right": 680,
+          "bottom": 248.40000915527344,
+          "left": 280
+        },
+        "password": {
+          "x": 280,
+          "y": 296.3999938964844,
+          "width": 400,
+          "height": 40,
+          "top": 296.3999938964844,
+          "right": 680,
+          "bottom": 336.3999938964844,
+          "left": 280
+        },
+        "submit": {
+          "x": 280,
+          "y": 360.3999938964844,
+          "width": 400,
+          "height": 40,
+          "top": 360.3999938964844,
+          "right": 680,
+          "bottom": 400.3999938964844,
+          "left": 280
+        },
+        "alternate": {
+          "x": 280,
+          "y": 416.3999938964844,
+          "width": 400,
+          "height": 36,
+          "top": 416.3999938964844,
+          "right": 680,
+          "bottom": 452.3999938964844,
+          "left": 280
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "dark",
+      "requestedOuterWindow": {
+        "width": 1920,
+        "height": 1080
+      },
+      "before": {
+        "width": 1922,
+        "height": 1080,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 961,
+        "height": 540,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "pending",
+      "result": {
+        "viewport": {
+          "width": 961,
+          "height": 540
+        },
+        "page": {
+          "clientWidth": 961,
+          "scrollWidth": 961,
+          "scrollHeight": 540
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 960.7999877929688,
+          "height": 540,
+          "top": 0,
+          "right": 960.7999877929688,
+          "bottom": 540,
+          "left": 0
+        },
+        "column": {
+          "x": 280.3999938964844,
+          "y": 88,
+          "width": 400,
+          "height": 364,
+          "top": 88,
+          "right": 680.3999938964844,
+          "bottom": 452,
+          "left": 280.3999938964844
+        },
+        "name": {
+          "x": 280.3999938964844,
+          "y": 208,
+          "width": 400,
+          "height": 40,
+          "top": 208,
+          "right": 680.3999938964844,
+          "bottom": 248,
+          "left": 280.3999938964844
+        },
+        "password": {
+          "x": 280.3999938964844,
+          "y": 296,
+          "width": 400,
+          "height": 40,
+          "top": 296,
+          "right": 680.3999938964844,
+          "bottom": 336,
+          "left": 280.3999938964844
+        },
+        "submit": {
+          "x": 280.3999938964844,
+          "y": 360,
+          "width": 400,
+          "height": 40,
+          "top": 360,
+          "right": 680.3999938964844,
+          "bottom": 400,
+          "left": 280.3999938964844
+        },
+        "alternate": {
+          "x": 280.3999938964844,
+          "y": 416,
+          "width": 400,
+          "height": 36,
+          "top": 416,
+          "right": 680.3999938964844,
+          "bottom": 452,
+          "left": 280.3999938964844
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(53, 58, 50)",
+          "submitColor": "rgb(233, 231, 223)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": null,
+          "noticeColor": null,
+          "noticeBorder": null
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "dark",
+      "requestedOuterWindow": {
+        "width": 1920,
+        "height": 1080
+      },
+      "before": {
+        "width": 1920,
+        "height": 1082,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 960,
+        "height": 541,
+        "dpr": 2.5
+      },
+      "screen": "login",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 960,
+          "height": 541
+        },
+        "page": {
+          "clientWidth": 960,
+          "scrollWidth": 960,
+          "scrollHeight": 541
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 960,
+          "height": 540.7999877929688,
+          "top": 0,
+          "right": 960,
+          "bottom": 540.7999877929688,
+          "left": 0
+        },
+        "column": {
+          "x": 280,
+          "y": 49.60000228881836,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 49.60000228881836,
+          "right": 680,
+          "bottom": 491.200008392334,
+          "left": 280
+        },
+        "name": {
+          "x": 280,
+          "y": 169.60000610351562,
+          "width": 400,
+          "height": 40,
+          "top": 169.60000610351562,
+          "right": 680,
+          "bottom": 209.60000610351562,
+          "left": 280
+        },
+        "password": {
+          "x": 280,
+          "y": 257.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 257.6000061035156,
+          "right": 680,
+          "bottom": 297.6000061035156,
+          "left": 280
+        },
+        "submit": {
+          "x": 280,
+          "y": 399.20001220703125,
+          "width": 400,
+          "height": 40,
+          "top": 399.20001220703125,
+          "right": 680,
+          "bottom": 439.20001220703125,
+          "left": 280
+        },
+        "alternate": {
+          "x": 280,
+          "y": 455.20001220703125,
+          "width": 400,
+          "height": 36,
+          "top": 455.20001220703125,
+          "right": 680,
+          "bottom": 491.20001220703125,
+          "left": 280
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(72, 44, 41)",
+          "noticeColor": "rgb(240, 171, 163)",
+          "noticeBorder": "rgb(240, 171, 163)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "dark",
+      "requestedOuterWindow": {
+        "width": 1920,
+        "height": 1080
+      },
+      "before": {
+        "width": 1922,
+        "height": 1080,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 961,
+        "height": 540,
+        "dpr": 2.5
+      },
+      "screen": "signup",
+      "state": "success",
+      "result": {
+        "viewport": {
+          "width": 961,
+          "height": 540
+        },
+        "page": {
+          "clientWidth": 961,
+          "scrollWidth": 961,
+          "scrollHeight": 540
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 960.7999877929688,
+          "height": 540,
+          "top": 0,
+          "right": 960.7999877929688,
+          "bottom": 540,
+          "left": 0
+        },
+        "column": {
+          "x": 280.3999938964844,
+          "y": 49.20000076293945,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 49.20000076293945,
+          "right": 680.3999938964844,
+          "bottom": 490.8000068664551,
+          "left": 280.3999938964844
+        },
+        "name": {
+          "x": 280.3999938964844,
+          "y": 169.1999969482422,
+          "width": 400,
+          "height": 40,
+          "top": 169.1999969482422,
+          "right": 680.3999938964844,
+          "bottom": 209.1999969482422,
+          "left": 280.3999938964844
+        },
+        "password": {
+          "x": 280.3999938964844,
+          "y": 257.20001220703125,
+          "width": 400,
+          "height": 40,
+          "top": 257.20001220703125,
+          "right": 680.3999938964844,
+          "bottom": 297.20001220703125,
+          "left": 280.3999938964844
+        },
+        "submit": {
+          "x": 280.3999938964844,
+          "y": 398.8000183105469,
+          "width": 400,
+          "height": 40,
+          "top": 398.8000183105469,
+          "right": 680.3999938964844,
+          "bottom": 438.8000183105469,
+          "left": 280.3999938964844
+        },
+        "alternate": {
+          "x": 280.3999938964844,
+          "y": 454.8000183105469,
+          "width": 400,
+          "height": 36,
+          "top": 454.8000183105469,
+          "right": 680.3999938964844,
+          "bottom": 490.8000183105469,
+          "left": 280.3999938964844
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(41, 61, 46)",
+          "noticeColor": "rgb(168, 207, 176)",
+          "noticeBorder": "rgb(168, 207, 176)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    },
+    {
+      "method": "Playwright-owned persistent Chromium extension chrome.tabs.setZoom(2)",
+      "zoom": 2,
+      "theme": "dark",
+      "requestedOuterWindow": {
+        "width": 1920,
+        "height": 1080
+      },
+      "before": {
+        "width": 1920,
+        "height": 1082,
+        "dpr": 1.25
+      },
+      "after": {
+        "width": 960,
+        "height": 541,
+        "dpr": 2.5
+      },
+      "screen": "signup",
+      "state": "error",
+      "result": {
+        "viewport": {
+          "width": 960,
+          "height": 541
+        },
+        "page": {
+          "clientWidth": 960,
+          "scrollWidth": 960,
+          "scrollHeight": 541
+        },
+        "main": {
+          "x": 0,
+          "y": 0,
+          "width": 960,
+          "height": 540.7999877929688,
+          "top": 0,
+          "right": 960,
+          "bottom": 540.7999877929688,
+          "left": 0
+        },
+        "column": {
+          "x": 280,
+          "y": 49.60000228881836,
+          "width": 400,
+          "height": 441.6000061035156,
+          "top": 49.60000228881836,
+          "right": 680,
+          "bottom": 491.200008392334,
+          "left": 280
+        },
+        "name": {
+          "x": 280,
+          "y": 169.60000610351562,
+          "width": 400,
+          "height": 40,
+          "top": 169.60000610351562,
+          "right": 680,
+          "bottom": 209.60000610351562,
+          "left": 280
+        },
+        "password": {
+          "x": 280,
+          "y": 257.6000061035156,
+          "width": 400,
+          "height": 40,
+          "top": 257.6000061035156,
+          "right": 680,
+          "bottom": 297.6000061035156,
+          "left": 280
+        },
+        "submit": {
+          "x": 280,
+          "y": 399.20001220703125,
+          "width": 400,
+          "height": 40,
+          "top": 399.20001220703125,
+          "right": 680,
+          "bottom": 439.20001220703125,
+          "left": 280
+        },
+        "alternate": {
+          "x": 280,
+          "y": 455.20001220703125,
+          "width": 400,
+          "height": 36,
+          "top": 455.20001220703125,
+          "right": 680,
+          "bottom": 491.20001220703125,
+          "left": 280
+        },
+        "styles": {
+          "mainBackground": "rgb(32, 34, 31)",
+          "bodyBackground": "rgb(32, 34, 31)",
+          "inputBackground": "rgb(48, 53, 46)",
+          "inputBorder": "rgb(135, 145, 127)",
+          "inputColor": "rgb(233, 231, 223)",
+          "focusOutlineWidth": "2px",
+          "focusOutlineOffset": "2px",
+          "focusOutlineColor": "rgb(168, 196, 211)",
+          "submitBackground": "rgb(168, 196, 211)",
+          "submitColor": "rgb(25, 35, 31)",
+          "alternateColor": "rgb(233, 231, 223)",
+          "noticeBackground": "rgb(72, 44, 41)",
+          "noticeColor": "rgb(240, 171, 163)",
+          "noticeBorder": "rgb(240, 171, 163)"
+        },
+        "theme": "dark",
+        "colorScheme": "dark",
+        "shell": false,
+        "settings": false
+      }
+    }
+  ]
+}

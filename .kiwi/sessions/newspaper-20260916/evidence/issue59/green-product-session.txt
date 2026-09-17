@@ -1,0 +1,17 @@
+Command: WEB_URL=http://127.0.0.1:3400/ DOCULIGHT_E2E_USER=<ephemeral-superuser> DOCULIGHT_E2E_PASS=<ephemeral-password> node test/auth-round-trip-check.mjs
+Exit code: 0
+
+11/11 passed against a newly launched isolated product server using a temporary DOCULIGHT_DATA_DIR:
+- unauthenticated product path displayed the login screen
+- wrong credentials were rejected with the server message
+- screen submission created a real login session
+- logout removed the session cookie and remained logged out after navigation
+- password change invalidated the session and the new password logged in
+- approval signup mode accepted a request, blocked the pending account, and allowed login after approval
+
+The Playwright harness launched and owned its Chromium browser. The owned product server was stopped after the run. The temporary database and credentials were deleted file by file from the verified issue59 evidence subtree.
+
+Additional checked-in self-contained product command: npm run test:browser:pre-auth-product --workspace @doculight/web
+Exit code: 0; 13/13 passed on each of two consecutive direct runs.
+
+The additional product run verified anonymous shell/settings absence, real two-way login/signup navigation, unchanged login endpoint and exact payload values, indistinguishable unknown-user/wrong-password messages, distinct pending/suspended/rejected messages, open-mode authenticated entry, approval-mode pre-approval blocking, and invite-only closed signup wording.

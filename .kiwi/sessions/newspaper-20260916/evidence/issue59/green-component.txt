@@ -1,0 +1,7 @@
+Command: npm test --workspace @doculight/web -- --run test/newspaper-pre-auth.test.tsx test/pre-auth.test.tsx test/auth-wiring.test.tsx
+Exit code: 0
+
+Test Files  3 passed (3)
+Tests       48 passed (48)
+
+The issue-specific newspaper pre-auth suite contributed 20 passing tests. Existing pre-auth and auth wiring tests contributed 28 passing regression tests.

@@ -1,89 +1,168 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-/**
- * 이름과 비밀번호를 받아 한 번 제출하는 폼.
- *
- * 로그인(`IR-AUTH-001` AC-1)과 가입 신청(AC-2)이 같은 골격을 쓴다 — 두 번째
- * 사용처가 생긴 자리에서 공용화했다. 갈리는 것은 셋뿐이며 전부 인자로 받는다:
- * 버튼 문구, 자동완성 힌트, 그리고 **성공했을 때 무엇을 보이는가**.
- *
- * **거절 사유를 이 부품이 짓지 않는다.** 사유는 서버가 소유하고 여기서는
- * 받은 문장을 그대로 세운다 — 화면이 자기 문구를 갖기 시작하면 서버의 판정이
- * 늘 때마다 두 곳이 갈리고, 갈린 쪽은 사용자가 무엇을 해야 할지 알 수 없는
- * 일반 문구로 뭉개진다.
- */
+import { Button } from '../components/ui/button.js';
+import { Field } from '../components/ui/field.js';
+import { Input } from '../components/ui/input.js';
+import { InlineNotice } from '../components/ui/states.js';
+
+const REQUEST_FAILURE = '요청을 처리하지 못했습니다. 잠시 후 다시 시도하십시오.';
+const REQUEST_UNAVAILABLE = '지금은 요청을 보낼 수 없습니다.';
+
 export function CredentialForm({
+  formId,
+  pendingLabel,
   submitLabel,
   passwordHint,
   successNotice,
   onSubmit,
 }: {
-  /** 제출 버튼의 문구. 이 폼이 무엇을 하는지 사용자가 읽는 유일한 자리다. */
+  formId: 'login' | 'signup';
+  pendingLabel: string;
   submitLabel: string;
-  /** 비밀번호 칸의 `autoComplete`. 로그인은 기존 것, 가입은 새 것이다. */
   passwordHint: 'current-password' | 'new-password';
-  /**
-   * 성공했을 때 세울 안내. 없으면 아무것도 세우지 않는다.
-   *
-   * 로그인은 화면 자체가 바뀌므로 안내가 필요 없지만, 가입 신청은 같은
-   * 화면에 남으므로 아무 말도 없으면 사용자가 신청이 나갔는지 알 수 없어
-   * 다시 누른다.
-   */
   successNotice?: string;
-  /** 제출한다. 거절되면 그 사유 문장을, 되면 아무것도 돌려주지 않는다. */
   onSubmit?: (input: { name: string; password: string }) => Promise<string | undefined | void>;
 }) {
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
   const [reason, setReason] = useState<string | null>(null);
-  const [됐다, set됐다] = useState(false);
-  const [보내는중, set보내는중] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const submittingRef = useRef(false);
+  const revisionRef = useRef(0);
+  const mountedRef = useRef(true);
+  const composingRef = useRef(false);
+  const suppressNextEnterRef = useRef(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  const noticeId = `${formId}-notice`;
 
   return (
     <form
+      data-pre-auth-form={formId}
+      aria-busy={submitting || undefined}
+      aria-describedby={reason !== null || submitted || onSubmit === undefined ? noticeId : undefined}
+      onInput={() => {
+        revisionRef.current += 1;
+        setReason(null);
+        setSubmitted(false);
+      }}
       onSubmit={(event) => {
         event.preventDefault();
-        if (보내는중) return;
-        set보내는중(true);
+        if (onSubmit === undefined || submittingRef.current) return;
+
+        submittingRef.current = true;
+        setSubmitting(true);
         setReason(null);
-        set됐다(false);
-        void Promise.resolve(onSubmit?.({ name, password }))
-          .then((거절) => {
-            if (typeof 거절 === 'string') setReason(거절);
-            else set됐다(true);
+        setSubmitted(false);
+        const submittedRevision = revisionRef.current;
+        const values = new FormData(event.currentTarget);
+        const snapshot = {
+          name: String(values.get('name') ?? ''),
+          password: String(values.get('password') ?? ''),
+        };
+
+        let request: Promise<string | undefined | void>;
+        try {
+          request = onSubmit(snapshot);
+        } catch {
+          if (mountedRef.current && revisionRef.current === submittedRevision) setReason(REQUEST_FAILURE);
+          submittingRef.current = false;
+          if (mountedRef.current) setSubmitting(false);
+          return;
+        }
+
+        void Promise.resolve(request)
+          .then((rejection) => {
+            if (!mountedRef.current || revisionRef.current !== submittedRevision) return;
+            if (typeof rejection === 'string') setReason(rejection);
+            else if (successNotice !== undefined) setSubmitted(true);
           })
-          .finally(() => set보내는중(false));
+          .catch(() => {
+            if (!mountedRef.current || revisionRef.current !== submittedRevision) return;
+            setReason(REQUEST_FAILURE);
+          })
+          .finally(() => {
+            submittingRef.current = false;
+            if (mountedRef.current) setSubmitting(false);
+          });
       }}
     >
-      <label>
-        이름
-        <input
-          name="name"
-          autoComplete="username"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-        />
-      </label>
-      <label>
-        비밀번호
-        {/* 가린다 — 어깨너머로 읽히면 그 계정이 그대로 열린다. */}
-        <input
-          name="password"
-          type="password"
-          autoComplete={passwordHint}
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-        />
-      </label>
+      <div data-slot="field-stack">
+        <Field label="이름">
+          <Input
+            id={`${formId}-name`}
+            name="name"
+            autoComplete="username"
+            autoCapitalize="none"
+            spellCheck={false}
+            autoFocus
+            onCompositionStart={() => {
+              composingRef.current = true;
+            }}
+            onCompositionEnd={() => {
+              composingRef.current = false;
+              suppressNextEnterRef.current = true;
+              queueMicrotask(() => {
+                suppressNextEnterRef.current = false;
+              });
+            }}
+            onKeyDown={(event) => {
+              if (event.key !== 'Enter') return;
+              if (composingRef.current || event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) {
+                event.preventDefault();
+                return;
+              }
+              if (suppressNextEnterRef.current) {
+                suppressNextEnterRef.current = false;
+                event.preventDefault();
+              }
+            }}
+            onKeyUp={(event) => {
+              if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
+                suppressNextEnterRef.current = false;
+              }
+            }}
+          />
+        </Field>
+        <Field label="비밀번호">
+          <Input
+            id={`${formId}-password`}
+            name="password"
+            type="password"
+            autoComplete={passwordHint}
+          />
+        </Field>
+      </div>
 
-      {/* 사유는 `alert` 로 세운다 — 화면 낭독기가 그것을 읽지 않으면
-          왜 안 되는지 알 방법이 없다. */}
-      {reason === null ? null : <p role="alert">{reason}</p>}
-      {됐다 && successNotice !== undefined ? <p role="status">{successNotice}</p> : null}
+      {reason === null ? null : (
+        <InlineNotice
+          id={noticeId}
+          role="presentation"
+          variant="error"
+          title={<span role="alert" data-slot="inline-notice">{reason}</span>}
+        />
+      )}
+      {submitted && successNotice !== undefined ? (
+        <InlineNotice id={noticeId} variant="success" title={successNotice} />
+      ) : null}
+      {onSubmit === undefined ? (
+        <InlineNotice id={noticeId} title={REQUEST_UNAVAILABLE} />
+      ) : null}
 
-      <button type="submit" disabled={보내는중}>
-        {submitLabel}
-      </button>
+      <Button
+        type="submit"
+        size="auth"
+        loading={submitting}
+        disabled={onSubmit === undefined}
+        data-pre-auth-submit
+      >
+        {submitting ? pendingLabel : submitLabel}
+      </Button>
     </form>
   );
 }
