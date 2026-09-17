@@ -140,7 +140,9 @@ describe('FR-EDITOR-005 · FR-EDITOR-008 — 저장 거부와 병합', () => {
   it('FR-EDITOR-005 AC-2: 거부 상태에서 본문을 내려받을 수단이 있다', () => {
     render(<DocumentSurface file={md} initialMode="live" save="rejected" />);
 
-    expect(screen.getByRole('button', { name: '내려받기' })).toBeDefined();
+    const alert = screen.getByRole('alert');
+    expect(alert.textContent).toContain('저장하지 못했습니다. 편집 내용은 그대로 남아 있습니다. 본문을 내려받아 보관할 수 있습니다.');
+    expect(screen.getByRole('button', { name: '편집 중인 본문 내려받기' }).textContent).toBe('내려받기');
   });
 
   it('FR-EDITOR-008 AC-2 · AC-3: 충돌이면 병합 화면이 뜨고 양쪽을 대조한다', () => {
@@ -149,7 +151,10 @@ describe('FR-EDITOR-005 · FR-EDITOR-008 — 저장 거부와 병합', () => {
     const merge = screen.getByRole('region', { name: '병합' });
     // 서버의 현재 내용이 **왼쪽**에 선다 — 오른쪽은 내가 편집 중인 것이다.
     // 자리를 지정해 보지 않으면 어느 쪽을 보고 있는지 시험이 말하지 못한다.
-    expect(within(merge).getByLabelText('왼쪽').textContent).toContain('남의 것');
+    expect(screen.getByRole('alert').textContent).toBe('저장 중 원본이 바뀌어 병합이 필요합니다. 편집 내용은 유지됩니다.');
+    expect(within(merge).getByLabelText('서버 내용').textContent).toContain('남의 것');
+    expect(within(merge).getByLabelText('내 편집 내용').textContent).toBe('');
+    expect(within(merge).getByText('오른쪽 내용을 확인한 뒤 저장하세요.')).toBeDefined();
   });
 
   it('FR-EDITOR-008 AC-1: 잠금 안내가 없다 — 동시 편집이 막히지 않는다', () => {

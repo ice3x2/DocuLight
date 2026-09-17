@@ -82,17 +82,14 @@ describe('FR-EDITOR-005 AC-2 — 거부된 본문을 내려받을 수 있다', (
   it('내려받기 버튼이 실제로 무언가를 한다', async () => {
     const user = userEvent.setup();
     const clicks: string[] = [];
-    vi.stubGlobal('URL', {
-      ...URL,
-      createObjectURL: (blob: Blob) => {
-        clicks.push(String(blob.size));
-        return 'blob:x';
-      },
-      revokeObjectURL: () => undefined,
+    vi.spyOn(URL, 'createObjectURL').mockImplementation((blob: Blob) => {
+      clicks.push(String(blob.size));
+      return 'blob:x';
     });
+    vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
 
     render(<DocumentSurface file={md} initialMode="live" body={'# 잃으면 안 되는 본문'} save="rejected" />);
-    await user.click(screen.getByRole('button', { name: '내려받기' }));
+    await user.click(screen.getByRole('button', { name: '편집 중인 본문 내려받기' }));
 
     // 알리기만 하면 사용자는 화면을 닫는 순간 자기 글을 잃는다.
     expect(clicks).toHaveLength(1);

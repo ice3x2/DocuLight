@@ -1,6 +1,6 @@
-import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { AppShell } from '../src/shell/AppShell.js';
 import {
@@ -17,6 +17,66 @@ afterEach(cleanup);
 // 카테고리가 빠지면 골격 검사가 조건 검사와 섞인다. 조건 자체는
 // settings-categories.test.tsx 가 따로 본다.
 const ROOT: Viewer = { superuser: true, workspaceCount: 2, adminWorkspaceCount: 1 };
+
+describe('FR-SHELL-012 AC-3 · AC-4 — 문서 교체 확인', () => {
+  it('공용 alert dialog에서 머무르기에 초기 초점을 두고 현재 콜백을 한 번 호출한다', async () => {
+    const cancel = vi.fn();
+    const accept = vi.fn();
+    const { rerender } = render(<AppShell viewer={ROOT} confirmReplace={{ name: '아주 긴 대상 문서 이름.md', cancel, accept }} />);
+
+    const dialog = await screen.findByRole('alertdialog', { name: '편집 중인 문서' });
+    expect(within(dialog).getByRole('heading', { name: '편집 중인 문서' })).toBeDefined();
+    expect(dialog.textContent).toContain('지금 문서에 저장되지 않은 편집이 남아 있습니다. 아주 긴 대상 문서 이름.md 을(를) 열면 그 편집이 사라집니다.');
+    const stay = within(dialog).getByRole('button', { name: '머무르기' });
+    await waitFor(() => expect(document.activeElement).toBe(stay));
+
+    const nextAccept = vi.fn();
+    rerender(<AppShell viewer={ROOT} confirmReplace={{ name: '바뀐 대상.md', cancel, accept: nextAccept }} />);
+    await userEvent.setup().click(within(screen.getByRole('alertdialog')).getByRole('button', { name: '그래도 열기' }));
+    expect(accept).not.toHaveBeenCalled();
+    expect(nextAccept).toHaveBeenCalledTimes(1);
+  });
+
+  it('Escape는 취소만 한 번 호출하고 파괴 동작을 실행하지 않는다', async () => {
+    const cancel = vi.fn();
+    const accept = vi.fn();
+    render(<AppShell viewer={ROOT} confirmReplace={{ name: '대상.md', cancel, accept }} />);
+
+    await screen.findByRole('alertdialog');
+    await userEvent.setup().keyboard('{Escape}');
+
+    expect(cancel).toHaveBeenCalledTimes(1);
+    expect(accept).not.toHaveBeenCalled();
+  });
+
+  it('조합 중 Enter는 열지 않고 조합 종료 뒤 별도 Enter가 정확히 한 번 연다', async () => {
+    const accept = vi.fn();
+    render(<AppShell viewer={ROOT} confirmReplace={{ name: '대상.md', cancel: vi.fn(), accept }} />);
+    const open = await screen.findByRole('button', { name: '그래도 열기' });
+    open.focus();
+
+    fireEvent.compositionStart(open);
+    await userEvent.setup().keyboard('{Enter}');
+    expect(accept).not.toHaveBeenCalled();
+
+    fireEvent.compositionEnd(open);
+    await userEvent.setup().keyboard('{Enter}');
+    expect(accept).toHaveBeenCalledTimes(1);
+  });
+
+  it('빠른 반복 활성화도 현재 파괴 콜백을 정확히 한 번만 호출한다', async () => {
+    const oldAccept = vi.fn();
+    const currentAccept = vi.fn();
+    const request = { name: '대상.md', cancel: vi.fn(), accept: oldAccept };
+    const { rerender } = render(<AppShell viewer={ROOT} confirmReplace={request} />);
+    rerender(<AppShell viewer={ROOT} confirmReplace={{ ...request, accept: currentAccept }} />);
+
+    await userEvent.setup().dblClick(await screen.findByRole('button', { name: '그래도 열기' }));
+
+    expect(oldAccept).not.toHaveBeenCalled();
+    expect(currentAccept).toHaveBeenCalledTimes(1);
+  });
+});
 
 describe('IR-SHELL-002 · CON-ARCH-004 — 셸 골격', () => {
   it('좌측·본문·우측 세 구역이 선다', () => {

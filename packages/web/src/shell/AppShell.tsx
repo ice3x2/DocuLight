@@ -38,6 +38,14 @@ import { UserRoster } from '../principal/UserRoster.js';
 import { SignupApproval } from '../principal/SignupApproval.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
 import { EmptyState, ErrorState, LoadingState } from '../components/ui/states.js';
+import { Button } from '../components/ui/button.js';
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+} from '../components/ui/alert-dialog.js';
 import type { RosterGroup, RosterUser, RosterUserStatus } from '../api/client.js';
 import { containerFor, destinationsFor, nodeById } from '../tree/tree-contract.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
@@ -53,6 +61,62 @@ export type ShellPanelState =
   | { state: 'ready' }
   | { state: 'loading' }
   | { state: 'error'; message: string; onRetry?: () => void };
+
+function ReplaceConfirmation({ request, restoreFocus }: { request: { name: string; accept: () => void; cancel: () => void }; restoreFocus: HTMLElement | null }) {
+  const cancelRef = useRef<HTMLButtonElement>(null);
+  const invoker = useRef<HTMLElement | null>(
+    restoreFocus ?? (typeof document === 'undefined' ? null : document.activeElement instanceof HTMLElement ? document.activeElement : null),
+  );
+  const activated = useRef(false);
+  const composing = useRef(false);
+
+  useLayoutEffect(() => { activated.current = false; }, [request]);
+
+  const restoreInvoker = () => {
+    const returnTarget = invoker.current;
+    if (returnTarget?.isConnected) returnTarget.focus();
+    else document.querySelector<HTMLElement>('[data-document-header] [tabindex="0"]')?.focus();
+  };
+
+  const cancel = () => {
+    if (activated.current) return;
+    activated.current = true;
+    request.cancel();
+    requestAnimationFrame(restoreInvoker);
+  };
+  const accept = () => {
+    if (activated.current || composing.current) return;
+    activated.current = true;
+    request.accept();
+  };
+
+  return (
+    <AlertDialog open onOpenChange={(open) => { if (!open) cancel(); }}>
+      <AlertDialogContent
+        data-replace-confirmation
+        onOpenAutoFocus={(event) => { event.preventDefault(); cancelRef.current?.focus(); }}
+        onCloseAutoFocus={(event) => { event.preventDefault(); requestAnimationFrame(restoreInvoker); }}
+        onCompositionStartCapture={() => { composing.current = true; }}
+        onCompositionEndCapture={() => { composing.current = false; }}
+        onKeyDownCapture={(event) => {
+          if (event.key === 'Enter' && (composing.current || event.nativeEvent.isComposing)) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        }}
+      >
+        <AlertDialogTitle>편집 중인 문서</AlertDialogTitle>
+        <AlertDialogDescription>
+          지금 문서에 저장되지 않은 편집이 남아 있습니다. {request.name} 을(를) 열면 그 편집이 사라집니다.
+        </AlertDialogDescription>
+        <div data-slot="alert-dialog-actions">
+          <AlertDialogCancel ref={cancelRef} type="button" onClick={cancel}>머무르기</AlertDialogCancel>
+          <Button variant="destructive" onClick={accept}>그래도 열기</Button>
+        </div>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
 
 function FocusRestoreBoundary({
   identity,
@@ -638,6 +702,23 @@ export function AppShell({
   const [leftTab, setLeftTab] = useState(LEFT_TABS[0]!.id);
   const favoritesTab = useRef<HTMLButtonElement>(null);
   const [rightTab, setRightTab] = useState(RIGHT_TABS[0]!.id);
+  const replaceInvoker = useRef<HTMLElement | null>(null);
+
+  useLayoutEffect(() => {
+    if (confirmReplace !== undefined) return;
+    const rememberPointer = (event: PointerEvent) => {
+      if (event.target instanceof HTMLElement) replaceInvoker.current = event.target.closest<HTMLElement>('button, [href], [tabindex]');
+    };
+    const rememberKey = (event: KeyboardEvent) => {
+      if ((event.key === 'Enter' || event.key === ' ') && event.target instanceof HTMLElement) replaceInvoker.current = event.target.closest<HTMLElement>('button, [href], [tabindex]');
+    };
+    document.addEventListener('pointerdown', rememberPointer, true);
+    document.addEventListener('keydown', rememberKey, true);
+    return () => {
+      document.removeEventListener('pointerdown', rememberPointer, true);
+      document.removeEventListener('keydown', rememberKey, true);
+    };
+  }, [confirmReplace]);
   const rightTabTrigger = useRef<HTMLButtonElement>(null);
   /** 새 버전을 올릴 대상. 골라 둔 뒤 확인과 파일 고르기가 이어진다. */
   const [overwriting, setOverwriting] = useState<TreeNodeView | null>(null);
@@ -1001,20 +1082,7 @@ export function AppShell({
       )}
 
       {confirmReplace !== undefined && (
-        // `alertdialog` 인 이유는 잃을 것이 있다는 사실을 먼저 알려야 하기
-        // 때문이다 — 보통 대화상자는 읽지 않고 지나칠 수 있다.
-        <div role="alertdialog" aria-label="편집 중인 문서">
-          <p>
-            지금 문서에 저장되지 않은 편집이 남아 있습니다. {confirmReplace.name} 을(를) 열면
-            그 편집이 사라집니다.
-          </p>
-          <button type="button" onClick={confirmReplace.accept}>
-            그래도 열기
-          </button>
-          <button type="button" onClick={confirmReplace.cancel}>
-            머무르기
-          </button>
-        </div>
+        <ReplaceConfirmation request={confirmReplace} restoreFocus={replaceInvoker.current} />
       )}
     </div>
   );

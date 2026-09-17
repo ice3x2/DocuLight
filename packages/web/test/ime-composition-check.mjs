@@ -28,10 +28,16 @@ import {
 
 /** 조합 단계 사이의 간격. 입력기가 실제로 내는 속도에 맞춘다. */
 const 조합간격 = 150;
+/** useAutosave 의 2초 debounce 경계를 실제로 지나 중복 PUT 유무를 센다. */
+const 저장경계 = 2_300;
 
 await runBrowserChecks(async ({ page, check, beginMeasuring, note }) => {
   await login(page);
   const doc = await makeDocument(page, '# IME 시험\n\n');
+  let 저장요청수 = 0;
+  page.on('request', (request) => {
+    if (request.method() === 'PUT' && new URL(request.url()).pathname === `/api/documents/${doc.id}`) 저장요청수 += 1;
+  });
 
   try {
     await openInEditor(page, doc.id, doc.name);
@@ -39,6 +45,14 @@ await runBrowserChecks(async ({ page, check, beginMeasuring, note }) => {
     await page.keyboard.press('Control+End');
 
     const cdp = await page.context().newCDPSession(page);
+    await page.evaluate(() => {
+      window.__issue57CompositionEvents = [];
+      for (const type of ['compositionstart', 'compositionupdate', 'compositionend', 'beforeinput', 'input']) {
+        document.addEventListener(type, (event) => window.__issue57CompositionEvents.push({ type, data: event.data ?? null, inputType: event.inputType ?? null, trusted: event.isTrusted }), true);
+      }
+      window.__issue57OuterSubmits = 0;
+      document.addEventListener('submit', (event) => { window.__issue57OuterSubmits += 1; event.preventDefault(); }, true);
+    });
 
     /**
      * 한 글자를 조합해 확정한다.
@@ -60,8 +74,27 @@ await runBrowserChecks(async ({ page, check, beginMeasuring, note }) => {
       await page.waitForTimeout(조합간격);
     };
 
+    const 이벤트초기화 = () => page.evaluate(() => { window.__issue57CompositionEvents = []; });
+    const 이벤트 = () => page.evaluate(() => window.__issue57CompositionEvents ?? []);
+    const 이벤트순서 = async () => {
+      const observed = await 이벤트();
+      const names = observed.map((event) => event.type);
+      return {
+        observed,
+        valid: names.indexOf('compositionstart') >= 0 && names.indexOf('compositionupdate') > names.indexOf('compositionstart') && names.indexOf('compositionend') > names.indexOf('compositionupdate'),
+      };
+    };
+    const cmCaret = () => page.evaluate(() => {
+      const content = document.querySelector('.cm-content');
+      const selection = getSelection();
+      if (!content || !selection?.anchorNode || !content.contains(selection.anchorNode)) return -1;
+      const range = document.createRange(); range.selectNodeContents(content); range.setEnd(selection.anchorNode, selection.anchorOffset); return range.toString().length;
+    });
+
     const 본문 = () =>
       page.evaluate(() => document.querySelector('.cm-content')?.textContent ?? '');
+    const 서버본문 = () =>
+      page.evaluate(async (id) => (await (await fetch(`/api/documents/${id}`)).json()).body ?? '', doc.id);
 
     beginMeasuring();
 
@@ -91,9 +124,63 @@ await runBrowserChecks(async ({ page, check, beginMeasuring, note }) => {
       자모잔여 ? `남은 글자: ${(친뒤.match(/[ㄱ-ㅎㅏ-ㅣ]/g) ?? []).join('')}` : '없음',
     );
 
+    const initialEvents = await 이벤트순서();
+    check('Playwright/CDP live 조합이 start→update→end 순서로 관측된다', initialEvents.valid, JSON.stringify(initialEvents.observed));
+
+    await page.locator('.cm-content').click(); await page.keyboard.press('Control+End');
+    const liveBeforeTheme = await 본문(); const liveCaretBeforeTheme = await cmCaret(); await 이벤트초기화();
+    await cdp.send('Input.imeSetComposition', { text: 'ㄱ', selectionStart: 1, selectionEnd: 1 });
+    await cdp.send('Input.imeSetComposition', { text: '계', selectionStart: 1, selectionEnd: 1 });
+    await page.evaluate(() => { document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; });
+    await cdp.send('Input.insertText', { text: '계' });
+    const liveAfterTheme = await 본문(); const liveCaretAfterTheme = await cmCaret();
+    check('live 조합 commit과 caret가 theme 변경 뒤 정확하다', liveAfterTheme === `${liveBeforeTheme}계` && liveCaretAfterTheme === liveCaretBeforeTheme + 1, `caret ${liveCaretBeforeTheme}/${liveCaretAfterTheme}`);
+    check('live theme 조합 event ordering이 유지된다', (await 이벤트순서()).valid, JSON.stringify(await 이벤트()));
+    await waitUntil(서버본문, (body) => body === liveAfterTheme, { timeout: 10_000 });
+
+    const liveBeforeCancel = await 본문(); const liveCaretBeforeCancel = await cmCaret(); const liveCancelSaveBefore = 저장요청수; await 이벤트초기화();
+    await cdp.send('Input.imeSetComposition', { text: '취', selectionStart: 1, selectionEnd: 1 });
+    await cdp.send('Input.imeSetComposition', { text: '', selectionStart: 0, selectionEnd: 0 });
+    await page.waitForTimeout(저장경계);
+    check('live 조합 취소가 본문/caret를 보존하고 저장하지 않는다', await 본문() === liveBeforeCancel && await cmCaret() === liveCaretBeforeCancel && 저장요청수 - liveCancelSaveBefore === 0, `caret ${liveCaretBeforeCancel}/${await cmCaret()} · save PUT delta=${저장요청수 - liveCancelSaveBefore}`);
+
+    const liveBeforeEnter = await 본문(); const liveCaretBeforeEnter = await cmCaret(); const liveEnterSaveBefore = 저장요청수; await 이벤트초기화();
+    await cdp.send('Input.imeSetComposition', { text: '입', selectionStart: 1, selectionEnd: 1 });
+    await page.keyboard.press('Enter');
+    await cdp.send('Input.insertText', { text: '입' });
+    const liveEnterEvents = await 이벤트();
+    await waitUntil(서버본문, (body) => body === `${liveBeforeEnter}입`, { timeout: 10_000 });
+    check('live 조합 중 Enter가 exact text/caret, submit 0, save PUT 1을 만든다', await 본문() === `${liveBeforeEnter}입` && await cmCaret() === liveCaretBeforeEnter + 1 && liveEnterEvents.filter((event) => event.type === 'compositionend').length === 1 && await page.evaluate(() => window.__issue57OuterSubmits) === 0 && 저장요청수 - liveEnterSaveBefore === 1, `delta=${JSON.stringify((await 본문()).slice(liveBeforeEnter.length))} · caret ${liveCaretBeforeEnter}/${await cmCaret()} · save PUT delta=${저장요청수 - liveEnterSaveBefore} · ${JSON.stringify(liveEnterEvents)}`);
+
+    await page.getByRole('button', { name: '소스' }).click();
+    const source = page.getByRole('textbox', { name: '원문' });
+    await source.click(); await source.press('Control+End');
+    const sourceBefore = await source.inputValue(); const sourceCaretBefore = await source.evaluate((element) => element.selectionStart); await 이벤트초기화();
+    await 조합(['ㅅ', '소', '솟'], '소스');
+    const sourceAfter = await source.inputValue(); const sourceCaretAfter = await source.evaluate((element) => element.selectionStart);
+    check('source 조합 commit의 exact text/caret가 맞다', sourceAfter === `${sourceBefore}소스` && sourceCaretAfter === sourceCaretBefore + 2, `caret ${sourceCaretBefore}/${sourceCaretAfter}`);
+    check('source 조합이 start→update→end 순서로 관측된다', (await 이벤트순서()).valid, JSON.stringify(await 이벤트()));
+    await waitUntil(서버본문, (body) => body === sourceAfter, { timeout: 10_000 });
+
+    const sourceBeforeCancel = await source.inputValue(); const sourceCaretBeforeCancel = await source.evaluate((element) => element.selectionStart); const sourceCancelSaveBefore = 저장요청수; await 이벤트초기화();
+    await cdp.send('Input.imeSetComposition', { text: '취소', selectionStart: 2, selectionEnd: 2 });
+    await cdp.send('Input.imeSetComposition', { text: '', selectionStart: 0, selectionEnd: 0 });
+    await page.waitForTimeout(저장경계);
+    check('source 조합 cancel이 exact bytes/caret를 보존하고 저장하지 않는다', await source.inputValue() === sourceBeforeCancel && await source.evaluate((element) => element.selectionStart) === sourceCaretBeforeCancel && 저장요청수 - sourceCancelSaveBefore === 0, `caret ${sourceCaretBeforeCancel}/${await source.evaluate((element) => element.selectionStart)} · save PUT delta=${저장요청수 - sourceCancelSaveBefore}`);
+
+    const sourceBeforeEnter = await source.inputValue(); const sourceCaretBeforeEnter = await source.evaluate((element) => element.selectionStart); const sourceEnterSaveBefore = 저장요청수; await 이벤트초기화();
+    await cdp.send('Input.imeSetComposition', { text: '입', selectionStart: 1, selectionEnd: 1 });
+    await page.keyboard.press('Enter');
+    await cdp.send('Input.insertText', { text: '입' });
+    const sourceAfterEnter = await source.inputValue();
+    const outerSubmit = await page.locator('body').getAttribute('data-accepted');
+    const sourceEnterEvents = await 이벤트();
+    await waitUntil(서버본문, (body) => body === sourceAfterEnter, { timeout: 10_000 });
+    check('source 조합 중 Enter가 exact text/caret, submit 0, save PUT 1을 만든다', sourceAfterEnter === `${sourceBeforeEnter}입\n` && await source.evaluate((element) => element.selectionStart) === sourceCaretBeforeEnter + 1 && outerSubmit === null && await page.evaluate(() => window.__issue57OuterSubmits) === 0 && sourceEnterEvents.filter((event) => event.type === 'compositionend').length === 1 && 저장요청수 - sourceEnterSaveBefore === 1, `delta=${JSON.stringify(sourceAfterEnter.slice(sourceBeforeEnter.length))} · caret ${sourceCaretBeforeEnter}/${await source.evaluate((element) => element.selectionStart)} · save PUT delta=${저장요청수 - sourceEnterSaveBefore} · ${JSON.stringify(sourceEnterEvents)}`);
+
     // 조합한 글자가 **저장까지** 가는지 본다. 화면에만 서고 디스크에 다른
     // 것이 들어가면 사용자는 다시 열었을 때 그것을 알게 된다.
-    const 서버본문 = await waitUntil(
+    const 저장된본문 = await waitUntil(
       () =>
         page.evaluate(
           async (id) => (await (await fetch(`/api/documents/${id}`)).json()).body ?? '',
@@ -104,11 +191,11 @@ await runBrowserChecks(async ({ page, check, beginMeasuring, note }) => {
     );
     check(
       '수용 기준 7 조합한 글자가 저장까지 간다',
-      서버본문.includes('한글입력') && !/[ㄱ-ㅎㅏ-ㅣ]/.test(서버본문),
-      `서버 본문 길이 ${서버본문.length}`,
+      저장된본문.includes('한글입력') && !/[ㄱ-ㅎㅏ-ㅣ]/.test(저장된본문),
+      `서버 본문 길이 ${저장된본문.length}`,
     );
 
-    note('(조합은 CDP `Input.imeSetComposition` 으로 재현했다 — OS 입력기 없이 그 단계를 그대로 낸다)');
+    note('(이 증거는 격리된 Playwright-owned Chromium의 CDP `Input.imeSetComposition`/`Input.insertText`로 생성한 synthetic/CDP 조합이며, native OS IME 증거가 아니고 IR-EDITOR-002 AC5를 승격하지 않는다)');
   } finally {
     await removeDocument(page, doc.id);
   }

@@ -2,6 +2,7 @@ import { MergeView as CodeMirrorMergeView } from '@codemirror/merge';
 import { EditorState, type Extension } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
 import { useEffect, useRef, useState } from 'react';
+import { Button } from '../components/ui/button.js';
 
 /**
  * 나란히 대조하는 화면 (`IR-STORAGE-001` · `FR-EDITOR-008`).
@@ -138,12 +139,12 @@ export function MergeView({
       </div>
 
       {onResolve !== undefined && (
-        <button
-          type="button"
-          onClick={() => onResolve(view.current?.b.state.doc.toString() ?? right)}
-        >
-          이 내용으로 저장
-        </button>
+        <div data-merge-action>
+          <span>오른쪽 내용을 확인한 뒤 저장하세요.</span>
+          <Button variant="primary" onClick={() => onResolve(view.current?.b.state.doc.toString() ?? right)}>
+            이 내용으로 저장
+          </Button>
+        </div>
       )}
     </div>
   );

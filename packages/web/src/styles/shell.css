@@ -637,6 +637,23 @@
 [data-merge-viewport] [data-merge] { min-width: 480px; }
 [data-merge-viewport] .cm-mergeView .cm-editor { min-width: 240px; }
 [data-merge-viewport] .cm-mergeView .cm-scroller { max-height: clamp(180px, 45dvh, 480px); overflow: auto; }
+[data-save-conflict],
+[data-save-rejected] {
+  box-sizing: border-box;
+  margin: 8px 0;
+  padding: 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  overflow-wrap: anywhere;
+  box-shadow: none;
+}
+[data-save-conflict] { border-color: var(--status-warning); background: var(--surface-warning); color: var(--status-warning); }
+[data-save-rejected] { border-color: var(--status-danger); background: var(--surface-danger); color: var(--status-danger); }
+[data-save-rejected] > p { margin: 0 0 8px; }
+[data-save-rejected] > button { min-height: 36px; }
+[data-merge-action] { display: flex; min-height: 52px; align-items: center; justify-content: space-between; gap: 12px; padding-top: 8px; }
+[data-merge-action] > span { color: var(--text-secondary); overflow-wrap: anywhere; }
+[data-merge-action] > button { flex: 0 0 auto; min-height: 36px; }
 [data-version-restore-footer] {
   display: flex; min-height: 52px; margin-top: 8px; align-items: center; justify-content: space-between; gap: 12px;
 }

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { fetchWikiTargets, uploadAttachment } from '../api/client.js';
 import { pasteUpload } from '../attachment/upload-contract.js';
+import { Button } from '../components/ui/button.js';
 import { urlForNode } from '../routing/deep-link.js';
 import { MergeView } from './MergeView.js';
 import { resolveWikiLink } from './wiki-link-resolve.js';
@@ -278,6 +279,20 @@ export function DocumentSurface({
   }
   /** 지금 편집기가 들고 있는 본문. 저장·내려받기·머지가 이것을 읽는다. */
   const readBody = () => lastBody.current ?? '';
+  const compositionStartBody = useRef<string | null>(null);
+  const bodyChanged = (next: string) => {
+    lastBody.current = next;
+    if (compositionStartBody.current === null) autosave.changed(next);
+  };
+  const compositionStarted = () => {
+    if (compositionStartBody.current === null) compositionStartBody.current = readBody();
+  };
+  const compositionEnded = () => {
+    const before = compositionStartBody.current;
+    compositionStartBody.current = null;
+    const next = readBody();
+    if (before !== null && next !== before) autosave.changed(next);
+  };
   // **모드나 문서가 바뀔 때만** 다시 읽는다. 타이핑마다 새 값을 넘기면
   // 편집기가 자기 문서와 다른 값을 계속 받아 흔들리고, 글자가 새어 나간다.
   const documentText = useMemo(
@@ -335,19 +350,19 @@ export function DocumentSurface({
       <ModeToggle file={file} mode={mode} onChange={change} />
 
       {shown === 'rejected' && (
-        <div role="alert">
-          <p>저장이 거부되었습니다. 편집 중이던 본문은 그대로 남아 있습니다.</p>
+        <div role="alert" data-save-rejected>
+          <p>저장하지 못했습니다. 편집 내용은 그대로 남아 있습니다. 본문을 내려받아 보관할 수 있습니다.</p>
           {/* 본문을 되찾을 길을 함께 준다 (`FR-EDITOR-005` AC-2) — 알리기만
               하면 사용자는 화면을 닫는 순간 자기 글을 잃는다. */}
-          <button type="button" onClick={() => downloadBody(file.name, readBody())}>
+          <Button variant="secondary" aria-label="편집 중인 본문 내려받기" onClick={() => downloadBody(file.name, readBody())}>
             내려받기
-          </button>
+          </Button>
         </div>
       )}
 
       {shown === 'conflict' && (
         <>
-          <div role="alert">저장 중 원본이 바뀌어 병합이 필요합니다.</div>
+          <div role="alert" data-save-conflict>저장 중 원본이 바뀌어 병합이 필요합니다. 편집 내용은 유지됩니다.</div>
           {/* 양쪽을 나란히 두고 **고를 수 있게** 한다 (`FR-EDITOR-008`
               AC-3 · AC-4). 읽기 전용으로 두면 대조는 되는데 해소가 안 되고,
               해소가 안 되면 자동 저장이 영영 멈춘 채로 남는다. */}
@@ -355,6 +370,8 @@ export function DocumentSurface({
             label="병합"
             left={conflictBody ?? ''}
             right={readBody()}
+            leftLabel="서버 내용"
+            rightLabel="내 편집 내용"
             onResolve={(merged) => {
               lastBody.current = merged;
               autosave.resolve(merged);
@@ -363,7 +380,14 @@ export function DocumentSurface({
         </>
       )}
 
-      <div role="region" aria-label={MODE_LABEL[mode]} data-node={file.nodeId} data-document-body>
+      <div
+        role="region"
+        aria-label={MODE_LABEL[mode]}
+        data-node={file.nodeId}
+        data-document-body
+        onCompositionStartCapture={compositionStarted}
+        onCompositionEndCapture={compositionEnded}
+      >
         {documentText === undefined ? null : mode === 'source' ? (
           // 소스는 **원문 그대로**다 — 마크다운 편집기를 쓰면 그 편집기가
           // 기호를 숨기므로 소스가 아니게 된다. 읽기 전용도 아니다:
@@ -373,10 +397,7 @@ export function DocumentSurface({
             aria-label="원문"
             data-source-editor
             defaultValue={documentText}
-            onChange={(event) => {
-              lastBody.current = event.target.value;
-              autosave.changed(event.target.value);
-            }}
+            onChange={(event) => bodyChanged(event.target.value)}
           />
         ) : (
           <AtomicCodeMirrorEditor
@@ -403,8 +424,7 @@ export function DocumentSurface({
               // (`CON-ARCH-006` AC-1) — 올리면 정본이 둘이 된다. 두 ref 로
               // 나눠 들면 그중 하나만 갱신되는 자리가 생기고, 그 자리가
               // 위에서 말한 데이터 손실이었다.
-              lastBody.current = next;
-              if (mode !== 'read') autosave.changed(next);
+              if (mode !== 'read') bodyChanged(next);
             }}
           />
         )}
