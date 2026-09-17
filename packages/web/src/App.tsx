@@ -20,6 +20,7 @@ import {
   issueToken,
   revokeToken,
   createNode,
+  fetchTree,
   loadDocument,
   uploadAttachment,
   uploadIntoDirectory,
@@ -71,6 +72,7 @@ import { axesFrom, axesTo, readAxes, writeAxes, type SearchAxis } from './search
 import type { UploadRequest } from './attachment/upload-contract.js';
 import { PreAuthScreen, type PreAuthScreenId } from './auth/PreAuthScreen.js';
 import { AppShell, type ShellPanelState } from './shell/AppShell.js';
+import type { NewVersionOutcome, NewVersionResult } from './tree/NewVersionPrompt.js';
 import { LoadingState } from './components/ui/states.js';
 import {
   activeTab,
@@ -866,16 +868,42 @@ function AppBody() {
    * 다음 저장이 방금 올린 것을 덮는다.
    */
   const newVersion = useCallback(
-    async (node: TreeNodeView, file: File) => {
-      const done = await uploadNewVersion(node.id, file)
-        .then(() => true)
-        .catch(() => false);
-      if (!done) return;
+    async (node: TreeNodeView, file: File): Promise<NewVersionResult> => {
+      try {
+        await uploadNewVersion(node.id, file);
+      } catch (error) {
+        if (!(error instanceof ApiError)) return { status: 'unknown' };
+        if (error.status === 403) return { status: 'rejected', reason: 'forbidden' };
+        if (error.status === 413) return { status: 'rejected', reason: 'too-large' };
+        return { status: 'rejected' };
+      }
 
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.document(node.id) });
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
+      const observedDocument = documents.tabs.some((tab) => tab.nodeId === node.id);
+      type RefreshTarget = 'tree' | 'document';
+      const refresh = async (targets: readonly RefreshTarget[]): Promise<NewVersionOutcome> => {
+        const failed: RefreshTarget[] = [];
+        for (const target of targets) {
+          try {
+            if (target === 'tree') {
+              await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree, exact: true, refetchType: 'none' });
+              await queries.fetchQuery({ queryKey: QUERY_KEYS.tree, queryFn: () => fetchTree<WorkspaceTreeView[]>() });
+            } else {
+              await queries.invalidateQueries({ queryKey: QUERY_KEYS.document(node.id), exact: true, refetchType: 'none' });
+              await queries.fetchQuery({ queryKey: QUERY_KEYS.document(node.id), queryFn: () => loadDocument(node.id) });
+            }
+          } catch {
+            failed.push(target);
+          }
+        }
+        return failed.length === 0 ? { status: 'success' } : { status: 'refresh-failed', retryRefresh: () => refresh(failed) };
+      };
+
+      if (!observedDocument) {
+        await queries.invalidateQueries({ queryKey: QUERY_KEYS.document(node.id), exact: true, refetchType: 'none' });
+      }
+      return { status: 'refreshing', completion: refresh(observedDocument ? ['tree', 'document'] : ['tree']) };
     },
-    [queries],
+    [documents.tabs, queries],
   );
 
   /**

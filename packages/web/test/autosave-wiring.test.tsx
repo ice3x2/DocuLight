@@ -271,6 +271,7 @@ describe('FR-SHELL-008 AC-2 — 열려 있는 문서에 새 버전을 올려도 
     await waitFor(() =>
       expect(document.querySelector('.cm-content')?.textContent).toContain('새 버전'),
     );
+    await user.click(screen.getByRole('button', { name: '닫기' }));
 
     await user.click(screen.getByRole('button', { name: '편집' }));
     await user.keyboard('{Control>}s{/Control}');

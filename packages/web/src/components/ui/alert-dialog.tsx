@@ -7,6 +7,7 @@ import { OverlayOwnerContext } from './overlay-owner.js';
 export const AlertDialog = AlertDialogPrimitive.Root;
 export const AlertDialogTrigger = AlertDialogPrimitive.Trigger;
 export const AlertDialogPortal = AlertDialogPrimitive.Portal;
+export const AlertDialogAction = AlertDialogPrimitive.Action;
 
 // @req IR-SHELL-008
 export const AlertDialogOverlay = forwardRef<

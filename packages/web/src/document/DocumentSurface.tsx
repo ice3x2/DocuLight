@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { fetchWikiTargets, uploadAttachment } from '../api/client.js';
 import { pasteUpload } from '../attachment/upload-contract.js';
 import { Button } from '../components/ui/button.js';
+import { ErrorState, LoadingState } from '../components/ui/states.js';
 import { urlForNode } from '../routing/deep-link.js';
 import { MergeView } from './MergeView.js';
 import { resolveWikiLink } from './wiki-link-resolve.js';
@@ -327,17 +328,14 @@ export function DocumentSurface({
   useEffect(() => onSaveState?.(shown), [shown, onSaveState]);
 
   if (surface === 'image') {
-    return (
-      <div>
-        <img src={urlForNode(file.nodeId)} alt={file.name} />
-      </div>
-    );
+    return <ImageSurface nodeId={file.nodeId} name={file.name} />;
   }
 
   if (surface === 'download') {
     // 뷰어를 열지 않는다 — 링크 하나가 이 요구의 전부다.
     return (
-      <div>
+      <div data-file-download-surface>
+        <p>파일을 내려받아 확인하세요.</p>
         <a href={urlForNode(file.nodeId)} download={file.name}>
           {file.name} 내려받기
         </a>
@@ -429,6 +427,32 @@ export function DocumentSurface({
           />
         )}
       </div>
+    </div>
+  );
+}
+
+function ImageSurface({ nodeId, name }: { nodeId: string; name: string }) {
+  const [attempt, setAttempt] = useState(0);
+  const [state, setState] = useState<'loading' | 'loaded' | 'error'>('loading');
+  const image = useRef<HTMLImageElement>(null);
+  const resource = urlForNode(nodeId);
+
+  useEffect(() => {
+    setState('loading');
+    const current = image.current;
+    if (current?.complete && current.naturalWidth > 0) setState('loaded');
+  }, [nodeId, resource, attempt]);
+
+  return (
+    <div role="region" aria-label="이미지 미리보기" aria-busy={state === 'loading' ? 'true' : undefined} data-image-preview data-image-state={state}>
+      {state === 'loading' ? <LoadingState label="이미지를 불러오는 중입니다." /> : null}
+      {state === 'error' ? (
+        <ErrorState label="이미지 오류" title="이미지를 표시할 수 없습니다." onRetry={() => {
+          setState('loading');
+          setAttempt((value) => value + 1);
+        }} />
+      ) : null}
+      <img key={`${nodeId}:${attempt}`} ref={image} src={resource} alt={name} onLoad={() => setState('loaded')} onError={() => setState('error')} />
     </div>
   );
 }

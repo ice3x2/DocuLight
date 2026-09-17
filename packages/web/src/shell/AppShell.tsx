@@ -13,7 +13,7 @@ import type { SaveState, TabState } from '../document/tab-state.js';
 import { DocumentTree, type Naming } from '../tree/DocumentTree.js';
 import type { UploadRequest } from '../attachment/upload-contract.js';
 import { EmptyState as AccessEmptyState } from '../tree/EmptyState.js';
-import { NewVersionPrompt } from '../tree/NewVersionPrompt.js';
+import { NewVersionPrompt, type NewVersionResult } from '../tree/NewVersionPrompt.js';
 import { RelocationDialog } from './RelocationDialog.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
 import {
@@ -677,7 +677,7 @@ export function AppShell({
     onInheritFromParent?: (nodeId: string) => void;
   };
   /** 그 파일에 새 버전을 올린다 (`FR-SHELL-008` AC-2). */
-  onNewVersion?: (node: TreeNodeView, file: File) => void;
+  onNewVersion?: (node: TreeNodeView, file: File) => Promise<NewVersionResult>;
   /** 안내를 닫았다. 문구를 바깥이 들고 있으므로 지우는 것도 바깥이 한다. */
   onNoticeDismiss?: () => void;
   /**
@@ -722,6 +722,14 @@ export function AppShell({
   const rightTabTrigger = useRef<HTMLButtonElement>(null);
   /** 새 버전을 올릴 대상. 골라 둔 뒤 확인과 파일 고르기가 이어진다. */
   const [overwriting, setOverwriting] = useState<TreeNodeView | null>(null);
+  const newVersionFocusSequence = useRef(0);
+  const [newVersionFocusRequest, setNewVersionFocusRequest] = useState<{ nodeId: string; sequence: number }>();
+  const closeNewVersion = useCallback(() => {
+    if (overwriting === null) return;
+    newVersionFocusSequence.current += 1;
+    setNewVersionFocusRequest({ nodeId: overwriting.id, sequence: newVersionFocusSequence.current });
+    setOverwriting(null);
+  }, [overwriting]);
   /**
    * 지금 이름을 정하는 자리 (`FR-SHELL-015` AC-1 · `FR-SHELL-016` AC-3).
    *
@@ -919,6 +927,14 @@ export function AppShell({
                   setRelocating({ node, kind });
                 }}
                 onNewVersion={setOverwriting}
+                focusRequest={newVersionFocusRequest}
+                onFocusUnavailable={() => {
+                  setLeftTab('tree');
+                  requestAnimationFrame(() => {
+                    const tabs = Array.from(document.querySelectorAll<HTMLElement>('[role="tab"]'));
+                    tabs.find((tab) => tab.textContent?.trim() === '문서 트리')?.focus();
+                  });
+                }}
               />
             );
           if (tab.id === 'search')
@@ -1073,11 +1089,8 @@ export function AppShell({
       {overwriting !== null && (
         <NewVersionPrompt
           node={overwriting}
-          onPick={(file) => {
-            onNewVersion?.(overwriting, file);
-            setOverwriting(null);
-          }}
-          onCancel={() => setOverwriting(null)}
+          onPick={(file) => onNewVersion?.(overwriting, file) ?? Promise.resolve({ status: 'unknown' })}
+          onCancel={closeNewVersion}
         />
       )}
 

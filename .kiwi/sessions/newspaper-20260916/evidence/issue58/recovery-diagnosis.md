@@ -1,0 +1,6 @@
+# Recovery diagnosis
+
+- The prior local-matrix `false !== true` failure was the focus-restoration assertion immediately after AlertDialog detachment. Cancel-first focus already passed. Radix performs close auto-focus at the end of the close lifecycle, so the checker now waits for the initiating button to become `document.activeElement` instead of sampling between detachment and focus restoration.
+- The later `새 버전 올리기` timeout came from reopening a second ordinary dialog immediately after closing the first inside the same fixture pass. The independent behavior was already covered; the duplicate sequence raced the previous modal teardown. The checker now performs cancel and affirmative paths in one still-current picker instance.
+- The earlier byte-hash failure did not reproduce against the final fixture or the disposable real product. The current checks compare SHA-256 over the Playwright download bytes and over the exact stored binary in the fixture's isolated data directory; both pass. No production process or pre-existing browser was used or terminated.
+- The checker now closes every owned Playwright context in `finally`, removes every unique temporary profile, and only asks its directly spawned Vite child to terminate. No process-name-wide termination is used.

@@ -1,86 +1,172 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+} from '../components/ui/alert-dialog.js';
+import { Button } from '../components/ui/button.js';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../components/ui/dialog.js';
+import { InlineNotice } from '../components/ui/states.js';
 import type { TreeNodeView } from './tree-contract.js';
 
-/**
- * 새 버전 올리기의 확인과 파일 고르기 (`FR-SHELL-008` AC-2 · AC-5).
- *
- * 되돌릴 수 없는 파일에는 **경고를 먼저 세운다.** md 는 이전 본문이 버전으로
- * 남아 되찾을 수 있으므로 세우지 않는다 — 모든 덮어쓰기에 경고를 붙이면
- * 사용자가 그것을 읽지 않게 되고, 정작 되돌릴 수 없는 자리에서도 지나친다.
- *
- * 되돌릴 수 있는지는 **서버가 판정해 보낸 값**을 쓴다. 여기서 확장자를 다시
- * 보면 버전 보관 규칙이 바뀔 때 경고만 옛 규칙을 따른다.
- *
- * 어느 쪽이든 **그만둘 수 있다.** 파일을 고르는 것 말고 없앨 방법이 없으면
- * 잘못 연 사용자가 아무 파일이나 고르게 된다.
- */
-export function NewVersionPrompt({
-  node,
-  onPick,
-  onCancel,
-}: {
+export type NewVersionOutcome =
+  | { status: 'success' }
+  | { status: 'rejected'; reason?: 'forbidden' | 'too-large' }
+  | { status: 'unknown' }
+  | { status: 'refresh-failed'; retryRefresh?: () => Promise<NewVersionOutcome> };
+export type NewVersionResult = NewVersionOutcome | { status: 'refreshing'; completion: Promise<NewVersionOutcome> };
+
+/** 새 버전 올리기의 파일 선택과 binary L2 확인 (`FR-SHELL-008`, `FR-CONFIRM-010`, `IR-SHELL-010`). */
+export function NewVersionPrompt({ node, onPick, onRetryRefresh, onCancel }: {
   node: TreeNodeView;
-  onPick: (file: File) => void;
+  onPick: (file: File) => Promise<NewVersionResult>;
+  onRetryRefresh?: () => Promise<NewVersionOutcome>;
   onCancel: () => void;
 }) {
   const input = useRef<HTMLInputElement>(null);
+  const confirmButton = useRef<HTMLButtonElement>(null);
+  const result = useRef<HTMLDivElement>(null);
+  const retry = useRef<HTMLButtonElement>(null);
+  const close = useRef<HTMLButtonElement>(null);
+  const attempt = useRef(0);
+  const accepted = useRef(false);
+  const focusAfterResult = useRef(false);
   const warns = node.overwriteIrreversible === true;
+  const [selected, setSelected] = useState<File | null>(null);
+  const [confirming, setConfirming] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [outcome, setOutcome] = useState<NewVersionOutcome | null>(null);
 
-  // 열리면 파일 고르기로 초점을 옮긴다 — 옮기지 않으면 키보드 사용자는
-  // 방금 열린 것이 무엇인지 모른 채 문서 어딘가에 초점을 둔 상태가 된다.
   useEffect(() => {
-    input.current?.focus();
-  }, []);
+    setSelected(null);
+    setConfirming(false);
+    setPending(false);
+    setRefreshing(false);
+    setOutcome(null);
+    attempt.current += 1;
+    accepted.current = false;
+    focusAfterResult.current = false;
+    if (input.current !== null) input.current.value = '';
+  }, [node.id]);
 
-  // Escape 로 닫힌다. 경고를 세워 놓고 닫는 방법이 버튼 하나뿐이면 그것을
-  // 못 찾은 사용자에게는 화면이 멈춘 것으로 보인다.
   useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onCancel();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onCancel]);
+    if (!focusAfterResult.current || pending || outcome === null) return;
+    focusAfterResult.current = false;
+    if (outcome.status === 'success') close.current?.focus();
+    else if (retry.current !== null) retry.current.focus();
+    else result.current?.focus();
+  }, [outcome, pending]);
 
-  const picker = (
-    <input
-      ref={input}
-      type="file"
-      aria-label={`${node.name} 새 버전 파일`}
-      onChange={(event) => {
-        const file = event.target.files?.[0];
-        if (file !== undefined) onPick(file);
-      }}
-    />
-  );
+  const run = async (file: File) => {
+    if (pending) return;
+    const current = ++attempt.current;
+    focusAfterResult.current = true;
+    setPending(true);
+    setOutcome(null);
+    const next = await onPick(file).catch(() => ({ status: 'unknown' as const }));
+    if (current !== attempt.current) return;
+    if (next === undefined) {
+      setPending(false);
+      setOutcome({ status: 'unknown' });
+      return;
+    }
+    if (next.status === 'refreshing') {
+      setRefreshing(true);
+      const completed = await next.completion;
+      if (current !== attempt.current) return;
+      setRefreshing(false);
+      setPending(false);
+      setOutcome(completed);
+      return;
+    }
+    setPending(false);
+    setOutcome(next);
+  };
 
-  const cancel = (
-    <button type="button" onClick={onCancel}>
-      그만두기
-    </button>
-  );
+  const retryRefresh = async () => {
+    const action = outcome?.status === 'refresh-failed' ? outcome.retryRefresh ?? onRetryRefresh : undefined;
+    if (action === undefined || pending) return;
+    const current = ++attempt.current;
+    focusAfterResult.current = true;
+    setPending(true);
+    setRefreshing(true);
+    const next = await action();
+    if (current !== attempt.current) return;
+    setPending(false);
+    setRefreshing(false);
+    setOutcome(next);
+  };
 
-  if (!warns)
-    return (
-      <div>
-        {picker}
-        {cancel}
-      </div>
-    );
+  const failed = outcome?.status === 'rejected' || outcome?.status === 'unknown';
+  const refreshFailed = outcome?.status === 'refresh-failed';
+  const done = outcome?.status === 'success';
 
   return (
-    // `alertdialog` 인 이유는 잃을 것이 있다는 사실을 먼저 알려야 하기
-    // 때문이다 — 보통 대화상자는 읽지 않고 지나칠 수 있다. `aria-modal` 은
-    // 뒤가 조작 대상이 아님을 알린다: 없으면 보조 기술 사용자가 경고를
-    // 지나쳐 뒤의 트리를 계속 훑는다.
-    <div role="alertdialog" aria-modal="true" aria-label="새 버전 올리기">
-      <p>
-        {node.name} 은(는) 버전으로 보관되지 않습니다. 새 버전을 올리면 지금 내용을 되돌릴 수
-        없습니다.
-      </p>
-      {picker}
-      {cancel}
-    </div>
+    <Dialog defaultOpen onOpenChange={(open) => { if (!open && !confirming) onCancel(); }}>
+      <DialogContent data-new-version-prompt aria-busy={pending ? 'true' : undefined} onCloseAutoFocus={(event) => event.preventDefault()}>
+        <DialogTitle>새 버전 올리기</DialogTitle>
+        <DialogDescription>대상 파일: {node.name}</DialogDescription>
+        {warns ? <InlineNotice variant="warning" title="되돌릴 수 없는 교체">
+          {node.name} 은(는) 버전으로 보관되지 않습니다. 새 버전을 올리면 지금 내용을 되돌릴 수 없습니다.
+        </InlineNotice> : null}
+        <label data-new-version-file-field>
+          <span>새 버전 파일</span>
+          <input ref={input} type="file" aria-label={`${node.name} 새 버전 파일`} disabled={pending || done} onChange={(event) => {
+            const file = event.target.files?.[0];
+            if (file === undefined) return;
+            setSelected(file);
+            if (!warns) void run(file);
+            else accepted.current = false;
+          }} />
+        </label>
+        {selected === null ? null : <p data-selected-file-name>{selected.name}</p>}
+        <div data-new-version-actions>
+          {!done && !refreshFailed ? <Button variant="secondary" disabled={pending} onClick={onCancel}>그만두기</Button> : null}
+          {warns && !done && !refreshFailed ? <Button ref={confirmButton} disabled={selected === null || pending} onClick={() => setConfirming(true)}>새 버전 올리기</Button> : null}
+        </div>
+
+        {pending || outcome !== null ? <div
+          ref={result}
+          role={failed || refreshFailed ? 'alert' : 'status'}
+          aria-label={failed || refreshFailed ? '새 버전 업로드 오류' : '새 버전 업로드 상태'}
+          tabIndex={-1}
+          data-new-version-result
+        >
+          {pending ? (refreshing ? '새 버전은 올라갔고 화면 정보를 새로 고치는 중입니다.' : '새 버전을 올리는 중입니다.') : null}
+          {outcome?.status === 'rejected' ? (outcome.reason === 'forbidden' ? '권한이 없어 새 버전을 올리지 못했습니다.' : outcome.reason === 'too-large' ? '파일이 너무 커서 새 버전을 올리지 못했습니다.' : '새 버전을 올리지 못했습니다.') : null}
+          {outcome?.status === 'unknown' ? '업로드 완료 여부를 확인하지 못했습니다.' : null}
+          {refreshFailed ? '새 버전은 올라갔지만 화면을 새로 고치지 못했습니다.' : null}
+          {done ? '새 버전을 올렸습니다.' : null}
+          {failed ? <Button ref={retry} onClick={() => {
+            if (selected === null) return;
+            if (warns) { accepted.current = false; setConfirming(true); }
+            else void run(selected);
+          }}>다시 시도</Button> : null}
+          {refreshFailed ? <Button ref={retry} onClick={() => void retryRefresh()}>화면 새로고침 다시 시도</Button> : null}
+          {done ? <Button ref={close} onClick={onCancel}>닫기</Button> : null}
+        </div> : null}
+
+        <AlertDialog open={confirming} onOpenChange={setConfirming}>
+          <AlertDialogContent aria-modal="true" onCloseAutoFocus={(event) => { event.preventDefault(); confirmButton.current?.focus(); }}>
+            <AlertDialogTitle>기존 파일을 교체하시겠습니까?</AlertDialogTitle>
+            <AlertDialogDescription>대상 파일: {node.name}. 선택한 파일: {selected?.name}. 지금 내용은 되돌릴 수 없습니다.</AlertDialogDescription>
+            <div data-slot="alert-dialog-actions">
+              <AlertDialogCancel autoFocus>돌아가기</AlertDialogCancel>
+              <AlertDialogAction asChild><Button variant="destructive" onClick={() => {
+                if (selected === null || accepted.current) return;
+                accepted.current = true;
+                setConfirming(false);
+                void run(selected);
+              }}>교체하기</Button></AlertDialogAction>
+            </div>
+          </AlertDialogContent>
+        </AlertDialog>
+      </DialogContent>
+    </Dialog>
   );
 }

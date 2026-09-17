@@ -270,7 +270,7 @@ function TreeRow({
   }
 
   return (
-    <div data-tree-row="" data-kind={node?.kind ?? 'workspace'} data-visibility={node?.visibility} data-level={node?.level ?? undefined}>
+    <div data-tree-row="" data-node-id={row.id} data-kind={node?.kind ?? 'workspace'} data-visibility={node?.visibility} data-level={node?.level ?? undefined}>
       {expandable && (
         <button type="button" aria-label={`${row.name} ${api.isOpen ? '접기' : '펼치기'}`} onClick={() => api.toggle()}>
           <span data-tree-expander="" aria-hidden="true" />
@@ -386,6 +386,8 @@ export function DocumentTree({
   onRelocate,
   onShare,
   onNewVersion,
+  focusRequest,
+  onFocusUnavailable,
   naming,
   onNamed,
   onNamingCancel,
@@ -423,6 +425,9 @@ export function DocumentTree({
   onShare?: (node: TreeNodeView) => void;
   /** 그 파일을 덮어쓰겠다 (`FR-SHELL-008` AC-2). 확인과 파일 고르기는 바깥이 한다. */
   onNewVersion?: (node: TreeNodeView) => void;
+  /** 닫힌 셸 표면에서 안정된 노드 ID로 초점을 돌리고, 사라진 대상은 안전한 트리 표면으로 내린다. */
+  focusRequest?: { nodeId: string; sequence: number };
+  onFocusUnavailable?: () => void;
   /** 지금 이름을 정하는 자리. 없으면 트리는 평소대로 선다. */
   naming?: Naming;
   /** 이름이 정해졌다. 그 이름으로 무엇을 할지는 바깥이 안다. */
@@ -438,11 +443,47 @@ export function DocumentTree({
 
   const tree = useRef<TreeApi<Row> | null>(null);
   const viewport = useRef<HTMLDivElement>(null);
+  const lastFocusedNodeId = useRef<string | undefined>(undefined);
+  const restoringTreeRegion = useRef(false);
   const [treeHeight, setTreeHeight] = useState(1);
   const namingHelpId = 'document-tree-naming-help';
   const [emptyNamingError, setEmptyNamingError] = useState(false);
 
   useEffect(() => setEmptyNamingError(false), [naming]);
+
+  useEffect(() => {
+    if (focusRequest === undefined) return;
+    const frame = requestAnimationFrame(() => {
+      const treeElement = viewport.current?.querySelector<HTMLElement>('[role="tree"]');
+      const rowFor = (nodeId: string) => treeElement
+        ?.querySelector<HTMLElement>(`[data-tree-row][data-node-id="${CSS.escape(nodeId)}"]`)
+        ?.closest<HTMLElement>('[role="treeitem"]');
+      const target = rowFor(focusRequest.nodeId);
+      if (target !== undefined && target !== null) {
+        tree.current?.focus(focusRequest.nodeId);
+        return;
+      }
+      const lastFocused = lastFocusedNodeId.current === undefined
+        ? undefined
+        : rowFor(lastFocusedNodeId.current);
+      const selected = lastFocused ?? Array.from(
+        treeElement?.querySelectorAll<HTMLElement>('[role="treeitem"][aria-selected="true"]') ?? [],
+      ).find((item) => item.querySelector('[data-tree-row][data-kind]:not([data-kind="workspace"])') !== null);
+      if (selected !== null && selected !== undefined && selected.isConnected) {
+        const nodeId = selected.querySelector<HTMLElement>('[data-tree-row][data-node-id]')?.dataset.nodeId;
+        if (nodeId !== undefined) tree.current?.focus(nodeId);
+        return;
+      }
+      if (treeElement !== null && treeElement !== undefined && treeElement.isConnected) {
+        restoringTreeRegion.current = true;
+        treeElement.focus();
+        restoringTreeRegion.current = false;
+        return;
+      }
+      onFocusUnavailable?.();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [focusRequest, onFocusUnavailable]);
 
   useEffect(() => {
     const element = viewport.current;
@@ -530,7 +571,22 @@ export function DocumentTree({
         </div>
       ) : null}
 
-      <div ref={viewport} data-tree-viewport="">
+      <div
+        ref={viewport}
+        data-tree-viewport=""
+        onFocusCapture={(event) => {
+          const target = event.target as HTMLElement;
+          if (restoringTreeRegion.current && target.getAttribute('role') === 'tree') {
+            event.stopPropagation();
+            return;
+          }
+          const row = target.closest<HTMLElement>('[data-tree-row][data-node-id]')
+            ?? target.closest<HTMLElement>('[role="treeitem"]')?.querySelector<HTMLElement>('[data-tree-row][data-node-id]');
+          if (row?.dataset.nodeId !== undefined && row.dataset.kind !== 'workspace') {
+            lastFocusedNodeId.current = row.dataset.nodeId;
+          }
+        }}
+      >
         <Tree<Row>
           ref={tree}
           data={rows}

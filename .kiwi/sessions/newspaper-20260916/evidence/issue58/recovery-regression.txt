@@ -1,0 +1,9 @@
+2026-09-17 recovery verification
+
+- `npm test -- --run test/issue58-file-surfaces.test.tsx test/screen-wiring.test.tsx` (packages/web): 2 files, 60 tests passed.
+- `npm test -- --run` (packages/web): 68 files, 738 tests passed.
+- `npm test -- --run` (packages/editor): 23 files, 261 passed, 1 skipped.
+- `npm run typecheck` (packages/web): passed.
+- `npm run build` (packages/web): passed; existing chunk-size warning only.
+- `node test/issue58-file-surface-check.cjs` (packages/web): Playwright matrix 12/12, cached/loading/error/retry states and forced-colors passed.
+- `node run-product-fixture.mjs` (issue58 evidence directory): disposable real-product integration and authenticated full-AppShell Playwright matrix 12/12 passed.

@@ -250,7 +250,7 @@ describe('FR-SHELL-008 AC-5 — 되돌릴 수 없는 덮어쓰기는 경고한�
       within(await screen.findByRole('menu')).getByRole('menuitem', { name: '새 버전 올리기' }),
     );
 
-    const warning = await screen.findByRole('alertdialog', { name: '새 버전 올리기' });
+    const warning = await screen.findByRole('dialog', { name: '새 버전 올리기' });
     expect(warning.textContent).toContain('되돌릴 수 없습니다');
   });
 
@@ -482,7 +482,12 @@ describe('검증에서 나온 나머지 — 안내 소거·취소·포커스', (
       within(await screen.findByRole('menu')).getByRole('menuitem', { name: '새 버전 올리기' }),
     );
 
-    const warning = await screen.findByRole('alertdialog', { name: '새 버전 올리기' });
+    await user.upload(
+      await screen.findByLabelText('설계.zip 새 버전 파일'),
+      new File(['binary'], '교체.bin'),
+    );
+    await user.click(screen.getByRole('button', { name: '새 버전 올리기' }));
+    const warning = await screen.findByRole('alertdialog', { name: '기존 파일을 교체하시겠습니까?' });
     expect(warning.getAttribute('aria-modal')).toBe('true');
   });
 });
