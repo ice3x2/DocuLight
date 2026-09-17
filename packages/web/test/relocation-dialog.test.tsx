@@ -86,11 +86,88 @@ describe('FR-ACL-006 — 목적지를 고르면 프리뷰가 그 목적지 기�
   it('목적지를 아직 고르지 않았으면 실행할 수 없다', () => {
     열기({ kind: 'move' });
 
-    expect((screen.getByRole('button', { name: /실행/ }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole('button', { name: '이동' }) as HTMLButtonElement).disabled).toBe(true);
+  });
+});
+
+describe('GitHub #66 — 기존 소품의 이동·복사 표현', () => {
+  it('목적지 라벨과 placeholder를 유지하고 선택한 전체 경로를 별도로 보여준다', () => {
+    열기({ destinationId: 'd1', relocation: { kind: 'copy', reachable: 3 } });
+
+    const select = screen.getByLabelText('목적지') as HTMLSelectElement;
+    expect(select.tagName).toBe('SELECT');
+    expect(select.options[0]?.textContent).toBe('선택하세요');
+    expect(select.value).toBe('d1');
+    expect(screen.getByTestId('selected-destination-path').textContent).toBe('기획팀/설계');
+  });
+
+  it('선택 전과 제공된 빈 목록을 사실 문구로 구분한다', () => {
+    const { rerender } = 열기();
+    expect(screen.getByText('목적지를 선택하세요.')).toBeDefined();
+
+    rerender(
+      <RelocationDialog kind="copy" open sourceName="회의록.md" destinations={[]} />,
+    );
+    expect(screen.getByText('제공된 목적지가 없습니다.')).toBeDefined();
+  });
+
+  it('프리뷰가 없으면 loading이나 0으로 꾸미지 않고 미전달 사실을 밝힌다', () => {
+    열기({ destinationId: 'd1' });
+
+    expect(screen.getByText('영향 정보가 전달되지 않았습니다.')).toBeDefined();
+    expect(screen.queryByText(/불러오는 중/)).toBeNull();
+    expect(screen.queryByText('0명')).toBeNull();
+  });
+
+  it('제목·닫기·취소·주요 동작에 조작 이름을 쓴다', () => {
+    열기({ kind: 'move', destinationId: 'd1', relocation: { kind: 'move', before: 2, after: 2 } });
+
+    expect(screen.getByRole('heading', { name: '회의록.md 이동' })).toBeDefined();
+    expect(screen.getByRole('button', { name: '이동 닫기' })).toBeDefined();
+    expect(screen.getByRole('button', { name: '취소' })).toBeDefined();
+    expect(screen.getByRole('button', { name: '이동' })).toBeDefined();
+  });
+
+  it('Escape와 닫기 버튼이 기존 취소 callback을 사용한다', async () => {
+    const 취소했다 = vi.fn();
+    열기({ onCancel: 취소했다 });
+    const user = userEvent.setup();
+
+    await user.keyboard('{Escape}');
+    expect(취소했다).toHaveBeenCalledTimes(1);
+
+    await user.click(screen.getByRole('button', { name: '복사 닫기' }));
+    expect(취소했다).toHaveBeenCalledTimes(2);
+  });
+
+  it('이동 화면은 복사 결과 수를 이동한 수로 바꾸어 말하지 않는다', () => {
+    열기({ kind: 'move', result: { copied: 9 } });
+
+    expect(screen.queryByText(/9개 항목을 이동/)).toBeNull();
   });
 });
 
 describe('FR-CONFIRM-005 — 입력 폼은 확인 관문이 아니다', () => {
+  it.each([
+    ['move', '이동', { kind: 'move', before: 2, after: 5 }],
+    ['copy', '복사', { kind: 'copy', reachable: 4 }],
+  ] as const)('L2 %s 관문을 Escape로 닫으면 invoking %s 버튼으로 초점이 복귀하고 parent callback은 0회다', async (kind, operation, relocation) => {
+    const 실행했다 = vi.fn();
+    const 부모를닫았다 = vi.fn();
+    열기({ kind, destinationId: 'd1', relocation, grade: 'L2', onConfirm: 실행했다, onCancel: 부모를닫았다 });
+    const primary = screen.getByRole('button', { name: operation, exact: true });
+    const user = userEvent.setup();
+
+    await user.click(primary);
+    expect(screen.getByRole('alertdialog')).toBeDefined();
+    await user.keyboard('{Escape}');
+
+    expect(screen.queryByRole('alertdialog')).toBeNull();
+    expect(document.activeElement).toBe(primary);
+    expect(부모를닫았다).not.toHaveBeenCalled();
+    expect(실행했다).not.toHaveBeenCalled();
+  });
+
   it('AC-1: 목적지를 고르고 실행을 눌러도 확인 단계가 한 번 더 선다', async () => {
     const 실행했다 = vi.fn();
     열기({
@@ -101,7 +178,7 @@ describe('FR-CONFIRM-005 — 입력 폼은 확인 관문이 아니다', () => {
       onConfirm: 실행했다,
     });
 
-    await userEvent.setup().click(screen.getByRole('button', { name: /실행/ }));
+    await userEvent.setup().click(screen.getByRole('button', { name: '이동' }));
 
     expect(screen.getByRole('alertdialog')).toBeDefined();
     // 폼의 실행 버튼이 관문을 대신하지 않는다 — 대신한다고 인정하면
@@ -120,7 +197,7 @@ describe('FR-CONFIRM-005 — 입력 폼은 확인 관문이 아니다', () => {
     });
 
     const user = userEvent.setup();
-    await user.click(screen.getByRole('button', { name: /실행/ }));
+    await user.click(screen.getByRole('button', { name: '이동' }));
     await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: '실행' }));
 
     expect(실행했다).toHaveBeenCalledTimes(1);
@@ -138,7 +215,7 @@ describe('FR-CONFIRM-005 — 입력 폼은 확인 관문이 아니다', () => {
       onConfirm: 실행했다,
     });
 
-    await userEvent.setup().click(screen.getByRole('button', { name: /실행/ }));
+    await userEvent.setup().click(screen.getByRole('button', { name: '복사' }));
 
     expect(screen.getByRole('alertdialog')).toBeDefined();
     expect(실행했다).not.toHaveBeenCalled();
@@ -164,7 +241,7 @@ describe('FR-CONFIRM-005 — 입력 폼은 확인 관문이 아니다', () => {
       onConfirm: 실행했다,
     });
 
-    await userEvent.setup().click(screen.getByRole('button', { name: /실행/ }));
+    await userEvent.setup().click(screen.getByRole('button', { name: '이동' }));
 
     expect(screen.queryByRole('alertdialog')).toBeNull();
     expect(실행했다).toHaveBeenCalledTimes(1);

@@ -100,6 +100,31 @@ describe('이동·복사 프리뷰 (`FR-ACL-006` · `FR-ACL-002` · `IR-ACL-001`
     rerender(<RelocationPreview relocation={{ kind: 'move', before: 1, after: 2 }} level="admin" />);
     expect(screen.getByTestId('roster-elsewhere').textContent ?? '').toContain('시뮬레이션');
   });
+
+  it('이동 전후 수치를 screen reader도 상태와 함께 구분해 읽는다', () => {
+    render(<RelocationPreview relocation={{ kind: 'move', before: 3, after: 5 }} />);
+
+    expect(screen.getByLabelText('이동 전 접근 가능 3명, 이동 후 접근 가능 5명')).toBeDefined();
+    expect(screen.getByText('볼 수 있는 사람이 늘어납니다.')).toBeDefined();
+  });
+
+  it('감소와 동일 상태를 구분하며 동일해도 전후 두 수치를 유지한다', () => {
+    const { rerender } = render(
+      <RelocationPreview relocation={{ kind: 'move', before: 5, after: 2 }} />,
+    );
+    expect(screen.getByText('볼 수 있는 사람이 줄어듭니다.')).toBeDefined();
+
+    rerender(<RelocationPreview relocation={{ kind: 'move', before: 4, after: 4 }} />);
+    expect(screen.queryByText(/늘어납니다|줄어듭니다/)).toBeNull();
+    expect(screen.getAllByTestId('relocation-count')).toHaveLength(2);
+  });
+
+  it('복사는 목적지 접근 가능 수치만 읽고 이동 증감 표현을 만들지 않는다', () => {
+    render(<RelocationPreview relocation={{ kind: 'copy', reachable: 7 }} />);
+
+    expect(screen.getByLabelText('접근 가능 7명')).toBeDefined();
+    expect(screen.queryByText(/이동 전|이동 후|늘어납니다|줄어듭니다/)).toBeNull();
+  });
 });
 
 describe('주체 축 일괄 회수 (`FR-ACL-003` · `FR-PRINCIPAL-004` · `FR-PRINCIPAL-010`)', () => {

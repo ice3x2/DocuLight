@@ -843,7 +843,7 @@ describe('FR-SHELL-015 — 이동과 복사가 화면에서 서버까지 닿는�
 
     // 실행 버튼은 **관문이 아니다** — 그것을 누르면 확인 다이얼로그가 서고,
     // 거기서 한 번 더 실행해야 나간다 (`FR-CONFIRM-005`).
-    await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: '실행' }));
+    await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: 항목, exact: true }));
     await user.click(
       within(await screen.findByRole('alertdialog')).getByRole('button', { name: '실행' }),
     );
@@ -889,7 +889,7 @@ describe('FR-SHELL-015 — 이동과 복사가 화면에서 서버까지 닿는�
     });
     await user.click(within(await screen.findByRole('menu')).getByRole('menuitem', { name: '이동' }));
 
-    const 실행 = within(await screen.findByRole('dialog')).getByRole('button', { name: '실행' });
+    const 실행 = within(await screen.findByRole('dialog')).getByRole('button', { name: '이동', exact: true });
     expect(실행).toHaveProperty('disabled', true);
     expect(sent.some((one) => one.path.includes('/move'))).toBe(false);
   });

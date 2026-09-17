@@ -1,7 +1,13 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 
 import { RelocationPreview, type Relocation } from '../acl/RelocationPreview.js';
+import {
+  Button,
+  Select,
+} from '../components/ui/index.js';
 import { ConfirmGate, type Grade } from '../confirm/ConfirmGate.js';
+
+import './RelocationDialog.css';
 
 /**
  * 복사 다이얼로그의 안내 문구 (`SEC-SHELL-003` AC-3 · 원장 `R105-a`).
@@ -65,8 +71,40 @@ export function RelocationDialog({
   onCancel?: () => void;
 }) {
   const titleId = useId();
+  const descriptionId = useId();
   const selectId = useId();
+  const closeButton = useRef<HTMLButtonElement>(null);
+  const executeButton = useRef<HTMLButtonElement>(null);
   const [관문열림, set관문열림] = useState(false);
+  const operation = kind === 'copy' ? '복사' : '이동';
+  const selectedPath = destinations.find((destination) => destination.id === destinationId)?.path;
+
+  useEffect(() => {
+    if (open) closeButton.current?.focus();
+  }, [open]);
+
+  const handleDialogKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Escape') {
+      if (관문열림) return;
+      event.preventDefault();
+      onCancel?.();
+      return;
+    }
+    if (event.key !== 'Tab') return;
+    const controls = [...event.currentTarget.querySelectorAll<HTMLElement>(
+      'button:not(:disabled), select:not(:disabled), [href], [tabindex]:not([tabindex="-1"])',
+    )];
+    const first = controls[0];
+    const last = controls.at(-1);
+    if (first === undefined || last === undefined) return;
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
 
   /**
    * 실행 버튼은 **관문이 아니다** (`FR-CONFIRM-005`).
@@ -83,56 +121,80 @@ export function RelocationDialog({
   if (!open) return null;
 
   return (
-    <div role="dialog" aria-labelledby={titleId}>
-      <h2 id={titleId}>
-        {sourceName} {kind === 'copy' ? '복사' : '이동'}
-      </h2>
+    <>
+    <div data-relocation-overlay="" />
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+      aria-describedby={descriptionId}
+      data-relocation-dialog=""
+      onKeyDown={handleDialogKeyDown}
+    >
+        <header data-relocation-header="">
+          <h2 id={titleId} data-slot="dialog-title">{sourceName} {operation}</h2>
+          <Button ref={closeButton} type="button" variant="ghost" size="icon" aria-label={`${operation} 닫기`} data-relocation-close="" onClick={onCancel} />
+        </header>
 
-      <label htmlFor={selectId}>목적지</label>
-      <select
-        id={selectId}
-        value={destinationId ?? ''}
-        onChange={(event) => onDestination?.(event.target.value)}
-      >
-        <option value="">선택하세요</option>
-        {destinations.map((destination) => (
-          <option key={destination.id} value={destination.id}>
-            {destination.path}
-          </option>
-        ))}
-      </select>
+        <div data-relocation-body="">
+          <p id={descriptionId} data-relocation-source="">{sourceName}</p>
 
-      {relocation === undefined ? null : (
-        <RelocationPreview relocation={relocation} {...(level === undefined ? {} : { level })} />
-      )}
+          <div data-slot="field">
+            <label htmlFor={selectId}>목적지</label>
+            <Select
+              id={selectId}
+              value={destinationId ?? ''}
+              onChange={(event) => onDestination?.(event.target.value)}
+            >
+              <option value="">선택하세요</option>
+              {destinations.map((destination) => (
+                <option key={destination.id} value={destination.id}>
+                  {destination.path}
+                </option>
+              ))}
+            </Select>
+            {destinations.length === 0 ? (
+              <p data-slot="field-description">제공된 목적지가 없습니다.</p>
+            ) : selectedPath === undefined ? (
+              <p data-slot="field-description">목적지를 선택하세요.</p>
+            ) : (
+              <p data-slot="field-description" data-testid="selected-destination-path">{selectedPath}</p>
+            )}
+          </div>
 
-      {kind === 'copy' ? <p data-testid="copy-notice">{COPY_NOTICE}</p> : null}
+          {relocation === undefined ? (
+            <p data-relocation-help="">영향 정보가 전달되지 않았습니다.</p>
+          ) : (
+            <RelocationPreview relocation={relocation} {...(level === undefined ? {} : { level })} />
+          )}
 
-      {/* 결과가 없을 때 0 을 그리지 않는다 — 아직 안 한 것과 0 개를 복사한
-          것이 같은 모양이 되면 사용자가 실패로 읽는다. */}
-      {result === undefined ? null : (
-        <p role="status">{result.copied}개 항목을 {kind === 'copy' ? '복사' : '이동'}했습니다.</p>
-      )}
+          {kind === 'copy' ? <p data-testid="copy-notice" data-relocation-help="">{COPY_NOTICE}</p> : null}
 
-      <ConfirmGate
-        open={관문열림}
-        grade={grade}
-        title={`${sourceName} ${kind === 'copy' ? '복사' : '이동'}`}
-        onConfirm={() => {
-          set관문열림(false);
-          onConfirm?.();
-        }}
-        onCancel={() => set관문열림(false)}
-      />
+          {/* 현재 result 소품은 복사 수만 소유한다. 이동 결과로 재해석하지 않는다. */}
+          {kind === 'copy' && result !== undefined ? (
+            <p role="status" data-relocation-status="">{result.copied}개 항목을 복사했습니다.</p>
+          ) : null}
+        </div>
 
-      <button type="button" onClick={onCancel}>
-        취소
-      </button>
-      {/* 빈 문자열도 「고르지 않음」이다 — 선택칸의 빈 옵션을 다시 고르면
-          `''` 가 올라오는데, `undefined` 만 보면 그 자리에서 실행이 열린다. */}
-      <button type="button" disabled={!destinationId} onClick={실행누름}>
-        실행
-      </button>
+        <div data-relocation-actions="">
+          <Button type="button" variant="secondary" onClick={onCancel}>취소</Button>
+          {/* 빈 문자열도 「고르지 않음」이다 — 선택칸의 빈 옵션을 다시 고르면
+              `''` 가 올라오는데, `undefined` 만 보면 그 자리에서 실행이 열린다. */}
+          <Button ref={executeButton} type="button" disabled={!destinationId} onClick={실행누름}>{operation}</Button>
+        </div>
+
+        <ConfirmGate
+          open={관문열림}
+          grade={grade}
+          title={`${sourceName} ${operation}`}
+          restoreFocusRef={executeButton}
+          onConfirm={() => {
+            set관문열림(false);
+            onConfirm?.();
+          }}
+          onCancel={() => set관문열림(false)}
+        />
     </div>
+    </>
   );
 }

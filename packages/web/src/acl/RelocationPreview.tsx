@@ -26,20 +26,33 @@ export function RelocationPreview({
   // 명단을 담을 소품이 **없다** (`FR-ACL-006` AC-3 · `SEC-ACL-015` AC-4).
   // 칸을 두면 그 칸이 곧 누출 경로가 되고, 이니셜·부분 목록 같은 축소
   // 표시도 같은 칸에서 나온다.
-  const counts =
-    relocation.kind === 'move' ? [relocation.before, relocation.after] : [relocation.reachable];
+  const accessibleLabel = relocation.kind === 'move'
+    ? `이동 전 ${LABEL} ${relocation.before}명, 이동 후 ${LABEL} ${relocation.after}명`
+    : `${LABEL} ${relocation.reachable}명`;
+  const trend = relocation.kind !== 'move' || relocation.before === relocation.after
+    ? null
+    : relocation.after > relocation.before
+      ? '볼 수 있는 사람이 늘어납니다.'
+      : '볼 수 있는 사람이 줄어듭니다.';
 
   return (
-    <div data-testid="relocation-preview">
-      <p>
-        {LABEL}{' '}
-        {counts.map((count, index) => (
-          <span key={index}>
-            {index === 0 ? null : ' → '}
-            <span data-testid="relocation-count">{count}명</span>
-          </span>
-        ))}
+    <div data-testid="relocation-preview" data-relocation-preview="">
+      <p aria-label={accessibleLabel}>
+        <span aria-hidden="true">
+          {LABEL}{' '}
+          {relocation.kind === 'move' ? (
+            <>
+              <span data-testid="relocation-count">{relocation.before}명</span>
+              {' → '}
+              <span data-testid="relocation-count">{relocation.after}명</span>
+            </>
+          ) : (
+            <span data-testid="relocation-count">{relocation.reachable}명</span>
+          )}
+        </span>
       </p>
+
+      {trend === null ? null : <p data-relocation-trend="">{trend}</p>}
 
       {level === 'admin' ? (
         // 명단이 필요하면 여기가 아니라 저기다 (`FR-ACL-006` AC-4). 이
