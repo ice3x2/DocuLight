@@ -43,6 +43,13 @@ const queue = (count = 1): ReconciliationQueueBody => ({
 });
 
 describe('GitHub #70 — 감사와 재조정 대기열의 독립 읽기 상태', () => {
+  it('선택 워크스페이스 ID는 문맥으로 보이되 실제 조회 범위는 전체 관리 범위라고 밝힌다', () => {
+    render(<AuditLogPanel audit={{ state: 'ready', data: audit() }} workspaceContext={{ id: 'workspace-123', name: '기획팀' }} />);
+
+    const context = screen.getByText(/workspace-123/);
+    expect(context.textContent).toContain('기획팀');
+    expect(context.textContent).toContain('관리 가능한 모든 워크스페이스');
+  });
   it('감사 실패 중에도 대기열로 이동하고 각 읽기만 다시 시도한다', async () => {
     const auditRetry = vi.fn();
     const queueRetry = vi.fn();
@@ -234,5 +241,29 @@ describe('GitHub #70 — 감사 카테고리 배지 상태', () => {
     const badge = await screen.findByTestId('queue-badge');
     expect(badge.textContent).toBe(text);
     expect(badge.getAttribute('aria-label')).toBe(label);
+  });
+
+  it('회수된 워크스페이스 ID를 선택 문맥으로 노출하지 않고 실제 조회 범위만 밝힌다', async () => {
+    const user = userEvent.setup();
+    render(
+      <AppShell
+        viewer={{ superuser: false, workspaceCount: 1, adminWorkspaceCount: 1 }}
+        audit={{ state: 'ready', data: audit() }}
+        workspaceManagement={{
+          managed: { state: 'ready', rows: [{ id: 'remaining', name: '남은 워크스페이스', adminless: false }] },
+          all: { state: 'loading' },
+          administrators: { state: 'loading' },
+          selectedId: 'revoked-workspace',
+          onSelect: vi.fn(),
+          onRename: vi.fn(),
+        }}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: '설정' }));
+    await user.click(screen.getByRole('tab', { name: '감사 로그' }));
+    expect(screen.queryByText(/revoked-workspace/)).toBeNull();
+    expect(screen.queryByText(/선택 문맥/)).toBeNull();
+    expect(screen.getByText(/관리 가능한 모든 워크스페이스/)).toBeDefined();
   });
 });

@@ -605,7 +605,20 @@ export interface WorkspaceListRow {
   adminless: boolean;
 }
 
-export const fetchWorkspaceList = () => call<WorkspaceListRow[]>('/workspaces');
+export const fetchWorkspaceList = (scope?: 'managed' | 'all') =>
+  call<WorkspaceListRow[]>(`/workspaces${scope === undefined ? '' : `?scope=${scope}`}`);
+
+export interface WorkspaceRenameBody {
+  workspace: { id: string; name: string; createdAt: string };
+  sidecarSync: 'synced' | 'pending';
+}
+
+export const renameWorkspace = (workspaceId: string, name: string) =>
+  call<WorkspaceRenameBody>(`/workspaces/${encodeURIComponent(workspaceId)}`, {
+    method: 'PATCH',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ name }),
+  });
 
 export const fetchAccessors = (nodeId: string) =>
   call<AccessorReportBody>(`/nodes/${encodeURIComponent(nodeId)}/accessors`);

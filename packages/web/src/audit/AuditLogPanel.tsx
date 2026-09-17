@@ -9,7 +9,7 @@ export type AuditReadState<T> =
   | { state: 'error'; onRetry: () => void; operations?: readonly string[] };
 
 /** 감사 로그와 재조정 대기열의 읽기 전용 화면 (`IR-AUDIT-001`~`IR-AUDIT-004`). */
-export function AuditLogPanel({ audit, view, onOperation, operation, queueState, queue, contextKey }: {
+export function AuditLogPanel({ audit, view, onOperation, operation, queueState, queue, contextKey, workspaceContext }: {
   audit?: AuditReadState<AuditViewBody>;
   view?: AuditViewBody;
   operation?: string;
@@ -17,6 +17,7 @@ export function AuditLogPanel({ audit, view, onOperation, operation, queueState,
   queueState?: AuditReadState<ReconciliationQueueBody>;
   queue?: ReconciliationQueueBody;
   contextKey?: string;
+  workspaceContext?: { id: string; name: string };
 }) {
   const 감사읽기: AuditReadState<AuditViewBody> = audit ?? (view === undefined ? { state: 'loading' } : { state: 'ready', data: view });
   const 대기열읽기: AuditReadState<ReconciliationQueueBody> | undefined = queueState ?? (queue === undefined ? undefined : { state: 'ready', data: queue });
@@ -95,6 +96,10 @@ export function AuditLogPanel({ audit, view, onOperation, operation, queueState,
           </button>
         )}
       </div>
+      <p data-audit-workspace-context>
+        {workspaceContext === undefined ? null : <>선택 문맥: {workspaceContext.name} ({workspaceContext.id}). </>}
+        현재 감사 로그 조회 범위는 관리 가능한 모든 워크스페이스입니다.
+      </p>
       {대기열보기 && 대기열읽기 !== undefined ? (
         <QueueResult query={대기열읽기} />
       ) : (

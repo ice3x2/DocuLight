@@ -36,8 +36,8 @@ beforeEach(() => {
   vi.stubGlobal(
     'fetch',
     vi.fn((url: string | URL | Request) => {
-      const path = String(url).split('?')[0]!;
-      const handler = routes.get(path);
+      const requestPath = String(url);
+      const handler = routes.get(requestPath) ?? routes.get(requestPath.split('?')[0]!);
       return Promise.resolve(handler === undefined ? json(null, 404) : handler());
     }),
   );
@@ -157,6 +157,7 @@ describe('권한 감사 구역이 실제로 서버에서 값을 받아 그린다
 
   it('IR-WORKSPACE-002: 가시 워크스페이스를 관리 범위 증거로 사용하지 않는다', async () => {
     routes.set('/api/workspaces', () => json([{ id: 'ws-1', name: '기획팀', adminless: false }]));
+    routes.set('/api/workspaces?scope=managed', () => json(null, 500));
 
     const { modal } = await 감사구역();
 

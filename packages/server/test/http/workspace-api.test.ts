@@ -6,7 +6,7 @@ import request from 'supertest';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { actorFor, type Actor } from '../../src/app/acl/permission-service.js';
-import { breakInheritance, grantPermission } from '../../src/app/acl/grant-service.js';
+import { breakInheritance, grantPermission, revokePermission } from '../../src/app/acl/grant-service.js';
 import { createNode } from '../../src/app/node/node-service.js';
 import { writeSetting } from '../../src/app/settings/instance-settings.js';
 import { createWorkspace } from '../../src/app/workspace/create-workspace.js';
@@ -18,7 +18,7 @@ import { attachmentStores, superuserActor } from '../support/acl-fixture.js';
 let dir: string;
 let docsRoot: string;
 let db: Database;
-let stores: ReturnType<typeof attachmentStores>;
+let stores: ReturnType<typeof attachmentStores> & { files: FsWorkspaceFiles };
 let root: Actor;
 let me: Actor;
 let ws: string;
@@ -35,7 +35,7 @@ beforeEach(async () => {
   docsRoot = join(dir, 'docs');
   await mkdir(docsRoot, { recursive: true });
   db = openDatabase(join(dir, 'doculight.db'));
-  stores = attachmentStores(db, docsRoot);
+  stores = Object.assign(attachmentStores(db, docsRoot), { files: new FsWorkspaceFiles(docsRoot) });
   root = superuserActor(stores);
   ws = (await createWorkspace({ workspaces: stores.workspaces, files: new FsWorkspaceFiles(docsRoot) }, '기획팀')).id;
   doc = idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'file', name: '회의록.md' }));
@@ -76,6 +76,127 @@ describe('세션 — 화면이 표시 조건을 세울 근거를 받는다 (`IR-
     actingAs = undefined;
 
     expect((await request(app).get('/api/session')).status).toBe(401);
+  });
+});
+
+describe('워크스페이스 관리 목록과 표시 이름 (`IR-WORKSPACE-001` AC-1 · AC-2 · AC-3 · AC-6 · AC-7)', () => {
+  it('기본 목록은 가시 범위를 유지하고 managed는 관리 범위만, all은 슈퍼유저에게만 준다', async () => {
+    const visibleOnly = (await createWorkspace({ workspaces: stores.workspaces, files: stores.files }, '열람 전용')).id;
+    grantPermission(stores, root, { nodeId: ws, principalId: me.id, level: 'admin' });
+    grantPermission(stores, root, { nodeId: visibleOnly, principalId: me.id, level: 'view' });
+    actingAs = actorFor(stores.principals, me.id);
+
+    expect((await request(app).get('/api/workspaces')).body.map((row: { id: string }) => row.id)).toEqual([ws, visibleOnly]);
+    expect((await request(app).get('/api/workspaces?scope=managed')).body.map((row: { id: string }) => row.id)).toEqual([ws]);
+    expect((await request(app).get('/api/workspaces?scope=all')).status).toBe(404);
+    expect((await request(app).get('/api/workspaces?scope=unknown')).status).toBe(400);
+    expect((await request(app).get('/api/workspaces?scope=managed&scope=all')).status).toBe(400);
+
+    actingAs = root;
+    expect((await request(app).get('/api/workspaces?scope=all')).body.map((row: { id: string }) => row.id)).toEqual([ws, visibleOnly]);
+  });
+
+  it('전용 PATCH는 표시 이름만 정규화해 바꾸고 최신 DB 값으로 사이드카를 쓴다', async () => {
+    const before = stores.workspaces.findById(ws)!;
+    const response = await request(app).patch(`/api/workspaces/${ws}`).send({ name: '  e\u0301quipe / CON  ' });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ workspace: { ...before, name: 'équipe / CON' }, sidecarSync: 'synced' });
+    expect(JSON.parse(await readFile(join(docsRoot, ws, '.workspace.json'), 'utf8'))).toEqual(response.body.workspace);
+  });
+
+  it('관리 권한을 다시 검사하고 부재와 권한 부족을 같은 응답으로 감춘다', async () => {
+    actingAs = actorFor(stores.principals, me.id);
+    const forbidden = await request(app).patch(`/api/workspaces/${ws}`).send({ name: '몰래' });
+    const missing = await request(app).patch('/api/workspaces/missing').send({ name: '몰래' });
+
+    expect(forbidden.status).toBe(404);
+    expect(missing.status).toBe(404);
+    expect(stores.workspaces.findById(ws)?.name).toBe('기획팀');
+  });
+
+  it('표시 이름의 120 코드포인트 경계와 제어문자를 검사한다', async () => {
+    expect((await request(app).patch(`/api/workspaces/${ws}`).send({ name: '😀'.repeat(120) })).status).toBe(200);
+    expect((await request(app).patch(`/api/workspaces/${ws}`).send({ name: '😀'.repeat(121) })).status).toBe(400);
+    expect((await request(app).patch(`/api/workspaces/${ws}`).send({ name: '나쁜\u007f이름' })).status).toBe(400);
+  });
+
+  it('DB 커밋 뒤 사이드카 실패는 pending이며 DB 이름을 되돌리지 않는다', async () => {
+    stores.files.writeSidecar = async () => { throw new Error('disk'); };
+    const response = await request(app).patch(`/api/workspaces/${ws}`).send({ name: 'DB 정본' });
+
+    expect(response.status).toBe(200);
+    expect(response.body.sidecarSync).toBe('pending');
+    expect(stores.workspaces.findById(ws)?.name).toBe('DB 정본');
+  });
+
+  it('동시 개명에서 늦은 이전 사이드카 쓰기가 최신 DB 이름을 덮지 않는다', async () => {
+    const files = new FsWorkspaceFiles(docsRoot);
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => { release = resolve; });
+    let first = true;
+    stores.files.writeSidecar = async (workspace) => {
+      if (first) { first = false; await held; }
+      await files.writeSidecar(workspace);
+    };
+
+    const older = request(app).patch(`/api/workspaces/${ws}`).send({ name: '먼저' }).then((response) => response);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    const newer = request(app).patch(`/api/workspaces/${ws}`).send({ name: '나중' }).then((response) => response);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    release();
+    await Promise.all([older, newer]);
+
+    expect(stores.workspaces.findById(ws)?.name).toBe('나중');
+    expect(JSON.parse(await readFile(join(docsRoot, ws, '.workspace.json'), 'utf8')).name).toBe('나중');
+  });
+
+  it('직렬화 대기 중 관리 권한이 회수되면 임계 구역 안에서 다시 거부한다', async () => {
+    const granted = grantPermission(stores, root, { nodeId: ws, principalId: me.id, level: 'admin' });
+    actingAs = actorFor(stores.principals, me.id);
+    const files = new FsWorkspaceFiles(docsRoot);
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => { release = resolve; });
+    let first = true;
+    stores.files.writeSidecar = async (workspace) => {
+      if (first) { first = false; await held; }
+      await files.writeSidecar(workspace);
+    };
+
+    const accepted = request(app).patch(`/api/workspaces/${ws}`).send({ name: '권한 있을 때' }).then((response) => response);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    const queued = request(app).patch(`/api/workspaces/${ws}`).send({ name: '권한 잃은 뒤' }).then((response) => response);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    revokePermission(stores, root, (granted as { ok: true; entryId: string }).entryId);
+    release();
+
+    expect((await accepted).status).toBe(200);
+    expect((await queued).status).toBe(404);
+    expect(stores.workspaces.findById(ws)?.name).toBe('권한 있을 때');
+  });
+
+  it('직렬화 대기 중 계정이 정지되면 요청 시점 actor를 재사용하지 않는다', async () => {
+    grantPermission(stores, root, { nodeId: ws, principalId: me.id, level: 'admin' });
+    actingAs = actorFor(stores.principals, me.id);
+    const files = new FsWorkspaceFiles(docsRoot);
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => { release = resolve; });
+    let first = true;
+    stores.files.writeSidecar = async (workspace) => {
+      if (first) { first = false; await held; }
+      await files.writeSidecar(workspace);
+    };
+
+    const accepted = request(app).patch(`/api/workspaces/${ws}`).send({ name: '정지 전' }).then((response) => response);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    const queued = request(app).patch(`/api/workspaces/${ws}`).send({ name: '정지 후' }).then((response) => response);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    stores.principals.setStatus(me.id, 'suspended');
+    release();
+
+    expect((await accepted).status).toBe(200);
+    expect((await queued).status).toBe(404);
+    expect(stores.workspaces.findById(ws)?.name).toBe('정지 전');
   });
 });
 

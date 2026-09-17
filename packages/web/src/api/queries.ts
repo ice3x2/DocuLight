@@ -8,6 +8,7 @@ import {
   fetchRevocation,
   fetchSimulation,
   fetchWorkspaceList,
+  fetchShareView,
   fetchLinks,
   fetchGroupRoster,
   fetchIdentity,
@@ -36,6 +37,7 @@ import {
   type SessionBody,
   type TokenRow,
   type WorkspaceListRow,
+  type ShareRow,
 } from './client.js';
 import type { TrashRowView } from '../trash/TrashPanel.js';
 import type { WorkspaceTreeView } from '../tree/tree-contract.js';
@@ -64,7 +66,10 @@ export const QUERY_KEYS = {
   userRoster: ['roster', 'users'] as const,
   groupRoster: ['roster', 'groups'] as const,
   document: (nodeId: string) => ['document', nodeId] as const,
-  workspaces: ['workspaces'] as const,
+  workspaces: (scope: 'visible' | 'managed' | 'all' = 'visible', userId?: string, authGeneration?: number) =>
+    userId === undefined ? ['workspaces', scope] as const : ['workspaces', scope, userId, authGeneration] as const,
+  workspaceAdministrators: (workspaceId: string, userId: string, authGeneration: number) =>
+    ['workspace-administrators', workspaceId, userId, authGeneration] as const,
   brokenInheritance: ['broken-inheritance'] as const,
   auditLog: (contextKey: string, operation: string) => ['audit-log', contextKey, operation] as const,
   reconciliationQueue: (contextKey: string) => ['reconciliation-queue', contextKey] as const,
@@ -172,8 +177,27 @@ export const useDocument = (nodeId: string): UseQueryResult<DocumentBody> =>
  */
 export const useWorkspaceList = (
   enabled: boolean,
+  scope: 'visible' | 'managed' | 'all' = 'managed',
+  userId?: string,
+  authGeneration?: number,
 ): UseQueryResult<WorkspaceListRow[]> =>
-  useQuery({ queryKey: QUERY_KEYS.workspaces, queryFn: fetchWorkspaceList, enabled, retry: false });
+  useQuery({ queryKey: QUERY_KEYS.workspaces(scope, userId, authGeneration), queryFn: () => fetchWorkspaceList(scope === 'visible' ? undefined : scope), enabled, retry: false });
+
+export const useWorkspaceAdministrators = (
+  enabled: boolean,
+  workspaceId: string,
+  userId: string,
+  authGeneration: number,
+): UseQueryResult<ShareRow[]> => useQuery({
+  queryKey: QUERY_KEYS.workspaceAdministrators(workspaceId, userId, authGeneration),
+  queryFn: async () => {
+    const view = await fetchShareView(workspaceId);
+    if (view.nodeKind !== 'workspace' || view.rows === null) throw new Error('workspace administrators unavailable');
+    return view.rows.filter((row) => row.level === 'admin' && !row.inherited && row.entryId !== null);
+  },
+  enabled,
+  retry: false,
+});
 
 export const useBrokenInheritance = (enabled: boolean): UseQueryResult<BrokenInheritanceBody> =>
   useQuery({

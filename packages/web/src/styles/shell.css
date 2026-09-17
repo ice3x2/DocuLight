@@ -413,6 +413,35 @@
   background: var(--surface-control);
 }
 
+[data-workspace-management] { width: 100%; min-width: 0; color: var(--text-primary); font: 400 14px/22px var(--font-sans); }
+[data-workspace-management] > h2 { margin: 0 0 20px; font: 600 18px/26px var(--font-sans); }
+[data-workspace-list] { margin: 0 0 32px; padding: 0; list-style: none; border-top: 1px solid var(--border-subtle); }
+[data-workspace-list] > li { min-height: 48px; border-bottom: 1px solid var(--border-subtle); }
+[data-workspace-list] > li[data-selected] { border-left: 2px solid var(--action-primary); background: var(--surface-selected); }
+[data-workspace-list] button, [data-workspace-static] { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; width: 100%; min-height: 48px; padding: 8px 12px; border: 0; background: transparent; color: inherit; text-align: left; }
+[data-workspace-list] button { cursor: pointer; }
+[data-workspace-list] button:hover { background: var(--surface-control); }
+[data-workspace-list] button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+[data-workspace-list] button > span:first-child, [data-workspace-static] > span:first-child { min-width: 0; flex: 1 1 16rem; overflow-wrap: anywhere; font-weight: 600; }
+[data-workspace-list] small, [data-testid='adminless-badge'] { font-size: 12px; line-height: 18px; }
+[data-testid='adminless-badge'] { padding: 1px 6px; border: 1px solid var(--status-warning); border-radius: 999px; color: var(--status-warning); background: var(--surface-warning); }
+[data-workspace-detail] { display: grid; gap: 8px; width: min(100%, 560px); }
+[data-workspace-detail] > h3 { margin: 0 0 12px; font: 600 18px/26px var(--font-sans); overflow-wrap: anywhere; }
+[data-workspace-detail] > label { font: 600 13px/20px var(--font-sans); }
+[data-workspace-detail] > input { min-height: 36px; padding: 6px 10px; border: 1px solid var(--border-control); border-radius: 4px; background: var(--surface-control); color: inherit; font: 400 14px/22px var(--font-sans); }
+[data-workspace-detail] > input:focus-visible, [data-workspace-detail] > button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+[data-workspace-detail] > p { margin: 0; overflow-wrap: anywhere; font-size: 12px; line-height: 18px; }
+[data-workspace-detail] > button { justify-self: start; min-height: 36px; margin-top: 4px; padding: 6px 12px; }
+[data-workspace-detail] > section { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border-subtle); }
+[data-workspace-detail] > section h3 { margin: 0 0 8px; font: 600 18px/26px var(--font-sans); }
+[data-workspace-administrators] { display: grid; gap: 8px; width: min(100%, 560px); margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-subtle); }
+[data-workspace-administrators] > h3, [data-workspace-administrators] > h4 { margin: 0; font: 600 18px/26px var(--font-sans); }
+[data-workspace-administrators] > h4 { margin-top: 12px; font-size: 14px; line-height: 22px; }
+[data-workspace-administrators] ul { margin: 0; padding: 0; list-style: none; }
+[data-workspace-administrators] li { min-height: 36px; padding: 7px 0; border-bottom: 1px solid var(--border-subtle); overflow-wrap: anywhere; }
+[data-workspace-administrators] [cmdk-root] { min-width: 0; width: 100%; }
+[data-workspace-administrators] [cmdk-input] { box-sizing: border-box; width: 100%; min-height: 36px; padding: 6px 10px; border: 1px solid var(--border-control); border-radius: 4px; background: var(--surface-control); color: inherit; }
+
 /* #70 감사 로그와 재조정 대기열. */
 [data-audit-panel] { width: min(100%, 880px); min-width: 0; color: var(--text-primary); font: 400 14px/22px var(--font-sans); }
 [data-audit-header] { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }

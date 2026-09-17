@@ -15,6 +15,7 @@ import { EmptyState as AccessEmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt, type NewVersionResult } from '../tree/NewVersionPrompt.js';
 import { RelocationDialog } from './RelocationDialog.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
+import { WorkspaceManagementPanel, type WorkspaceAdministratorState, type WorkspaceQueryState, type WorkspaceRenameResult } from '../workspace/WorkspaceList.js';
 import {
   PersonalSettings,
   type ThemeLoadState,
@@ -282,6 +283,7 @@ function SettingsModal({
   onUserStatus,
   onLogout,
   onPasswordChange,
+  workspaceManagement,
 }: {
   viewer: Viewer;
   trash?: readonly TrashRowView[];
@@ -341,6 +343,14 @@ function SettingsModal({
     current: string;
     next: string;
   }) => Promise<string | undefined | void>;
+  workspaceManagement?: {
+    managed: WorkspaceQueryState;
+    all: WorkspaceQueryState;
+    administrators: WorkspaceAdministratorState;
+    selectedId?: string;
+    onSelect: (workspaceId: string) => void;
+    onRename: (workspaceId: string, name: string) => Promise<WorkspaceRenameResult>;
+  };
 }) {
   const [open, setOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('editor');
@@ -348,6 +358,10 @@ function SettingsModal({
   const [tokenLostNotice, setTokenLostNotice] = useState(false);
   const tokenLeaveGuard = useRef<TokenLeaveGuard | null>(null);
   const titleId = useId();
+  const selectedWorkspaceContext = workspaceManagement?.selectedId === undefined ? undefined : [
+    ...(workspaceManagement.managed.state === 'ready' ? workspaceManagement.managed.rows : []),
+    ...(workspaceManagement.all.state === 'ready' ? workspaceManagement.all.rows : []),
+  ].find((workspace) => workspace.id === workspaceManagement.selectedId);
   useEffect(() => {
     setTokenLostNotice(false);
     tokenLeaveGuard.current = null;
@@ -470,6 +484,14 @@ function SettingsModal({
                     {...(onTrashPurge === undefined ? {} : { onPurge: onTrashPurge })}
                     {...(onTrashRestore === undefined ? {} : { onRestore: onTrashRestore })}
                   />
+                ) : category.id === 'workspace' || category.id === 'all-workspaces' ? (
+                  <WorkspaceManagementPanel
+                    mode={category.id === 'workspace' ? 'managed' : 'all'}
+                    query={category.id === 'workspace' ? workspaceManagement?.managed ?? { state: 'loading' } : workspaceManagement?.all ?? { state: 'loading' }}
+                    administratorSearchEnabled={selectedCategory === category.id}
+                    {...(workspaceManagement?.selectedId === undefined ? {} : { selectedId: workspaceManagement.selectedId })}
+                    {...(workspaceManagement === undefined ? {} : { onSelect: workspaceManagement.onSelect, onRename: workspaceManagement.onRename, administrators: workspaceManagement.administrators })}
+                  />
                 ) : category.id === 'instance' ? (
                   <InstanceSettings />
                 ) : category.id === 'editor' || category.id === 'appearance' ? (
@@ -548,6 +570,12 @@ function SettingsModal({
                 ) : category.id === 'audit-log' ? (
                   // 이름을 **감사 로그**로 부른다 (`CON-AUDIT-001` AC-4).
                   <AuditLogPanel
+                    {...(selectedWorkspaceContext === undefined ? {} : {
+                      workspaceContext: {
+                        id: selectedWorkspaceContext.id,
+                        name: selectedWorkspaceContext.name,
+                      },
+                    })}
                     {...(audit === undefined ? {} : { audit })}
                     {...(auditLog === undefined ? {} : { view: auditLog })}
                     {...(queueState === undefined ? {} : { queueState })}
@@ -645,6 +673,7 @@ export function AppShell({
   onUnfavorite,
   onLogout,
   onPasswordChange,
+  workspaceManagement,
   onDelete,
   onRename,
   onRelocate,
@@ -785,6 +814,14 @@ export function AppShell({
     current: string;
     next: string;
   }) => Promise<string | undefined | void>;
+  workspaceManagement?: {
+    managed: WorkspaceQueryState;
+    all: WorkspaceQueryState;
+    administrators: WorkspaceAdministratorState;
+    selectedId?: string;
+    onSelect: (workspaceId: string) => void;
+    onRename: (workspaceId: string, name: string) => Promise<WorkspaceRenameResult>;
+  };
   onDelete?: (nodeId: string) => void;
   onRename?: (nodeId: string, name: string) => void | Promise<string | undefined>;
   onRelocate?: (nodeId: string, kind: 'move' | 'copy', destinationId: string) => void;
@@ -971,6 +1008,7 @@ export function AppShell({
             {...(onReopenUser === undefined ? {} : { onReopenUser })}
             {...(onUserStatus === undefined ? {} : { onUserStatus })}
             {...(onRegisterUser === undefined ? {} : { onRegisterUser })}
+            {...(workspaceManagement === undefined ? {} : { workspaceManagement })}
           />
         }
         // 트리만 내용을 갖는다. 검색·즐겨찾기는 그것을 소유한 요구가 서는

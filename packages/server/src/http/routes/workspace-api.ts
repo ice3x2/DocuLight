@@ -45,6 +45,9 @@ import {
   grantWarnings,
   isLastAdministrator,
 } from '../../app/workspace/admin-presence.js';
+import { managedWorkspacesOf } from '../../app/acl/admin-scope.js';
+import { renameWorkspace } from '../../app/workspace/rename-workspace.js';
+import type { WorkspaceFiles } from '../../domain/ports/workspace-files.js';
 import {
   breakInheritance,
   grantCapabilityReceipt,
@@ -130,6 +133,7 @@ export interface WorkspaceApiDeps {
       passwords: PasswordHasher;
       /** 가입 모드가 DB 에 산다 (`FR-AUTH-004` AC-4). */
       settings: Parameters<typeof currentSignupMode>[0]['settings'];
+      files?: WorkspaceFiles;
     };
   /**
    * 이 요청을 누구로 볼 것인가. 세울 수 없으면 `undefined`.
@@ -1150,14 +1154,50 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       return;
     }
 
+    if (req.query.scope !== undefined && typeof req.query.scope !== 'string') {
+      res.sendStatus(400);
+      return;
+    }
+    const scope = req.query.scope;
+    if (scope !== undefined && scope !== 'managed' && scope !== 'all') {
+      res.sendStatus(400);
+      return;
+    }
+    if (scope === 'all' && !isSuperuser(stores.principals.groupsOf(actor.id))) {
+      res.sendStatus(404);
+      return;
+    }
+    const selected = scope === 'all'
+      ? stores.workspaces.list().map((workspace) => ({ workspace }))
+      : scope === 'managed'
+        ? managedWorkspacesOf(stores, actor).map((workspace) => ({ workspace }))
+        : visibleWorkspacesOf(stores, actor);
     const adminless = new Set(adminlessWorkspaceIds(stores));
     res.json(
-      visibleWorkspacesOf(stores, actor).map((entry) => ({
+      selected.map((entry) => ({
         id: entry.workspace.id,
         name: entry.workspace.name,
         adminless: adminless.has(entry.workspace.id),
       })),
     );
+  });
+
+  // @req IR-WORKSPACE-001
+  router.patch('/workspaces/:workspaceId', async (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) { res.sendStatus(401); return; }
+    if (stores.files === undefined) { res.sendStatus(503); return; }
+    const result = await renameWorkspace(
+      { ...stores, files: stores.files },
+      actor,
+      req.params.workspaceId!,
+      req.body?.name,
+    );
+    if (!result.ok) {
+      res.sendStatus(result.rule === 'invalid-name' ? 400 : 404);
+      return;
+    }
+    res.json({ workspace: result.workspace, sidecarSync: result.sidecarSync });
   });
 
   /**

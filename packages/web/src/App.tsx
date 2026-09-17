@@ -35,6 +35,7 @@ import {
   grantShare,
   revokeShare,
   renameNode,
+  renameWorkspace,
   purgeFromTrash,
   restoreFromTrash,
   uploadNewVersion,
@@ -69,6 +70,7 @@ import {
   useTrash,
   useTree,
   useWorkspaceList,
+  useWorkspaceAdministrators,
 } from './api/queries.js';
 import type { AuditQuery, BulkPlan } from './acl/BulkRevokePanel.js';
 import { axesFrom, axesTo, readAxes, writeAxes, type SearchAxis } from './search/search-axes.js';
@@ -799,17 +801,45 @@ function AppBody() {
   const [회수주체, set회수주체] = useState<readonly PrincipalRow[]>([]);
   const [시뮬주체, set시뮬주체] = useState<PrincipalRow | null>(null);
   const adminScope = session.data !== undefined && session.data.adminWorkspaceCount > 0;
-  const workspaceList = useWorkspaceList(signedIn && adminScope);
+  const workspaceList = useWorkspaceList(signedIn && adminScope, 'managed', userId, authGeneration);
+  const allWorkspaces = useWorkspaceList(signedIn && session.data?.superuser === true, 'all', userId, authGeneration);
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>();
+  const selectionInitialized = useRef(false);
+  useEffect(() => {
+    selectionInitialized.current = false;
+    setSelectedWorkspaceId(undefined);
+  }, [authGeneration, userId]);
+  useEffect(() => {
+    if (workspaceList.data === undefined || selectionInitialized.current) return;
+    selectionInitialized.current = true;
+    setSelectedWorkspaceId(workspaceList.data[0]?.id);
+  }, [workspaceList.data]);
+  const authorizedSelectedWorkspaceId = selectedWorkspaceId !== undefined
+    && workspaceList.data?.some((workspace) => workspace.id === selectedWorkspaceId)
+    ? selectedWorkspaceId
+    : undefined;
+  const selectedWorkspaceAdministrators = useWorkspaceAdministrators(
+    authorizedSelectedWorkspaceId !== undefined && userId !== undefined,
+    authorizedSelectedWorkspaceId ?? 'unavailable',
+    userId ?? 'anonymous',
+    authGeneration,
+  );
+  const renameSelectedWorkspace = useCallback(async (workspaceId: string, name: string) => {
+    const result = await renameWorkspace(workspaceId, name);
+    await Promise.all([
+      queries.invalidateQueries({ queryKey: QUERY_KEYS.workspaces('managed') }),
+      queries.invalidateQueries({ queryKey: QUERY_KEYS.workspaces('all') }),
+      queries.invalidateQueries({ queryKey: QUERY_KEYS.tree }),
+    ]);
+    return result;
+  }, [queries]);
   const brokenInheritance = useBrokenInheritance(signedIn && (adminScope || session.data?.superuser === true));
   // 슈퍼유저는 관리 워크스페이스가 없어도 인스턴스 스코프의 행을 읽는다
   // (`SEC-AUDIT-010` AC-5) — `adminScope` 만 보면 그 문이 닫힌다.
   const 감사자격 = signedIn && (adminScope || session.data?.superuser === true);
   /** 감사 로그의 조작 필터. 빈 문자열이 「전체」다 (`IR-AUDIT-001`). */
   const [auditOperation, setAuditOperation] = useState('');
-  const auditScopeKey = adminScope
-    ? workspaceList.data?.map((workspace) => workspace.id).sort().join(',') ?? 'scope-pending'
-    : 'scope-none';
-  const auditContextKey = `${authGeneration}:${userId ?? 'pending'}:${session.data?.superuser === true ? 'super' : 'member'}:${session.data?.adminWorkspaceCount ?? 0}:${auditScopeKey}`;
+  const auditContextKey = `${authGeneration}:${userId ?? 'pending'}:${session.data?.superuser === true ? 'super' : 'member'}:${session.data?.adminWorkspaceCount ?? 0}`;
   const auditLog = useAuditLog(감사자격, auditOperation, auditContextKey);
   // 대기열은 감사 로그와 **같은 조건**으로 켠다 (`SEC-AUDIT-007` AC-6) —
   // 자격 판정은 서버가 하나로 들고, 화면이 조건을 따로 적으면 둘이 갈린다.
@@ -871,9 +901,13 @@ function AppBody() {
             })),
           },
         };
-  const managedAuditScope = workspaceList.isFetching
-    ? { state: 'loading' as const }
-    : { state: 'error' as const, onRetry: () => { void workspaceList.refetch(); } };
+  const managedAuditScope = workspaceList.isError
+    ? { state: 'error' as const, onRetry: () => { void workspaceList.refetch(); } }
+    : workspaceList.data === undefined || workspaceList.isFetching
+      ? { state: 'loading' as const }
+      : authorizedSelectedWorkspaceId === undefined
+        ? { state: 'empty' as const }
+        : { state: 'ready' as const, workspaceId: authorizedSelectedWorkspaceId };
   const aclAuditContextKey = JSON.stringify([
     userId ?? 'anonymous',
     authGeneration,
@@ -1216,6 +1250,26 @@ function AppBody() {
         onSimulatePick: set시뮬주체,
         onPreviewRevocation: previewRevocations,
         onRevokeSubject: revokeOneSubject,
+      }}
+      workspaceManagement={{
+        selectedId: selectedWorkspaceId,
+        onSelect: setSelectedWorkspaceId,
+        onRename: renameSelectedWorkspace,
+        administrators: selectedWorkspaceAdministrators.isError
+          ? { state: 'error', onRetry: () => { void selectedWorkspaceAdministrators.refetch(); } }
+          : selectedWorkspaceAdministrators.data === undefined
+            ? { state: 'loading' }
+            : { state: 'ready', rows: selectedWorkspaceAdministrators.data },
+        managed: workspaceList.isError
+          ? { state: 'error', onRetry: () => { void workspaceList.refetch(); } }
+          : workspaceList.data === undefined
+            ? { state: 'loading' }
+            : { state: 'ready', rows: workspaceList.data },
+        all: allWorkspaces.isError
+          ? { state: 'error', onRetry: () => { void allWorkspaces.refetch(); } }
+          : allWorkspaces.data === undefined
+            ? { state: 'loading' }
+            : { state: 'ready', rows: allWorkspaces.data },
       }}
       favorites={favorites.data ?? []}
       favoritesState={favoritesState}

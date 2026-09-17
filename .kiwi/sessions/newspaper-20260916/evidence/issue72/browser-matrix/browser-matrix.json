@@ -1,0 +1,609 @@
+{
+  "runner": "isolated Playwright-owned persistent Chromium with extension setZoom/getZoom/reset",
+  "fixture": {
+    "firstWorkspace": "06063ac24434e30e9e8541011008df2b",
+    "secondWorkspace": "0c98c5bf625abaedb721d6d1ee8ac831",
+    "adminlessWorkspace": "7343f5eac2df67e4f6880d0af7c15c11"
+  },
+  "roles": [
+    "anonymous",
+    "manager",
+    "viewer",
+    "superuser"
+  ],
+  "scenarios": [
+    "list error/loading/empty",
+    "administrator read error",
+    "rename pending/selection race",
+    "sidecar pending",
+    "authority loss focus",
+    "invalid blur",
+    "keyboard selection",
+    "close/final reachability"
+  ],
+  "focusStyle": {
+    "outlineStyle": "solid",
+    "outlineWidth": "2px"
+  },
+  "calls": [
+    {
+      "method": "GET",
+      "path": "/api/workspaces?scope=managed",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces?scope=managed",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces?scope=managed",
+      "body": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/workspaces/06063ac24434e30e9e8541011008df2b",
+      "body": {
+        "name": "첫 요청 지연"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces?scope=managed",
+      "body": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/workspaces/0c98c5bf625abaedb721d6d1ee8ac831",
+      "body": {
+        "name": "사이드카 대기 이름"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces?scope=managed",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces?scope=managed",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces?scope=managed",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces?scope=managed",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces?scope=managed",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces?scope=all",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces?scope=managed",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces?scope=all",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces?scope=all",
+      "body": null
+    }
+  ],
+  "environments": [
+    {
+      "theme": "light",
+      "requestedViewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "cssViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "window": {
+          "outerWidth": 788,
+          "outerHeight": 854
+        },
+        "devicePixelRatio": 1,
+        "visualViewport": {
+          "width": 1280,
+          "height": 720,
+          "scale": 1
+        },
+        "overflow": false,
+        "controls": [
+          48,
+          48,
+          48,
+          48,
+          50,
+          36,
+          36
+        ],
+        "selected": 1,
+        "closeReachable": true,
+        "finalReachable": true
+      },
+      "screenshot": "workspace-light-1280x720-100.png"
+    },
+    {
+      "theme": "light",
+      "requestedViewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "cssViewport": {
+          "width": 640,
+          "height": 360
+        },
+        "window": {
+          "outerWidth": 788,
+          "outerHeight": 854
+        },
+        "devicePixelRatio": 2,
+        "visualViewport": {
+          "width": 640,
+          "height": 360,
+          "scale": 1
+        },
+        "overflow": false,
+        "controls": [
+          48,
+          48,
+          48,
+          48,
+          50,
+          36,
+          36
+        ],
+        "selected": 1,
+        "closeReachable": true,
+        "finalReachable": true
+      },
+      "screenshot": "workspace-light-1280x720-200.png"
+    },
+    {
+      "theme": "dark",
+      "requestedViewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "cssViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "window": {
+          "outerWidth": 788,
+          "outerHeight": 854
+        },
+        "devicePixelRatio": 1,
+        "visualViewport": {
+          "width": 1280,
+          "height": 720,
+          "scale": 1
+        },
+        "overflow": false,
+        "controls": [
+          48,
+          48,
+          48,
+          48,
+          50,
+          36,
+          36
+        ],
+        "selected": 1,
+        "closeReachable": true,
+        "finalReachable": true
+      },
+      "screenshot": "workspace-dark-1280x720-100.png"
+    },
+    {
+      "theme": "dark",
+      "requestedViewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "cssViewport": {
+          "width": 640,
+          "height": 360
+        },
+        "window": {
+          "outerWidth": 788,
+          "outerHeight": 854
+        },
+        "devicePixelRatio": 2,
+        "visualViewport": {
+          "width": 640,
+          "height": 360,
+          "scale": 1
+        },
+        "overflow": false,
+        "controls": [
+          48,
+          48,
+          48,
+          48,
+          50,
+          36,
+          36
+        ],
+        "selected": 1,
+        "closeReachable": true,
+        "finalReachable": true
+      },
+      "screenshot": "workspace-dark-1280x720-200.png"
+    },
+    {
+      "theme": "light",
+      "requestedViewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "cssViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "window": {
+          "outerWidth": 788,
+          "outerHeight": 1034
+        },
+        "devicePixelRatio": 1,
+        "visualViewport": {
+          "width": 1440,
+          "height": 900,
+          "scale": 1
+        },
+        "overflow": false,
+        "controls": [
+          48,
+          48,
+          48,
+          48,
+          50,
+          36,
+          36
+        ],
+        "selected": 1,
+        "closeReachable": true,
+        "finalReachable": true
+      },
+      "screenshot": "workspace-light-1440x900-100.png"
+    },
+    {
+      "theme": "light",
+      "requestedViewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "cssViewport": {
+          "width": 720,
+          "height": 450
+        },
+        "window": {
+          "outerWidth": 788,
+          "outerHeight": 1034
+        },
+        "devicePixelRatio": 2,
+        "visualViewport": {
+          "width": 720,
+          "height": 450,
+          "scale": 1
+        },
+        "overflow": false,
+        "controls": [
+          48,
+          48,
+          48,
+          48,
+          50,
+          36,
+          36
+        ],
+        "selected": 1,
+        "closeReachable": true,
+        "finalReachable": true
+      },
+      "screenshot": "workspace-light-1440x900-200.png"
+    },
+    {
+      "theme": "dark",
+      "requestedViewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "cssViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "window": {
+          "outerWidth": 788,
+          "outerHeight": 1034
+        },
+        "devicePixelRatio": 1,
+        "visualViewport": {
+          "width": 1440,
+          "height": 900,
+          "scale": 1
+        },
+        "overflow": false,
+        "controls": [
+          48,
+          48,
+          48,
+          48,
+          50,
+          36,
+          36
+        ],
+        "selected": 1,
+        "closeReachable": true,
+        "finalReachable": true
+      },
+      "screenshot": "workspace-dark-1440x900-100.png"
+    },
+    {
+      "theme": "dark",
+      "requestedViewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "cssViewport": {
+          "width": 720,
+          "height": 450
+        },
+        "window": {
+          "outerWidth": 788,
+          "outerHeight": 1034
+        },
+        "devicePixelRatio": 2,
+        "visualViewport": {
+          "width": 720,
+          "height": 450,
+          "scale": 1
+        },
+        "overflow": false,
+        "controls": [
+          48,
+          48,
+          48,
+          48,
+          50,
+          36,
+          36
+        ],
+        "selected": 1,
+        "closeReachable": true,
+        "finalReachable": true
+      },
+      "screenshot": "workspace-dark-1440x900-200.png"
+    },
+    {
+      "theme": "light",
+      "requestedViewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "cssViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "window": {
+          "outerWidth": 788,
+          "outerHeight": 1214
+        },
+        "devicePixelRatio": 1,
+        "visualViewport": {
+          "width": 1920,
+          "height": 1080,
+          "scale": 1
+        },
+        "overflow": false,
+        "controls": [
+          48,
+          48,
+          48,
+          48,
+          50,
+          36,
+          36
+        ],
+        "selected": 1,
+        "closeReachable": true,
+        "finalReachable": true
+      },
+      "screenshot": "workspace-light-1920x1080-100.png"
+    },
+    {
+      "theme": "light",
+      "requestedViewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "cssViewport": {
+          "width": 960,
+          "height": 540
+        },
+        "window": {
+          "outerWidth": 788,
+          "outerHeight": 1214
+        },
+        "devicePixelRatio": 2,
+        "visualViewport": {
+          "width": 960,
+          "height": 540,
+          "scale": 1
+        },
+        "overflow": false,
+        "controls": [
+          48,
+          48,
+          48,
+          48,
+          50,
+          36,
+          36
+        ],
+        "selected": 1,
+        "closeReachable": true,
+        "finalReachable": true
+      },
+      "screenshot": "workspace-light-1920x1080-200.png"
+    },
+    {
+      "theme": "dark",
+      "requestedViewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "cssViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "window": {
+          "outerWidth": 788,
+          "outerHeight": 1214
+        },
+        "devicePixelRatio": 1,
+        "visualViewport": {
+          "width": 1920,
+          "height": 1080,
+          "scale": 1
+        },
+        "overflow": false,
+        "controls": [
+          48,
+          48,
+          48,
+          48,
+          50,
+          36,
+          36
+        ],
+        "selected": 1,
+        "closeReachable": true,
+        "finalReachable": true
+      },
+      "screenshot": "workspace-dark-1920x1080-100.png"
+    },
+    {
+      "theme": "dark",
+      "requestedViewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "cssViewport": {
+          "width": 960,
+          "height": 540
+        },
+        "window": {
+          "outerWidth": 788,
+          "outerHeight": 1214
+        },
+        "devicePixelRatio": 2,
+        "visualViewport": {
+          "width": 960,
+          "height": 540,
+          "scale": 1
+        },
+        "overflow": false,
+        "controls": [
+          48,
+          48,
+          48,
+          48,
+          50,
+          36,
+          36
+        ],
+        "selected": 1,
+        "closeReachable": true,
+        "finalReachable": true
+      },
+      "screenshot": "workspace-dark-1920x1080-200.png"
+    }
+  ],
+  "forcedColors": [
+    {
+      "zoom": 100,
+      "observedZoom": 1,
+      "computed": {
+        "color": "rgb(0, 0, 0)",
+        "backgroundColor": "rgba(255, 255, 255, 0)",
+        "outlineColor": "rgb(55, 0, 110)",
+        "outlineStyle": "solid"
+      },
+      "screenshot": "workspace-forced-colors-100.png",
+      "active": true
+    },
+    {
+      "zoom": 200,
+      "observedZoom": 2,
+      "computed": {
+        "color": "rgb(0, 0, 0)",
+        "backgroundColor": "rgba(255, 255, 255, 0)",
+        "outlineColor": "rgb(55, 0, 110)",
+        "outlineStyle": "solid"
+      },
+      "screenshot": "workspace-forced-colors-200.png",
+      "active": true
+    }
+  ],
+  "ime": {
+    "syntheticComposition": "passed",
+    "nativeWindowsCandidateUi": "not automated; nonblocking manual surface remains untested"
+  }
+}
