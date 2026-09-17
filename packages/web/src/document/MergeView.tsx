@@ -1,7 +1,7 @@
 import { MergeView as CodeMirrorMergeView } from '@codemirror/merge';
 import { EditorState, type Extension } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * 나란히 대조하는 화면 (`IR-STORAGE-001` · `FR-EDITOR-008`).
@@ -33,8 +33,11 @@ function renderDiffCueLayer(merge: CodeMirrorMergeView, side: 'a' | 'b'): void {
   for (const chunk of merge.chunks) {
     const from = side === 'a' ? chunk.fromA : chunk.fromB;
     const to = side === 'a' ? chunk.toA : chunk.toB;
-    if (to <= from) continue;
-    const coords = editor.coordsAtPos(Math.min(from, editor.state.doc.length));
+    const documentLength = editor.state.doc.length;
+    const sourceFrom = Math.min(from, documentLength);
+    const sourceTo = Math.min(to, documentLength);
+    if (sourceTo <= sourceFrom) continue;
+    const coords = editor.coordsAtPos(sourceFrom);
     if (!coords) continue;
     const cue = document.createElement('span');
     cue.className = `dl-diff-cue dl-diff-cue-${side}`;
@@ -58,6 +61,9 @@ export function MergeView({
   left,
   right,
   onResolve,
+  mode = 'conflict',
+  leftLabel = '왼쪽',
+  rightLabel = '오른쪽',
 }: {
   label: string;
   /** 왼쪽 — 보관된 버전 또는 서버의 현재 내용. */
@@ -65,35 +71,71 @@ export function MergeView({
   /** 오른쪽 — 지금 편집 중인 본문. */
   right: string;
   onResolve?: (body: string) => void;
+  mode?: 'conflict' | 'version';
+  leftLabel?: string;
+  rightLabel?: string;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const view = useRef<CodeMirrorMergeView | null>(null);
+  const [draftAlternative, setDraftAlternative] = useState(right);
+
+  useEffect(() => setDraftAlternative(right), [right]);
 
   useEffect(() => {
     if (host.current === null) return;
     view.current = new CodeMirrorMergeView({
-      a: { doc: left, extensions: [EditorState.readOnly.of(true), diffCueExtension('a', () => view.current)] },
-      b: { doc: right, extensions: [EditorView.editable.of(true), diffCueExtension('b', () => view.current)] },
+      a: {
+        doc: left,
+        extensions: [
+          EditorState.readOnly.of(true),
+          EditorView.editable.of(false),
+          diffCueExtension('a', () => view.current),
+        ],
+      },
+      b: {
+        doc: right,
+        extensions: [
+          EditorState.readOnly.of(mode === 'version'),
+          EditorView.editable.of(mode !== 'version'),
+          diffCueExtension('b', () => view.current),
+          EditorView.updateListener.of((update) => {
+            if (update.docChanged && mode === 'conflict') setDraftAlternative(update.state.doc.toString());
+          }),
+        ],
+      },
       parent: host.current,
     });
-    renderDiffCueLayer(view.current, 'a');
-    renderDiffCueLayer(view.current, 'b');
+    const paneScrollers = host.current.querySelectorAll<HTMLElement>('.cm-mergeViewEditor .cm-scroller');
+    const paneLabels = [leftLabel, rightLabel];
+    paneScrollers.forEach((scroller, index) => {
+      scroller.tabIndex = 0;
+      scroller.dataset.mergePane = index === 0 ? 'left' : 'right';
+      scroller.setAttribute('aria-label', `${paneLabels[index]} 내용 스크롤`);
+    });
+    queueMicrotask(() => {
+      if (!view.current) return;
+      renderDiffCueLayer(view.current, 'a');
+      renderDiffCueLayer(view.current, 'b');
+    });
 
     return () => {
       view.current?.destroy();
       view.current = null;
     };
-  }, [left, right]);
+  }, [left, right, mode, leftLabel, rightLabel]);
 
   return (
-    <div role="region" aria-label={label}>
+    <div role="region" aria-label={label} data-merge-view data-merge-mode={mode}>
       {/* 원문을 접근성 트리에도 남긴다 — 머지 뷰의 DOM 은 가상 스크롤이라
           화면 밖 줄이 렌더되지 않고, 그러면 「나란히 대조한다」가 보는
           사람에게만 참이 된다. */}
-      <pre aria-label="왼쪽">{left}</pre>
-      <pre aria-label="오른쪽">{right}</pre>
+      <pre className="dl-visually-hidden-source" aria-label={mode === 'conflict' ? leftLabel : `${leftLabel} 전체 원문`}>{left}</pre>
+      <pre className="dl-visually-hidden-source" aria-label={mode === 'conflict' ? rightLabel : `${rightLabel} 전체 원문`}>{mode === 'conflict' ? draftAlternative : right}</pre>
 
-      <div ref={host} data-merge={mergeEngine()} />
+      <div data-merge-viewport tabIndex={0} aria-label={`${label} 비교 영역`}>
+        <div data-merge-headers aria-hidden="true"><span>{leftLabel}</span><span>{rightLabel}</span></div>
+        <div ref={host} data-merge={mergeEngine()} />
+      </div>
 
       {onResolve !== undefined && (
         <button

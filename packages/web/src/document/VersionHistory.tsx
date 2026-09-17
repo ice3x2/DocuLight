@@ -1,84 +1,154 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { listVersions, loadVersion, restoreVersion, type VersionRow } from '../api/client.js';
+import { EmptyState, ErrorState, LoadingState } from '../components/ui/states.js';
+import { Button } from '../components/ui/button.js';
 import { MergeView } from './MergeView.js';
 
-/**
- * 버전 기록 (`IR-STORAGE-001` · `FR-SHELL-002` AC-3).
- *
- * 비교 화면이 **충돌 병합과 같은 컴포넌트**다(AC-3). 둘을 따로 만들면
- * 한쪽에만 손이 가서 같은 조작이 두 화면에서 다르게 동작하는데, 사용자에게는
- * 둘 다 「나란히 놓고 고르는 일」이다.
- *
- * 작성자와 시각을 함께 보여 준다 — 「누가」가 없으면 사용자는 어느 것을
- * 고를지 알 수 없다. 그 칸이 있는 것이 `G28` 판정의 이유였다.
- */
-export function VersionHistory({
-  nodeId,
-  currentBody,
-  onRestored,
-}: {
+type LoadState = { state: 'loading' } | { state: 'error' } | { state: 'ready'; rows: readonly VersionRow[] };
+type CompareState =
+  | { state: 'idle' }
+  | { state: 'loading'; seq: number }
+  | { state: 'error'; seq: number }
+  | { state: 'ready'; seq: number; body: string };
+
+/** @req IR-STORAGE-001 */
+export function VersionHistory({ nodeId, currentBody, onRestored }: {
   nodeId: string;
-  /** 지금 편집 중인 본문 — 비교의 오른쪽이다. */
   currentBody: string;
   onRestored?: (seq: number) => void;
 }) {
-  const [rows, setRows] = useState<readonly VersionRow[] | null>(null);
-  const [comparing, setComparing] = useState<{ seq: number; body: string } | null>(null);
+  const [list, setList] = useState<LoadState>({ state: 'loading' });
+  const [comparing, setComparing] = useState<CompareState>({ state: 'idle' });
+  const [restoring, setRestoring] = useState<number | null>(null);
+  const [restoreError, setRestoreError] = useState<number | null>(null);
+  const identity = useRef(0);
+  const restorePending = useRef(false);
+  const comparePending = useRef(new Map<number, ReturnType<typeof loadVersion>>());
+  const root = useRef<HTMLElement>(null);
+  const restoreRetry = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    void listVersions(nodeId)
-      .then(setRows)
-      // 못 받으면 「없다」가 아니라 「모른다」다 — 빈 목록으로 접으면
-      // 사용자가 버전이 사라졌다고 읽는다.
-      .catch(() => setRows(null));
+    if (restoreError !== null) restoreRetry.current?.focus();
+  }, [restoreError]);
+
+  const loadList = useCallback(() => {
+    const request = ++identity.current;
+    setList({ state: 'loading' });
+    void listVersions(nodeId).then(
+      (rows) => { if (request === identity.current) setList({ state: 'ready', rows }); },
+      () => { if (request === identity.current) setList({ state: 'error' }); },
+    );
   }, [nodeId]);
 
-  const compare = useCallback(
-    async (seq: number) => {
-      const version = await loadVersion(nodeId, seq).catch(() => null);
-      if (version !== null) setComparing({ seq, body: version.body });
-    },
-    [nodeId],
-  );
+  useEffect(() => {
+    setComparing({ state: 'idle' });
+    comparePending.current.clear();
+    setRestoring(null);
+    setRestoreError(null);
+    loadList();
+    return () => { identity.current += 1; };
+  }, [loadList]);
 
-  const restore = useCallback(
-    async (seq: number) => {
-      await restoreVersion(nodeId, seq).catch(() => undefined);
+  const compare = useCallback((seq: number) => {
+    const request = ++identity.current;
+    setComparing({ state: 'loading', seq });
+    let pending = comparePending.current.get(seq);
+    if (!pending) {
+      pending = loadVersion(nodeId, seq);
+      comparePending.current.set(seq, pending);
+      const clearPending = () => {
+        if (comparePending.current.get(seq) === pending) comparePending.current.delete(seq);
+      };
+      void pending.then(clearPending, clearPending);
+    }
+    void pending.then(
+      (version) => {
+        if (request === identity.current) setComparing({ state: 'ready', seq, body: version.body });
+      },
+      () => {
+        if (request === identity.current) setComparing({ state: 'error', seq });
+      },
+    );
+  }, [nodeId]);
+
+  const restore = useCallback(async (seq: number) => {
+    if (restorePending.current) return;
+    restorePending.current = true;
+    setRestoring(seq);
+    setRestoreError(null);
+    try {
+      await restoreVersion(nodeId, seq);
+      root.current
+        ?.closest('[data-document-area]')
+        ?.querySelector<HTMLElement>('[data-document-header] button')
+        ?.focus();
       onRestored?.(seq);
-    },
-    [nodeId, onRestored],
-  );
+    } catch {
+      setRestoreError(seq);
+    } finally {
+      restorePending.current = false;
+      setRestoring(null);
+    }
+  }, [nodeId, onRestored]);
 
-  if (rows === null) return <p>버전 기록을 불러오는 중입니다.</p>;
-  if (rows.length === 0) return <p>보관된 버전이 없습니다.</p>;
+  const selected = comparing.state === 'ready' ? comparing.seq : null;
 
   return (
-    <div>
-      <ul aria-label="버전 기록">
-        {rows.map((row) => (
-          <li key={row.seq}>
-            <span>{row.seq}판</span>
-            <span>{row.createdAt}</span>
-            <span>{row.author}</span>
-            <button type="button" onClick={() => void compare(row.seq)}>
-              {row.seq}판 비교
-            </button>
-            <button type="button" onClick={() => void restore(row.seq)}>
-              {row.seq}판 복원
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      {comparing !== null && (
-        <MergeView
-          label="버전 비교"
-          left={comparing.body}
-          right={currentBody}
-          onResolve={() => void restore(comparing.seq)}
-        />
+    <section ref={root} data-version-history aria-label="버전 기록" aria-busy={list.state === 'loading' || undefined}>
+      <h2 tabIndex={-1}>버전 기록</h2>
+      {list.state === 'loading' ? (
+        <LoadingState label="버전 기록을 불러오는 중입니다." />
+      ) : list.state === 'error' ? (
+        <ErrorState label="버전 기록 오류" title="버전 기록을 불러오지 못했습니다." onRetry={loadList} />
+      ) : list.rows.length === 0 ? (
+        <EmptyState title="보관된 버전이 없습니다." />
+      ) : (
+        <ul aria-label="버전 기록" data-version-list>
+          {list.rows.map((row) => (
+            <li key={row.seq} data-version-row data-selected={selected === row.seq || undefined}>
+              <div data-version-meta>
+                <strong>{row.seq}판</strong>
+                <span>{row.author ? `작성자 ${row.author}` : '작성자 정보 없음'}</span>
+                {row.createdAt ? <time dateTime={row.createdAt}>{row.createdAt}</time> : <span>시각 정보 없음</span>}
+                {selected === row.seq && <span data-version-selected>비교 중</span>}
+              </div>
+              <div data-version-actions>
+                <Button variant="secondary" aria-pressed={selected === row.seq} aria-busy={comparing.state === 'loading' && comparing.seq === row.seq || undefined} aria-disabled={comparing.state === 'loading' && comparing.seq === row.seq || undefined} onClick={() => compare(row.seq)}>
+                  {comparing.state === 'loading' && comparing.seq === row.seq ? '불러오는 중…' : `${row.seq}판 비교`}
+                </Button>
+                <Button variant="ghost" loading={restoring === row.seq} disabled={restoring !== null} onClick={() => void restore(row.seq)}>
+                  {restoring === row.seq ? '복원 중…' : `${row.seq}판 복원`}
+                </Button>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
-    </div>
+
+      <div data-version-comparison aria-busy={comparing.state === 'loading' || undefined}>
+        {comparing.state === 'idle' && <p>비교할 버전을 선택하세요.</p>}
+        {comparing.state === 'loading' && <LoadingState label="선택한 버전을 불러오는 중입니다." />}
+        {comparing.state === 'error' && <ErrorState label="버전 비교 오류" title="선택한 버전을 불러오지 못했습니다." onRetry={() => compare(comparing.seq)} />}
+        {comparing.state === 'ready' && (
+          <>
+            <span role="status" className="dl-visually-hidden-source">{comparing.seq}판 비교 준비됨</span>
+            <MergeView label="버전 비교" left={comparing.body} right={currentBody} mode="version" leftLabel={`보관된 ${comparing.seq}판`} rightLabel="현재 본문" />
+            <div data-version-restore-footer>
+              <span>현재 본문을 {comparing.seq}판으로 바꿉니다.</span>
+              <Button variant="primary" loading={restoring === comparing.seq} disabled={restoring !== null} onClick={() => void restore(comparing.seq)}>
+                {restoring === comparing.seq ? '복원 중…' : '이 버전으로 복원'}
+              </Button>
+            </div>
+          </>
+        )}
+      </div>
+      {restoreError !== null && (
+        <div role="alert" data-version-restore-error>
+          <span>버전을 복원하지 못했습니다.</span>
+          <Button ref={restoreRetry} variant="secondary" onClick={() => void restore(restoreError)}>다시 시도</Button>
+        </div>
+      )}
+    </section>
   );
 }
