@@ -1,5 +1,5 @@
 import * as Tabs from '@radix-ui/react-tabs';
-import { Fragment, useCallback, useId, useLayoutEffect, useRef, useState, type RefObject } from 'react';
+import { Fragment, useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type RefObject } from 'react';
 
 import { DocumentArea } from '../document/DocumentArea.js';
 import { PasswordChangeForm } from '../auth/PasswordChangeForm.js';
@@ -21,7 +21,7 @@ import {
   type ThemeSaveState,
 } from '../settings/PersonalSettings.js';
 import type { EditorPreferenceLoadState, EditorPreferenceSaveStates } from '../settings/editor-preferences.js';
-import { TokenPanel } from '../settings/TokenPanel.js';
+import { TokenPanel, type TokenLeaveGuard, type TokenOwner, type TokenQueryState } from '../settings/TokenPanel.js';
 import type { TokenIssueInput, TokenRowView } from '../settings/token-contract.js';
 import { AclAuditPanel, type AclAuditProps } from '../acl/AclAuditPanel.js';
 import { ShareModal } from '../acl/ShareModal.js';
@@ -248,6 +248,8 @@ function SettingsModal({
   trashLens,
   personalSettings = {},
   tokens = [],
+  tokenOwner,
+  tokenQuery,
   onIssueToken,
   onRevokeToken,
   userRoster = [],
@@ -283,10 +285,12 @@ function SettingsModal({
   personalSettings?: Readonly<Record<string, string>>;
   /** 이 사용자의 PAT 목록 (`SEC-AUTH-007` AC-1). 본인 것만 온다. */
   tokens?: readonly TokenRowView[];
+  tokenOwner?: TokenOwner;
+  tokenQuery?: TokenQueryState;
   /** PAT 를 발급한다. **평문을 돌려주고**, 그 값은 화면 밖으로 나가지 않는다. */
   onIssueToken?: (input: TokenIssueInput) => Promise<{ token: string } | undefined>;
   /** PAT 를 폐기한다 (`SEC-AUTH-007` AC-2). 화면이 L2 확인을 먼저 받는다. */
-  onRevokeToken?: (id: string) => void;
+  onRevokeToken?: (id: string) => Promise<{ ok: true } | { ok: false }>;
   /** 슈퍼유저 전용 명부 (`R163`). 슈퍼유저가 아니면 비어 있다. */
   userRoster?: readonly RosterUser[];
   groupRoster?: readonly RosterGroup[];
@@ -330,7 +334,13 @@ function SettingsModal({
   const [open, setOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('editor');
   const [비밀번호폼, set비밀번호폼] = useState(false);
+  const [tokenLostNotice, setTokenLostNotice] = useState(false);
+  const tokenLeaveGuard = useRef<TokenLeaveGuard | null>(null);
   const titleId = useId();
+  useEffect(() => {
+    setTokenLostNotice(false);
+    tokenLeaveGuard.current = null;
+  }, [tokenOwner?.generation, tokenOwner?.userId]);
   // 보이지 않는 카테고리는 **그리지 않는다.** 트리 컨텍스트 메뉴는 반대로
   // 비활성으로 남기는데(`FR-SHELL-003` AC-3), 그것은 권한을 얻으면 열리는
   // 조작이기 때문이다. 여기 감춰지는 것들은 권한 자체를 못 얻는 자리다 —
@@ -345,8 +355,9 @@ function SettingsModal({
 
   return (
     <Dialog open={open} onOpenChange={(next) => {
-      setOpen(next);
-      if (next) setSelectedCategory('editor');
+      const change = () => { setOpen(next); if (next) setSelectedCategory('editor'); };
+      if (!next && tokenLeaveGuard.current !== null) { tokenLeaveGuard.current(change); return; }
+      change();
     }}>
       {/* 좌하단 기어가 자리다 (`IR-SHELL-002` AC-1) — 어디에 있어도 되는
           버튼이면 사용자가 매번 찾아야 한다. */}
@@ -357,6 +368,12 @@ function SettingsModal({
       <DialogContent
         data-settings-dialog
         aria-labelledby={titleId}
+        onEscapeKeyDown={(event) => {
+          if (tokenLeaveGuard.current !== null) event.preventDefault();
+        }}
+        onPointerDownOutside={(event) => {
+          if (tokenLeaveGuard.current !== null) event.preventDefault();
+        }}
         onOpenAutoFocus={(event) => {
           event.preventDefault();
           requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-settings-dialog] [role="tab"][data-state="active"]')?.focus());
@@ -373,7 +390,11 @@ function SettingsModal({
           </header>
 
           {/* 좌측 카테고리 — 관리 기능이 전부 이 목록 안에 든다(AC-2). */}
-          <Tabs.Root value={selectedCategory} onValueChange={setSelectedCategory} orientation="vertical" data-settings-layout>
+          <Tabs.Root value={selectedCategory} onValueChange={(category) => {
+            const change = () => setSelectedCategory(category);
+            if (tokenLeaveGuard.current !== null) { tokenLeaveGuard.current(change); return; }
+            change();
+          }} orientation="vertical" data-settings-layout>
             <Tabs.List
               aria-label="설정 카테고리"
               data-settings-navigation
@@ -448,7 +469,11 @@ function SettingsModal({
                   // 배열에만 있고 렌더되지 않으면 그 조작은 제품에 없는
                   // 것이라는 `IR-SHELL-002` VE-3 의 선례가 이 자리다.
                   <TokenPanel
-                    rows={tokens}
+                    {...(tokenOwner === undefined ? {} : { owner: tokenOwner })}
+                    {...(tokenQuery === undefined ? { rows: tokens } : { query: tokenQuery })}
+                    lostNotice={tokenLostNotice}
+                    onLostNotice={setTokenLostNotice}
+                    onLeaveGuardChange={(guard) => { tokenLeaveGuard.current = guard; }}
                     {...(onIssueToken === undefined ? {} : { onIssue: onIssueToken })}
                     {...(onRevokeToken === undefined ? {} : { onRevoke: onRevokeToken })}
                   />
@@ -550,6 +575,8 @@ export function AppShell({
   trashLens,
   personalSettings = {},
   tokens = [],
+  tokenOwner,
+  tokenQuery,
   onIssueToken,
   onRevokeToken,
   userRoster = [],
@@ -655,8 +682,10 @@ export function AppShell({
    * 평문은 발급 응답에만 실린다 (`SEC-AUTH-006` AC-2).
    */
   tokens?: readonly TokenRowView[];
+  tokenOwner?: TokenOwner;
+  tokenQuery?: TokenQueryState;
   onIssueToken?: (input: TokenIssueInput) => Promise<{ token: string } | undefined>;
-  onRevokeToken?: (id: string) => void;
+  onRevokeToken?: (id: string) => Promise<{ ok: true } | { ok: false }>;
   /** 슈퍼유저 전용 명부 (`R163`). 슈퍼유저가 아니면 서버가 주지 않는다. */
   userRoster?: readonly RosterUser[];
   groupRoster?: readonly RosterGroup[];
@@ -880,6 +909,8 @@ export function AppShell({
             {...(editorSaveStates === undefined ? {} : { editorSaveStates })}
             {...(onPersonalSetting === undefined ? {} : { onPersonalSetting })}
             tokens={tokens}
+            {...(tokenOwner === undefined ? {} : { tokenOwner })}
+            {...(tokenQuery === undefined ? {} : { tokenQuery })}
             {...(onIssueToken === undefined ? {} : { onIssueToken })}
             {...(onRevokeToken === undefined ? {} : { onRevokeToken })}
             {...(onLogout === undefined ? {} : { onLogout })}

@@ -1,0 +1,549 @@
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test
+> vitest run --run test/issue63-token-lifecycle.test.tsx
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+stderr | test/issue63-token-lifecycle.test.tsx
+Warning: KaTeX doesn't work in quirks mode. Make sure your website has a suitable doctype.
+
+ ❯ test/issue63-token-lifecycle.test.tsx (14 tests | 3 failed) 5399ms
+     × invalidates a deferred category destination when clipboard settles with fulfill 679ms
+     × invalidates a deferred category destination when clipboard settles with reject 492ms
+     × invalidates a deferred settings-close destination when clipboard settles with reject 551ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/issue63-token-lifecycle.test.tsx > issue #63 B1/B2 — inline secret lifecycle and parent departures > invalidates a deferred category destination when clipboard settles with fulfill
+AssertionError: expected <p …(1)></p> to be null
+
+- Expected:
+null
+
++ Received:
+<p
+  data-testid="token-close-reconfirm"
+>
+  아직 복사하지 않았다면 지금이 마지막입니다. 닫으면 다시 볼 수 없습니다.
+</p>
+
+ ❯ test/issue63-token-lifecycle.test.tsx:275:71
+    273|       await user.click(within(settings).getByRole('button', { name: '발…
+    274|       await within(settings).findByDisplayValue(`dl_pat_late_${outcome…
+    275|       expect(within(settings).queryByTestId('token-close-reconfirm')).…
+       |                                                                       ^
+    276|     } else {
+    277|       expect(within(settings).getByTestId('token-copy-failed')).toBeDe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  test/issue63-token-lifecycle.test.tsx > issue #63 B1/B2 — inline secret lifecycle and parent departures > invalidates a deferred category destination when clipboard settles with reject
+TestingLibraryElementError: Unable to find an element by: [data-testid="token-close-reconfirm"]
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-describedby[39m=[32m"radix-_r_3e_"[39m
+  [33maria-labelledby[39m=[32m"_r_3b_"[39m
+  [33mclass[39m=[32m"dl-dialog-content"[39m
+  [33mdata-overlay-owner-id[39m=[32m"_r_3f_"[39m
+  [33mdata-overlay-owner-kind[39m=[32m"dialog"[39m
+  [33mdata-settings-dialog[39m=[32m"true"[39m
+  [33mdata-slot[39m=[32m"dialog-content"[39m
+  [33mdata-state[39m=[32m"open"[39m
+  [33mid[39m=[32m"radix-_r_3c_"[39m
+  [33mrole[39m=[32m"dialog"[39m
+  [33mstyle[39m=[32m"pointer-events: auto;"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<header[39m
+    [33mdata-settings-header[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"dl-overlay-title"[39m
+        [33mdata-slot[39m=[32m"dialog-title"[39m
+        [33mid[39m=[32m"_r_3b_"[39m
+      [36m>[39m
+        [0m설정[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"dl-overlay-description"[39m
+        [33mdata-slot[39m=[32m"dialog-description"[39m
+        [33mid[39m=[32m"radix-_r_3e_"[39m
+      [36m>[39m
+        [0m왼쪽에서 설정 항목을 선택하세요.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"설정 닫기"[39m
+      [33mclass[39m=[32m"dl-button dl-button-ghost dl-control-icon"[39m
+      [33mdata-size[39m=[32m"icon"[39m
+      [33mdata-slot[39m=[32m"button"[39m
+      [33mdata-variant[39m=[32m"ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m×[0m
+    [36m</button>[39m
+  [36m</header>[39m
+  [36m<div[39m
+    [33mdata-orientation[39m=[32m"vertical"[39m
+    [33mdata-settings-layout[39m=[32m"true"[39m
+    [33mdir[39m=[32m"ltr"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33maria-label[39m=[32m"설정 카테고리"[39m
+      [33maria-orientation[39m=[32m"vertical"[39m
+      [33mdata-orientation[39m=[32m"vertical"[39m
+      [33mdata-settings-navigation[39m=[32m"true"[39m
+      [33mrole[39m=[32m"tablist"[39m
+      [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+      [33mtabindex[39m=[32m"0"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0m개인[0m
+      [36m</h2>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_3k_-content-editor"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_3k_-trigger-editor"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"0"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m에디터[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_3k_-content-appearance"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_3k_-trigger-appearance"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m외모(테마)[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_3k_-content-tokens"[39m
+        [33maria-selected[39m=[32m"true"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_3k_-trigger-tokens"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m액세스 토큰[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_3k_-content-account"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_3k_-trigger-account"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m계정[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_3k_-content-trash"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_3k_-trigger-trash"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m휴지통[0m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mdata-settings-content[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_3k_-trigger-editor"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_3k_-content-editor"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_3k_-trigger-appearance"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_3k_-content-appearance"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_3k_-trigger-tokens"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_3k_-content-tokens"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mdata-stage[39m=[32m"reveal"[39m
+          [33mdata-token-panel[39m=[32m"true"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mtabindex[39m=[32m"-1"[39m
+          [36m>[39m
+            [0m토큰이 발급되었습니다[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mdata-token-reveal[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mfor[39m=[32m"_r_3t_-plaintext"[39m
+            [36m>[39m
+              [0m발급된 액세스 토큰[0m
+            [36m</label>[39m
+            [36m<textarea[39m
+              [33mautocomplete[39m=[32m"off"[39m
+              [33mdata-testid[39m=[32m"token-plaintext"[39m
+              [33mid[39m=[32m"_r_3t_-plaintext"[39m
+              [33mreadonly[39m=[32m""[39m
+              [33mspellcheck[39m=[32m"false"[39m
+            [36m>[39m
+              [0mdl_pat_late_reject[0m
+            [36m</textarea>[39m
+            [36m<p>[39m
+              [0m이 값은 지금 한 번만 보입니다. 닫으면 다시 볼 수 없고, 잃으면 새로 발급해야 합니다.[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mdata-testid[39m=[32m"token-copy-failed"[39m
+              [33mrole[39m=[32m"alert"[39m
+            [36m>[39m
+              [0m복사하지 못했습니다. 위의 값을 직접 선택해 복사한 뒤 닫으십시오.[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mdata-token-actions[39m=[32m"true"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m복사하고 닫기[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m닫기[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_3k_-trigger-account"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_3k_-content-account"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_3k_-trigger-trash"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_3k_-content-trash"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue63-token-lifecycle.test.tsx:281:29
+    279|
+    280|     await user.click(within(settings).getByRole('tab', { name: '에디터' }…
+    281|     expect(within(settings).getByTestId('token-close-reconfirm')).toBe…
+       |                             ^
+    282|     await user.click(within(settings).getByRole('button', { name: '그래도…
+    283|     expect(within(settings).getByRole('tabpanel', { name: '에디터' })).to…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  test/issue63-token-lifecycle.test.tsx > issue #63 B1/B2 — inline secret lifecycle and parent departures > invalidates a deferred settings-close destination when clipboard settles with reject
+TestingLibraryElementError: Unable to find an element by: [data-testid="token-close-reconfirm"]
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-describedby[39m=[32m"radix-_r_4s_"[39m
+  [33maria-labelledby[39m=[32m"_r_4p_"[39m
+  [33mclass[39m=[32m"dl-dialog-content"[39m
+  [33mdata-overlay-owner-id[39m=[32m"_r_4t_"[39m
+  [33mdata-overlay-owner-kind[39m=[32m"dialog"[39m
+  [33mdata-settings-dialog[39m=[32m"true"[39m
+  [33mdata-slot[39m=[32m"dialog-content"[39m
+  [33mdata-state[39m=[32m"open"[39m
+  [33mid[39m=[32m"radix-_r_4q_"[39m
+  [33mrole[39m=[32m"dialog"[39m
+  [33mstyle[39m=[32m"pointer-events: auto;"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<header[39m
+    [33mdata-settings-header[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"dl-overlay-title"[39m
+        [33mdata-slot[39m=[32m"dialog-title"[39m
+        [33mid[39m=[32m"_r_4p_"[39m
+      [36m>[39m
+        [0m설정[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"dl-overlay-description"[39m
+        [33mdata-slot[39m=[32m"dialog-description"[39m
+        [33mid[39m=[32m"radix-_r_4s_"[39m
+      [36m>[39m
+        [0m왼쪽에서 설정 항목을 선택하세요.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"설정 닫기"[39m
+      [33mclass[39m=[32m"dl-button dl-button-ghost dl-control-icon"[39m
+      [33mdata-size[39m=[32m"icon"[39m
+      [33mdata-slot[39m=[32m"button"[39m
+      [33mdata-variant[39m=[32m"ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m×[0m
+    [36m</button>[39m
+  [36m</header>[39m
+  [36m<div[39m
+    [33mdata-orientation[39m=[32m"vertical"[39m
+    [33mdata-settings-layout[39m=[32m"true"[39m
+    [33mdir[39m=[32m"ltr"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33maria-label[39m=[32m"설정 카테고리"[39m
+      [33maria-orientation[39m=[32m"vertical"[39m
+      [33mdata-orientation[39m=[32m"vertical"[39m
+      [33mdata-settings-navigation[39m=[32m"true"[39m
+      [33mrole[39m=[32m"tablist"[39m
+      [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+      [33mtabindex[39m=[32m"0"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0m개인[0m
+      [36m</h2>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_52_-content-editor"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_52_-trigger-editor"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m에디터[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_52_-content-appearance"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_52_-trigger-appearance"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m외모(테마)[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_52_-content-tokens"[39m
+        [33maria-selected[39m=[32m"true"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_52_-trigger-tokens"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"0"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m액세스 토큰[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_52_-content-account"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_52_-trigger-account"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m계정[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_52_-content-trash"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_52_-trigger-trash"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m휴지통[0m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mdata-settings-content[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_52_-trigger-editor"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_52_-content-editor"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_52_-trigger-appearance"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_52_-content-appearance"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_52_-trigger-tokens"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_52_-content-tokens"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mdata-stage[39m=[32m"reveal"[39m
+          [33mdata-token-panel[39m=[32m"true"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mtabindex[39m=[32m"-1"[39m
+          [36m>[39m
+            [0m토큰이 발급되었습니다[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mdata-token-reveal[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mfor[39m=[32m"_r_5b_-plaintext"[39m
+            [36m>[39m
+              [0m발급된 액세스 토큰[0m
+            [36m</label>[39m
+            [36m<textarea[39m
+              [33mautocomplete[39m=[32m"off"[39m
+              [33mdata-testid[39m=[32m"token-plaintext"[39m
+              [33mid[39m=[32m"_r_5b_-plaintext"[39m
+              [33mreadonly[39m=[32m""[39m
+              [33mspellcheck[39m=[32m"false"[39m
+            [36m>[39m
+              [0mdl_pat_close_reject[0m
+            [36m</textarea>[39m
+            [36m<p>[39m
+              [0m이 값은 지금 한 번만 보입니다. 닫으면 다시 볼 수 없고, 잃으면 새로 발급해야 합니다.[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mdata-testid[39m=[32m"token-copy-failed"[39m
+              [33mrole[39m=[32m"alert"[39m
+            [36m>[39m
+              [0m복사하지 못했습니다. 위의 값을 직접 선택해 복사한 뒤 닫으십시오.[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mdata-token-actions[39m=[32m"true"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m복사하고 닫기[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m닫기[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_52_-trigger-account"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_52_-content-account"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_52_-trigger-trash"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_52_-content-trash"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue63-token-lifecycle.test.tsx:310:31
+    308|     await user.click(within(settings).getByRole('button', { name: '설정 …
+    309|     if (outcome === 'reject') {
+    310|       expect(within(settings).getByTestId('token-close-reconfirm')).to…
+       |                               ^
+    311|       await user.click(within(settings).getByRole('button', { name: '그…
+    312|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 11 passed (14)
+   Start at  19:50:40
+   Duration  7.38s (transform 706ms, setup 24ms, import 1.43s, tests 5.40s, environment 369ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Work\git\DocuLight2.0\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --run test/issue63-token-lifecycle.test.tsx

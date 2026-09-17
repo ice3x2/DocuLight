@@ -1,0 +1,26 @@
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test:browser:tokens
+> node test/issue63-token-browser-check.cjs
+
+checking light 1280x720 100%
+AssertionError [ERR_ASSERTION]: list gap 0
+    at auditFocus (C:\Work\git\DocuLight2.0\packages\web\test\issue63-token-browser-check.cjs:64:3)
+    at async exercise (C:\Work\git\DocuLight2.0\packages\web\test\issue63-token-browser-check.cjs:134:21)
+    at async normalMatrix (C:\Work\git\DocuLight2.0\packages\web\test\issue63-token-browser-check.cjs:210:21)
+    at async C:\Work\git\DocuLight2.0\packages\web\test\issue63-token-browser-check.cjs:254:44 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+npm error Lifecycle script `test:browser:tokens` failed with error:
+npm error code 1
+npm error path C:\Work\git\DocuLight2.0\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c node test/issue63-token-browser-check.cjs

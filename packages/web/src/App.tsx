@@ -285,7 +285,7 @@ function AppBody() {
   // PAT 목록은 설정 모달의 한 탭에서만 쓰이지만 다른 개인 설정과 같은
   // 조건으로 받는다 — 탭을 열 때 받게 하면 그 자리에 로딩이 서고,
   // 목록이 비어 있는 것과 아직 안 온 것이 화면에서 같아 보인다.
-  const tokens = useTokens(signedIn);
+  const tokens = useTokens(userId, authGeneration);
   // 슈퍼유저가 아니면 서버가 404 로 답한다 — 화면이 다시 판정하지 않는다.
   const users = useUserRoster(signedIn && session.data?.superuser === true);
   // 가입 승인 화면이 빈 대기열의 **원인**을 말하려면 모드를 알아야 한다.
@@ -866,19 +866,24 @@ function AppBody() {
       const issued = await issueToken(input).catch(() => undefined);
       if (issued === undefined) return undefined;
 
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tokens });
+      void queries.invalidateQueries({ queryKey: QUERY_KEYS.tokens(userId ?? '', authGeneration) });
       return { token: issued.token };
     },
-    [queries],
+    [authGeneration, queries, userId],
   );
 
   /** PAT 를 폐기한다 (`SEC-AUTH-007` AC-2). 화면이 L2 확인을 이미 받았다. */
   const 토큰을폐기한다 = useCallback(
     async (id: string) => {
-      await revokeToken(id).catch(() => undefined);
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tokens });
+      try {
+        await revokeToken(id);
+      } catch {
+        return { ok: false as const };
+      }
+      void queries.invalidateQueries({ queryKey: QUERY_KEYS.tokens(userId ?? '', authGeneration) });
+      return { ok: true as const };
     },
-    [queries],
+    [authGeneration, queries, userId],
   );
 
   /**
@@ -1071,9 +1076,16 @@ function AppBody() {
       editorLoadState={editor.loadState}
       editorSaveStates={editor.saveStates}
       onPersonalSetting={pickPersonalSetting}
-      tokens={tokens.data ?? []}
+      tokenOwner={userId === undefined ? undefined : { userId, generation: authGeneration }}
+      tokenQuery={userId === undefined || identity.isFetching || tokens.isFetching
+        ? { state: 'loading' }
+        : identity.isError || tokens.isError
+          ? { state: 'error', onRetry: () => void (identity.isError ? identity.refetch() : tokens.refetch()) }
+          : tokens.data === undefined
+            ? { state: 'loading' }
+            : { state: 'ready', rows: tokens.data }}
       onIssueToken={토큰을발급한다}
-      onRevokeToken={(id) => void 토큰을폐기한다(id)}
+      onRevokeToken={토큰을폐기한다}
       userRoster={users.data ?? []}
       groupRoster={groups.data ?? []}
       onGroupRemove={dropGroup}

@@ -60,7 +60,7 @@ export const QUERY_KEYS = {
   trash: (scope: 'mine' | 'all', workspaceId?: string) => ['trash', scope, workspaceId] as const,
   links: (nodeId: string) => ['links', nodeId] as const,
   personalSettings: (userId: string) => ['personal-settings', userId] as const,
-  tokens: ['tokens'] as const,
+  tokens: (userId: string, generation: number) => ['tokens', userId, generation] as const,
   userRoster: ['roster', 'users'] as const,
   groupRoster: ['roster', 'groups'] as const,
   document: (nodeId: string) => ['document', nodeId] as const,
@@ -106,8 +106,13 @@ export const usePersonalSettings = (
  * 로그인 전에는 읽을 대상이 정해지지 않는다 — 대상은 세션의 주인이고,
  * 그것을 정하는 것이 서버다.
  */
-export const useTokens = (enabled: boolean): UseQueryResult<TokenRow[]> =>
-  useQuery({ queryKey: QUERY_KEYS.tokens, queryFn: fetchTokens, enabled });
+export const useTokens = (userId: string | undefined, generation: number): UseQueryResult<TokenRow[]> =>
+  useQuery({
+    queryKey: QUERY_KEYS.tokens(userId ?? '', generation),
+    queryFn: fetchTokens,
+    enabled: userId !== undefined,
+    retry: false,
+  });
 
 /** 슈퍼유저 전용 명부 (`R163`). 슈퍼유저가 아니면 서버가 404 로 답한다. */
 export const useUserRoster = (enabled: boolean): UseQueryResult<RosterUser[]> =>

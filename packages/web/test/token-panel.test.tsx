@@ -12,6 +12,8 @@ import {
   TOKEN_EXPIRY_CHOICES,
   type TokenRowView,
 } from '../src/settings/token-contract.js';
+import '../src/styles/index.css';
+import '../src/styles/shell.css';
 
 /**
  * 개인 › 액세스 토큰 (`SEC-AUTH-006` AC-2 · `SEC-AUTH-007` AC-1 · AC-2 ·
@@ -38,7 +40,7 @@ const row = (over: Partial<TokenRowView> = {}): TokenRowView => ({
 
 async function 토큰탭을연다(props: Parameters<typeof AppShell>[0] = { viewer: ME }) {
   const user = userEvent.setup();
-  render(<AppShell {...props} viewer={props.viewer ?? ME} />);
+  render(<AppShell tokenOwner={{ userId: 'test-owner', generation: 1 }} {...props} viewer={props.viewer ?? ME} />);
   await user.click(screen.getByRole('button', { name: '설정' }));
   const modal = await screen.findByRole('dialog', { name: '설정' });
   await user.click(within(modal).getByRole('tab', { name: '액세스 토큰' }));
@@ -95,12 +97,25 @@ describe('04 §2.3 — 목록', () => {
     });
 
     const 행 = (이름: string) => within(panel).getByText(이름).closest('tr') as HTMLElement;
+    const 셀스타일 = (이름: string) => getComputedStyle(행(이름).querySelector('td')!);
+    const 명도 = (color: string) => {
+      const channels = (color.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number).map((part) => {
+        const value = part / 255;
+        return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * channels[0]! + 0.7152 * channels[1]! + 0.0722 * channels[2]!;
+    };
+    const 대비 = (foreground: string, background: string) => {
+      const first = 명도(foreground); const second = 명도(background);
+      return (Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05);
+    };
 
     // **계산된 값으로 잰다.** 표식만 붙고 실제로는 아무것도 흐려지지 않는
     // 상태가 통과하지 않게 한다.
-    expect(Number(getComputedStyle(행('구형 데스크탑')).opacity)).toBeLessThan(
-      Number(getComputedStyle(행('노트북 CLI')).opacity),
-    );
+    expect(행('구형 데스크탑').getAttribute('data-expired')).toBe('true');
+    expect(행('노트북 CLI').getAttribute('data-expired')).toBeNull();
+    expect(셀스타일('구형 데스크탑').color).not.toBe(셀스타일('노트북 CLI').color);
+    expect(대비(셀스타일('구형 데스크탑').color, 셀스타일('구형 데스크탑').backgroundColor)).toBeGreaterThanOrEqual(4.5);
   });
 });
 
@@ -148,7 +163,7 @@ describe('SEC-AUTH-007 AC-1 · SEC-AUTH-008 AC-1 — 발급 폼', () => {
     const { user, panel } = await 토큰탭을연다({ viewer: ME, tokens: [], onIssueToken });
 
     await user.click(within(panel).getByRole('button', { name: '새 액세스 토큰' }));
-    const form = await screen.findByRole('dialog', { name: '새 액세스 토큰' });
+    const form = panel.querySelector('form')!;
 
     await user.type(within(form).getByLabelText('이름'), 'CI 스크립트');
     await user.click(within(form).getByRole('radio', { name: '읽기 전용' }));
@@ -180,7 +195,7 @@ describe('SEC-AUTH-007 AC-1 · SEC-AUTH-008 AC-1 — 발급 폼', () => {
     const { user, panel } = await 토큰탭을연다({ viewer: ME, tokens: [], onIssueToken });
 
     await user.click(within(panel).getByRole('button', { name: '새 액세스 토큰' }));
-    const form = await screen.findByRole('dialog', { name: '새 액세스 토큰' });
+    const form = panel.querySelector('form')!;
 
     const 읽기전용 = within(form).getByRole('radio', { name: '읽기 전용' }) as HTMLInputElement;
     const 읽기쓰기 = within(form).getByRole('radio', { name: '읽기+쓰기' }) as HTMLInputElement;
@@ -206,12 +221,12 @@ describe('SEC-AUTH-007 AC-1 · SEC-AUTH-008 AC-1 — 발급 폼', () => {
     // 한 번 넓은 쪽을 골라 두고 취소한다. 폼을 여는 자리가 기본값을 다시
     // 세우지 않으면, 두 번째 발급이 앞 회차의 선택을 조용히 물려받는다.
     await user.click(within(panel).getByRole('button', { name: '새 액세스 토큰' }));
-    const first = await screen.findByRole('dialog', { name: '새 액세스 토큰' });
+    const first = panel.querySelector('form')!;
     await user.click(within(first).getByRole('radio', { name: '읽기+쓰기' }));
     await user.click(within(first).getByRole('button', { name: '취소' }));
 
     await user.click(within(panel).getByRole('button', { name: '새 액세스 토큰' }));
-    const second = await screen.findByRole('dialog', { name: '새 액세스 토큰' });
+    const second = panel.querySelector('form')!;
 
     expect(
       (within(second).getByRole('radio', { name: '읽기 전용' }) as HTMLInputElement).checked,
@@ -232,7 +247,7 @@ describe('SEC-AUTH-007 AC-1 · SEC-AUTH-008 AC-1 — 발급 폼', () => {
     const { user, panel } = await 토큰탭을연다({ viewer: ME, tokens: [] });
 
     await user.click(within(panel).getByRole('button', { name: '새 액세스 토큰' }));
-    const form = await screen.findByRole('dialog', { name: '새 액세스 토큰' });
+    const form = panel.querySelector('form')!;
     const select = within(form).getByLabelText('만료 기간') as HTMLSelectElement;
 
     expect([...select.options].map((option) => Number(option.value))).toEqual([
@@ -246,7 +261,7 @@ describe('SEC-AUTH-007 AC-1 · SEC-AUTH-008 AC-1 — 발급 폼', () => {
     const { user, panel } = await 토큰탭을연다({ viewer: ME, tokens: [], onIssueToken });
 
     await user.click(within(panel).getByRole('button', { name: '새 액세스 토큰' }));
-    const form = await screen.findByRole('dialog', { name: '새 액세스 토큰' });
+    const form = panel.querySelector('form')!;
     await user.click(within(form).getByRole('button', { name: '발급' }));
 
     expect(onIssueToken).not.toHaveBeenCalled();
@@ -260,10 +275,11 @@ describe('SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출', () => {
     token = 'dl_pat_9f2c8a1',
   ) => {
     await user.click(within(panel).getByRole('button', { name: '새 액세스 토큰' }));
-    const form = await screen.findByRole('dialog', { name: '새 액세스 토큰' });
+    const form = panel.querySelector('form')!;
     await user.type(within(form).getByLabelText('이름'), '노트북 CLI');
     await user.click(within(form).getByRole('button', { name: '발급' }));
-    return { reveal: await screen.findByRole('dialog', { name: '토큰이 발급되었다' }), token };
+    const plaintext = await screen.findByTestId('token-plaintext');
+    return { reveal: plaintext.closest<HTMLElement>('[data-token-reveal]')!, token };
   };
 
   const 발급되는셸 = (token = 'dl_pat_9f2c8a1') => ({
@@ -330,7 +346,7 @@ describe('SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출', () => {
     expect(reveal.textContent).toContain('복사하지 않았다면');
     expect(reveal.textContent).toContain('다시 볼 수 없습니다');
     // 재확인 중에도 평문은 아직 화면에 있다 — 되돌릴 자리이기 때문이다.
-    await user.click(within(reveal).getByRole('button', { name: '취소' }));
+    await user.click(within(reveal).getByRole('button', { name: '계속 보기' }));
     expect(reveal.textContent).toContain(token);
   });
 
@@ -345,10 +361,10 @@ describe('SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출', () => {
     await user.click(within(reveal).getByRole('button', { name: '그래도 닫기' }));
 
     await waitFor(() => {
-      expect(screen.queryByRole('dialog', { name: '토큰이 발급되었다' })).toBeNull();
+      expect(screen.queryByTestId('token-plaintext')).toBeNull();
     });
     expect(document.body.textContent, '닫은 뒤에도 평문이 화면에 남아 있다').not.toContain(token);
-    expect(panel.textContent).toContain('재발급');
+    expect(panel.textContent).toContain('필요하면 새로 발급해야 합니다');
   });
 
   it('`복사하고 닫기` 는 클립보드에 넣고 재확인 없이 닫는다', async () => {
@@ -363,7 +379,7 @@ describe('SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출', () => {
       expect(await navigator.clipboard.readText()).toBe(token);
     });
     await waitFor(() => {
-      expect(screen.queryByRole('dialog', { name: '토큰이 발급되었다' })).toBeNull();
+      expect(screen.queryByTestId('token-plaintext')).toBeNull();
     });
   });
 
@@ -395,7 +411,7 @@ describe('SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출', () => {
 
 describe('SEC-AUTH-007 AC-2 · R115-b — 폐기는 L2 확인을 받는다', () => {
   it('폐기 버튼이 L2 관문을 세우고 실행해야 나간다', async () => {
-    const onRevokeToken = vi.fn();
+    const onRevokeToken = vi.fn(async () => ({ ok: true as const }));
     const { user, panel } = await 토큰탭을연다({ viewer: ME, tokens: [row()], onRevokeToken });
 
     await user.click(within(panel).getByRole('button', { name: '노트북 CLI 폐기' }));
@@ -412,7 +428,7 @@ describe('SEC-AUTH-007 AC-2 · R115-b — 폐기는 L2 확인을 받는다', () 
   });
 
   it('취소하면 아무것도 나가지 않는다', async () => {
-    const onRevokeToken = vi.fn();
+    const onRevokeToken = vi.fn(async () => ({ ok: true as const }));
     const { user, panel } = await 토큰탭을연다({ viewer: ME, tokens: [row()], onRevokeToken });
 
     await user.click(within(panel).getByRole('button', { name: '노트북 CLI 폐기' }));
