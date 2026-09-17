@@ -1,0 +1,526 @@
+{
+  "runner": "isolated Playwright-owned persistent Chromium with extension chrome.tabs.setZoom/getZoom",
+  "actualAppShell": true,
+  "actualSettingsApi": true,
+  "stateChecks": [
+    "pending-lock",
+    "transport-uncertain-reconciliation",
+    "load-error-retry",
+    "role-loss-stop",
+    "invalid",
+    "retention-blocked"
+  ],
+  "environments": [
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "zoom": 100,
+      "observedZoom": 1,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "form": {
+          "width": 640,
+          "right": 965
+        },
+        "action": {
+          "top": 582,
+          "bottom": 659
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 638,
+          "clientWidth": 638
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-light-1280x720-100.png"
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "zoom": 200,
+      "observedZoom": 2,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "form": {
+          "width": 368.2265625,
+          "right": 596.296875
+        },
+        "action": {
+          "top": 248,
+          "bottom": 325
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 86,
+          "scrollWidth": 366,
+          "clientWidth": 366
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-light-1280x720-200.png"
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "zoom": 100,
+      "observedZoom": 1,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "form": {
+          "width": 640,
+          "right": 965
+        },
+        "action": {
+          "top": 582,
+          "bottom": 659
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 638,
+          "clientWidth": 638
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-dark-1280x720-100.png"
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "zoom": 200,
+      "observedZoom": 2,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "form": {
+          "width": 368.2265625,
+          "right": 596.296875
+        },
+        "action": {
+          "top": 248,
+          "bottom": 325
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 86,
+          "scrollWidth": 366,
+          "clientWidth": 366
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-dark-1280x720-200.png"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "zoom": 100,
+      "observedZoom": 1,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "form": {
+          "width": 640,
+          "right": 1045
+        },
+        "action": {
+          "top": 677,
+          "bottom": 754
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 638,
+          "clientWidth": 638
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-light-1440x900-100.png"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "zoom": 200,
+      "observedZoom": 2,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "form": {
+          "width": 419.3671875,
+          "right": 673.8984375
+        },
+        "action": {
+          "top": 333.5,
+          "bottom": 410.5
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 417,
+          "clientWidth": 417
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-light-1440x900-200.png"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "zoom": 100,
+      "observedZoom": 1,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "form": {
+          "width": 640,
+          "right": 1045
+        },
+        "action": {
+          "top": 677,
+          "bottom": 754
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 638,
+          "clientWidth": 638
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-dark-1440x900-100.png"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "zoom": 200,
+      "observedZoom": 2,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "form": {
+          "width": 419.3671875,
+          "right": 673.8984375
+        },
+        "action": {
+          "top": 333.5,
+          "bottom": 410.5
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 417,
+          "clientWidth": 417
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-dark-1440x900-200.png"
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 100,
+      "observedZoom": 1,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "form": {
+          "width": 640,
+          "right": 1285
+        },
+        "action": {
+          "top": 772,
+          "bottom": 849
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 638,
+          "clientWidth": 638
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-light-1920x1080-100.png"
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 200,
+      "observedZoom": 2,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "form": {
+          "width": 584.8984375,
+          "right": 898.69921875
+        },
+        "action": {
+          "top": 411,
+          "bottom": 488
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 583,
+          "clientWidth": 583
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-light-1920x1080-200.png"
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 100,
+      "observedZoom": 1,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "form": {
+          "width": 640,
+          "right": 1285
+        },
+        "action": {
+          "top": 772,
+          "bottom": 849
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 638,
+          "clientWidth": 638
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-dark-1920x1080-100.png"
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 200,
+      "observedZoom": 2,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "form": {
+          "width": 584.8984375,
+          "right": 898.69921875
+        },
+        "action": {
+          "top": 411,
+          "bottom": 488
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 583,
+          "clientWidth": 583
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-dark-1920x1080-200.png"
+    }
+  ],
+  "forcedColors": [
+    {
+      "zoom": 100,
+      "observedZoom": 1,
+      "state": {
+        "forced": true,
+        "invalidStyle": "double",
+        "actionVisible": true
+      },
+      "screenshot": "instance-forced-colors-100.png"
+    },
+    {
+      "zoom": 200,
+      "observedZoom": 2,
+      "state": {
+        "forced": true,
+        "invalidStyle": "double",
+        "actionVisible": true
+      },
+      "screenshot": "instance-forced-colors-200.png"
+    }
+  ],
+  "requestMethods": [
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "GET",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET"
+  ]
+}

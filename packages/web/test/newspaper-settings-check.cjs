@@ -135,15 +135,18 @@ async function inspect(page, { screenshotPath, zoom }) {
   await waitForFocus(instance, 'ArrowUp reaches instance settings');
   assert.equal(await instance.getAttribute('aria-selected'), 'true');
 
-  const inputs = dialog.locator('form input');
+  const inputs = dialog.locator('form select, form input');
   await inputs.first().waitFor();
   await page.keyboard.press('Tab');
   await waitForFocus(inputs.first(), 'Tab enters the real instance-settings form');
+  await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Shift+Tab');
   await waitForFocus(instance, 'Shift+Tab returns to the selected category');
   await page.keyboard.press('Tab');
   const inputCount = await inputs.count();
   for (let index = 1; index < inputCount; index += 1) await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  await waitForFocus(dialog.locator('form button[type="button"]').first(), 'keyboard reaches reset before save');
   await page.keyboard.press('Tab');
   const save = dialog.locator('form button[type="submit"]');
   await waitForFocus(save, 'keyboard reaches the real final action');
@@ -162,6 +165,8 @@ async function inspect(page, { screenshotPath, zoom }) {
   assert.equal(realReachability.actionVisible, true, 'real final action is fully visible');
   await tabs.nth(10).hover();
   if (screenshotPath) await page.screenshot({ path: screenshotPath });
+  await page.keyboard.press('Shift+Tab');
+  await waitForFocus(dialog.locator('form button[type="button"]').first(), 'Shift+Tab returns to reset from save');
   await page.keyboard.press('Shift+Tab');
   await waitForFocus(inputs.last(), 'Shift+Tab reaches the real final input');
 
@@ -208,7 +213,7 @@ async function inspect(page, { screenshotPath, zoom }) {
 
   await dialog.locator('[data-settings-header] button').click();
   assert.equal(await dialog.count(), 0);
-  assert.equal(await gear.evaluate((el) => document.activeElement === el), true);
+  await waitForFocus(gear, 'closing settings restores the gear trigger');
   if (issues.length) throw new Error(`inspection failures (${issues.length}): ${issues.join('; ')}`);
   return { ...result, realReachability, visual };
 }

@@ -1110,3 +1110,97 @@
   [data-share-dialog] input:focus,
   [data-share-dialog] select:focus { outline-color: Highlight; }
 }
+
+/* #71: the five instance-policy fields and their explicit save state. */
+[data-instance-settings] {
+  display: flex;
+  width: min(100%, 640px);
+  min-width: 0;
+  min-height: 100%;
+  margin: 0;
+  padding-bottom: 76px;
+  box-sizing: border-box;
+  flex-direction: column;
+  gap: 20px;
+  color: var(--text-primary);
+}
+[data-instance-settings] > header > h2 { margin: 0; font-size: 18px; font-weight: 600; line-height: 26px; }
+[data-instance-settings] > header > p { margin: 4px 0 0; color: var(--text-secondary); font-size: 13px; line-height: 20px; }
+[data-instance-settings-fields] { display: grid; gap: 32px; }
+[data-instance-setting-field] { display: grid; min-width: 0; gap: 4px; }
+[data-instance-setting-field] > label { font-size: 13px; font-weight: 600; line-height: 20px; }
+[data-instance-setting-field] > input,
+[data-instance-setting-field] > select {
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  padding: 6px 8px;
+  box-sizing: border-box;
+  border: 1px solid var(--border-control);
+  border-radius: 4px;
+  background: var(--surface-control);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 14px;
+  line-height: 22px;
+}
+[data-instance-setting-field] > input:focus,
+[data-instance-setting-field] > input:focus-visible,
+[data-instance-setting-field] > select:focus,
+[data-instance-setting-field] > select:focus-visible,
+[data-instance-settings] button:focus,
+[data-instance-settings] button:focus-visible,
+[data-instance-settings-state] button:focus,
+[data-instance-settings-state] button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+[data-instance-setting-field] > [aria-invalid='true'] { border-color: var(--status-danger); }
+[data-instance-setting-help] { color: var(--text-secondary); font-size: 12px; line-height: 18px; }
+[data-instance-setting-error] { color: var(--status-danger); font-size: 12px; font-weight: 600; line-height: 18px; }
+[data-instance-retention-note],
+[data-instance-settings] > [role='alert'],
+[data-instance-settings] > [role='status'] {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--status-warning);
+  border-radius: 4px;
+  background: var(--surface-warning);
+  color: var(--status-warning);
+  font-size: 13px;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+[data-instance-settings] > [role='alert'] { border-color: var(--status-danger); background: var(--surface-danger); color: var(--status-danger); }
+[data-instance-settings-action] {
+  position: sticky;
+  z-index: 1;
+  bottom: 0;
+  display: flex;
+  min-width: 0;
+  min-height: 56px;
+  margin-top: auto;
+  padding: 10px 0;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--surface-app);
+}
+[data-instance-settings-action] > span { min-width: 0; margin-right: auto; color: var(--text-secondary); font-size: 13px; line-height: 20px; overflow-wrap: anywhere; }
+[data-instance-settings] button,
+[data-instance-settings-state] button { min-height: 36px; padding: 6px 12px; border: 1px solid var(--border-control); border-radius: 4px; background: var(--surface-control); color: var(--text-primary); font: inherit; }
+[data-instance-settings-action] > button[type='submit'] { border-color: var(--action-primary); background: var(--action-primary); color: var(--text-on-primary); }
+[data-instance-settings] button:disabled { background: var(--surface-app); color: var(--text-secondary); cursor: not-allowed; }
+
+@media (forced-colors: active) {
+  [data-instance-setting-field] > input,
+  [data-instance-setting-field] > select,
+  [data-instance-settings] button,
+  [data-instance-settings-action],
+  [data-instance-retention-note],
+  [data-instance-settings] > [role='alert'],
+  [data-instance-settings] > [role='status'] { border-color: CanvasText; forced-color-adjust: auto; }
+  [data-instance-setting-field] > [aria-invalid='true'] { border-style: double; }
+  [data-instance-setting-field] > input:focus,
+  [data-instance-setting-field] > select:focus,
+  [data-instance-settings] button:focus { outline-color: Highlight; }
+}

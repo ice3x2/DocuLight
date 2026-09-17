@@ -58,12 +58,11 @@ describe('IR-SHELL-002 AC-7 · DR-SHELL-001 AC-3 — 인스턴스 설정을 화�
     const user = userEvent.setup();
     render(<InstanceSettings />);
 
-    const field = await screen.findByLabelText('휴지통 보존 일수');
-    await user.clear(field);
-    await user.type(field, '7');
+    const field = await screen.findByLabelText('가입 모드');
+    await user.selectOptions(field, 'open');
     await user.click(screen.getByRole('button', { name: '저장' }));
 
-    await waitFor(() => expect(saved).toEqual([expect.objectContaining({ 'trash-retention-days': '7' })]));
+    await waitFor(() => expect(saved).toEqual([{ 'signup-mode': 'open' }]));
   });
 
   it('FR-STORAGE-004 AC-1 · FR-ATTACH-006 AC-1: 보관 개수와 업로드 제한도 같은 자리에서 바뀐다', async () => {

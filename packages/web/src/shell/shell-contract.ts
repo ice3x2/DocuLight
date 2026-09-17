@@ -107,13 +107,13 @@ export interface InstanceSettingField {
   label: string;
 }
 
-export const INSTANCE_SETTING_FIELDS: readonly InstanceSettingField[] = [
+export const INSTANCE_SETTING_FIELDS = [
   { key: 'signup-mode', label: '가입 모드' },
   { key: 'upload-size-limit-bytes', label: '업로드 크기 제한' },
   { key: 'retained-version-count', label: '보관 버전 개수' },
   { key: 'trash-retention-days', label: '휴지통 보존 일수' },
   { key: 'audit-retention-days', label: '감사 로그 보존 기간' },
-];
+] as const satisfies readonly InstanceSettingField[];
 
 /** 그 라벨들만. 목록을 확인하는 자리가 쓴다. */
 export const INSTANCE_SETTINGS: readonly string[] = INSTANCE_SETTING_FIELDS.map(
