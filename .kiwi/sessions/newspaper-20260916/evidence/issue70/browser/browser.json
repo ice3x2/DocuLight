@@ -1,0 +1,883 @@
+{
+  "timestamp": "2026-09-17T20:37:39.124Z",
+  "nonce": "484c9784-0f7b-4f37-94bf-8c705dc75083",
+  "environments": [
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "forcedColors": "none",
+      "owner": "Playwright-owned isolated persistent Chromium",
+      "extensionZoom": true,
+      "before": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "after": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2
+      },
+      "getZoomAt100": 1,
+      "getZoomAt200": 2,
+      "resetGetZoom": 1,
+      "sameMountResize": true,
+      "stateFocusPreserved": true,
+      "headingFocus": {
+        "focused": true,
+        "outlineWidth": "2px",
+        "outlineOffset": "2px"
+      },
+      "at100": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "heading": {
+          "size": "18px",
+          "line": "26px",
+          "weight": "600"
+        },
+        "disclosure": {
+          "height": 82,
+          "outlineWidth": "2px",
+          "outlineOffset": "2px"
+        },
+        "select": {
+          "height": 36,
+          "radius": "4px"
+        },
+        "dialog": {
+          "x": 40,
+          "y": 36,
+          "width": 1200,
+          "height": 648,
+          "top": 36,
+          "right": 1240,
+          "bottom": 684,
+          "left": 40
+        },
+        "panel": {
+          "x": 325,
+          "y": 136,
+          "width": 875,
+          "height": 1006,
+          "top": 136,
+          "right": 1200,
+          "bottom": 1142,
+          "left": 325
+        },
+        "detailOverflow": "auto",
+        "pageOverflow": false,
+        "forced": false,
+        "focusIsDisclosure": true,
+        "lastDetailPresent": true
+      },
+      "at200": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "heading": {
+          "size": "18px",
+          "line": "26px",
+          "weight": "600"
+        },
+        "disclosure": {
+          "height": 142,
+          "outlineWidth": "2px",
+          "outlineOffset": "2px"
+        },
+        "select": {
+          "height": 36,
+          "radius": "4px"
+        },
+        "dialog": {
+          "x": 19.203125,
+          "y": 18,
+          "width": 601.59375,
+          "height": 324,
+          "top": 18,
+          "right": 620.796875,
+          "bottom": 342,
+          "left": 19.203125
+        },
+        "panel": {
+          "x": 228.0703125,
+          "y": 110,
+          "width": 368.2265625,
+          "height": 1654,
+          "top": 110,
+          "right": 596.296875,
+          "bottom": 1764,
+          "left": 228.0703125
+        },
+        "detailOverflow": "auto",
+        "pageOverflow": false,
+        "forced": false,
+        "focusIsDisclosure": true,
+        "lastDetailPresent": true
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "forcedColors": "none",
+      "owner": "Playwright-owned isolated persistent Chromium",
+      "extensionZoom": true,
+      "before": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1
+      },
+      "after": {
+        "width": 720,
+        "height": 450,
+        "dpr": 2
+      },
+      "getZoomAt100": 1,
+      "getZoomAt200": 2,
+      "resetGetZoom": 1,
+      "sameMountResize": false,
+      "stateFocusPreserved": true,
+      "headingFocus": {
+        "focused": true,
+        "outlineWidth": "2px",
+        "outlineOffset": "2px"
+      },
+      "at100": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "heading": {
+          "size": "18px",
+          "line": "26px",
+          "weight": "600"
+        },
+        "disclosure": {
+          "height": 82,
+          "outlineWidth": "2px",
+          "outlineOffset": "2px"
+        },
+        "select": {
+          "height": 36,
+          "radius": "4px"
+        },
+        "dialog": {
+          "x": 120,
+          "y": 45,
+          "width": 1200,
+          "height": 810,
+          "top": 45,
+          "right": 1320,
+          "bottom": 855,
+          "left": 120
+        },
+        "panel": {
+          "x": 405,
+          "y": 145,
+          "width": 875,
+          "height": 1006,
+          "top": 145,
+          "right": 1280,
+          "bottom": 1151,
+          "left": 405
+        },
+        "detailOverflow": "auto",
+        "pageOverflow": false,
+        "forced": false,
+        "focusIsDisclosure": true,
+        "lastDetailPresent": true
+      },
+      "at200": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "heading": {
+          "size": "18px",
+          "line": "26px",
+          "weight": "600"
+        },
+        "disclosure": {
+          "height": 142,
+          "outlineWidth": "2px",
+          "outlineOffset": "2px"
+        },
+        "select": {
+          "height": 36,
+          "radius": "4px"
+        },
+        "dialog": {
+          "x": 21.6015625,
+          "y": 22.5,
+          "width": 676.796875,
+          "height": 405,
+          "top": 22.5,
+          "right": 698.3984375,
+          "bottom": 427.5,
+          "left": 21.6015625
+        },
+        "panel": {
+          "x": 254.53125,
+          "y": 114.5,
+          "width": 419.3671875,
+          "height": 1368,
+          "top": 114.5,
+          "right": 673.8984375,
+          "bottom": 1482.5,
+          "left": 254.53125
+        },
+        "detailOverflow": "auto",
+        "pageOverflow": false,
+        "forced": false,
+        "focusIsDisclosure": true,
+        "lastDetailPresent": true
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "forcedColors": "none",
+      "owner": "Playwright-owned isolated persistent Chromium",
+      "extensionZoom": true,
+      "before": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1
+      },
+      "after": {
+        "width": 960,
+        "height": 540,
+        "dpr": 2
+      },
+      "getZoomAt100": 1,
+      "getZoomAt200": 2,
+      "resetGetZoom": 1,
+      "sameMountResize": false,
+      "stateFocusPreserved": true,
+      "headingFocus": {
+        "focused": true,
+        "outlineWidth": "2px",
+        "outlineOffset": "2px"
+      },
+      "at100": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "heading": {
+          "size": "18px",
+          "line": "26px",
+          "weight": "600"
+        },
+        "disclosure": {
+          "height": 82,
+          "outlineWidth": "2px",
+          "outlineOffset": "2px"
+        },
+        "select": {
+          "height": 36,
+          "radius": "4px"
+        },
+        "dialog": {
+          "x": 360,
+          "y": 130,
+          "width": 1200,
+          "height": 820,
+          "top": 130,
+          "right": 1560,
+          "bottom": 950,
+          "left": 360
+        },
+        "panel": {
+          "x": 645,
+          "y": 230,
+          "width": 875,
+          "height": 1006,
+          "top": 230,
+          "right": 1520,
+          "bottom": 1236,
+          "left": 645
+        },
+        "detailOverflow": "auto",
+        "pageOverflow": false,
+        "forced": false,
+        "focusIsDisclosure": true,
+        "lastDetailPresent": true
+      },
+      "at200": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "heading": {
+          "size": "18px",
+          "line": "26px",
+          "weight": "600"
+        },
+        "disclosure": {
+          "height": 126,
+          "outlineWidth": "2px",
+          "outlineOffset": "2px"
+        },
+        "select": {
+          "height": 36,
+          "radius": "4px"
+        },
+        "dialog": {
+          "x": 28.80078125,
+          "y": 27,
+          "width": 902.3984375,
+          "height": 486,
+          "top": 27,
+          "right": 931.19921875,
+          "bottom": 513,
+          "left": 28.80078125
+        },
+        "panel": {
+          "x": 313.80078125,
+          "y": 127,
+          "width": 584.8984375,
+          "height": 1116,
+          "top": 127,
+          "right": 898.69921875,
+          "bottom": 1243,
+          "left": 313.80078125
+        },
+        "detailOverflow": "auto",
+        "pageOverflow": false,
+        "forced": false,
+        "focusIsDisclosure": true,
+        "lastDetailPresent": true
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "forcedColors": "none",
+      "owner": "Playwright-owned isolated persistent Chromium",
+      "extensionZoom": true,
+      "before": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "after": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2
+      },
+      "getZoomAt100": 1,
+      "getZoomAt200": 2,
+      "resetGetZoom": 1,
+      "sameMountResize": true,
+      "stateFocusPreserved": true,
+      "headingFocus": {
+        "focused": true,
+        "outlineWidth": "2px",
+        "outlineOffset": "2px"
+      },
+      "at100": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "heading": {
+          "size": "18px",
+          "line": "26px",
+          "weight": "600"
+        },
+        "disclosure": {
+          "height": 82,
+          "outlineWidth": "2px",
+          "outlineOffset": "2px"
+        },
+        "select": {
+          "height": 36,
+          "radius": "4px"
+        },
+        "dialog": {
+          "x": 40,
+          "y": 36,
+          "width": 1200,
+          "height": 648,
+          "top": 36,
+          "right": 1240,
+          "bottom": 684,
+          "left": 40
+        },
+        "panel": {
+          "x": 325,
+          "y": 136,
+          "width": 875,
+          "height": 1006,
+          "top": 136,
+          "right": 1200,
+          "bottom": 1142,
+          "left": 325
+        },
+        "detailOverflow": "auto",
+        "pageOverflow": false,
+        "forced": false,
+        "focusIsDisclosure": true,
+        "lastDetailPresent": true
+      },
+      "at200": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "heading": {
+          "size": "18px",
+          "line": "26px",
+          "weight": "600"
+        },
+        "disclosure": {
+          "height": 142,
+          "outlineWidth": "2px",
+          "outlineOffset": "2px"
+        },
+        "select": {
+          "height": 36,
+          "radius": "4px"
+        },
+        "dialog": {
+          "x": 19.203125,
+          "y": 18,
+          "width": 601.59375,
+          "height": 324,
+          "top": 18,
+          "right": 620.796875,
+          "bottom": 342,
+          "left": 19.203125
+        },
+        "panel": {
+          "x": 228.0703125,
+          "y": 110,
+          "width": 368.2265625,
+          "height": 1654,
+          "top": 110,
+          "right": 596.296875,
+          "bottom": 1764,
+          "left": 228.0703125
+        },
+        "detailOverflow": "auto",
+        "pageOverflow": false,
+        "forced": false,
+        "focusIsDisclosure": true,
+        "lastDetailPresent": true
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "forcedColors": "none",
+      "owner": "Playwright-owned isolated persistent Chromium",
+      "extensionZoom": true,
+      "before": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1
+      },
+      "after": {
+        "width": 720,
+        "height": 450,
+        "dpr": 2
+      },
+      "getZoomAt100": 1,
+      "getZoomAt200": 2,
+      "resetGetZoom": 1,
+      "sameMountResize": false,
+      "stateFocusPreserved": true,
+      "headingFocus": {
+        "focused": true,
+        "outlineWidth": "2px",
+        "outlineOffset": "2px"
+      },
+      "at100": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "heading": {
+          "size": "18px",
+          "line": "26px",
+          "weight": "600"
+        },
+        "disclosure": {
+          "height": 82,
+          "outlineWidth": "2px",
+          "outlineOffset": "2px"
+        },
+        "select": {
+          "height": 36,
+          "radius": "4px"
+        },
+        "dialog": {
+          "x": 120,
+          "y": 45,
+          "width": 1200,
+          "height": 810,
+          "top": 45,
+          "right": 1320,
+          "bottom": 855,
+          "left": 120
+        },
+        "panel": {
+          "x": 405,
+          "y": 145,
+          "width": 875,
+          "height": 1006,
+          "top": 145,
+          "right": 1280,
+          "bottom": 1151,
+          "left": 405
+        },
+        "detailOverflow": "auto",
+        "pageOverflow": false,
+        "forced": false,
+        "focusIsDisclosure": true,
+        "lastDetailPresent": true
+      },
+      "at200": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "heading": {
+          "size": "18px",
+          "line": "26px",
+          "weight": "600"
+        },
+        "disclosure": {
+          "height": 142,
+          "outlineWidth": "2px",
+          "outlineOffset": "2px"
+        },
+        "select": {
+          "height": 36,
+          "radius": "4px"
+        },
+        "dialog": {
+          "x": 21.6015625,
+          "y": 22.5,
+          "width": 676.796875,
+          "height": 405,
+          "top": 22.5,
+          "right": 698.3984375,
+          "bottom": 427.5,
+          "left": 21.6015625
+        },
+        "panel": {
+          "x": 254.53125,
+          "y": 114.5,
+          "width": 419.3671875,
+          "height": 1368,
+          "top": 114.5,
+          "right": 673.8984375,
+          "bottom": 1482.5,
+          "left": 254.53125
+        },
+        "detailOverflow": "auto",
+        "pageOverflow": false,
+        "forced": false,
+        "focusIsDisclosure": true,
+        "lastDetailPresent": true
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "forcedColors": "none",
+      "owner": "Playwright-owned isolated persistent Chromium",
+      "extensionZoom": true,
+      "before": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1
+      },
+      "after": {
+        "width": 960,
+        "height": 540,
+        "dpr": 2
+      },
+      "getZoomAt100": 1,
+      "getZoomAt200": 2,
+      "resetGetZoom": 1,
+      "sameMountResize": false,
+      "stateFocusPreserved": true,
+      "headingFocus": {
+        "focused": true,
+        "outlineWidth": "2px",
+        "outlineOffset": "2px"
+      },
+      "at100": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "heading": {
+          "size": "18px",
+          "line": "26px",
+          "weight": "600"
+        },
+        "disclosure": {
+          "height": 82,
+          "outlineWidth": "2px",
+          "outlineOffset": "2px"
+        },
+        "select": {
+          "height": 36,
+          "radius": "4px"
+        },
+        "dialog": {
+          "x": 360,
+          "y": 130,
+          "width": 1200,
+          "height": 820,
+          "top": 130,
+          "right": 1560,
+          "bottom": 950,
+          "left": 360
+        },
+        "panel": {
+          "x": 645,
+          "y": 230,
+          "width": 875,
+          "height": 1006,
+          "top": 230,
+          "right": 1520,
+          "bottom": 1236,
+          "left": 645
+        },
+        "detailOverflow": "auto",
+        "pageOverflow": false,
+        "forced": false,
+        "focusIsDisclosure": true,
+        "lastDetailPresent": true
+      },
+      "at200": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "heading": {
+          "size": "18px",
+          "line": "26px",
+          "weight": "600"
+        },
+        "disclosure": {
+          "height": 126,
+          "outlineWidth": "2px",
+          "outlineOffset": "2px"
+        },
+        "select": {
+          "height": 36,
+          "radius": "4px"
+        },
+        "dialog": {
+          "x": 28.80078125,
+          "y": 27,
+          "width": 902.3984375,
+          "height": 486,
+          "top": 27,
+          "right": 931.19921875,
+          "bottom": 513,
+          "left": 28.80078125
+        },
+        "panel": {
+          "x": 313.80078125,
+          "y": 127,
+          "width": 584.8984375,
+          "height": 1116,
+          "top": 127,
+          "right": 898.69921875,
+          "bottom": 1243,
+          "left": 313.80078125
+        },
+        "detailOverflow": "auto",
+        "pageOverflow": false,
+        "forced": false,
+        "focusIsDisclosure": true,
+        "lastDetailPresent": true
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "forcedColors": "active",
+      "owner": "Playwright-owned isolated persistent Chromium",
+      "extensionZoom": true,
+      "before": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "after": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2
+      },
+      "getZoomAt100": 1,
+      "getZoomAt200": 2,
+      "resetGetZoom": 1,
+      "sameMountResize": false,
+      "stateFocusPreserved": true,
+      "headingFocus": {
+        "focused": true,
+        "outlineWidth": "2px",
+        "outlineOffset": "2px"
+      },
+      "at100": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "heading": {
+          "size": "18px",
+          "line": "26px",
+          "weight": "600"
+        },
+        "disclosure": {
+          "height": 82,
+          "outlineWidth": "2px",
+          "outlineOffset": "2px"
+        },
+        "select": {
+          "height": 36,
+          "radius": "4px"
+        },
+        "dialog": {
+          "x": 40,
+          "y": 36,
+          "width": 1200,
+          "height": 648,
+          "top": 36,
+          "right": 1240,
+          "bottom": 684,
+          "left": 40
+        },
+        "panel": {
+          "x": 325,
+          "y": 136,
+          "width": 875,
+          "height": 1006,
+          "top": 136,
+          "right": 1200,
+          "bottom": 1142,
+          "left": 325
+        },
+        "detailOverflow": "auto",
+        "pageOverflow": false,
+        "forced": true,
+        "focusIsDisclosure": true,
+        "lastDetailPresent": true
+      },
+      "at200": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "heading": {
+          "size": "18px",
+          "line": "26px",
+          "weight": "600"
+        },
+        "disclosure": {
+          "height": 142,
+          "outlineWidth": "2px",
+          "outlineOffset": "2px"
+        },
+        "select": {
+          "height": 36,
+          "radius": "4px"
+        },
+        "dialog": {
+          "x": 19.203125,
+          "y": 18,
+          "width": 601.59375,
+          "height": 324,
+          "top": 18,
+          "right": 620.796875,
+          "bottom": 342,
+          "left": 19.203125
+        },
+        "panel": {
+          "x": 228.0703125,
+          "y": 110,
+          "width": 368.2265625,
+          "height": 1654,
+          "top": 110,
+          "right": 596.296875,
+          "bottom": 1764,
+          "left": 228.0703125
+        },
+        "detailOverflow": "auto",
+        "pageOverflow": false,
+        "forced": true,
+        "focusIsDisclosure": true,
+        "lastDetailPresent": true
+      }
+    }
+  ],
+  "coverage": {
+    "normalEnvironments": 12,
+    "forcedColorsEnvironments": 2,
+    "zoomTransitions": [
+      1,
+      2,
+      1
+    ],
+    "viewports": [
+      "1280x720",
+      "1440x900",
+      "1920x1080"
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "states": [
+      "loading",
+      "error",
+      "empty",
+      "ready"
+    ],
+    "roles": [
+      "manager",
+      "super-category",
+      "ordinary"
+    ],
+    "blockedFollowup": {
+      "role": "super-zero",
+      "categoryReachable": false,
+      "issue": 86,
+      "requirement": "IR-SHELL-012"
+    },
+    "ime": "N/A — no new text input",
+    "nativePasswordManagerAutofill": "nonblocking untested"
+  }
+}

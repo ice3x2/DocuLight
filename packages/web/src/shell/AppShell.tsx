@@ -26,7 +26,7 @@ import type { TokenIssueInput, TokenRowView } from '../settings/token-contract.j
 import { AclAuditPanel, type AclAuditProps } from '../acl/AclAuditPanel.js';
 import { ShareModal, type ShareActionResult, type ShareQueryState } from '../acl/ShareModal.js';
 import type { GrantWarning } from '../acl/GrantConfirm.js';
-import { AuditLogPanel } from '../audit/AuditLogPanel.js';
+import { AuditLogPanel, type AuditReadState } from '../audit/AuditLogPanel.js';
 import type {
   AuditViewBody,
   ReconciliationQueueBody,
@@ -258,8 +258,11 @@ function SettingsModal({
   userRoster = [],
   groupRoster = [],
   aclAudit,
+  audit,
   auditLog,
+  queueState,
   queue,
+  auditContextKey,
   auditOperation,
   onAuditOperation,
   onTrashLens,
@@ -302,9 +305,12 @@ function SettingsModal({
   /** 권한 감사 구역이 그릴 것 (`FR-ACL-003`~`FR-ACL-005`). */
   aclAudit?: AclAuditProps;
   /** 감사 로그 (`R84`). 관리 범위가 없으면 안 온다. */
+  audit?: AuditReadState<AuditViewBody>;
   auditLog?: AuditViewBody;
   /** 재조정 대기열 (`IR-AUDIT-002`). 감사 로그와 같은 자격으로 온다. */
+  queueState?: AuditReadState<ReconciliationQueueBody>;
   queue?: ReconciliationQueueBody;
+  auditContextKey?: string;
   /** 감사 로그의 조작 필터 (`IR-AUDIT-001`). 빈 문자열이 「전체」다. */
   auditOperation?: string;
   onAuditOperation?: (operation: string) => void;
@@ -415,14 +421,23 @@ function SettingsModal({
                 {category.id === 'editor' || category.id === 'workspace' || category.id === 'users' ? (
                   <h2>{sectionLabels[category.section]}</h2>
                 ) : null}
-                <Tabs.Trigger value={category.id} onFocus={(event) => event.currentTarget.scrollIntoView({ block: 'nearest' })}>
+                <Tabs.Trigger aria-label={category.label} value={category.id} onFocus={(event) => event.currentTarget.scrollIntoView({ block: 'nearest' })}>
                   {category.label}
                   {/* 미해소 건수 배지 (`IR-AUDIT-002` AC-5~AC-7). Phase 1 에
                       알림 체계가 없어(`R110-a`) 이것이 통지 수단이다.
                       **총계도 분모도 싣지 않는다** — 자기 몫과 총계의 차액이
                       곧 다른 워크스페이스의 규모를 알린다 (`R141-b`). */}
-                  {category.id === 'audit-log' && queue !== undefined ? (
-                    <span data-testid="queue-badge">{queue.items.length}</span>
+                  {category.id === 'audit-log' && (queueState !== undefined || queue !== undefined) ? (
+                    <span
+                      data-testid="queue-badge"
+                      aria-label={queueState?.state === 'loading'
+                        ? '미해소 항목 불러오는 중'
+                        : queueState?.state === 'error'
+                          ? '미해소 항목을 불러오지 못함'
+                          : `미해소 항목 ${queueState?.state === 'ready' ? queueState.data.items.length : queue!.items.length}개`}
+                    >
+                      {queueState?.state === 'loading' ? '…' : queueState?.state === 'error' ? '!' : queueState?.state === 'ready' ? queueState.data.items.length : queue!.items.length}
+                    </span>
                   ) : null}
                 </Tabs.Trigger>
                 </Fragment>
@@ -533,8 +548,11 @@ function SettingsModal({
                 ) : category.id === 'audit-log' ? (
                   // 이름을 **감사 로그**로 부른다 (`CON-AUDIT-001` AC-4).
                   <AuditLogPanel
+                    {...(audit === undefined ? {} : { audit })}
                     {...(auditLog === undefined ? {} : { view: auditLog })}
+                    {...(queueState === undefined ? {} : { queueState })}
                     {...(queue === undefined ? {} : { queue })}
+                    {...(auditContextKey === undefined ? {} : { contextKey: auditContextKey })}
                     {...(auditOperation === undefined ? {} : { operation: auditOperation })}
                     {...(onAuditOperation === undefined ? {} : { onOperation: onAuditOperation })}
                   />
@@ -591,8 +609,11 @@ export function AppShell({
   userRoster = [],
   groupRoster = [],
   aclAudit,
+  audit,
   auditLog,
+  queueState,
   queue,
+  auditContextKey,
   tags,
   tagsState = { state: 'ready' },
   tagScope,
@@ -720,9 +741,12 @@ export function AppShell({
    */
   aclAudit?: AclAuditProps;
   /** 감사 로그 (`R84`). 관리 범위가 없으면 안 온다. */
+  audit?: AuditReadState<AuditViewBody>;
   auditLog?: AuditViewBody;
   /** 재조정 대기열 (`IR-AUDIT-002`). 감사 로그와 같은 자격으로 온다. */
+  queueState?: AuditReadState<ReconciliationQueueBody>;
   queue?: ReconciliationQueueBody;
+  auditContextKey?: string;
   /** 태그 색인 (`FR-SHELL-009`). 서버가 이미 거르고 정렬한 것이다. */
   tags?: TagIndexBody;
   tagsState?: ShellPanelState;
@@ -933,8 +957,11 @@ export function AppShell({
             userRoster={userRoster}
             groupRoster={groupRoster}
             {...(aclAudit === undefined ? {} : { aclAudit })}
+            {...(audit === undefined ? {} : { audit })}
             {...(auditLog === undefined ? {} : { auditLog })}
+            {...(queueState === undefined ? {} : { queueState })}
             {...(queue === undefined ? {} : { queue })}
+            {...(auditContextKey === undefined ? {} : { auditContextKey })}
             {...(auditOperation === undefined ? {} : { auditOperation })}
             {...(onAuditOperation === undefined ? {} : { onAuditOperation })}
             {...(onGroupRemove === undefined ? {} : { onGroupRemove })}

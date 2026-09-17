@@ -1,0 +1,1852 @@
+﻿Pre-RED facts:
+F22B7542AA298C7DA718A3D9D6752A5DF3F0E9F44FFFC8657FCADCECDA2279AE
+PRODUCT_ADAPTER_DIFF_ABSENT_AT_RED=YES
+
+RED command: npm test --workspace @doculight/web -- issue70-audit-app-race.test.tsx
+RED exit code: 1
+
+--- raw merged output ---
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test
+> vitest run issue70-audit-app-race.test.tsx
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+stderr | test/issue70-audit-app-race.test.tsx
+Warning: KaTeX doesn't work in quirks mode. Make sure your website has a suitable doctype.
+System.Management.Automation.RemoteException
+ ❯ test/issue70-audit-app-race.test.tsx (5 tests | 5 failed) 3965ms
+     × 늦은 이전 필터 응답을 버리고 로딩 중 select 초점과 서버 옵션은 유지한다 300ms
+     × 계정이 바뀌면 늦은 이전 계정 응답이 새 계정 화면과 배지를 칠하지 않는다 1160ms
+     × 캐시 데이터가 있어도 실패한 authoritative 재읽기를 오류로 보인다 1170ms
+     × 감사와 대기열 실패가 각자의 다시 불러오기만 실행한다 1153ms
+     × 역할 상실 뒤 다른 계정이 권한을 얻어도 이전 숫자 배지를 재사용하지 않는다 180ms
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+System.Management.Automation.RemoteException
+ FAIL  test/issue70-audit-app-race.test.tsx > GitHub #70 — 실제 App 감사 읽기 세대와 상태 어댑터 > 늦은 이전 필터 응답을 버리고 로딩 중 select 초점과 서버 옵션은 유지한다
+AssertionError: expected <div role="dialog" …(11)>…(2)</div> to be <select id="audit-operation">…(3)</select> // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- <select
+-   id="audit-operation"
++ <div
++   aria-describedby="radix-_r_7_"
++   aria-labelledby="_r_4_"
++   class="dl-dialog-content"
++   data-overlay-owner-id="_r_8_"
++   data-overlay-owner-kind="dialog"
++   data-settings-dialog="true"
++   data-slot="dialog-content"
++   data-state="open"
++   id="radix-_r_5_"
++   role="dialog"
++   style="pointer-events: auto;"
++   tabindex="-1"
++ >
++   <header
++     data-settings-header="true"
++   >
++     <div>
++       <h2
++         class="dl-overlay-title"
++         data-slot="dialog-title"
++         id="_r_4_"
++       >
++         설정
++       </h2>
++       <p
++         class="dl-overlay-description"
++         data-slot="dialog-description"
++         id="radix-_r_7_"
++       >
++         왼쪽에서 설정 항목을 선택하세요.
++       </p>
++     </div>
++     <button
++       aria-label="설정 닫기"
++       class="dl-button dl-button-ghost dl-control-icon"
++       data-size="icon"
++       data-slot="button"
++       data-variant="ghost"
++       type="button"
++     >
++       ×
++     </button>
++   </header>
++   <div
++     data-orientation="vertical"
++     data-settings-layout="true"
++     dir="ltr"
++   >
++     <div
++       aria-label="설정 카테고리"
++       aria-orientation="vertical"
++       data-orientation="vertical"
++       data-settings-navigation="true"
++       role="tablist"
++       style="outline-color: none; outline-style: none; outline-width: initial;"
++       tabindex="0"
++     >
++       <h2>
++         개인
++       </h2>
++       <button
++         aria-controls="radix-_r_d_-content-editor"
++         aria-label="에디터"
++         aria-selected="false"
++         data-orientation="vertical"
++         data-radix-collection-item=""
++         data-state="inactive"
++         id="radix-_r_d_-trigger-editor"
++         role="tab"
++         tabindex="-1"
++         type="button"
++       >
++         에디터
++       </button>
++       <button
++         aria-controls="radix-_r_d_-content-appearance"
++         aria-label="외모(테마)"
++         aria-selected="false"
++         data-orientation="vertical"
++         data-radix-collection-item=""
++         data-state="inactive"
++         id="radix-_r_d_-trigger-appearance"
++         role="tab"
++         tabindex="-1"
++         type="button"
++       >
++         외모(테마)
++       </button>
++       <button
++         aria-controls="radix-_r_d_-content-tokens"
++         aria-label="액세스 토큰"
++         aria-selected="false"
++         data-orientation="vertical"
++         data-radix-collection-item=""
++         data-state="inactive"
++         id="radix-_r_d_-trigger-tokens"
++         role="tab"
++         tabindex="-1"
++         type="button"
++       >
++         액세스 토큰
++       </button>
++       <button
++         aria-controls="radix-_r_d_-content-account"
++         aria-label="계정"
++         aria-selected="false"
++         data-orientation="vertical"
++         data-radix-collection-item=""
++         data-state="inactive"
++         id="radix-_r_d_-trigger-account"
++         role="tab"
++         tabindex="-1"
++         type="button"
++       >
++         계정
++       </button>
++       <button
++         aria-controls="radix-_r_d_-content-trash"
++         aria-label="휴지통"
++         aria-selected="false"
++         data-orientation="vertical"
++         data-radix-collection-item=""
++         data-state="inactive"
++         id="radix-_r_d_-trigger-trash"
++         role="tab"
++         tabindex="-1"
++         type="button"
++       >
++         휴지통
++       </button>
++       <h2>
++         워크스페이스 관리
++       </h2>
++       <button
++         aria-controls="radix-_r_d_-content-workspace"
++         aria-label="워크스페이스"
++         aria-selected="false"
++         data-orientation="vertical"
++         data-radix-collection-item=""
++         data-state="inactive"
++         id="radix-_r_d_-trigger-workspace"
++         role="tab"
++         tabindex="-1"
++         type="button"
++       >
++         워크스페이스
++       </button>
++       <button
++         aria-controls="radix-_r_d_-content-acl-audit"
++         aria-label="권한 감사"
++         aria-selected="false"
++         data-orientation="vertical"
++         data-radix-collection-item=""
++         data-state="inactive"
++         id="radix-_r_d_-trigger-acl-audit"
++         role="tab"
++         tabindex="-1"
++         type="button"
+        >
+-   <option
+-     value=""
++         권한 감사
++       </button>
++       <button
++         aria-controls="radix-_r_d_-content-audit-log"
++         aria-label="감사 로그"
++         aria-selected="true"
++         data-orientation="vertical"
++         data-radix-collection-item=""
++         data-state="active"
++         id="radix-_r_d_-trigger-audit-log"
++         role="tab"
++         tabindex="0"
++         type="button"
+        >
+-     전체
+-   </option>
+-   <option
+-     value="old.operation"
++         감사 로그
++         <span
++           aria-label="미해소 항목 0개"
++           data-testid="queue-badge"
+          >
+-     old.operation
+-   </option>
+-   <option
+-     value="new.operation"
++           0
++         </span>
++       </button>
++     </div>
++     <div
++       data-settings-content="true"
+      >
+-     new.operation
+-   </option>
+- </select>
++       <div
++         aria-labelledby="radix-_r_d_-trigger-editor"
++         data-orientation="vertical"
++         data-state="inactive"
++         hidden=""
++         id="radix-_r_d_-content-editor"
++         role="tabpanel"
++         tabindex="-1"
++       />
++       <div
++         aria-labelledby="radix-_r_d_-trigger-appearance"
++         data-orientation="vertical"
++         data-state="inactive"
++         hidden=""
++         id="radix-_r_d_-content-appearance"
++         role="tabpanel"
++         tabindex="-1"
++       />
++       <div
++         aria-labelledby="radix-_r_d_-trigger-tokens"
++         data-orientation="vertical"
++         data-state="inactive"
++         hidden=""
++         id="radix-_r_d_-content-tokens"
++         role="tabpanel"
++         tabindex="-1"
++       />
++       <div
++         aria-labelledby="radix-_r_d_-trigger-account"
++         data-orientation="vertical"
++         data-state="inactive"
++         hidden=""
++         id="radix-_r_d_-content-account"
++         role="tabpanel"
++         tabindex="-1"
++       />
++       <div
++         aria-labelledby="radix-_r_d_-trigger-trash"
++         data-orientation="vertical"
++         data-state="inactive"
++         hidden=""
++         id="radix-_r_d_-content-trash"
++         role="tabpanel"
++         tabindex="-1"
++       />
++       <div
++         aria-labelledby="radix-_r_d_-trigger-workspace"
++         data-orientation="vertical"
++         data-state="inactive"
++         hidden=""
++         id="radix-_r_d_-content-workspace"
++         role="tabpanel"
++         tabindex="-1"
++       />
++       <div
++         aria-labelledby="radix-_r_d_-trigger-acl-audit"
++         data-orientation="vertical"
++         data-state="inactive"
++         hidden=""
++         id="radix-_r_d_-content-acl-audit"
++         role="tabpanel"
++         tabindex="-1"
++       />
++       <div
++         aria-labelledby="radix-_r_d_-trigger-audit-log"
++         data-orientation="vertical"
++         data-state="active"
++         id="radix-_r_d_-content-audit-log"
++         role="tabpanel"
++         tabindex="-1"
++       >
++         <section
++           data-audit-panel="true"
++         >
++           <div
++             data-audit-header="true"
++           >
++             <h2
++               tabindex="-1"
++             >
++               감사 로그
++             </h2>
++             <button
++               data-audit-switch="true"
++               type="button"
++             >
++               재조정 대기열
++             </button>
++           </div>
++           <div
++             aria-busy="true"
++             aria-label="감사 로그 결과"
++             data-audit-state="true"
++             role="region"
++           >
++             <p>
++               감사 로그를 불러오는 중입니다.
++             </p>
++           </div>
++         </section>
++       </div>
++     </div>
++   </div>
++ </div>
+System.Management.Automation.RemoteException
+ ❯ test/issue70-audit-app-race.test.tsx:85:36
+     83|
+     84|     await user.selectOptions(select, 'old.operation');
+     85|     expect(document.activeElement).toBe(select);
+       |                                    ^
+     86|     expect(within(modal).queryByText('initial-row.md')).toBeNull();
+     87|     expect(within(modal).getByText('감사 로그를 불러오는 중입니다.')).toBeDefined();
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+System.Management.Automation.RemoteException
+ FAIL  test/issue70-audit-app-race.test.tsx > GitHub #70 — 실제 App 감사 읽기 세대와 상태 어댑터 > 계정이 바뀌면 늦은 이전 계정 응답이 새 계정 화면과 배지를 칠하지 않는다
+AssertionError: expected 1 to be 2 // Object.is equality
+System.Management.Automation.RemoteException
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"light"[39m
+  [33mstyle[39m=[32m"color-scheme: light;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body[39m
+    [33mdata-scroll-locked[39m=[32m"1"[39m
+    [33mstyle[39m=[32m"pointer-events: none;"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mdata-aria-hidden[39m=[32m"true"[39m
+      [33mdata-radix-focus-guard[39m=[32m""[39m
+      [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; outline-style: none; outline-width: initial;"[39m
+      [33mtabindex[39m=[32m"0"[39m
+    [36m/>[39m
+    [36m<div[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mdata-aria-hidden[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mdata-shell[39m=[32m"root"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-label[39m=[32m"좌측 사이드바"[39m
+          [33mdata-side[39m=[32m"left"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdir[39m=[32m"ltr"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"좌측 사이드바"[39m
+              [33maria-orientation[39m=[32m"horizontal"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mrole[39m=[32m"tablist"[39m
+              [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"radix-_r_q_-content-tree"[39m
+                [33maria-selected[39m=[32m"true"[39m
+                [33mdata-orientation[39m=[32m"horizontal"[39m
+                [33mdata-radix-collection-item[39m=[32m""[39m
+                [33mdata-state[39m=[32m"active"[39m
+                [33mid[39m=[32m"radix-_r_q_-trigger-tree"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtabindex[39m=[32m"-1"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m문서 트리[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"radix-_r_q_-content-search"[39m
+                [33maria-selected[39m=[32m"false"[39m
+                [33mdata-orientation[39m=[32m"horizontal"[39m
+                [33mdata-radix-collection-item[39m=[32m""[39m
+                [33mdata-state[39m=[32m"inactive"[39m
+                [33mid[39m=[32m"radix-_r_q_-trigger-search"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtabindex[39m=[32m"-1"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m검색[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"radix-_r_q_-content-favorites"[39m
+                [33maria-selected[39m=[32m"false"[39m
+                [33mdata-orientation[39m=[32m"horizontal"[39m
+                [33mdata-radix-collection-item[39m=[32m""[39m
+                [33mdata-state[39m=[32m"inactive"[39m
+                [33mid[39m=[32m"radix-_r_q_-trigger-favorites"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtabindex[39m=[32m"-1"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m즐겨찾기[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33maria-labelledby[39m=[32m"radix-_r_q_-trigger-tree"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_q_-content-tree"[39m
+              [33mrole[39m=[32m"tabpanel"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33maria-label[39m=[32m"빈 상태 안내"[39m
+                [33mrole[39m=[32m"note"[39m
+              [36m>[39m
+                [36m<p>[39m
+                  [0m접근할 수 있는 문서가 아직 없습니다.[0m
+                [36m</p>[39m
+                [36m<p>[39m
+                  [0m워크스페이스 관리자에게 권한을 요청하세요.[0m
+                [36m</p>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33maria-labelledby[39m=[32m"radix-_r_q_-trigger-search"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mhidden[39m=[32m""[39m
+              [33mid[39m=[32m"radix-_r_q_-content-search"[39m
+              [33mrole[39m=[32m"tabpanel"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33maria-labelledby[39m=[32m"radix-_r_q_-trigger-favorites"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mhidden[39m=[32m""[39m
+              [33mid[39m=[32m"radix-_r_q_-content-favorites"[39m
+              [33mrole[39m=[32m"tabpanel"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mdata-shell[39m=[32m"settings-corner"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_v_"[39m
+              [33maria-expanded[39m=[32m"true"[39m
+              [33maria-haspopup[39m=[32m"dialog"[39m
+              [33maria-label[39m=[32m"설정"[39m
+              [33mdata-state[39m=[32m"open"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m⚙[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</aside>[39m
+        [36m<main>[39m
+          [36m<div[39m
+            [33mdata-empty[39m=[32m"documents"[39m
+          [36m/>[39m
+        [36m</main>[39m
+        [36m<aside[39m
+          [33maria-label[39m=[32m"우측 사이드바"[39m
+          [33mdata-side[39m=[32m"right"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdir[39m=[32m"ltr"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"우측 사이드바"[39m
+              [33maria-orientation[39m=[32m"horizontal"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mrole[39m=[32m"tablist"[39m
+              [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+              [33mtabindex[39m=[32m"0"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"radix-_r_13_-content-backlinks"...
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 2
++ 1
+System.Management.Automation.RemoteException
+ ❯ test/issue70-audit-app-race.test.tsx:121:43
+    119|
+    120|     act(() => queryClient.setQueryData(['identity'], { userId: 'user-b…
+    121|     await waitFor(() => expect(auditCall).toBe(2));
+       |                                           ^
+    122|     auditRequests[1]!.resolve(json(audit('account-b-row', 'new.operati…
+    123|     queueRequests[1]!.resolve(json(queue(1)));
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/@testing-library/dom/dist/wait-for.js:118:16
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+System.Management.Automation.RemoteException
+ FAIL  test/issue70-audit-app-race.test.tsx > GitHub #70 — 실제 App 감사 읽기 세대와 상태 어댑터 > 캐시 데이터가 있어도 실패한 authoritative 재읽기를 오류로 보인다
+TestingLibraryElementError: Unable to find an element with the text: 감사 로그를 불러오지 못했습니다.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+System.Management.Automation.RemoteException
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-describedby[39m=[32m"radix-_r_1q_"[39m
+  [33maria-labelledby[39m=[32m"_r_1n_"[39m
+  [33mclass[39m=[32m"dl-dialog-content"[39m
+  [33mdata-overlay-owner-id[39m=[32m"_r_1r_"[39m
+  [33mdata-overlay-owner-kind[39m=[32m"dialog"[39m
+  [33mdata-settings-dialog[39m=[32m"true"[39m
+  [33mdata-slot[39m=[32m"dialog-content"[39m
+  [33mdata-state[39m=[32m"open"[39m
+  [33mid[39m=[32m"radix-_r_1o_"[39m
+  [33mrole[39m=[32m"dialog"[39m
+  [33mstyle[39m=[32m"pointer-events: auto;"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<header[39m
+    [33mdata-settings-header[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"dl-overlay-title"[39m
+        [33mdata-slot[39m=[32m"dialog-title"[39m
+        [33mid[39m=[32m"_r_1n_"[39m
+      [36m>[39m
+        [0m설정[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"dl-overlay-description"[39m
+        [33mdata-slot[39m=[32m"dialog-description"[39m
+        [33mid[39m=[32m"radix-_r_1q_"[39m
+      [36m>[39m
+        [0m왼쪽에서 설정 항목을 선택하세요.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"설정 닫기"[39m
+      [33mclass[39m=[32m"dl-button dl-button-ghost dl-control-icon"[39m
+      [33mdata-size[39m=[32m"icon"[39m
+      [33mdata-slot[39m=[32m"button"[39m
+      [33mdata-variant[39m=[32m"ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m×[0m
+    [36m</button>[39m
+  [36m</header>[39m
+  [36m<div[39m
+    [33mdata-orientation[39m=[32m"vertical"[39m
+    [33mdata-settings-layout[39m=[32m"true"[39m
+    [33mdir[39m=[32m"ltr"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33maria-label[39m=[32m"설정 카테고리"[39m
+      [33maria-orientation[39m=[32m"vertical"[39m
+      [33mdata-orientation[39m=[32m"vertical"[39m
+      [33mdata-settings-navigation[39m=[32m"true"[39m
+      [33mrole[39m=[32m"tablist"[39m
+      [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+      [33mtabindex[39m=[32m"0"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0m개인[0m
+      [36m</h2>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-editor"[39m
+        [33maria-label[39m=[32m"에디터"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-editor"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m에디터[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-appearance"[39m
+        [33maria-label[39m=[32m"외모(테마)"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-appearance"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m외모(테마)[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-tokens"[39m
+        [33maria-label[39m=[32m"액세스 토큰"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-tokens"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m액세스 토큰[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-account"[39m
+        [33maria-label[39m=[32m"계정"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-account"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m계정[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-trash"[39m
+        [33maria-label[39m=[32m"휴지통"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-trash"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m휴지통[0m
+      [36m</button>[39m
+      [36m<h2>[39m
+        [0m워크스페이스 관리[0m
+      [36m</h2>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-workspace"[39m
+        [33maria-label[39m=[32m"워크스페이스"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-workspace"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m워크스페이스[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-acl-audit"[39m
+        [33maria-label[39m=[32m"권한 감사"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-acl-audit"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m권한 감사[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-audit-log"[39m
+        [33maria-label[39m=[32m"감사 로그"[39m
+        [33maria-selected[39m=[32m"true"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-audit-log"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"0"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m감사 로그[0m
+        [36m<span[39m
+          [33maria-label[39m=[32m"미해소 항목 0개"[39m
+          [33mdata-testid[39m=[32m"queue-badge"[39m
+        [36m>[39m
+          [0m0[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mdata-settings-content[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-editor"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_20_-content-editor"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-appearance"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_20_-content-appearance"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-tokens"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_20_-content-tokens"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-account"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_20_-content-account"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-trash"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_20_-content-trash"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-workspace"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_20_-content-workspace"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-acl-audit"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_20_-content-acl-audit"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-audit-log"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_20_-content-audit-log"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mdata-audit-panel[39m=[32m"true"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mdata-audit-header[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mtabindex[39m=[32m"-1"[39m
+            [36m>[39m
+              [0m감사 로그[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33mdata-audit-switch[39m=[32m"true"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m재조정 대기열[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mdata-audit-filter[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mfor[39m=[32m"audit-operation"[39m
+            [36m>[39m
+              [0m조작[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mid[39m=[32m"audit-operation"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0m전체[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"old.operation"[39m
+              [36m>[39m
+                [0mold.operation[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"new.operation"[39m
+              [36m>[39m
+                [0mnew.operation[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"감사 로그 결과"[39m
+            [33mdata-audit-results[39m=[32m"true"[39m
+            [33mrole[39m=[32m"region"[39m
+          [36m>[39m
+            [36m<ul[39m
+              [33mdata-audit-groups[39m=[32m"true"[39m
+            [36m>[39m
+              [36m<li[39m
+                [33mdata-testid[39m=[32m"audit-group"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-controls[39m=[32m"_r_2c_"[39m
+                  [33maria-expanded[39m=[32m"false"[39m
+                  [33mdata-audit-disclosure[39m=[32m"true"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mdata-audit-chevron[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▸[0m
+                  [36m</span>[39m
+                  [36m<span>[39m
+                    [0m2026-09-18 12:00:00[0m
+                  [36m</span>[39m
+                  [36m<span>[39m
+                    [0mold.operation[0m
+                  [36m</span>[39m
+                  [36m<span>[39m
+                    [0m감사 담당자[0m
+                  [36m</span>[39m
+                  [36m<span[39m
+                    [33mdata-audit-count[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m1[0m
+                    [0m건[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</li>[39m
+            [36m</ul>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</div>[39m
+System.Management.Automation.RemoteException
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-describedby[39m=[32m"radix-_r_1q_"[39m
+  [33maria-labelledby[39m=[32m"_r_1n_"[39m
+  [33mclass[39m=[32m"dl-dialog-content"[39m
+  [33mdata-overlay-owner-id[39m=[32m"_r_1r_"[39m
+  [33mdata-overlay-owner-kind[39m=[32m"dialog"[39m
+  [33mdata-settings-dialog[39m=[32m"true"[39m
+  [33mdata-slot[39m=[32m"dialog-content"[39m
+  [33mdata-state[39m=[32m"open"[39m
+  [33mid[39m=[32m"radix-_r_1o_"[39m
+  [33mrole[39m=[32m"dialog"[39m
+  [33mstyle[39m=[32m"pointer-events: auto;"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<header[39m
+    [33mdata-settings-header[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"dl-overlay-title"[39m
+        [33mdata-slot[39m=[32m"dialog-title"[39m
+        [33mid[39m=[32m"_r_1n_"[39m
+      [36m>[39m
+        [0m설정[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"dl-overlay-description"[39m
+        [33mdata-slot[39m=[32m"dialog-description"[39m
+        [33mid[39m=[32m"radix-_r_1q_"[39m
+      [36m>[39m
+        [0m왼쪽에서 설정 항목을 선택하세요.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"설정 닫기"[39m
+      [33mclass[39m=[32m"dl-button dl-button-ghost dl-control-icon"[39m
+      [33mdata-size[39m=[32m"icon"[39m
+      [33mdata-slot[39m=[32m"button"[39m
+      [33mdata-variant[39m=[32m"ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m×[0m
+    [36m</button>[39m
+  [36m</header>[39m
+  [36m<div[39m
+    [33mdata-orientation[39m=[32m"vertical"[39m
+    [33mdata-settings-layout[39m=[32m"true"[39m
+    [33mdir[39m=[32m"ltr"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33maria-label[39m=[32m"설정 카테고리"[39m
+      [33maria-orientation[39m=[32m"vertical"[39m
+      [33mdata-orientation[39m=[32m"vertical"[39m
+      [33mdata-settings-navigation[39m=[32m"true"[39m
+      [33mrole[39m=[32m"tablist"[39m
+      [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+      [33mtabindex[39m=[32m"0"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0m개인[0m
+      [36m</h2>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-editor"[39m
+        [33maria-label[39m=[32m"에디터"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-editor"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m에디터[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-appearance"[39m
+        [33maria-label[39m=[32m"외모(테마)"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-appearance"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m외모(테마)[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-tokens"[39m
+        [33maria-label[39m=[32m"액세스 토큰"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-tokens"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m액세스 토큰[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-account"[39m
+        [33maria-label[39m=[32m"계정"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-account"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m계정[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-trash"[39m
+        [33maria-label[39m=[32m"휴지통"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-trash"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m휴지통[0m
+      [36m</button>[39m
+      [36m<h2>[39m
+        [0m워크스페이스 관리[0m
+      [36m</h2>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-workspace"[39m
+        [33maria-label[39m=[32m"워크스페이스"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-workspace"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m워크스페이스[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-acl-audit"[39m
+        [33maria-label[39m=[32m"권한 감사"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-acl-audit"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m권한 감사[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_20_-content-audit-log"[39m
+        [33maria-label[39m=[32m"감사 로그"[39m
+        [33maria-selected[39m=[32m"true"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_20_-trigger-audit-log"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"0"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m감사 로그[0m
+        [36m<span[39m
+          [33maria-label[39m=[32m"미해소 항목 0개"[39m
+          [33mdata-testid[39m=[32m"queue-badge"[39m
+        [36m>[39m
+          [0m0[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mdata-settings-content[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-editor"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_20_-content-editor"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-appearance"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_20_-content-appearance"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-tokens"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_20_-content-tokens"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-account"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_20_-content-account"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-trash"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_20_-content-trash"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-workspace"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_20_-content-workspace"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-acl-audit"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_20_-content-acl-audit"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_20_-trigger-audit-log"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_20_-content-audit-log"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mdata-audit-panel[39m=[32m"true"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mdata-audit-header[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mtabindex[39m=[32m"-1"[39m
+            [36m>[39m
+              [0m감사 로그[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33mdata-audit-switch[39m=[32m"true"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m재조정 대기열[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mdata-audit-filter[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mfor[39m=[32m"audit-operation"[39m
+            [36m>[39m
+              [0m조작[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mid[39m=[32m"audit-operation"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0m전체[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"old.operation"[39m
+              [36m>[39m
+                [0mold.operation[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"new.operation"[39m
+              [36m>[39m
+                [0mnew.operation[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"감사 로그 결과"[39m
+            [33mdata-audit-results[39m=[32m"true"[39m
+            [33mrole[39m=[32m"region"[39m
+          [36m>[39m
+            [36m<ul[39m
+              [33mdata-audit-groups[39m=[32m"true"[39m
+            [36m>[39m
+              [36m<li[39m
+                [33mdata-testid[39m=[32m"audit-group"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-controls[39m=[32m"_r_2c_"[39m
+                  [33maria-expanded[39m=[32m"false"[39m
+                  [33mdata-audit-disclosure[39m=[32m"true"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mdata-audit-chevron[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▸[0m
+                  [36m</span>[39m
+                  [36m<span>[39m
+                    [0m2026-09-18 12:00:00[0m
+                  [36m</span>[39m
+                  [36m<span>[39m
+                    [0mold.operation[0m
+                  [36m</span>[39m
+                  [36m<span>[39m
+                    [0m감사 담당자[0m
+                  [36m</span>[39m
+                  [36m<span[39m
+                    [33mdata-audit-count[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m1[0m
+                    [0m건[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</li>[39m
+            [36m</ul>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</div>[39m
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ test/issue70-audit-app-race.test.tsx:151:32
+    149|     failAudit = true;
+    150|     await act(async () => { await queryClient.invalidateQueries({ pred…
+    151|     expect(await within(modal).findByText('감사 로그를 불러오지 못했습니다.')).toBeD…
+       |                                ^
+    152|     expect(within(modal).queryByTestId('audit-group')).toBeNull();
+    153|   });
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+System.Management.Automation.RemoteException
+ FAIL  test/issue70-audit-app-race.test.tsx > GitHub #70 — 실제 App 감사 읽기 세대와 상태 어댑터 > 감사와 대기열 실패가 각자의 다시 불러오기만 실행한다
+TestingLibraryElementError: Unable to find an element with the text: 감사 로그를 불러오지 못했습니다.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+System.Management.Automation.RemoteException
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-describedby[39m=[32m"radix-_r_2k_"[39m
+  [33maria-labelledby[39m=[32m"_r_2h_"[39m
+  [33mclass[39m=[32m"dl-dialog-content"[39m
+  [33mdata-overlay-owner-id[39m=[32m"_r_2l_"[39m
+  [33mdata-overlay-owner-kind[39m=[32m"dialog"[39m
+  [33mdata-settings-dialog[39m=[32m"true"[39m
+  [33mdata-slot[39m=[32m"dialog-content"[39m
+  [33mdata-state[39m=[32m"open"[39m
+  [33mid[39m=[32m"radix-_r_2i_"[39m
+  [33mrole[39m=[32m"dialog"[39m
+  [33mstyle[39m=[32m"pointer-events: auto;"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<header[39m
+    [33mdata-settings-header[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"dl-overlay-title"[39m
+        [33mdata-slot[39m=[32m"dialog-title"[39m
+        [33mid[39m=[32m"_r_2h_"[39m
+      [36m>[39m
+        [0m설정[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"dl-overlay-description"[39m
+        [33mdata-slot[39m=[32m"dialog-description"[39m
+        [33mid[39m=[32m"radix-_r_2k_"[39m
+      [36m>[39m
+        [0m왼쪽에서 설정 항목을 선택하세요.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"설정 닫기"[39m
+      [33mclass[39m=[32m"dl-button dl-button-ghost dl-control-icon"[39m
+      [33mdata-size[39m=[32m"icon"[39m
+      [33mdata-slot[39m=[32m"button"[39m
+      [33mdata-variant[39m=[32m"ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m×[0m
+    [36m</button>[39m
+  [36m</header>[39m
+  [36m<div[39m
+    [33mdata-orientation[39m=[32m"vertical"[39m
+    [33mdata-settings-layout[39m=[32m"true"[39m
+    [33mdir[39m=[32m"ltr"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33maria-label[39m=[32m"설정 카테고리"[39m
+      [33maria-orientation[39m=[32m"vertical"[39m
+      [33mdata-orientation[39m=[32m"vertical"[39m
+      [33mdata-settings-navigation[39m=[32m"true"[39m
+      [33mrole[39m=[32m"tablist"[39m
+      [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+      [33mtabindex[39m=[32m"0"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0m개인[0m
+      [36m</h2>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-editor"[39m
+        [33maria-label[39m=[32m"에디터"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-editor"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m에디터[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-appearance"[39m
+        [33maria-label[39m=[32m"외모(테마)"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-appearance"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m외모(테마)[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-tokens"[39m
+        [33maria-label[39m=[32m"액세스 토큰"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-tokens"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m액세스 토큰[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-account"[39m
+        [33maria-label[39m=[32m"계정"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-account"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m계정[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-trash"[39m
+        [33maria-label[39m=[32m"휴지통"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-trash"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m휴지통[0m
+      [36m</button>[39m
+      [36m<h2>[39m
+        [0m워크스페이스 관리[0m
+      [36m</h2>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-workspace"[39m
+        [33maria-label[39m=[32m"워크스페이스"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-workspace"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m워크스페이스[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-acl-audit"[39m
+        [33maria-label[39m=[32m"권한 감사"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-acl-audit"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m권한 감사[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-audit-log"[39m
+        [33maria-label[39m=[32m"감사 로그"[39m
+        [33maria-selected[39m=[32m"true"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-audit-log"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"0"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m감사 로그[0m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mdata-settings-content[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-editor"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-editor"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-appearance"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-appearance"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-tokens"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-tokens"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-account"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-account"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-trash"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-trash"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-workspace"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-workspace"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-acl-audit"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-acl-audit"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-audit-log"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-audit-log"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mdata-audit-panel[39m=[32m"true"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mdata-audit-header[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mtabindex[39m=[32m"-1"[39m
+            [36m>[39m
+              [0m감사 로그[0m
+            [36m</h2>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-busy[39m=[32m"true"[39m
+            [33maria-label[39m=[32m"감사 로그 결과"[39m
+            [33mdata-audit-state[39m=[32m"true"[39m
+            [33mrole[39m=[32m"region"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0m감사 로그를 불러오는 중입니다.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</div>[39m
+System.Management.Automation.RemoteException
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-describedby[39m=[32m"radix-_r_2k_"[39m
+  [33maria-labelledby[39m=[32m"_r_2h_"[39m
+  [33mclass[39m=[32m"dl-dialog-content"[39m
+  [33mdata-overlay-owner-id[39m=[32m"_r_2l_"[39m
+  [33mdata-overlay-owner-kind[39m=[32m"dialog"[39m
+  [33mdata-settings-dialog[39m=[32m"true"[39m
+  [33mdata-slot[39m=[32m"dialog-content"[39m
+  [33mdata-state[39m=[32m"open"[39m
+  [33mid[39m=[32m"radix-_r_2i_"[39m
+  [33mrole[39m=[32m"dialog"[39m
+  [33mstyle[39m=[32m"pointer-events: auto;"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<header[39m
+    [33mdata-settings-header[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"dl-overlay-title"[39m
+        [33mdata-slot[39m=[32m"dialog-title"[39m
+        [33mid[39m=[32m"_r_2h_"[39m
+      [36m>[39m
+        [0m설정[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"dl-overlay-description"[39m
+        [33mdata-slot[39m=[32m"dialog-description"[39m
+        [33mid[39m=[32m"radix-_r_2k_"[39m
+      [36m>[39m
+        [0m왼쪽에서 설정 항목을 선택하세요.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"설정 닫기"[39m
+      [33mclass[39m=[32m"dl-button dl-button-ghost dl-control-icon"[39m
+      [33mdata-size[39m=[32m"icon"[39m
+      [33mdata-slot[39m=[32m"button"[39m
+      [33mdata-variant[39m=[32m"ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m×[0m
+    [36m</button>[39m
+  [36m</header>[39m
+  [36m<div[39m
+    [33mdata-orientation[39m=[32m"vertical"[39m
+    [33mdata-settings-layout[39m=[32m"true"[39m
+    [33mdir[39m=[32m"ltr"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33maria-label[39m=[32m"설정 카테고리"[39m
+      [33maria-orientation[39m=[32m"vertical"[39m
+      [33mdata-orientation[39m=[32m"vertical"[39m
+      [33mdata-settings-navigation[39m=[32m"true"[39m
+      [33mrole[39m=[32m"tablist"[39m
+      [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+      [33mtabindex[39m=[32m"0"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0m개인[0m
+      [36m</h2>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-editor"[39m
+        [33maria-label[39m=[32m"에디터"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-editor"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m에디터[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-appearance"[39m
+        [33maria-label[39m=[32m"외모(테마)"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-appearance"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m외모(테마)[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-tokens"[39m
+        [33maria-label[39m=[32m"액세스 토큰"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-tokens"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m액세스 토큰[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-account"[39m
+        [33maria-label[39m=[32m"계정"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-account"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m계정[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-trash"[39m
+        [33maria-label[39m=[32m"휴지통"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-trash"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m휴지통[0m
+      [36m</button>[39m
+      [36m<h2>[39m
+        [0m워크스페이스 관리[0m
+      [36m</h2>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-workspace"[39m
+        [33maria-label[39m=[32m"워크스페이스"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-workspace"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m워크스페이스[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-acl-audit"[39m
+        [33maria-label[39m=[32m"권한 감사"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-acl-audit"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m권한 감사[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_2q_-content-audit-log"[39m
+        [33maria-label[39m=[32m"감사 로그"[39m
+        [33maria-selected[39m=[32m"true"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_2q_-trigger-audit-log"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"0"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m감사 로그[0m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mdata-settings-content[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-editor"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-editor"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-appearance"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-appearance"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-tokens"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-tokens"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-account"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-account"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-trash"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-trash"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-workspace"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-workspace"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-acl-audit"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-acl-audit"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_2q_-trigger-audit-log"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_2q_-content-audit-log"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+
+      [36m>[39m
+        [36m<section[39m
+          [33mdata-audit-panel[39m=[32m"true"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mdata-audit-header[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mtabindex[39m=[32m"-1"[39m
+            [36m>[39m
+              [0m감사 로그[0m
+            [36m</h2>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-busy[39m=[32m"true"[39m
+            [33maria-label[39m=[32m"감사 로그 결과"[39m
+            [33mdata-audit-state[39m=[32m"true"[39m
+            [33mrole[39m=[32m"region"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0m감사 로그를 불러오는 중입니다.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</div>[39m
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ test/issue70-audit-app-race.test.tsx:169:25
+    167|     render(<App queryClient={client()} />);
+    168|     const modal = await openAudit(user);
+    169|     await within(modal).findByText('감사 로그를 불러오지 못했습니다.');
+       |                         ^
+    170|     const beforeQueue = queueCalls;
+    171|     await user.click(within(modal).getByRole('button', { name: '다시 불러오…
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+System.Management.Automation.RemoteException
+ FAIL  test/issue70-audit-app-race.test.tsx > GitHub #70 — 실제 App 감사 읽기 세대와 상태 어댑터 > 역할 상실 뒤 다른 계정이 권한을 얻어도 이전 숫자 배지를 재사용하지 않는다
+AssertionError: expected '3' to be '…' // Object.is equality
+System.Management.Automation.RemoteException
+Expected: "…"
+Received: "3"
+System.Management.Automation.RemoteException
+ ❯ test/issue70-audit-app-race.test.tsx:213:69
+    211|     });
+    212|     const auditTab = await within(modal).findByRole('tab', { name: '감사…
+    213|     expect(within(auditTab).getByTestId('queue-badge').textContent).to…
+       |                                                                     ^
+    214|     expect(queueCalls).toBe(2);
+    215|   });
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+System.Management.Automation.RemoteException
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  05:39:19
+   Duration  5.88s (transform 722ms, setup 22ms, import 1.40s, tests 3.97s, environment 342ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Work\git\DocuLight2.0\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run issue70-audit-app-race.test.tsx

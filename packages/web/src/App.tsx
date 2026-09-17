@@ -806,10 +806,32 @@ function AppBody() {
   const 감사자격 = signedIn && (adminScope || session.data?.superuser === true);
   /** 감사 로그의 조작 필터. 빈 문자열이 「전체」다 (`IR-AUDIT-001`). */
   const [auditOperation, setAuditOperation] = useState('');
-  const auditLog = useAuditLog(감사자격, auditOperation);
+  const auditScopeKey = adminScope
+    ? workspaceList.data?.map((workspace) => workspace.id).sort().join(',') ?? 'scope-pending'
+    : 'scope-none';
+  const auditContextKey = `${authGeneration}:${userId ?? 'pending'}:${session.data?.superuser === true ? 'super' : 'member'}:${session.data?.adminWorkspaceCount ?? 0}:${auditScopeKey}`;
+  const auditLog = useAuditLog(감사자격, auditOperation, auditContextKey);
   // 대기열은 감사 로그와 **같은 조건**으로 켠다 (`SEC-AUDIT-007` AC-6) —
   // 자격 판정은 서버가 하나로 들고, 화면이 조건을 따로 적으면 둘이 갈린다.
-  const queue = useReconciliationQueue(감사자격);
+  const queue = useReconciliationQueue(감사자격, auditContextKey);
+  const auditOptions = useRef<{ contextKey: string; operations: readonly string[] } | undefined>(undefined);
+  useEffect(() => {
+    if (auditLog.data === undefined || auditLog.isError) return;
+    auditOptions.current = { contextKey: auditContextKey, operations: auditLog.data.operations };
+  }, [auditContextKey, auditLog.data, auditLog.isError]);
+  const sameContextOperations = auditOptions.current?.contextKey === auditContextKey
+    ? auditOptions.current.operations
+    : undefined;
+  const auditState = auditLog.isError
+    ? { state: 'error' as const, onRetry: () => { void auditLog.refetch(); }, ...(sameContextOperations === undefined ? {} : { operations: sameContextOperations }) }
+    : auditLog.isFetching || auditLog.data === undefined
+      ? { state: 'loading' as const, ...(sameContextOperations === undefined ? {} : { operations: sameContextOperations }) }
+      : { state: 'ready' as const, data: auditLog.data };
+  const queueState = queue.isError
+    ? { state: 'error' as const, onRetry: () => { void queue.refetch(); } }
+    : queue.isFetching || queue.data === undefined
+      ? { state: 'loading' as const }
+      : { state: 'ready' as const, data: queue.data };
   /** 태그 탭의 범위 (`FR-SHELL-009` AC-2). 빈 문자열이 「전체」다. */
   const [tagScope, setTagScope] = useState('');
   const tags = useTags(signedIn, tagScope);
@@ -1218,10 +1240,11 @@ function AppBody() {
       onSaveState={noteSaveState}
       onSaved={noteSaved}
       onDocuments={setDocuments}
-      {...(auditLog.data === undefined ? {} : { auditLog: auditLog.data })}
+      audit={auditState}
       auditOperation={auditOperation}
       onAuditOperation={setAuditOperation}
-      {...(queue.data === undefined ? {} : { queue: queue.data })}
+      queueState={queueState}
+      auditContextKey={auditContextKey}
       {...(tags.data === undefined ? {} : { tags: tags.data })}
       tagsState={tagsState}
       tagScope={tagScope}

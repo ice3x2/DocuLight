@@ -66,8 +66,8 @@ export const QUERY_KEYS = {
   document: (nodeId: string) => ['document', nodeId] as const,
   workspaces: ['workspaces'] as const,
   brokenInheritance: ['broken-inheritance'] as const,
-  auditLog: (operation: string) => ['audit-log', operation] as const,
-  reconciliationQueue: ['reconciliation-queue'] as const,
+  auditLog: (contextKey: string, operation: string) => ['audit-log', contextKey, operation] as const,
+  reconciliationQueue: (contextKey: string) => ['reconciliation-queue', contextKey] as const,
   tags: (workspaceId: string) => ['tags', workspaceId] as const,
   search: (query: string, axes: string) => ['search', query, axes] as const,
   revocation: (principalId: string) => ['revocation', principalId] as const,
@@ -205,9 +205,11 @@ export const useAuditLog = (
   enabled: boolean,
   /** 조작 필터. 빈 문자열이 「전체」다 — 질의 키의 일부라 바뀌면 다시 받는다. */
   operation = '',
+  /** 계정과 서버 인가 범위가 같은 응답끼리만 캐시를 공유한다. */
+  contextKey = '',
 ): UseQueryResult<AuditViewBody> =>
   useQuery({
-    queryKey: QUERY_KEYS.auditLog(operation),
+    queryKey: QUERY_KEYS.auditLog(contextKey, operation),
     queryFn: () => fetchAuditLog(operation),
     enabled,
     retry: false,
@@ -253,9 +255,10 @@ export const useTags = (enabled: boolean, workspaceId = ''): UseQueryResult<TagI
  */
 export const useReconciliationQueue = (
   enabled: boolean,
+  contextKey = '',
 ): UseQueryResult<ReconciliationQueueBody> =>
   useQuery({
-    queryKey: QUERY_KEYS.reconciliationQueue,
+    queryKey: QUERY_KEYS.reconciliationQueue(contextKey),
     queryFn: fetchReconciliationQueue,
     enabled,
     retry: false,

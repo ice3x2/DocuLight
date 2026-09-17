@@ -413,6 +413,53 @@
   background: var(--surface-control);
 }
 
+/* #70 감사 로그와 재조정 대기열. */
+[data-audit-panel] { width: min(100%, 880px); min-width: 0; color: var(--text-primary); font: 400 14px/22px var(--font-sans); }
+[data-audit-header] { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+[data-audit-header] > h2 { margin: 0; font: 600 18px/26px var(--font-sans); }
+[data-audit-header] > h2:focus,
+[data-audit-header] > h2:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+[data-audit-switch], [data-audit-state] button { min-height: 36px; padding: 6px 12px; }
+[data-audit-filter] { display: grid; gap: 4px; margin-bottom: 16px; }
+[data-audit-filter] > label { font-size: 13px; line-height: 20px; font-weight: 600; }
+[data-audit-filter] > select { width: min(100%, 24rem); min-height: 36px; border: 1px solid var(--border-default); border-radius: 4px; background: var(--surface-control); color: var(--text-primary); font: inherit; }
+[data-audit-notice] { margin: 4px 0 0; color: var(--text-secondary); font-size: 12px; line-height: 18px; }
+[data-audit-state], [data-audit-results] { min-width: 0; }
+[data-audit-state] > p, [data-audit-results] > p { margin: 0 0 12px; overflow-wrap: anywhere; }
+[data-audit-groups], [data-reconciliation-list] { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--border-subtle); }
+[data-audit-groups] > li, [data-reconciliation-list] > li { border-bottom: 1px solid var(--border-subtle); }
+[data-audit-disclosure] { display: grid; grid-template-columns: auto minmax(9rem, auto) minmax(8rem, 1fr) minmax(8rem, 1fr) auto; align-items: center; gap: 8px; width: 100%; min-height: 40px; padding: 8px 12px; border: 0; background: var(--surface-document); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
+[data-audit-disclosure]:hover { background: var(--surface-control); }
+[data-audit-disclosure] > span { min-width: 0; overflow-wrap: anywhere; }
+[data-audit-count] { font-variant-numeric: tabular-nums; white-space: nowrap; }
+[data-audit-detail] { min-width: 0; margin-left: 12px; padding: 4px 12px 12px; border-left: 2px solid var(--border-default); overflow-x: auto; }
+[data-audit-detail] dl { min-width: min(100%, 640px); margin: 0; padding: 8px 0; border-bottom: 1px solid var(--border-subtle); }
+[data-audit-detail] dl:last-child { border-bottom: 0; }
+[data-audit-detail] dl > div { display: grid; grid-template-columns: minmax(5rem, 8rem) minmax(0, 1fr); min-height: 40px; align-items: start; gap: 12px; padding: 8px 0; }
+[data-audit-detail] dt { font-size: 13px; line-height: 20px; font-weight: 600; }
+[data-audit-detail] dd { min-width: 0; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+[data-audit-detail] [data-testid='audit-row'] > span { display: grid; grid-template-columns: minmax(5rem, 8rem) minmax(0, 1fr); gap: 12px; padding-top: 8px; }
+[data-audit-detail] [data-testid='audit-row'] b { font-size: 13px; line-height: 20px; }
+[data-reconciliation-list] > li { min-height: 40px; padding: 8px 12px; overflow-wrap: anywhere; }
+[data-audit-panel] :is(button, select):focus,
+[data-audit-panel] :is(button, select):focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+@media (max-width: 720px) {
+  [data-audit-disclosure] { grid-template-columns: auto minmax(0, 1fr) auto; }
+  [data-audit-disclosure] > span:nth-child(3), [data-audit-disclosure] > span:nth-child(4) { grid-column: 2; }
+  [data-audit-count] { grid-column: 3; grid-row: 1 / span 3; }
+}
+
+@media (forced-colors: active) {
+  [data-audit-panel] { color: CanvasText; }
+  [data-audit-disclosure], [data-audit-filter] > select { border-color: ButtonText; background: Canvas; color: CanvasText; }
+  [data-audit-detail] { border-left-color: Highlight; }
+  [data-audit-panel] :is(button, select):focus,
+  [data-audit-panel] :is(button, select):focus-visible,
+  [data-audit-header] > h2:focus,
+  [data-audit-header] > h2:focus-visible { outline-color: Highlight; }
+}
+
 /* #63 access-token settings body. */
 [data-token-panel] { width: min(100%, 760px); min-width: 0; }
 :root[data-theme='light'] [data-token-panel], :root[data-theme='light'] [data-grade='L2'] { --token-focus-ring: #005ea8; }

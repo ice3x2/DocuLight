@@ -1,180 +1,232 @@
-import { useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 
 import { ACL레벨이름 } from '../acl/level-name.js';
 import type { AuditGroupBody, AuditViewBody, ReconciliationQueueBody } from '../api/client.js';
 
-/**
- * 감사 로그 (`R84`).
- *
- * 이름을 **감사 로그**로 부른다 (`CON-AUDIT-001` AC-4). 「감사 목록」이라는
- * 한정어 없는 지시어를 쓰지 않는다 — 제품에 그 이름으로 불릴 수 있는 것이
- * 셋이라(재조정 대기열 · 상속 끊김 노드 감사 목록 · 감사 로그) 한정어가
- * 빠지면 어느 것을 가리키는지 사람마다 다르게 읽는다.
- *
- * **표시는 묶음 접기이고 저장은 낱행이다** (`IR-AUDIT-003`). 접힌 줄을
- * 펼치면 낱행이 전부 보인다.
- */
-export function AuditLogPanel({
-  view,
-  onOperation,
-  operation,
-  queue,
-}: {
+export type AuditReadState<T> =
+  | { state: 'loading'; operations?: readonly string[] }
+  | { state: 'ready'; data: T }
+  | { state: 'error'; onRetry: () => void; operations?: readonly string[] };
+
+/** 감사 로그와 재조정 대기열의 읽기 전용 화면 (`IR-AUDIT-001`~`IR-AUDIT-004`). */
+export function AuditLogPanel({ audit, view, onOperation, operation, queueState, queue, contextKey }: {
+  audit?: AuditReadState<AuditViewBody>;
   view?: AuditViewBody;
-  /** 조작 필터의 현재 값. 빈 문자열이 「전체」다. */
   operation?: string;
   onOperation?: (operation: string) => void;
-  /** 재조정 대기열 (`IR-AUDIT-002`). 이 패널의 **두 번째 화면**이다. */
+  queueState?: AuditReadState<ReconciliationQueueBody>;
   queue?: ReconciliationQueueBody;
+  contextKey?: string;
 }) {
-  // 대기열을 이 패널 안에서 전환한다 (`IR-AUDIT-002` AC-1). 카테고리를
-  // 하나 더 만들지 않는 이유는 `R24-a` 의 구역·카테고리 구성이 요구이기
-  // 때문이고(AC-3 · AC-4), 감사 로그 표에 섞지 않는 이유는 한 표에 성질이
-  // 다른 두 줄이 서면 조작 필터가 무엇을 거르는지 흐려지기 때문이다(AC-2).
+  const 감사읽기: AuditReadState<AuditViewBody> = audit ?? (view === undefined ? { state: 'loading' } : { state: 'ready', data: view });
+  const 대기열읽기: AuditReadState<ReconciliationQueueBody> | undefined = queueState ?? (queue === undefined ? undefined : { state: 'ready', data: queue });
   const [대기열보기, set대기열보기] = useState(false);
-  // 두 화면 중 어느 쪽인가. 대기열이 오지 않았으면 전환 자체가 없다.
-  const 대기열 = 대기열보기 ? queue : undefined;
+  const [필터알림, set필터알림] = useState('');
+  const [펼친묶음, set펼친묶음] = useState<ReadonlySet<string>>(() => new Set());
+  const 제목 = useRef<HTMLHeadingElement>(null);
+  const 패널 = useRef<HTMLElement>(null);
+  const 초점묶음 = useRef<string | null>(null);
+  const 이전묶음순서 = useRef<readonly string[]>([]);
+  const 요약요소 = useRef(new Map<string, HTMLButtonElement>());
+  const 이전문맥 = useRef(contextKey);
 
-  if (view === undefined) return null;
+  // @req IR-AUDIT-001
+  useEffect(() => {
+    if (감사읽기.state !== 'ready' || !operation || 감사읽기.data.operations.includes(operation)) return;
+    onOperation?.('');
+    set필터알림('선택한 조작이 더 이상 없어 전체로 돌아갔습니다.');
+  }, [감사읽기, onOperation, operation]);
+
+  useEffect(() => set펼친묶음(new Set()), [operation]);
+
+  useEffect(() => {
+    const 문맥변경 = 이전문맥.current !== contextKey;
+    이전문맥.current = contextKey;
+    set펼친묶음(new Set());
+    if (문맥변경 && 초점묶음.current !== null) requestAnimationFrame(() => 제목.current?.focus());
+    if (문맥변경) 초점묶음.current = null;
+  }, [contextKey]);
+
+  // @req IR-AUDIT-003
+  useEffect(() => {
+    if (감사읽기.state !== 'ready') return;
+    const 현재묶음순서 = 감사읽기.data.groups.map((group) => group.rows[0]!.id);
+    const 남은식별자 = new Set(현재묶음순서);
+    const 제거된초점 = 초점묶음.current !== null && !남은식별자.has(초점묶음.current);
+    const 제거된위치 = 제거된초점 ? 이전묶음순서.current.indexOf(초점묶음.current!) : -1;
+    const 다음초점 = 제거된위치 < 0
+      ? 현재묶음순서[0]
+      : 이전묶음순서.current.slice(제거된위치 + 1).find((id) => 남은식별자.has(id))
+        ?? [...이전묶음순서.current.slice(0, 제거된위치)].reverse().find((id) => 남은식별자.has(id))
+        ?? 현재묶음순서[0];
+    이전묶음순서.current = 현재묶음순서;
+    set펼친묶음((was) => {
+      const next = new Set([...was].filter((id) => 남은식별자.has(id)));
+      return next.size === was.size ? was : next;
+    });
+    if (제거된초점) requestAnimationFrame(() => {
+      if (다음초점 !== undefined) 요약요소.current.get(다음초점)?.focus();
+      else 제목.current?.focus();
+      초점묶음.current = 다음초점 ?? null;
+    });
+  }, [감사읽기]);
+
+  // @req IR-AUDIT-002
+  const 화면전환 = () => {
+    set대기열보기((was) => !was);
+    requestAnimationFrame(() => 제목.current?.focus());
+  };
+  // @req IR-AUDIT-003
+  const 펼침변경 = (id: string, value: boolean) => {
+    set펼친묶음((was) => {
+      const next = new Set(was);
+      if (value) next.add(id); else next.delete(id);
+      return next;
+    });
+  };
 
   return (
-    <section>
-      <h2>감사 로그</h2>
-
-      {queue === undefined ? null : (
-        <button type="button" onClick={() => set대기열보기((was) => !was)}>
-          {대기열보기 ? '감사 로그' : '재조정 대기열'}
-        </button>
-      )}
-
-      {대기열 === undefined ? (
-        <>
-          {/* 선택지가 **실제 기록 값**에서 온다 (`IR-AUDIT-001` AC-2) — 고정
-              목록을 여기 적으면 새 조작이 처음 기록돼도 배포 전까지 나타나지
-              않는다.
-
-              상대 노드·대상 역할로 거르는 필터를 두지 않는다
-              (`SEC-AUDIT-009` AC-2 · AC-3). 「외부로 나간 것만」 거르는 필터도
-              없다 (`SEC-AUDIT-004` AC-2) — 그 필터의 결과 수가 곧 반출 건수다. */}
-          <label htmlFor="audit-operation">조작</label>
-          <select
-            id="audit-operation"
-            value={operation ?? ''}
-            onChange={(event) => onOperation?.(event.target.value)}
-          >
-            <option value="">전체</option>
-            {view.operations.map((one) => (
-              <option key={one} value={one}>
-                {one}
-              </option>
-            ))}
-          </select>
-
-          {view.groups.length === 0 ? (
-            <p data-testid="audit-empty">기록된 감사 행이 없습니다.</p>
-          ) : (
-            <ul>
-              {view.groups.map((group) => (
-                // 조작·행위자·시각으로 식별하지 않는다 — 묶음 경계가 상관
-                // 키로 옮겨진 뒤(`IR-AUDIT-003` AC-8) 그 셋이 똑같은 두 묶음이
-                // 정상적으로 생기고, 그러면 펼친 줄의 자리에 다른 조작의
-                // 낱행이 그려진다.
-                //
-                // 상관 키를 쓰지 않는 것은 그 값이 응답에 오지 않기 때문이며
-                // (AC-6), 첫 낱행의 id 로 충분하다 — 낱행은 묶음 하나에만
-                // 속하므로 그 값이 곧 묶음의 유일한 이름이다.
-                <AuditGroupRow key={group.rows[0]!.id} group={group} />
-              ))}
-            </ul>
-          )}
-        </>
+    <section ref={패널} data-audit-panel>
+      <div data-audit-header>
+        <h2 ref={제목} tabIndex={-1}>{대기열보기 ? '재조정 대기열' : '감사 로그'}</h2>
+        {대기열읽기 === undefined ? null : (
+          <button type="button" onClick={화면전환} data-audit-switch>
+            {대기열보기 ? '감사 로그' : '재조정 대기열'}
+          </button>
+        )}
+      </div>
+      {대기열보기 && 대기열읽기 !== undefined ? (
+        <QueueResult query={대기열읽기} />
       ) : (
-        <ReconciliationQueue queue={대기열} />
+        <AuditResult
+          query={감사읽기}
+          operation={operation ?? ''}
+          onOperation={onOperation}
+          notice={필터알림}
+          expanded={펼친묶음}
+          onExpanded={펼침변경}
+          onGroupFocus={(id) => { 초점묶음.current = id; }}
+          onGroupBlur={(id) => { if (초점묶음.current === id) 초점묶음.current = null; }}
+          onSummaryRef={(id, element) => {
+            if (element === null) 요약요소.current.delete(id);
+            else 요약요소.current.set(id, element);
+          }}
+        />
       )}
     </section>
   );
 }
 
-/**
- * 재조정 대기열 (`IR-AUDIT-002` · `SEC-AUDIT-007`).
- *
- * 미해소 항목만 온다 — 해소는 새 감사 행으로 남으므로(`REL-AUDIT-002`)
- * 해소된 것을 여기 다시 세우면 같은 사실이 두 곳에 서게 된다.
- */
-function ReconciliationQueue({ queue }: { queue: ReconciliationQueueBody }) {
-  if (queue.items.length === 0) {
-    return <p data-testid="queue-empty">미해소 항목이 없습니다.</p>;
+// @req IR-AUDIT-001
+function AuditResult({ query, operation, onOperation, notice, expanded, onExpanded, onGroupFocus, onGroupBlur, onSummaryRef }: {
+  query: AuditReadState<AuditViewBody>;
+  operation: string;
+  onOperation?: (operation: string) => void;
+  notice: string;
+  expanded: ReadonlySet<string>;
+  onExpanded: (id: string, value: boolean) => void;
+  onGroupFocus: (id: string) => void;
+  onGroupBlur: (id: string) => void;
+  onSummaryRef: (id: string, element: HTMLButtonElement | null) => void;
+}) {
+  if (query.state === 'error' && query.operations === undefined) {
+    return <div role="region" aria-label="감사 로그 결과" data-audit-state><p>감사 로그를 불러오지 못했습니다.</p><button type="button" onClick={query.onRetry}>다시 불러오기</button></div>;
+  }
+  if (query.state === 'loading' && query.operations === undefined) {
+    return <div role="region" aria-label="감사 로그 결과" aria-busy="true" data-audit-state><p>감사 로그를 불러오는 중입니다.</p></div>;
   }
 
-  return (
-    <ul>
-      {queue.items.map((item) => (
-        <li key={item.id} data-testid="queue-item">
-          {item.type}
-        </li>
-      ))}
-    </ul>
-  );
+  const operations = query.state === 'ready' ? query.data.operations : (query.operations ?? []);
+
+  return <>
+    <div data-audit-filter>
+      <label htmlFor="audit-operation">조작</label>
+      <select id="audit-operation" value={operations.includes(operation) ? operation : ''} onChange={(event) => onOperation?.(event.target.value)}>
+        <option value="">전체</option>
+        {operations.map((one) => <option key={one} value={one}>{one}</option>)}
+      </select>
+      {notice === '' ? null : <p role="status" data-audit-notice>{notice}</p>}
+    </div>
+    <div role="region" aria-label="감사 로그 결과" data-audit-results>
+      {query.state === 'error'
+        ? <><p>감사 로그를 불러오지 못했습니다.</p><button type="button" onClick={query.onRetry}>다시 불러오기</button></>
+        : query.state === 'loading' ? <p aria-busy="true">감사 로그를 불러오는 중입니다.</p> : query.data.groups.length === 0 ? <p data-testid="audit-empty">기록된 감사 행이 없습니다.</p> : (
+        <ul data-audit-groups>{query.data.groups.map((group) => {
+          const id = group.rows[0]!.id;
+          return <AuditGroupRow
+            key={id}
+            group={group}
+            expanded={expanded.has(id)}
+            onExpanded={(value) => onExpanded(id, value)}
+            onFocus={() => onGroupFocus(id)}
+            onBlur={() => onGroupBlur(id)}
+            onSummaryRef={(element) => onSummaryRef(id, element)}
+          />;
+        })}</ul>
+      )}
+    </div>
+  </>;
 }
 
-/**
- * 접힌 한 줄. 펼치면 낱행이 보인다 (`IR-AUDIT-003` AC-2 · AC-3).
- *
- * 건수는 **열람자 스코프의 행 수 그 자체**다 (`SEC-AUDIT-011`) — 총계도
- * 분모도 「이 밖에 N건 더」도 없다. 그 차액이 곧 스코프 밖 행의 개수이기
- * 때문이다.
- */
-function AuditGroupRow({ group }: { group: AuditGroupBody }) {
-  const [펼침, set펼침] = useState(false);
+// @req IR-AUDIT-002
+function QueueResult({ query }: { query: AuditReadState<ReconciliationQueueBody> }) {
+  if (query.state === 'error') {
+    return <div role="region" aria-label="재조정 대기열 결과" data-audit-state><p>재조정 대기열을 불러오지 못했습니다.</p><button type="button" onClick={query.onRetry}>다시 불러오기</button></div>;
+  }
+  if (query.state === 'loading') {
+    return <div role="region" aria-label="재조정 대기열 결과" aria-busy="true" data-audit-state><p>재조정 대기열을 불러오는 중입니다.</p></div>;
+  }
+  return <div role="region" aria-label="재조정 대기열 결과" data-audit-results><ReconciliationQueue queue={query.data} /></div>;
+}
 
-  return (
-    <li data-testid="audit-group">
-      <button type="button" onClick={() => set펼침((was) => !was)}>
-        {group.occurredAt} · {group.operation} · {group.actor} · {group.rows.length}건
-      </button>
+/** 재조정 항목은 현재 HTTP 계약이 준 id와 type만 읽기 전용으로 보인다. */
+function ReconciliationQueue({ queue }: { queue: ReconciliationQueueBody }) {
+  if (queue.items.length === 0) return <p data-testid="queue-empty">미해소 항목이 없습니다.</p>;
+  return <ul data-reconciliation-list>{queue.items.map((item) => <li key={item.id} data-testid="queue-item">{item.type}</li>)}</ul>;
+}
 
-      {펼침 ? (
-        <ul>
-          {group.rows.map((row) => (
-            <li key={row.id} data-testid="audit-row">
-              <span>{row.target ?? '-'}</span>
-              {/* 상대 노드는 서버가 이미 가려서 준다 — 화면이 가리면 API 를
-                  직접 부르는 쪽에 원시 ID 가 그대로 나간다
-                  (`SEC-AUDIT-008` AC-3). */}
-              {row.counterpart === null ? null : <span data-testid="audit-counterpart">{row.counterpart}</span>}
-              {/* 대상 역할을 **보인다** (`SEC-AUDIT-001` AC-1 · AC-2) —
-                  경계를 넘는 복사는 두 행이 모두 조작=복사라, 역할이 없으면
-                  「나갔다」와 「들어왔다」가 화면에서 같아진다.
-                  보이는 것과 축이 되는 것은 다르다 — 거르거나 정렬하거나
-                  세는 자리는 두지 않는다 (`SEC-AUDIT-009` AC-3~AC-5). */}
-              {row.targetRole === undefined ? null : (
-                <span data-testid="audit-role">{row.targetRole === 'origin' ? '원본' : '사본'}</span>
-              )}
-              {/* 주체와 레벨을 **보인다** (`IR-AUDIT-004`). 서버가 두 값을
-                  실어 보내는데 여기가 그리지 않아, 목록이 「누가 언제 어느
-                  노드에」까지만 답하고 「누구에게 무엇을」을 답하지 못했다 —
-                  원장 `G15` 종결 판정이 Phase 1 잔여로 지목한 자리다.
+/** 서버가 준 한 묶음을 첫 낱행 ID의 안정된 React identity로 접고 편다. */
+function AuditGroupRow({ group, expanded, onExpanded, onFocus, onBlur, onSummaryRef }: {
+  group: AuditGroupBody;
+  expanded: boolean;
+  onExpanded: (value: boolean) => void;
+  onFocus: () => void;
+  onBlur: () => void;
+  onSummaryRef: (element: HTMLButtonElement | null) => void;
+}) {
+  const detailId = useId();
+  const summary = useRef<HTMLButtonElement>(null);
+  const detail = useRef<HTMLDivElement>(null);
+  // @req IR-AUDIT-003
+  const 접기전환 = () => {
+    const 안에초점 = detail.current?.contains(document.activeElement) === true;
+    onExpanded(!expanded);
+    if (expanded && 안에초점) requestAnimationFrame(() => summary.current?.focus());
+  };
 
-                  주체는 서버가 이미 이름으로 풀어서 준다 (AC-3) — 여기서
-                  풀려면 낱행마다 명부를 두드려야 하고, 그 창구가 곧 스코프
-                  없는 명부 경로가 된다.
-
-                  빈 칸은 자리표로 채우지 않는다 (AC-6) — 없는 사실을 그리게
-                  된다. 보이는 것과 축이 되는 것은 다르다: 거르거나 정렬하거나
-                  세는 자리는 두지 않는다 (AC-8 · AC-9). */}
-              {row.subject === undefined ? null : <span data-testid="audit-subject">{row.subject}</span>}
-              {row.level === undefined ? null : (
-                <span data-testid="audit-level">{ACL레벨이름(row.level)}</span>
-              )}
-              {row.beforeValue === undefined ? null : (
-                <span>
-                  {row.beforeValue} → {row.afterValue ?? '-'}
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-    </li>
-  );
+  return <li
+    data-testid="audit-group"
+    onFocusCapture={onFocus}
+    onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) onBlur(); }}
+  >
+    <button ref={(element) => { summary.current = element; onSummaryRef(element); }} type="button" onClick={접기전환} aria-expanded={expanded} aria-controls={detailId} data-audit-disclosure>
+      <span aria-hidden="true" data-audit-chevron>{expanded ? '▾' : '▸'}</span>
+      <span>{group.occurredAt}</span><span>{group.operation}</span><span>{group.actor}</span><span data-audit-count>{group.rows.length}건</span>
+    </button>
+    {expanded ? <div id={detailId} ref={detail} data-audit-detail>
+      {group.rows.map((row) => <dl key={row.id} data-audit-row>
+        <div><dt>시각</dt><dd>{row.occurredAt}</dd></div>
+        <div><dt>조작</dt><dd>{row.operation}</dd></div>
+        <div><dt>행위자</dt><dd>{row.actor}</dd></div>
+        <div><dt>대상</dt><dd data-testid="audit-row">{row.target ?? '—'}
+          {row.counterpart === null ? null : <span><b>상대 노드</b><span data-testid="audit-counterpart">{row.counterpart}</span></span>}
+          {row.targetRole === undefined ? null : <span><b>대상 역할</b><span data-testid="audit-role">{row.targetRole === 'origin' ? '원본' : '사본'}</span></span>}
+          {row.subject === undefined ? null : <span><b>주체</b><span data-testid="audit-subject">{row.subject}</span></span>}
+          {row.level === undefined ? null : <span><b>레벨</b><span data-testid="audit-level">{ACL레벨이름(row.level)}</span></span>}
+          {row.beforeValue === undefined ? null : <span><b>이전 값</b><span>{row.beforeValue}</span></span>}
+          {row.afterValue === undefined ? null : <span><b>이후 값</b><span>{row.afterValue}</span></span>}
+        </dd></div>
+      </dl>)}
+    </div> : null}
+  </li>;
 }

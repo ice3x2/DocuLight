@@ -1,0 +1,1495 @@
+Pre-RED facts:
+6FA4F63F7AA3B7F25F993EFF6BEB7A8A05C1B62E20B47A6285B251ADB33EE430
+PRODUCT_DIFF_ABSENT_AT_FINAL_RED=YES
+
+RED command: npm test --workspace @doculight/web -- issue70-audit-panel.test.tsx
+RED exit code: 1
+
+--- raw output ---
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test
+> vitest run issue70-audit-panel.test.tsx
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+stderr | test/issue70-audit-panel.test.tsx
+Warning: KaTeX doesn't work in quirks mode. Make sure your website has a suitable doctype.
+
+ ❯ test/issue70-audit-panel.test.tsx (9 tests | 9 failed) 4363ms
+     × 감사 실패 중에도 대기열로 이동하고 각 읽기만 다시 시도한다 15ms
+     × loading은 busy이고 성공한 빈 결과와 구별된다 5ms
+     × 성공 응답에서 선택 조작이 사라지면 전체로 되돌리고 알린다 2ms
+     × disclosure 관계와 낱행의 각 사실을 의미 있는 라벨로 보인다 2ms
+     × 없는 선택 필드는 DOM에서 생략하고 null 대상만 중립 기호로 보인다 1ms
+     × 성공 0을 포함하고 loading/error에는 숫자를 가장하지 않는다 1112ms
+     × 성공 0을 포함하고 loading/error에는 숫자를 가장하지 않는다 1080ms
+     × 성공 0을 포함하고 loading/error에는 숫자를 가장하지 않는다 1068ms
+     × 성공 0을 포함하고 loading/error에는 숫자를 가장하지 않는다 1076ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/issue70-audit-panel.test.tsx > GitHub #70 — 감사와 재조정 대기열의 독립 읽기 상태 > 감사 실패 중에도 대기열로 이동하고 각 읽기만 다시 시도한다
+TestingLibraryElementError: Unable to find an element with the text: 감사 로그를 불러오지 못했습니다.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue70-audit-panel.test.tsx:57:19
+     55|     );
+     56|
+     57|     expect(screen.getByText('감사 로그를 불러오지 못했습니다.')).toBeDefined();
+       |                   ^
+     58|     await user.click(screen.getByRole('button', { name: '재조정 대기열' }));
+     59|     expect(screen.getAllByTestId('queue-item')).toHaveLength(2);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  test/issue70-audit-panel.test.tsx > GitHub #70 — 감사와 재조정 대기열의 독립 읽기 상태 > loading은 busy이고 성공한 빈 결과와 구별된다
+TestingLibraryElementError: Unable to find an accessible element with the role "region" and name "감사 로그 결과"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue70-audit-panel.test.tsx:82:19
+     80|     );
+     81|
+     82|     expect(screen.getByRole('region', { name: '감사 로그 결과' }).getAttribu…
+       |                   ^
+     83|     expect(screen.queryByText('기록된 감사 행이 없습니다.')).toBeNull();
+     84|     await user.click(screen.getByRole('button', { name: '재조정 대기열' }));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  test/issue70-audit-panel.test.tsx > GitHub #70 — 필터와 그룹 상세의 진실성 > 성공 응답에서 선택 조작이 사라지면 전체로 되돌리고 알린다
+AssertionError: expected "vi.fn()" to be called with arguments: [ '' ]
+
+Number of calls: 0
+
+ ❯ test/issue70-audit-panel.test.tsx:102:25
+    100|     );
+    101|
+    102|     expect(onOperation).toHaveBeenCalledWith('');
+       |                         ^
+    103|     expect(screen.getByRole('status').textContent).toContain('전체');
+    104|     expect(within(screen.getByLabelText('조작')).getAllByRole('option').…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  test/issue70-audit-panel.test.tsx > GitHub #70 — 필터와 그룹 상세의 진실성 > disclosure 관계와 낱행의 각 사실을 의미 있는 라벨로 보인다
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/acl\.grant/`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue70-audit-panel.test.tsx:119:31
+    117|     );
+    118|
+    119|     const disclosure = screen.getByRole('button', { name: /acl\.grant/…
+       |                               ^
+    120|     expect(disclosure.getAttribute('aria-expanded')).toBe('false');
+    121|     expect(disclosure.getAttribute('aria-controls')).toBeTruthy();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  test/issue70-audit-panel.test.tsx > GitHub #70 — 필터와 그룹 상세의 진실성 > 없는 선택 필드는 DOM에서 생략하고 null 대상만 중립 기호로 보인다
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/node\.create/`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue70-audit-panel.test.tsx:156:29
+    154|     );
+    155|
+    156|     await user.click(screen.getByRole('button', { name: /node\.create/…
+       |                             ^
+    157|     const detail = screen.getByTestId('audit-row');
+    158|     expect(detail.querySelector('[data-testid="audit-subject"]')).toBe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  test/issue70-audit-panel.test.tsx > GitHub #70 — 감사 카테고리 배지 상태 > 성공 0을 포함하고 loading/error에는 숫자를 가장하지 않는다
+TestingLibraryElementError: Unable to find an element by: [data-testid="queue-badge"]
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; outline-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mdata-shell[39m=[32m"root"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"좌측 사이드바"[39m
+        [33mdata-side[39m=[32m"left"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"좌측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_0_-content-tree"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_0_-trigger-tree"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m문서 트리[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_0_-content-search"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_0_-trigger-search"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m검색[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_0_-content-favorites"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_0_-trigger-favorites"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m즐겨찾기[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_0_-trigger-tree"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"active"[39m
+            [33mid[39m=[32m"radix-_r_0_-content-tree"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mstyle[39m=[32m"animation-duration: 0s;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"빈 상태 안내"[39m
+              [33mrole[39m=[32m"note"[39m
+            [36m>[39m
+              [36m<p>[39m
+                [0m접근할 수 있는 문서가 아직 없습니다.[0m
+              [36m</p>[39m
+              [36m<p>[39m
+                [0m워크스페이스 관리자에게 권한을 요청하세요.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_0_-trigger-search"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_0_-content-search"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_0_-trigger-favorites"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_0_-content-favorites"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mdata-shell[39m=[32m"settings-corner"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"radix-_r_5_"[39m
+            [33maria-expanded[39m=[32m"true"[39m
+            [33maria-haspopup[39m=[32m"dialog"[39m
+            [33maria-label[39m=[32m"설정"[39m
+            [33mdata-state[39m=[32m"open"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m⚙[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+      [36m<main>[39m
+        [36m<div[39m
+          [33mdata-empty[39m=[32m"documents"[39m
+        [36m/>[39m
+      [36m</main>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"우측 사이드바"[39m
+        [33mdata-side[39m=[32m"right"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"우측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_9_-content-backlinks"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_9_-trigger-backlinks"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabin...
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; outline-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mdata-shell[39m=[32m"root"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"좌측 사이드바"[39m
+        [33mdata-side[39m=[32m"left"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"좌측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_0_-content-tree"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_0_-trigger-tree"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m문서 트리[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_0_-content-search"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_0_-trigger-search"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m검색[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_0_-content-favorites"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_0_-trigger-favorites"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m즐겨찾기[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_0_-trigger-tree"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"active"[39m
+            [33mid[39m=[32m"radix-_r_0_-content-tree"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mstyle[39m=[32m"animation-duration: 0s;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"빈 상태 안내"[39m
+              [33mrole[39m=[32m"note"[39m
+            [36m>[39m
+              [36m<p>[39m
+                [0m접근할 수 있는 문서가 아직 없습니다.[0m
+              [36m</p>[39m
+              [36m<p>[39m
+                [0m워크스페이스 관리자에게 권한을 요청하세요.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_0_-trigger-search"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_0_-content-search"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_0_-trigger-favorites"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_0_-content-favorites"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mdata-shell[39m=[32m"settings-corner"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"radix-_r_5_"[39m
+            [33maria-expanded[39m=[32m"true"[39m
+            [33maria-haspopup[39m=[32m"dialog"[39m
+            [33maria-label[39m=[32m"설정"[39m
+            [33mdata-state[39m=[32m"open"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m⚙[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+      [36m<main>[39m
+        [36m<div[39m
+          [33mdata-empty[39m=[32m"documents"[39m
+        [36m/>[39m
+      [36m</main>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"우측 사이드바"[39m
+        [33mdata-side[39m=[32m"right"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"우측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_9_-content-backlinks"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_9_-trigger-backlinks"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabin...
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ test/issue70-audit-panel.test.tsx:185:32
+    183|     await user.click(screen.getByRole('button', { name: '설정' }));
+    184|
+    185|     const badge = await screen.findByTestId('queue-badge');
+       |                                ^
+    186|     expect(badge.textContent).toBe(text);
+    187|     expect(badge.getAttribute('aria-label')).toBe(label);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  test/issue70-audit-panel.test.tsx > GitHub #70 — 감사 카테고리 배지 상태 > 성공 0을 포함하고 loading/error에는 숫자를 가장하지 않는다
+TestingLibraryElementError: Unable to find an element by: [data-testid="queue-badge"]
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; outline-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mdata-shell[39m=[32m"root"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"좌측 사이드바"[39m
+        [33mdata-side[39m=[32m"left"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"좌측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_p_-content-tree"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_p_-trigger-tree"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m문서 트리[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_p_-content-search"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_p_-trigger-search"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m검색[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_p_-content-favorites"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_p_-trigger-favorites"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m즐겨찾기[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_p_-trigger-tree"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"active"[39m
+            [33mid[39m=[32m"radix-_r_p_-content-tree"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mstyle[39m=[32m"animation-duration: 0s;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"빈 상태 안내"[39m
+              [33mrole[39m=[32m"note"[39m
+            [36m>[39m
+              [36m<p>[39m
+                [0m접근할 수 있는 문서가 아직 없습니다.[0m
+              [36m</p>[39m
+              [36m<p>[39m
+                [0m워크스페이스 관리자에게 권한을 요청하세요.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_p_-trigger-search"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_p_-content-search"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_p_-trigger-favorites"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_p_-content-favorites"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mdata-shell[39m=[32m"settings-corner"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"radix-_r_u_"[39m
+            [33maria-expanded[39m=[32m"true"[39m
+            [33maria-haspopup[39m=[32m"dialog"[39m
+            [33maria-label[39m=[32m"설정"[39m
+            [33mdata-state[39m=[32m"open"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m⚙[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+      [36m<main>[39m
+        [36m<div[39m
+          [33mdata-empty[39m=[32m"documents"[39m
+        [36m/>[39m
+      [36m</main>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"우측 사이드바"[39m
+        [33mdata-side[39m=[32m"right"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"우측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_12_-content-backlinks"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_12_-trigger-backlinks"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtab...
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; outline-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mdata-shell[39m=[32m"root"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"좌측 사이드바"[39m
+        [33mdata-side[39m=[32m"left"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"좌측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_p_-content-tree"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_p_-trigger-tree"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m문서 트리[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_p_-content-search"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_p_-trigger-search"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m검색[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_p_-content-favorites"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_p_-trigger-favorites"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m즐겨찾기[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_p_-trigger-tree"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"active"[39m
+            [33mid[39m=[32m"radix-_r_p_-content-tree"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mstyle[39m=[32m"animation-duration: 0s;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"빈 상태 안내"[39m
+              [33mrole[39m=[32m"note"[39m
+            [36m>[39m
+              [36m<p>[39m
+                [0m접근할 수 있는 문서가 아직 없습니다.[0m
+              [36m</p>[39m
+              [36m<p>[39m
+                [0m워크스페이스 관리자에게 권한을 요청하세요.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_p_-trigger-search"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_p_-content-search"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_p_-trigger-favorites"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_p_-content-favorites"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mdata-shell[39m=[32m"settings-corner"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"radix-_r_u_"[39m
+            [33maria-expanded[39m=[32m"true"[39m
+            [33maria-haspopup[39m=[32m"dialog"[39m
+            [33maria-label[39m=[32m"설정"[39m
+            [33mdata-state[39m=[32m"open"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m⚙[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+      [36m<main>[39m
+        [36m<div[39m
+          [33mdata-empty[39m=[32m"documents"[39m
+        [36m/>[39m
+      [36m</main>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"우측 사이드바"[39m
+        [33mdata-side[39m=[32m"right"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"우측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_12_-content-backlinks"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_12_-trigger-backlinks"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtab...
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ test/issue70-audit-panel.test.tsx:185:32
+    183|     await user.click(screen.getByRole('button', { name: '설정' }));
+    184|
+    185|     const badge = await screen.findByTestId('queue-badge');
+       |                                ^
+    186|     expect(badge.textContent).toBe(text);
+    187|     expect(badge.getAttribute('aria-label')).toBe(label);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  test/issue70-audit-panel.test.tsx > GitHub #70 — 감사 카테고리 배지 상태 > 성공 0을 포함하고 loading/error에는 숫자를 가장하지 않는다
+TestingLibraryElementError: Unable to find an element by: [data-testid="queue-badge"]
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; outline-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mdata-shell[39m=[32m"root"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"좌측 사이드바"[39m
+        [33mdata-side[39m=[32m"left"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"좌측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_1i_-content-tree"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_1i_-trigger-tree"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m문서 트리[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_1i_-content-search"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_1i_-trigger-search"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m검색[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_1i_-content-favorites"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_1i_-trigger-favorites"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m즐겨찾기[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_1i_-trigger-tree"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"active"[39m
+            [33mid[39m=[32m"radix-_r_1i_-content-tree"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mstyle[39m=[32m"animation-duration: 0s;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"빈 상태 안내"[39m
+              [33mrole[39m=[32m"note"[39m
+            [36m>[39m
+              [36m<p>[39m
+                [0m접근할 수 있는 문서가 아직 없습니다.[0m
+              [36m</p>[39m
+              [36m<p>[39m
+                [0m워크스페이스 관리자에게 권한을 요청하세요.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_1i_-trigger-search"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_1i_-content-search"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_1i_-trigger-favorites"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_1i_-content-favorites"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mdata-shell[39m=[32m"settings-corner"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"radix-_r_1n_"[39m
+            [33maria-expanded[39m=[32m"true"[39m
+            [33maria-haspopup[39m=[32m"dialog"[39m
+            [33maria-label[39m=[32m"설정"[39m
+            [33mdata-state[39m=[32m"open"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m⚙[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+      [36m<main>[39m
+        [36m<div[39m
+          [33mdata-empty[39m=[32m"documents"[39m
+        [36m/>[39m
+      [36m</main>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"우측 사이드바"[39m
+        [33mdata-side[39m=[32m"right"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"우측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_1r_-content-backlinks"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_1r_-trigger-backlinks"[39m
+              [33mrole[39m=[32m"tab"[39m
+         ...
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; outline-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mdata-shell[39m=[32m"root"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"좌측 사이드바"[39m
+        [33mdata-side[39m=[32m"left"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"좌측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_1i_-content-tree"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_1i_-trigger-tree"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m문서 트리[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_1i_-content-search"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_1i_-trigger-search"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m검색[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_1i_-content-favorites"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_1i_-trigger-favorites"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m즐겨찾기[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_1i_-trigger-tree"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"active"[39m
+            [33mid[39m=[32m"radix-_r_1i_-content-tree"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mstyle[39m=[32m"animation-duration: 0s;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"빈 상태 안내"[39m
+              [33mrole[39m=[32m"note"[39m
+            [36m>[39m
+              [36m<p>[39m
+                [0m접근할 수 있는 문서가 아직 없습니다.[0m
+              [36m</p>[39m
+              [36m<p>[39m
+                [0m워크스페이스 관리자에게 권한을 요청하세요.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_1i_-trigger-search"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_1i_-content-search"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_1i_-trigger-favorites"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_1i_-content-favorites"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mdata-shell[39m=[32m"settings-corner"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"radix-_r_1n_"[39m
+            [33maria-expanded[39m=[32m"true"[39m
+            [33maria-haspopup[39m=[32m"dialog"[39m
+            [33maria-label[39m=[32m"설정"[39m
+            [33mdata-state[39m=[32m"open"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m⚙[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+      [36m<main>[39m
+        [36m<div[39m
+          [33mdata-empty[39m=[32m"documents"[39m
+        [36m/>[39m
+      [36m</main>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"우측 사이드바"[39m
+        [33mdata-side[39m=[32m"right"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"우측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_1r_-content-backlinks"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_1r_-trigger-backlinks"[39m
+              [33mrole[39m=[32m"tab"[39m
+         ...
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ test/issue70-audit-panel.test.tsx:185:32
+    183|     await user.click(screen.getByRole('button', { name: '설정' }));
+    184|
+    185|     const badge = await screen.findByTestId('queue-badge');
+       |                                ^
+    186|     expect(badge.textContent).toBe(text);
+    187|     expect(badge.getAttribute('aria-label')).toBe(label);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  test/issue70-audit-panel.test.tsx > GitHub #70 — 감사 카테고리 배지 상태 > 성공 0을 포함하고 loading/error에는 숫자를 가장하지 않는다
+TestingLibraryElementError: Unable to find an element by: [data-testid="queue-badge"]
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; outline-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mdata-shell[39m=[32m"root"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"좌측 사이드바"[39m
+        [33mdata-side[39m=[32m"left"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"좌측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_2b_-content-tree"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_2b_-trigger-tree"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m문서 트리[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_2b_-content-search"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_2b_-trigger-search"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m검색[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_2b_-content-favorites"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_2b_-trigger-favorites"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m즐겨찾기[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_2b_-trigger-tree"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"active"[39m
+            [33mid[39m=[32m"radix-_r_2b_-content-tree"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mstyle[39m=[32m"animation-duration: 0s;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"빈 상태 안내"[39m
+              [33mrole[39m=[32m"note"[39m
+            [36m>[39m
+              [36m<p>[39m
+                [0m접근할 수 있는 문서가 아직 없습니다.[0m
+              [36m</p>[39m
+              [36m<p>[39m
+                [0m워크스페이스 관리자에게 권한을 요청하세요.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_2b_-trigger-search"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_2b_-content-search"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_2b_-trigger-favorites"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_2b_-content-favorites"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mdata-shell[39m=[32m"settings-corner"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"radix-_r_2g_"[39m
+            [33maria-expanded[39m=[32m"true"[39m
+            [33maria-haspopup[39m=[32m"dialog"[39m
+            [33maria-label[39m=[32m"설정"[39m
+            [33mdata-state[39m=[32m"open"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m⚙[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+      [36m<main>[39m
+        [36m<div[39m
+          [33mdata-empty[39m=[32m"documents"[39m
+        [36m/>[39m
+      [36m</main>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"우측 사이드바"[39m
+        [33mdata-side[39m=[32m"right"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"우측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_2k_-content-backlinks"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_2k_-trigger-backlinks"[39m
+              [33mrole[39m=[32m"tab"[39m
+         ...
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mdata-scroll-locked[39m=[32m"1"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+[36m>[39m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+    [33mdata-radix-focus-guard[39m=[32m""[39m
+    [33mstyle[39m=[32m"opacity: 0; position: fixed; pointer-events: none; outline-color: none; outline-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+  [36m<div[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mdata-aria-hidden[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mdata-shell[39m=[32m"root"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"좌측 사이드바"[39m
+        [33mdata-side[39m=[32m"left"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"좌측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_2b_-content-tree"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_2b_-trigger-tree"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m문서 트리[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_2b_-content-search"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_2b_-trigger-search"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m검색[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_2b_-content-favorites"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_2b_-trigger-favorites"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m즐겨찾기[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_2b_-trigger-tree"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"active"[39m
+            [33mid[39m=[32m"radix-_r_2b_-content-tree"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mstyle[39m=[32m"animation-duration: 0s;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"빈 상태 안내"[39m
+              [33mrole[39m=[32m"note"[39m
+            [36m>[39m
+              [36m<p>[39m
+                [0m접근할 수 있는 문서가 아직 없습니다.[0m
+              [36m</p>[39m
+              [36m<p>[39m
+                [0m워크스페이스 관리자에게 권한을 요청하세요.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_2b_-trigger-search"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_2b_-content-search"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_2b_-trigger-favorites"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_2b_-content-favorites"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mdata-shell[39m=[32m"settings-corner"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"radix-_r_2g_"[39m
+            [33maria-expanded[39m=[32m"true"[39m
+            [33maria-haspopup[39m=[32m"dialog"[39m
+            [33maria-label[39m=[32m"설정"[39m
+            [33mdata-state[39m=[32m"open"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m⚙[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+      [36m<main>[39m
+        [36m<div[39m
+          [33mdata-empty[39m=[32m"documents"[39m
+        [36m/>[39m
+      [36m</main>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"우측 사이드바"[39m
+        [33mdata-side[39m=[32m"right"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"우측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_2k_-content-backlinks"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_2k_-trigger-backlinks"[39m
+              [33mrole[39m=[32m"tab"[39m
+         ...
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ test/issue70-audit-panel.test.tsx:185:32
+    183|     await user.click(screen.getByRole('button', { name: '설정' }));
+    184|
+    185|     const badge = await screen.findByTestId('queue-badge');
+       |                                ^
+    186|     expect(badge.textContent).toBe(text);
+    187|     expect(badge.getAttribute('aria-label')).toBe(label);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed (9)
+   Start at  05:01:35
+   Duration  6.13s (transform 638ms, setup 21ms, import 1.27s, tests 4.36s, environment 333ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Work\git\DocuLight2.0\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run issue70-audit-panel.test.tsx
