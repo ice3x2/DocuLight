@@ -1,5 +1,8 @@
+import { useEffect, useRef, useState } from 'react';
+
 import type { RosterGroup } from '../api/client.js';
 import { PrincipalPicker } from './PrincipalPicker.js';
+import './GroupRoster.css';
 
 /**
  * 그룹 관리 (`FR-PRINCIPAL-001` AC-2).
@@ -15,48 +18,109 @@ import { PrincipalPicker } from './PrincipalPicker.js';
  */
 export function GroupRoster({
   groups = [],
-  onRemove,
   onAddMember,
 }: {
   groups?: readonly RosterGroup[];
   onRemove?: (groupId: string) => void;
   onAddMember?: (groupId: string, userId: string) => void;
 }) {
+  const [invalidGroup, setInvalidGroup] = useState<string | null>(null);
+  const [scrollable, setScrollable] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = scrollRef.current;
+    if (element === null) return;
+    const update = () => {
+      const overflows = element.scrollWidth > element.clientWidth;
+      setScrollable(overflows);
+      const active = document.activeElement;
+      if (overflows && active instanceof HTMLElement && element.contains(active)) {
+        active.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        const activeRect = active.getBoundingClientRect();
+        const scrollRect = element.getBoundingClientRect();
+        if (activeRect.right > scrollRect.right - 4) element.scrollLeft += activeRect.right - scrollRect.right + 4;
+        if (activeRect.left < scrollRect.left + 4) element.scrollLeft -= scrollRect.left - activeRect.left + 4;
+      }
+    };
+    update();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(update);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [groups, onAddMember]);
+
   return (
-    <table>
-      <caption>그룹 관리</caption>
-      <thead>
-        <tr>
-          <th scope="col">이름</th>
-          <th scope="col">멤버</th>
-          <th scope="col">멤버 추가</th>
-          <th scope="col">삭제</th>
-        </tr>
-      </thead>
-      <tbody>
-        {groups.map((group) => (
-          <tr key={group.id}>
-            <td>
-              {group.name}
-              {group.system ? <span data-testid="system-group">시스템 그룹</span> : null}
-            </td>
-            <td>{group.members.map((member) => member.name).join(', ')}</td>
-            <td>
-              <PrincipalPicker
-                scope={`group:${group.id}`}
-                onPick={(row) => onAddMember?.(group.id, row.id)}
-              />
-            </td>
-            <td>
-              {group.system ? null : (
-                <button type="button" onClick={() => onRemove?.(group.id)}>
-                  {group.name} 삭제
-                </button>
-              )}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <section data-group-roster>
+      <div
+        ref={scrollRef}
+        data-group-table-scroll
+        {...(scrollable ? { 'aria-label': '그룹 표 가로 스크롤', tabIndex: 0 } : {})}
+      >
+        <table>
+          <caption>그룹 관리</caption>
+          <thead>
+            <tr>
+              <th scope="col">이름</th>
+              <th scope="col">멤버</th>
+              <th scope="col">멤버 추가</th>
+              <th scope="col">삭제</th>
+            </tr>
+          </thead>
+          <tbody>
+            {groups.length === 0 ? (
+              <tr><td colSpan={4} data-group-empty>표시할 그룹 항목이 없습니다.</td></tr>
+            ) : groups.map((group) => (
+              <tr key={group.id} data-group-id={group.id}>
+                <td data-group-name>
+                  <span>{group.name}</span>
+                  {group.system ? <span data-testid="system-group" data-system-group>시스템 그룹</span> : null}
+                </td>
+                <td>
+                  {group.members.length === 0 ? (
+                    <p data-group-help>제공된 멤버 항목이 없습니다.</p>
+                  ) : (
+                    <ul data-group-members>
+                      {group.members.map((member) => <li key={member.id}>{member.name}</li>)}
+                    </ul>
+                  )}
+                  {group.system ? <p data-group-help>시스템 그룹의 멤버십은 해당 관리 규칙을 따릅니다.</p> : null}
+                </td>
+                <td>
+                  {onAddMember === undefined ? (
+                    <p data-group-help>멤버 추가 기능을 사용할 수 없습니다.</p>
+                  ) : (
+                    <div role="region" aria-label={`${group.name}의 멤버 추가`} data-group-picker>
+                      <PrincipalPicker
+                        scope={`group:${group.id}`}
+                        onPick={(row) => {
+                          if (row.kind !== 'user') {
+                            setInvalidGroup(group.id);
+                            return;
+                          }
+                          setInvalidGroup(null);
+                          onAddMember(group.id, row.id);
+                        }}
+                      />
+                      {invalidGroup === group.id ? <p role="status" data-group-help>그룹은 멤버로 추가할 수 없습니다.</p> : null}
+                    </div>
+                  )}
+                </td>
+                <td data-group-delete>
+                  {group.system ? (
+                    <p data-group-help>시스템 그룹은 삭제하거나 이름을 바꿀 수 없습니다.</p>
+                  ) : (
+                    <>
+                      <button type="button" aria-label={`${group.name} 삭제`} disabled>삭제</button>
+                      <p data-group-help>삭제 확인 기능이 연결되지 않아 여기서 삭제할 수 없습니다.</p>
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
   );
 }

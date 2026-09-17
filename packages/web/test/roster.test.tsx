@@ -89,16 +89,24 @@ describe('FR-PRINCIPAL-001 — 그룹 관리와 표시 권한', () => {
     expect(screen.getByRole('button', { name: '기획팀원 삭제' })).toBeDefined();
   });
 
-  it('AC-2: 삭제를 누르면 그 그룹 ID 가 밖으로 나간다', async () => {
-    const 지운것: string[] = [];
+  it('FR-CONFIRM-006 AC-5: L3 연결 전에는 일반 그룹 삭제 콜백도 실행하지 않는다', async () => {
+    const 지운것 = vi.fn();
     const user = await openCategory('그룹 관리', {
       groupRoster: GROUPS,
-      onGroupRemove: (id: string) => 지운것.push(id),
+      onGroupRemove: 지운것,
     });
 
-    await user.click(screen.getByRole('button', { name: '기획팀원 삭제' }));
+    const 삭제 = screen.getByRole('button', { name: '기획팀원 삭제' });
+    expect(삭제.hasAttribute('disabled')).toBe(true);
+    expect(삭제.textContent).toBe('삭제');
+    expect(screen.getByText('삭제 확인 기능이 연결되지 않아 여기서 삭제할 수 없습니다.')).toBeDefined();
 
-    expect(지운것).toEqual(['g1']);
+    await user.click(삭제);
+    삭제.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    삭제.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+    삭제.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: ' ' }));
+
+    expect(지운것).not.toHaveBeenCalled();
   });
 
   it('AC-3: 슈퍼유저가 아니면 두 카테고리가 보이지 않는다', () => {
@@ -209,5 +217,57 @@ describe('CON-PRINCIPAL-006 — 그룹 멤버 추가도 공용 부품으로 고�
     await user.click(screen.getByText('새사람'));
 
     expect(더했다).toHaveBeenCalledWith(GROUPS[0]!.id, 'u9');
+  });
+
+  it('DR-PRINCIPAL-002: 그룹 후보는 사용자 ID 콜백으로 전달하지 않는다', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.resolve(new Response(JSON.stringify([
+        { id: 'group-candidate', name: '다른 그룹', kind: 'group', status: 'active' },
+      ]), { status: 200, headers: { 'content-type': 'application/json' } }))),
+    );
+    const 더했다 = vi.fn();
+    const { GroupRoster } = await import('../src/principal/GroupRoster.js');
+    render(<GroupRoster groups={[GROUPS[1]!]} onAddMember={더했다} />);
+
+    const user = userEvent.setup();
+    await user.type(screen.getByLabelText('사용자·그룹 검색'), '다른');
+    await user.click(await screen.findByText('다른 그룹'));
+
+    expect(더했다).not.toHaveBeenCalled();
+    expect(screen.getByText('그룹은 멤버로 추가할 수 없습니다.')).toBeDefined();
+  });
+});
+
+describe('Issue #68 — GroupRoster 표시 계약', () => {
+  it('공급 순서와 ID를 보존한 표·목록·시스템 설명을 렌더링한다', async () => {
+    const { GroupRoster } = await import('../src/principal/GroupRoster.js');
+    const groups: RosterGroup[] = [
+      { id: 'system-id', name: '아주 긴 시스템 그룹 이름', system: true, members: [USERS[1]!, USERS[0]!] },
+      { id: 'ordinary-id', name: '일반 그룹', system: false, members: [] },
+    ];
+    render(<GroupRoster groups={groups} onAddMember={vi.fn()} />);
+
+    const table = screen.getByRole('table', { name: '그룹 관리' });
+    expect(within(table).getAllByRole('columnheader').map((cell) => cell.textContent)).toEqual([
+      '이름', '멤버', '멤버 추가', '삭제',
+    ]);
+    const rows = within(table).getAllByRole('row').slice(1);
+    expect(rows.map((row) => row.getAttribute('data-group-id'))).toEqual(['system-id', 'ordinary-id']);
+    expect(within(rows[0]!).getAllByRole('listitem').map((item) => item.textContent)).toEqual(['대기자', '활성이']);
+    expect(within(rows[0]!).getByText('시스템 그룹은 삭제하거나 이름을 바꿀 수 없습니다.')).toBeDefined();
+    expect(within(rows[0]!).getByText('시스템 그룹의 멤버십은 해당 관리 규칙을 따릅니다.')).toBeDefined();
+    expect(within(rows[1]!).getByText('제공된 멤버 항목이 없습니다.')).toBeDefined();
+    expect(within(rows[0]!).getByRole('region', { name: '아주 긴 시스템 그룹 이름의 멤버 추가' })).toBeDefined();
+  });
+
+  it('그룹이나 멤버 추가 콜백이 없을 때 각각의 공급 상태를 정직하게 설명한다', async () => {
+    const { GroupRoster } = await import('../src/principal/GroupRoster.js');
+    const view = render(<GroupRoster />);
+    expect(screen.getByText('표시할 그룹 항목이 없습니다.')).toBeDefined();
+
+    view.rerender(<GroupRoster groups={[GROUPS[1]!]} />);
+    expect(screen.getByText('멤버 추가 기능을 사용할 수 없습니다.')).toBeDefined();
+    expect(screen.queryByLabelText('사용자·그룹 검색')).toBeNull();
   });
 });

@@ -50,7 +50,8 @@
     "test:browser:gestures": "node test/input-gestures-check.mjs",
     "test:browser:gestures:headed": "node test/input-gestures-check.mjs --headed",
     "test:browser:auth": "node test/auth-round-trip-check.mjs",
-    "test:browser:auth:headed": "node test/auth-round-trip-check.mjs --headed"
+    "test:browser:auth:headed": "node test/auth-round-trip-check.mjs --headed",
+    "test:browser:issue68": "node test/issue68-group-roster-browser-check.cjs"
   },
   "dependencies": {
     "@codemirror/merge": "^6.10.4",

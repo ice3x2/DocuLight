@@ -1,0 +1,1695 @@
+{
+  "timestamp": "2026-09-17T18:55:24.720Z",
+  "harness": "actual production AppShell/settings trigger and GroupRoster component bundle; simulated principal read responses; no backend mutation/query integration claim",
+  "environments": 12,
+  "regular": [
+    {
+      "width": 1280,
+      "height": 720,
+      "zoom": 100,
+      "gates": {
+        "ordinary": 0,
+        "workspace-manager": 0,
+        "superuser": 1
+      },
+      "identity": "light-1280x720-100",
+      "theme": "light",
+      "metrics": {
+        "caption": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "600",
+          "lineHeight": "26px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(233, 231, 226)"
+        },
+        "header": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "600",
+          "lineHeight": "20px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(233, 231, 226)"
+        },
+        "cell": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "22px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(245, 244, 239)"
+        },
+        "help": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px",
+          "color": "rgb(101, 102, 95)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "rect": {
+          "x": 325,
+          "y": 136,
+          "width": 890,
+          "height": 3751,
+          "top": 136,
+          "right": 1215,
+          "bottom": 3887,
+          "left": 325
+        },
+        "dialog": {
+          "x": 40,
+          "y": 36,
+          "width": 1200,
+          "height": 648,
+          "top": 36,
+          "right": 1240,
+          "bottom": 684,
+          "left": 40
+        },
+        "removeHeight": 36,
+        "explanationOutsideButton": true,
+        "horizontalViewportOverflow": false,
+        "forcedColors": false,
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        }
+      },
+      "interactions": {
+        "detailed": true,
+        "default": true,
+        "hover": {
+          "before": "rgb(36, 37, 33)",
+          "after": "rgb(54, 91, 112)",
+          "middleBefore": {
+            "rect": {
+              "x": 733.90625,
+              "y": 569,
+              "width": 222.03125,
+              "height": 30,
+              "top": 569,
+              "right": 955.9375,
+              "bottom": 599,
+              "left": 733.90625
+            },
+            "background": "rgba(0, 0, 0, 0)"
+          },
+          "middleAfter": {
+            "rect": {
+              "x": 733.90625,
+              "y": 366,
+              "width": 222.03125,
+              "height": 30,
+              "top": 366,
+              "right": 955.9375,
+              "bottom": 396,
+              "left": 733.90625
+            },
+            "background": "rgb(223, 231, 233)"
+          }
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(54, 91, 112)",
+          "background": "rgb(245, 244, 239)",
+          "border": "rgb(36, 37, 33)",
+          "rect": {
+            "x": 733.90625,
+            "y": 233,
+            "width": 222.03125,
+            "height": 36,
+            "top": 233,
+            "right": 955.9375,
+            "bottom": 269,
+            "left": 733.90625
+          },
+          "clip": {
+            "x": 325,
+            "y": 136,
+            "width": 890,
+            "height": 3751,
+            "top": 136,
+            "right": 1215,
+            "bottom": 3887,
+            "left": 325
+          }
+        },
+        "tabAndShiftTab": true,
+        "loading": true,
+        "emptySearch": true,
+        "emptyGroups": true,
+        "missingCallbacks": true,
+        "errorRetry": {
+          "requests": 2,
+          "exactScope": "group:system-superusers"
+        },
+        "selected": {
+          "arrowDown": true,
+          "end": true,
+          "home": true
+        },
+        "firstAndLastGroupScope": true,
+        "userCallback": [
+          "system-superusers",
+          "user-target"
+        ],
+        "groupCallbackBlocked": true,
+        "compositionEnterBlocked": true,
+        "clipboard": true
+      },
+      "deletionCallbackCount": 0
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "zoom": 100,
+      "gates": {
+        "ordinary": 0,
+        "workspace-manager": 0,
+        "superuser": 1
+      },
+      "identity": "light-1440x900-100",
+      "theme": "light",
+      "metrics": {
+        "caption": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "600",
+          "lineHeight": "26px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(233, 231, 226)"
+        },
+        "header": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "600",
+          "lineHeight": "20px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(233, 231, 226)"
+        },
+        "cell": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "22px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(245, 244, 239)"
+        },
+        "help": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px",
+          "color": "rgb(101, 102, 95)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "rect": {
+          "x": 405,
+          "y": 145,
+          "width": 890,
+          "height": 3751,
+          "top": 145,
+          "right": 1295,
+          "bottom": 3896,
+          "left": 405
+        },
+        "dialog": {
+          "x": 120,
+          "y": 45,
+          "width": 1200,
+          "height": 810,
+          "top": 45,
+          "right": 1320,
+          "bottom": 855,
+          "left": 120
+        },
+        "removeHeight": 36,
+        "explanationOutsideButton": true,
+        "horizontalViewportOverflow": false,
+        "forcedColors": false,
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        }
+      },
+      "interactions": {
+        "detailed": false
+      },
+      "deletionCallbackCount": 0
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "zoom": 100,
+      "gates": {
+        "ordinary": 0,
+        "workspace-manager": 0,
+        "superuser": 1
+      },
+      "identity": "light-1920x1080-100",
+      "theme": "light",
+      "metrics": {
+        "caption": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "600",
+          "lineHeight": "26px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(233, 231, 226)"
+        },
+        "header": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "600",
+          "lineHeight": "20px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(233, 231, 226)"
+        },
+        "cell": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "22px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(245, 244, 239)"
+        },
+        "help": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px",
+          "color": "rgb(101, 102, 95)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "rect": {
+          "x": 645,
+          "y": 230,
+          "width": 890,
+          "height": 3751,
+          "top": 230,
+          "right": 1535,
+          "bottom": 3981,
+          "left": 645
+        },
+        "dialog": {
+          "x": 360,
+          "y": 130,
+          "width": 1200,
+          "height": 820,
+          "top": 130,
+          "right": 1560,
+          "bottom": 950,
+          "left": 360
+        },
+        "removeHeight": 36,
+        "explanationOutsideButton": true,
+        "horizontalViewportOverflow": false,
+        "forcedColors": false,
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        }
+      },
+      "interactions": {
+        "detailed": false
+      },
+      "deletionCallbackCount": 0
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "zoom": 100,
+      "gates": {
+        "ordinary": 0,
+        "workspace-manager": 0,
+        "superuser": 1
+      },
+      "identity": "dark-1280x720-100",
+      "theme": "dark",
+      "metrics": {
+        "caption": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "600",
+          "lineHeight": "26px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(32, 34, 31)"
+        },
+        "header": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "600",
+          "lineHeight": "20px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(32, 34, 31)"
+        },
+        "cell": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "22px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(41, 44, 39)"
+        },
+        "help": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px",
+          "color": "rgb(181, 184, 174)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "rect": {
+          "x": 325,
+          "y": 136,
+          "width": 890,
+          "height": 3751,
+          "top": 136,
+          "right": 1215,
+          "bottom": 3887,
+          "left": 325
+        },
+        "dialog": {
+          "x": 40,
+          "y": 36,
+          "width": 1200,
+          "height": 648,
+          "top": 36,
+          "right": 1240,
+          "bottom": 684,
+          "left": 40
+        },
+        "removeHeight": 36,
+        "explanationOutsideButton": true,
+        "horizontalViewportOverflow": false,
+        "forcedColors": false,
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        }
+      },
+      "interactions": {
+        "detailed": true,
+        "default": true,
+        "hover": {
+          "before": "rgb(233, 231, 223)",
+          "after": "rgb(168, 196, 211)",
+          "middleBefore": {
+            "rect": {
+              "x": 733.90625,
+              "y": 569,
+              "width": 222.03125,
+              "height": 30,
+              "top": 569,
+              "right": 955.9375,
+              "bottom": 599,
+              "left": 733.90625
+            },
+            "background": "rgba(0, 0, 0, 0)"
+          },
+          "middleAfter": {
+            "rect": {
+              "x": 733.90625,
+              "y": 366,
+              "width": 222.03125,
+              "height": 30,
+              "top": 366,
+              "right": 955.9375,
+              "bottom": 396,
+              "left": 733.90625
+            },
+            "background": "rgb(52, 70, 80)"
+          }
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(168, 196, 211)",
+          "background": "rgb(41, 44, 39)",
+          "border": "rgb(233, 231, 223)",
+          "rect": {
+            "x": 733.90625,
+            "y": 233,
+            "width": 222.03125,
+            "height": 36,
+            "top": 233,
+            "right": 955.9375,
+            "bottom": 269,
+            "left": 733.90625
+          },
+          "clip": {
+            "x": 325,
+            "y": 136,
+            "width": 890,
+            "height": 3751,
+            "top": 136,
+            "right": 1215,
+            "bottom": 3887,
+            "left": 325
+          }
+        },
+        "tabAndShiftTab": true,
+        "loading": true,
+        "emptySearch": true,
+        "emptyGroups": true,
+        "missingCallbacks": true,
+        "errorRetry": {
+          "requests": 2,
+          "exactScope": "group:system-superusers"
+        },
+        "selected": {
+          "arrowDown": true,
+          "end": true,
+          "home": true
+        },
+        "firstAndLastGroupScope": true,
+        "userCallback": [
+          "system-superusers",
+          "user-target"
+        ],
+        "groupCallbackBlocked": true,
+        "compositionEnterBlocked": true,
+        "clipboard": true
+      },
+      "deletionCallbackCount": 0
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "zoom": 100,
+      "gates": {
+        "ordinary": 0,
+        "workspace-manager": 0,
+        "superuser": 1
+      },
+      "identity": "dark-1440x900-100",
+      "theme": "dark",
+      "metrics": {
+        "caption": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "600",
+          "lineHeight": "26px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(32, 34, 31)"
+        },
+        "header": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "600",
+          "lineHeight": "20px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(32, 34, 31)"
+        },
+        "cell": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "22px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(41, 44, 39)"
+        },
+        "help": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px",
+          "color": "rgb(181, 184, 174)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "rect": {
+          "x": 405,
+          "y": 145,
+          "width": 890,
+          "height": 3751,
+          "top": 145,
+          "right": 1295,
+          "bottom": 3896,
+          "left": 405
+        },
+        "dialog": {
+          "x": 120,
+          "y": 45,
+          "width": 1200,
+          "height": 810,
+          "top": 45,
+          "right": 1320,
+          "bottom": 855,
+          "left": 120
+        },
+        "removeHeight": 36,
+        "explanationOutsideButton": true,
+        "horizontalViewportOverflow": false,
+        "forcedColors": false,
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        }
+      },
+      "interactions": {
+        "detailed": false
+      },
+      "deletionCallbackCount": 0
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "zoom": 100,
+      "gates": {
+        "ordinary": 0,
+        "workspace-manager": 0,
+        "superuser": 1
+      },
+      "identity": "dark-1920x1080-100",
+      "theme": "dark",
+      "metrics": {
+        "caption": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "600",
+          "lineHeight": "26px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(32, 34, 31)"
+        },
+        "header": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "600",
+          "lineHeight": "20px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(32, 34, 31)"
+        },
+        "cell": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "22px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(41, 44, 39)"
+        },
+        "help": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px",
+          "color": "rgb(181, 184, 174)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "rect": {
+          "x": 645,
+          "y": 230,
+          "width": 890,
+          "height": 3751,
+          "top": 230,
+          "right": 1535,
+          "bottom": 3981,
+          "left": 645
+        },
+        "dialog": {
+          "x": 360,
+          "y": 130,
+          "width": 1200,
+          "height": 820,
+          "top": 130,
+          "right": 1560,
+          "bottom": 950,
+          "left": 360
+        },
+        "removeHeight": 36,
+        "explanationOutsideButton": true,
+        "horizontalViewportOverflow": false,
+        "forcedColors": false,
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        }
+      },
+      "interactions": {
+        "detailed": false
+      },
+      "deletionCallbackCount": 0
+    }
+  ],
+  "zoomed": [
+    {
+      "width": 1280,
+      "height": 720,
+      "zoom": 200,
+      "gates": {
+        "ordinary": 0,
+        "workspace-manager": 0,
+        "superuser": 1
+      },
+      "initialZoom": 1,
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "sameMountResize": true,
+      "beforeZoom": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "preservedAt200": {
+        "category": "그룹 관리",
+        "query": "후보",
+        "focused": "사용자·그룹 검색",
+        "target": "system-superusers",
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "preservedAt100": {
+        "category": "그룹 관리",
+        "query": "후보",
+        "focused": "사용자·그룹 검색",
+        "target": "system-superusers",
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "identity": "light-1280x720-200",
+      "theme": "light",
+      "metrics": {
+        "caption": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "600",
+          "lineHeight": "26px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(233, 231, 226)"
+        },
+        "header": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "600",
+          "lineHeight": "20px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(233, 231, 226)"
+        },
+        "cell": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "22px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(245, 244, 239)"
+        },
+        "help": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px",
+          "color": "rgb(101, 102, 95)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "rect": {
+          "x": 228.0703125,
+          "y": 97,
+          "width": 368.2265625,
+          "height": 3758.5,
+          "top": 97,
+          "right": 596.296875,
+          "bottom": 3855.5,
+          "left": 228.0703125
+        },
+        "dialog": {
+          "x": 19.203125,
+          "y": 18,
+          "width": 601.59375,
+          "height": 324,
+          "top": 18,
+          "right": 620.796875,
+          "bottom": 342,
+          "left": 19.203125
+        },
+        "removeHeight": 36,
+        "explanationOutsideButton": true,
+        "horizontalViewportOverflow": false,
+        "forcedColors": false,
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        }
+      },
+      "interactions": {
+        "detailed": false
+      },
+      "deletionCallbackCount": 0
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "zoom": 200,
+      "gates": {
+        "ordinary": 0,
+        "workspace-manager": 0,
+        "superuser": 1
+      },
+      "initialZoom": 1,
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "sameMountResize": true,
+      "beforeZoom": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "preservedAt200": {
+        "category": "그룹 관리",
+        "query": "후보",
+        "focused": "사용자·그룹 검색",
+        "target": "system-superusers",
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "preservedAt100": {
+        "category": "그룹 관리",
+        "query": "후보",
+        "focused": "사용자·그룹 검색",
+        "target": "system-superusers",
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "identity": "light-1440x900-200",
+      "theme": "light",
+      "metrics": {
+        "caption": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "600",
+          "lineHeight": "26px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(233, 231, 226)"
+        },
+        "header": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "600",
+          "lineHeight": "20px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(233, 231, 226)"
+        },
+        "cell": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "22px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(245, 244, 239)"
+        },
+        "help": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px",
+          "color": "rgb(101, 102, 95)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "rect": {
+          "x": 254.53125,
+          "y": 101.5,
+          "width": 419.3671875,
+          "height": 3758.5,
+          "top": 101.5,
+          "right": 673.8984375,
+          "bottom": 3860,
+          "left": 254.53125
+        },
+        "dialog": {
+          "x": 21.6015625,
+          "y": 22.5,
+          "width": 676.796875,
+          "height": 405,
+          "top": 22.5,
+          "right": 698.3984375,
+          "bottom": 427.5,
+          "left": 21.6015625
+        },
+        "removeHeight": 36,
+        "explanationOutsideButton": true,
+        "horizontalViewportOverflow": false,
+        "forcedColors": false,
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        }
+      },
+      "interactions": {
+        "detailed": false
+      },
+      "deletionCallbackCount": 0
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "zoom": 200,
+      "gates": {
+        "ordinary": 0,
+        "workspace-manager": 0,
+        "superuser": 1
+      },
+      "initialZoom": 1,
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "sameMountResize": true,
+      "beforeZoom": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "preservedAt200": {
+        "category": "그룹 관리",
+        "query": "후보",
+        "focused": "사용자·그룹 검색",
+        "target": "system-superusers",
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "preservedAt100": {
+        "category": "그룹 관리",
+        "query": "후보",
+        "focused": "사용자·그룹 검색",
+        "target": "system-superusers",
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "identity": "light-1920x1080-200",
+      "theme": "light",
+      "metrics": {
+        "caption": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "600",
+          "lineHeight": "26px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(233, 231, 226)"
+        },
+        "header": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "600",
+          "lineHeight": "20px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(233, 231, 226)"
+        },
+        "cell": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "22px",
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(245, 244, 239)"
+        },
+        "help": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px",
+          "color": "rgb(101, 102, 95)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "rect": {
+          "x": 313.80078125,
+          "y": 106,
+          "width": 584.8984375,
+          "height": 3758.5,
+          "top": 106,
+          "right": 898.69921875,
+          "bottom": 3864.5,
+          "left": 313.80078125
+        },
+        "dialog": {
+          "x": 28.80078125,
+          "y": 27,
+          "width": 902.3984375,
+          "height": 486,
+          "top": 27,
+          "right": 931.19921875,
+          "bottom": 513,
+          "left": 28.80078125
+        },
+        "removeHeight": 36,
+        "explanationOutsideButton": true,
+        "horizontalViewportOverflow": false,
+        "forcedColors": false,
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        }
+      },
+      "interactions": {
+        "detailed": false
+      },
+      "deletionCallbackCount": 0
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "zoom": 200,
+      "gates": {
+        "ordinary": 0,
+        "workspace-manager": 0,
+        "superuser": 1
+      },
+      "initialZoom": 1,
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "sameMountResize": true,
+      "beforeZoom": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "preservedAt200": {
+        "category": "그룹 관리",
+        "query": "후보",
+        "focused": "사용자·그룹 검색",
+        "target": "system-superusers",
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "preservedAt100": {
+        "category": "그룹 관리",
+        "query": "후보",
+        "focused": "사용자·그룹 검색",
+        "target": "system-superusers",
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "identity": "dark-1280x720-200",
+      "theme": "dark",
+      "metrics": {
+        "caption": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "600",
+          "lineHeight": "26px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(32, 34, 31)"
+        },
+        "header": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "600",
+          "lineHeight": "20px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(32, 34, 31)"
+        },
+        "cell": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "22px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(41, 44, 39)"
+        },
+        "help": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px",
+          "color": "rgb(181, 184, 174)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "rect": {
+          "x": 228.0703125,
+          "y": 97,
+          "width": 368.2265625,
+          "height": 3758.5,
+          "top": 97,
+          "right": 596.296875,
+          "bottom": 3855.5,
+          "left": 228.0703125
+        },
+        "dialog": {
+          "x": 19.203125,
+          "y": 18,
+          "width": 601.59375,
+          "height": 324,
+          "top": 18,
+          "right": 620.796875,
+          "bottom": 342,
+          "left": 19.203125
+        },
+        "removeHeight": 36,
+        "explanationOutsideButton": true,
+        "horizontalViewportOverflow": false,
+        "forcedColors": false,
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        }
+      },
+      "interactions": {
+        "detailed": false
+      },
+      "deletionCallbackCount": 0
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "zoom": 200,
+      "gates": {
+        "ordinary": 0,
+        "workspace-manager": 0,
+        "superuser": 1
+      },
+      "initialZoom": 1,
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "sameMountResize": true,
+      "beforeZoom": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "preservedAt200": {
+        "category": "그룹 관리",
+        "query": "후보",
+        "focused": "사용자·그룹 검색",
+        "target": "system-superusers",
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "preservedAt100": {
+        "category": "그룹 관리",
+        "query": "후보",
+        "focused": "사용자·그룹 검색",
+        "target": "system-superusers",
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "identity": "dark-1440x900-200",
+      "theme": "dark",
+      "metrics": {
+        "caption": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "600",
+          "lineHeight": "26px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(32, 34, 31)"
+        },
+        "header": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "600",
+          "lineHeight": "20px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(32, 34, 31)"
+        },
+        "cell": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "22px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(41, 44, 39)"
+        },
+        "help": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px",
+          "color": "rgb(181, 184, 174)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "rect": {
+          "x": 254.53125,
+          "y": 101.5,
+          "width": 419.3671875,
+          "height": 3758.5,
+          "top": 101.5,
+          "right": 673.8984375,
+          "bottom": 3860,
+          "left": 254.53125
+        },
+        "dialog": {
+          "x": 21.6015625,
+          "y": 22.5,
+          "width": 676.796875,
+          "height": 405,
+          "top": 22.5,
+          "right": 698.3984375,
+          "bottom": 427.5,
+          "left": 21.6015625
+        },
+        "removeHeight": 36,
+        "explanationOutsideButton": true,
+        "horizontalViewportOverflow": false,
+        "forcedColors": false,
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        }
+      },
+      "interactions": {
+        "detailed": false
+      },
+      "deletionCallbackCount": 0
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "zoom": 200,
+      "gates": {
+        "ordinary": 0,
+        "workspace-manager": 0,
+        "superuser": 1
+      },
+      "initialZoom": 1,
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "sameMountResize": true,
+      "beforeZoom": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "preservedAt200": {
+        "category": "그룹 관리",
+        "query": "후보",
+        "focused": "사용자·그룹 검색",
+        "target": "system-superusers",
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "preservedAt100": {
+        "category": "그룹 관리",
+        "query": "후보",
+        "focused": "사용자·그룹 검색",
+        "target": "system-superusers",
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "identity": "dark-1920x1080-200",
+      "theme": "dark",
+      "metrics": {
+        "caption": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "600",
+          "lineHeight": "26px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(32, 34, 31)"
+        },
+        "header": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "600",
+          "lineHeight": "20px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(32, 34, 31)"
+        },
+        "cell": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "22px",
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(41, 44, 39)"
+        },
+        "help": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px",
+          "color": "rgb(181, 184, 174)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        "rect": {
+          "x": 313.80078125,
+          "y": 106,
+          "width": 584.8984375,
+          "height": 3758.5,
+          "top": 106,
+          "right": 898.69921875,
+          "bottom": 3864.5,
+          "left": 313.80078125
+        },
+        "dialog": {
+          "x": 28.80078125,
+          "y": 27,
+          "width": 902.3984375,
+          "height": 486,
+          "top": 27,
+          "right": 931.19921875,
+          "bottom": 513,
+          "left": 28.80078125
+        },
+        "removeHeight": 36,
+        "explanationOutsideButton": true,
+        "horizontalViewportOverflow": false,
+        "forcedColors": false,
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        }
+      },
+      "interactions": {
+        "detailed": false
+      },
+      "deletionCallbackCount": 0
+    }
+  ],
+  "forcedColors": {
+    "at100": {
+      "identity": "forced-1280x720-100",
+      "theme": "forced",
+      "metrics": {
+        "caption": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "600",
+          "lineHeight": "26px",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        },
+        "header": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "600",
+          "lineHeight": "20px",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        },
+        "cell": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "22px",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        },
+        "help": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgba(255, 255, 255, 0)"
+        },
+        "rect": {
+          "x": 325,
+          "y": 136,
+          "width": 890,
+          "height": 3751,
+          "top": 136,
+          "right": 1215,
+          "bottom": 3887,
+          "left": 325
+        },
+        "dialog": {
+          "x": 40,
+          "y": 36,
+          "width": 1200,
+          "height": 648,
+          "top": 36,
+          "right": 1240,
+          "bottom": 684,
+          "left": 40
+        },
+        "removeHeight": 36,
+        "explanationOutsideButton": true,
+        "horizontalViewportOverflow": false,
+        "forcedColors": true,
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        }
+      },
+      "interactions": {
+        "detailed": true,
+        "default": true,
+        "hover": {
+          "before": "rgb(0, 0, 0)",
+          "after": "rgb(55, 0, 110)",
+          "middleBefore": {
+            "rect": {
+              "x": 733.90625,
+              "y": 569,
+              "width": 222.03125,
+              "height": 30,
+              "top": 569,
+              "right": 955.9375,
+              "bottom": 599,
+              "left": 733.90625
+            },
+            "background": "rgba(255, 255, 255, 0)"
+          },
+          "middleAfter": {
+            "rect": {
+              "x": 733.90625,
+              "y": 366,
+              "width": 222.03125,
+              "height": 30,
+              "top": 366,
+              "right": 955.9375,
+              "bottom": 396,
+              "left": 733.90625
+            },
+            "background": "rgb(55, 0, 110)"
+          }
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(55, 0, 110)",
+          "background": "rgb(255, 255, 255)",
+          "border": "rgb(0, 0, 0)",
+          "rect": {
+            "x": 733.90625,
+            "y": 233,
+            "width": 222.03125,
+            "height": 36,
+            "top": 233,
+            "right": 955.9375,
+            "bottom": 269,
+            "left": 733.90625
+          },
+          "clip": {
+            "x": 325,
+            "y": 136,
+            "width": 890,
+            "height": 3751,
+            "top": 136,
+            "right": 1215,
+            "bottom": 3887,
+            "left": 325
+          }
+        },
+        "tabAndShiftTab": true,
+        "loading": true,
+        "emptySearch": true,
+        "emptyGroups": true,
+        "missingCallbacks": true,
+        "errorRetry": {
+          "requests": 2,
+          "exactScope": "group:system-superusers"
+        },
+        "selected": {
+          "arrowDown": true,
+          "end": true,
+          "home": true
+        },
+        "firstAndLastGroupScope": true,
+        "userCallback": [
+          "system-superusers",
+          "user-target"
+        ],
+        "groupCallbackBlocked": true,
+        "compositionEnterBlocked": true,
+        "clipboard": true
+      },
+      "deletionCallbackCount": 0,
+      "gates": {
+        "ordinary": 0,
+        "workspace-manager": 0,
+        "superuser": 1
+      }
+    },
+    "at200": {
+      "width": 1280,
+      "height": 720,
+      "zoom": 200,
+      "gates": {
+        "ordinary": 0,
+        "workspace-manager": 0,
+        "superuser": 1
+      },
+      "initialZoom": 1,
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "sameMountResize": true,
+      "beforeZoom": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "preservedAt200": {
+        "category": "그룹 관리",
+        "query": "후보",
+        "focused": "사용자·그룹 검색",
+        "target": "system-superusers",
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "preservedAt100": {
+        "category": "그룹 관리",
+        "query": "후보",
+        "focused": "사용자·그룹 검색",
+        "target": "system-superusers",
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "selectedId": "user-target",
+        "callbacks": {
+          "added": 0,
+          "removed": 0
+        }
+      },
+      "identity": "forced-1280x720-200",
+      "theme": "forced",
+      "metrics": {
+        "caption": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "600",
+          "lineHeight": "26px",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        },
+        "header": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "600",
+          "lineHeight": "20px",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        },
+        "cell": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "22px",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        },
+        "help": {
+          "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px",
+          "color": "rgb(0, 0, 0)",
+          "background": "rgba(255, 255, 255, 0)"
+        },
+        "rect": {
+          "x": 228.0703125,
+          "y": 97,
+          "width": 368.2265625,
+          "height": 3758.5,
+          "top": 97,
+          "right": 596.296875,
+          "bottom": 3855.5,
+          "left": 228.0703125
+        },
+        "dialog": {
+          "x": 19.203125,
+          "y": 18,
+          "width": 601.59375,
+          "height": 324,
+          "top": 18,
+          "right": 620.796875,
+          "bottom": 342,
+          "left": 19.203125
+        },
+        "removeHeight": 36,
+        "explanationOutsideButton": true,
+        "horizontalViewportOverflow": false,
+        "forcedColors": true,
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        }
+      },
+      "interactions": {
+        "detailed": false
+      },
+      "deletionCallbackCount": 0
+    }
+  },
+  "limitations": {
+    "nativeWindowsImeCandidateUi": "nonblocking untested",
+    "passwordManagerAutofillUi": "nonblocking untested",
+    "osNativeInput": "not used"
+  }
+}
