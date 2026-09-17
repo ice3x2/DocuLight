@@ -50,7 +50,8 @@ describe('CON-ARCH-004 — 지정 패키지가 실제로 쓰인다', () => {
     // 세 부품이 각자 다른 자리에 서 있으므로 한 파일만 보면 나머지가
     // 손으로 만든 것이어도 통과한다.
     const 셸 = await src('shell/AppShell.tsx');
-    expect(셸).toContain('@radix-ui/react-dialog');
+    expect(셸).toContain('../components/ui/dialog.js');
+    expect(await src('components/ui/dialog.tsx')).toContain('@radix-ui/react-dialog');
     expect(셸).toContain('@radix-ui/react-tabs');
     expect(await src('tree/DocumentTree.tsx')).toContain('@radix-ui/react-context-menu');
   });

@@ -1,0 +1,1115 @@
+{
+  "environments": 12,
+  "matrix": [
+    {
+      "owner": "Playwright fresh isolated Chromium",
+      "theme": "light",
+      "physical": {
+        "width": 1280,
+        "height": 720
+      },
+      "zoom": 1,
+      "measurement": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "dialog": {
+          "x": 40,
+          "y": 36,
+          "width": 1200,
+          "height": 648,
+          "top": 36,
+          "right": 1240,
+          "bottom": 684,
+          "left": 40
+        },
+        "nav": {
+          "x": 41,
+          "y": 112,
+          "width": 260,
+          "height": 571,
+          "top": 112,
+          "right": 301,
+          "bottom": 683,
+          "left": 41
+        },
+        "content": {
+          "x": 301,
+          "y": 112,
+          "width": 938,
+          "height": 571,
+          "top": 112,
+          "right": 1239,
+          "bottom": 683,
+          "left": 301
+        },
+        "header": {
+          "x": 41,
+          "y": 37,
+          "width": 1198,
+          "height": 75,
+          "top": 37,
+          "right": 1239,
+          "bottom": 112,
+          "left": 41
+        },
+        "close": {
+          "x": 1179,
+          "y": 56,
+          "width": 36,
+          "height": 36,
+          "top": 56,
+          "right": 1215,
+          "bottom": 92,
+          "left": 1179
+        },
+        "paddingRight": 24,
+        "tabs": 14,
+        "columns": "260px 938px",
+        "overflow": {
+          "nav": "auto",
+          "content": "auto"
+        },
+        "realReachability": {
+          "contentScrollTop": 0,
+          "actionVisible": true,
+          "headerCloseTop": 56
+        },
+        "visual": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(223, 231, 233)",
+          "focus": "rgb(54, 91, 112)",
+          "navBackground": "rgb(222, 221, 214)",
+          "focusExtent": {
+            "left": 4,
+            "top": 475,
+            "right": 5,
+            "bottom": 48
+          }
+        }
+      }
+    },
+    {
+      "owner": "Playwright fresh isolated Chromium",
+      "theme": "light",
+      "physical": {
+        "width": 1440,
+        "height": 900
+      },
+      "zoom": 1,
+      "measurement": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "dialog": {
+          "x": 120,
+          "y": 45,
+          "width": 1200,
+          "height": 810,
+          "top": 45,
+          "right": 1320,
+          "bottom": 855,
+          "left": 120
+        },
+        "nav": {
+          "x": 121,
+          "y": 121,
+          "width": 260,
+          "height": 733,
+          "top": 121,
+          "right": 381,
+          "bottom": 854,
+          "left": 121
+        },
+        "content": {
+          "x": 381,
+          "y": 121,
+          "width": 938,
+          "height": 733,
+          "top": 121,
+          "right": 1319,
+          "bottom": 854,
+          "left": 381
+        },
+        "header": {
+          "x": 121,
+          "y": 46,
+          "width": 1198,
+          "height": 75,
+          "top": 46,
+          "right": 1319,
+          "bottom": 121,
+          "left": 121
+        },
+        "close": {
+          "x": 1259,
+          "y": 65,
+          "width": 36,
+          "height": 36,
+          "top": 65,
+          "right": 1295,
+          "bottom": 101,
+          "left": 1259
+        },
+        "paddingRight": 24,
+        "tabs": 14,
+        "columns": "260px 938px",
+        "overflow": {
+          "nav": "auto",
+          "content": "auto"
+        },
+        "realReachability": {
+          "contentScrollTop": 0,
+          "actionVisible": true,
+          "headerCloseTop": 65
+        },
+        "visual": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(223, 231, 233)",
+          "focus": "rgb(54, 91, 112)",
+          "navBackground": "rgb(222, 221, 214)",
+          "focusExtent": {
+            "left": 4,
+            "top": 620,
+            "right": 5,
+            "bottom": 65
+          }
+        }
+      }
+    },
+    {
+      "owner": "Playwright fresh isolated Chromium",
+      "theme": "light",
+      "physical": {
+        "width": 1920,
+        "height": 1080
+      },
+      "zoom": 1,
+      "measurement": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "dialog": {
+          "x": 360,
+          "y": 130,
+          "width": 1200,
+          "height": 820,
+          "top": 130,
+          "right": 1560,
+          "bottom": 950,
+          "left": 360
+        },
+        "nav": {
+          "x": 361,
+          "y": 206,
+          "width": 260,
+          "height": 743,
+          "top": 206,
+          "right": 621,
+          "bottom": 949,
+          "left": 361
+        },
+        "content": {
+          "x": 621,
+          "y": 206,
+          "width": 938,
+          "height": 743,
+          "top": 206,
+          "right": 1559,
+          "bottom": 949,
+          "left": 621
+        },
+        "header": {
+          "x": 361,
+          "y": 131,
+          "width": 1198,
+          "height": 75,
+          "top": 131,
+          "right": 1559,
+          "bottom": 206,
+          "left": 361
+        },
+        "close": {
+          "x": 1499,
+          "y": 150,
+          "width": 36,
+          "height": 36,
+          "top": 150,
+          "right": 1535,
+          "bottom": 186,
+          "left": 1499
+        },
+        "paddingRight": 24,
+        "tabs": 14,
+        "columns": "260px 938px",
+        "overflow": {
+          "nav": "auto",
+          "content": "auto"
+        },
+        "realReachability": {
+          "contentScrollTop": 0,
+          "actionVisible": true,
+          "headerCloseTop": 150
+        },
+        "visual": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(223, 231, 233)",
+          "focus": "rgb(54, 91, 112)",
+          "navBackground": "rgb(222, 221, 214)",
+          "focusExtent": {
+            "left": 4,
+            "top": 620,
+            "right": 5,
+            "bottom": 75
+          }
+        }
+      }
+    },
+    {
+      "owner": "Playwright fresh isolated Chromium",
+      "theme": "dark",
+      "physical": {
+        "width": 1280,
+        "height": 720
+      },
+      "zoom": 1,
+      "measurement": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "dialog": {
+          "x": 40,
+          "y": 36,
+          "width": 1200,
+          "height": 648,
+          "top": 36,
+          "right": 1240,
+          "bottom": 684,
+          "left": 40
+        },
+        "nav": {
+          "x": 41,
+          "y": 112,
+          "width": 260,
+          "height": 571,
+          "top": 112,
+          "right": 301,
+          "bottom": 683,
+          "left": 41
+        },
+        "content": {
+          "x": 301,
+          "y": 112,
+          "width": 938,
+          "height": 571,
+          "top": 112,
+          "right": 1239,
+          "bottom": 683,
+          "left": 301
+        },
+        "header": {
+          "x": 41,
+          "y": 37,
+          "width": 1198,
+          "height": 75,
+          "top": 37,
+          "right": 1239,
+          "bottom": 112,
+          "left": 41
+        },
+        "close": {
+          "x": 1179,
+          "y": 56,
+          "width": 36,
+          "height": 36,
+          "top": 56,
+          "right": 1215,
+          "bottom": 92,
+          "left": 1179
+        },
+        "paddingRight": 24,
+        "tabs": 14,
+        "columns": "260px 938px",
+        "overflow": {
+          "nav": "auto",
+          "content": "auto"
+        },
+        "realReachability": {
+          "contentScrollTop": 0,
+          "actionVisible": true,
+          "headerCloseTop": 56
+        },
+        "visual": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(52, 70, 80)",
+          "focus": "rgb(168, 196, 211)",
+          "navBackground": "rgb(26, 29, 25)",
+          "focusExtent": {
+            "left": 4,
+            "top": 475,
+            "right": 5,
+            "bottom": 48
+          }
+        }
+      }
+    },
+    {
+      "owner": "Playwright fresh isolated Chromium",
+      "theme": "dark",
+      "physical": {
+        "width": 1440,
+        "height": 900
+      },
+      "zoom": 1,
+      "measurement": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "dialog": {
+          "x": 120,
+          "y": 45,
+          "width": 1200,
+          "height": 810,
+          "top": 45,
+          "right": 1320,
+          "bottom": 855,
+          "left": 120
+        },
+        "nav": {
+          "x": 121,
+          "y": 121,
+          "width": 260,
+          "height": 733,
+          "top": 121,
+          "right": 381,
+          "bottom": 854,
+          "left": 121
+        },
+        "content": {
+          "x": 381,
+          "y": 121,
+          "width": 938,
+          "height": 733,
+          "top": 121,
+          "right": 1319,
+          "bottom": 854,
+          "left": 381
+        },
+        "header": {
+          "x": 121,
+          "y": 46,
+          "width": 1198,
+          "height": 75,
+          "top": 46,
+          "right": 1319,
+          "bottom": 121,
+          "left": 121
+        },
+        "close": {
+          "x": 1259,
+          "y": 65,
+          "width": 36,
+          "height": 36,
+          "top": 65,
+          "right": 1295,
+          "bottom": 101,
+          "left": 1259
+        },
+        "paddingRight": 24,
+        "tabs": 14,
+        "columns": "260px 938px",
+        "overflow": {
+          "nav": "auto",
+          "content": "auto"
+        },
+        "realReachability": {
+          "contentScrollTop": 0,
+          "actionVisible": true,
+          "headerCloseTop": 65
+        },
+        "visual": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(52, 70, 80)",
+          "focus": "rgb(168, 196, 211)",
+          "navBackground": "rgb(26, 29, 25)",
+          "focusExtent": {
+            "left": 4,
+            "top": 620,
+            "right": 5,
+            "bottom": 65
+          }
+        }
+      }
+    },
+    {
+      "owner": "Playwright fresh isolated Chromium",
+      "theme": "dark",
+      "physical": {
+        "width": 1920,
+        "height": 1080
+      },
+      "zoom": 1,
+      "measurement": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "dialog": {
+          "x": 360,
+          "y": 130,
+          "width": 1200,
+          "height": 820,
+          "top": 130,
+          "right": 1560,
+          "bottom": 950,
+          "left": 360
+        },
+        "nav": {
+          "x": 361,
+          "y": 206,
+          "width": 260,
+          "height": 743,
+          "top": 206,
+          "right": 621,
+          "bottom": 949,
+          "left": 361
+        },
+        "content": {
+          "x": 621,
+          "y": 206,
+          "width": 938,
+          "height": 743,
+          "top": 206,
+          "right": 1559,
+          "bottom": 949,
+          "left": 621
+        },
+        "header": {
+          "x": 361,
+          "y": 131,
+          "width": 1198,
+          "height": 75,
+          "top": 131,
+          "right": 1559,
+          "bottom": 206,
+          "left": 361
+        },
+        "close": {
+          "x": 1499,
+          "y": 150,
+          "width": 36,
+          "height": 36,
+          "top": 150,
+          "right": 1535,
+          "bottom": 186,
+          "left": 1499
+        },
+        "paddingRight": 24,
+        "tabs": 14,
+        "columns": "260px 938px",
+        "overflow": {
+          "nav": "auto",
+          "content": "auto"
+        },
+        "realReachability": {
+          "contentScrollTop": 0,
+          "actionVisible": true,
+          "headerCloseTop": 150
+        },
+        "visual": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(52, 70, 80)",
+          "focus": "rgb(168, 196, 211)",
+          "navBackground": "rgb(26, 29, 25)",
+          "focusExtent": {
+            "left": 4,
+            "top": 620,
+            "right": 5,
+            "bottom": 75
+          }
+        }
+      }
+    },
+    {
+      "owner": "Playwright persistent isolated Chromium",
+      "theme": "light",
+      "physical": {
+        "width": 1280,
+        "height": 720
+      },
+      "zoom": 2,
+      "before": {
+        "width": 1280,
+        "height": 634,
+        "dpr": 1.25
+      },
+      "measurement": {
+        "viewport": {
+          "width": 640,
+          "height": 317,
+          "dpr": 2.5
+        },
+        "dialog": {
+          "x": 19.200000762939453,
+          "y": 15.840624809265137,
+          "width": 601.6000366210938,
+          "height": 285.1187438964844,
+          "top": 15.840624809265137,
+          "right": 620.8000373840332,
+          "bottom": 300.9593687057495,
+          "left": 19.200000762939453
+        },
+        "nav": {
+          "x": 20,
+          "y": 91.44062805175781,
+          "width": 192,
+          "height": 208.71875,
+          "top": 91.44062805175781,
+          "right": 212,
+          "bottom": 300.1593780517578,
+          "left": 20
+        },
+        "content": {
+          "x": 212,
+          "y": 91.44062805175781,
+          "width": 408,
+          "height": 208.71875,
+          "top": 91.44062805175781,
+          "right": 620,
+          "bottom": 300.1593780517578,
+          "left": 212
+        },
+        "header": {
+          "x": 20,
+          "y": 16.640625,
+          "width": 600,
+          "height": 74.80000305175781,
+          "top": 16.640625,
+          "right": 620,
+          "bottom": 91.44062805175781,
+          "left": 20
+        },
+        "close": {
+          "x": 560,
+          "y": 35.640625,
+          "width": 36,
+          "height": 36,
+          "top": 35.640625,
+          "right": 596,
+          "bottom": 71.640625,
+          "left": 560
+        },
+        "paddingRight": 16,
+        "tabs": 14,
+        "columns": "192px 408px",
+        "overflow": {
+          "nav": "auto",
+          "content": "auto"
+        },
+        "realReachability": {
+          "contentScrollTop": 0,
+          "actionVisible": true,
+          "headerCloseTop": 35.640625
+        },
+        "visual": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(223, 231, 233)",
+          "focus": "rgb(54, 91, 112)",
+          "navBackground": "rgb(222, 221, 214)",
+          "focusExtent": {
+            "left": 4,
+            "top": 112.80000305175781,
+            "right": 12.399993896484375,
+            "bottom": 47.91874694824219
+          }
+        }
+      }
+    },
+    {
+      "owner": "Playwright persistent isolated Chromium",
+      "theme": "light",
+      "physical": {
+        "width": 1440,
+        "height": 900
+      },
+      "zoom": 2,
+      "before": {
+        "width": 1440,
+        "height": 814,
+        "dpr": 1.25
+      },
+      "measurement": {
+        "viewport": {
+          "width": 720,
+          "height": 407,
+          "dpr": 2.5
+        },
+        "dialog": {
+          "x": 21.600000381469727,
+          "y": 20.340625762939453,
+          "width": 676.7999877929688,
+          "height": 366.1187438964844,
+          "top": 20.340625762939453,
+          "right": 698.3999881744385,
+          "bottom": 386.4593696594238,
+          "left": 21.600000381469727
+        },
+        "nav": {
+          "x": 22.399999618530273,
+          "y": 95.94062805175781,
+          "width": 216.0625,
+          "height": 289.71875,
+          "top": 95.94062805175781,
+          "right": 238.46249961853027,
+          "bottom": 385.6593780517578,
+          "left": 22.399999618530273
+        },
+        "content": {
+          "x": 238.46250915527344,
+          "y": 95.94062805175781,
+          "width": 459.13751220703125,
+          "height": 289.71875,
+          "top": 95.94062805175781,
+          "right": 697.6000213623047,
+          "bottom": 385.6593780517578,
+          "left": 238.46250915527344
+        },
+        "header": {
+          "x": 22.399999618530273,
+          "y": 21.140625,
+          "width": 675.2000122070312,
+          "height": 74.80000305175781,
+          "top": 21.140625,
+          "right": 697.6000118255615,
+          "bottom": 95.94062805175781,
+          "left": 22.399999618530273
+        },
+        "close": {
+          "x": 637.6000366210938,
+          "y": 40.140625,
+          "width": 36,
+          "height": 36,
+          "top": 40.140625,
+          "right": 673.6000366210938,
+          "bottom": 76.140625,
+          "left": 637.6000366210938
+        },
+        "paddingRight": 16,
+        "tabs": 14,
+        "columns": "216.062px 459.138px",
+        "overflow": {
+          "nav": "auto",
+          "content": "auto"
+        },
+        "realReachability": {
+          "contentScrollTop": 0,
+          "actionVisible": true,
+          "headerCloseTop": 40.140625
+        },
+        "visual": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(223, 231, 233)",
+          "focus": "rgb(54, 91, 112)",
+          "navBackground": "rgb(222, 221, 214)",
+          "focusExtent": {
+            "left": 4,
+            "top": 193.59999084472656,
+            "right": 12.399993896484375,
+            "bottom": 48.11875915527344
+          }
+        }
+      }
+    },
+    {
+      "owner": "Playwright persistent isolated Chromium",
+      "theme": "light",
+      "physical": {
+        "width": 1920,
+        "height": 1080
+      },
+      "zoom": 2,
+      "before": {
+        "width": 1920,
+        "height": 994,
+        "dpr": 1.25
+      },
+      "measurement": {
+        "viewport": {
+          "width": 960,
+          "height": 497,
+          "dpr": 2.5
+        },
+        "dialog": {
+          "x": 28.80000114440918,
+          "y": 24.840625762939453,
+          "width": 902.4000244140625,
+          "height": 447.1187438964844,
+          "top": 24.840625762939453,
+          "right": 931.2000255584717,
+          "bottom": 471.9593696594238,
+          "left": 28.80000114440918
+        },
+        "nav": {
+          "x": 29.600000381469727,
+          "y": 100.44062805175781,
+          "width": 260,
+          "height": 370.71875,
+          "top": 100.44062805175781,
+          "right": 289.6000003814697,
+          "bottom": 471.1593780517578,
+          "left": 29.600000381469727
+        },
+        "content": {
+          "x": 289.6000061035156,
+          "y": 100.44062805175781,
+          "width": 640.7999877929688,
+          "height": 370.71875,
+          "top": 100.44062805175781,
+          "right": 930.3999938964844,
+          "bottom": 471.1593780517578,
+          "left": 289.6000061035156
+        },
+        "header": {
+          "x": 29.600000381469727,
+          "y": 25.640625,
+          "width": 900.7999877929688,
+          "height": 74.80000305175781,
+          "top": 25.640625,
+          "right": 930.3999881744385,
+          "bottom": 100.44062805175781,
+          "left": 29.600000381469727
+        },
+        "close": {
+          "x": 870.4000244140625,
+          "y": 44.640625,
+          "width": 36,
+          "height": 36,
+          "top": 44.640625,
+          "right": 906.4000244140625,
+          "bottom": 80.640625,
+          "left": 870.4000244140625
+        },
+        "paddingRight": 24,
+        "tabs": 14,
+        "columns": "260px 640.8px",
+        "overflow": {
+          "nav": "auto",
+          "content": "auto"
+        },
+        "realReachability": {
+          "contentScrollTop": 0,
+          "actionVisible": true,
+          "headerCloseTop": 44.640625
+        },
+        "visual": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(223, 231, 233)",
+          "focus": "rgb(54, 91, 112)",
+          "navBackground": "rgb(222, 221, 214)",
+          "focusExtent": {
+            "left": 4.000001907348633,
+            "top": 274.8000030517578,
+            "right": 12.399991989135742,
+            "bottom": 47.91874694824219
+          }
+        }
+      }
+    },
+    {
+      "owner": "Playwright persistent isolated Chromium",
+      "theme": "dark",
+      "physical": {
+        "width": 1280,
+        "height": 720
+      },
+      "zoom": 2,
+      "before": {
+        "width": 1280,
+        "height": 634,
+        "dpr": 1.25
+      },
+      "measurement": {
+        "viewport": {
+          "width": 640,
+          "height": 317,
+          "dpr": 2.5
+        },
+        "dialog": {
+          "x": 19.200000762939453,
+          "y": 15.840624809265137,
+          "width": 601.6000366210938,
+          "height": 285.1187438964844,
+          "top": 15.840624809265137,
+          "right": 620.8000373840332,
+          "bottom": 300.9593687057495,
+          "left": 19.200000762939453
+        },
+        "nav": {
+          "x": 20,
+          "y": 91.44062805175781,
+          "width": 192,
+          "height": 208.71875,
+          "top": 91.44062805175781,
+          "right": 212,
+          "bottom": 300.1593780517578,
+          "left": 20
+        },
+        "content": {
+          "x": 212,
+          "y": 91.44062805175781,
+          "width": 408,
+          "height": 208.71875,
+          "top": 91.44062805175781,
+          "right": 620,
+          "bottom": 300.1593780517578,
+          "left": 212
+        },
+        "header": {
+          "x": 20,
+          "y": 16.640625,
+          "width": 600,
+          "height": 74.80000305175781,
+          "top": 16.640625,
+          "right": 620,
+          "bottom": 91.44062805175781,
+          "left": 20
+        },
+        "close": {
+          "x": 560,
+          "y": 35.640625,
+          "width": 36,
+          "height": 36,
+          "top": 35.640625,
+          "right": 596,
+          "bottom": 71.640625,
+          "left": 560
+        },
+        "paddingRight": 16,
+        "tabs": 14,
+        "columns": "192px 408px",
+        "overflow": {
+          "nav": "auto",
+          "content": "auto"
+        },
+        "realReachability": {
+          "contentScrollTop": 0,
+          "actionVisible": true,
+          "headerCloseTop": 35.640625
+        },
+        "visual": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(52, 70, 80)",
+          "focus": "rgb(168, 196, 211)",
+          "navBackground": "rgb(26, 29, 25)",
+          "focusExtent": {
+            "left": 4,
+            "top": 112.80000305175781,
+            "right": 12.399993896484375,
+            "bottom": 47.91874694824219
+          }
+        }
+      }
+    },
+    {
+      "owner": "Playwright persistent isolated Chromium",
+      "theme": "dark",
+      "physical": {
+        "width": 1440,
+        "height": 900
+      },
+      "zoom": 2,
+      "before": {
+        "width": 1440,
+        "height": 814,
+        "dpr": 1.25
+      },
+      "measurement": {
+        "viewport": {
+          "width": 720,
+          "height": 407,
+          "dpr": 2.5
+        },
+        "dialog": {
+          "x": 21.600000381469727,
+          "y": 20.340625762939453,
+          "width": 676.7999877929688,
+          "height": 366.1187438964844,
+          "top": 20.340625762939453,
+          "right": 698.3999881744385,
+          "bottom": 386.4593696594238,
+          "left": 21.600000381469727
+        },
+        "nav": {
+          "x": 22.399999618530273,
+          "y": 95.94062805175781,
+          "width": 216.0625,
+          "height": 289.71875,
+          "top": 95.94062805175781,
+          "right": 238.46249961853027,
+          "bottom": 385.6593780517578,
+          "left": 22.399999618530273
+        },
+        "content": {
+          "x": 238.46250915527344,
+          "y": 95.94062805175781,
+          "width": 459.13751220703125,
+          "height": 289.71875,
+          "top": 95.94062805175781,
+          "right": 697.6000213623047,
+          "bottom": 385.6593780517578,
+          "left": 238.46250915527344
+        },
+        "header": {
+          "x": 22.399999618530273,
+          "y": 21.140625,
+          "width": 675.2000122070312,
+          "height": 74.80000305175781,
+          "top": 21.140625,
+          "right": 697.6000118255615,
+          "bottom": 95.94062805175781,
+          "left": 22.399999618530273
+        },
+        "close": {
+          "x": 637.6000366210938,
+          "y": 40.140625,
+          "width": 36,
+          "height": 36,
+          "top": 40.140625,
+          "right": 673.6000366210938,
+          "bottom": 76.140625,
+          "left": 637.6000366210938
+        },
+        "paddingRight": 16,
+        "tabs": 14,
+        "columns": "216.062px 459.138px",
+        "overflow": {
+          "nav": "auto",
+          "content": "auto"
+        },
+        "realReachability": {
+          "contentScrollTop": 0,
+          "actionVisible": true,
+          "headerCloseTop": 40.140625
+        },
+        "visual": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(52, 70, 80)",
+          "focus": "rgb(168, 196, 211)",
+          "navBackground": "rgb(26, 29, 25)",
+          "focusExtent": {
+            "left": 4,
+            "top": 193.59999084472656,
+            "right": 12.399993896484375,
+            "bottom": 48.11875915527344
+          }
+        }
+      }
+    },
+    {
+      "owner": "Playwright persistent isolated Chromium",
+      "theme": "dark",
+      "physical": {
+        "width": 1920,
+        "height": 1080
+      },
+      "zoom": 2,
+      "before": {
+        "width": 1920,
+        "height": 994,
+        "dpr": 1.25
+      },
+      "measurement": {
+        "viewport": {
+          "width": 960,
+          "height": 497,
+          "dpr": 2.5
+        },
+        "dialog": {
+          "x": 28.80000114440918,
+          "y": 24.840625762939453,
+          "width": 902.4000244140625,
+          "height": 447.1187438964844,
+          "top": 24.840625762939453,
+          "right": 931.2000255584717,
+          "bottom": 471.9593696594238,
+          "left": 28.80000114440918
+        },
+        "nav": {
+          "x": 29.600000381469727,
+          "y": 100.44062805175781,
+          "width": 260,
+          "height": 370.71875,
+          "top": 100.44062805175781,
+          "right": 289.6000003814697,
+          "bottom": 471.1593780517578,
+          "left": 29.600000381469727
+        },
+        "content": {
+          "x": 289.6000061035156,
+          "y": 100.44062805175781,
+          "width": 640.7999877929688,
+          "height": 370.71875,
+          "top": 100.44062805175781,
+          "right": 930.3999938964844,
+          "bottom": 471.1593780517578,
+          "left": 289.6000061035156
+        },
+        "header": {
+          "x": 29.600000381469727,
+          "y": 25.640625,
+          "width": 900.7999877929688,
+          "height": 74.80000305175781,
+          "top": 25.640625,
+          "right": 930.3999881744385,
+          "bottom": 100.44062805175781,
+          "left": 29.600000381469727
+        },
+        "close": {
+          "x": 870.4000244140625,
+          "y": 44.640625,
+          "width": 36,
+          "height": 36,
+          "top": 44.640625,
+          "right": 906.4000244140625,
+          "bottom": 80.640625,
+          "left": 870.4000244140625
+        },
+        "paddingRight": 24,
+        "tabs": 14,
+        "columns": "260px 640.8px",
+        "overflow": {
+          "nav": "auto",
+          "content": "auto"
+        },
+        "realReachability": {
+          "contentScrollTop": 0,
+          "actionVisible": true,
+          "headerCloseTop": 44.640625
+        },
+        "visual": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(52, 70, 80)",
+          "focus": "rgb(168, 196, 211)",
+          "navBackground": "rgb(26, 29, 25)",
+          "focusExtent": {
+            "left": 4.000001907348633,
+            "top": 274.8000030517578,
+            "right": 12.399991989135742,
+            "bottom": 47.91874694824219
+          }
+        }
+      }
+    }
+  ]
+}

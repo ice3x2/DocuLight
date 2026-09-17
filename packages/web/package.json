@@ -20,6 +20,8 @@
     "test:browser:search": "node test/search-layout-check.mjs",
     "test:browser:search:headed": "node test/search-layout-check.mjs --headed",
     "test:browser:shell": "node test/newspaper-shell-layout-check.cjs",
+    "test:browser:settings": "node test/newspaper-settings-check.cjs",
+    "test:browser:settings-product": "node test/newspaper-settings-product-runner.mjs",
     "test:browser:pre-auth": "node test/newspaper-pre-auth-check.cjs",
     "test:browser:pre-auth-product": "node test/newspaper-pre-auth-product-runner.mjs",
     "test:browser:install-product": "node test/newspaper-install-product-runner.mjs",

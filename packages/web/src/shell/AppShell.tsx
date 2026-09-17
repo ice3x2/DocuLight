@@ -1,6 +1,5 @@
-import * as Dialog from '@radix-ui/react-dialog';
 import * as Tabs from '@radix-ui/react-tabs';
-import { useCallback, useId, useLayoutEffect, useRef, useState, type RefObject } from 'react';
+import { Fragment, useCallback, useId, useLayoutEffect, useRef, useState, type RefObject } from 'react';
 
 import { DocumentArea } from '../document/DocumentArea.js';
 import { PasswordChangeForm } from '../auth/PasswordChangeForm.js';
@@ -39,6 +38,14 @@ import { SignupApproval } from '../principal/SignupApproval.js';
 import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
 import { EmptyState, ErrorState, LoadingState } from '../components/ui/states.js';
 import { Button } from '../components/ui/button.js';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from '../components/ui/dialog.js';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -316,6 +323,7 @@ function SettingsModal({
   }) => Promise<string | undefined | void>;
 }) {
   const [open, setOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('editor');
   const [비밀번호폼, set비밀번호폼] = useState(false);
   const titleId = useId();
   // 보이지 않는 카테고리는 **그리지 않는다.** 트리 컨텍스트 메뉴는 반대로
@@ -323,25 +331,60 @@ function SettingsModal({
   // 조작이기 때문이다. 여기 감춰지는 것들은 권한 자체를 못 얻는 자리다 —
   // 비활성으로 보여 주면 그것이 언젠가 열릴 것처럼 읽힌다.
   const categories = visibleCategories(viewer);
+  const selectionRevoked = !categories.some((category) => category.id === selectedCategory);
+  const sectionLabels = {
+    personal: '개인',
+    workspace: '워크스페이스 관리',
+    instance: '인스턴스',
+  } as const;
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(next) => {
+      setOpen(next);
+      if (next) setSelectedCategory('editor');
+    }}>
       {/* 좌하단 기어가 자리다 (`IR-SHELL-002` AC-1) — 어디에 있어도 되는
           버튼이면 사용자가 매번 찾아야 한다. */}
       <div data-shell="settings-corner">
-        <Dialog.Trigger aria-label="설정">⚙</Dialog.Trigger>
+        <DialogTrigger aria-label="설정">⚙</DialogTrigger>
       </div>
 
-      <Dialog.Portal>
-        <Dialog.Overlay />
-        <Dialog.Content aria-labelledby={titleId}>
-          <Dialog.Title id={titleId}>설정</Dialog.Title>
+      <DialogContent
+        data-settings-dialog
+        aria-labelledby={titleId}
+        onOpenAutoFocus={(event) => {
+          event.preventDefault();
+          requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-settings-dialog] [role="tab"][data-state="active"]')?.focus());
+        }}
+      >
+          <header data-settings-header>
+            <div>
+              <DialogTitle id={titleId}>설정</DialogTitle>
+              <DialogDescription>왼쪽에서 설정 항목을 선택하세요.</DialogDescription>
+            </div>
+            <DialogClose asChild>
+              <Button type="button" variant="ghost" size="icon" aria-label="설정 닫기">×</Button>
+            </DialogClose>
+          </header>
 
           {/* 좌측 카테고리 — 관리 기능이 전부 이 목록 안에 든다(AC-2). */}
-          <Tabs.Root defaultValue={categories[0]!.id} orientation="vertical">
-            <Tabs.List aria-label="설정 카테고리">
+          <Tabs.Root value={selectedCategory} onValueChange={setSelectedCategory} orientation="vertical" data-settings-layout>
+            <Tabs.List
+              aria-label="설정 카테고리"
+              data-settings-navigation
+              onKeyDown={(event) => {
+                if (event.key !== 'Home' && event.key !== 'End') return;
+                event.preventDefault();
+                const tabs = event.currentTarget.querySelectorAll<HTMLElement>('[role="tab"]');
+                tabs[event.key === 'Home' ? 0 : tabs.length - 1]?.focus();
+              }}
+            >
               {categories.map((category) => (
-                <Tabs.Trigger key={category.id} value={category.id}>
+                <Fragment key={category.id}>
+                {category.id === 'editor' || category.id === 'workspace' || category.id === 'users' ? (
+                  <h2>{sectionLabels[category.section]}</h2>
+                ) : null}
+                <Tabs.Trigger value={category.id} onFocus={(event) => event.currentTarget.scrollIntoView({ block: 'nearest' })}>
                   {category.label}
                   {/* 미해소 건수 배지 (`IR-AUDIT-002` AC-5~AC-7). Phase 1 에
                       알림 체계가 없어(`R110-a`) 이것이 통지 수단이다.
@@ -351,11 +394,20 @@ function SettingsModal({
                     <span data-testid="queue-badge">{queue.items.length}</span>
                   ) : null}
                 </Tabs.Trigger>
+                </Fragment>
               ))}
             </Tabs.List>
 
-            {categories.map((category) => (
-              <Tabs.Content key={category.id} value={category.id}>
+            <div data-settings-content>
+            {selectionRevoked ? (
+              <div role="status" data-settings-unavailable>
+                <p>선택한 설정을 더 이상 사용할 수 없습니다.</p>
+                <Button type="button" variant="secondary" onClick={() => setSelectedCategory('editor')}>
+                  에디터로 이동
+                </Button>
+              </div>
+            ) : categories.map((category) => (
+              <Tabs.Content key={category.id} value={category.id} tabIndex={-1}>
                 {/* 휴지통만 내용을 갖는다 — 나머지 카테고리는 그것을
                     소유한 요구가 서는 자리에서 채워진다. */}
                 {category.id === 'trash' ? (
@@ -456,10 +508,10 @@ function SettingsModal({
                 )}
               </Tabs.Content>
             ))}
+            </div>
           </Tabs.Root>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 }
 
