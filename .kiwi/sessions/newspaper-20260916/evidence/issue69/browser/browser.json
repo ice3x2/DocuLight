@@ -1,0 +1,452 @@
+{
+  "timestamp": "2026-09-17T19:49:01.811Z",
+  "harness": "actual production AppShell and AclAuditPanel bundle with typed fixture data",
+  "environments": [
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "forcedColors": "none",
+      "at100": {
+        "tabCount": 3,
+        "tabDisplay": "flex",
+        "tabOverflowX": "auto",
+        "headingFontSize": "18px",
+        "headingLineHeight": "26px",
+        "buttonHeight": 36,
+        "focusWidth": "2px",
+        "focusOffset": "2px",
+        "tableInsideViewport": true,
+        "pageOverflow": false,
+        "forced": false,
+        "activeTag": "INPUT",
+        "activeLabel": "사용자·그룹 검색",
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        }
+      },
+      "at200": {
+        "tabCount": 3,
+        "tabDisplay": "flex",
+        "tabOverflowX": "auto",
+        "headingFontSize": "18px",
+        "headingLineHeight": "26px",
+        "buttonHeight": 36,
+        "focusWidth": "2px",
+        "focusOffset": "2px",
+        "tableInsideViewport": false,
+        "pageOverflow": false,
+        "forced": false,
+        "activeTag": "INPUT",
+        "activeLabel": "사용자·그룹 검색",
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        }
+      },
+      "zoomAt200": 2,
+      "zoomReset": 1,
+      "preservedAt200": true,
+      "preservedAt100": true,
+      "sameActiveElementThroughZoomCycle": true,
+      "mountedSelectedPlanSubjects": 2,
+      "visitedTabs": [
+        "revoke",
+        "simulate",
+        "inheritance"
+      ],
+      "l3Token": "1",
+      "partialOutcome": {
+        "completed": 1,
+        "unconfirmed": 1
+      },
+      "unsupportedRestoreDisabled": true
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "forcedColors": "none",
+      "at100": {
+        "tabCount": 3,
+        "tabDisplay": "flex",
+        "tabOverflowX": "auto",
+        "headingFontSize": "18px",
+        "headingLineHeight": "26px",
+        "buttonHeight": 36,
+        "focusWidth": "2px",
+        "focusOffset": "2px",
+        "tableInsideViewport": true,
+        "pageOverflow": false,
+        "forced": false,
+        "activeTag": "INPUT",
+        "activeLabel": "사용자·그룹 검색",
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        }
+      },
+      "at200": {
+        "tabCount": 3,
+        "tabDisplay": "flex",
+        "tabOverflowX": "auto",
+        "headingFontSize": "18px",
+        "headingLineHeight": "26px",
+        "buttonHeight": 36,
+        "focusWidth": "2px",
+        "focusOffset": "2px",
+        "tableInsideViewport": false,
+        "pageOverflow": false,
+        "forced": false,
+        "activeTag": "INPUT",
+        "activeLabel": "사용자·그룹 검색",
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        }
+      },
+      "zoomAt200": 2,
+      "zoomReset": 1,
+      "preservedAt200": true,
+      "preservedAt100": true,
+      "sameActiveElementThroughZoomCycle": true,
+      "mountedSelectedPlanSubjects": 2,
+      "visitedTabs": [
+        "revoke",
+        "simulate",
+        "inheritance"
+      ],
+      "l3Token": "1",
+      "partialOutcome": {
+        "completed": 1,
+        "unconfirmed": 1
+      },
+      "unsupportedRestoreDisabled": true
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "forcedColors": "none",
+      "at100": {
+        "tabCount": 3,
+        "tabDisplay": "flex",
+        "tabOverflowX": "auto",
+        "headingFontSize": "18px",
+        "headingLineHeight": "26px",
+        "buttonHeight": 36,
+        "focusWidth": "2px",
+        "focusOffset": "2px",
+        "tableInsideViewport": true,
+        "pageOverflow": false,
+        "forced": false,
+        "activeTag": "INPUT",
+        "activeLabel": "사용자·그룹 검색",
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        }
+      },
+      "at200": {
+        "tabCount": 3,
+        "tabDisplay": "flex",
+        "tabOverflowX": "auto",
+        "headingFontSize": "18px",
+        "headingLineHeight": "26px",
+        "buttonHeight": 36,
+        "focusWidth": "2px",
+        "focusOffset": "2px",
+        "tableInsideViewport": false,
+        "pageOverflow": false,
+        "forced": false,
+        "activeTag": "INPUT",
+        "activeLabel": "사용자·그룹 검색",
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        }
+      },
+      "zoomAt200": 2,
+      "zoomReset": 1,
+      "preservedAt200": true,
+      "preservedAt100": true,
+      "sameActiveElementThroughZoomCycle": true,
+      "mountedSelectedPlanSubjects": 2,
+      "visitedTabs": [
+        "revoke",
+        "simulate",
+        "inheritance"
+      ],
+      "l3Token": "1",
+      "partialOutcome": {
+        "completed": 1,
+        "unconfirmed": 1
+      },
+      "unsupportedRestoreDisabled": true
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "forcedColors": "none",
+      "at100": {
+        "tabCount": 3,
+        "tabDisplay": "flex",
+        "tabOverflowX": "auto",
+        "headingFontSize": "18px",
+        "headingLineHeight": "26px",
+        "buttonHeight": 36,
+        "focusWidth": "2px",
+        "focusOffset": "2px",
+        "tableInsideViewport": true,
+        "pageOverflow": false,
+        "forced": false,
+        "activeTag": "INPUT",
+        "activeLabel": "사용자·그룹 검색",
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        }
+      },
+      "at200": {
+        "tabCount": 3,
+        "tabDisplay": "flex",
+        "tabOverflowX": "auto",
+        "headingFontSize": "18px",
+        "headingLineHeight": "26px",
+        "buttonHeight": 36,
+        "focusWidth": "2px",
+        "focusOffset": "2px",
+        "tableInsideViewport": false,
+        "pageOverflow": false,
+        "forced": false,
+        "activeTag": "INPUT",
+        "activeLabel": "사용자·그룹 검색",
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        }
+      },
+      "zoomAt200": 2,
+      "zoomReset": 1,
+      "preservedAt200": true,
+      "preservedAt100": true,
+      "sameActiveElementThroughZoomCycle": true,
+      "mountedSelectedPlanSubjects": 2,
+      "visitedTabs": [
+        "revoke",
+        "simulate",
+        "inheritance"
+      ],
+      "l3Token": "1",
+      "partialOutcome": {
+        "completed": 1,
+        "unconfirmed": 1
+      },
+      "unsupportedRestoreDisabled": true
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "forcedColors": "none",
+      "at100": {
+        "tabCount": 3,
+        "tabDisplay": "flex",
+        "tabOverflowX": "auto",
+        "headingFontSize": "18px",
+        "headingLineHeight": "26px",
+        "buttonHeight": 36,
+        "focusWidth": "2px",
+        "focusOffset": "2px",
+        "tableInsideViewport": true,
+        "pageOverflow": false,
+        "forced": false,
+        "activeTag": "INPUT",
+        "activeLabel": "사용자·그룹 검색",
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        }
+      },
+      "at200": {
+        "tabCount": 3,
+        "tabDisplay": "flex",
+        "tabOverflowX": "auto",
+        "headingFontSize": "18px",
+        "headingLineHeight": "26px",
+        "buttonHeight": 36,
+        "focusWidth": "2px",
+        "focusOffset": "2px",
+        "tableInsideViewport": false,
+        "pageOverflow": false,
+        "forced": false,
+        "activeTag": "INPUT",
+        "activeLabel": "사용자·그룹 검색",
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        }
+      },
+      "zoomAt200": 2,
+      "zoomReset": 1,
+      "preservedAt200": true,
+      "preservedAt100": true,
+      "sameActiveElementThroughZoomCycle": true,
+      "mountedSelectedPlanSubjects": 2,
+      "visitedTabs": [
+        "revoke",
+        "simulate",
+        "inheritance"
+      ],
+      "l3Token": "1",
+      "partialOutcome": {
+        "completed": 1,
+        "unconfirmed": 1
+      },
+      "unsupportedRestoreDisabled": true
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "forcedColors": "none",
+      "at100": {
+        "tabCount": 3,
+        "tabDisplay": "flex",
+        "tabOverflowX": "auto",
+        "headingFontSize": "18px",
+        "headingLineHeight": "26px",
+        "buttonHeight": 36,
+        "focusWidth": "2px",
+        "focusOffset": "2px",
+        "tableInsideViewport": true,
+        "pageOverflow": false,
+        "forced": false,
+        "activeTag": "INPUT",
+        "activeLabel": "사용자·그룹 검색",
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        }
+      },
+      "at200": {
+        "tabCount": 3,
+        "tabDisplay": "flex",
+        "tabOverflowX": "auto",
+        "headingFontSize": "18px",
+        "headingLineHeight": "26px",
+        "buttonHeight": 36,
+        "focusWidth": "2px",
+        "focusOffset": "2px",
+        "tableInsideViewport": false,
+        "pageOverflow": false,
+        "forced": false,
+        "activeTag": "INPUT",
+        "activeLabel": "사용자·그룹 검색",
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        }
+      },
+      "zoomAt200": 2,
+      "zoomReset": 1,
+      "preservedAt200": true,
+      "preservedAt100": true,
+      "sameActiveElementThroughZoomCycle": true,
+      "mountedSelectedPlanSubjects": 2,
+      "visitedTabs": [
+        "revoke",
+        "simulate",
+        "inheritance"
+      ],
+      "l3Token": "1",
+      "partialOutcome": {
+        "completed": 1,
+        "unconfirmed": 1
+      },
+      "unsupportedRestoreDisabled": true
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "forcedColors": "active",
+      "at100": {
+        "tabCount": 3,
+        "tabDisplay": "flex",
+        "tabOverflowX": "auto",
+        "headingFontSize": "18px",
+        "headingLineHeight": "26px",
+        "buttonHeight": 36,
+        "focusWidth": "2px",
+        "focusOffset": "2px",
+        "tableInsideViewport": true,
+        "pageOverflow": false,
+        "forced": true,
+        "activeTag": "INPUT",
+        "activeLabel": "사용자·그룹 검색",
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        }
+      },
+      "at200": {
+        "tabCount": 3,
+        "tabDisplay": "flex",
+        "tabOverflowX": "auto",
+        "headingFontSize": "18px",
+        "headingLineHeight": "26px",
+        "buttonHeight": 36,
+        "focusWidth": "2px",
+        "focusOffset": "2px",
+        "tableInsideViewport": false,
+        "pageOverflow": false,
+        "forced": true,
+        "activeTag": "INPUT",
+        "activeLabel": "사용자·그룹 검색",
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        }
+      },
+      "zoomAt200": 2,
+      "zoomReset": 1,
+      "preservedAt200": true,
+      "preservedAt100": true,
+      "sameActiveElementThroughZoomCycle": true,
+      "mountedSelectedPlanSubjects": 2,
+      "visitedTabs": [
+        "revoke",
+        "simulate",
+        "inheritance"
+      ],
+      "l3Token": "1",
+      "partialOutcome": {
+        "completed": 1,
+        "unconfirmed": 1
+      },
+      "unsupportedRestoreDisabled": true
+    }
+  ],
+  "limitations": {
+    "nativeWindowsImeCandidateUi": "nonblocking untested",
+    "passwordManagerAutofillUi": "nonblocking untested",
+    "inputEvidence": "DOM input/focus; no OS automation"
+  }
+}

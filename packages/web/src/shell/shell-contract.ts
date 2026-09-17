@@ -34,7 +34,7 @@ export const RIGHT_TABS: readonly ShellTab[] = [
  * 관리 권한이 있는 워크스페이스가 하나라도 있을 때, 인스턴스는 슈퍼유저.
  * 휴지통만 네 번째 조건(접근 가능한 워크스페이스 ≥1)을 쓴다.
  */
-export type CategoryGate = 'everyone' | 'has-workspace' | 'workspace-admin' | 'superuser';
+export type CategoryGate = 'everyone' | 'has-workspace' | 'workspace-admin' | 'workspace-admin-or-superuser' | 'superuser';
 
 export interface SettingsCategory extends ShellTab {
   section: 'personal' | 'workspace' | 'instance';
@@ -78,7 +78,7 @@ export const SETTINGS_CATEGORIES: readonly SettingsCategory[] = [
   { id: 'trash', label: '휴지통', section: 'personal', gate: 'has-workspace' },
 
   { id: 'workspace', label: '워크스페이스', section: 'workspace', gate: 'workspace-admin' },
-  { id: 'acl-audit', label: '권한 감사', section: 'workspace', gate: 'workspace-admin' },
+  { id: 'acl-audit', label: '권한 감사', section: 'workspace', gate: 'workspace-admin-or-superuser' },
   { id: 'audit-log', label: '감사 로그', section: 'workspace', gate: 'workspace-admin' },
 
   { id: 'users', label: '사용자 관리', section: 'instance', gate: 'superuser' },
@@ -197,6 +197,8 @@ export function visibleCategories(viewer: Viewer): SettingsCategory[] {
         return viewer.workspaceCount > 0;
       case 'workspace-admin':
         return viewer.adminWorkspaceCount > 0;
+      case 'workspace-admin-or-superuser':
+        return viewer.adminWorkspaceCount > 0 || viewer.superuser;
       case 'superuser':
         return viewer.superuser;
     }

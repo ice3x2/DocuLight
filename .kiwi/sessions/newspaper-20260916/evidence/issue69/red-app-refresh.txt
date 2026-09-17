@@ -1,0 +1,5 @@
+﻿Issue #69 App refresh adapter RED
+Test SHA-256: a29c2405bbf6f8c63e7a05570b82e8bad2267289131250596bc9ad9e26a3012a
+Command: cd packages/web && npx vitest run test/issue69-acl-audit.test.tsx --reporter=verbose
+Exit: 1
+Raw output: red-app-refresh-raw.txt

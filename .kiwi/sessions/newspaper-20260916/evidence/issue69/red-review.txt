@@ -1,0 +1,9 @@
+﻿Issue #69 review RED
+HEAD: 3925aec8a1675158c10c87dfa19c6892e21bcd76
+HEAD tree: 2f39f1a7911322ecfa9ddceeaa3ce25419f2063e
+Test SHA-256: 42fa3e80246db44e6b736bf5e6cda1c2b22c177d0977087ae9a1fb90cf7a7a48
+Expanded tests: 19 (18 failed, 1 passed)
+Product diff against HEAD before RED: exit 0 (absent)
+RED command: cd packages/web && npx vitest run test/issue69-acl-audit.test.tsx --reporter=verbose
+RED exit: 1
+Raw output: red-review-raw.txt

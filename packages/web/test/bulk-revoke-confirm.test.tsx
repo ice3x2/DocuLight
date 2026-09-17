@@ -27,15 +27,30 @@ const 행 = (entryId: string): RevocationRow => ({
   grantedAt: '2026-08-20T01:02:03.000Z',
 });
 
-const 패널 = (over: Record<string, unknown> = {}) => {
+const 패널 = ({
+  subjects = [사람('u1', '한범'), 사람('u2', '지원')],
+  rows = [행('e1'), 행('e2'), 행('e3')],
+}: { subjects?: readonly PrincipalRow[]; rows?: readonly RevocationRow[] } = {}) => {
   const 걷는다 = vi.fn();
+  const plan = {
+    subjects: subjects.map((subject, index) => ({
+      subject,
+      response: { scope: 'instance' as const, rows: index === 0 ? rows : [] },
+    })),
+  };
   render(
     <BulkRevokePanel
+      contextKey={`ctx:${subjects.map((subject) => subject.id).join(',')}`}
       workspaceId="ws1"
-      subjects={[사람('u1', '한범'), 사람('u2', '지원')]}
-      revocation={{ scope: 'instance', rows: [행('e1'), 행('e2'), 행('e3')] }}
-      onRevoke={걷는다}
-      {...over}
+      subjects={subjects}
+      plan={{ state: 'ready', data: plan }}
+      onPick={vi.fn()}
+      onRemove={vi.fn()}
+      onPreview={vi.fn().mockResolvedValue(plan)}
+      onRevokeSubject={async (id) => {
+        걷는다(id);
+        return { revocation: { scope: 'instance', rows: [] }, refreshFailed: false };
+      }}
     />,
   );
   return { 걷는다, user: userEvent.setup() };
@@ -112,11 +127,11 @@ describe('FR-CONFIRM-021 · FR-CONFIRM-022 — 묶음 확인 1회와 건수 토�
     await user.type(within(gate).getByLabelText(/3 를 입력/), '3');
     await user.click(within(gate).getByRole('button', { name: '실행' }));
 
-    expect(걷는다).toHaveBeenCalledWith(['u1', 'u2']);
+    expect(걷는다.mock.calls.map(([id]) => id)).toEqual(['u1', 'u2']);
   });
 
   it('FR-CONFIRM-022 AC-5: 영향 건수가 0 이면 강등이 아니라 차단이다', () => {
-    패널({ revocation: { scope: 'instance', rows: [] } });
+    패널({ rows: [] });
 
     // `L2` 로 내려가 「확인만 하고 아무 일도 안 일어나는」 경로가 생기면
     // 그 무해한 통과가 곧 0 건이라는 신호다.
@@ -129,7 +144,7 @@ describe('FR-CONFIRM-021 · FR-CONFIRM-022 — 묶음 확인 1회와 건수 토�
     // 판정하면 0 건인 주체가 조용히 빠지고 그 사실이 신호가 된다.
     const { user } = 패널({
       subjects: [사람('u1', '한범'), 사람('u2', '지원'), 사람('u3', '민수')],
-      revocation: { scope: 'instance', rows: [행('e1')] },
+      rows: [행('e1')],
     });
 
     await user.click(screen.getByRole('button', { name: /회수/ }));

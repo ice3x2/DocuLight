@@ -1,154 +1,191 @@
-import { useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import type { PrincipalRow, RevocationBody, RevocationScope } from '../api/client.js';
 import { ConfirmGate } from '../confirm/ConfirmGate.js';
 import { PrincipalPicker } from '../principal/PrincipalPicker.js';
 
-/**
- * 적용 범위 문구 (`FR-PRINCIPAL-004`).
- *
- * 서버가 준 값으로 고른다 — 화면이 요청자 레벨을 다시 판정하면 실제로
- * 걷히는 범위와 갈리고, 회수는 되돌리려면 재부여가 필요해 그 차이를
- * 사후에 알아차리기 어렵다.
- *
- * 슈퍼유저에게 관리 범위 한정 문구를 그대로 보이지 않는다 (AC-3) — 논리
- * 모순은 없지만 그 문구를 본 슈퍼유저는 자신이 부분 회수를 한다고 오해한
- * 채 전 인스턴스 회수를 실행한다.
- */
+export type AuditQuery<T> = { state: 'idle' } | { state: 'loading' } | { state: 'ready'; data: T } | { state: 'error'; onRetry: () => void };
+export interface SubjectPlan { subject: PrincipalRow; response: RevocationBody }
+export interface BulkPlan { subjects: readonly SubjectPlan[] }
+export interface RevokeSubjectResult { revocation: RevocationBody; refreshFailed: boolean }
+export type SubjectOutcome =
+  | { subjectId: string; state: 'completed'; result: RevokeSubjectResult }
+  | { subjectId: string; state: 'unconfirmed' }
+  | { subjectId: string; state: 'not-run' };
+
 const SCOPE_NOTE: Record<RevocationScope, string> = {
   instance: '이 회수는 전 인스턴스에 적용됩니다.',
   'managed-workspaces': '이 회수는 당신이 관리하는 워크스페이스에만 적용됩니다.',
 };
+const SYSTEM_GROUP_NOTE = '시스템 그룹입니다. 걷힌 항목은 가입·활성화 절차로 되살아나지 않습니다.';
+const LEVEL = { view: '보기', edit: '편집', admin: '관리' } as const;
 
-/**
- * 시스템 그룹을 골랐을 때의 안내 (`FR-CONFIRM-020` AC-3).
- *
- * **주체마다 각각 선다.** 묶음 하나로 접으면 어느 주체가 시스템 그룹인지
- * 알 수 없고, 그 그룹 앞 항목은 걷으면 영구히 사라진다.
- */
-const SYSTEM_GROUP_NOTE = '시스템 그룹입니다. 걷은 항목은 가입·활성화 절차로 되살아나지 않습니다.';
+function inspectPlan(plan: BulkPlan, subjects: readonly PrincipalRow[]) {
+  const expected = subjects.map((subject) => subject.id);
+  const actual = plan.subjects.map(({ subject }) => subject.id);
+  if (new Set(expected).size !== expected.length || expected.join('\u0000') !== actual.join('\u0000')) return { valid: false, total: 0, scope: null } as const;
+  const scopes = new Set(plan.subjects.map(({ response }) => response.scope));
+  const entries = new Map<string, { owner: string; data: string }>();
+  for (const item of plan.subjects) {
+    for (const row of item.response.rows) {
+      const previous = entries.get(row.entryId);
+      const data = JSON.stringify(row);
+      if (previous !== undefined && (previous.owner !== item.subject.id || previous.data !== data)) return { valid: false, total: 0, scope: null } as const;
+      entries.set(row.entryId, { owner: item.subject.id, data });
+    }
+  }
+  if (scopes.size !== 1) return { valid: false, total: 0, scope: null } as const;
+  return { valid: true, total: entries.size, scope: [...scopes][0]! } as const;
+}
 
-/**
- * 주체 축 일괄 회수 (`FR-ACL-003` · `FR-CONFIRM-020`~`FR-CONFIRM-022`).
- *
- * **주체를 여럿 고를 수 있다** (`FR-CONFIRM-020` AC-1). 반대로 임의 노드를
- * 다중 선택해 걷는 자리는 두지 않는다 (AC-4) — 이 화면의 축은 주체이고,
- * 노드 축 선택칸이 서면 그 자체로 다른 조작이 된다.
- *
- * **시스템 그룹을 후보에서 빼지 않는다** (`FR-PRINCIPAL-010` AC-1). 시스템
- * 그룹 잠금은 삭제와 개명만 금지하고 ACL 회수는 다루지 않으며, `default`
- * 그룹 앞으로 부여된 항목은 걷으면 영구히 사라지므로 실제 효과가 있는
- * 조작이다. 그래서 이 화면은 주체를 거르는 코드를 두지 않는다.
- */
-export function BulkRevokePanel({
-  workspaceId,
-  subjects = [],
-  revocation,
-  onPick,
-  onRevoke,
-}: {
-  /** 주체 검색의 부여 자격 근거 (`R162`). 이 화면은 관리 전용이다. */
+function identity(plan: BulkPlan) {
+  return JSON.stringify(plan.subjects.map(({ subject, response }) => ({ subjectId: subject.id, scope: response.scope, entryIds: response.rows.map((row) => row.entryId).sort() })));
+}
+
+export interface BulkRevokeProps {
+  contextKey: string;
   workspaceId: string;
-  subjects?: readonly PrincipalRow[];
-  revocation?: RevocationBody;
-  onPick?: (row: PrincipalRow) => void;
-  onRevoke?: (principalIds: readonly string[]) => void;
-}) {
-  const [관문열림, set관문열림] = useState(false);
-  const rows = revocation?.rows ?? [];
+  subjects: readonly PrincipalRow[];
+  plan: AuditQuery<BulkPlan>;
+  onPick: (row: PrincipalRow) => void;
+  onRemove: (id: string) => void;
+  onPreview: (subjects: readonly PrincipalRow[]) => Promise<BulkPlan>;
+  onRevokeSubject: (principalId: string) => Promise<RevokeSubjectResult>;
+}
 
-  /**
-   * 영향 건수 (`FR-CONFIRM-022`).
-   *
-   * **총합으로 판정한다** (AC-6). 주체별로 판정하면 0 건인 주체가 조용히
-   * 빠지고, 어느 주체가 빠졌는지가 곧 그 주체에게 항목이 없다는 신호다.
-   *
-   * 0 건이면 강등이 아니라 **차단**이다 (AC-5) — 강등하면 「확인만 하고
-   * 아무 일도 일어나지 않는」 경로가 생기고, 그 무해한 통과가 곧 0 건이라는
-   * 신호가 된다.
-   */
-  const 영향 = rows.length;
-  const 실행가능 = subjects.length > 0 && 영향 > 0;
+export function BulkRevokePanel({ contextKey, workspaceId, subjects, plan: current, onPick, onRemove, onPreview, onRevokeSubject }: BulkRevokeProps) {
+  const actionRef = useRef<HTMLButtonElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const removeRefs = useRef(new Map<string, HTMLButtonElement>());
+  const pendingFocus = useRef<{ next?: string; previous?: string } | null>(null);
+  const mounted = useRef(false);
+  const generation = useRef(0);
+  const renderedContext = useRef(contextKey);
+  if (renderedContext.current !== contextKey) {
+    renderedContext.current = contextKey;
+    generation.current += 1;
+  }
+  const [gatePlan, setGatePlan] = useState<BulkPlan | null>(null);
+  const [opening, setOpening] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [outcomes, setOutcomes] = useState<readonly SubjectOutcome[]>([]);
+  const contractReady = contextKey !== undefined && current !== undefined && onPick !== undefined && onRemove !== undefined && onPreview !== undefined && onRevokeSubject !== undefined;
+  const checked = contractReady && current.state === 'ready' ? inspectPlan(current.data, subjects) : null;
+  const subjectKey = subjects.map((subject) => subject.id).join('\u0000');
 
-  return (
-    <section>
-      <h2>주체 단위 권한 회수</h2>
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; generation.current += 1; };
+  }, []);
+  useEffect(() => {
+    generation.current += 1;
+    setGatePlan(null);
+    setOpening(false);
+    setMessage(null);
+    setOutcomes([]);
+  }, [contextKey, workspaceId, subjectKey]);
+  useLayoutEffect(() => {
+    const pending = pendingFocus.current;
+    if (pending === null) return;
+    pendingFocus.current = null;
+    const target = (pending.next === undefined ? undefined : removeRefs.current.get(pending.next))
+      ?? (pending.previous === undefined ? undefined : removeRefs.current.get(pending.previous))
+      ?? sectionRef.current?.querySelector<HTMLInputElement>('[aria-label="사용자·그룹 검색"]');
+    target?.focus();
+  }, [subjectKey]);
 
-      <PrincipalPicker scope={`workspace:${workspaceId}`} onPick={onPick} />
+  const isCurrent = (request: number) => mounted.current && generation.current === request && renderedContext.current === contextKey;
+  const openGate = async () => {
+    if (subjects.length === 0 || current.state !== 'ready' || checked?.valid !== true || checked.total === 0 || opening) return;
+    const request = generation.current;
+    setOpening(true);
+    setMessage(null);
+    try {
+      const fresh = await onPreview(subjects);
+      if (!isCurrent(request)) return;
+      const inspection = inspectPlan(fresh, subjects);
+      if (!inspection.valid || inspection.total === 0) {
+        if (isCurrent(request)) setMessage('완전한 미리보기를 불러오지 못했습니다. 미리보기를 새로고침하세요.');
+        return;
+      }
+      if (isCurrent(request)) setGatePlan(fresh);
+    } catch {
+      if (isCurrent(request)) setMessage('미리보기를 불러오지 못했습니다. 다시 시도하세요.');
+    } finally {
+      if (isCurrent(request)) setOpening(false);
+    }
+  };
+  const execute = async () => {
+    if (gatePlan === null) return;
+    const request = generation.current;
+    const frozen = gatePlan;
+    try {
+      const fresh = await onPreview(frozen.subjects.map(({ subject }) => subject));
+      if (!isCurrent(request)) return;
+      if (identity(fresh) !== identity(frozen) || !inspectPlan(fresh, subjects).valid) {
+        if (!isCurrent(request)) return;
+        setGatePlan(null);
+        if (!isCurrent(request)) return;
+        setMessage('미리보기가 변경되었습니다. 갱신된 내용을 다시 확인하세요.');
+        return;
+      }
+      const ids = frozen.subjects.map(({ subject }) => subject.id);
+      const next: SubjectOutcome[] = [];
+      for (let index = 0; index < ids.length; index += 1) {
+        const subjectId = ids[index]!;
+        try {
+          const result = await onRevokeSubject(subjectId);
+          if (!isCurrent(request)) return;
+          next.push({ subjectId, state: 'completed', result });
+        } catch {
+          if (!isCurrent(request)) return;
+          next.push({ subjectId, state: 'unconfirmed' });
+          for (const remaining of ids.slice(index + 1)) next.push({ subjectId: remaining, state: 'not-run' });
+          break;
+        }
+      }
+      if (!isCurrent(request)) return;
+      setOutcomes(next);
+      if (!isCurrent(request)) return;
+      setGatePlan(null);
+    } catch {
+      if (!isCurrent(request)) return;
+      setGatePlan(null);
+      if (isCurrent(request)) setMessage('미리보기를 확인하지 못해 회수를 실행하지 않았습니다.');
+    }
+  };
+  const removeSubject = (id: string) => {
+    const index = subjects.findIndex((subject) => subject.id === id);
+    pendingFocus.current = {
+      ...(subjects[index + 1] === undefined ? {} : { next: subjects[index + 1]!.id }),
+      ...(subjects[index - 1] === undefined ? {} : { previous: subjects[index - 1]!.id }),
+    };
+    onRemove(id);
+  };
+  const gateInspection = gatePlan === null ? null : inspectPlan(gatePlan, subjects);
+  const confirmedTotal = useMemo(() => outcomes.reduce((total, outcome) => outcome.state === 'completed' ? total + outcome.result.revocation.rows.length : total, 0), [outcomes]);
 
-      {subjects.length === 0 ? null : (
-        <ul data-testid="revocation-subjects">
-          {subjects.map((subject) => (
-            <li key={subject.id}>
-              <span>{subject.name}</span>
-              {subject.system === true ? (
-                <span data-testid="system-group-notice">{SYSTEM_GROUP_NOTE}</span>
-              ) : null}
-            </li>
-          ))}
-        </ul>
-      )}
+  if (!contractReady) return <section className="acl-audit-section"><p role="alert">회수 상태를 사용할 수 없습니다.</p></section>;
 
-      {revocation === undefined ? null : (
-        <>
-          <p data-testid="revocation-scope">{SCOPE_NOTE[revocation.scope]}</p>
-
-          <table>
-            <caption>걷힐 항목</caption>
-            <thead>
-              <tr>
-                <th scope="col">워크스페이스</th>
-                <th scope="col">경로</th>
-                <th scope="col">레벨</th>
-                <th scope="col">부여자</th>
-                <th scope="col">부여 시각</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => (
-                <tr key={row.entryId}>
-                  <td>{row.workspaceName}</td>
-                  {/* 워크스페이스 자체에 걸린 항목에는 경로가 없다 — 빈
-                      칸으로 두면 경로를 못 읽은 것과 구별되지 않는다. */}
-                  <td>{row.path ?? '워크스페이스 전체'}</td>
-                  <td>{row.level}</td>
-                  <td>{row.grantedBy ?? '시스템'}</td>
-                  <td>{row.grantedAt}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <button type="button" disabled={!실행가능} onClick={() => set관문열림(true)}>
-            권한 전부 회수
-          </button>
-
-          {/* 확인은 **묶음 1회**다 (`FR-CONFIRM-021`). 주체마다 받으면
-              스무 명을 오프보딩할 때 사용자가 스무 번째를 읽지 않는다.
-
-              토큰이 영향 건수 그 자체다 (`FR-CONFIRM-022` AC-1) — 임의
-              문구를 치게 하면 그 수를 읽지 않고 칠 수 있는데, 이 조작에서
-              확인해야 하는 것이 정확히 그 수다. */}
-          <ConfirmGate
-            open={관문열림}
-            grade="L3"
-            title="선택한 주체의 권한을 회수합니다"
-            token={String(영향)}
-            onConfirm={() => {
-              set관문열림(false);
-              onRevoke?.(subjects.map((subject) => subject.id));
-            }}
-            onCancel={() => set관문열림(false)}
-          >
-            {/* 주체 수와 항목 수를 함께 보인다 (AC-2). 어느 하나만 보이면
-                「몇 사람의 몇 건인가」를 실행자가 알 수 없다. 건수에
-                분모를 붙이지 않는다 (AC-3). */}
-            <p data-testid="revocation-tally">
-              주체 {subjects.length}명 · 항목 {영향}건
-            </p>
-          </ConfirmGate>
-        </>
-      )}
-    </section>
-  );
+  return <section ref={sectionRef} className="acl-audit-section" aria-labelledby="bulk-revoke-heading">
+    <h2 id="bulk-revoke-heading">주체 단위 권한 회수</h2>
+    <PrincipalPicker scope={`workspace:${workspaceId}`} onPick={onPick} />
+    {subjects.length === 0 ? <p>회수할 사용자 또는 그룹을 선택하세요.</p> : <ul className="acl-subject-list" data-testid="revocation-subjects">{subjects.map((subject) => <li key={subject.id}>
+      <span>{subject.name} · {subject.kind === 'user' ? '사용자' : '그룹'}</span>
+      {subject.system === true ? <span data-testid="system-group-notice">{SYSTEM_GROUP_NOTE}</span> : null}
+      <button ref={(node) => { if (node === null) removeRefs.current.delete(subject.id); else removeRefs.current.set(subject.id, node); }} type="button" aria-label={`${subject.name} 제거`} onClick={() => removeSubject(subject.id)}>선택에서 제거</button>
+    </li>)}</ul>}
+    {current.state === 'idle' ? <p role="status">회수할 주체를 선택하세요.</p> : null}
+    {current.state === 'loading' ? <p role="status">회수 영향을 확인하는 중…</p> : null}
+    {current.state === 'error' ? <div role="alert"><p>회수 영향을 확인하지 못했습니다.</p><button type="button" onClick={current.onRetry}>미리보기 다시 시도</button></div> : null}
+    {current.state === 'ready' && checked?.valid === false ? <p role="alert">미리보기가 선택 주체와 일치하지 않습니다. 미리보기를 새로고침하세요.</p> : null}
+    {current.state === 'ready' && checked?.valid === true ? <><p data-testid="revocation-scope">{SCOPE_NOTE[checked.scope]}</p>{current.data.subjects.map(({ subject, response }) => <details key={subject.id} open data-testid={`revocation-group-${subject.id}`}>
+      <summary>{subject.name} · {response.rows.length}건</summary>
+      {response.rows.length === 0 ? <p>회수할 ACL 항목이 없습니다.</p> : <div className="acl-table-scroll"><table><caption>{subject.name}에게서 걷힐 항목</caption><thead><tr><th>워크스페이스</th><th>경로</th><th>레벨</th><th>부여자</th><th>부여 시각</th></tr></thead><tbody>{response.rows.map((item) => <tr key={item.entryId}><td>{item.workspaceName}</td><td>{item.path ?? '워크스페이스 전체'}</td><td>{LEVEL[item.level]}</td><td>{item.grantedBy ?? '시스템'}</td><td>{item.grantedAt}</td></tr>)}</tbody></table></div>}
+    </details>)}</> : null}
+    {message === null ? null : <p role="alert">{message}</p>}
+    <button ref={actionRef} type="button" disabled={subjects.length === 0 || opening || current.state !== 'ready' || checked?.valid !== true || checked.total === 0} onClick={() => { void openGate(); }}>{opening ? '미리보기 확인 중…' : '권한 전부 회수'}</button>
+    {outcomes.length === 0 ? null : <div><p>확정 합계 {confirmedTotal}건</p><ul aria-label="회수 실행 결과">{outcomes.map((outcome) => <li key={outcome.subjectId} data-subject-id={outcome.subjectId} data-outcome-state={outcome.state}>{subjects.find((item) => item.id === outcome.subjectId)?.name ?? outcome.subjectId}: {outcome.state === 'completed' ? <><span>완료 · 실제 {outcome.result.revocation.rows.length}건</span>{outcome.result.revocation.rows.length === 0 ? null : <ul>{outcome.result.revocation.rows.map((item) => <li key={item.entryId}>{item.path ?? item.workspaceName}</li>)}</ul>}{outcome.result.refreshFailed ? <p role="alert">회수는 완료되었지만 화면 새로고침에 실패했습니다.</p> : null}</> : outcome.state === 'unconfirmed' ? '결과 확인 필요' : '실행하지 않음'}</li>)}</ul></div>}
+    <ConfirmGate open={gatePlan !== null} grade="L3" title="선택한 주체의 권한을 회수합니다" token={gateInspection === null ? null : String(gateInspection.total)} restoreFocusRef={actionRef} onConfirm={execute} onCancel={() => setGatePlan(null)}>{gatePlan === null || gateInspection === null ? null : <><p data-testid="revocation-tally">주체 {gatePlan.subjects.length}개 · 항목 {gateInspection.total}건</p><ul>{gatePlan.subjects.map(({ subject }) => <li key={subject.id}>{subject.name} · {subject.kind === 'user' ? '사용자' : '그룹'}</li>)}</ul><p>{SCOPE_NOTE[gateInspection.scope!]}</p></>}</ConfirmGate>
+  </section>;
 }

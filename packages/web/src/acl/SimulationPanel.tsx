@@ -1,5 +1,6 @@
 import type { PrincipalRow, SimulationBody } from '../api/client.js';
 import { PrincipalPicker } from '../principal/PrincipalPicker.js';
+import type { AuditQuery } from './BulkRevokePanel.js';
 
 /**
  * 왜 저 사람이 저 문서를 못 보는가 (`FR-ACL-004`).
@@ -18,22 +19,34 @@ const SOURCE: Record<'direct' | 'inherited', string> = {
 
 export function SimulationPanel({
   workspaceId,
-  simulation,
+  selectedSubject,
+  query,
   onPick,
 }: {
   /** 주체 검색의 부여 자격 근거 (`R162`). 이 화면은 관리 전용이다. */
   workspaceId: string;
-  simulation?: SimulationBody;
+  selectedSubject: PrincipalRow | null;
+  query: AuditQuery<SimulationBody>;
   onPick?: (row: PrincipalRow) => void;
 }) {
+  const current = query;
+  const mismatched = current.state === 'ready' && selectedSubject !== null && current.data.subjectId !== selectedSubject.id;
+  const missingIdentity = selectedSubject === null && current.state === 'ready';
   return (
-    <section>
+    <section className="acl-audit-section">
       <h2>유효 권한 시뮬레이션</h2>
 
       <PrincipalPicker scope={`workspace:${workspaceId}`} onPick={onPick} />
 
-      {simulation === undefined ? null : (
-        <table>
+      {selectedSubject === null && current.state === 'idle' ? <p>시뮬레이션할 주체를 선택하세요.</p> : null}
+      {selectedSubject === null ? null : <p data-testid="simulation-subject">{selectedSubject.name} · {selectedSubject.kind === 'user' ? '사용자' : '그룹'}</p>}
+      {current.state === 'loading' ? <p role="status">유효 권한을 확인하는 중…</p> : null}
+      {current.state === 'error' ? <div role="alert"><p>유효 권한을 확인하지 못했습니다.</p><button type="button" onClick={current.onRetry}>시뮬레이션 다시 시도</button></div> : null}
+      {mismatched ? <p role="alert">응답이 선택한 주체와 일치하지 않습니다. 다시 조회하세요.</p> : null}
+      {missingIdentity ? <p role="alert">시뮬레이션 주체를 선택해야 결과를 표시할 수 있습니다.</p> : null}
+      {current.state === 'ready' && !missingIdentity && !mismatched && current.data.nodes.length === 0 ? <p>표시할 유효 권한 결과가 없습니다.</p> : null}
+      {current.state === 'ready' && !missingIdentity && !mismatched && current.data.nodes.length > 0 ? (
+        <div className="acl-table-scroll" role="region" aria-label="시뮬레이션 결과 표" tabIndex={0}><table>
           <caption>조회 시점의 권한</caption>
           <thead>
             <tr>
@@ -44,17 +57,17 @@ export function SimulationPanel({
             </tr>
           </thead>
           <tbody>
-            {simulation.nodes.map((node) => (
+            {current.data.nodes.map((node) => (
               <tr key={node.nodeId}>
                 <td>{node.workspaceName}</td>
                 <td>{node.path}</td>
                 <td>{node.level ?? '볼 수 없음'}</td>
-                <td>{node.source === null ? '-' : SOURCE[node.source]}</td>
+                <td>{node.source === null ? '—' : SOURCE[node.source]}</td>
               </tr>
             ))}
           </tbody>
-        </table>
-      )}
+        </table></div>
+      ) : null}
     </section>
   );
 }

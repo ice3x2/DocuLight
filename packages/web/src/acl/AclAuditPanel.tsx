@@ -3,10 +3,10 @@ import * as Tabs from '@radix-ui/react-tabs';
 import type {
   BrokenInheritanceBody,
   PrincipalRow,
-  RevocationBody,
   SimulationBody,
 } from '../api/client.js';
 import { BulkRevokePanel } from './BulkRevokePanel.js';
+import type { AuditQuery, BulkPlan, RevokeSubjectResult } from './BulkRevokePanel.js';
 import { InheritanceAuditPanel } from './InheritanceAuditPanel.js';
 import { SimulationPanel } from './SimulationPanel.js';
 
@@ -28,69 +28,111 @@ export interface AclAuditProps {
    * 주체 검색의 부여 자격 근거 (`R162`). **없으면 검색칸을 두지 않는다** —
    * 스코프 없는 검색칸은 그 자체가 명부로 가는 경로다.
    */
-  workspaceId?: string;
-  revocation?: RevocationBody;
+  managedScope?: ManagedSearchScope;
+  contextKey?: string;
+  revocationPlan?: AuditQuery<BulkPlan>;
   /** 고른 주체들 — 다건이다 (`FR-CONFIRM-020`). */
   subjects?: readonly PrincipalRow[];
-  simulation?: SimulationBody;
-  audit?: BrokenInheritanceBody;
+  simulationSubject?: PrincipalRow | null;
+  simulationQuery?: AuditQuery<SimulationBody>;
+  inheritanceQuery?: AuditQuery<BrokenInheritanceBody>;
   onRevokePick?: (row: PrincipalRow) => void;
-  onRevoke?: (principalIds: readonly string[]) => void;
+  onRevokeRemove?: (principalId: string) => void;
+  onPreviewRevocation?: (subjects: readonly PrincipalRow[]) => Promise<BulkPlan>;
+  onRevokeSubject?: (principalId: string) => Promise<RevokeSubjectResult>;
   onSimulatePick?: (row: PrincipalRow) => void;
   onRestore?: (nodeId: string) => void;
 }
 
+export type ManagedSearchScope =
+  | { state: 'unavailable' }
+  | { state: 'loading' }
+  | { state: 'ready'; workspaceId: string }
+  | { state: 'empty' }
+  | { state: 'error'; onRetry: () => void };
+
+function ScopeState({ scope }: { scope: Exclude<ManagedSearchScope, { state: 'ready' }> }) {
+  if (scope.state === 'unavailable') return <p role="alert">관리 범위 정보를 사용할 수 없습니다.</p>;
+  if (scope.state === 'loading') return <p role="status">관리 범위를 확인하는 중…</p>;
+  if (scope.state === 'error') return <div role="alert"><p>관리 범위를 확인하지 못했습니다.</p><button type="button" onClick={scope.onRetry}>관리 범위 다시 시도</button></div>;
+  return <p data-testid="audit-no-workspace">관리 권한이 있는 워크스페이스가 없습니다.</p>;
+}
+
 export function AclAuditPanel({
-  workspaceId,
-  revocation,
+  managedScope,
+  contextKey,
+  revocationPlan,
   subjects,
-  simulation,
-  audit,
+  simulationSubject,
+  simulationQuery,
+  inheritanceQuery,
   onRevokePick,
-  onRevoke,
+  onRevokeRemove,
+  onPreviewRevocation,
+  onRevokeSubject,
   onSimulatePick,
-  onRestore,
 }: AclAuditProps) {
+  const scope: ManagedSearchScope = managedScope ?? { state: 'unavailable' };
+  const revokeContextKey = scope.state === 'ready' && contextKey !== undefined && subjects !== undefined
+    ? JSON.stringify([contextKey, scope.state, scope.workspaceId, subjects.map((subject) => subject.id)])
+    : undefined;
+  const revokeContractReady = revokeContextKey !== undefined
+    && subjects !== undefined
+    && revocationPlan !== undefined
+    && onRevokePick !== undefined
+    && onRevokeRemove !== undefined
+    && onPreviewRevocation !== undefined
+    && onRevokeSubject !== undefined;
+  const simulationContractReady = simulationSubject !== undefined
+    && simulationQuery !== undefined
+    && onSimulatePick !== undefined;
   return (
-    <Tabs.Root defaultValue="revoke">
-      <Tabs.List aria-label="권한 감사">
+    <Tabs.Root defaultValue="revoke" className="acl-audit">
+      <Tabs.List aria-label="권한 감사" className="acl-audit-tabs">
         <Tabs.Trigger value="revoke">권한 회수</Tabs.Trigger>
         <Tabs.Trigger value="simulate">유효 권한 시뮬레이션</Tabs.Trigger>
         <Tabs.Trigger value="inheritance">상속 끊김</Tabs.Trigger>
       </Tabs.List>
 
       <Tabs.Content value="revoke">
-        {workspaceId === undefined ? (
-          <p data-testid="audit-no-workspace">관리 권한이 있는 워크스페이스가 없습니다.</p>
+        {scope.state !== 'ready' ? (
+          <ScopeState scope={scope} />
+        ) : !revokeContractReady ? (
+          <p role="alert">회수 상태를 사용할 수 없습니다.</p>
         ) : (
           <BulkRevokePanel
-            workspaceId={workspaceId}
-            {...(subjects === undefined ? {} : { subjects })}
-            {...(revocation === undefined ? {} : { revocation })}
-            {...(onRevokePick === undefined ? {} : { onPick: onRevokePick })}
-            {...(onRevoke === undefined ? {} : { onRevoke })}
+            contextKey={revokeContextKey!}
+            workspaceId={scope.workspaceId}
+            subjects={subjects}
+            plan={revocationPlan}
+            onPick={onRevokePick}
+            onRemove={onRevokeRemove}
+            onPreview={onPreviewRevocation}
+            onRevokeSubject={onRevokeSubject}
           />
         )}
       </Tabs.Content>
 
       <Tabs.Content value="simulate">
-        {workspaceId === undefined ? (
-          <p data-testid="audit-no-workspace">관리 권한이 있는 워크스페이스가 없습니다.</p>
+        {scope.state !== 'ready' ? (
+          <ScopeState scope={scope} />
+        ) : !simulationContractReady ? (
+          <p role="alert">시뮬레이션 상태를 사용할 수 없습니다.</p>
         ) : (
           <SimulationPanel
-            workspaceId={workspaceId}
-            {...(simulation === undefined ? {} : { simulation })}
-            {...(onSimulatePick === undefined ? {} : { onPick: onSimulatePick })}
+            workspaceId={scope.workspaceId}
+            selectedSubject={simulationSubject}
+            query={simulationQuery}
+            onPick={onSimulatePick}
           />
         )}
       </Tabs.Content>
 
       <Tabs.Content value="inheritance">
         {/* 이 탭만 주체를 고르지 않는다 — 목록이 이미 관리 범위로 잘려 온다. */}
-        <InheritanceAuditPanel
-          {...(audit === undefined ? {} : { audit })}
-          {...(onRestore === undefined ? {} : { onRestore })}
-        />
+        {inheritanceQuery === undefined
+          ? <p role="alert">상속 감사 상태를 사용할 수 없습니다.</p>
+          : <InheritanceAuditPanel query={inheritanceQuery} />}
       </Tabs.Content>
     </Tabs.Root>
   );

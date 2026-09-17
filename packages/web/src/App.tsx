@@ -44,9 +44,10 @@ import {
   reopenUser,
   setUserStatus,
   type RosterUserStatus,
-  restoreInheritance,
+  fetchRevocation,
   revokeAllFor,
   type PrincipalRow,
+  type RevocationBody,
 } from './api/client.js';
 import {
   QUERY_KEYS,
@@ -61,7 +62,6 @@ import {
   useIdentity,
   usePersonalSettings,
   useTokens,
-  useRevocation,
   useSimulation,
   useUserRoster,
   useLinks,
@@ -70,6 +70,7 @@ import {
   useTree,
   useWorkspaceList,
 } from './api/queries.js';
+import type { AuditQuery, BulkPlan } from './acl/BulkRevokePanel.js';
 import { axesFrom, axesTo, readAxes, writeAxes, type SearchAxis } from './search/search-axes.js';
 import type { UploadRequest } from './attachment/upload-contract.js';
 import { PreAuthScreen, type PreAuthScreenId } from './auth/PreAuthScreen.js';
@@ -92,6 +93,23 @@ import type { WorkspaceTreeView, TreeNodeView } from './tree/tree-contract.js';
 import { rememberTheme, useThemeRuntime, type ThemePreference } from './theme/runtime.js';
 import type { ThemeLoadState, ThemeSaveState } from './settings/PersonalSettings.js';
 import { useEditorPreferenceController, type EditorPreferenceKey } from './settings/editor-preferences.js';
+
+export async function revokeSubjectAndRefresh(
+  principalId: string,
+  revoke: (id: string) => Promise<RevocationBody>,
+  refresh: (target: 'revocation' | 'tree', id: string) => Promise<void>,
+) {
+  const removed = await revoke(principalId);
+  let refreshFailed = false;
+  for (const target of ['revocation', 'tree'] as const) {
+    try {
+      await refresh(target, principalId);
+    } catch {
+      refreshFailed = true;
+    }
+  }
+  return { revocation: removed, refreshFailed };
+}
 
 /** 트리에서 그 노드를 찾는다 — 문서를 열 때 이름과 권한이 필요하다. */
 function findNode(workspaces: readonly WorkspaceTreeView[], nodeId: string): TreeNodeView | undefined {
@@ -779,10 +797,10 @@ function AppBody() {
    * 같은 인가를 지난다 (`R162`).
    */
   const [회수주체, set회수주체] = useState<readonly PrincipalRow[]>([]);
-  const [시뮬주체, set시뮬주체] = useState<string | null>(null);
+  const [시뮬주체, set시뮬주체] = useState<PrincipalRow | null>(null);
   const adminScope = session.data !== undefined && session.data.adminWorkspaceCount > 0;
   const workspaceList = useWorkspaceList(signedIn && adminScope);
-  const brokenInheritance = useBrokenInheritance(signedIn && adminScope);
+  const brokenInheritance = useBrokenInheritance(signedIn && (adminScope || session.data?.superuser === true));
   // 슈퍼유저는 관리 워크스페이스가 없어도 인스턴스 스코프의 행을 읽는다
   // (`SEC-AUDIT-010` AC-5) — `adminScope` 만 보면 그 문이 닫힌다.
   const 감사자격 = signedIn && (adminScope || session.data?.superuser === true);
@@ -809,30 +827,49 @@ function AppBody() {
       : searchResults.isError
         ? { state: 'error' as const, onRetry: () => void searchResults.refetch() }
         : { state: 'success' as const };
-  // 지금은 첫 주체의 것만 묻는다 — 다건 조회의 합산 규칙을 정한 요구가
-  // 아직 없어, 없는 규칙을 화면이 지어내지 않는다.
-  const revocation = useRevocation(회수주체[0]?.id ?? null);
-  const simulation = useSimulation(시뮬주체);
+  const revocations = useQueries({
+    queries: 회수주체.map((subject) => ({
+      queryKey: QUERY_KEYS.revocation(subject.id),
+      queryFn: () => fetchRevocation(subject.id),
+      retry: false,
+    })),
+  });
+  const revocationPlan: AuditQuery<BulkPlan> = 회수주체.length === 0
+    ? { state: 'idle' }
+    : revocations.some((query) => query.isError)
+      ? { state: 'error', onRetry: () => { for (const query of revocations) void query.refetch(); } }
+      : revocations.some((query) => query.isFetching || query.data === undefined)
+        ? { state: 'loading' }
+        : {
+          state: 'ready',
+          data: {
+            subjects: 회수주체.map((subject, index) => ({
+              subject,
+              response: revocations[index]!.data!,
+            })),
+          },
+        };
+  const managedAuditScope = workspaceList.isFetching
+    ? { state: 'loading' as const }
+    : { state: 'error' as const, onRetry: () => { void workspaceList.refetch(); } };
+  const aclAuditContextKey = JSON.stringify([
+    userId ?? 'anonymous',
+    authGeneration,
+    managedAuditScope.state,
+    회수주체.map((subject) => subject.id),
+  ]);
+  const previewRevocations = useCallback(async (selected: readonly PrincipalRow[]): Promise<BulkPlan> => ({
+    subjects: await Promise.all(selected.map(async (subject) => ({
+      subject,
+      response: await fetchRevocation(subject.id),
+    }))),
+  }), []);
+  const simulation = useSimulation(시뮬주체?.id ?? null);
 
-  const revokeAllForSubject = useCallback(
-    async (principalIds: readonly string[]) => {
-      // 주체마다 한 번씩 지난다 — 확인은 묶음 1회였고(`FR-CONFIRM-021`)
-      // 실행은 항목마다 감사 행을 남겨야 한다(`SEC-ACL-010`).
-      for (const principalId of principalIds) {
-        await revokeAllFor(principalId).catch(() => undefined);
-        await queries.invalidateQueries({ queryKey: QUERY_KEYS.revocation(principalId) });
-      }
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
-    },
-    [queries],
-  );
-
-  const restoreNodeInheritance = useCallback(
-    async (nodeId: string) => {
-      await restoreInheritance(nodeId).catch(() => undefined);
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.brokenInheritance });
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
-    },
+  const revokeOneSubject = useCallback(
+    (principalId: string) => revokeSubjectAndRefresh(principalId, revokeAllFor, async (target, id) => {
+      await queries.invalidateQueries({ queryKey: target === 'revocation' ? QUERY_KEYS.revocation(id) : QUERY_KEYS.tree });
+    }),
     [queries],
   );
 
@@ -1135,15 +1172,28 @@ function AppBody() {
       onReopenUser={reopen}
       onUserStatus={changeUserStatus}
       aclAudit={{
-        ...(workspaceList.data?.[0] === undefined ? {} : { workspaceId: workspaceList.data[0].id }),
+        contextKey: aclAuditContextKey,
+        managedScope: managedAuditScope,
         subjects: 회수주체,
-        ...(revocation.data === undefined ? {} : { revocation: revocation.data }),
-        ...(simulation.data === undefined ? {} : { simulation: simulation.data }),
-        ...(brokenInheritance.data === undefined ? {} : { audit: brokenInheritance.data }),
+        revocationPlan,
+        simulationSubject: 시뮬주체,
+        simulationQuery: 시뮬주체 === null
+          ? { state: 'idle' }
+          : simulation.isError
+            ? { state: 'error', onRetry: () => { void simulation.refetch(); } }
+            : simulation.isFetching || simulation.data === undefined
+              ? { state: 'loading' }
+              : { state: 'ready', data: simulation.data },
+        inheritanceQuery: brokenInheritance.isError
+          ? { state: 'error', onRetry: () => { void brokenInheritance.refetch(); } }
+          : brokenInheritance.isFetching || brokenInheritance.data === undefined
+            ? { state: 'loading' }
+            : { state: 'ready', data: brokenInheritance.data },
         onRevokePick: (row) => set회수주체((was) => (was.some((one) => one.id === row.id) ? was : [...was, row])),
-        onSimulatePick: (row) => set시뮬주체(row.id),
-        onRevoke: revokeAllForSubject,
-        onRestore: restoreNodeInheritance,
+        onRevokeRemove: (id) => set회수주체((was) => was.filter((subject) => subject.id !== id)),
+        onSimulatePick: set시뮬주체,
+        onPreviewRevocation: previewRevocations,
+        onRevokeSubject: revokeOneSubject,
       }}
       favorites={favorites.data ?? []}
       favoritesState={favoritesState}

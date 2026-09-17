@@ -23,8 +23,8 @@ describe('IR-SHELL-008 AC-1/2 · IR-SHELL-002 — 신문지 설정 셸', () => {
     [{ superuser: false, workspaceCount: 1, adminWorkspaceCount: 0 }, 5],
     [{ superuser: false, workspaceCount: 1, adminWorkspaceCount: 1 }, 8],
     [{ superuser: true, workspaceCount: 1, adminWorkspaceCount: 1 }, 14],
-    [{ superuser: true, workspaceCount: 0, adminWorkspaceCount: 0 }, 10],
-    [{ superuser: true, workspaceCount: 1, adminWorkspaceCount: 0 }, 11],
+    [{ superuser: true, workspaceCount: 0, adminWorkspaceCount: 0 }, 11],
+    [{ superuser: true, workspaceCount: 1, adminWorkspaceCount: 0 }, 12],
   ] satisfies Array<[Viewer, number]>)('권한별 허용 카테고리만 DOM에 둔다: %o', async (viewer, count) => {
     const { dialog } = await open(viewer);
     expect(within(dialog).getAllByRole('tab')).toHaveLength(count);
