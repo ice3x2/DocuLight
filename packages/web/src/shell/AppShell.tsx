@@ -20,6 +20,7 @@ import {
   type ThemeLoadState,
   type ThemeSaveState,
 } from '../settings/PersonalSettings.js';
+import type { EditorPreferenceLoadState, EditorPreferenceSaveStates } from '../settings/editor-preferences.js';
 import { TokenPanel } from '../settings/TokenPanel.js';
 import type { TokenIssueInput, TokenRowView } from '../settings/token-contract.js';
 import { AclAuditPanel, type AclAuditProps } from '../acl/AclAuditPanel.js';
@@ -262,6 +263,8 @@ function SettingsModal({
   onPersonalSetting,
   themeLoadState,
   themeSaveState,
+  editorLoadState,
+  editorSaveStates,
   onGroupRemove,
   onGroupAddMember,
   onRegisterUser,
@@ -302,6 +305,8 @@ function SettingsModal({
   onPersonalSetting?: (key: string, value: string) => void;
   themeLoadState?: ThemeLoadState;
   themeSaveState?: ThemeSaveState;
+  editorLoadState?: EditorPreferenceLoadState;
+  editorSaveStates?: EditorPreferenceSaveStates;
   onGroupRemove?: (groupId: string) => void;
   onGroupAddMember?: (groupId: string, userId: string) => void;
   /** 슈퍼유저 직접 등록 (`FR-AUTH-003`). */
@@ -433,6 +438,8 @@ function SettingsModal({
                     values={personalSettings}
                     {...(themeLoadState === undefined ? {} : { themeLoadState })}
                     {...(themeSaveState === undefined ? {} : { themeSaveState })}
+                    {...(editorLoadState === undefined ? {} : { editorLoadState })}
+                    {...(editorSaveStates === undefined ? {} : { editorSaveStates })}
                     {...(onPersonalSetting === undefined ? {} : { onPick: onPersonalSetting })}
                   />
                 ) : category.id === 'tokens' ? (
@@ -562,6 +569,8 @@ export function AppShell({
   onPersonalSetting,
   themeLoadState,
   themeSaveState,
+  editorLoadState,
+  editorSaveStates,
   onGroupRemove,
   onGroupAddMember,
   onRegisterUser,
@@ -637,6 +646,8 @@ export function AppShell({
   onPersonalSetting?: (key: string, value: string) => void;
   themeLoadState?: ThemeLoadState;
   themeSaveState?: ThemeSaveState;
+  editorLoadState?: EditorPreferenceLoadState;
+  editorSaveStates?: EditorPreferenceSaveStates;
   /**
    * 이 사용자의 PAT 목록 (`SEC-AUTH-006` · `SEC-AUTH-007`).
    *
@@ -865,6 +876,8 @@ export function AppShell({
             personalSettings={personalSettings}
             {...(themeLoadState === undefined ? {} : { themeLoadState })}
             {...(themeSaveState === undefined ? {} : { themeSaveState })}
+            {...(editorLoadState === undefined ? {} : { editorLoadState })}
+            {...(editorSaveStates === undefined ? {} : { editorSaveStates })}
             {...(onPersonalSetting === undefined ? {} : { onPersonalSetting })}
             tokens={tokens}
             {...(onIssueToken === undefined ? {} : { onIssueToken })}

@@ -1,0 +1,274 @@
+{
+  "generatedAt": "2026-09-17T07:37:59.879Z",
+  "execution": {
+    "productAssembly": "packages/server/dist/main.js serving packages/web/dist and /api on one origin",
+    "processOwnership": "in-process owned HTTP server, ephemeral port, orderly server.close()",
+    "database": "temporary SQLite database created for this run and deleted after verification",
+    "secrets": "generated credentials, cookies, PAT plaintext, and password hashes are omitted",
+    "cleanupVerified": true
+  },
+  "artifacts": {
+    "serverMainSha256": "738ad4b0b8e1200e6d6a58e50742481609d039f7d54ee6cb5058b3ff2a645d0d",
+    "webIndexSha256": "dbf5b30d20aaa1e91b6dee51aee3f459efb68d66240850dff26282c5510c1ec2",
+    "harnessSha256": "0e1f680ea85c41e5d5ae34a71da7f546788a3f220aed7f3355337c6b7159b216"
+  },
+  "checks": [
+    {
+      "name": "install token is accepted by the built product",
+      "pass": true,
+      "actual": 200
+    },
+    {
+      "name": "isolated product install succeeds",
+      "pass": true,
+      "actual": 200
+    },
+    {
+      "name": "built SPA shell is served by the installed product process",
+      "pass": true,
+      "actual": 200
+    },
+    {
+      "name": "built SPA shell contains the React mount",
+      "pass": true,
+      "actual": true
+    },
+    {
+      "name": "setup superuser login succeeds",
+      "pass": true,
+      "actual": 200
+    },
+    {
+      "name": "first real user is created through the product API",
+      "pass": true,
+      "actual": 201
+    },
+    {
+      "name": "second real user is created through the product API",
+      "pass": true,
+      "actual": 201
+    },
+    {
+      "name": "first user session one login succeeds",
+      "pass": true,
+      "actual": 200
+    },
+    {
+      "name": "first user session two login succeeds",
+      "pass": true,
+      "actual": 200
+    },
+    {
+      "name": "second user session login succeeds",
+      "pass": true,
+      "actual": 200
+    },
+    {
+      "name": "first user PAT one authenticates before change",
+      "pass": true,
+      "actual": 200
+    },
+    {
+      "name": "first user PAT two authenticates before change",
+      "pass": true,
+      "actual": 200
+    },
+    {
+      "name": "second user PAT authenticates before change",
+      "pass": true,
+      "actual": 200
+    },
+    {
+      "name": "wrong current password is rejected",
+      "pass": true,
+      "actual": 400
+    },
+    {
+      "name": "wrong current password returns its rule",
+      "pass": true,
+      "actual": "wrong-password"
+    },
+    {
+      "name": "empty new password is rejected",
+      "pass": true,
+      "actual": 400
+    },
+    {
+      "name": "empty new password returns its rule",
+      "pass": true,
+      "actual": "empty-password"
+    },
+    {
+      "name": "old password still works after both rejected changes",
+      "pass": true,
+      "actual": 200
+    },
+    {
+      "name": "new password does not work after rejected changes",
+      "pass": true,
+      "actual": 401
+    },
+    {
+      "name": "all first-user sessions survive rejected changes",
+      "pass": true,
+      "actual": [
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "name": "first-user PATs survive rejected changes",
+      "pass": true,
+      "actual": [
+        200,
+        200
+      ]
+    },
+    {
+      "name": "second-user session and PAT survive rejected changes",
+      "pass": true,
+      "actual": [
+        200,
+        200
+      ]
+    },
+    {
+      "name": "DB stores three first-user sessions before valid change",
+      "pass": true,
+      "actual": 3
+    },
+    {
+      "name": "DB stores one independent second-user session before valid change",
+      "pass": true,
+      "actual": 1
+    },
+    {
+      "name": "DB has two live first-user PATs before valid change",
+      "pass": true,
+      "actual": {
+        "total": 2,
+        "live": 2,
+        "revoked": 0
+      }
+    },
+    {
+      "name": "DB has one live second-user PAT before valid change",
+      "pass": true,
+      "actual": {
+        "total": 1,
+        "live": 1,
+        "revoked": 0
+      }
+    },
+    {
+      "name": "valid password change succeeds through the product API",
+      "pass": true,
+      "actual": 204
+    },
+    {
+      "name": "successful response expires the current cookie",
+      "pass": true,
+      "actual": true
+    },
+    {
+      "name": "all existing first-user sessions are invalidated",
+      "pass": true,
+      "actual": [
+        401,
+        401,
+        401
+      ]
+    },
+    {
+      "name": "all existing first-user PATs are invalidated",
+      "pass": true,
+      "actual": [
+        401,
+        401
+      ]
+    },
+    {
+      "name": "second-user session remains valid",
+      "pass": true,
+      "actual": 200
+    },
+    {
+      "name": "second-user PAT remains valid",
+      "pass": true,
+      "actual": 200
+    },
+    {
+      "name": "DB has zero first-user sessions immediately after change",
+      "pass": true,
+      "actual": 0
+    },
+    {
+      "name": "DB retains the second-user session after change",
+      "pass": true,
+      "actual": 1
+    },
+    {
+      "name": "DB marks both first-user PAT rows revoked",
+      "pass": true,
+      "actual": {
+        "total": 2,
+        "live": 0,
+        "revoked": 2
+      }
+    },
+    {
+      "name": "DB leaves the second-user PAT row live",
+      "pass": true,
+      "actual": {
+        "total": 1,
+        "live": 1,
+        "revoked": 0
+      }
+    },
+    {
+      "name": "DB records one revoke audit row per live first-user PAT",
+      "pass": true,
+      "actual": 2
+    },
+    {
+      "name": "DB records no revoke audit row for the second user",
+      "pass": true,
+      "actual": 0
+    },
+    {
+      "name": "DB changed only the first user password hash",
+      "pass": true,
+      "actual": [
+        true,
+        true
+      ]
+    },
+    {
+      "name": "old password no longer authenticates",
+      "pass": true,
+      "actual": 401
+    },
+    {
+      "name": "new password authenticates",
+      "pass": true,
+      "actual": 200
+    },
+    {
+      "name": "DB contains only the new first-user session after re-login",
+      "pass": true,
+      "actual": 1
+    },
+    {
+      "name": "DB still contains the independent second-user session",
+      "pass": true,
+      "actual": 1
+    }
+  ],
+  "summary": {
+    "passed": 43,
+    "failed": 0,
+    "firstUser": "password rotated; three old sessions and two PATs invalidated; new login succeeds",
+    "secondUser": "password hash, session, and PAT remain unchanged and valid"
+  }
+}

@@ -1,8 +1,9 @@
-import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { App } from '../src/App.js';
+import { QueryClient } from '@tanstack/react-query';
 
 /**
  * 인증 왕복 배선 (원장 §4 **수용 기준 14**).
@@ -14,7 +15,7 @@ import { App } from '../src/App.js';
  * 이 시험이 없으면 「로그인할 수 없는 빌드」가 나머지 열셋을 전부 통과한다.
  * 원장 §4 의 〔판정 필요 · 2026-08-19〕가 정확히 그 사실을 적어 두었다.
  */
-const routes = new Map<string, (init?: RequestInit) => Response>();
+const routes = new Map<string, (init?: RequestInit) => Response | Promise<Response>>();
 let sent: { path: string; method: string; body: unknown }[];
 /** 로그인했는가 — 서버 상태를 흉내 낸다. */
 let 로그인됨: boolean;
@@ -159,7 +160,7 @@ describe('수용 기준 14 — 로그아웃 (R145) · 비밀번호 변경 (R144)
     await user.click(screen.getByRole('button', { name: '비밀번호 변경' }));
     await user.type(await screen.findByLabelText('현재 비밀번호'), 'x'.repeat(10));
     await user.type(screen.getByLabelText('새 비밀번호'), 'y'.repeat(12));
-    await user.click(screen.getByRole('button', { name: '바꾸기' }));
+    await user.click(screen.getByRole('button', { name: '비밀번호 바꾸기' }));
 
     await waitFor(() =>
       expect(sent).toContainEqual({
@@ -196,11 +197,167 @@ describe('수용 기준 14 — 로그아웃 (R145) · 비밀번호 변경 (R144)
     await user.click(screen.getByRole('button', { name: '비밀번호 변경' }));
     await user.type(await screen.findByLabelText('현재 비밀번호'), '틀림');
     await user.type(screen.getByLabelText('새 비밀번호'), 'y'.repeat(12));
-    await user.click(screen.getByRole('button', { name: '바꾸기' }));
+    await user.click(screen.getByRole('button', { name: '비밀번호 바꾸기' }));
 
     expect((await screen.findByRole('alert')).textContent).toContain('현재 비밀번호');
     // 실패했는데 화면을 닫으면 사용자는 바뀐 줄 안다.
     expect(screen.getByLabelText('새 비밀번호')).toBeDefined();
+  });
+
+  it.each([
+    ['rule-less 400', 400, undefined],
+    ['401', 401, undefined],
+    ['429', 429, undefined],
+    ['500', 500, undefined],
+    ['unknown rule', 400, 'future-rule'],
+  ])('%s는 App 어댑터부터 폼까지 일반 오류로 보존한다', async (_name, status, rule) => {
+    routes.set('/api/auth/password', () => json(rule === undefined ? {} : { rule }, status));
+    const user = await 로그인한채로연다();
+
+    await user.click(screen.getByRole('button', { name: '비밀번호 변경' }));
+    await user.type(await screen.findByLabelText('현재 비밀번호'), '현재-값');
+    await user.type(screen.getByLabelText('새 비밀번호'), '새-값');
+    await user.click(screen.getByRole('button', { name: '비밀번호 바꾸기' }));
+
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toContain('비밀번호를 바꾸지 못했습니다. 잠시 후 다시 시도하십시오.');
+    expect(alert.textContent).not.toContain('계정을 찾을 수 없습니다');
+    expect(screen.getByRole('dialog', { name: '설정' })).toBeDefined();
+  });
+
+  it('전송 자체가 거부되면 App은 성공 후 세션 갱신을 하지 않고 폼에 일반 오류를 남긴다', async () => {
+    let sessionReads = 0;
+    routes.set('/api/session', () => {
+      sessionReads += 1;
+      return json({ superuser: false, workspaceCount: 1, adminWorkspaceCount: 0 });
+    });
+    routes.set('/api/auth/password', () => {
+      throw new TypeError('network unavailable');
+    });
+    const user = await 로그인한채로연다();
+    const readsBeforeSubmit = sessionReads;
+
+    await user.click(screen.getByRole('button', { name: '비밀번호 변경' }));
+    await user.type(await screen.findByLabelText('현재 비밀번호'), '현재-값');
+    await user.type(screen.getByLabelText('새 비밀번호'), '새-값');
+    await user.click(screen.getByRole('button', { name: '비밀번호 바꾸기' }));
+
+    expect((await screen.findByRole('alert')).textContent).toContain(
+      '비밀번호를 바꾸지 못했습니다. 잠시 후 다시 시도하십시오.',
+    );
+    expect(sent.filter(({ path }) => path === '/api/auth/password')).toHaveLength(1);
+    expect(sessionReads).toBe(readsBeforeSubmit);
+    expect(screen.getByRole('dialog', { name: '설정' })).toBeDefined();
+  });
+
+  it.each(['wrong-password', 'empty-password', 'self-only', 'unknown-account'])(
+    'HTTP 400의 알려진 %s 규칙만 기존 안내로 분류한다',
+    async (rule) => {
+      routes.set('/api/auth/password', () => json({ rule }, 400));
+      const user = await 로그인한채로연다();
+      await user.click(screen.getByRole('button', { name: '비밀번호 변경' }));
+      await user.click(screen.getByRole('button', { name: '비밀번호 바꾸기' }));
+
+      expect((await screen.findByRole('alert')).textContent).not.toContain(
+        '비밀번호를 바꾸지 못했습니다',
+      );
+    },
+  );
+});
+
+describe('IR-SHELL-004 App editor outcome wiring', () => {
+  const openEditor = async () => {
+    routes.set('/api/session', () => json({ superuser: false, workspaceCount: 1, adminWorkspaceCount: 0 }));
+    routes.set('/api/auth/me', () => json({ userId: 'u1' }));
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(await screen.findByRole('button', { name: '설정' }));
+    return user;
+  };
+
+  it.each([200, 403, 404, 409, 413, 429, 500])('maps HTTP %s through App to unknown without confirming the attempted value', async (status) => {
+    routes.set('/api/personal-settings', (init) => init?.method === 'PATCH' ? json(null, status) : json({ 'default-view-mode': 'view', 'default-edit-subview': 'live-preview', theme: 'system' }));
+    const user = await openEditor();
+    const select = await screen.findByLabelText('기본 열람 모드') as HTMLSelectElement;
+    await user.selectOptions(select, 'edit');
+    expect((await screen.findByRole('alert')).textContent).toContain('저장 여부를 확인하지 못했습니다');
+    expect(select.value).toBe('view');
+    expect(sent.filter((row) => row.path === '/api/personal-settings')).toHaveLength(1);
+  });
+
+  it('maps 401 to one auth-ended alert, disables both fields and exposes no retry', async () => {
+    routes.set('/api/personal-settings', (init) => init?.method === 'PATCH' ? json(null, 401) : json({ 'default-view-mode': 'view', 'default-edit-subview': 'live-preview' }));
+    const user = await openEditor(); const select = await screen.findByLabelText('기본 열람 모드');
+    await user.selectOptions(select, 'edit');
+    expect(await screen.findAllByText(/로그인이 필요합니다/)).toHaveLength(1);
+    expect(screen.getAllByRole('combobox').every((node) => (node as HTMLSelectElement).disabled)).toBe(true);
+    expect(screen.queryByRole('button', { name: /저장 다시 시도/ })).toBeNull();
+  });
+
+  it('retries the exact rejected 400 assignment once and then adopts 204', async () => {
+    let attempts = 0;
+    routes.set('/api/personal-settings', (init) => init?.method === 'PATCH' ? json(null, ++attempts === 1 ? 400 : 204) : json({ 'default-view-mode': 'view', 'default-edit-subview': 'live-preview' }));
+    const user = await openEditor(); const select = await screen.findByLabelText('기본 열람 모드') as HTMLSelectElement;
+    await user.selectOptions(select, 'edit');
+    await user.click(await screen.findByRole('button', { name: /저장 다시 시도/ }));
+    await waitFor(() => expect(select.value).toBe('edit'));
+    expect(sent.filter((row) => row.path === '/api/personal-settings').map((row) => row.body)).toEqual([{ 'default-view-mode': 'edit' }, { 'default-view-mode': 'edit' }]);
+  });
+
+  it('maps transport rejection to unknown without session cleanup', async () => {
+    routes.set('/api/personal-settings', (init) => init?.method === 'PATCH' ? Promise.reject(new TypeError('offline')) : json({ 'default-view-mode': 'view', 'default-edit-subview': 'live-preview' }));
+    const user = await openEditor(); await user.selectOptions(await screen.findByLabelText('기본 열람 모드'), 'edit');
+    expect((await screen.findByRole('alert')).textContent).toContain('저장 여부를 확인하지 못했습니다');
+  });
+
+  it('renders preference load failure and retries the exact current-user query', async () => {
+    routes.set('/api/session', () => json({ superuser: false, workspaceCount: 1, adminWorkspaceCount: 0 })); routes.set('/api/auth/me', () => json({ userId: 'u1' }));
+    let fail = true; routes.set('/api/personal-settings', () => fail ? json(null, 500) : json({ 'default-view-mode': 'view', 'default-edit-subview': 'live-preview' }));
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } }); const user = userEvent.setup(); render(<App queryClient={client} />);
+    await user.click(await screen.findByRole('button', { name: '설정' }));
+    expect((await screen.findByRole('alert')).textContent).toContain('에디터 설정을 불러오지 못했습니다');
+    fail = false; await user.click(screen.getByRole('button', { name: '다시 불러오기' }));
+    await waitFor(() => expect((screen.getByLabelText('기본 열람 모드') as HTMLSelectElement).disabled).toBe(false));
+  });
+
+  it('blocks delayed same-key reentry and merges without clobbering theme', async () => {
+    let finish!: (response: Response) => void;
+    routes.set('/api/personal-settings', (init) => init?.method === 'PATCH' ? new Promise<Response>((resolve) => { finish = resolve; }) : json({ 'default-view-mode': 'view', 'default-edit-subview': 'live-preview', theme: 'dark' }));
+    await openEditor(); const select = await screen.findByLabelText('기본 열람 모드');
+    fireEvent.change(select, { target: { value: 'edit' } }); fireEvent.change(select, { target: { value: 'view' } });
+    expect(sent.filter((row) => row.path === '/api/personal-settings')).toEqual([{ path: '/api/personal-settings', method: 'PATCH', body: { 'default-view-mode': 'edit' } }]);
+    finish(json(null, 204)); await waitFor(() => expect(select).toHaveProperty('value', 'edit'));
+    expect((await screen.findByLabelText('기본 열람 모드')).getAttribute('aria-busy')).toBeNull();
+  });
+
+  it('shows a lost response as unknown then accepts a later authoritative reread without clobbering theme', async () => {
+    let stored = 'view'; const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    routes.set('/api/personal-settings', (init) => { if (init?.method === 'PATCH') { stored = 'edit'; return Promise.reject(new TypeError('lost response')); } return json({ 'default-view-mode': stored, 'default-edit-subview': 'live-preview', theme: 'dark' }); });
+    routes.set('/api/session', () => json({ superuser: false, workspaceCount: 1, adminWorkspaceCount: 0 })); routes.set('/api/auth/me', () => json({ userId: 'u1' }));
+    const user = userEvent.setup(); render(<App queryClient={client} />); await user.click(await screen.findByRole('button', { name: '설정' }));
+    const select = await screen.findByLabelText('기본 열람 모드') as HTMLSelectElement; await user.selectOptions(select, 'edit');
+    expect((await screen.findByRole('alert')).textContent).toContain('저장 여부를 확인하지 못했습니다'); expect(select.value).toBe('view');
+    await client.invalidateQueries({ queryKey: ['personal-settings', 'u1'] });
+    await waitFor(() => expect(select.value).toBe('edit'));
+    expect(client.getQueryData(['personal-settings', 'u1'])).toMatchObject({ theme: 'dark', 'default-edit-subview': 'live-preview' });
+  });
+
+  it('keeps different-key success independent from a concurrent rejected key', async () => {
+    let resolveView!: (response: Response) => void; let resolveSubview!: (response: Response) => void;
+    routes.set('/api/personal-settings', (init) => {
+      if (init?.method !== 'PATCH') return json({ 'default-view-mode': 'view', 'default-edit-subview': 'live-preview', theme: 'system' });
+      const body = JSON.parse(String(init.body));
+      return new Promise<Response>((resolve) => { if ('default-view-mode' in body) resolveView = resolve; else resolveSubview = resolve; });
+    });
+    await openEditor();
+    const [view, subview] = await screen.findAllByRole('combobox');
+    fireEvent.change(view!, { target: { value: 'edit' } });
+    fireEvent.change(subview!, { target: { value: 'source' } });
+    expect(sent.filter((row) => row.path === '/api/personal-settings')).toHaveLength(2);
+    resolveView(json(null, 204)); resolveSubview(json(null, 400));
+    await waitFor(() => expect(view).toHaveProperty('value', 'edit'));
+    await waitFor(() => expect(subview).toHaveProperty('value', 'live-preview'));
+    expect(sent.filter((row) => row.path === '/api/personal-settings')).toHaveLength(2);
   });
 });
 

@@ -364,6 +364,16 @@ export const savePersonalSetting = (key: string, value: string) =>
     body: JSON.stringify({ [key]: value }),
   });
 
+/** Editor-only adapter: preserve the exact successful HTTP status. */
+export async function saveEditorPreference(key: string, value: string): Promise<number> {
+  const response = await fetch(`${BASE}/personal-settings`, {
+    method: 'PATCH', credentials: 'same-origin', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ [key]: value }),
+  });
+  if (!response.ok) throw new ApiError(response.status);
+  return response.status;
+}
+
 /**
  * 주체 검색의 **부여 대상** (`R162`).
  *

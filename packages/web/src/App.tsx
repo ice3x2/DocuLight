@@ -17,6 +17,7 @@ import {
   requestSignup,
   removeGroup,
   savePersonalSetting,
+  saveEditorPreference,
   issueToken,
   revokeToken,
   createNode,
@@ -88,6 +89,7 @@ import { CREATE_DEFAULTS } from './tree/tree-contract.js';
 import type { WorkspaceTreeView, TreeNodeView } from './tree/tree-contract.js';
 import { rememberTheme, useThemeRuntime, type ThemePreference } from './theme/runtime.js';
 import type { ThemeLoadState, ThemeSaveState } from './settings/PersonalSettings.js';
+import { useEditorPreferenceController, type EditorPreferenceKey } from './settings/editor-preferences.js';
 
 /** 트리에서 그 노드를 찾는다 — 문서를 열 때 이름과 권한이 필요하다. */
 function findNode(workspaces: readonly WorkspaceTreeView[], nodeId: string): TreeNodeView | undefined {
@@ -196,6 +198,7 @@ function AppBody() {
    * 뒤에도 그 자리가 이력에 남아 뒤로 가기가 인증 전으로 되돌린다.
    */
   const [preAuthScreen, setPreAuthScreen] = useState<PreAuthScreenId>('login');
+  const [authGeneration, setAuthGeneration] = useState(0);
   /** 좌측 검색 탭의 질의. 태그를 눌러도 이 값이 채워진다. */
   const [query, setQuery] = useState('');
   /**
@@ -247,6 +250,22 @@ function AppBody() {
       : personal.isError
         ? { state: 'error', onRetry: () => void personal.refetch() }
         : { state: 'loading' };
+  const editorLoad = userId === undefined
+    ? identity.isError ? 'error' as const : 'loading' as const
+    : personal.data !== undefined ? 'ready' as const : personal.isError ? 'error' as const : 'loading' as const;
+  const editor = useEditorPreferenceController({
+    userId,
+    authGeneration,
+    settings: personal.data ?? {},
+    loadState: editorLoad,
+    retryLoad: () => void (userId === undefined ? identity.refetch() : personal.refetch()),
+    save: saveEditorPreference,
+    cancelReads: () => userId === undefined ? undefined : queries.cancelQueries({ queryKey: QUERY_KEYS.personalSettings(userId) }),
+    mergeCache: (key, value) => {
+      if (userId === undefined) return;
+      queries.setQueryData<Record<string, string>>(QUERY_KEYS.personalSettings(userId), (was) => ({ ...(was ?? {}), [key]: value }));
+    },
+  });
   useThemeRuntime({
     ...(userId === undefined ? {} : { userId }),
     ...(resolvedTheme === undefined ? {} : { preference: resolvedTheme }),
@@ -625,6 +644,7 @@ function AppBody() {
         throw error;
       }
       queries.removeQueries({ predicate: (query) => query.queryKey[0] !== 'session' });
+      setAuthGeneration((value) => value + 1);
       await queries.invalidateQueries({ queryKey: QUERY_KEYS.session });
       return undefined;
     },
@@ -662,6 +682,7 @@ function AppBody() {
    * 잠깐 보인다.
    */
   const signOut = useCallback(async () => {
+    setAuthGeneration((value) => value + 1);
     await logOut().catch(() => undefined);
     // 세션 **외**를 지운다. 통째로 비우면 세션 쿼리까지 사라져 화면이
     // 「아직 안 왔다」 상태로 멎고, 그 자리에는 로딩만 남는다.
@@ -680,10 +701,11 @@ function AppBody() {
       try {
         await changePassword(input);
       } catch (error) {
-        if (error instanceof ApiError) return error.detail?.rule ?? 'unknown-account';
+        if (error instanceof ApiError && error.status === 400 && error.detail?.rule !== undefined && ['wrong-password', 'empty-password', 'self-only', 'unknown-account'].includes(error.detail.rule)) return error.detail.rule;
         throw error;
       }
       queries.removeQueries({ predicate: (query) => query.queryKey[0] !== 'session' });
+      setAuthGeneration((value) => value + 1);
       await queries.invalidateQueries({ queryKey: QUERY_KEYS.session });
       return undefined;
     },
@@ -825,11 +847,9 @@ function AppBody() {
         await saveTheme(value);
         return;
       }
-      if (userId === undefined) return;
-      await savePersonalSetting(key, value).catch(() => undefined);
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.personalSettings(userId) });
+      if (key === 'default-view-mode' || key === 'default-edit-subview') editor.onPick(key as EditorPreferenceKey, value);
     },
-    [queries, saveTheme, userId],
+    [editor, saveTheme],
   );
 
   /**
@@ -1043,11 +1063,13 @@ function AppBody() {
       onTrashPurge={purgeTrash}
       onTrashRestore={restoreTrash}
       personalSettings={{
-        ...(personal.data ?? {}),
+        ...editor.values,
         ...(optimisticTheme === undefined ? {} : { theme: optimisticTheme }),
       }}
       themeSaveState={themeSaveState}
       themeLoadState={themeLoadState}
+      editorLoadState={editor.loadState}
+      editorSaveStates={editor.saveStates}
       onPersonalSetting={pickPersonalSetting}
       tokens={tokens.data ?? []}
       onIssueToken={토큰을발급한다}

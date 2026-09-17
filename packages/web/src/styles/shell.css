@@ -413,6 +413,19 @@
   background: var(--surface-control);
 }
 
+/* #62 personal editor, appearance and account settings. */
+[data-personal-settings], [data-password-change-form] { width: min(100%, 560px); min-width: 0; }
+[data-personal-settings] > h2 { margin: 0 0 24px; font-family: var(--font-sans); font-size: 18px; font-weight: 600; line-height: 26px; }
+[data-personal-settings-fields], [data-password-change-fields] { display: grid; gap: 20px; }
+[data-personal-settings] [data-slot='field'] > label, [data-password-change-form] [data-slot='field'] > label { font-size: 13px; font-weight: 600; line-height: 20px; }
+[data-personal-settings] [data-slot='select'], [data-password-change-form] [data-slot='input'] { width: 100%; min-width: 0; min-height: 36px; font-family: var(--font-sans); font-size: 14px; line-height: 22px; }
+[data-personal-settings] [data-slot='select']:not(:disabled):hover { border-color: var(--focus-ring); }
+[data-personal-setting-status] { margin: 8px 0 0; overflow-wrap: anywhere; }
+[data-personal-setting-status] [data-slot='button'] { margin-top: 8px; }
+[data-password-change-form] > [data-slot='inline-notice'] { margin-bottom: 24px; }
+[data-password-change-error] { margin: 8px 0 0; color: var(--status-danger); overflow-wrap: anywhere; }
+[data-password-change-actions] { display: flex; justify-content: flex-end; margin-top: 24px; }
+
 @media (max-width: 899px) {
   [data-settings-layout] {
     grid-template-columns: min(260px, 32%) minmax(0, 1fr);
