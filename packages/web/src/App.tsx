@@ -539,16 +539,26 @@ function AppBody() {
 
   const purgeTrash = useCallback(
     async (nodeId: string) => {
-      await purgeFromTrash(nodeId).catch(() => undefined);
-      await afterTrashAction();
+      try {
+        await purgeFromTrash(nodeId);
+      } catch {
+        return { ok: false as const };
+      }
+      void afterTrashAction();
+      return { ok: true as const };
     },
     [afterTrashAction],
   );
 
   const restoreTrash = useCallback(
     async (nodeId: string) => {
-      await restoreFromTrash(nodeId).catch(() => undefined);
-      await afterTrashAction();
+      try {
+        await restoreFromTrash(nodeId);
+      } catch {
+        return { ok: false as const };
+      }
+      void afterTrashAction();
+      return { ok: true as const };
     },
     [afterTrashAction],
   );
@@ -1063,6 +1073,12 @@ function AppBody() {
       bodies={bodies}
       hashes={hashes}
       trash={trash.data ?? []}
+      trashQuery={trash.isError
+        ? { state: 'error', onRetry: () => void trash.refetch() }
+        : trash.data === undefined
+          ? { state: 'loading' }
+          : { state: 'ready' }}
+      trashContextKey={`${userId ?? 'anonymous'}:${authGeneration}:${trashLens.workspaceId ?? '*'}:${trashLens.scope}`}
       trashLens={trashLens}
       onTrashLens={setTrashLens}
       onTrashPurge={purgeTrash}

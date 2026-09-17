@@ -1,24 +1,11 @@
-// v9 는 기본 진입점에서 API 를 새로 냈고, 옛 형태는 `legacy` 로 옮겼다.
-// 여기서 옛 형태를 쓰는 이유는 그것이 이 화면이 필요로 하는 전부이고,
-// 새 형태로 옮기는 일이 이 요구가 말하는 것과 무관하기 때문이다.
+// v9 keeps the small legacy table surface used by this panel.
 import { flexRender } from '@tanstack/react-table';
-import {
-  getCoreRowModel,
-  useLegacyTable,
-  type LegacyColumnDef,
-} from '@tanstack/react-table/legacy';
-import { useVirtualizer } from '@tanstack/react-virtual';
-import { useMemo, useRef } from 'react';
+import { getCoreRowModel, useLegacyTable, type LegacyColumnDef } from '@tanstack/react-table/legacy';
+import { defaultRangeExtractor, useVirtualizer } from '@tanstack/react-virtual';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 
-/**
- * 휴지통 (`FR-SHELL-007` · `SEC-SHELL-001`).
- *
- * **전 워크스페이스의 통합 목록**이라 `워크스페이스` 열을 갖는다. 영구
- * 삭제 버튼은 그 행의 권한을 따라 그리거나 안 그린다 — 판정이 목록
- * 전체가 아니라 행마다이므로 한 목록 안에 열린 행과 닫힌 행이 함께 선다.
- *
- * 서버가 이미 걸러 준 행만 온다. 여기서 다시 거르지 않는다.
- */
+import { ConfirmGate } from '../confirm/ConfirmGate.js';
+
 export interface TrashRowView {
   nodeId: string;
   workspaceId: string;
@@ -26,23 +13,33 @@ export interface TrashRowView {
   originalPath: string;
   deletedAt: string;
   deletedBy: string;
-  /** 이 행의 영구 삭제 버튼을 그릴 것인가 — 서버의 판정을 그대로 받는다. */
   canPurge: boolean;
 }
 
-const ROW_HEIGHT = 40;
-const PANEL_HEIGHT = 480;
-
-/** 목록을 어떻게 좁혀 볼 것인가 (`FR-SHELL-007` AC-4 · AC-5). */
 export interface TrashLens {
-  /** 비면 전 워크스페이스. */
   workspaceId?: string;
-  /** `all` 은 **요청**이지 권한이 아니다 — 넓혀 달라 해도 서버가 행마다 좁힌다. */
   scope: 'mine' | 'all';
 }
 
+export type TrashQueryState =
+  | { readonly state: 'loading' }
+  | { readonly state: 'ready' }
+  | { readonly state: 'error'; readonly onRetry: () => void };
+
+export type TrashActionResult = { readonly ok: true } | { readonly ok: false };
+
+type ActionKind = 'restore' | 'purge';
+type RowActionState = { readonly kind: ActionKind; readonly pending: boolean };
+type RowResultState = { readonly role: 'status' | 'alert'; readonly text: string };
+
+const ROW_HEIGHT = 40;
+const OVERSCAN = 8;
+
+/** Trash list for FR-SHELL-007, SEC-SHELL-001 and IR-SHELL-009. */
 export function TrashPanel({
+  contextKey = 'default',
   rows,
+  query = { state: 'ready' },
   workspaces = [],
   lens = { scope: 'mine' },
   canWidenScope = false,
@@ -50,137 +47,350 @@ export function TrashPanel({
   onPurge,
   onRestore,
 }: {
+  contextKey?: string;
   rows: readonly TrashRowView[];
-  /** 필터에 세울 워크스페이스들. 접근 가능한 것만 온다. */
+  query?: TrashQueryState;
   workspaces?: readonly { id: string; name: string }[];
   lens?: TrashLens;
-  /**
-   * 범위 토글을 세울 것인가 (`FR-SHELL-007` AC-5).
-   *
-   * 관리 권한이 어디에도 없으면 세우지 않는다 — 눌러도 결과가 그대로인
-   * 조작을 보여 주면 사용자는 목록이 고장 났다고 읽는다.
-   */
   canWidenScope?: boolean;
   onLens?: (lens: TrashLens) => void;
-  onPurge?: (nodeId: string) => void;
-  onRestore?: (nodeId: string) => void;
+  onPurge?: (nodeId: string) => Promise<TrashActionResult>;
+  onRestore?: (nodeId: string) => Promise<TrashActionResult>;
 }) {
-  const columns = useMemo<LegacyColumnDef<TrashRowView>[]>(
-    () => [
-      { accessorKey: 'originalPath', header: '경로' },
-      { accessorKey: 'workspaceName', header: '워크스페이스' },
-      { accessorKey: 'deletedAt', header: '삭제 시각' },
-      {
-        id: 'actions',
-        header: '조작',
-        cell: ({ row }) => (
-          <>
-            <button type="button" onClick={() => onRestore?.(row.original.nodeId)}>
-              {row.original.originalPath} 복구
-            </button>
-            {/* 권한이 없으면 **그리지 않는다** (`SEC-SHELL-001` AC-1) —
-                비활성으로 두면 그 조작이 언젠가 열릴 것처럼 읽히는데,
-                영구 삭제는 워크스페이스 관리 권한이 있어야 열린다. */}
-            {row.original.canPurge && (
-              <button type="button" onClick={() => onPurge?.(row.original.nodeId)}>
-                {row.original.originalPath} 영구 삭제
-              </button>
-            )}
-          </>
-        ),
-      },
-    ],
-    [onPurge, onRestore],
-  );
-
-  const table = useLegacyTable({
-    data: rows as TrashRowView[],
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
+  const [actions, setActions] = useState<Readonly<Record<string, RowActionState>>>({});
+  const [results, setResults] = useState<Readonly<Record<string, RowResultState>>>({});
+  const pending = useRef(new Set<string>());
+  const context = useRef(contextKey);
+  context.current = contextKey;
+  const [message, setMessage] = useState<RowResultState | null>(null);
+  const [focusAfterRemoval, setFocusAfterRemoval] = useState<readonly string[] | null>(null);
+  const [focusedNode, setFocusedNode] = useState<string | null>(null);
+  const [keyboardTarget, setKeyboardTarget] = useState<{ nodeId: string; action: ActionKind } | null>(null);
+  const virtualApi = useRef<{ measure: () => void; scrollToIndex: (index: number, options?: { align?: 'auto' | 'center' | 'end' | 'start' }) => void } | null>(null);
+  const currentRows = useRef(rows);
+  currentRows.current = rows;
+  const visibleAnchor = useRef<{ nodeId: string; offset: number } | null>(null);
+  const adjustingAnchor = useRef(false);
+  const [purgeTarget, setPurgeTarget] = useState<TrashRowView | null>(null);
+  const purgeReturnRef = useRef<HTMLElement | null>(null);
   const scroller = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    pending.current.clear();
+    setActions({});
+    setResults({});
+    setMessage(null);
+    setPurgeTarget(null);
+    setFocusAfterRemoval(null);
+    setFocusedNode(null);
+    setKeyboardTarget(null);
+    visibleAnchor.current = null;
+    if (scroller.current !== null) scroller.current.scrollTop = 0;
+  }, [contextKey]);
+
+  const moveByKeyboard = useCallback((event: KeyboardEvent<HTMLButtonElement>, nodeId: string, action: ActionKind) => {
+    if (event.key !== 'Tab') return;
+    const index = rows.findIndex((row) => row.nodeId === nodeId);
+    if (index < 0) return;
+    let target: { nodeId: string; action: ActionKind } | undefined;
+    if (event.shiftKey) {
+      if (action === 'purge') target = { nodeId, action: 'restore' };
+      else if (index > 0) target = { nodeId: rows[index - 1]!.nodeId, action: rows[index - 1]!.canPurge ? 'purge' : 'restore' };
+    } else if (action === 'restore' && rows[index]!.canPurge) target = { nodeId, action: 'purge' };
+    else if (index + 1 < rows.length) target = { nodeId: rows[index + 1]!.nodeId, action: 'restore' };
+    if (target === undefined) return;
+    event.preventDefault();
+    setFocusedNode(target.nodeId);
+    setKeyboardTarget(target);
+    virtualApi.current?.scrollToIndex(rows.findIndex((row) => row.nodeId === target!.nodeId), { align: 'auto' });
+  }, [rows]);
+
+  const captureAnchor = useCallback(() => {
+    if (adjustingAnchor.current) return;
+    const viewport = scroller.current;
+    if (viewport === null) return;
+    const top = Math.max(viewport.getBoundingClientRect().top, viewport.querySelector('thead')?.getBoundingClientRect().bottom ?? 0);
+    const row = Array.from(viewport.querySelectorAll<HTMLElement>('tbody tr[aria-rowindex]'))
+      .find((candidate) => candidate.getBoundingClientRect().top >= top);
+    const nodeId = row?.querySelector<HTMLElement>('[data-trash-node-id]')?.dataset.trashNodeId;
+    if (row !== undefined && nodeId !== undefined) visibleAnchor.current = { nodeId, offset: row.getBoundingClientRect().top - top };
+  }, []);
+
+  const runAction = useCallback(async (kind: ActionKind, target: TrashRowView, ownsFocus = false) => {
+    const callback = kind === 'restore' ? onRestore : onPurge;
+    if (callback === undefined || pending.current.has(target.nodeId)) return false;
+    pending.current.add(target.nodeId);
+    const owner = context.current;
+    const focused = ownsFocus || document.activeElement instanceof HTMLElement
+      && document.activeElement.dataset.trashNodeId === target.nodeId;
+    const at = rows.findIndex((row) => row.nodeId === target.nodeId);
+    const focusCandidates = [rows[at + 1]?.nodeId, rows[at - 1]?.nodeId].filter((id): id is string => id !== undefined);
+    setResults((current) => {
+      const next = { ...current };
+      delete next[target.nodeId];
+      return next;
+    });
+    setActions((current) => ({ ...current, [target.nodeId]: { kind, pending: true } }));
+    let result: TrashActionResult;
+    try {
+      result = await callback(target.nodeId);
+    } catch {
+      result = { ok: false };
+    }
+    if (context.current !== owner) return false;
+    pending.current.delete(target.nodeId);
+    setActions((current) => {
+      const next = { ...current };
+      delete next[target.nodeId];
+      return next;
+    });
+    const outcome: RowResultState = result.ok
+      ? { role: 'status', text: kind === 'restore' ? '항목을 복구했습니다.' : '항목을 영구 삭제했습니다.' }
+      : { role: 'alert', text: kind === 'restore'
+          ? '항목을 복구하지 못했습니다. 목록을 확인한 뒤 다시 시도하십시오.'
+          : '항목을 영구 삭제하지 못했습니다. 목록을 확인한 뒤 다시 시도하십시오.' };
+    setResults((current) => ({ ...current, [target.nodeId]: outcome }));
+    if (result.ok) setMessage(outcome);
+    if (result.ok && focused && !ownsFocus) setFocusAfterRemoval(focusCandidates);
+    return result.ok;
+  }, [onPurge, onRestore, rows]);
+
+  const confirmPurge = useCallback(async () => {
+    if (purgeTarget === null) return;
+    const current = rows.find((candidate) => candidate.nodeId === purgeTarget.nodeId);
+    if (current === undefined || !current.canPurge || current.originalPath !== purgeTarget.originalPath) {
+      setPurgeTarget(null);
+      setMessage({ role: 'status', text: '항목 상태가 변경되었습니다. 목록을 다시 불러오십시오.' });
+      return;
+    }
+    const at = rows.findIndex((row) => row.nodeId === current.nodeId);
+    const focusCandidates = [rows[at + 1]?.nodeId, rows[at - 1]?.nodeId].filter((id): id is string => id !== undefined);
+    const removed = await runAction('purge', current, true);
+    if (removed) {
+      const nextTarget = focusCandidates
+        .map((nodeId) => Array.from(document.querySelectorAll<HTMLButtonElement>('[data-trash-action]'))
+          .find((element) => element.dataset.trashNodeId === nodeId && !element.disabled))
+        .find((element): element is HTMLButtonElement => element !== undefined);
+      purgeReturnRef.current = nextTarget ?? document.getElementById('trash-heading');
+    }
+    setPurgeTarget(null);
+    if (removed) window.setTimeout(() => {
+      const target = focusCandidates.find((nodeId) => currentRows.current.some((row) => row.nodeId === nodeId));
+      if (target === undefined) {
+        document.getElementById('trash-heading')?.focus();
+        return;
+      }
+      virtualApi.current?.scrollToIndex(currentRows.current.findIndex((row) => row.nodeId === target), { align: 'auto' });
+      requestAnimationFrame(() => {
+        Array.from(document.querySelectorAll<HTMLButtonElement>('[data-trash-action]'))
+          .find((element) => element.dataset.trashNodeId === target && !element.disabled)?.focus();
+      });
+    }, 0);
+  }, [purgeTarget, rows, runAction]);
+
+  const columns = useMemo<LegacyColumnDef<TrashRowView>[]>(() => [
+    { accessorKey: 'originalPath', header: '경로' },
+    { accessorKey: 'workspaceName', header: '워크스페이스' },
+    { accessorKey: 'deletedBy', header: '삭제자' },
+    {
+      accessorKey: 'deletedAt',
+      header: '삭제 시각',
+      cell: ({ row }) => <time dateTime={row.original.deletedAt}>{row.original.deletedAt}</time>,
+    },
+    {
+      id: 'actions',
+      header: '조작',
+      cell: ({ row }) => {
+        const item = row.original;
+        const state = actions[item.nodeId];
+        const busy = state?.pending === true;
+        return <div data-trash-actions>
+          <button
+            type="button"
+            aria-label={`${item.originalPath} 복구`}
+            disabled={onRestore === undefined || busy}
+            data-trash-action="restore"
+            data-trash-node-id={item.nodeId}
+            onFocus={() => setFocusedNode(item.nodeId)}
+            onKeyDown={(event) => moveByKeyboard(event, item.nodeId, 'restore')}
+            onClick={() => { void runAction('restore', item); }}
+          >{busy && state.kind === 'restore' ? '복구 중…' : '복구'}</button>
+          {item.canPurge ? <button
+            type="button"
+            aria-label={`${item.originalPath} 영구 삭제`}
+            disabled={onPurge === undefined || busy}
+            data-trash-action="purge"
+            data-trash-node-id={item.nodeId}
+            onFocus={() => setFocusedNode(item.nodeId)}
+            onKeyDown={(event) => moveByKeyboard(event, item.nodeId, 'purge')}
+            onClick={(event) => {
+              purgeReturnRef.current = event.currentTarget;
+              setPurgeTarget(item);
+            }}
+          >{busy && state.kind === 'purge' ? '영구 삭제 중…' : '영구 삭제'}</button> : null}
+          {results[item.nodeId] === undefined ? null : <span
+            data-testid={`trash-result-${item.nodeId}`}
+            {...(results[item.nodeId]!.role === 'alert'
+              ? { role: 'alert' }
+              : { 'data-result-role': 'status' })}
+          >{results[item.nodeId]!.text}</span>}
+        </div>;
+      },
+    },
+  ], [actions, moveByKeyboard, onPurge, onRestore, results, runAction]);
+
+  const table = useLegacyTable({ data: rows as TrashRowView[], columns, getCoreRowModel: getCoreRowModel() });
   const model = table.getRowModel().rows;
-  // 휴지통은 워크스페이스 전부를 합친 목록이라 길어질 수 있다 — 전부
-  // 그리면 스크롤이 그 길이에 비례해 느려진다.
   const virtual = useVirtualizer({
-    count: model.length,
+    count: query.state === 'ready' ? model.length : 0,
     getScrollElement: () => scroller.current,
     estimateSize: () => ROW_HEIGHT,
-    // 창 높이를 못 재는 환경(측정 없는 렌더·시험)에서는 전부 그린다 —
-    // 0 으로 접히면 목록이 통째로 사라지고, 그것은 「행이 없다」와
-    // 구별되지 않는다.
-    overscan: model.length,
+    getItemKey: (index) => model[index]?.original.nodeId ?? index,
+    overscan: OVERSCAN,
+    rangeExtractor: (range) => {
+      const normal = defaultRangeExtractor(range);
+      const focusedIndex = focusedNode === null ? -1 : model.findIndex((row) => row.original.nodeId === focusedNode);
+      return focusedIndex < 0 ? normal : [...new Set([...normal, focusedIndex])].sort((a, b) => a - b);
+    },
+    measureElement: (element) => Math.max(ROW_HEIGHT, element.scrollHeight || 0),
   });
+  virtualApi.current = virtual;
+  const virtualRows = virtual.getVirtualItems();
+  useEffect(() => { virtual.measure(); }, [rows, virtual]);
+  useEffect(() => {
+    const viewport = scroller.current;
+    if (viewport === null || typeof ResizeObserver === 'undefined') return;
+    let dpr = window.devicePixelRatio;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let resizeAnchor: { nodeId: string; offset: number } | null = null;
+    const reposition = () => {
+      const nextDpr = window.devicePixelRatio;
+      if (nextDpr === dpr) return;
+      dpr = nextDpr;
+      resizeAnchor ??= visibleAnchor.current;
+      adjustingAnchor.current = true;
+      if (timer !== undefined) clearTimeout(timer);
+      timer = setTimeout(() => {
+        const anchor = resizeAnchor;
+        const index = anchor === null ? -1 : currentRows.current.findIndex((row) => row.nodeId === anchor.nodeId);
+        virtualApi.current?.measure();
+        virtualApi.current?.scrollToIndex(index < 0 ? 0 : index, { align: 'start' });
+        const align = (remaining: number) => requestAnimationFrame(() => {
+          const row = anchor === null || index < 0 ? undefined : Array.from(viewport.querySelectorAll<HTMLElement>('tbody tr[aria-rowindex]'))
+            .find((candidate) => candidate.querySelector<HTMLElement>('[data-trash-node-id]')?.dataset.trashNodeId === anchor.nodeId);
+          if (row !== undefined) {
+            const top = Math.max(viewport.getBoundingClientRect().top, viewport.querySelector('thead')?.getBoundingClientRect().bottom ?? 0);
+            viewport.scrollTop += row.getBoundingClientRect().top - top - anchor!.offset;
+          }
+          if (remaining > 0) { align(remaining - 1); return; }
+          resizeAnchor = null;
+          adjustingAnchor.current = false;
+          captureAnchor();
+        });
+        align(30);
+      }, 40);
+    };
+    const observer = new ResizeObserver(reposition);
+    observer.observe(viewport);
+    window.addEventListener('resize', reposition);
+    window.visualViewport?.addEventListener('resize', reposition);
+    return () => {
+      observer.disconnect();
+      if (timer !== undefined) clearTimeout(timer);
+      window.removeEventListener('resize', reposition);
+      window.visualViewport?.removeEventListener('resize', reposition);
+    };
+  }, [captureAnchor, contextKey]);
+  useEffect(() => {
+    if (focusAfterRemoval === null) return;
+    const target = focusAfterRemoval.find((nodeId) => rows.some((row) => row.nodeId === nodeId));
+    if (target === undefined) {
+      document.getElementById('trash-heading')?.focus();
+      setFocusAfterRemoval(null);
+      return;
+    }
+    const index = rows.findIndex((row) => row.nodeId === target);
+    virtual.scrollToIndex(index, { align: 'auto' });
+    requestAnimationFrame(() => {
+      Array.from(document.querySelectorAll<HTMLElement>('[data-trash-action="restore"]'))
+        .find((element) => element.dataset.trashNodeId === target)?.focus();
+      setFocusAfterRemoval(null);
+    });
+  }, [focusAfterRemoval, rows, virtual]);
+  useEffect(() => {
+    if (keyboardTarget === null) return;
+    requestAnimationFrame(() => {
+      Array.from(document.querySelectorAll<HTMLElement>(`[data-trash-action="${keyboardTarget.action}"]`))
+        .find((element) => element.dataset.trashNodeId === keyboardTarget.nodeId)?.focus();
+      setKeyboardTarget(null);
+    });
+  }, [keyboardTarget, virtualRows]);
+  const bottom = virtualRows.length === 0 ? 0 : Math.max(0, virtual.getTotalSize() - virtualRows[virtualRows.length - 1]!.end);
 
-  return (
-    <div data-panel="trash">
+  return <section data-panel="trash" aria-labelledby="trash-heading">
+    <h2 id="trash-heading" tabIndex={-1}>휴지통</h2>
+    <div data-trash-toolbar>
       <label>
         워크스페이스 필터
         <select
           aria-label="워크스페이스 필터"
           value={lens.workspaceId ?? ''}
-          onChange={(event) =>
-            onLens?.(
-              event.target.value === ''
-                ? { scope: lens.scope }
-                : { scope: lens.scope, workspaceId: event.target.value },
-            )
-          }
+          onChange={(event) => onLens?.(event.target.value === ''
+            ? { scope: lens.scope }
+            : { scope: lens.scope, workspaceId: event.target.value })}
         >
           <option value="">전 워크스페이스</option>
-          {workspaces.map((one) => (
-            <option key={one.id} value={one.id}>
-              {one.name}
-            </option>
-          ))}
+          {workspaces.map((workspace) => <option key={workspace.id} value={workspace.id}>{workspace.name}</option>)}
         </select>
       </label>
+      <span data-trash-scope>현재 범위: {lens.scope === 'all' ? '전체' : '본인분'}</span>
+      {canWidenScope ? <button
+        type="button"
+        aria-pressed={lens.scope === 'all'}
+        onClick={() => onLens?.({ ...(lens.workspaceId === undefined ? {} : { workspaceId: lens.workspaceId }), scope: lens.scope === 'all' ? 'mine' : 'all' })}
+      >{lens.scope === 'all' ? '본인분만 보기' : '전체 보기'}</button> : null}
+    </div>
 
-      {canWidenScope && (
-        <button
-          type="button"
-          onClick={() =>
-            onLens?.({
-              ...(lens.workspaceId === undefined ? {} : { workspaceId: lens.workspaceId }),
-              scope: lens.scope === 'all' ? 'mine' : 'all',
-            })
-          }
-        >
-          {lens.scope === 'all' ? '본인분만 보기' : '전체 보기'}
-        </button>
-      )}
-
-      {/* 스크롤 컨테이너에 높이를 준다 — 없으면 가상화가 잴 창이 없어
-          아무 행도 그리지 않는다. 필터를 이 안에 넣지 않는 이유는 목록이
-          길어져 스크롤할 때 필터가 함께 밀려 올라가면 안 되기 때문이다. */}
-      <div ref={scroller} style={{ height: PANEL_HEIGHT, overflow: 'auto' }}>
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((group) => (
-            <tr key={group.id}>
-              {group.headers.map((header) => (
-                <th key={header.id}>
-                  {flexRender(header.column.columnDef.header, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
+    {message === null ? null : <p role={message.role}>{message.text}</p>}
+    {query.state === 'loading' ? <p role="status">휴지통을 불러오는 중입니다.</p> : null}
+    {query.state === 'error' ? <div role="alert"><p>휴지통을 불러오지 못했습니다.</p><button type="button" onClick={query.onRetry}>다시 불러오기</button></div> : null}
+    {query.state === 'ready' && rows.length === 0 ? <p data-trash-empty>표시할 휴지통 항목이 없습니다.</p> : null}
+    {query.state === 'ready' && rows.length > 0 ? <div ref={scroller} data-trash-results role="region" aria-label="휴지통 결과" onScroll={captureAnchor}>
+      <table aria-rowcount={rows.length + 1}>
+        <thead>{table.getHeaderGroups().map((group) => <tr key={group.id}>{group.headers.map((header) => <th key={header.id}>{flexRender(header.column.columnDef.header, header.getContext())}</th>)}</tr>)}</thead>
         <tbody>
-          {virtual.getVirtualItems().map((item) => {
-            const row = model[item.index]!;
-            return (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-                ))}
+          {virtualRows.map((item) => {
+            const one = model[item.index]!;
+            const priorEnd = item.index === virtualRows[0]?.index ? 0 : virtualRows[virtualRows.indexOf(item) - 1]?.end ?? 0;
+            const gap = Math.max(0, item.start - priorEnd);
+            return <Fragment key={one.original.nodeId}>
+              {gap > 0 || item === virtualRows[0] ? <tr
+                aria-hidden="true"
+                {...(item === virtualRows[0] ? { 'data-testid': 'trash-virtual-spacer', 'data-total-size': virtual.getTotalSize() } : {})}
+                style={gap > 0 ? undefined : { display: 'none' }}
+              ><td colSpan={columns.length} style={{ height: gap, padding: 0 }} /></tr> : null}
+              <tr ref={(element) => { if (element !== null) virtual.measureElement(element); }} data-index={item.index} aria-rowindex={item.index + 2}>
+                {one.getVisibleCells().map((cell) => <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>)}
               </tr>
-            );
+            </Fragment>;
           })}
+          {bottom > 0 ? <tr aria-hidden="true"><td colSpan={columns.length} style={{ height: bottom, padding: 0 }} /></tr> : null}
         </tbody>
       </table>
-      </div>
-    </div>
-  );
+    </div> : null}
+
+    <ConfirmGate
+      open={purgeTarget !== null}
+      grade="L2"
+      title="선택한 항목을 영구 삭제합니다"
+      description="이 항목은 복구할 수 없습니다."
+      confirmLabel="영구 삭제"
+      pendingLabel="영구 삭제 중…"
+      restoreFocusRef={purgeReturnRef}
+      onConfirm={confirmPurge}
+      onCancel={() => setPurgeTarget(null)}
+    >
+      {purgeTarget === null ? null : <><p>{purgeTarget.originalPath}</p><p>{purgeTarget.workspaceName}</p></>}
+    </ConfirmGate>
+  </section>;
 }

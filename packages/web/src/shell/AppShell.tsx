@@ -36,7 +36,7 @@ import type {
 import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
 import { SignupApproval } from '../principal/SignupApproval.js';
-import { TrashPanel, type TrashLens, type TrashRowView } from '../trash/TrashPanel.js';
+import { TrashPanel, type TrashActionResult, type TrashLens, type TrashQueryState, type TrashRowView } from '../trash/TrashPanel.js';
 import { EmptyState, ErrorState, LoadingState } from '../components/ui/states.js';
 import { Button } from '../components/ui/button.js';
 import {
@@ -244,6 +244,8 @@ function Sidebar({
 function SettingsModal({
   viewer,
   trash = [],
+  trashQuery,
+  trashContextKey,
   workspaces = [],
   trashLens,
   personalSettings = {},
@@ -279,6 +281,8 @@ function SettingsModal({
 }: {
   viewer: Viewer;
   trash?: readonly TrashRowView[];
+  trashQuery?: TrashQueryState;
+  trashContextKey?: string;
   workspaces?: readonly { id: string; name: string }[];
   trashLens?: TrashLens;
   /** 이 사용자의 개인 설정 (`DR-SHELL-002`). 없는 항목은 기본값으로 그린다. */
@@ -304,8 +308,8 @@ function SettingsModal({
   auditOperation?: string;
   onAuditOperation?: (operation: string) => void;
   onTrashLens?: (lens: TrashLens) => void;
-  onTrashPurge?: (nodeId: string) => void;
-  onTrashRestore?: (nodeId: string) => void;
+  onTrashPurge?: (nodeId: string) => Promise<TrashActionResult>;
+  onTrashRestore?: (nodeId: string) => Promise<TrashActionResult>;
   onPersonalSetting?: (key: string, value: string) => void;
   themeLoadState?: ThemeLoadState;
   themeSaveState?: ThemeSaveState;
@@ -438,7 +442,9 @@ function SettingsModal({
                     소유한 요구가 서는 자리에서 채워진다. */}
                 {category.id === 'trash' ? (
                   <TrashPanel
+                    contextKey={trashContextKey}
                     rows={trash}
+                    query={trashQuery ?? { state: 'ready' }}
                     workspaces={workspaces}
                     // 관리 권한이 어디에도 없으면 범위 토글이 서지 않는다
                     // (`FR-SHELL-007` AC-5) — 눌러도 결과가 그대로다.
@@ -572,6 +578,8 @@ export function AppShell({
   searchAxes,
   onSearchAxes,
   trash = [],
+  trashQuery,
+  trashContextKey,
   trashLens,
   personalSettings = {},
   tokens = [],
@@ -649,6 +657,8 @@ export function AppShell({
   linksState?: ShellPanelState;
   /** 휴지통 행. 서버가 행마다 권한을 붙여 준다. */
   trash?: readonly TrashRowView[];
+  trashQuery?: TrashQueryState;
+  trashContextKey?: string;
   /**
    * 방금 조작에 대한 서버의 안내 (`SEC-SHELL-002` AC-3).
    *
@@ -660,9 +670,9 @@ export function AppShell({
   trashLens?: TrashLens;
   onTrashLens?: (lens: TrashLens) => void;
   /** 그 항목을 영구 삭제한다 (`SEC-SHELL-001`). 버튼은 서버 판정을 따라 그려진다. */
-  onTrashPurge?: (nodeId: string) => void;
+  onTrashPurge?: (nodeId: string) => Promise<TrashActionResult>;
   /** 그 항목을 되돌린다 (`FR-SHELL-007`). */
-  onTrashRestore?: (nodeId: string) => void;
+  onTrashRestore?: (nodeId: string) => Promise<TrashActionResult>;
   /**
    * 이 사용자의 개인 설정 (`IR-SHELL-004` · `DR-SHELL-002`).
    *
@@ -897,6 +907,8 @@ export function AppShell({
           <SettingsModal
             viewer={viewer}
             trash={trash}
+            {...(trashQuery === undefined ? {} : { trashQuery })}
+            {...(trashContextKey === undefined ? {} : { trashContextKey })}
             workspaces={workspaces.map((entry) => entry.workspace)}
             {...(trashLens === undefined ? {} : { trashLens })}
             {...(onTrashLens === undefined ? {} : { onTrashLens })}

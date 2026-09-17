@@ -1,0 +1,1755 @@
+{
+  "environments": 12,
+  "forcedColors": {
+    "at100": true,
+    "at200": true
+  },
+  "matrix": [
+    {
+      "environment": {
+        "owner": "fresh Playwright isolated Chromium",
+        "theme": "light",
+        "zoom": 1,
+        "requestedViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "preZoomViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        }
+      },
+      "baseline": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "columns": [
+          "경로",
+          "워크스페이스",
+          "삭제자",
+          "삭제 시각",
+          "조작"
+        ],
+        "renderedRows": 14,
+        "logicalRows": 1001,
+        "totalSize": 40618,
+        "firstHeight": 97,
+        "wraps": true,
+        "scrollOverflow": "auto",
+        "tableRight": 1214,
+        "resultsRight": 1215,
+        "textColor": "rgb(36, 37, 33)",
+        "textBackground": "rgb(245, 244, 239)",
+        "noPurgeForSecond": true
+      },
+      "purgeTarget": "기획/2026/분기/아주 긴 한글 원본 경로는 말줄임 없이 여러 줄로 자연스럽게 표시되어야 합니다.md 영구 삭제",
+      "stages": {
+        "filterFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 325,
+            "top": 198,
+            "right": 1001.09375,
+            "bottom": 234,
+            "width": 676.09375,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "restoreFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 1071.828125,
+            "top": 239,
+            "right": 1121.828125,
+            "bottom": 275,
+            "width": 50,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "purgeFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 1071.828125,
+            "top": 336,
+            "right": 1154.75,
+            "bottom": 372,
+            "width": 82.921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "l2Focus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(0, 94, 168)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 730.078125,
+            "top": 430,
+            "right": 792.078125,
+            "bottom": 466,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "queryLoadingErrorRetry": true,
+        "nativeSelectKeys": true,
+        "lensPreserved": true,
+        "bounded1000": true,
+        "middleLastReached": true,
+        "runtimeResize899900901": true,
+        "restoreFailureRetry": true,
+        "l2EscapeOutsideCancelNoDelete": true,
+        "purgeFailureRetry": true,
+        "purgeSuccessFocus": true
+      },
+      "requestCounts": {
+        "restore": 2,
+        "purge": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright isolated Chromium",
+        "theme": "light",
+        "zoom": 1,
+        "requestedViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "preZoomViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        }
+      },
+      "baseline": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "columns": [
+          "경로",
+          "워크스페이스",
+          "삭제자",
+          "삭제 시각",
+          "조작"
+        ],
+        "renderedRows": 14,
+        "logicalRows": 1001,
+        "totalSize": 40618,
+        "firstHeight": 97,
+        "wraps": true,
+        "scrollOverflow": "auto",
+        "tableRight": 1294,
+        "resultsRight": 1295,
+        "textColor": "rgb(36, 37, 33)",
+        "textBackground": "rgb(245, 244, 239)",
+        "noPurgeForSecond": true
+      },
+      "purgeTarget": "기획/2026/분기/아주 긴 한글 원본 경로는 말줄임 없이 여러 줄로 자연스럽게 표시되어야 합니다.md 영구 삭제",
+      "stages": {
+        "filterFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 405,
+            "top": 207,
+            "right": 1081.09375,
+            "bottom": 243,
+            "width": 676.09375,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "restoreFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 1151.828125,
+            "top": 301,
+            "right": 1201.828125,
+            "bottom": 337,
+            "width": 50,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "purgeFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 1151.828125,
+            "top": 345,
+            "right": 1234.75,
+            "bottom": 381,
+            "width": 82.921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "l2Focus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(0, 94, 168)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 810.078125,
+            "top": 520,
+            "right": 872.078125,
+            "bottom": 556,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "queryLoadingErrorRetry": true,
+        "nativeSelectKeys": true,
+        "lensPreserved": true,
+        "bounded1000": true,
+        "middleLastReached": true,
+        "runtimeResize899900901": true,
+        "restoreFailureRetry": true,
+        "l2EscapeOutsideCancelNoDelete": true,
+        "purgeFailureRetry": true,
+        "purgeSuccessFocus": true
+      },
+      "requestCounts": {
+        "restore": 2,
+        "purge": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright isolated Chromium",
+        "theme": "light",
+        "zoom": 1,
+        "requestedViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "preZoomViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        }
+      },
+      "baseline": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "columns": [
+          "경로",
+          "워크스페이스",
+          "삭제자",
+          "삭제 시각",
+          "조작"
+        ],
+        "renderedRows": 14,
+        "logicalRows": 1001,
+        "totalSize": 40618,
+        "firstHeight": 97,
+        "wraps": true,
+        "scrollOverflow": "auto",
+        "tableRight": 1534,
+        "resultsRight": 1535,
+        "textColor": "rgb(36, 37, 33)",
+        "textBackground": "rgb(245, 244, 239)",
+        "noPurgeForSecond": true
+      },
+      "purgeTarget": "기획/2026/분기/아주 긴 한글 원본 경로는 말줄임 없이 여러 줄로 자연스럽게 표시되어야 합니다.md 영구 삭제",
+      "stages": {
+        "filterFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 645,
+            "top": 292,
+            "right": 1321.09375,
+            "bottom": 328,
+            "width": 676.09375,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "restoreFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 1391.828125,
+            "top": 386,
+            "right": 1441.828125,
+            "bottom": 422,
+            "width": 50,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "purgeFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 1391.828125,
+            "top": 430,
+            "right": 1474.75,
+            "bottom": 466,
+            "width": 82.921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "l2Focus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(0, 94, 168)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 1050.078125,
+            "top": 610,
+            "right": 1112.078125,
+            "bottom": 646,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "queryLoadingErrorRetry": true,
+        "nativeSelectKeys": true,
+        "lensPreserved": true,
+        "bounded1000": true,
+        "middleLastReached": true,
+        "runtimeResize899900901": true,
+        "restoreFailureRetry": true,
+        "l2EscapeOutsideCancelNoDelete": true,
+        "purgeFailureRetry": true,
+        "purgeSuccessFocus": true
+      },
+      "requestCounts": {
+        "restore": 2,
+        "purge": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright isolated Chromium",
+        "theme": "dark",
+        "zoom": 1,
+        "requestedViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "preZoomViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        }
+      },
+      "baseline": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "columns": [
+          "경로",
+          "워크스페이스",
+          "삭제자",
+          "삭제 시각",
+          "조작"
+        ],
+        "renderedRows": 14,
+        "logicalRows": 1001,
+        "totalSize": 40618,
+        "firstHeight": 97,
+        "wraps": true,
+        "scrollOverflow": "auto",
+        "tableRight": 1214,
+        "resultsRight": 1215,
+        "textColor": "rgb(233, 231, 223)",
+        "textBackground": "rgb(41, 44, 39)",
+        "noPurgeForSecond": true
+      },
+      "purgeTarget": "기획/2026/분기/아주 긴 한글 원본 경로는 말줄임 없이 여러 줄로 자연스럽게 표시되어야 합니다.md 영구 삭제",
+      "stages": {
+        "filterFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 325,
+            "top": 198,
+            "right": 1001.09375,
+            "bottom": 234,
+            "width": 676.09375,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "restoreFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 1071.828125,
+            "top": 244,
+            "right": 1121.828125,
+            "bottom": 280,
+            "width": 50,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "purgeFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 1071.828125,
+            "top": 336,
+            "right": 1154.75,
+            "bottom": 372,
+            "width": 82.921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "l2Focus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(142, 203, 255)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 730.078125,
+            "top": 430,
+            "right": 792.078125,
+            "bottom": 466,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "queryLoadingErrorRetry": true,
+        "nativeSelectKeys": true,
+        "lensPreserved": true,
+        "bounded1000": true,
+        "middleLastReached": true,
+        "runtimeResize899900901": true,
+        "restoreFailureRetry": true,
+        "l2EscapeOutsideCancelNoDelete": true,
+        "purgeFailureRetry": true,
+        "purgeSuccessFocus": true
+      },
+      "requestCounts": {
+        "restore": 2,
+        "purge": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright isolated Chromium",
+        "theme": "dark",
+        "zoom": 1,
+        "requestedViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "preZoomViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        }
+      },
+      "baseline": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "columns": [
+          "경로",
+          "워크스페이스",
+          "삭제자",
+          "삭제 시각",
+          "조작"
+        ],
+        "renderedRows": 14,
+        "logicalRows": 1001,
+        "totalSize": 40618,
+        "firstHeight": 97,
+        "wraps": true,
+        "scrollOverflow": "auto",
+        "tableRight": 1294,
+        "resultsRight": 1295,
+        "textColor": "rgb(233, 231, 223)",
+        "textBackground": "rgb(41, 44, 39)",
+        "noPurgeForSecond": true
+      },
+      "purgeTarget": "기획/2026/분기/아주 긴 한글 원본 경로는 말줄임 없이 여러 줄로 자연스럽게 표시되어야 합니다.md 영구 삭제",
+      "stages": {
+        "filterFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 405,
+            "top": 207,
+            "right": 1081.09375,
+            "bottom": 243,
+            "width": 676.09375,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "restoreFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 1151.828125,
+            "top": 301,
+            "right": 1201.828125,
+            "bottom": 337,
+            "width": 50,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "purgeFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 1151.828125,
+            "top": 345,
+            "right": 1234.75,
+            "bottom": 381,
+            "width": 82.921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "l2Focus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(142, 203, 255)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 810.078125,
+            "top": 520,
+            "right": 872.078125,
+            "bottom": 556,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "queryLoadingErrorRetry": true,
+        "nativeSelectKeys": true,
+        "lensPreserved": true,
+        "bounded1000": true,
+        "middleLastReached": true,
+        "runtimeResize899900901": true,
+        "restoreFailureRetry": true,
+        "l2EscapeOutsideCancelNoDelete": true,
+        "purgeFailureRetry": true,
+        "purgeSuccessFocus": true
+      },
+      "requestCounts": {
+        "restore": 2,
+        "purge": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright isolated Chromium",
+        "theme": "dark",
+        "zoom": 1,
+        "requestedViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "preZoomViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        }
+      },
+      "baseline": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "columns": [
+          "경로",
+          "워크스페이스",
+          "삭제자",
+          "삭제 시각",
+          "조작"
+        ],
+        "renderedRows": 14,
+        "logicalRows": 1001,
+        "totalSize": 40618,
+        "firstHeight": 97,
+        "wraps": true,
+        "scrollOverflow": "auto",
+        "tableRight": 1534,
+        "resultsRight": 1535,
+        "textColor": "rgb(233, 231, 223)",
+        "textBackground": "rgb(41, 44, 39)",
+        "noPurgeForSecond": true
+      },
+      "purgeTarget": "기획/2026/분기/아주 긴 한글 원본 경로는 말줄임 없이 여러 줄로 자연스럽게 표시되어야 합니다.md 영구 삭제",
+      "stages": {
+        "filterFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 645,
+            "top": 292,
+            "right": 1321.09375,
+            "bottom": 328,
+            "width": 676.09375,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "restoreFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 1391.828125,
+            "top": 386,
+            "right": 1441.828125,
+            "bottom": 422,
+            "width": 50,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "purgeFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 1391.828125,
+            "top": 430,
+            "right": 1474.75,
+            "bottom": 466,
+            "width": 82.921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "l2Focus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(142, 203, 255)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 1050.078125,
+            "top": 610,
+            "right": 1112.078125,
+            "bottom": 646,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "queryLoadingErrorRetry": true,
+        "nativeSelectKeys": true,
+        "lensPreserved": true,
+        "bounded1000": true,
+        "middleLastReached": true,
+        "runtimeResize899900901": true,
+        "restoreFailureRetry": true,
+        "l2EscapeOutsideCancelNoDelete": true,
+        "purgeFailureRetry": true,
+        "purgeSuccessFocus": true
+      },
+      "requestCounts": {
+        "restore": 2,
+        "purge": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright persistent isolated Chromium",
+        "theme": "light",
+        "zoom": 2,
+        "requestedViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "preZoomViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "transitions": [
+          1,
+          2,
+          1
+        ],
+        "mountedTransition": {
+          "transitions": [
+            1,
+            2,
+            1
+          ],
+          "at100": {
+            "nodeId": "trash-544",
+            "offset": 19,
+            "rendered": 6
+          },
+          "at200": {
+            "nodeId": "trash-544",
+            "offset": 19,
+            "rendered": 6
+          },
+          "reset": {
+            "nodeId": "trash-544",
+            "offset": 19,
+            "rendered": 6
+          },
+          "forced100": {
+            "active": true,
+            "width": 2,
+            "offset": 2,
+            "color": "rgb(55, 0, 110)",
+            "bg": "rgb(255, 255, 255)",
+            "rect": {
+              "left": 1046.953125,
+              "top": 263,
+              "right": 1096.953125,
+              "bottom": 299,
+              "width": 50,
+              "height": 36
+            },
+            "viewport": {
+              "width": 1280,
+              "height": 720
+            }
+          },
+          "forced200": {
+            "active": true,
+            "width": 2,
+            "offset": 2,
+            "color": "rgb(55, 0, 110)",
+            "bg": "rgb(255, 255, 255)",
+            "rect": {
+              "left": 474.0625,
+              "top": 162,
+              "right": 524.0625,
+              "bottom": 198,
+              "width": 50,
+              "height": 36
+            },
+            "viewport": {
+              "width": 640,
+              "height": 360
+            }
+          },
+          "finalZoom": 1
+        }
+      },
+      "baseline": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "columns": [
+          "경로",
+          "워크스페이스",
+          "삭제자",
+          "삭제 시각",
+          "조작"
+        ],
+        "renderedRows": 14,
+        "logicalRows": 1001,
+        "totalSize": 40626,
+        "firstHeight": 105,
+        "wraps": true,
+        "scrollOverflow": "auto",
+        "tableRight": 949.0703125,
+        "resultsRight": 596.296875,
+        "textColor": "rgb(36, 37, 33)",
+        "textBackground": "rgb(245, 244, 239)",
+        "noPurgeForSecond": true
+      },
+      "purgeTarget": "기획/2026/분기/아주 긴 한글 원본 경로는 말줄임 없이 여러 줄로 자연스럽게 표시되어야 합니다.md 영구 삭제",
+      "stages": {
+        "filterFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 228.0703125,
+            "top": 172,
+            "right": 481.3125,
+            "bottom": 208,
+            "width": 253.2421875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "restoreFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 474.0625,
+            "top": 199.5,
+            "right": 524.0625,
+            "bottom": 235.5,
+            "width": 50,
+            "height": 36
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "purgeFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 474.0625,
+            "top": 199.5,
+            "right": 556.984375,
+            "bottom": 235.5,
+            "width": 82.921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "l2Focus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(0, 94, 168)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 410.078125,
+            "top": 250,
+            "right": 472.078125,
+            "bottom": 286,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "queryLoadingErrorRetry": true,
+        "nativeSelectKeys": true,
+        "lensPreserved": true,
+        "bounded1000": true,
+        "middleLastReached": true,
+        "runtimeResize899900901": true,
+        "restoreFailureRetry": true,
+        "l2EscapeOutsideCancelNoDelete": true,
+        "purgeFailureRetry": true,
+        "purgeSuccessFocus": true
+      },
+      "requestCounts": {
+        "restore": 2,
+        "purge": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright persistent isolated Chromium",
+        "theme": "light",
+        "zoom": 2,
+        "requestedViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "preZoomViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "transitions": [],
+        "mountedTransition": null
+      },
+      "baseline": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "columns": [
+          "경로",
+          "워크스페이스",
+          "삭제자",
+          "삭제 시각",
+          "조작"
+        ],
+        "renderedRows": 14,
+        "logicalRows": 1001,
+        "totalSize": 40626,
+        "firstHeight": 105,
+        "wraps": true,
+        "scrollOverflow": "auto",
+        "tableRight": 975.53125,
+        "resultsRight": 673.8984375,
+        "textColor": "rgb(36, 37, 33)",
+        "textBackground": "rgb(245, 244, 239)",
+        "noPurgeForSecond": true
+      },
+      "purgeTarget": "기획/2026/분기/아주 긴 한글 원본 경로는 말줄임 없이 여러 줄로 자연스럽게 표시되어야 합니다.md 영구 삭제",
+      "stages": {
+        "filterFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 254.53125,
+            "top": 176.5,
+            "right": 558.9140625,
+            "bottom": 212.5,
+            "width": 304.3828125,
+            "height": 36
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "restoreFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 552.0234375,
+            "top": 244.5,
+            "right": 602.0234375,
+            "bottom": 280.5,
+            "width": 50,
+            "height": 36
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "purgeFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 552.0234375,
+            "top": 362.5,
+            "right": 634.9453125,
+            "bottom": 398.5,
+            "width": 82.921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "l2Focus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(0, 94, 168)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 450.078125,
+            "top": 295,
+            "right": 512.078125,
+            "bottom": 331,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "queryLoadingErrorRetry": true,
+        "nativeSelectKeys": true,
+        "lensPreserved": true,
+        "bounded1000": true,
+        "middleLastReached": true,
+        "runtimeResize899900901": true,
+        "restoreFailureRetry": true,
+        "l2EscapeOutsideCancelNoDelete": true,
+        "purgeFailureRetry": true,
+        "purgeSuccessFocus": true
+      },
+      "requestCounts": {
+        "restore": 2,
+        "purge": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright persistent isolated Chromium",
+        "theme": "light",
+        "zoom": 2,
+        "requestedViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "preZoomViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "transitions": [],
+        "mountedTransition": null
+      },
+      "baseline": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "columns": [
+          "경로",
+          "워크스페이스",
+          "삭제자",
+          "삭제 시각",
+          "조작"
+        ],
+        "renderedRows": 14,
+        "logicalRows": 1001,
+        "totalSize": 40626,
+        "firstHeight": 105,
+        "wraps": true,
+        "scrollOverflow": "auto",
+        "tableRight": 1034.80078125,
+        "resultsRight": 898.69921875,
+        "textColor": "rgb(36, 37, 33)",
+        "textBackground": "rgb(245, 244, 239)",
+        "noPurgeForSecond": true
+      },
+      "purgeTarget": "기획/2026/분기/아주 긴 한글 원본 경로는 말줄임 없이 여러 줄로 자연스럽게 표시되어야 합니다.md 영구 삭제",
+      "stages": {
+        "filterFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 313.80078125,
+            "top": 189,
+            "right": 684.79296875,
+            "bottom": 225,
+            "width": 370.9921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "restoreFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 776.79296875,
+            "top": 283,
+            "right": 826.79296875,
+            "bottom": 319,
+            "width": 50,
+            "height": 36
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "purgeFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 776.79296875,
+            "top": 327,
+            "right": 859.71484375,
+            "bottom": 363,
+            "width": 82.921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "l2Focus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(0, 94, 168)",
+          "bg": "rgb(250, 249, 245)",
+          "rect": {
+            "left": 570.078125,
+            "top": 340,
+            "right": 632.078125,
+            "bottom": 376,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "queryLoadingErrorRetry": true,
+        "nativeSelectKeys": true,
+        "lensPreserved": true,
+        "bounded1000": true,
+        "middleLastReached": true,
+        "runtimeResize899900901": true,
+        "restoreFailureRetry": true,
+        "l2EscapeOutsideCancelNoDelete": true,
+        "purgeFailureRetry": true,
+        "purgeSuccessFocus": true
+      },
+      "requestCounts": {
+        "restore": 2,
+        "purge": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright persistent isolated Chromium",
+        "theme": "dark",
+        "zoom": 2,
+        "requestedViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "preZoomViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "transitions": [],
+        "mountedTransition": null
+      },
+      "baseline": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "columns": [
+          "경로",
+          "워크스페이스",
+          "삭제자",
+          "삭제 시각",
+          "조작"
+        ],
+        "renderedRows": 14,
+        "logicalRows": 1001,
+        "totalSize": 40626,
+        "firstHeight": 105,
+        "wraps": true,
+        "scrollOverflow": "auto",
+        "tableRight": 949.0703125,
+        "resultsRight": 596.296875,
+        "textColor": "rgb(233, 231, 223)",
+        "textBackground": "rgb(41, 44, 39)",
+        "noPurgeForSecond": true
+      },
+      "purgeTarget": "기획/2026/분기/아주 긴 한글 원본 경로는 말줄임 없이 여러 줄로 자연스럽게 표시되어야 합니다.md 영구 삭제",
+      "stages": {
+        "filterFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 228.0703125,
+            "top": 172,
+            "right": 481.3125,
+            "bottom": 208,
+            "width": 253.2421875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "restoreFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 474.0625,
+            "top": 199.5,
+            "right": 524.0625,
+            "bottom": 235.5,
+            "width": 50,
+            "height": 36
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "purgeFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 474.0625,
+            "top": 199.5,
+            "right": 556.984375,
+            "bottom": 235.5,
+            "width": 82.921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "l2Focus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(142, 203, 255)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 410.078125,
+            "top": 250,
+            "right": 472.078125,
+            "bottom": 286,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "queryLoadingErrorRetry": true,
+        "nativeSelectKeys": true,
+        "lensPreserved": true,
+        "bounded1000": true,
+        "middleLastReached": true,
+        "runtimeResize899900901": true,
+        "restoreFailureRetry": true,
+        "l2EscapeOutsideCancelNoDelete": true,
+        "purgeFailureRetry": true,
+        "purgeSuccessFocus": true
+      },
+      "requestCounts": {
+        "restore": 2,
+        "purge": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright persistent isolated Chromium",
+        "theme": "dark",
+        "zoom": 2,
+        "requestedViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "preZoomViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "transitions": [],
+        "mountedTransition": null
+      },
+      "baseline": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "columns": [
+          "경로",
+          "워크스페이스",
+          "삭제자",
+          "삭제 시각",
+          "조작"
+        ],
+        "renderedRows": 14,
+        "logicalRows": 1001,
+        "totalSize": 40626,
+        "firstHeight": 105,
+        "wraps": true,
+        "scrollOverflow": "auto",
+        "tableRight": 975.53125,
+        "resultsRight": 673.8984375,
+        "textColor": "rgb(233, 231, 223)",
+        "textBackground": "rgb(41, 44, 39)",
+        "noPurgeForSecond": true
+      },
+      "purgeTarget": "기획/2026/분기/아주 긴 한글 원본 경로는 말줄임 없이 여러 줄로 자연스럽게 표시되어야 합니다.md 영구 삭제",
+      "stages": {
+        "filterFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 254.53125,
+            "top": 176.5,
+            "right": 558.9140625,
+            "bottom": 212.5,
+            "width": 304.3828125,
+            "height": 36
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "restoreFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 552.0234375,
+            "top": 244.5,
+            "right": 602.0234375,
+            "bottom": 280.5,
+            "width": 50,
+            "height": 36
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "purgeFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 552.0234375,
+            "top": 362.5,
+            "right": 634.9453125,
+            "bottom": 398.5,
+            "width": 82.921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "l2Focus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(142, 203, 255)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 450.078125,
+            "top": 295,
+            "right": 512.078125,
+            "bottom": 331,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "queryLoadingErrorRetry": true,
+        "nativeSelectKeys": true,
+        "lensPreserved": true,
+        "bounded1000": true,
+        "middleLastReached": true,
+        "runtimeResize899900901": true,
+        "restoreFailureRetry": true,
+        "l2EscapeOutsideCancelNoDelete": true,
+        "purgeFailureRetry": true,
+        "purgeSuccessFocus": true
+      },
+      "requestCounts": {
+        "restore": 2,
+        "purge": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright persistent isolated Chromium",
+        "theme": "dark",
+        "zoom": 2,
+        "requestedViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "preZoomViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "transitions": [],
+        "mountedTransition": null
+      },
+      "baseline": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "columns": [
+          "경로",
+          "워크스페이스",
+          "삭제자",
+          "삭제 시각",
+          "조작"
+        ],
+        "renderedRows": 14,
+        "logicalRows": 1001,
+        "totalSize": 40626,
+        "firstHeight": 105,
+        "wraps": true,
+        "scrollOverflow": "auto",
+        "tableRight": 1034.80078125,
+        "resultsRight": 898.69921875,
+        "textColor": "rgb(233, 231, 223)",
+        "textBackground": "rgb(41, 44, 39)",
+        "noPurgeForSecond": true
+      },
+      "purgeTarget": "기획/2026/분기/아주 긴 한글 원본 경로는 말줄임 없이 여러 줄로 자연스럽게 표시되어야 합니다.md 영구 삭제",
+      "stages": {
+        "filterFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 313.80078125,
+            "top": 189,
+            "right": 684.79296875,
+            "bottom": 225,
+            "width": 370.9921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "restoreFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 776.79296875,
+            "top": 283,
+            "right": 826.79296875,
+            "bottom": 319,
+            "width": 50,
+            "height": 36
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "purgeFocus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 776.79296875,
+            "top": 327,
+            "right": 859.71484375,
+            "bottom": 363,
+            "width": 82.921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "l2Focus": {
+          "active": true,
+          "width": 2,
+          "offset": 2,
+          "color": "rgb(142, 203, 255)",
+          "bg": "rgb(48, 53, 46)",
+          "rect": {
+            "left": 570.078125,
+            "top": 340,
+            "right": 632.078125,
+            "bottom": 376,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "queryLoadingErrorRetry": true,
+        "nativeSelectKeys": true,
+        "lensPreserved": true,
+        "bounded1000": true,
+        "middleLastReached": true,
+        "runtimeResize899900901": true,
+        "restoreFailureRetry": true,
+        "l2EscapeOutsideCancelNoDelete": true,
+        "purgeFailureRetry": true,
+        "purgeSuccessFocus": true
+      },
+      "requestCounts": {
+        "restore": 2,
+        "purge": 2
+      }
+    }
+  ],
+  "ownedServerPid": 100368,
+  "browserOwnership": "fresh Playwright-owned isolated Chromium contexts; persistent disposable profiles for zoom"
+}

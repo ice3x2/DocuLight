@@ -24,6 +24,8 @@
     "test:browser:settings-product": "node test/newspaper-settings-product-runner.mjs",
     "test:browser:tokens": "node test/issue63-token-browser-check.cjs",
     "test:browser:tokens-product": "node test/issue63-token-product-runner.mjs",
+    "test:browser:trash64": "node test/issue64-trash-browser-check.cjs",
+    "test:browser:trash64-product": "node test/issue64-trash-product-runner.mjs",
     "test:browser:pre-auth": "node test/newspaper-pre-auth-check.cjs",
     "test:browser:pre-auth-product": "node test/newspaper-pre-auth-product-runner.mjs",
     "test:browser:install-product": "node test/newspaper-install-product-runner.mjs",

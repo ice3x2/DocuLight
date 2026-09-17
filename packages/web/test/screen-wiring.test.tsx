@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
+import { act, cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { existsSync } from 'node:fs';
 import { readdir, readFile } from 'node:fs/promises';
@@ -554,8 +554,8 @@ describe('휴지통 복구·영구 삭제가 서버까지 닿는다 (`FR-SHELL-0
 
   const openTrashPanel = async () => {
     routes.set('/api/trash', () => json(TRASH_ROW));
-    routes.set('/api/trash/t1', () => json(null, 204));
-    routes.set('/api/nodes/t1/restore', () => json(null, 204));
+    routes.set('/api/trash/t1', () => new Response(null, { status: 204 }));
+    routes.set('/api/trash/t1/restore', () => new Response(null, { status: 204 }));
     const user = await openTree();
     await user.click(screen.getByRole('button', { name: '설정' }));
     await user.click(
@@ -568,10 +568,12 @@ describe('휴지통 복구·영구 삭제가 서버까지 닿는다 (`FR-SHELL-0
     const user = await openTrashPanel();
 
     await user.click(await screen.findByRole('button', { name: /영구 삭제/ }));
+    await user.click(within(await screen.findByRole('alertdialog')).getByRole('button', { name: '영구 삭제' }));
 
     await waitFor(() =>
       expect(sent.some((one) => one.path === '/api/trash/t1' && one.method === 'DELETE')).toBe(true),
     );
+    expect((await screen.findByRole('status')).textContent).toContain('항목을 영구 삭제했습니다.');
   });
 
   it('복구를 누르면 그 요청이 나간다', async () => {
@@ -580,6 +582,48 @@ describe('휴지통 복구·영구 삭제가 서버까지 닿는다 (`FR-SHELL-0
     await user.click(await screen.findByRole('button', { name: /복구/ }));
 
     await waitFor(() => expect(sent.some((one) => one.path.includes('restore'))).toBe(true));
+    expect((await screen.findByRole('status')).textContent).toContain('항목을 복구했습니다.');
+  });
+
+  it('background refresh keeps cached trash rows and focused actions mounted', async () => {
+    let calls = 0;
+    let release!: () => void;
+    const delayed = new Promise<Response>((resolve) => { release = () => resolve(json(TRASH_ROW)); });
+    routes.set('/api/trash', () => ++calls === 1 ? json(TRASH_ROW) : delayed);
+    routes.set('/api/trash/t1/restore', () => new Response(null, { status: 204 }));
+    const user = await openTree();
+    await user.click(screen.getByRole('button', { name: '설정' }));
+    await user.click(within(await screen.findByRole('dialog', { name: '설정' })).getByRole('tab', { name: '휴지통' }));
+    const restore = await screen.findByRole('button', { name: /복구/ });
+    restore.focus();
+    await user.keyboard('{Enter}');
+    await waitFor(() => expect(calls).toBe(2));
+    expect(screen.getByText(TRASH_ROW[0]!.originalPath)).toBeDefined();
+    expect(screen.queryByText('휴지통을 불러오는 중입니다.')).toBeNull();
+    await act(async () => { release(); await delayed; });
+  });
+
+  it('서버 조작 실패를 성공으로 접지 않고 목록 새로고침과 구분한다', async () => {
+    const user = await openTrashPanel();
+    routes.set('/api/trash/t1/restore', () => json({ message: 'private detail' }, 500));
+
+    await user.click(await screen.findByRole('button', { name: /복구/ }));
+
+    expect((await screen.findByRole('alert')).textContent).toContain('항목을 복구하지 못했습니다.');
+    expect(screen.queryByText('항목을 복구했습니다.')).toBeNull();
+  });
+
+  it('목록 질의 실패는 빈 목록이 아니라 재시도 가능한 오류로 보인다', async () => {
+    routes.set('/api/trash', () => json({ message: 'private detail' }, 500));
+    const user = await openTree();
+    await user.click(screen.getByRole('button', { name: '설정' }));
+    await user.click(
+      within(await screen.findByRole('dialog', { name: '설정' })).getByRole('tab', { name: '휴지통' }),
+    );
+
+    expect((await screen.findByRole('alert')).textContent).toContain('휴지통을 불러오지 못했습니다.');
+    expect(screen.getByRole('button', { name: '다시 불러오기' })).toBeDefined();
+    expect(screen.queryByText('표시할 휴지통 항목이 없습니다.')).toBeNull();
   });
 });
 

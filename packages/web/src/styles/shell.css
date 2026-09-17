@@ -929,3 +929,54 @@
   [data-version-meta],
   [data-version-actions] { flex: 1 1 100%; width: 100%; }
 }
+
+/* #64: settings-owned trash list, bounded independently from the dialog. */
+[data-panel="trash"] {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  color: var(--text-primary);
+}
+[data-panel="trash"] > h2 { margin: 0 0 12px; font-size: 18px; font-weight: 600; line-height: 26px; }
+[data-trash-toolbar] { display: flex; flex: 0 0 auto; flex-wrap: wrap; align-items: end; gap: 12px; margin-bottom: 12px; }
+[data-trash-toolbar] label { display: grid; min-width: min(100%, 220px); flex: 1 1 220px; gap: 4px; font-size: 13px; line-height: 20px; }
+[data-trash-toolbar] select,
+[data-trash-toolbar] button { min-height: 36px; border: 1px solid var(--border-control); border-radius: 4px; background: var(--surface-control); color: var(--text-primary); font: inherit; }
+[data-trash-toolbar] select { width: 100%; min-width: 0; padding: 6px 28px 6px 8px; font-size: 14px; line-height: 22px; }
+[data-trash-toolbar] button { padding: 6px 12px; }
+[data-trash-scope] { align-self: center; color: var(--text-secondary); font-size: 13px; line-height: 20px; }
+[data-trash-results] { min-width: 0; min-height: 0; max-height: 480px; overflow: auto; border: 1px solid var(--border-subtle); }
+[data-trash-results] table { width: 100%; min-width: 720px; border-collapse: collapse; table-layout: fixed; }
+[data-trash-results] thead { position: sticky; z-index: 1; top: 0; background: var(--surface-app); }
+[data-trash-results] th { padding: 8px 12px; border-bottom: 1px solid var(--border-subtle); font-size: 13px; font-weight: 600; line-height: 20px; text-align: left; }
+[data-trash-results] td { min-height: 40px; padding: 8px 12px; border-bottom: 1px solid var(--border-subtle); background: var(--surface-document); font-size: 14px; line-height: 22px; overflow-wrap: anywhere; vertical-align: top; }
+[data-trash-results] th:nth-child(1) { width: 30%; }
+[data-trash-results] th:nth-child(2) { width: 18%; }
+[data-trash-results] th:nth-child(3) { width: 14%; }
+[data-trash-results] th:nth-child(4) { width: 21%; }
+[data-trash-results] th:nth-child(5) { width: 17%; }
+[data-trash-actions] { display: flex; flex-wrap: wrap; gap: 8px; }
+[data-trash-actions] > button { min-height: 36px; padding: 6px 10px; border: 1px solid var(--border-control); border-radius: 4px; background: var(--surface-control); color: var(--text-primary); font: inherit; }
+[data-trash-actions] > button:last-child { border-color: var(--status-danger); color: var(--status-danger); }
+[data-panel="trash"] button:focus,
+[data-panel="trash"] button:focus-visible,
+[data-panel="trash"] select:focus,
+[data-panel="trash"] select:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+[data-panel="trash"] [role="alert"] { color: var(--status-danger); }
+[data-panel="trash"] > [role="status"],
+[data-panel="trash"] > [role="alert"],
+[data-trash-empty] { margin: 8px 0; font-size: 14px; line-height: 22px; overflow-wrap: anywhere; }
+
+@media (forced-colors: active) {
+  [data-panel="trash"] button,
+  [data-panel="trash"] select,
+  [data-trash-results],
+  [data-trash-results] th,
+  [data-trash-results] td { border-color: CanvasText; forced-color-adjust: auto; }
+  [data-panel="trash"] button:focus,
+  [data-panel="trash"] button:focus-visible,
+  [data-panel="trash"] select:focus,
+  [data-panel="trash"] select:focus-visible { outline-color: Highlight; }
+}

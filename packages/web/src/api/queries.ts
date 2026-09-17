@@ -136,6 +136,7 @@ export const useTrash = (
     queryKey: QUERY_KEYS.trash(where.scope, where.workspaceId),
     queryFn: () => fetchTrash<TrashRowView[]>(where),
     enabled,
+    retry: false,
   });
 
 /**
