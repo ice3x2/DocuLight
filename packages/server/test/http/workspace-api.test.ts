@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import express, { type Express } from 'express';
@@ -10,6 +10,7 @@ import { breakInheritance, grantPermission, revokePermission } from '../../src/a
 import { createNode } from '../../src/app/node/node-service.js';
 import { writeSetting } from '../../src/app/settings/instance-settings.js';
 import { createWorkspace } from '../../src/app/workspace/create-workspace.js';
+import { DEFAULT_GROUP_ID } from '../../src/domain/principal/system-groups.js';
 import { workspaceApiRouter } from '../../src/http/routes/workspace-api.js';
 import { FsWorkspaceFiles } from '../../src/infra/fs/workspace-sidecar.js';
 import { openDatabase, type Database } from '../../src/infra/sqlite/database.js';
@@ -80,6 +81,111 @@ describe('세션 — 화면이 표시 조건을 세울 근거를 받는다 (`IR-
 });
 
 describe('워크스페이스 관리 목록과 표시 이름 (`IR-WORKSPACE-001` AC-1 · AC-2 · AC-3 · AC-6 · AC-7)', () => {
+  it('AC-4 · AC-5: 슈퍼유저가 정확한 생성 요청으로 워크스페이스와 초기 ACL을 만든다', async () => {
+    const administrator = stores.principals.createGroup('새 워크스페이스 관리자');
+
+    const response = await request(app).post('/api/workspaces').send({
+      name: '  e\u0301quipe / CON  ',
+      administratorId: administrator.id,
+      defaultGroupLevel: 'edit',
+    });
+
+    expect(response.status).toBe(201);
+    expect(response.body.workspace).toMatchObject({ name: 'équipe / CON' });
+    const createdId = response.body.workspace.id as string;
+    expect(stores.acl.entriesOn(createdId).map((entry) => ({ principalId: entry.principalId, level: entry.level }))).toEqual(
+      expect.arrayContaining([
+        { principalId: administrator.id, level: 'admin' },
+        { principalId: DEFAULT_GROUP_ID, level: 'edit' },
+      ]),
+    );
+    expect(JSON.parse(await readFile(join(docsRoot, createdId, '.workspace.json'), 'utf8'))).toEqual(response.body.workspace);
+  });
+
+  it('AC-4 · AC-6: 생성은 라이브 슈퍼유저와 이름·관리자·레벨을 모두 검증한다', async () => {
+    const before = stores.workspaces.list().length;
+    const valid = { name: '새 공간', administratorId: me.id, defaultGroupLevel: 'none' };
+
+    actingAs = me;
+    const needsSuperuser = await request(app).post('/api/workspaces').send(valid);
+    expect(needsSuperuser.status).toBe(403);
+    expect(needsSuperuser.body).toEqual({ rule: 'needs-superuser' });
+    actingAs = root;
+    const unknownAdministrator = await request(app).post('/api/workspaces').send({ ...valid, administratorId: 'missing' });
+    expect(unknownAdministrator.status).toBe(400);
+    expect(unknownAdministrator.body).toEqual({ rule: 'unknown-administrator' });
+    const invalidName = await request(app).post('/api/workspaces').send({ ...valid, name: '😀'.repeat(121) });
+    expect(invalidName.status).toBe(400);
+    expect(invalidName.body).toEqual({ rule: 'invalid-name' });
+    const invalidAdministrator = await request(app).post('/api/workspaces').send({ ...valid, administratorId: 4 });
+    expect(invalidAdministrator.status).toBe(400);
+    expect(invalidAdministrator.body).toEqual({ rule: 'invalid-administrator' });
+    const invalidLevel = await request(app).post('/api/workspaces').send({ ...valid, defaultGroupLevel: 'admin' });
+    expect(invalidLevel.status).toBe(400);
+    expect(invalidLevel.body).toEqual({ rule: 'invalid-default-group-level' });
+    expect(stores.workspaces.list()).toHaveLength(before);
+  });
+
+  it('FR-PRINCIPAL-007: warning query는 enum 밖 값과 duplicate scalar를 400으로 거절한다', async () => {
+    expect((await request(app).get('/api/grant-warnings?principalId=x&defaultGroupLevel=admin')).status).toBe(400);
+    expect((await request(app).get('/api/grant-warnings?principalId=x&principalId=y')).status).toBe(400);
+    expect((await request(app).get('/api/grant-warnings?defaultGroupLevel=view&defaultGroupLevel=edit')).status).toBe(400);
+  });
+
+  it('FR-PRINCIPAL-007: 없음은 default ACL을 만들지 않는다', async () => {
+    const response = await request(app).post('/api/workspaces').send({
+      name: '비공개 공간',
+      administratorId: me.id,
+      defaultGroupLevel: 'none',
+    });
+
+    expect(response.status).toBe(201);
+    expect(stores.acl.entriesOn(response.body.workspace.id).map((entry) => entry.principalId)).toEqual([me.id]);
+  });
+
+  it('AC-5: DB 생성 실패는 500 unknown이며 워크스페이스 흔적을 남기지 않는다', async () => {
+    const before = stores.workspaces.list().map((workspace) => workspace.id);
+    stores.workspaces.create = () => { throw new Error('db failure'); };
+
+    const response = await request(app).post('/api/workspaces').send({
+      name: 'DB 실패 공간', administratorId: me.id, defaultGroupLevel: 'edit',
+    });
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ rule: 'creation-unknown' });
+    expect(stores.workspaces.list().map((workspace) => workspace.id)).toEqual(before);
+  });
+
+  it('AC-5: 디렉터리 생성 실패는 500 unknown이며 DB-only partial 상태를 사실대로 남긴다', async () => {
+    stores.files.createDirectory = async () => { throw new Error('directory failure'); };
+
+    const response = await request(app).post('/api/workspaces').send({
+      name: '디렉터리 실패 공간', administratorId: me.id, defaultGroupLevel: 'edit',
+    });
+    const partial = stores.workspaces.list().find((workspace) => workspace.name === '디렉터리 실패 공간');
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ rule: 'creation-unknown' });
+    expect(partial).toBeDefined();
+    expect(stores.acl.entriesOn(partial!.id)).toEqual([]);
+    await expect(readFile(join(docsRoot, partial!.id, '.workspace.json'), 'utf8')).rejects.toThrow();
+  });
+
+  it('AC-5: sidecar 쓰기 실패는 500 unknown이며 DB+directory partial 상태와 무권한 상태를 드러낸다', async () => {
+    stores.files.writeSidecar = async () => { throw new Error('sidecar failure'); };
+
+    const response = await request(app).post('/api/workspaces').send({
+      name: '사이드카 실패 공간', administratorId: me.id, defaultGroupLevel: 'view',
+    });
+    const partial = stores.workspaces.list().find((workspace) => workspace.name === '사이드카 실패 공간');
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ rule: 'creation-unknown' });
+    expect(partial).toBeDefined();
+    expect(stores.acl.entriesOn(partial!.id)).toEqual([]);
+    expect((await stat(join(docsRoot, partial!.id))).isDirectory()).toBe(true);
+    await expect(readFile(join(docsRoot, partial!.id, '.workspace.json'), 'utf8')).rejects.toThrow();
+  });
   it('기본 목록은 가시 범위를 유지하고 managed는 관리 범위만, all은 슈퍼유저에게만 준다', async () => {
     const visibleOnly = (await createWorkspace({ workspaces: stores.workspaces, files: stores.files }, '열람 전용')).id;
     grantPermission(stores, root, { nodeId: ws, principalId: me.id, level: 'admin' });
@@ -825,6 +931,17 @@ describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
 
     expect(정지.body).toEqual(['suspended-subject']);
     expect(멀쩡.body).toEqual([]);
+  });
+
+  it('FR-PRINCIPAL-007 AC-5: 생성 맥락의 기본 편집 권한을 fresh warning 판정에 전달한다', async () => {
+    writeSetting(stores.settings, 'signup-mode', 'open');
+
+    const got = await request(app).get('/api/grant-warnings').query({
+      principalId: me.id,
+      defaultGroupLevel: 'edit',
+    });
+
+    expect(got.body).toEqual(['open-signup-edit']);
   });
 
   it('FR-PRINCIPAL-005 AC-2: 마지막 관리 권한자 회수에 사유가 붙는다', async () => {

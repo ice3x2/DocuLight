@@ -138,8 +138,8 @@ describe('FR-PRINCIPAL-007 — 생성 폼의 초기 권한', () => {
     서버없이();
     const user = userEvent.setup();
     render(<NewWorkspaceForm signupMode="open" onCreate={() => undefined} />);
-    await user.type(screen.getByLabelText('이름'), '기획팀');
-    await user.type(screen.getByLabelText('사용자·그룹 검색'), '관리');
+    await user.type(screen.getByLabelText('이름 (필수)'), '기획팀');
+    await user.type(screen.getByRole('combobox', { name: '워크스페이스 관리자 (필수)' }), '관리');
 
     await user.selectOptions(screen.getByLabelText('기본 그룹 초기 권한'), 'edit');
 

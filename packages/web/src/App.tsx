@@ -36,6 +36,7 @@ import {
   revokeShare,
   renameNode,
   renameWorkspace,
+  createWorkspace as createWorkspaceRequest,
   purgeFromTrash,
   restoreFromTrash,
   uploadNewVersion,
@@ -180,6 +181,16 @@ export function App({ queryClient }: { queryClient?: QueryClient } = {}) {
  * 사용자가 로그인 전에 트리와 탭의 껍데기를 보게 되고, 그것이 「내용이
  * 없다」로 읽힌다.
  */
+export async function refetchWorkspaceCreationReads(queries: QueryClient): Promise<boolean> {
+  const refreshed = await Promise.allSettled([
+    queries.refetchQueries({ queryKey: QUERY_KEYS.workspaces('managed') }, { throwOnError: true }),
+    queries.refetchQueries({ queryKey: QUERY_KEYS.workspaces('all') }, { throwOnError: true }),
+    queries.refetchQueries({ queryKey: QUERY_KEYS.tree }, { throwOnError: true }),
+    queries.refetchQueries({ queryKey: QUERY_KEYS.session }, { throwOnError: true }),
+  ]);
+  return refreshed.every((result) => result.status === 'fulfilled');
+}
+
 function AppBody() {
   const queries = useQueryClient();
   const session = useSession();
@@ -833,6 +844,24 @@ function AppBody() {
     ]);
     return result;
   }, [queries]);
+  const [workspaceCreationStatus, setWorkspaceCreationStatus] = useState<{ kind: 'success' | 'refresh-error'; message: string }>();
+  const refreshWorkspaceCreationReads = useCallback(() => refetchWorkspaceCreationReads(queries), [queries]);
+  const retryWorkspaceCreationReads = useCallback(async () => {
+    const refreshed = await refreshWorkspaceCreationReads();
+    setWorkspaceCreationStatus(refreshed
+      ? { kind: 'success', message: '워크스페이스 목록을 새로 불러왔습니다.' }
+      : { kind: 'refresh-error', message: '워크스페이스는 만들어졌지만 목록을 새로 불러오지 못했습니다.' });
+  }, [refreshWorkspaceCreationReads]);
+  // @req IR-WORKSPACE-001
+  const createWorkspaceAndRefresh = useCallback(async (input: Parameters<typeof createWorkspaceRequest>[0]) => {
+    const result = await createWorkspaceRequest(input);
+    setSelectedWorkspaceId(result.workspace.id);
+    const refreshed = await refreshWorkspaceCreationReads();
+    setWorkspaceCreationStatus(refreshed
+      ? { kind: 'success', message: '워크스페이스를 만들었습니다.' }
+      : { kind: 'refresh-error', message: '워크스페이스를 만들었습니다. 목록을 새로 불러오지 못했습니다.' });
+    return result;
+  }, [refreshWorkspaceCreationReads]);
   const brokenInheritance = useBrokenInheritance(signedIn && (adminScope || session.data?.superuser === true));
   // 슈퍼유저는 관리 워크스페이스가 없어도 인스턴스 스코프의 행을 읽는다
   // (`SEC-AUDIT-010` AC-5) — `adminScope` 만 보면 그 문이 닫힌다.
@@ -1255,6 +1284,10 @@ function AppBody() {
         selectedId: selectedWorkspaceId,
         onSelect: setSelectedWorkspaceId,
         onRename: renameSelectedWorkspace,
+        onCreate: createWorkspaceAndRefresh,
+        onLoadCreationWarnings: ({ administratorId, defaultGroupLevel }) => fetchGrantWarnings({ principalId: administratorId, defaultGroupLevel }),
+        creationStatus: workspaceCreationStatus,
+        onRetryCreationRefresh: () => { void retryWorkspaceCreationReads(); },
         administrators: selectedWorkspaceAdministrators.isError
           ? { state: 'error', onRetry: () => { void selectedWorkspaceAdministrators.refetch(); } }
           : selectedWorkspaceAdministrators.data === undefined

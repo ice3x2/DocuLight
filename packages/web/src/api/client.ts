@@ -453,10 +453,11 @@ export const inheritFromParent = (nodeId: string) =>
 export const fetchShareView = (nodeId: string) =>
   call<ShareViewBody>(`/nodes/${encodeURIComponent(nodeId)}/share`);
 
-export const fetchGrantWarnings = (input: { principalId?: string; entryId?: string }) => {
+export const fetchGrantWarnings = (input: { principalId?: string; entryId?: string; defaultGroupLevel?: 'none' | 'view' | 'edit' }) => {
   const query = new URLSearchParams();
   if (input.principalId !== undefined) query.set('principalId', input.principalId);
   if (input.entryId !== undefined) query.set('entryId', input.entryId);
+  if (input.defaultGroupLevel !== undefined) query.set('defaultGroupLevel', input.defaultGroupLevel);
   return call<('suspended-subject' | 'open-signup-edit' | 'last-administrator')[]>(
     `/grant-warnings?${query.toString()}`,
   );
@@ -618,6 +619,18 @@ export const renameWorkspace = (workspaceId: string, name: string) =>
     method: 'PATCH',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ name }),
+  });
+
+export interface WorkspaceCreateBody {
+  workspace: { id: string; name: string; createdAt: string };
+}
+
+// @req IR-WORKSPACE-001
+export const createWorkspace = (input: { name: string; administratorId: string; defaultGroupLevel: 'none' | 'view' | 'edit' }) =>
+  call<WorkspaceCreateBody>('/workspaces', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(input),
   });
 
 export const fetchAccessors = (nodeId: string) =>

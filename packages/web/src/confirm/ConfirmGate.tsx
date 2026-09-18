@@ -121,9 +121,9 @@ export function ConfirmGate({
           cancelRef.current?.focus();
         }}
         onCloseAutoFocus={(event) => {
-          if (restoreFocusRef?.current) {
+          if (restoreFocusRef !== undefined) {
             event.preventDefault();
-            restoreFocusRef.current.focus();
+            if (restoreFocusRef.current?.isConnected) restoreFocusRef.current.focus();
           }
         }}
       >

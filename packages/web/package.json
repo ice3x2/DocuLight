@@ -24,6 +24,7 @@
     "test:browser:settings-product": "node test/newspaper-settings-product-runner.mjs",
     "test:browser:issue71-product": "node test/issue71-instance-settings-product-runner.mjs",
     "test:browser:issue72-product": "node test/issue72-workspace-product-runner.mjs",
+    "test:browser:issue73-product": "node test/issue73-workspace-create-product-runner.mjs",
     "test:browser:tokens": "node test/issue63-token-browser-check.cjs",
     "test:browser:tokens-product": "node test/issue63-token-product-runner.mjs",
     "test:browser:trash64": "node test/issue64-trash-browser-check.cjs",

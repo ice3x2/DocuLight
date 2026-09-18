@@ -47,6 +47,8 @@ import {
 } from '../../app/workspace/admin-presence.js';
 import { managedWorkspacesOf } from '../../app/acl/admin-scope.js';
 import { renameWorkspace } from '../../app/workspace/rename-workspace.js';
+import { createWorkspaceAs } from '../../app/workspace/create-workspace.js';
+import { validateWorkspaceName } from '../../app/workspace/rename-workspace.js';
 import type { WorkspaceFiles } from '../../domain/ports/workspace-files.js';
 import {
   breakInheritance,
@@ -1130,10 +1132,22 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       return;
     }
 
+    if ([req.query.entryId, req.query.principalId, req.query.defaultGroupLevel]
+      .some((value) => value !== undefined && typeof value !== 'string')) {
+      res.sendStatus(400);
+      return;
+    }
+    const defaultGroupLevel = one(req.query.defaultGroupLevel);
+    if (defaultGroupLevel !== undefined
+      && defaultGroupLevel !== 'none' && defaultGroupLevel !== 'view' && defaultGroupLevel !== 'edit') {
+      res.sendStatus(400);
+      return;
+    }
     const entryId = one(req.query.entryId);
     const warnings = [
       ...grantWarnings(stores, {
         ...(one(req.query.principalId) === undefined ? {} : { principalId: one(req.query.principalId)! }),
+        ...(defaultGroupLevel === undefined ? {} : { defaultGroupLevel }),
       }),
       ...(entryId !== undefined && isLastAdministrator(stores, entryId) ? ['last-administrator'] : []),
     ];
@@ -1180,6 +1194,37 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
         adminless: adminless.has(entry.workspace.id),
       })),
     );
+  });
+
+  // @req IR-WORKSPACE-001
+  router.post('/workspaces', async (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) { res.sendStatus(401); return; }
+    if (!isSuperuser(stores.principals.groupsOf(actor.id))) { res.status(403).json({ rule: 'needs-superuser' }); return; }
+    if (stores.files === undefined) { res.sendStatus(503); return; }
+    const validName = validateWorkspaceName(req.body?.name);
+    const administratorId = req.body?.administratorId;
+    const defaultGroupLevel = req.body?.defaultGroupLevel;
+    if (!validName.ok) { res.status(400).json({ rule: 'invalid-name' }); return; }
+    if (typeof administratorId !== 'string') { res.status(400).json({ rule: 'invalid-administrator' }); return; }
+    if (defaultGroupLevel !== 'none' && defaultGroupLevel !== 'view' && defaultGroupLevel !== 'edit') {
+      res.status(400).json({ rule: 'invalid-default-group-level' }); return;
+    }
+    try {
+      const result = await createWorkspaceAs(
+        { ...stores, files: stores.files },
+        actor,
+        { name: validName.name, administratorId, defaultGroupLevel },
+      );
+      if (!result.ok) {
+        if (result.rule === 'unknown-administrator') res.status(400).json({ rule: result.rule });
+        else res.status(403).json({ rule: 'needs-superuser' });
+        return;
+      }
+      res.status(201).json({ workspace: result.workspace });
+    } catch {
+      res.status(500).json({ rule: 'creation-unknown' });
+    }
   });
 
   // @req IR-WORKSPACE-001

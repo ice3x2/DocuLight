@@ -1,0 +1,27 @@
+﻿{
+    "capturedAt":  "2026-09-18T08:50:22.5325484+09:00",
+    "head":  "0b0b63199bbcb6acb301cba98b8132b799911183",
+    "workingDiffHash":  "39d1d8f1447e6dbf9dc71100288e9e07437e0bfb",
+    "redArtifacts":  [
+                         {
+                             "path":  ".kiwi\\sessions\\newspaper-20260916\\evidence\\issue73\\red-review-ui.txt",
+                             "sha256":  "f8c56a15eff321699f7e9c1b6fe354a8b5d732525582f238e1540a2421c43a0f"
+                         },
+                         {
+                             "path":  ".kiwi\\sessions\\newspaper-20260916\\evidence\\issue73\\red-review-server.txt",
+                             "sha256":  "e1b0295d083426a1c89e6e001faee7a4b0b09e04df1063e60dab81ca2e14ba64"
+                         },
+                         {
+                             "path":  "packages\\web\\test\\workspace-create-confirm.test.tsx",
+                             "sha256":  "30c1715a889c77135de3878108c50c7a6a1c98033f0c11bad65ce1c4bfd97b32"
+                         },
+                         {
+                             "path":  "packages\\web\\test\\workspace-create-parent-flow.test.tsx",
+                             "sha256":  "1f0ab8d9fdc0fd8c8de715c174a828b219637f10528edff076c8eebee7cda33b"
+                         },
+                         {
+                             "path":  "packages\\server\\test\\http\\workspace-api.test.ts",
+                             "sha256":  "8c7bacae7efda44e3532ff4899a9fed16e19cc8f212fcad3da938d049861576d"
+                         }
+                     ]
+}

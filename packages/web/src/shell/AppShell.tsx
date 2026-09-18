@@ -16,6 +16,8 @@ import { NewVersionPrompt, type NewVersionResult } from '../tree/NewVersionPromp
 import { RelocationDialog } from './RelocationDialog.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { WorkspaceManagementPanel, type WorkspaceAdministratorState, type WorkspaceQueryState, type WorkspaceRenameResult } from '../workspace/WorkspaceList.js';
+import type { WorkspaceCreateInput } from '../workspace/NewWorkspaceForm.js';
+import type { WorkspaceCreateBody } from '../api/client.js';
 import {
   PersonalSettings,
   type ThemeLoadState,
@@ -350,6 +352,10 @@ function SettingsModal({
     selectedId?: string;
     onSelect: (workspaceId: string) => void;
     onRename: (workspaceId: string, name: string) => Promise<WorkspaceRenameResult>;
+    onCreate?: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateBody>;
+    onLoadCreationWarnings?: (input: Pick<WorkspaceCreateInput, 'administratorId' | 'defaultGroupLevel'>) => Promise<readonly GrantWarning[]>;
+    creationStatus?: { kind: 'success' | 'refresh-error'; message: string };
+    onRetryCreationRefresh?: () => void;
   };
 }) {
   const [open, setOpen] = useState(false);
@@ -491,6 +497,12 @@ function SettingsModal({
                     administratorSearchEnabled={selectedCategory === category.id}
                     {...(workspaceManagement?.selectedId === undefined ? {} : { selectedId: workspaceManagement.selectedId })}
                     {...(workspaceManagement === undefined ? {} : { onSelect: workspaceManagement.onSelect, onRename: workspaceManagement.onRename, administrators: workspaceManagement.administrators })}
+                    {...(category.id !== 'all-workspaces' || workspaceManagement === undefined ? {} : {
+                      onCreate: workspaceManagement.onCreate,
+                      onLoadCreationWarnings: workspaceManagement.onLoadCreationWarnings,
+                      creationStatus: workspaceManagement.creationStatus,
+                      onRetryCreationRefresh: workspaceManagement.onRetryCreationRefresh,
+                    })}
                   />
                 ) : category.id === 'instance' ? (
                   <InstanceSettings />
@@ -821,6 +833,10 @@ export function AppShell({
     selectedId?: string;
     onSelect: (workspaceId: string) => void;
     onRename: (workspaceId: string, name: string) => Promise<WorkspaceRenameResult>;
+    onCreate?: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateBody>;
+    onLoadCreationWarnings?: (input: Pick<WorkspaceCreateInput, 'administratorId' | 'defaultGroupLevel'>) => Promise<readonly GrantWarning[]>;
+    creationStatus?: { kind: 'success' | 'refresh-error'; message: string };
+    onRetryCreationRefresh?: () => void;
   };
   onDelete?: (nodeId: string) => void;
   onRename?: (nodeId: string, name: string) => void | Promise<string | undefined>;

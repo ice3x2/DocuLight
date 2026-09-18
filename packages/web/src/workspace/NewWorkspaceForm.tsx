@@ -1,114 +1,221 @@
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 
-import { PrincipalPicker } from '../principal/PrincipalPicker.js';
+import { ApiError, type PrincipalRow, type WorkspaceCreateBody } from '../api/client.js';
 import { GrantWarningList, type GrantWarning } from '../acl/GrantConfirm.js';
 import { ConfirmGate } from '../confirm/ConfirmGate.js';
-import type { PrincipalRow } from '../api/client.js';
+import { PrincipalPicker } from '../principal/PrincipalPicker.js';
 
-/** `default` 그룹의 초기 권한 (`FR-PRINCIPAL-007`). */
 export type DefaultGroupLevel = 'none' | 'view' | 'edit';
 
-/** 레벨의 화면 문구. **여기 하나다** — 두 곳에 적으면 두 화면이 같은 레벨을 다른 말로 부른다. */
 export const 레벨문구: Record<DefaultGroupLevel, string> = {
   none: '없음',
   view: '보기',
   edit: '편집',
 };
 
-/**
- * 워크스페이스 생성 폼 (`FR-PRINCIPAL-007` · `SEC-WORKSPACE-001`).
- *
- * **기본값이 `없음` 이다** (AC-2). 반대로 두면 「깜빡한 것」과 「전원
- * 공개로 정한 것」이 같은 조작이 되고, 그 차이는 나중에 누가 문서를 열어
- * 봐야만 드러난다.
- *
- * 관리자를 **만들기 전에** 고른다 — 만들고 나서 지정하게 하면 관리자 없는
- * 워크스페이스가 그 사이에 존재하고, 그 상태에서 실패하면 아무도 손댈 수
- * 없는 워크스페이스가 영구히 남는다.
- */
-export function NewWorkspaceForm({
-  signupMode,
-  onCreate,
-}: {
-  /** 인스턴스의 가입 모드. `open` 이면 `편집` 선택에 경고가 붙는다 (AC-5). */
-  signupMode?: 'open' | 'approval' | 'invite-only';
-  onCreate?: (input: { name: string; administratorId: string; defaultGroupLevel: DefaultGroupLevel }) => void;
+export interface WorkspaceCreateInput {
+  name: string;
+  administratorId: string;
+  defaultGroupLevel: DefaultGroupLevel;
+}
+
+type FrozenCreation = WorkspaceCreateInput & {
+  administrator: PrincipalRow;
+  warnings: readonly GrantWarning[];
+};
+
+const sameWarnings = (left: readonly GrantWarning[], right: readonly GrantWarning[]) =>
+  left.length === right.length && left.every((warning, index) => warning === right[index]);
+
+export function validateWorkspaceDisplayName(raw: string): { name?: string; error?: string } {
+  const name = raw.normalize('NFC').trim();
+  if ([...name].length === 0) return { error: '이름을 입력하세요.' };
+  if ([...name].length > 120) return { error: '이름은 120자 이하여야 합니다.' };
+  if (/[\u0000-\u001f\u007f]/u.test(name)) return { error: '이름에는 제어 문자를 사용할 수 없습니다.' };
+  return { name };
+}
+
+// @req IR-WORKSPACE-001
+export function NewWorkspaceForm({ onCreate, onLoadWarnings, onCancel }: {
+  onCreate: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateBody>;
+  onLoadWarnings: (input: Pick<WorkspaceCreateInput, 'administratorId' | 'defaultGroupLevel'>) => Promise<readonly GrantWarning[]>;
+  onCancel?: () => void;
 }) {
   const formId = useId();
-  const [이름, set이름] = useState('');
-  const [관리자, set관리자] = useState<PrincipalRow | null>(null);
-  const [레벨, set레벨] = useState<DefaultGroupLevel>('none');
-  const [확인대기, set확인대기] = useState(false);
+  const nameHelpId = `${formId}-name-help`;
+  const administratorHelpId = `${formId}-administrator-help`;
+  const levelHelpId = `${formId}-level-help`;
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const nameSelection = useRef<[number, number] | null>(null);
+  const pendingRef = useRef(false);
+  const warningPendingRef = useRef(false);
+  const composing = useRef(false);
+  const warningGeneration = useRef(0);
+  const [name, setName] = useState('');
+  const [administrator, setAdministrator] = useState<PrincipalRow | null>(null);
+  const [level, setLevel] = useState<DefaultGroupLevel>('none');
+  const [frozen, setFrozen] = useState<FrozenCreation | null>(null);
+  const [error, setError] = useState<string>();
+  const [warningRetry, setWarningRetry] = useState<WorkspaceCreateInput>();
+  const [warningChanged, setWarningChanged] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [warningPending, setWarningPending] = useState(false);
+  const [uncertain, setUncertain] = useState(false);
 
-  // 사유가 하나뿐이라 화면이 판정할 수 있는 자리다 — 서버도 같은 규칙을
-  // 들고 있고(`grantWarnings`), 실행 시점에 그쪽이 정본이다. 여기서 미리
-  // 보이는 것은 고르는 순간 알려 주기 위해서다.
-  const 경고: GrantWarning[] = 레벨 === 'edit' && signupMode === 'open' ? ['open-signup-edit'] : [];
-
-  const 만들기 = () => {
-    if (관리자 === null) return;
-    onCreate?.({ name: 이름, administratorId: 관리자.id, defaultGroupLevel: 레벨 });
-    set확인대기(false);
+  const captureNameSelection = () => {
+    const input = nameRef.current;
+    if (input === null || input.selectionStart === null || input.selectionEnd === null) return;
+    nameSelection.current = [input.selectionStart, input.selectionEnd];
   };
 
-  return (
-    <form
-      aria-label="새 워크스페이스"
-      onSubmit={(event) => {
-        event.preventDefault();
-        // **생성 버튼은 관문이 아니다** (`FR-CONFIRM-019` AC-3). 경고가
-        // 있을 때만 확인을 받으면 그 확인의 등장 여부가 곧 경고의 유무를
-        // 알리고, 겸해 폼의 제출 버튼이 관문을 대신한다는 해석이 생긴다 —
-        // 그 해석을 인정하면 규칙 전체가 무력화된다 (`FR-CONFIRM-005`).
-        set확인대기(true);
-      }}
-    >
-      <label htmlFor={`${formId}-name`}>이름</label>
-      <input id={`${formId}-name`} value={이름} onChange={(event) => set이름(event.target.value)} />
+  const restoreNameSelection = () => {
+    const selection = nameSelection.current;
+    if (selection === null) return;
+    queueMicrotask(() => { nameRef.current?.setSelectionRange(selection[0], selection[1]); });
+  };
 
-      <label htmlFor={`${formId}-admin`}>워크스페이스 관리자</label>
-      {/* 아직 워크스페이스가 없으므로 스코프가 노드일 수 없다 — 이 조작을
-          실행할 수 있는 것은 슈퍼유저뿐이고(`SEC-WORKSPACE-001`), 그
-          자격이 곧 그룹 스코프의 자격이다 (`R162`). */}
-      <PrincipalPicker scope="group:superuser" onPick={set관리자} />
+  const invalidateConfirmation = () => {
+    warningGeneration.current += 1;
+    setFrozen(null);
+    setWarningRetry(undefined);
+    setWarningChanged(false);
+    warningPendingRef.current = false;
+    setWarningPending(false);
+  };
 
-      <label htmlFor={`${formId}-level`}>기본 그룹 초기 권한</label>
-      <select
-        id={`${formId}-level`}
-        value={레벨}
-        onChange={(event) => set레벨(event.target.value as DefaultGroupLevel)}
-      >
-        {(['none', 'view', 'edit'] as const).map((one) => (
-          <option key={one} value={one}>
-            {레벨문구[one]}
-          </option>
-        ))}
-      </select>
+  const loadWarnings = async (input: WorkspaceCreateInput, chosen: PrincipalRow) => {
+    const generation = warningGeneration.current;
+    warningPendingRef.current = true;
+    setWarningPending(true);
+    try {
+      const warnings = await onLoadWarnings(input);
+      if (warningGeneration.current !== generation) return;
+      setFrozen({ ...input, administrator: chosen, warnings });
+      setWarningRetry(undefined);
+      setError(undefined);
+    } catch {
+      if (warningGeneration.current !== generation) return;
+      setFrozen(null);
+      setWarningRetry(input);
+      setError('확인 정보를 불러오지 못했습니다. 생성 요청은 보내지 않았습니다.');
+    } finally {
+      if (warningGeneration.current === generation) {
+        warningPendingRef.current = false;
+        setWarningPending(false);
+      }
+    }
+  };
 
-      <button type="submit" disabled={관리자 === null}>
-        만들기
-      </button>
+  const prepare = async () => {
+    if (administrator === null || composing.current || pendingRef.current || warningPendingRef.current) return;
+    captureNameSelection();
+    const valid = validateWorkspaceDisplayName(name);
+    setError(valid.error);
+    if (valid.name === undefined) return;
+    const input = { name: valid.name, administratorId: administrator.id, defaultGroupLevel: level };
+    setWarningChanged(false);
+    await loadWarnings(input, administrator);
+  };
 
-      {/* 관리자 지정과 기본 그룹 초기 권한을 **한 관문**에 함께 싣는다
-          (AC-2) — 둘로 나누면 사용자가 첫 확인만 읽고 둘째를 기계적으로
-          넘긴다. 경고도 그 안에 든다.
+  const create = async () => {
+    if (frozen === null || pendingRef.current) return;
+    pendingRef.current = true;
+    setPending(true);
+    try {
+      let warnings: readonly GrantWarning[];
+      try {
+        warnings = await onLoadWarnings(frozen);
+      } catch {
+        setFrozen(null);
+        setWarningRetry(frozen);
+        setError('확인 정보를 불러오지 못했습니다. 생성 요청은 보내지 않았습니다.');
+        return;
+      }
+      if (!sameWarnings(warnings, frozen.warnings)) {
+        setFrozen({ ...frozen, warnings });
+        setWarningChanged(true);
+        return;
+      }
+      setWarningChanged(false);
+      await onCreate({ name: frozen.name, administratorId: frozen.administratorId, defaultGroupLevel: frozen.defaultGroupLevel });
+      setFrozen(null);
+      setName('');
+      setAdministrator(null);
+      setLevel('none');
+      setUncertain(false);
+    } catch (caught) {
+      setFrozen(null);
+      if (caught instanceof ApiError && caught.detail?.rule === 'unknown-administrator') {
+        setAdministrator(null);
+        warningGeneration.current += 1;
+        setWarningRetry(undefined);
+        setUncertain(false);
+        setError('선택한 관리자를 확인할 수 없습니다. 관리자를 다시 선택하세요.');
+        return;
+      }
+      const knownFailure = caught instanceof ApiError && (caught.status === 400 || caught.status === 403 || caught.status === 404);
+      setUncertain(!knownFailure);
+      setError(knownFailure
+          ? '입력 또는 권한이 변경되어 만들지 못했습니다. 내용을 확인한 뒤 다시 시도하세요.'
+          : '생성 완료 여부를 확인하지 못했습니다. 다시 만들기 전에 전체 워크스페이스 목록을 확인하세요.');
+    } finally {
+      pendingRef.current = false;
+      setPending(false);
+    }
+  };
 
-          적용 하위 노드 수를 싣지 않는다 (AC-4) — 갓 만든 워크스페이스에는
-          하위가 없어 그 수치가 뜻 없는 자리에 서고, 사용자는 0 을 실패로
-          읽는다. 대신 지연 효과 고지로 대체한다 (AC-5). */}
-      <ConfirmGate
-        open={확인대기}
-        grade="L2"
-        title={`${이름 || '새 워크스페이스'} 를 만들고 권한을 부여합니다`}
-        delayedEffect
-        onConfirm={만들기}
-        onCancel={() => set확인대기(false)}
-      >
-        <p data-testid="grant-summary">
-          관리자 {관리자?.name ?? '-'} · 기본 그룹 초기 권한 {레벨문구[레벨]}
-        </p>
-        <GrantWarningList warnings={경고} />
-      </ConfirmGate>
+  return <section data-workspace-create="">
+    <header data-workspace-create-header="">
+      <button type="button" disabled={pending} onClick={onCancel}>전체 워크스페이스로 돌아가기</button>
+      <h3>새 워크스페이스</h3>
+    </header>
+    <form aria-label="새 워크스페이스" onKeyDown={(event) => {
+      if (event.key === 'Enter' && (composing.current || event.nativeEvent.isComposing)) event.preventDefault();
+    }} onSubmit={(event) => { event.preventDefault(); void prepare(); }}>
+      <div data-workspace-create-field="">
+        <label htmlFor={`${formId}-name`}>이름 (필수)</label>
+        <input ref={nameRef} id={`${formId}-name`} value={name} disabled={pending} required aria-invalid={error?.startsWith('이름') ? true : undefined}
+          aria-describedby={[nameHelpId, error?.startsWith('이름') ? `${formId}-error` : undefined].filter(Boolean).join(' ')}
+          onInvalid={(event) => { event.preventDefault(); setError('이름을 입력하세요.'); }}
+          onCompositionStart={() => { composing.current = true; }} onCompositionEnd={() => { composing.current = false; }}
+          onChange={(event) => { setName(event.target.value); setError(undefined); invalidateConfirmation(); setUncertain(false); }} />
+        <p id={nameHelpId}>120자 이하의 워크스페이스 표시 이름을 입력하세요.</p>
+      </div>
+
+      <div data-workspace-create-field="">
+        <span>워크스페이스 관리자 (필수)</span>
+        <PrincipalPicker label="워크스페이스 관리자 (필수)" ariaRequired ariaDescribedBy={administratorHelpId} scope="group:system-superuser" onPick={(row) => { setAdministrator(row); invalidateConfirmation(); setUncertain(false); }} onSelectionInvalidated={() => { setAdministrator(null); invalidateConfirmation(); setUncertain(false); }} />
+        {administrator === null ? <p id={administratorHelpId}>관리할 사용자 또는 그룹을 검색해 선택하세요.</p> : <p id={administratorHelpId} data-selected-principal="">
+          <span>{administrator.name} · {administrator.kind === 'user' ? '사용자' : '그룹'} · {administrator.status === 'active' ? '활성' : administrator.status === 'pending' ? '대기' : '비활성'}</span>
+          <button type="button" disabled={pending} onClick={() => { setAdministrator(null); invalidateConfirmation(); setUncertain(false); }}>선택 해제</button>
+        </p>}
+      </div>
+
+      <div data-workspace-create-field="">
+        <label htmlFor={`${formId}-level`}>기본 그룹 초기 권한</label>
+        <select id={`${formId}-level`} aria-describedby={levelHelpId} value={level} disabled={pending} onChange={(event) => { setLevel(event.target.value as DefaultGroupLevel); invalidateConfirmation(); setUncertain(false); }}>
+          {(['none', 'view', 'edit'] as const).map((one) => <option key={one} value={one}>{레벨문구[one]}</option>)}
+        </select>
+        <p id={levelHelpId}>없음을 선택하면 기본 그룹 ACL을 만들지 않습니다. 지정 관리자와 슈퍼유저는 계속 접근할 수 있습니다.</p>
+      </div>
+
+      {error === undefined ? null : <p id={`${formId}-error`} role="alert">{error}</p>}
+      {warningPending ? <p role="status">권한 부여 내용을 확인하는 중입니다</p> : null}
+      {warningRetry === undefined || administrator === null ? null : <button type="button" onClick={() => { captureNameSelection(); void loadWarnings(warningRetry, administrator); }}>확인 정보 다시 불러오기</button>}
+      <footer data-workspace-create-actions="">
+        <button type="button" disabled={pending} onClick={onCancel}>취소</button>
+        <button ref={triggerRef} type="submit" disabled={administrator === null || pending || warningPending || uncertain}>만들기</button>
+      </footer>
     </form>
-  );
+
+    <ConfirmGate open={frozen !== null} grade="L2" title={`${frozen?.name ?? '새 워크스페이스'}를 만들고 권한을 부여합니다`}
+      description="워크스페이스와 초기 권한을 함께 적용합니다." restoreFocusRef={triggerRef}
+      pendingLabel="만드는 중" onConfirm={create} onCancel={() => { if (!pending) { setFrozen(null); restoreNameSelection(); } }}>
+      <p data-testid="grant-summary" aria-readonly="true" aria-label="확정된 워크스페이스 생성 내용">이름 {frozen?.name ?? '-'} · 관리자 {frozen?.administrator.name ?? '-'} · 관리 · 기본 그룹 초기 권한 {frozen === null ? '-' : 레벨문구[frozen.defaultGroupLevel]}</p>
+      <GrantWarningList warnings={frozen?.warnings ?? []} />
+      {warningChanged ? <p role="alert">확인 정보가 바뀌었습니다. 바뀐 내용을 확인하고 다시 실행하세요.</p> : null}
+      <p data-testid="delayed-notice">워크스페이스와 초기 권한은 지금 만들어집니다. 앞으로 만드는 문서는 이 접근 설정을 물려받으며, 이미 읽은 내용은 되돌릴 수 없습니다.</p>
+    </ConfirmGate>
+  </section>;
 }

@@ -42,9 +42,9 @@ const MINIMUM_QUERY = 2;
 const RESULT_LIMIT = 20;
 
 // @req IR-SHELL-006
-function keepEnterInsidePicker(event: KeyboardEvent<HTMLInputElement>) {
+function keepEnterInsidePicker(event: KeyboardEvent<HTMLInputElement>, composing: boolean) {
   if (event.key !== 'Enter') return;
-  if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) {
+  if (composing || event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) {
     event.preventDefault();
     event.stopPropagation();
   }
@@ -74,6 +74,9 @@ const BADGE: Record<PrincipalStatus, string> = {
 
 export function PrincipalPicker({
   scope,
+  label = '사용자·그룹 검색',
+  ariaRequired,
+  ariaDescribedBy,
   onPick,
   onSelectionInvalidated,
 }: {
@@ -82,6 +85,9 @@ export function PrincipalPicker({
    * 조용히 사라지고, 그것이 곧 명부를 여는 경로가 된다.
    */
   scope: PrincipalScope;
+  label?: string;
+  ariaRequired?: boolean;
+  ariaDescribedBy?: string;
   onPick?: (row: PrincipalRow) => void;
   onSelectionInvalidated?: () => void;
 }) {
@@ -90,6 +96,7 @@ export function PrincipalPicker({
   const [state, setState] = useState<'threshold' | 'loading' | 'ready' | 'error'>('threshold');
   const [attempt, setAttempt] = useState(0);
   const selected = useRef<string | null>(null);
+  const composing = useRef(false);
   const generation = useRef(0);
   const previousScope = useRef(scope);
 
@@ -153,12 +160,16 @@ export function PrincipalPicker({
   };
 
   return (
-    <Command label="사용자·그룹 검색" shouldFilter={false}>
+    <Command label={label} shouldFilter={false}>
       <Command.Input
-        aria-label="사용자·그룹 검색"
+        aria-label={label}
+        aria-required={ariaRequired}
+        aria-describedby={ariaDescribedBy}
         value={query}
         onValueChange={changeQuery}
-        onKeyDown={keepEnterInsidePicker}
+        onCompositionStart={() => { composing.current = true; }}
+        onCompositionEnd={() => { composing.current = false; }}
+        onKeyDown={(event) => { keepEnterInsidePicker(event, composing.current); }}
         placeholder="사용자 또는 그룹 이름"
       />
 

@@ -2,6 +2,9 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import type { PrincipalRow, ShareRow } from '../api/client.js';
 import { PrincipalPicker } from '../principal/PrincipalPicker.js';
+import { NewWorkspaceForm, type WorkspaceCreateInput } from './NewWorkspaceForm.js';
+import type { WorkspaceCreateBody } from '../api/client.js';
+import type { GrantWarning } from '../acl/GrantConfirm.js';
 
 /**
  * 워크스페이스 한 줄이 아는 것.
@@ -94,7 +97,7 @@ function duplicateIdentityLabels(rows: readonly WorkspaceRowView[]): ReadonlyMap
 }
 
 // @req IR-WORKSPACE-001
-export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, onRename, administrators, administratorSearchEnabled = true }: {
+export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, onRename, administrators, administratorSearchEnabled = true, onCreate, onLoadCreationWarnings, creationStatus, onRetryCreationRefresh }: {
   mode: 'managed' | 'all';
   query: WorkspaceQueryState;
   selectedId?: string;
@@ -102,6 +105,10 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
   onRename?: (workspaceId: string, name: string) => Promise<WorkspaceRenameResult>;
   administrators?: WorkspaceAdministratorState;
   administratorSearchEnabled?: boolean;
+  onCreate?: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateBody>;
+  onLoadCreationWarnings?: (input: Pick<WorkspaceCreateInput, 'administratorId' | 'defaultGroupLevel'>) => Promise<readonly GrantWarning[]>;
+  creationStatus?: { kind: 'success' | 'refresh-error'; message: string };
+  onRetryCreationRefresh?: () => void;
 }) {
   const rows = query.state === 'ready' ? query.rows : [];
   const selected = rows.find((row) => row.id === selectedId);
@@ -111,13 +118,23 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
   const [pending, setPending] = useState(false);
   const [adminCandidate, setAdminCandidate] = useState<PrincipalRow>();
   const [conflictingBaseline, setConflictingBaseline] = useState<string>();
+  const [surface, setSurface] = useState<'list' | 'create'>('list');
+  const [createdFocusId, setCreatedFocusId] = useState<string>();
+  const [restoreEntryFocus, setRestoreEntryFocus] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const creationStatusRef = useRef<HTMLDivElement>(null);
+  const creationRetryRef = useRef<HTMLButtonElement>(null);
+  const rowActionRefs = useRef(new Map<string, HTMLButtonElement>());
+  const createEntryRef = useRef<HTMLButtonElement>(null);
+  const savedScrollTop = useRef(0);
   const composing = useRef(false);
   const operationGeneration = useRef(0);
   const mounted = useRef(true);
   const currentSelectedId = useRef<string | undefined>(undefined);
   const previousSelectedId = useRef<string | undefined>(undefined);
   const baselineName = useRef<string | undefined>(undefined);
-  const unavailable = selectedId !== undefined && selected === undefined;
+  const unavailable = query.state === 'ready' && selectedId !== undefined && selected === undefined;
   const unavailableRef = useRef<HTMLParagraphElement>(null);
   const inputId = useId();
   const helpId = useId();
@@ -149,18 +166,67 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
   useEffect(() => setAdminCandidate(undefined), [selected?.id]);
   useEffect(() => () => { mounted.current = false; operationGeneration.current += 1; }, []);
   useEffect(() => { if (unavailable) unavailableRef.current?.focus(); }, [unavailable]);
+  useEffect(() => {
+    if (surface !== 'list' || !restoreEntryFocus) return;
+    const scroller = sectionRef.current?.closest<HTMLElement>('[data-settings-content]');
+    if (scroller !== null && scroller !== undefined) scroller.scrollTop = savedScrollTop.current;
+    createEntryRef.current?.focus();
+    setRestoreEntryFocus(false);
+  }, [restoreEntryFocus, surface]);
+  useEffect(() => {
+    if (surface !== 'list' || createdFocusId === undefined) return;
+    if (creationStatus?.kind === 'refresh-error' && creationRetryRef.current !== null) {
+      const retry = creationRetryRef.current;
+      requestAnimationFrame(() => requestAnimationFrame(() => { if (retry.isConnected) retry.focus(); }));
+      setCreatedFocusId(undefined);
+      return;
+    }
+    const action = rowActionRefs.current.get(createdFocusId);
+    if (action !== undefined) {
+      requestAnimationFrame(() => requestAnimationFrame(() => { if (action.isConnected) action.focus(); }));
+      setCreatedFocusId(undefined);
+      return;
+    }
+    if (query.state === 'loading' || creationStatus === undefined) return;
+    const fallback = creationRetryRef.current ?? creationStatusRef.current ?? headingRef.current;
+    requestAnimationFrame(() => requestAnimationFrame(() => { if (fallback?.isConnected) fallback.focus(); }));
+    setCreatedFocusId(undefined);
+  }, [createdFocusId, creationStatus, query.state, rows, surface]);
 
-  if (query.state === 'loading') return <p role="status">{mode === 'managed' ? '관리 워크스페이스를 불러오는 중입니다.' : '전체 워크스페이스를 불러오는 중입니다.'}</p>;
-  if (query.state === 'error') return <div role="alert"><p>워크스페이스를 불러오지 못했습니다.</p><button type="button" onClick={query.onRetry}>다시 불러오기</button></div>;
+  const cancelCreation = () => {
+    setSurface('list');
+    setRestoreEntryFocus(true);
+  };
 
-  return <section data-workspace-management={mode}>
-    <h2>{mode === 'managed' ? '워크스페이스 관리' : '전체 워크스페이스'}</h2>
-    {rows.length === 0 ? <p>{mode === 'managed' ? '관리 권한이 있는 워크스페이스가 없습니다.' : '등록된 워크스페이스가 없습니다.'}</p> : (
+  return <section ref={sectionRef} data-workspace-management={mode} data-workspace-surface={surface}>
+    {surface === 'create' && mode === 'all' && onCreate !== undefined && onLoadCreationWarnings !== undefined
+      ? <NewWorkspaceForm onCancel={cancelCreation} onLoadWarnings={onLoadCreationWarnings} onCreate={async (input) => {
+        const result = await onCreate(input);
+        setCreatedFocusId(result.workspace.id);
+        setSurface('list');
+        return result;
+      }} />
+      : <>
+    <h2 ref={headingRef} tabIndex={-1}>{mode === 'managed' ? '워크스페이스 관리' : '전체 워크스페이스'}</h2>
+    {query.state === 'ready' && mode === 'all' && onCreate !== undefined && onLoadCreationWarnings !== undefined ? <button ref={createEntryRef} type="button" data-workspace-create-entry="" onClick={() => {
+      savedScrollTop.current = sectionRef.current?.closest<HTMLElement>('[data-settings-content]')?.scrollTop ?? 0;
+      setSurface('create');
+    }}>새 워크스페이스</button> : null}
+    {creationStatus === undefined ? null : <div ref={creationStatusRef} tabIndex={-1} aria-label="워크스페이스 생성 결과" role={creationStatus.kind === 'refresh-error' ? 'alert' : 'status'} data-workspace-create-status="">
+      <p>{creationStatus.message}</p>
+      {creationStatus.kind === 'refresh-error' ? <button ref={creationRetryRef} type="button" onClick={onRetryCreationRefresh}>목록 다시 불러오기</button> : null}
+    </div>}
+    {query.state === 'loading' ? <p role="status">{mode === 'managed' ? '관리 워크스페이스를 불러오는 중입니다.' : '전체 워크스페이스를 불러오는 중입니다.'}</p>
+      : query.state === 'error' ? <div role="alert"><p>워크스페이스를 불러오지 못했습니다.</p><button type="button" onClick={query.onRetry}>다시 불러오기</button></div>
+      : rows.length === 0 ? <p>{mode === 'managed' ? '관리 권한이 있는 워크스페이스가 없습니다.' : '등록된 워크스페이스가 없습니다.'}</p> : (
       <ul aria-label={mode === 'managed' ? '관리 워크스페이스' : '전체 워크스페이스'} data-workspace-list="">
-        {rows.map((row) => <li key={row.id} data-selected={row.id === selectedId ? '' : undefined}>
+        {rows.map((row) => <li key={row.id} data-workspace-id={row.id} data-selected={row.id === selectedId ? '' : undefined}>
           {rows.length === 1 && row.id === selectedId ? <div data-workspace-static="" aria-current="true">
             <span>{row.name}</span><AdminlessBadge adminless={row.adminless} />
-          </div> : <button type="button" aria-current={row.id === selectedId ? 'true' : undefined} onClick={() => onSelect?.(row.id)}>
+          </div> : <button ref={(node) => {
+            if (node === null) rowActionRefs.current.delete(row.id);
+            else rowActionRefs.current.set(row.id, node);
+          }} type="button" aria-current={row.id === selectedId ? 'true' : undefined} onClick={() => onSelect?.(row.id)}>
             <span>{row.name}</span>{duplicateLabels.has(row.id) ? <small>{duplicateLabels.get(row.id)}</small> : null}
             <AdminlessBadge adminless={row.adminless} />
           </button>}
@@ -221,5 +287,6 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
         {adminCandidate === undefined ? null : <p>{adminCandidate.name} · {adminCandidate.kind === 'user' ? '사용자' : '그룹'}</p>}</> : null}
       <p>관리자 추가·제거는 권위 있는 영향 범위 확인이 제공될 때 연결됩니다.</p>
     </section></>}
+    </>}
   </section>;
 }

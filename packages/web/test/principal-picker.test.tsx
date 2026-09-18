@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { existsSync } from 'node:fs';
@@ -48,6 +48,22 @@ const type = async (text: string) => {
 };
 
 describe('SEC-PRINCIPAL-003 — 최소 질의 길이와 결과 상한이 부품에 박혀 있다', () => {
+  it('compositionupdate 중 Enter는 검색 결과를 선택하지 않고 조합 문자열을 보존한다', async () => {
+    const onPick = vi.fn();
+    serving([row({ name: '한글 관리자' })]);
+    render(<PrincipalPicker scope={SCOPE} onPick={onPick} />);
+    const input = screen.getByLabelText('사용자·그룹 검색');
+
+    fireEvent.compositionStart(input, { data: '한' });
+    fireEvent.change(input, { target: { value: '한글' } });
+    fireEvent.compositionUpdate(input, { data: '한글' });
+    await screen.findByText('한글 관리자');
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
+
+    expect(onPick).not.toHaveBeenCalled();
+    expect((input as HTMLInputElement).value).toBe('한글');
+    fireEvent.compositionEnd(input, { data: '한글' });
+  });
   it('AC-1: 한 글자만 치면 서버에 묻지 않는다', async () => {
     const asked = serving([row()]);
     render(<PrincipalPicker scope={SCOPE} />);
