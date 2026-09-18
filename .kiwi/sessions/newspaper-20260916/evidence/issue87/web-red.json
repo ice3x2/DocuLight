@@ -1,0 +1,83 @@
+{
+  "command": "\"C:\\\\Program Files\\\\nodejs\\\\node.exe\" \"C:\\\\Work\\\\git\\\\DocuLight2.0-wt-issue87\\\\node_modules\\\\vitest\\\\vitest.mjs\" \"run\" \"test/issue87-retention-impact.test.tsx\" \"--root\" \"C:\\\\Work\\\\git\\\\DocuLight2.0-wt-issue87\\\\packages\\\\web\" \"--reporter=json\" \"--outputFile\" \"C:\\\\Users\\\\beom\\\\AppData\\\\Local\\\\Temp\\\\doculight-issue87-red-ZKTmK8\\\\web-vitest.json\"",
+  "cwd": "C:\\Work\\git\\DocuLight2.0-wt-issue87",
+  "startedAt": "2026-09-18T08:09:30.778Z",
+  "completedAt": "2026-09-18T08:09:47.096Z",
+  "timeoutMs": 120000,
+  "timedOut": false,
+  "exitCode": 1,
+  "signal": null,
+  "stdout": "JSON report written to C:/Users/beom/AppData/Local/Temp/doculight-issue87-red-ZKTmK8/web-vitest.json\n",
+  "stderr": "",
+  "structuredResult": {
+    "total": 13,
+    "failed": [
+      {
+        "id": "FR-CONFIRM-024 — retention impact confirmation UI completes L2 with initial cancel focus, receipt-only PUT, readback, and no outside-click dismissal",
+        "errorType": "Error",
+        "message": "Error: Unable to find role=\"alertdialog\""
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact confirmation UI opens a cancellable pending shell, disables save, and renders zero-impact L2 without a typing field",
+        "errorType": "Error",
+        "message": "Error: Unable to find role=\"alertdialog\""
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact confirmation UI starts a new authoritative POST on every reopen and ignores a late response from a cancelled generation",
+        "errorType": "Error",
+        "message": "Error: Unable to find an element by: [data-testid=\"retention-impact-pending\"]"
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact confirmation UI requires the exact plain L3 token, sends receipt/token headers, and blocks stale confirmation until explicit re-review",
+        "errorType": "Error",
+        "message": "Error: Unable to find an element by: [data-testid=\"retention-impact-token\"]"
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact confirmation UI discards typed consent and acknowledgement after same-total identity staleness",
+        "errorType": "Error",
+        "message": "Error: Unable to find an element by: [data-testid=\"retention-impact-token\"]"
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact confirmation UI blocks Escape and cancel while the confirmed PUT is pending and latches duplicate confirmation",
+        "errorType": "Error",
+        "message": "Error: Unable to find an element by: [data-testid=\"retention-impact-confirm\"]"
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact confirmation UI retries a failed preview in place, preserves draft, and returns focus for continued editing",
+        "errorType": "Error",
+        "message": "Error: Unable to find an element by: [data-testid=\"retention-impact-error\"]"
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact confirmation UI ignores late preview and PUT completions after ownership is unmounted",
+        "errorType": "Error",
+        "message": "Error: Unable to find an element by: [data-testid=\"retention-impact-pending\"]"
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact confirmation UI isolates late preview across same-actor new-session and A-to-B-to-A owner generations",
+        "errorType": "Error",
+        "message": "Error: Unable to find an element by: [data-testid=\"retention-impact-pending\"]"
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact confirmation UI prevents a late accepted PUT from mutating the next owner UI or triggering its readback",
+        "errorType": "Error",
+        "message": "Error: Unable to find an element by: [data-testid=\"retention-impact-confirm\"]"
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact confirmation UI reconciles an uncertain retention PUT by GET and retries an accepted-readback failure with GET only",
+        "errorType": "Error",
+        "message": "Error: Unable to find an element by: [data-testid=\"retention-impact-confirm\"]"
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact confirmation UI keeps focus trapped, cancels with Escape, and announces preview errors without permitting PUT",
+        "errorType": "Error",
+        "message": "Error: Unable to find role=\"alertdialog\""
+      },
+      {
+        "id": "FR-CONFIRM-024 — real App/AppShell authentication ownership drops pending preview and accepted PUT results across same-actor new sessions and A-to-B-to-A login generations",
+        "errorType": "Error",
+        "message": "Error: Unable to find an element by: [data-testid=\"retention-impact-pending\"]"
+      }
+    ],
+    "passed": []
+  }
+}

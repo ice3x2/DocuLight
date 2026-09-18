@@ -1,0 +1,24 @@
+# Issue 87 TDD RED evidence
+
+- Requirement: `FR-CONFIRM-024`
+- Integration HEAD: `e754674496ae52938b43dcb550048f17f4bb826e`
+- Raw result identities and exact structured failure contracts: `red-evidence-manifest.json` (SSOT)
+- Source SHA-256 `77531b96025c241e8c4682f10983fe97124ebae550fe184bc403d810961fcd66`: `package.json`
+- Source SHA-256 `448b8bac85f72d05e5f13443ad98ed9137c2bd71f0e232d7b9b59a1f78fe830a`: `packages/web/package.json`
+- Source SHA-256 `a072fe60e6b033e649747d555f5c2bda46c11400523d2aa18c0fa49fe0cc4e2b`: `packages/server/test/http/retention-impact.test.ts`
+- Source SHA-256 `a9ec60e7709fcfcc6f90e879496fafb3f22d7469b367371d4abcaca85c862096`: `packages/web/test/issue87-retention-impact.test.tsx`
+- Source SHA-256 `4495ef1b983c47dc91cea3962b58329b3ac7a4b2c12a56e307fb817e90edf45d`: `packages/web/test/issue87-retention-impact-product-runner.mjs`
+- Source SHA-256 `92cab34c4f113d913c83e6249f7feea04eb14fcbbd2fdacca0cdc05df58352b1`: `packages/web/test/issue87-retention-impact-product-check.mjs`
+- Source SHA-256 `c0356bb128495db2c8881ddfbe714a2def33fb4fd6b7772e07407f145d9e9d57`: `packages/web/test/issue87-red-evidence-runner.mjs`
+- Source SHA-256 `24aa8bfa675d22e1be77e2d47a900e34616b1895c89553a1dbc96c7c5fb36e0a`: `packages/web/test/issue87-red-evidence-contract.mjs`
+- Source SHA-256 `063454a4863b3d5c7c16f420bd57eb87e7dbaf1fe3e9d92772ae7cc109e0ce2b`: `packages/web/test/issue87-evidence-bundle.mjs`
+- Source SHA-256 `51e264f3674cafa42add3e5dc7fefbd11c854fcf2db4a0d0a7663db3465cc045`: `packages/web/test/issue87-owned-child-grace.mjs`
+- Source SHA-256 `d22a827be410ec275c471c52c32c8d56ada13209aa227492e584f572fc372096`: `packages/web/test/issue87-red-runner-contract.test.mjs`
+- Source SHA-256 `e013cc76bf9092d61edbb147076e308452a553a333fc09bd680d1727d98d7d44`: `packages/web/test/issue87-red-allowlist.json`
+- Capture command: `npm run test:issue87:red-evidence`
+- Server RED: 61 failed, 5 passed, 66 total; every failed test ID, error type, and core message matches the checked-in allowlist.
+- Web RED: 13 failed, 0 passed, 13 total; every failed test ID, error type, and core message matches the checked-in allowlist.
+- Browser RED: server/web builds and isolated fixture completed, then the only failure was the 30,000 ms response timeout for `POST /api/settings/retention-impact`.
+- All reports require exit code 1, null signal, no runner timeout, and zero secondary process, cleanup, or aggregate errors.
+- IPC invariant failures preserve the original error, allow bounded natural Playwright cleanup, and terminate only the owned checker after grace expiry.
+- Product source files remained unchanged while these RED tests and evidence were authored.

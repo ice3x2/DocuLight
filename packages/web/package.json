@@ -13,7 +13,7 @@
     "test:watch": "vitest",
     "test:browser:focus": "node test/focus-retention-check.mjs",
     "test:browser:focus:headed": "node test/focus-retention-check.mjs --headed",
-    "test:browser:all": "npm run test:browser:files && npm run test:browser:complex && npm run test:browser:pre-auth && npm run test:browser:install-newspaper && npm run test:browser:auth && npm run test:browser:focus && npm run test:browser:ime && npm run test:browser:search && npm run test:browser:merge && npm run test:browser:styles && npm run test:browser:theme && npm run test:browser:acl && npm run test:browser:trash && npm run test:browser:gestures",
+    "test:browser:all": "npm run test:browser:files && npm run test:browser:complex && npm run test:browser:pre-auth && npm run test:browser:install-newspaper && npm run test:browser:auth && npm run test:browser:focus && npm run test:browser:ime && npm run test:browser:search && npm run test:browser:merge && npm run test:browser:styles && npm run test:browser:theme && npm run test:browser:acl && npm run test:browser:trash && npm run test:browser:gestures && npm run test:browser:issue87-product",
     "test:browser:files": "node test/issue58-file-surface-check.cjs",
     "test:browser:ime": "node test/ime-composition-check.mjs",
     "test:browser:ime:headed": "node test/ime-composition-check.mjs --headed",
@@ -58,6 +58,7 @@
     "test:browser:issue69": "node test/issue69-acl-browser-check.cjs",
     "test:browser:issue74-product": "node test/issue74-offboarding-product-runner.mjs",
     "test:browser:issue75-product": "node test/issue75-index-queue-product-runner.mjs",
+    "test:browser:issue87-product": "node test/issue87-retention-impact-product-runner.mjs",
     "test:browser:issue89-product": "node test/issue89-admin-grant-product-runner.mjs"
   },
   "dependencies": {

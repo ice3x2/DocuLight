@@ -11,6 +11,7 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "test:browser:all": "npm run test:browser:all --workspace @doculight/editor && npm run test:browser:all --workspace @doculight/web",
+    "test:issue87:red-evidence": "node packages/web/test/issue87-red-evidence-runner.mjs",
     "build": "npm run build --workspaces --if-present",
     "dev": "npm run dev --workspace @doculight/web",
     "dev:all": "node scripts/dev.mjs"

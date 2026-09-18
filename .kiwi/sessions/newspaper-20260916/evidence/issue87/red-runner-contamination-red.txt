@@ -1,0 +1,106 @@
+✖ FR-CONFIRM-024: rejects Error contamination appended to the server RED report (1.3952ms)
+✔ FR-CONFIRM-024: rejects TypeError contamination appended to the server RED report (0.3951ms)
+✔ FR-CONFIRM-024: rejects AggregateError contamination appended to the server RED report (0.1535ms)
+✖ FR-CONFIRM-024: rejects Error contamination appended to the web RED report (0.1359ms)
+✔ FR-CONFIRM-024: rejects TypeError contamination appended to the web RED report (0.108ms)
+✔ FR-CONFIRM-024: rejects AggregateError contamination appended to the web RED report (0.1038ms)
+✖ FR-CONFIRM-024: rejects Error contamination appended to the browser RED report (0.1454ms)
+✔ FR-CONFIRM-024: rejects TypeError contamination appended to the browser RED report (0.0883ms)
+✔ FR-CONFIRM-024: rejects AggregateError contamination appended to the browser RED report (0.1283ms)
+✔ FR-CONFIRM-024: rejects a structured suite-level secondary message (0.2893ms)
+✔ FR-CONFIRM-024: rejects multiple failure messages on one structured assertion (0.1459ms)
+✔ FR-CONFIRM-024: accepts only the exact server and web RED summaries (0.7518ms)
+✔ FR-CONFIRM-024: browser RED is only the post-build retention-impact response timeout (0.1465ms)
+✖ FR-CONFIRM-024: generated evidence document and manifest agree with raw and source identities (41.2216ms)
+✔ FR-CONFIRM-024: IPC invariant failure keeps the original error and gives natural cleanup a grace period (8.0336ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 11
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 134.4957
+
+✖ failing tests:
+
+test at packages\web\test\issue87-red-runner-contract.test.mjs:31:5
+✖ FR-CONFIRM-024: rejects Error contamination appended to the server RED report (1.3952ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception: server Error
+      at TestContext.<anonymous> (file:///C:/Work/git/DocuLight2.0-wt-issue87/packages/web/test/issue87-red-runner-contract.test.mjs:34:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.start (node:internal/test_runner/test:1177:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /unexpected RED outcome/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at packages\web\test\issue87-red-runner-contract.test.mjs:31:5
+✖ FR-CONFIRM-024: rejects Error contamination appended to the web RED report (0.1359ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception: web Error
+      at TestContext.<anonymous> (file:///C:/Work/git/DocuLight2.0-wt-issue87/packages/web/test/issue87-red-runner-contract.test.mjs:34:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /unexpected RED outcome/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at packages\web\test\issue87-red-runner-contract.test.mjs:31:5
+✖ FR-CONFIRM-024: rejects Error contamination appended to the browser RED report (0.1454ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception: browser Error
+      at TestContext.<anonymous> (file:///C:/Work/git/DocuLight2.0-wt-issue87/packages/web/test/issue87-red-runner-contract.test.mjs:34:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /unexpected RED outcome/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at packages\web\test\issue87-red-runner-contract.test.mjs:81:1
+✖ FR-CONFIRM-024: generated evidence document and manifest agree with raw and source identities (41.2216ms)
+  AssertionError [ERR_ASSERTION]: Got unwanted exception.
+  Actual message: "evidence source hash mismatch"
+      at TestContext.<anonymous> (file:///C:/Work/git/DocuLight2.0-wt-issue87/packages/web/test/issue87-red-runner-contract.test.mjs:82:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: Error: evidence source hash mismatch
+        at verifyEvidenceBundle (file:///C:/Work/git/DocuLight2.0-wt-issue87/packages/web/test/issue87-evidence-bundle.mjs:46:91)
+        at file:///C:/Work/git/DocuLight2.0-wt-issue87/packages/web/test/issue87-red-runner-contract.test.mjs:82:29
+        at getActual (node:assert:611:5)
+        at strict.doesNotThrow (node:assert:779:32)
+        at TestContext.<anonymous> (file:///C:/Work/git/DocuLight2.0-wt-issue87/packages/web/test/issue87-red-runner-contract.test.mjs:82:10)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1306:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+        at Test.postRun (node:internal/test_runner/test:1447:19)
+        at Test.run (node:internal/test_runner/test:1372:12),
+    expected: undefined,
+    operator: 'doesNotThrow',
+    diff: 'simple'
+  }

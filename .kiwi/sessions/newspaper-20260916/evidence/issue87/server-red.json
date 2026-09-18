@@ -1,0 +1,329 @@
+{
+  "command": "\"C:\\\\Program Files\\\\nodejs\\\\node.exe\" \"C:\\\\Work\\\\git\\\\DocuLight2.0-wt-issue87\\\\node_modules\\\\vitest\\\\vitest.mjs\" \"run\" \"test/http/retention-impact.test.ts\" \"--root\" \"C:\\\\Work\\\\git\\\\DocuLight2.0-wt-issue87\\\\packages\\\\server\" \"--reporter=json\" \"--outputFile\" \"C:\\\\Users\\\\beom\\\\AppData\\\\Local\\\\Temp\\\\doculight-issue87-red-ZKTmK8\\\\server-vitest.json\"",
+  "cwd": "C:\\Work\\git\\DocuLight2.0-wt-issue87",
+  "startedAt": "2026-09-18T08:09:26.966Z",
+  "completedAt": "2026-09-18T08:09:30.776Z",
+  "timeoutMs": 120000,
+  "timedOut": false,
+  "exitCode": 1,
+  "signal": null,
+  "stdout": "JSON report written to C:/Users/beom/AppData/Local/Temp/doculight-issue87-red-ZKTmK8/server-vitest.json\n",
+  "stderr": "",
+  "structuredResult": {
+    "total": 66,
+    "failed": [
+      {
+        "id": "FR-CONFIRM-024 — retention impact preview and save consent AC-1/AC-3: counts coordinated shortening as disjoint trash-node, audit-row and finding identities",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact preview and save consent AC-2/AC-3: a fresh zero preview is L2 and authorizes the exact patch without a typing token",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact preview and save consent runs the positive real HTTP GET -> preview -> PUT -> GET chain and persists settings plus per-field audits",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact preview and save consent AC-4: rejects a same-total replacement and writes neither the patch nor its audit row",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact preview and save consent AC-4: requires a receipt and exact positive total token for every destructive save",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — retention impact preview and save consent keeps preview superuser-only and rejects malformed or unknown patches before scanning",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 403 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authoritative impact-set semantics deduplicates nested trash roots, finding references, and equal IDs across namespaces",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authoritative impact-set semantics uses trash <= millisecond cutoff, audit < UTC-second cutoff, and includes already-overdue items",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authoritative impact-set semantics computes each domain only when that domain shortens and leaves unchanged zero semantics alone",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authoritative impact-set semantics treats unlimited-to-fractional finite retention as shortening using the full decimal value",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authoritative impact-set semantics has zero persistence side effects and returns an exact confidential no-store response shape",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation accepts the exact positive L3 token and receipt, atomically saving the full patch and one audit row per changed field",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects a forged receipt with the exact stale contract and no mutation",
+        "errorType": "AssertionError",
+        "message": "expected 204 to be 409 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects a changed patch with the exact stale contract and no mutation",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects a changed accompanying setting with the exact stale contract and no mutation",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation binds a receipt to the actor and rechecks superuser privilege at save time",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects a stale receipt even when a baseline change makes the submitted patch safe",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects same-total trash subtree membership replacement",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects same-total audit identity membership replacement",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects same-total finding identity membership replacement",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects same-total finding reference membership replacement",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation keeps a receipt valid across clock movement while membership is unchanged",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects missing, formatted, old, and arbitrary L3 token undefined with no mutation",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects missing, formatted, old, and arbitrary L3 token \"\" with no mutation",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects missing, formatted, old, and arbitrary L3 token \" 2\" with no mutation",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects missing, formatted, old, and arbitrary L3 token \"2 \" with no mutation",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects missing, formatted, old, and arbitrary L3 token \"2,000\" with no mutation",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects missing, formatted, old, and arbitrary L3 token \"1\" with no mutation",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects missing, formatted, old, and arbitrary L3 token \"99\" with no mutation",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation keeps a receipt valid after unrelated settings and out-of-impact records change",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation reclassifies a receiptless safe patch as risky against the final baseline",
+        "errorType": "AssertionError",
+        "message": "expected 204 to be 409 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rechecks a deterministic safe-to-risky race inside the final transaction after a second connection commits",
+        "errorType": "AssertionError",
+        "message": "expected 204 to be 409 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation returns retryable failure and all-zero writes under a real overlapping SQLite write lock",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rejects a receipt when clock movement crosses the cutoff and changes membership",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation detects a baseline race committed through a second SQLite connection",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rolls back every setting and audit row when a later audit append fails",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — receipt binding and save-time revalidation rolls back an earlier setting and audit row when a later setting write fails",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input rejects a malformed stored raw retention baseline without silently substituting a default",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 409 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 401/403 for preview and PUT and rejects a workspace administrator who is not a superuser",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 401 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input rejects a save when the authenticated session disappears after preview",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input rechecks expired session after route auth at the final transaction barrier",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input rechecks revoked session after route auth at the final transaction barrier",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input rechecks suspended account after route auth at the final transaction barrier",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input rechecks revoked superuser authority after route auth at the final transaction barrier",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 200 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for missing body",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for null body",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for array body",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for missing patch",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for null patch",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for array patch",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for unknown key",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for numeric value",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for blank value",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for negative value",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for NaN value",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for infinite value",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for invalid pair",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for malformed PUT null body",
+        "errorType": "AssertionError",
+        "message": "expected 500 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for malformed PUT array body",
+        "errorType": "AssertionError",
+        "message": "expected 204 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for malformed PUT negative value",
+        "errorType": "AssertionError",
+        "message": "expected 204 to be 400 // Object.is equality"
+      },
+      {
+        "id": "FR-CONFIRM-024 — authorization, availability, and malformed input returns a retryable non-success without mutation when authoritative storage cannot be scanned",
+        "errorType": "AssertionError",
+        "message": "expected 404 to be greater than or equal to 500"
+      }
+    ],
+    "passed": [
+      "FR-CONFIRM-024 — retention impact preview and save consent AC-5: preserves receiptless compatibility for expansions and finite-to-unlimited changes",
+      "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for malformed PUT unknown key",
+      "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for malformed PUT numeric value",
+      "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for malformed PUT blank value",
+      "FR-CONFIRM-024 — authorization, availability, and malformed input returns 400 with zero mutation for malformed PUT invalid pair"
+    ]
+  }
+}
