@@ -1203,6 +1203,10 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       return;
     }
     const entryId = one(req.query.entryId);
+    if (entryId !== undefined && grantCapabilityReceipt(stores, actor, entryId)?.canRevoke !== true) {
+      res.sendStatus(404);
+      return;
+    }
     const warnings = [
       ...grantWarnings(stores, {
         ...(one(req.query.principalId) === undefined ? {} : { principalId: one(req.query.principalId)! }),

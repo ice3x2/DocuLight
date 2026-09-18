@@ -849,6 +849,7 @@ function AppBody() {
     return result;
   }, [queries]);
   const [workspaceCreationStatus, setWorkspaceCreationStatus] = useState<{ kind: 'success' | 'refresh-error'; message: string }>();
+  const [workspaceAdministratorMutationStatus, setWorkspaceAdministratorMutationStatus] = useState<{ kind: 'success' | 'refresh-error'; message: string }>();
   const refreshWorkspaceCreationReads = useCallback(() => refetchWorkspaceCreationReads(queries), [queries]);
   const retryWorkspaceCreationReads = useCallback(async () => {
     const refreshed = await refreshWorkspaceCreationReads();
@@ -866,6 +867,22 @@ function AppBody() {
       : { kind: 'refresh-error', message: '워크스페이스를 만들었습니다. 목록을 새로 불러오지 못했습니다.' });
     return result;
   }, [refreshWorkspaceCreationReads]);
+  const refreshWorkspaceAdministratorReads = useCallback(async () => {
+    const [administratorsResult] = await Promise.all([
+      selectedWorkspaceAdministrators.refetch(),
+      queries.invalidateQueries({ queryKey: QUERY_KEYS.workspaces('managed') }),
+      queries.invalidateQueries({ queryKey: QUERY_KEYS.workspaces('all') }),
+      queries.invalidateQueries({ queryKey: QUERY_KEYS.session }),
+    ]);
+    if (administratorsResult.isError) throw administratorsResult.error;
+  }, [queries, selectedWorkspaceAdministrators]);
+  const retryWorkspaceAdministratorReads = useCallback(() => {
+    void refreshWorkspaceAdministratorReads().then(() => {
+      setWorkspaceAdministratorMutationStatus({ kind: 'success', message: '관리자 목록을 새로 불러왔습니다.' });
+    }).catch(() => {
+      setWorkspaceAdministratorMutationStatus({ kind: 'refresh-error', message: '관리 권한을 회수했지만 목록을 새로 불러오지 못했습니다.' });
+    });
+  }, [refreshWorkspaceAdministratorReads]);
   const brokenInheritance = useBrokenInheritance(signedIn && (adminScope || session.data?.superuser === true));
   // 슈퍼유저는 관리 워크스페이스가 없어도 인스턴스 스코프의 행을 읽는다
   // (`SEC-AUDIT-010` AC-5) — `adminScope` 만 보면 그 문이 닫힌다.
@@ -1299,15 +1316,12 @@ function AppBody() {
         onLoadCreationWarnings: ({ administratorId, defaultGroupLevel }) => fetchGrantWarnings({ principalId: administratorId, defaultGroupLevel }),
         onLoadAdminGrantPreview: fetchWorkspaceAdminGrantPreview,
         onGrantAdministrator: grantWorkspaceAdministrator,
-        onAdministratorsRefresh: async () => {
-          const [administratorsResult] = await Promise.all([
-            selectedWorkspaceAdministrators.refetch(),
-            queries.invalidateQueries({ queryKey: QUERY_KEYS.workspaces('managed') }),
-            queries.invalidateQueries({ queryKey: QUERY_KEYS.workspaces('all') }),
-            queries.invalidateQueries({ queryKey: QUERY_KEYS.session }),
-          ]);
-          if (administratorsResult.isError) throw administratorsResult.error;
-        },
+        onLoadAdminRevokeWarnings: (entryId) => fetchGrantWarnings({ entryId }),
+        onRevokeAdministrator: async (_workspaceId, entryId) => revokeShare(entryId),
+        onAdministratorsRefresh: refreshWorkspaceAdministratorReads,
+        administratorMutationStatus: workspaceAdministratorMutationStatus,
+        onAdministratorMutationStatus: setWorkspaceAdministratorMutationStatus,
+        onRetryAdministratorRefresh: retryWorkspaceAdministratorReads,
         creationStatus: workspaceCreationStatus,
         onRetryCreationRefresh: () => { void retryWorkspaceCreationReads(); },
         administrators: selectedWorkspaceAdministrators.isError

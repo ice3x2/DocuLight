@@ -3,6 +3,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { PrincipalRow, ShareRow, WorkspaceAdminGrantPreview, WorkspaceAdminGrantReceipt } from '../api/client.js';
 import { PrincipalPicker } from '../principal/PrincipalPicker.js';
 import { WorkspaceAdminGrantDialog } from './WorkspaceAdminGrantDialog.js';
+import { WorkspaceAdminRevokeDialog } from './WorkspaceAdminRevokeDialog.js';
 import { NewWorkspaceForm, type WorkspaceCreateInput } from './NewWorkspaceForm.js';
 import type { WorkspaceCreateBody } from '../api/client.js';
 import type { GrantWarning } from '../acl/GrantConfirm.js';
@@ -98,7 +99,7 @@ function duplicateIdentityLabels(rows: readonly WorkspaceRowView[]): ReadonlyMap
 }
 
 // @req IR-WORKSPACE-001
-export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, onRename, administrators, administratorSearchEnabled = true, onLoadAdminGrantPreview, onGrantAdministrator, onAdministratorsRefresh, onCreate, onLoadCreationWarnings, creationStatus, onRetryCreationRefresh }: {
+export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, onRename, administrators, administratorSearchEnabled = true, onLoadAdminGrantPreview, onGrantAdministrator, onLoadAdminRevokeWarnings, onRevokeAdministrator, onAdministratorsRefresh, administratorMutationStatus, onAdministratorMutationStatus, onRetryAdministratorRefresh, onAuthenticationLoss, onCreate, onLoadCreationWarnings, creationStatus, onRetryCreationRefresh }: {
   mode: 'managed' | 'all';
   query: WorkspaceQueryState;
   selectedId?: string;
@@ -108,7 +109,13 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
   administratorSearchEnabled?: boolean;
   onLoadAdminGrantPreview?: (workspaceId: string, principalId: string) => Promise<WorkspaceAdminGrantPreview>;
   onGrantAdministrator?: (workspaceId: string, principalId: string, previewToken: string) => Promise<WorkspaceAdminGrantReceipt>;
+  onLoadAdminRevokeWarnings?: (entryId: string) => Promise<readonly GrantWarning[]>;
+  onRevokeAdministrator?: (workspaceId: string, entryId: string) => Promise<void>;
   onAdministratorsRefresh?: () => Promise<unknown>;
+  administratorMutationStatus?: { kind: 'success' | 'refresh-error'; message: string };
+  onAdministratorMutationStatus?: (status: { kind: 'success' | 'refresh-error'; message: string }) => void;
+  onRetryAdministratorRefresh?: () => void;
+  onAuthenticationLoss?: () => void;
   onCreate?: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateBody>;
   onLoadCreationWarnings?: (input: Pick<WorkspaceCreateInput, 'administratorId' | 'defaultGroupLevel'>) => Promise<readonly GrantWarning[]>;
   creationStatus?: { kind: 'success' | 'refresh-error'; message: string };
@@ -124,6 +131,9 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
   const [adminGrantOpen, setAdminGrantOpen] = useState(false);
   const [adminGrantStatus, setAdminGrantStatus] = useState<string>();
   const [adminGrantRefreshFailed, setAdminGrantRefreshFailed] = useState(false);
+  const [adminRevokeTarget, setAdminRevokeTarget] = useState<ShareRow>();
+  const [adminRevokeStatus, setAdminRevokeStatus] = useState<string>();
+  const [adminRevokeRefreshFailed, setAdminRevokeRefreshFailed] = useState(false);
   const [conflictingBaseline, setConflictingBaseline] = useState<string>();
   const [surface, setSurface] = useState<'list' | 'create'>('list');
   const [createdFocusId, setCreatedFocusId] = useState<string>();
@@ -132,9 +142,11 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
   const headingRef = useRef<HTMLHeadingElement>(null);
   const creationStatusRef = useRef<HTMLDivElement>(null);
   const creationRetryRef = useRef<HTMLButtonElement>(null);
+  const administratorMutationStatusRef = useRef<HTMLDivElement>(null);
   const rowActionRefs = useRef(new Map<string, HTMLButtonElement>());
   const createEntryRef = useRef<HTMLButtonElement>(null);
   const adminGrantEntryRef = useRef<HTMLButtonElement>(null);
+  const adminRevokeEntryRefs = useRef(new Map<string, HTMLButtonElement>());
   const savedScrollTop = useRef(0);
   const composing = useRef(false);
   const operationGeneration = useRef(0);
@@ -171,9 +183,21 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
     }
   }, [selected?.id, selected?.name]);
 
-  useEffect(() => { setAdminCandidate(undefined); setAdminGrantOpen(false); setAdminGrantStatus(undefined); setAdminGrantRefreshFailed(false); }, [selected?.id]);
+  useEffect(() => {
+    setAdminCandidate(undefined);
+    setAdminGrantOpen(false);
+    setAdminGrantStatus(undefined);
+    setAdminGrantRefreshFailed(false);
+    setAdminRevokeTarget(undefined);
+    setAdminRevokeStatus(undefined);
+    setAdminRevokeRefreshFailed(false);
+  }, [selected?.id]);
   useEffect(() => () => { mounted.current = false; operationGeneration.current += 1; }, []);
   useEffect(() => { if (unavailable) unavailableRef.current?.focus(); }, [unavailable]);
+  useEffect(() => {
+    if (!unavailable || administratorMutationStatus === undefined) return;
+    administratorMutationStatusRef.current?.focus();
+  }, [administratorMutationStatus, unavailable]);
   useEffect(() => {
     if (surface !== 'list' || !restoreEntryFocus) return;
     const scroller = sectionRef.current?.closest<HTMLElement>('[data-settings-content]');
@@ -223,6 +247,13 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
     {creationStatus === undefined ? null : <div ref={creationStatusRef} tabIndex={-1} aria-label="워크스페이스 생성 결과" role={creationStatus.kind === 'refresh-error' ? 'alert' : 'status'} data-workspace-create-status="">
       <p>{creationStatus.message}</p>
       {creationStatus.kind === 'refresh-error' ? <button ref={creationRetryRef} type="button" onClick={onRetryCreationRefresh}>목록 다시 불러오기</button> : null}
+    </div>}
+    {administratorMutationStatus === undefined ? null : <div ref={administratorMutationStatusRef} tabIndex={-1}
+      role={administratorMutationStatus.kind === 'refresh-error' ? 'alert' : 'status'}
+      data-workspace-admin-mutation-status="">
+      <p>{administratorMutationStatus.message}</p>
+      {administratorMutationStatus.kind === 'refresh-error' && onRetryAdministratorRefresh !== undefined
+        ? <button type="button" onClick={onRetryAdministratorRefresh}>목록 다시 불러오기</button> : null}
     </div>}
     {query.state === 'loading' ? <p role="status">{mode === 'managed' ? '관리 워크스페이스를 불러오는 중입니다.' : '전체 워크스페이스를 불러오는 중입니다.'}</p>
       : query.state === 'error' ? <div role="alert"><p>워크스페이스를 불러오지 못했습니다.</p><button type="button" onClick={query.onRetry}>다시 불러오기</button></div>
@@ -289,7 +320,17 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
       {administrators === undefined || administrators.state === 'loading' ? <p role="status">워크스페이스 관리자를 불러오는 중입니다.</p>
         : administrators.state === 'error' ? <div role="alert"><p>워크스페이스 관리자를 불러오지 못했습니다.</p><button type="button" onClick={administrators.onRetry}>다시 불러오기</button></div>
           : administrators.rows.length === 0 ? <p>직접 지정된 워크스페이스 관리자가 없습니다.</p>
-            : <ul>{administrators.rows.map((row) => <li key={row.entryId ?? row.principalId}><span>{row.principalName}</span> <small>{row.principalKind === 'user' ? '사용자' : '그룹'}</small></li>)}</ul>}
+            : <ul>{administrators.rows.map((row) => <li key={row.entryId ?? row.principalId}>
+              <span>{row.principalName}</span> <small>{row.principalKind === 'user' ? '사용자' : '그룹'}</small>
+              {row.entryId === null || onLoadAdminRevokeWarnings === undefined || onRevokeAdministrator === undefined ? null
+                : <button ref={(node) => {
+                  if (node === null) adminRevokeEntryRefs.current.delete(row.entryId!);
+                  else adminRevokeEntryRefs.current.set(row.entryId!, node);
+                }} type="button" onClick={() => {
+                  setAdminRevokeStatus(undefined);
+                  setAdminRevokeTarget(row);
+                }}>{row.principalName} 관리 권한 회수</button>}
+            </li>)}</ul>}
       {administratorSearchEnabled ? <><h4>워크스페이스 관리자 추가</h4>
         <PrincipalPicker scope={`workspace:${selected.id}`} onPick={setAdminCandidate} onSelectionInvalidated={() => setAdminCandidate(undefined)} />
         {adminCandidate === undefined ? null : <><p>{adminCandidate.name} · {adminCandidate.kind === 'user' ? '사용자' : '그룹'}</p>
@@ -297,6 +338,12 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
         </>}</> : null}
       {adminGrantStatus === undefined ? null : <div role={adminGrantRefreshFailed ? 'alert' : 'status'}><p>{adminGrantStatus}</p>{adminGrantRefreshFailed && onAdministratorsRefresh !== undefined ? <button type="button" onClick={() => {
         void onAdministratorsRefresh().then(() => { setAdminGrantRefreshFailed(false); setAdminGrantStatus('목록을 새로 불러왔습니다.'); }).catch(() => setAdminGrantRefreshFailed(true));
+      }}>목록 다시 불러오기</button> : null}</div>}
+      {adminRevokeStatus === undefined ? null : <div role={adminRevokeRefreshFailed ? 'alert' : 'status'}><p>{adminRevokeStatus}</p>{adminRevokeRefreshFailed && onAdministratorsRefresh !== undefined ? <button type="button" onClick={() => {
+        void onAdministratorsRefresh().then(() => {
+          setAdminRevokeRefreshFailed(false);
+          setAdminRevokeStatus('관리자 목록을 새로 불러왔습니다.');
+        }).catch(() => setAdminRevokeRefreshFailed(true));
       }}>목록 다시 불러오기</button> : null}</div>}
       <p>관리자 추가 전 권위 있는 영향 범위 확인을 엽니다.</p>
       {adminGrantOpen && adminCandidate !== undefined && onLoadAdminGrantPreview !== undefined && onGrantAdministrator !== undefined ? <WorkspaceAdminGrantDialog
@@ -310,6 +357,22 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
           requestAnimationFrame(() => { if (headingRef.current?.isConnected) headingRef.current.focus(); });
           void onAdministratorsRefresh?.().catch(() => { setAdminGrantRefreshFailed(true); setAdminGrantStatus('관리자로 지정했습니다. 목록을 새로 불러오지 못했습니다.'); });
         }} /> : null}
+      {adminRevokeTarget !== undefined && adminRevokeTarget.entryId !== null
+        && onLoadAdminRevokeWarnings !== undefined && onRevokeAdministrator !== undefined ? <WorkspaceAdminRevokeDialog
+          open workspace={{ id: selected.id, name: selected.name }} administrator={adminRevokeTarget}
+          restoreFocusRef={{ current: adminRevokeEntryRefs.current.get(adminRevokeTarget.entryId) ?? null }}
+          onLoadWarnings={onLoadAdminRevokeWarnings} onRevoke={onRevokeAdministrator} onClose={(receipt) => {
+            setAdminRevokeTarget(undefined);
+            if (receipt === undefined) return;
+            setAdminRevokeRefreshFailed(false);
+            setAdminRevokeStatus('관리 권한을 회수했습니다.');
+            onAdministratorMutationStatus?.({ kind: 'success', message: '관리 권한을 회수했습니다.' });
+            void onAdministratorsRefresh?.().catch(() => {
+              setAdminRevokeRefreshFailed(true);
+              setAdminRevokeStatus('관리 권한을 회수했지만 목록을 새로 불러오지 못했습니다.');
+              onAdministratorMutationStatus?.({ kind: 'refresh-error', message: '관리 권한을 회수했지만 목록을 새로 불러오지 못했습니다.' });
+            });
+          }} onAuthenticationLoss={onAuthenticationLoss} /> : null}
     </section></>}
     </>}
   </section>;

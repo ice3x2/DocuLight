@@ -38,15 +38,16 @@ try {
   if (!response.ok) throw new Error(`install ${response.status}`);
   const installed = await response.json();
   const actor = permission.actorFor(runtime.stores.principals, installed.superuserId);
-  const second = await workspace.createWorkspaceAs(runtime.stores, actor, { name: '같은 이름 '.repeat(18), administratorId: installed.superuserId, defaultGroupLevel: 'none' });
-  const adminless = await workspace.createWorkspace(runtime.stores, '관리자 없는 실제 워크스페이스');
   const manager = await accounts.registerAccount(runtime.stores, { name: managerName, password: managerPassword, status: 'active' });
   const viewer = await accounts.registerAccount(runtime.stores, { name: viewerName, password: viewerPassword, status: 'active' });
-  if (!manager.ok || !viewer.ok || !second.ok) throw new Error('role fixture creation failed');
+  if (!manager.ok || !viewer.ok) throw new Error('role fixture creation failed');
+  const second = await workspace.createWorkspaceAs(runtime.stores, actor, { name: '같은 이름 '.repeat(18), administratorId: manager.id, defaultGroupLevel: 'none' });
+  const adminless = await workspace.createWorkspace(runtime.stores, '관리자 없는 실제 워크스페이스');
+  if (!second.ok) throw new Error('workspace fixture creation failed');
   const firstManagerGrant = grants.grantPermission(runtime.stores, actor, { nodeId: installed.workspaceId, principalId: manager.id, level: 'admin' });
-  const secondManagerGrant = grants.grantPermission(runtime.stores, actor, { nodeId: second.workspace.id, principalId: manager.id, level: 'admin' });
+  const secondManagerEntry = runtime.stores.acl.entriesOn(second.workspace.id).find((entry) => entry.principalId === manager.id && entry.level === 'admin');
   grants.grantPermission(runtime.stores, actor, { nodeId: installed.workspaceId, principalId: viewer.id, level: 'view' });
-  if (!firstManagerGrant.ok || !secondManagerGrant.ok) throw new Error('role grants failed');
+  if (!firstManagerGrant.ok || !secondManagerEntry) throw new Error('role grants failed');
   const writeSidecar = runtime.stores.files.writeSidecar.bind(runtime.stores.files);
   runtime.stores.files.writeSidecar = async (record) => {
     if (record.name.includes('사이드카 대기')) throw new Error('intentional issue72 sidecar failure');
@@ -58,7 +59,7 @@ try {
       DOCULIGHT_E2E_MANAGER: managerName, DOCULIGHT_E2E_MANAGER_PASS: managerPassword,
       DOCULIGHT_E2E_VIEWER: viewerName, DOCULIGHT_E2E_VIEWER_PASS: viewerPassword,
       DOCULIGHT_E2E_MANAGER_FIRST_ENTRY: firstManagerGrant.entryId,
-      DOCULIGHT_E2E_MANAGER_SECOND_ENTRY: secondManagerGrant.entryId,
+      DOCULIGHT_E2E_MANAGER_SECOND_ENTRY: secondManagerEntry.id,
       DOCULIGHT_E2E_FIRST_WORKSPACE: installed.workspaceId,
       DOCULIGHT_E2E_SECOND_WORKSPACE: second.workspace.id,
       DOCULIGHT_E2E_ADMINLESS_WORKSPACE: adminless.id,

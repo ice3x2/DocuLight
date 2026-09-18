@@ -1063,6 +1063,21 @@ describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
     expect(got.body).toEqual(['last-administrator']);
   });
 
+  it('IR-WORKSPACE-001 AC-3: entry 경고는 현재 회수 권한을 다시 확인하고 unknown과 같은 404를 쓴다', async () => {
+    grantPermission(stores, root, { nodeId: ws, principalId: me.id, level: 'admin' });
+    const 항목 = stores.acl.entriesOn(ws).find((entry) => entry.principalId === me.id)!;
+    const outsider = actorFor(stores.principals, stores.principals.createUser('외부인').id);
+    actingAs = outsider;
+
+    const forbidden = await request(app).get('/api/grant-warnings').query({ entryId: 항목.id });
+    const unknown = await request(app).get('/api/grant-warnings').query({ entryId: 'missing-entry' });
+
+    expect(forbidden.status).toBe(404);
+    expect(unknown.status).toBe(404);
+    expect((await request(app).delete('/api/acl-entries/' + 항목.id)).status).toBe(404);
+    expect(stores.acl.findEntry(항목.id)).toBeDefined();
+  });
+
   it('R163 · FR-PRINCIPAL-009: 명부는 rejected 를 담고 상한이 없다', async () => {
     for (let n = 0; n < 25; n += 1) stores.principals.createUser(`사람${n}`);
     const 거절된 = stores.principals.createUser('거절자');

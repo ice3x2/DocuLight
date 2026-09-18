@@ -362,7 +362,12 @@ function SettingsModal({
     onLoadCreationWarnings?: (input: Pick<WorkspaceCreateInput, 'administratorId' | 'defaultGroupLevel'>) => Promise<readonly GrantWarning[]>;
     onLoadAdminGrantPreview?: (workspaceId: string, principalId: string) => Promise<WorkspaceAdminGrantPreview>;
     onGrantAdministrator?: (workspaceId: string, principalId: string, previewToken: string) => Promise<WorkspaceAdminGrantReceipt>;
+    onLoadAdminRevokeWarnings?: (entryId: string) => Promise<readonly GrantWarning[]>;
+    onRevokeAdministrator?: (workspaceId: string, entryId: string) => Promise<void>;
     onAdministratorsRefresh?: () => Promise<unknown>;
+    administratorMutationStatus?: { kind: 'success' | 'refresh-error'; message: string };
+    onAdministratorMutationStatus?: (status: { kind: 'success' | 'refresh-error'; message: string }) => void;
+    onRetryAdministratorRefresh?: () => void;
     creationStatus?: { kind: 'success' | 'refresh-error'; message: string };
     onRetryCreationRefresh?: () => void;
   };
@@ -530,7 +535,13 @@ function SettingsModal({
                     {...(workspaceManagement === undefined ? {} : {
                       onLoadAdminGrantPreview: workspaceManagement.onLoadAdminGrantPreview,
                       onGrantAdministrator: workspaceManagement.onGrantAdministrator,
+                      onLoadAdminRevokeWarnings: workspaceManagement.onLoadAdminRevokeWarnings,
+                      onRevokeAdministrator: workspaceManagement.onRevokeAdministrator,
                       onAdministratorsRefresh: workspaceManagement.onAdministratorsRefresh,
+                      administratorMutationStatus: workspaceManagement.administratorMutationStatus,
+                      onAdministratorMutationStatus: workspaceManagement.onAdministratorMutationStatus,
+                      onRetryAdministratorRefresh: workspaceManagement.onRetryAdministratorRefresh,
+                      onAuthenticationLoss,
                     })}
                     {...(category.id !== 'all-workspaces' || workspaceManagement === undefined ? {} : {
                       onCreate: workspaceManagement.onCreate,
@@ -887,7 +898,12 @@ export function AppShell({
     onLoadCreationWarnings?: (input: Pick<WorkspaceCreateInput, 'administratorId' | 'defaultGroupLevel'>) => Promise<readonly GrantWarning[]>;
     onLoadAdminGrantPreview?: (workspaceId: string, principalId: string) => Promise<WorkspaceAdminGrantPreview>;
     onGrantAdministrator?: (workspaceId: string, principalId: string, previewToken: string) => Promise<WorkspaceAdminGrantReceipt>;
+    onLoadAdminRevokeWarnings?: (entryId: string) => Promise<readonly GrantWarning[]>;
+    onRevokeAdministrator?: (workspaceId: string, entryId: string) => Promise<void>;
     onAdministratorsRefresh?: () => Promise<unknown>;
+    administratorMutationStatus?: { kind: 'success' | 'refresh-error'; message: string };
+    onAdministratorMutationStatus?: (status: { kind: 'success' | 'refresh-error'; message: string }) => void;
+    onRetryAdministratorRefresh?: () => void;
     creationStatus?: { kind: 'success' | 'refresh-error'; message: string };
     onRetryCreationRefresh?: () => void;
   };

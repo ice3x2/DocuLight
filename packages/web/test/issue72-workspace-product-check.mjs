@@ -14,6 +14,7 @@ const required = (name) => {
   if (!value) throw new Error(`${name} is required`);
   return value;
 };
+const superuserName = required('DOCULIGHT_E2E_USER');
 const managerName = required('DOCULIGHT_E2E_MANAGER');
 const managerPassword = required('DOCULIGHT_E2E_MANAGER_PASS');
 const viewerName = required('DOCULIGHT_E2E_VIEWER');
@@ -55,7 +56,8 @@ try {
   const calls = [];
   page.on('request', (request) => {
     const url = new URL(request.url());
-    if (url.pathname === '/api/workspaces' || url.pathname.startsWith('/api/workspaces/')) {
+    if (url.pathname === '/api/workspaces' || url.pathname.startsWith('/api/workspaces/')
+      || url.pathname === '/api/grant-warnings' || url.pathname.startsWith('/api/acl-entries/')) {
       calls.push({ method: request.method(), path: `${url.pathname}${url.search}`, body: request.postDataJSON() });
     }
   });
@@ -121,7 +123,7 @@ try {
   assert(duplicateLabels.every((label) => label.length >= 8));
   await managed.getByText('워크스페이스 관리자를 불러오지 못했습니다.').waitFor();
   await managed.locator('[data-workspace-administrators]').getByRole('button', { name: '다시 불러오기' }).click();
-  await managed.locator('[data-workspace-administrators]').getByText(managerName).waitFor();
+  await managed.locator('[data-workspace-administrators]').getByText(managerName, { exact: true }).waitFor();
 
   const nameInput = managed.getByRole('textbox', { name: '표시 이름' });
   await nameInput.fill(' ');
@@ -172,28 +174,50 @@ try {
   assert.equal(sidecarBody.sidecarSync, 'pending', JSON.stringify(sidecarBody));
   await managed.getByText('표시 이름은 변경됐지만 재구성 사본 갱신이 대기 중입니다.').waitFor();
 
-  const revoke = async (entryId) => page.evaluate(async (id) => {
-    const response = await fetch(`/api/acl-entries/${encodeURIComponent(id)}`, { method: 'DELETE' });
-    return response.status;
-  }, entryId);
-  assert.equal(await revoke(secondEntry), 204);
-  await page.evaluate(() => {
-    window.__issue72RealDateNow = Date.now;
-    const original = Date.now;
-    Date.now = () => original() + 31_000;
-  });
-  await context.setOffline(true);
-  await context.setOffline(false);
+  const administratorSection = managed.locator('[data-workspace-administrators]');
+  const revokeEntry = administratorSection.getByRole('button', { name: `${managerName} \uAD00\uB9AC \uAD8C\uD55C \uD68C\uC218` });
+  const deletesBeforeCancel = calls.filter((call) => call.method === 'DELETE' && call.path.includes(secondEntry)).length;
+  await revokeEntry.click();
+  let revokeDialog = page.getByRole('alertdialog');
+  await revokeDialog.getByTestId('grant-warning').waitFor();
+  const cancel = revokeDialog.getByRole('button', { name: '\uCDE8\uC18C' });
+  assert.equal(await cancel.evaluate((node) => document.activeElement === node), true);
+  await page.keyboard.press('Escape');
+  await revokeDialog.waitFor({ state: 'hidden' });
+  assert.equal(calls.filter((call) => call.method === 'DELETE' && call.path.includes(secondEntry)).length, deletesBeforeCancel);
+  await revokeEntry.evaluate((node) => new Promise((resolve, reject) => {
+    const started = performance.now();
+    const check = () => {
+      if (document.activeElement === node) resolve(undefined);
+      else if (performance.now() - started > 1000) reject(new Error('revoke entry focus was not restored'));
+      else requestAnimationFrame(check);
+    };
+    check();
+  }));
+
+  await revokeEntry.click();
+  revokeDialog = page.getByRole('alertdialog');
+  await revokeDialog.getByTestId('grant-warning').waitFor();
+  await revokeDialog.getByRole('button', { name: '\uAD00\uB9AC \uAD8C\uD55C \uD68C\uC218' }).click();
+  const mutationStatus = managed.locator('[data-workspace-admin-mutation-status]');
+  await mutationStatus.waitFor();
+  assert((await mutationStatus.innerText()).includes('\uAD00\uB9AC \uAD8C\uD55C\uC744 \uD68C\uC218'));
+  assert.equal(calls.filter((call) => call.method === 'DELETE' && call.path.includes(secondEntry)).length, deletesBeforeCancel + 1);
+  assert(calls.filter((call) => call.method === 'GET' && call.path.includes(`/api/grant-warnings?entryId=${encodeURIComponent(secondEntry)}`)).length >= 2);
   const unavailable = managed.locator('[data-workspace-unavailable]');
   await unavailable.waitFor();
-  assert.equal(await unavailable.evaluate((node) => document.activeElement === node), true);
-  assert.equal(await managed.getByRole('textbox', { name: '표시 이름' }).count(), 0);
+  assert.equal(await mutationStatus.evaluate((node) => document.activeElement === node), true);
+  assert.equal(await managed.getByRole('textbox', { name: '\uD45C\uC2DC \uC774\uB984' }).count(), 0);
   assert.equal(await list.getByRole('button').count(), 1);
   assert.equal(await list.locator('[data-workspace-static]').count(), 0);
   await list.getByRole('button').click();
-  await managed.getByRole('textbox', { name: '표시 이름' }).waitFor();
+  await managed.getByRole('textbox', { name: '\uD45C\uC2DC \uC774\uB984' }).waitFor();
   assert.equal(await list.locator('[data-workspace-static][aria-current="true"]').count(), 1);
-  assert.equal(await revoke(firstEntry), 204);
+  const firstDeleteStatus = await page.evaluate(async (id) => {
+    const response = await fetch(`/api/acl-entries/${encodeURIComponent(id)}`, { method: 'DELETE' });
+    return response.status;
+  }, firstEntry);
+  assert.equal(firstDeleteStatus, 204);
   await page.route((url) => url.pathname === '/api/session', async (route) => {
     const response = await route.fetch();
     const body = await response.json();
@@ -252,6 +276,15 @@ try {
     return { outlineStyle: style.outlineStyle, outlineWidth: style.outlineWidth };
   });
 
+  const firstAllRow = all.locator(`[data-workspace-id=\"${firstWorkspace}\"] button`);
+  await firstAllRow.click();
+  const superuserRevoke = all.locator('[data-workspace-administrators]').getByRole('button', { name: `${superuserName} \uAD00\uB9AC \uAD8C\uD55C \uD68C\uC218` });
+  await superuserRevoke.click();
+  const revokeMatrixDialog = page.getByRole('alertdialog');
+  await revokeMatrixDialog.getByTestId('grant-warning').waitFor();
+  const matrixCancel = revokeMatrixDialog.getByRole('button', { name: '\uCDE8\uC18C' });
+  assert.equal(await matrixCancel.evaluate((node) => document.activeElement === node), true);
+
   const setZoom = async (value) => worker.evaluate(async ({ target, value }) => {
     const tab = (await chrome.tabs.query({})).find((candidate) => candidate.url === target);
     if (!tab?.id) throw new Error('product tab missing');
@@ -267,26 +300,36 @@ try {
         const observedZoom = await setZoom(zoom / 100);
         assert.equal(observedZoom, zoom / 100);
         await page.waitForTimeout(80);
-        const geometry = await all.evaluate((node) => {
-          const close = document.querySelector('[aria-label="설정 닫기"]');
-          const final = node.querySelector('[data-workspace-administrators] p:last-child');
+        const geometry = await revokeMatrixDialog.evaluate((node) => {
+          const actions = node.querySelector('[data-slot="alert-dialog-actions"]');
+          const before = node.getBoundingClientRect();
+          node.scrollTop = node.scrollHeight;
+          const maxScrollTop = node.scrollHeight - node.clientHeight;
+          const reachedScrollEnd = Math.abs(node.scrollTop - maxScrollTop) <= 1;
           return {
             cssViewport: { width: innerWidth, height: innerHeight },
             window: { outerWidth, outerHeight },
             devicePixelRatio,
             visualViewport: visualViewport ? { width: visualViewport.width, height: visualViewport.height, scale: visualViewport.scale } : null,
-            overflow: node.scrollWidth > node.clientWidth + 1,
+            rect: { left: before.left, top: before.top, right: before.right, bottom: before.bottom },
+            overflowX: node.scrollWidth > node.clientWidth + 1,
+            maxScrollTop,
+            reachedScrollEnd,
             controls: [...node.querySelectorAll('button,input')].map((item) => item.getBoundingClientRect().height),
-            selected: node.querySelectorAll('[aria-current="true"]').length,
-            closeReachable: close instanceof HTMLElement && close.getBoundingClientRect().width > 0,
-            finalReachable: final instanceof HTMLElement && final.getBoundingClientRect().width > 0,
+            actionsReachable: actions instanceof HTMLElement && actions.getBoundingClientRect().width > 0,
+            warningCount: node.querySelectorAll('[data-testid="grant-warning"]').length,
           };
         });
-        assert.equal(geometry.overflow, false, JSON.stringify({ width, height, theme, zoom, geometry }));
+        const expectedCssViewport = { width: Math.round(width / (zoom / 100)), height: Math.round(height / (zoom / 100)) };
+        assert(Math.abs(geometry.cssViewport.width - expectedCssViewport.width) <= 2, JSON.stringify({ width, height, theme, zoom, geometry }));
+        assert(Math.abs(geometry.cssViewport.height - expectedCssViewport.height) <= 2, JSON.stringify({ width, height, theme, zoom, geometry }));
+        assert.equal(geometry.overflowX, false, JSON.stringify({ width, height, theme, zoom, geometry }));
         assert(geometry.controls.every((value) => value >= 36), JSON.stringify({ width, height, theme, zoom, geometry }));
-        assert.equal(geometry.selected, 1);
-        assert.equal(geometry.closeReachable, true);
-        assert.equal(geometry.finalReachable, true);
+        assert.equal(geometry.actionsReachable, true);
+        assert.equal(geometry.warningCount, 1);
+        assert.equal(geometry.reachedScrollEnd, true);
+        assert(geometry.rect.left >= -1 && geometry.rect.right <= geometry.cssViewport.width + 1, JSON.stringify(geometry));
+        assert(geometry.rect.top >= -1 && geometry.rect.bottom <= geometry.cssViewport.height + 1, JSON.stringify(geometry));
         const file = `workspace-${theme}-${width}x${height}-${zoom}.png`;
         await page.screenshot({ path: path.join(output, file), fullPage: true });
         environments.push({ theme, requestedViewport: { width, height }, zoom, observedZoom, geometry, screenshot: file });
@@ -299,7 +342,8 @@ try {
   await page.emulateMedia({ forcedColors: 'active' });
   for (const zoom of [100, 200]) {
     const observedZoom = await setZoom(zoom / 100);
-    const computed = await allRows.nth(1).evaluate((node) => {
+    await matrixCancel.focus();
+    const computed = await matrixCancel.evaluate((node) => {
       const style = getComputedStyle(node);
       return { color: style.color, backgroundColor: style.backgroundColor, outlineColor: style.outlineColor, outlineStyle: style.outlineStyle };
     });
@@ -309,7 +353,23 @@ try {
   }
   assert(forcedColors.every((entry) => entry.active));
   await page.emulateMedia({ forcedColors: 'none' });
+  assert.equal(await setZoom(2), 2);
+  await page.setViewportSize({ width: 1000, height: 640 });
+  assert.equal(await revokeMatrixDialog.getByTestId('grant-warning').count(), 1);
+  await page.setViewportSize({ width: 1280, height: 720 });
+  assert.equal(await revokeMatrixDialog.getByTestId('grant-warning').count(), 1);
   assert.equal(await setZoom(1), 1);
+  await matrixCancel.click();
+  await revokeMatrixDialog.waitFor({ state: 'hidden' });
+  await superuserRevoke.evaluate((node) => new Promise((resolve, reject) => {
+    const started = performance.now();
+    const check = () => {
+      if (document.activeElement === node) resolve(undefined);
+      else if (performance.now() - started > 1000) reject(new Error('superuser revoke focus was not restored'));
+      else requestAnimationFrame(check);
+    };
+    check();
+  }));
   await dialog.getByRole('button', { name: '설정 닫기' }).focus();
   await page.keyboard.press('Enter');
   await dialog.waitFor({ state: 'hidden' });
@@ -318,7 +378,7 @@ try {
     runner: 'isolated Playwright-owned persistent Chromium with extension setZoom/getZoom/reset',
     fixture: { firstWorkspace, secondWorkspace, adminlessWorkspace },
     roles: ['anonymous', 'manager', 'viewer', 'superuser'],
-    scenarios: ['list error/loading/empty', 'administrator read error', 'rename pending/selection race', 'sidecar pending', 'authority loss focus', 'invalid blur', 'keyboard selection', 'close/final reachability'],
+    scenarios: ['list error/loading/empty', 'administrator read error', 'rename pending/selection race', 'sidecar pending', 'authority loss focus', 'invalid blur', 'keyboard selection', 'revoke cancel/confirm/focus', 'revoke dialog scroll/resize/zoom reachability'],
     focusStyle,
     calls,
     environments,

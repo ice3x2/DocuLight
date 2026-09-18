@@ -1,9 +1,9 @@
 {
   "runner": "isolated Playwright-owned persistent Chromium with extension setZoom/getZoom/reset",
   "fixture": {
-    "firstWorkspace": "06063ac24434e30e9e8541011008df2b",
-    "secondWorkspace": "0c98c5bf625abaedb721d6d1ee8ac831",
-    "adminlessWorkspace": "7343f5eac2df67e4f6880d0af7c15c11"
+    "firstWorkspace": "3712df3a9af274b8f4e3f9de7b968aef",
+    "secondWorkspace": "4ccdce270e5e43efc5bcb29d9d67724a",
+    "adminlessWorkspace": "2c4d1b15154e9bedec9d13645fb91e9e"
   },
   "roles": [
     "anonymous",
@@ -19,7 +19,8 @@
     "authority loss focus",
     "invalid blur",
     "keyboard selection",
-    "close/final reachability"
+    "revoke cancel/confirm/focus",
+    "revoke dialog scroll/resize/zoom reachability"
   ],
   "focusStyle": {
     "outlineStyle": "solid",
@@ -43,7 +44,7 @@
     },
     {
       "method": "PATCH",
-      "path": "/api/workspaces/06063ac24434e30e9e8541011008df2b",
+      "path": "/api/workspaces/3712df3a9af274b8f4e3f9de7b968aef",
       "body": {
         "name": "첫 요청 지연"
       }
@@ -55,7 +56,7 @@
     },
     {
       "method": "PATCH",
-      "path": "/api/workspaces/0c98c5bf625abaedb721d6d1ee8ac831",
+      "path": "/api/workspaces/4ccdce270e5e43efc5bcb29d9d67724a",
       "body": {
         "name": "사이드카 대기 이름"
       }
@@ -67,7 +68,32 @@
     },
     {
       "method": "GET",
+      "path": "/api/grant-warnings?entryId=43135727-4840-4a4a-9789-c3b0d98b883e",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/grant-warnings?entryId=43135727-4840-4a4a-9789-c3b0d98b883e",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/grant-warnings?entryId=43135727-4840-4a4a-9789-c3b0d98b883e",
+      "body": null
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/acl-entries/43135727-4840-4a4a-9789-c3b0d98b883e",
+      "body": null
+    },
+    {
+      "method": "GET",
       "path": "/api/workspaces?scope=managed",
+      "body": null
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/acl-entries/56ed7083-ffa7-4424-8c51-b618546ec513",
       "body": null
     },
     {
@@ -103,6 +129,11 @@
     {
       "method": "GET",
       "path": "/api/workspaces?scope=all",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/grant-warnings?entryId=2b3ca24e-6e28-4f83-b850-10f976e41adb",
       "body": null
     }
   ],
@@ -121,7 +152,7 @@
           "height": 720
         },
         "window": {
-          "outerWidth": 788,
+          "outerWidth": 1296,
           "outerHeight": 854
         },
         "devicePixelRatio": 1,
@@ -130,19 +161,21 @@
           "height": 720,
           "scale": 1
         },
-        "overflow": false,
+        "rect": {
+          "left": 360,
+          "top": 143.5,
+          "right": 920,
+          "bottom": 576.5
+        },
+        "overflowX": false,
+        "maxScrollTop": 0,
+        "reachedScrollEnd": true,
         "controls": [
-          48,
-          48,
-          48,
-          48,
-          50,
           36,
           36
         ],
-        "selected": 1,
-        "closeReachable": true,
-        "finalReachable": true
+        "actionsReachable": true,
+        "warningCount": 1
       },
       "screenshot": "workspace-light-1280x720-100.png"
     },
@@ -160,7 +193,7 @@
           "height": 360
         },
         "window": {
-          "outerWidth": 788,
+          "outerWidth": 1296,
           "outerHeight": 854
         },
         "devicePixelRatio": 2,
@@ -169,19 +202,21 @@
           "height": 360,
           "scale": 1
         },
-        "overflow": false,
+        "rect": {
+          "left": 40,
+          "top": 24,
+          "right": 600,
+          "bottom": 336
+        },
+        "overflowX": false,
+        "maxScrollTop": 121,
+        "reachedScrollEnd": true,
         "controls": [
-          48,
-          48,
-          48,
-          48,
-          50,
           36,
           36
         ],
-        "selected": 1,
-        "closeReachable": true,
-        "finalReachable": true
+        "actionsReachable": true,
+        "warningCount": 1
       },
       "screenshot": "workspace-light-1280x720-200.png"
     },
@@ -199,7 +234,7 @@
           "height": 720
         },
         "window": {
-          "outerWidth": 788,
+          "outerWidth": 1296,
           "outerHeight": 854
         },
         "devicePixelRatio": 1,
@@ -208,19 +243,21 @@
           "height": 720,
           "scale": 1
         },
-        "overflow": false,
+        "rect": {
+          "left": 360,
+          "top": 143.5,
+          "right": 920,
+          "bottom": 576.5
+        },
+        "overflowX": false,
+        "maxScrollTop": 0,
+        "reachedScrollEnd": true,
         "controls": [
-          48,
-          48,
-          48,
-          48,
-          50,
           36,
           36
         ],
-        "selected": 1,
-        "closeReachable": true,
-        "finalReachable": true
+        "actionsReachable": true,
+        "warningCount": 1
       },
       "screenshot": "workspace-dark-1280x720-100.png"
     },
@@ -238,7 +275,7 @@
           "height": 360
         },
         "window": {
-          "outerWidth": 788,
+          "outerWidth": 1296,
           "outerHeight": 854
         },
         "devicePixelRatio": 2,
@@ -247,19 +284,21 @@
           "height": 360,
           "scale": 1
         },
-        "overflow": false,
+        "rect": {
+          "left": 40,
+          "top": 24,
+          "right": 600,
+          "bottom": 336
+        },
+        "overflowX": false,
+        "maxScrollTop": 121,
+        "reachedScrollEnd": true,
         "controls": [
-          48,
-          48,
-          48,
-          48,
-          50,
           36,
           36
         ],
-        "selected": 1,
-        "closeReachable": true,
-        "finalReachable": true
+        "actionsReachable": true,
+        "warningCount": 1
       },
       "screenshot": "workspace-dark-1280x720-200.png"
     },
@@ -277,7 +316,7 @@
           "height": 900
         },
         "window": {
-          "outerWidth": 788,
+          "outerWidth": 1456,
           "outerHeight": 1034
         },
         "devicePixelRatio": 1,
@@ -286,19 +325,21 @@
           "height": 900,
           "scale": 1
         },
-        "overflow": false,
+        "rect": {
+          "left": 440,
+          "top": 233.5,
+          "right": 1000,
+          "bottom": 666.5
+        },
+        "overflowX": false,
+        "maxScrollTop": 0,
+        "reachedScrollEnd": true,
         "controls": [
-          48,
-          48,
-          48,
-          48,
-          50,
           36,
           36
         ],
-        "selected": 1,
-        "closeReachable": true,
-        "finalReachable": true
+        "actionsReachable": true,
+        "warningCount": 1
       },
       "screenshot": "workspace-light-1440x900-100.png"
     },
@@ -316,7 +357,7 @@
           "height": 450
         },
         "window": {
-          "outerWidth": 788,
+          "outerWidth": 1456,
           "outerHeight": 1034
         },
         "devicePixelRatio": 2,
@@ -325,19 +366,21 @@
           "height": 450,
           "scale": 1
         },
-        "overflow": false,
+        "rect": {
+          "left": 80,
+          "top": 24,
+          "right": 640,
+          "bottom": 426
+        },
+        "overflowX": false,
+        "maxScrollTop": 31,
+        "reachedScrollEnd": true,
         "controls": [
-          48,
-          48,
-          48,
-          48,
-          50,
           36,
           36
         ],
-        "selected": 1,
-        "closeReachable": true,
-        "finalReachable": true
+        "actionsReachable": true,
+        "warningCount": 1
       },
       "screenshot": "workspace-light-1440x900-200.png"
     },
@@ -355,7 +398,7 @@
           "height": 900
         },
         "window": {
-          "outerWidth": 788,
+          "outerWidth": 1456,
           "outerHeight": 1034
         },
         "devicePixelRatio": 1,
@@ -364,19 +407,21 @@
           "height": 900,
           "scale": 1
         },
-        "overflow": false,
+        "rect": {
+          "left": 440,
+          "top": 233.5,
+          "right": 1000,
+          "bottom": 666.5
+        },
+        "overflowX": false,
+        "maxScrollTop": 0,
+        "reachedScrollEnd": true,
         "controls": [
-          48,
-          48,
-          48,
-          48,
-          50,
           36,
           36
         ],
-        "selected": 1,
-        "closeReachable": true,
-        "finalReachable": true
+        "actionsReachable": true,
+        "warningCount": 1
       },
       "screenshot": "workspace-dark-1440x900-100.png"
     },
@@ -394,7 +439,7 @@
           "height": 450
         },
         "window": {
-          "outerWidth": 788,
+          "outerWidth": 1456,
           "outerHeight": 1034
         },
         "devicePixelRatio": 2,
@@ -403,19 +448,21 @@
           "height": 450,
           "scale": 1
         },
-        "overflow": false,
+        "rect": {
+          "left": 80,
+          "top": 24,
+          "right": 640,
+          "bottom": 426
+        },
+        "overflowX": false,
+        "maxScrollTop": 31,
+        "reachedScrollEnd": true,
         "controls": [
-          48,
-          48,
-          48,
-          48,
-          50,
           36,
           36
         ],
-        "selected": 1,
-        "closeReachable": true,
-        "finalReachable": true
+        "actionsReachable": true,
+        "warningCount": 1
       },
       "screenshot": "workspace-dark-1440x900-200.png"
     },
@@ -433,8 +480,8 @@
           "height": 1080
         },
         "window": {
-          "outerWidth": 788,
-          "outerHeight": 1214
+          "outerWidth": 1936,
+          "outerHeight": 1100
         },
         "devicePixelRatio": 1,
         "visualViewport": {
@@ -442,19 +489,21 @@
           "height": 1080,
           "scale": 1
         },
-        "overflow": false,
+        "rect": {
+          "left": 680,
+          "top": 323.5,
+          "right": 1240,
+          "bottom": 756.5
+        },
+        "overflowX": false,
+        "maxScrollTop": 0,
+        "reachedScrollEnd": true,
         "controls": [
-          48,
-          48,
-          48,
-          48,
-          50,
           36,
           36
         ],
-        "selected": 1,
-        "closeReachable": true,
-        "finalReachable": true
+        "actionsReachable": true,
+        "warningCount": 1
       },
       "screenshot": "workspace-light-1920x1080-100.png"
     },
@@ -472,8 +521,8 @@
           "height": 540
         },
         "window": {
-          "outerWidth": 788,
-          "outerHeight": 1214
+          "outerWidth": 1936,
+          "outerHeight": 1100
         },
         "devicePixelRatio": 2,
         "visualViewport": {
@@ -481,19 +530,21 @@
           "height": 540,
           "scale": 1
         },
-        "overflow": false,
+        "rect": {
+          "left": 200,
+          "top": 53.5,
+          "right": 760,
+          "bottom": 486.5
+        },
+        "overflowX": false,
+        "maxScrollTop": 0,
+        "reachedScrollEnd": true,
         "controls": [
-          48,
-          48,
-          48,
-          48,
-          50,
           36,
           36
         ],
-        "selected": 1,
-        "closeReachable": true,
-        "finalReachable": true
+        "actionsReachable": true,
+        "warningCount": 1
       },
       "screenshot": "workspace-light-1920x1080-200.png"
     },
@@ -511,8 +562,8 @@
           "height": 1080
         },
         "window": {
-          "outerWidth": 788,
-          "outerHeight": 1214
+          "outerWidth": 1936,
+          "outerHeight": 1100
         },
         "devicePixelRatio": 1,
         "visualViewport": {
@@ -520,19 +571,21 @@
           "height": 1080,
           "scale": 1
         },
-        "overflow": false,
+        "rect": {
+          "left": 680,
+          "top": 323.5,
+          "right": 1240,
+          "bottom": 756.5
+        },
+        "overflowX": false,
+        "maxScrollTop": 0,
+        "reachedScrollEnd": true,
         "controls": [
-          48,
-          48,
-          48,
-          48,
-          50,
           36,
           36
         ],
-        "selected": 1,
-        "closeReachable": true,
-        "finalReachable": true
+        "actionsReachable": true,
+        "warningCount": 1
       },
       "screenshot": "workspace-dark-1920x1080-100.png"
     },
@@ -550,8 +603,8 @@
           "height": 540
         },
         "window": {
-          "outerWidth": 788,
-          "outerHeight": 1214
+          "outerWidth": 1936,
+          "outerHeight": 1100
         },
         "devicePixelRatio": 2,
         "visualViewport": {
@@ -559,19 +612,21 @@
           "height": 540,
           "scale": 1
         },
-        "overflow": false,
+        "rect": {
+          "left": 200,
+          "top": 53.5,
+          "right": 760,
+          "bottom": 486.5
+        },
+        "overflowX": false,
+        "maxScrollTop": 0,
+        "reachedScrollEnd": true,
         "controls": [
-          48,
-          48,
-          48,
-          48,
-          50,
           36,
           36
         ],
-        "selected": 1,
-        "closeReachable": true,
-        "finalReachable": true
+        "actionsReachable": true,
+        "warningCount": 1
       },
       "screenshot": "workspace-dark-1920x1080-200.png"
     }
@@ -582,8 +637,8 @@
       "observedZoom": 1,
       "computed": {
         "color": "rgb(0, 0, 0)",
-        "backgroundColor": "rgba(255, 255, 255, 0)",
-        "outlineColor": "rgb(55, 0, 110)",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "outlineColor": "rgb(0, 0, 0)",
         "outlineStyle": "solid"
       },
       "screenshot": "workspace-forced-colors-100.png",
@@ -594,8 +649,8 @@
       "observedZoom": 2,
       "computed": {
         "color": "rgb(0, 0, 0)",
-        "backgroundColor": "rgba(255, 255, 255, 0)",
-        "outlineColor": "rgb(55, 0, 110)",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "outlineColor": "rgb(0, 0, 0)",
         "outlineStyle": "solid"
       },
       "screenshot": "workspace-forced-colors-200.png",
