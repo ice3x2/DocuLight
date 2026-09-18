@@ -57,7 +57,8 @@
     "test:browser:issue68": "node test/issue68-group-roster-browser-check.cjs",
     "test:browser:issue69": "node test/issue69-acl-browser-check.cjs",
     "test:browser:issue74-product": "node test/issue74-offboarding-product-runner.mjs",
-    "test:browser:issue75-product": "node test/issue75-index-queue-product-runner.mjs"
+    "test:browser:issue75-product": "node test/issue75-index-queue-product-runner.mjs",
+    "test:browser:issue89-product": "node test/issue89-admin-grant-product-runner.mjs"
   },
   "dependencies": {
     "@codemirror/merge": "^6.10.4",

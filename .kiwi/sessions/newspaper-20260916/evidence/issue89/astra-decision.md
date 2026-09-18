@@ -1,6 +1,6 @@
-# Issue 89 — binding workspace administrator grant decision
+# Issue 89 — non-normative workspace administrator grant rationale
 
-Decision: Astra, 2026-09-18, under delegated design ownership. This is a supporting implementation decision for `IR-WORKSPACE-003`, not a replacement requirements source. `docs/spec/` remains authoritative. No implementation, test result, SRS mutation, issue closure or verification is claimed here.
+Decision: Astra, 2026-09-18, under delegated design ownership. This is a **non-normative** implementation rationale for `IR-WORKSPACE-003`; `docs/spec/` is the only requirements source. Existing design suggestions below add no independent acceptance gate. The 2026-09-18 correction records exact session binding and Playwright-only evidence in IR-WORKSPACE-003 AC-5–8 and its normative Implementation Notes. No product implementation, test pass, issue closure or verification is claimed by this document correction.
 
 ## Authority and current facts
 
@@ -21,7 +21,7 @@ Observed implementation constraints:
 
 There is a literal conflict to resolve through guarded SpecKiwi mutation: `FR-CONFIRM-012` AC-2/3 currently says the count is inherited-only and excludes broken inheritance without qualifying grant level. `IR-WORKSPACE-003` AC-2 specifically forbids that exclusion for workspace admin.
 
-The binding interpretation is **view/edit keep their existing inherited-reach contract; workspace admin follows the upper-gate contract below**. Do not change ordinary `share.reached`, weaken its tests or suppress broken branches in the administrator preview. Before implementation, clarify FR-CONFIRM-012's scope/exception and trace it to IR-WORKSPACE-003; keep both requirements consistent about visible count versus semantic workspace coverage. This authoring task does not perform that mutation. No user product-policy choice is needed: #89 and IR-WORKSPACE-003 already select the administrator behavior. If mutation cannot be applied, report that concrete governance blocker and leave grant execution disabled.
+The documented interpretation is **view/edit keep their existing inherited-reach contract; workspace admin follows the upper-gate contract**. The historical reconciliation concern above is governed by the current FR-CONFIRM-012 and IR-WORKSPACE-003 blocks; this rationale does not override them or independently declare implementation ready.
 
 ## Narrow server contract
 
@@ -30,7 +30,7 @@ Use a workspace-only adapter around the existing grant service:
 1. GET `/api/workspaces/:id/admin-grant-preview?principalId=<id>` obtains the fresh confirmation input. It is read-only with respect to ACL, audit and product state; issuing bounded ephemeral preview state is permitted. Send `Cache-Control: no-store` and do not treat a cached React-query result as this read.
 2. POST `/api/workspaces/:id/admin-grants` accepts `{ principalId, previewToken }`. It grants the server-fixed level `admin` after the conditional checks below. It never accepts a client count, authority flag, warning list or substitute level as truth.
 
-The names above are the selected implementation interface. A different equivalent route requires updating this decision's handoff rather than independently wiring two protocols. Preserve existing valid view/edit sharing and its receipts. Do not merely widen the generic route to allow an unpreviewed admin write.
+The names above describe the implementation handoff. Any contract change belongs in the SRS first; changing this non-normative memo alone cannot authorize it. Existing valid view/edit sharing and its receipts are preserved by the SRS.
 
 The preview response carries these semantic fields, with a shared server/client type:
 
@@ -78,6 +78,8 @@ The count is **current visible coverage, not newly gained access and not the tot
 Opening the L2 always issues a new uncached preview request. Render loading until that succeeds. Bind each request/result to actor/authentication generation, selected workspace ID, selected principal ID and a monotonically increasing local request generation. Ignore late results from canceled/replaced requests even if abort did not stop the response. Switching workspace, changing/reselecting the principal, closing settings, losing authority or signing out clears unsubmitted consent.
 
 The preview token is opaque, tamper-resistant and server-bound to this actor/authentication context, workspace, principal, fixed admin operation and semantic snapshot. It is not an authorization capability. Use a bounded server-defined lifetime (five minutes for this implementation), expose `expiresAt`, and reject expired, unknown, forged, cross-actor or cross-target tokens. Expiry/restart never falls back to an unconditional grant. Keep token/receipt state scoped to this operation rather than introducing a general workflow engine.
+
+The previously unspecified authentication-context source is now defined only by **IR-WORKSPACE-003 AC-5–7 and its normative Implementation Notes**: canonical validated `doculight_session` → existing `hashSecretToken` session lookup key, bound together with actor ID. The reason is that SessionRecord has no separate session ID, the same actor can hold different sessions, and hashing an entire Cookie header makes unrelated cookies alter identity. The SRS also owns raw-secret/fingerprint nonexposure, transaction-time revalidation, new-token/session mismatch, logout/expiry/password invalidation and no-fallback behavior; this paragraph supplies rationale, not a second rule set.
 
 A snapshot captures the authoritative displayed identities, candidate status/warnings, direct-assignment state, count and identities of the visible covered nodes, and the material state used for authorization/coverage. Equal numbers after a node is replaced are not sufficient. Relevant visible topology/inheritance changes invalidate it even if the displayed count remains equal. Recheck authorization independently even when the semantic snapshot matches. Changes irrelevant to this confirmation, such as another workspace or only nonservable hidden data, must not expose hidden-state changes via the token. Group designation applies to the group's current/future membership by existing policy; this preview does not freeze, enumerate or count its members.
 
@@ -141,7 +143,7 @@ Required automated red→green cases:
 
 Use isolated Playwright against the actual built application, a dedicated temporary DB/storage root, isolated account fixtures/profile and owned test ports/PIDs. Never mutate the live service/data or kill processes by executable name. Capture network calls and stored ACL/audit facts for real grant and cancel paths. API stubs/component tests supplement but do not replace end-to-end wiring evidence.
 
-Browser matrix: 1280×720, 1440×900, 1920×1080 × light/dark × genuine 100%/200% = 12 environments, plus forced-colors at both zoom levels. Exercise both settings entry paths, long/duplicate Korean names, broken inheritance, loading/error/stale/pending/success, keyboard/focus, resize and theme changes while intent remains mounted. Native Windows Korean IME evidence is required for candidate input; synthetic composition alone is supplementary. Preserve selection/draft through 100→200→100 and resizing without unexpected submission.
+Browser matrix: 1280×720, 1440×900, 1920×1080 × light/dark × genuine 100%/200% = 12 environments, plus forced-colors at both zoom levels. Exercise both settings entry paths, long/duplicate Korean names, broken inheritance, loading/error/stale/pending/success, keyboard/focus, resize and theme changes while intent remains mounted. **IR-WORKSPACE-003 AC-8 supplies the sole IME evidence gate:** Playwright-only synthetic composition lifecycle in the actual product, composing Enter without unintended selection/L2/POST, preserved Korean input/selection, and separate deliberate acceptance after composition. Native Windows candidate-window behavior is explicitly nonblocking unverified because it is not observed by the permitted automation. No OS automation, manual browser operation or native manual evidence is required or permitted. Synthetic coverage is never labelled native PASS. Preserve selection/draft through 100→200→100 and resizing without unexpected submission.
 
 Genuine zoom uses isolated persistent Chromium with an owned extension calling `chrome.tabs.setZoom(tabId, 2)` and verifies `chrome.tabs.getZoom(...) === 2`; record pre/post CSS viewport, window geometry and DPR with screenshots/computed styles. CSS zoom/transform, device-scale changes, half-width viewport and device metrics emulation are not accepted as browser zoom evidence. If the harness cannot establish real zoom, record the blocker rather than report an emulation as passed. Verify readable contrast, real outlines and focus visibility in forced colors; class-name existence is not visual proof.
 
@@ -149,7 +151,7 @@ An independent verifier must review original #89/SRS, final diff and evidence wi
 
 ## Closure and current blockers
 
-#89 closes only after IR-WORKSPACE-003 AC-1–4 have implementation and independent automated/browser evidence, conditional execution cannot bypass the fresh L2, privacy/count/atomicity cases above pass, and the relevant SRS evidence/status is updated through supported tools. The document alone closes none of these gates.
+Completion is governed by IR-WORKSPACE-003 AC-1–8 and the other applicable SRS requirements, with independent automated/browser evidence and supported evidence/status updates. AC-8's honest native-candidate-window limitation alone does not block #89 when the remaining criteria pass; it is not a waiver of them or a native-IME verification claim. This non-normative document itself closes no gate.
 
 #72's administrator blocker is removed only when its **actual management detail** uses this preview+execution adapter and its existing remove adapter is safely connected and verified. A standalone server endpoint, placeholder, disabled add button or test fixture response does not complete IR-WORKSPACE-001 AC-3. #72 must still satisfy its other list/selection/rename/role/browser conditions; #73 creation ownership remains separate.
 

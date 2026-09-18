@@ -18,7 +18,7 @@ import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { IndexQueueSurface, type IndexQueueSnapshot } from '../settings/IndexQueuePanel.js';
 import { WorkspaceManagementPanel, type WorkspaceAdministratorState, type WorkspaceQueryState, type WorkspaceRenameResult } from '../workspace/WorkspaceList.js';
 import type { WorkspaceCreateInput } from '../workspace/NewWorkspaceForm.js';
-import type { WorkspaceCreateBody } from '../api/client.js';
+import type { WorkspaceAdminGrantPreview, WorkspaceAdminGrantReceipt, WorkspaceCreateBody } from '../api/client.js';
 import {
   PersonalSettings,
   type ThemeLoadState,
@@ -360,6 +360,9 @@ function SettingsModal({
     onRename: (workspaceId: string, name: string) => Promise<WorkspaceRenameResult>;
     onCreate?: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateBody>;
     onLoadCreationWarnings?: (input: Pick<WorkspaceCreateInput, 'administratorId' | 'defaultGroupLevel'>) => Promise<readonly GrantWarning[]>;
+    onLoadAdminGrantPreview?: (workspaceId: string, principalId: string) => Promise<WorkspaceAdminGrantPreview>;
+    onGrantAdministrator?: (workspaceId: string, principalId: string, previewToken: string) => Promise<WorkspaceAdminGrantReceipt>;
+    onAdministratorsRefresh?: () => Promise<unknown>;
     creationStatus?: { kind: 'success' | 'refresh-error'; message: string };
     onRetryCreationRefresh?: () => void;
   };
@@ -524,6 +527,11 @@ function SettingsModal({
                     administratorSearchEnabled={selectedCategory === category.id}
                     {...(workspaceManagement?.selectedId === undefined ? {} : { selectedId: workspaceManagement.selectedId })}
                     {...(workspaceManagement === undefined ? {} : { onSelect: workspaceManagement.onSelect, onRename: workspaceManagement.onRename, administrators: workspaceManagement.administrators })}
+                    {...(workspaceManagement === undefined ? {} : {
+                      onLoadAdminGrantPreview: workspaceManagement.onLoadAdminGrantPreview,
+                      onGrantAdministrator: workspaceManagement.onGrantAdministrator,
+                      onAdministratorsRefresh: workspaceManagement.onAdministratorsRefresh,
+                    })}
                     {...(category.id !== 'all-workspaces' || workspaceManagement === undefined ? {} : {
                       onCreate: workspaceManagement.onCreate,
                       onLoadCreationWarnings: workspaceManagement.onLoadCreationWarnings,
@@ -877,6 +885,9 @@ export function AppShell({
     onRename: (workspaceId: string, name: string) => Promise<WorkspaceRenameResult>;
     onCreate?: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateBody>;
     onLoadCreationWarnings?: (input: Pick<WorkspaceCreateInput, 'administratorId' | 'defaultGroupLevel'>) => Promise<readonly GrantWarning[]>;
+    onLoadAdminGrantPreview?: (workspaceId: string, principalId: string) => Promise<WorkspaceAdminGrantPreview>;
+    onGrantAdministrator?: (workspaceId: string, principalId: string, previewToken: string) => Promise<WorkspaceAdminGrantReceipt>;
+    onAdministratorsRefresh?: () => Promise<unknown>;
     creationStatus?: { kind: 'success' | 'refresh-error'; message: string };
     onRetryCreationRefresh?: () => void;
   };

@@ -1,7 +1,8 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 
-import type { PrincipalRow, ShareRow } from '../api/client.js';
+import type { PrincipalRow, ShareRow, WorkspaceAdminGrantPreview, WorkspaceAdminGrantReceipt } from '../api/client.js';
 import { PrincipalPicker } from '../principal/PrincipalPicker.js';
+import { WorkspaceAdminGrantDialog } from './WorkspaceAdminGrantDialog.js';
 import { NewWorkspaceForm, type WorkspaceCreateInput } from './NewWorkspaceForm.js';
 import type { WorkspaceCreateBody } from '../api/client.js';
 import type { GrantWarning } from '../acl/GrantConfirm.js';
@@ -97,7 +98,7 @@ function duplicateIdentityLabels(rows: readonly WorkspaceRowView[]): ReadonlyMap
 }
 
 // @req IR-WORKSPACE-001
-export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, onRename, administrators, administratorSearchEnabled = true, onCreate, onLoadCreationWarnings, creationStatus, onRetryCreationRefresh }: {
+export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, onRename, administrators, administratorSearchEnabled = true, onLoadAdminGrantPreview, onGrantAdministrator, onAdministratorsRefresh, onCreate, onLoadCreationWarnings, creationStatus, onRetryCreationRefresh }: {
   mode: 'managed' | 'all';
   query: WorkspaceQueryState;
   selectedId?: string;
@@ -105,6 +106,9 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
   onRename?: (workspaceId: string, name: string) => Promise<WorkspaceRenameResult>;
   administrators?: WorkspaceAdministratorState;
   administratorSearchEnabled?: boolean;
+  onLoadAdminGrantPreview?: (workspaceId: string, principalId: string) => Promise<WorkspaceAdminGrantPreview>;
+  onGrantAdministrator?: (workspaceId: string, principalId: string, previewToken: string) => Promise<WorkspaceAdminGrantReceipt>;
+  onAdministratorsRefresh?: () => Promise<unknown>;
   onCreate?: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateBody>;
   onLoadCreationWarnings?: (input: Pick<WorkspaceCreateInput, 'administratorId' | 'defaultGroupLevel'>) => Promise<readonly GrantWarning[]>;
   creationStatus?: { kind: 'success' | 'refresh-error'; message: string };
@@ -117,6 +121,9 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
   const [status, setStatus] = useState<string>();
   const [pending, setPending] = useState(false);
   const [adminCandidate, setAdminCandidate] = useState<PrincipalRow>();
+  const [adminGrantOpen, setAdminGrantOpen] = useState(false);
+  const [adminGrantStatus, setAdminGrantStatus] = useState<string>();
+  const [adminGrantRefreshFailed, setAdminGrantRefreshFailed] = useState(false);
   const [conflictingBaseline, setConflictingBaseline] = useState<string>();
   const [surface, setSurface] = useState<'list' | 'create'>('list');
   const [createdFocusId, setCreatedFocusId] = useState<string>();
@@ -127,6 +134,7 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
   const creationRetryRef = useRef<HTMLButtonElement>(null);
   const rowActionRefs = useRef(new Map<string, HTMLButtonElement>());
   const createEntryRef = useRef<HTMLButtonElement>(null);
+  const adminGrantEntryRef = useRef<HTMLButtonElement>(null);
   const savedScrollTop = useRef(0);
   const composing = useRef(false);
   const operationGeneration = useRef(0);
@@ -163,7 +171,7 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
     }
   }, [selected?.id, selected?.name]);
 
-  useEffect(() => setAdminCandidate(undefined), [selected?.id]);
+  useEffect(() => { setAdminCandidate(undefined); setAdminGrantOpen(false); setAdminGrantStatus(undefined); setAdminGrantRefreshFailed(false); }, [selected?.id]);
   useEffect(() => () => { mounted.current = false; operationGeneration.current += 1; }, []);
   useEffect(() => { if (unavailable) unavailableRef.current?.focus(); }, [unavailable]);
   useEffect(() => {
@@ -284,8 +292,24 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
             : <ul>{administrators.rows.map((row) => <li key={row.entryId ?? row.principalId}><span>{row.principalName}</span> <small>{row.principalKind === 'user' ? '사용자' : '그룹'}</small></li>)}</ul>}
       {administratorSearchEnabled ? <><h4>워크스페이스 관리자 추가</h4>
         <PrincipalPicker scope={`workspace:${selected.id}`} onPick={setAdminCandidate} onSelectionInvalidated={() => setAdminCandidate(undefined)} />
-        {adminCandidate === undefined ? null : <p>{adminCandidate.name} · {adminCandidate.kind === 'user' ? '사용자' : '그룹'}</p>}</> : null}
-      <p>관리자 추가·제거는 권위 있는 영향 범위 확인이 제공될 때 연결됩니다.</p>
+        {adminCandidate === undefined ? null : <><p>{adminCandidate.name} · {adminCandidate.kind === 'user' ? '사용자' : '그룹'}</p>
+          {onLoadAdminGrantPreview === undefined || onGrantAdministrator === undefined ? null : <button ref={adminGrantEntryRef} type="button" onClick={() => { setAdminGrantStatus(undefined); setAdminGrantOpen(true); }}>관리자로 지정</button>}
+        </>}</> : null}
+      {adminGrantStatus === undefined ? null : <div role={adminGrantRefreshFailed ? 'alert' : 'status'}><p>{adminGrantStatus}</p>{adminGrantRefreshFailed && onAdministratorsRefresh !== undefined ? <button type="button" onClick={() => {
+        void onAdministratorsRefresh().then(() => { setAdminGrantRefreshFailed(false); setAdminGrantStatus('목록을 새로 불러왔습니다.'); }).catch(() => setAdminGrantRefreshFailed(true));
+      }}>목록 다시 불러오기</button> : null}</div>}
+      <p>관리자 추가 전 권위 있는 영향 범위 확인을 엽니다.</p>
+      {adminGrantOpen && adminCandidate !== undefined && onLoadAdminGrantPreview !== undefined && onGrantAdministrator !== undefined ? <WorkspaceAdminGrantDialog
+        open workspace={{ id: selected.id, name: selected.name }} principal={adminCandidate} restoreFocusRef={adminGrantEntryRef}
+        onLoad={onLoadAdminGrantPreview} onGrant={onGrantAdministrator} onClose={(receipt) => {
+          setAdminGrantOpen(false);
+          if (receipt === undefined) return;
+          setAdminGrantStatus('관리자로 지정했습니다.');
+          setAdminGrantRefreshFailed(false);
+          setAdminCandidate(undefined);
+          requestAnimationFrame(() => { if (headingRef.current?.isConnected) headingRef.current.focus(); });
+          void onAdministratorsRefresh?.().catch(() => { setAdminGrantRefreshFailed(true); setAdminGrantStatus('관리자로 지정했습니다. 목록을 새로 불러오지 못했습니다.'); });
+        }} /> : null}
     </section></>}
     </>}
   </section>;

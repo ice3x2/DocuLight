@@ -652,6 +652,40 @@ export const createWorkspace = (input: { name: string; administratorId: string; 
     body: JSON.stringify(input),
   });
 
+export interface WorkspaceAdminGrantPreview {
+  workspace: { id: string; name: string };
+  principal: PrincipalRow;
+  level: 'admin';
+  grade: 'L2';
+  coverage: 'workspace-admin-gate';
+  visibleDescendantCount: number;
+  warnings: ('suspended-subject')[];
+  alreadyAssigned: boolean;
+  previewToken: string;
+  expiresAt: string;
+}
+
+export interface WorkspaceAdminGrantReceipt {
+  entryId: string;
+  workspaceId: string;
+  principalId: string;
+  level: 'admin';
+}
+
+// @req IR-WORKSPACE-003
+export const fetchWorkspaceAdminGrantPreview = (workspaceId: string, principalId: string) =>
+  call<WorkspaceAdminGrantPreview>(`/workspaces/${encodeURIComponent(workspaceId)}/admin-grant-preview?principalId=${encodeURIComponent(principalId)}`, {
+    cache: 'no-store',
+  });
+
+// @req IR-WORKSPACE-003
+export const grantWorkspaceAdministrator = (workspaceId: string, principalId: string, previewToken: string) =>
+  call<WorkspaceAdminGrantReceipt>(`/workspaces/${encodeURIComponent(workspaceId)}/admin-grants`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ principalId, previewToken }),
+  });
+
 export const fetchAccessors = (nodeId: string) =>
   call<AccessorReportBody>(`/nodes/${encodeURIComponent(nodeId)}/accessors`);
 

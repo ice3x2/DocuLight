@@ -1,0 +1,39 @@
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0-wt-issue89/packages/server
+
+stdout | test/http/install-assembly.test.ts > SEC-AUTH-011 — 게이트가 운영 조립에 물려 있다 > AC-1: 빌드 산출물이 **실제로 가리키는** 자산 경로가 막히지 않는다
+설치 토큰: DxhHADIBr0-3GHJG93uXjtozt2trJ-f4XWBg4O010eI
+만료: 2026-09-18T06:14:47.085Z
+
+ ❯ test/http/install-assembly.test.ts (12 tests | 1 failed) 4374ms
+     × AC-1: 빌드 산출물이 **실제로 가리키는** 자산 경로가 막히지 않는다 295ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/http/install-assembly.test.ts > SEC-AUTH-011 — 게이트가 운영 조립에 물려 있다 > AC-1: 빌드 산출물이 **실제로 가리키는** 자산 경로가 막히지 않는다
+AssertionError: expected [ '/theme-bootstrap.js', 503 ] to deeply equal [ '/theme-bootstrap.js', 200 ]
+
+- Expected
++ Received
+
+  [
+    "/theme-bootstrap.js",
+-   200,
++   503,
+  ]
+
+ ❯ test/http/install-assembly.test.ts:119:39
+    117|       // 모든 자산이 404 가 되어도 통과하는데, 그 404 상태가 정확히 이
+    118|       // 시험이 막겠다고 선언한 「설치 화면이 껍데기만 받는」 상태다.
+    119|       expect([path, response.status]).toEqual([path, 200]);
+       |                                       ^
+    120|     }
+    121|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 142 passed (143)
+      Tests  1 failed | 1518 passed (1519)
+   Start at  14:44:43
+   Duration  20.78s (transform 71.86s, setup 0ms, import 140.07s, tests 351.27s, environment 20ms)

@@ -49,6 +49,10 @@ import {
 import { managedWorkspacesOf } from '../../app/acl/admin-scope.js';
 import { renameWorkspace } from '../../app/workspace/rename-workspace.js';
 import { createWorkspaceAs } from '../../app/workspace/create-workspace.js';
+import { AdminGrantPreviews } from '../../app/workspace/admin-grant-preview.js';
+import { authenticateSession } from '../../app/auth/login-service.js';
+import { hashSecretToken } from '../../domain/auth/secret-token.js';
+import { sessionTokenOf } from './auth.js';
 import { validateWorkspaceName } from '../../app/workspace/rename-workspace.js';
 import type { WorkspaceFiles } from '../../domain/ports/workspace-files.js';
 import {
@@ -213,6 +217,7 @@ interface TreeNodeBody {
 
 export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Router {
   const router = Router();
+  const adminGrantPreviews = new AdminGrantPreviews(stores);
   // 본문 파서를 여기 두지 않는다 — `apiRouter` 가 `/api` 전체에 한 번만
   // 세운다. 두 곳이 세우면 먼저 선 것이 `req._body` 를 채워 뒤따르는 파서의
   // 한도가 조용히 죽고, 그 침묵은 한도를 올린 사람이 아무 변화도 못 보는
@@ -224,6 +229,15 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
 
   /** 관문 — 주체를 세우지 못하면 아무것도 하지 않는다. */
   const actorFor = (req: Request): Actor | undefined => actorOf(req);
+  const adminGrantContextFor = (req: Request): { actor: Actor; fingerprint: string } | undefined => {
+    const token = sessionTokenOf(req.headers.cookie);
+    if (token === undefined) return undefined;
+    const session = authenticateSession(stores, token);
+    if (session === undefined) return undefined;
+    const actor = actorFor(req);
+    if (actor === undefined || actor.id !== session.userId) return undefined;
+    return { actor, fingerprint: `session:v1:${hashSecretToken(token)}` };
+  };
 
   router.get('/session', (req, res) => {
     const actor = actorFor(req);
@@ -1239,6 +1253,40 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
         adminless: adminless.has(entry.workspace.id),
       })),
     );
+  });
+
+  // @req IR-WORKSPACE-003
+  router.get('/workspaces/:workspaceId/admin-grant-preview', (req, res) => {
+    const context = adminGrantContextFor(req);
+    if (context === undefined) { res.sendStatus(401); return; }
+    if (typeof req.query.principalId !== 'string') { res.sendStatus(400); return; }
+    const result = adminGrantPreviews.preview(context.actor, context.fingerprint, req.params.workspaceId!, req.query.principalId);
+    if (!result.ok) { res.sendStatus(404); return; }
+    res.setHeader('Cache-Control', 'no-store');
+    res.json(result.body);
+  });
+
+  // @req IR-WORKSPACE-003
+  router.post('/workspaces/:workspaceId/admin-grants', (req, res) => {
+    const context = adminGrantContextFor(req);
+    if (context === undefined) { res.sendStatus(401); return; }
+    const principalId = req.body?.principalId;
+    const previewToken = req.body?.previewToken;
+    if (typeof principalId !== 'string' || typeof previewToken !== 'string') { res.sendStatus(400); return; }
+    let result;
+    try {
+      result = adminGrantPreviews.grant(context.actor, context.fingerprint, req.params.workspaceId!, principalId, previewToken);
+    } catch {
+      res.status(500).json({ rule: 'unavailable' });
+      return;
+    }
+    if (!result.ok) {
+      if (result.rule === 'unauthenticated') res.sendStatus(401);
+      else if (result.rule === 'preview-stale') res.status(409).json({ rule: result.rule });
+      else res.sendStatus(result.rule === 'unavailable' ? 503 : 404);
+      return;
+    }
+    res.json(result.receipt);
   });
 
   // @req IR-WORKSPACE-001

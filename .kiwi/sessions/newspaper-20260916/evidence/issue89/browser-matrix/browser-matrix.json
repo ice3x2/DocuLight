@@ -1,0 +1,839 @@
+{
+  "runner": "isolated Playwright persistent Chromium; extension setZoom/getZoom/reset",
+  "environments": [
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "preGeometry": {
+        "cssViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "outer": {
+          "width": 1296,
+          "height": 854
+        },
+        "dpr": 1
+      },
+      "geometry": {
+        "cssViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "outer": {
+          "width": 1296,
+          "height": 854
+        },
+        "dpr": 1,
+        "before": {
+          "scrollTop": 0,
+          "actionRect": {
+            "x": 786.078125,
+            "y": 577,
+            "width": 108.921875,
+            "height": 36,
+            "top": 577,
+            "right": 895,
+            "bottom": 613,
+            "left": 786.078125
+          },
+          "dialogRect": {
+            "x": 360,
+            "y": 82,
+            "width": 560,
+            "height": 556,
+            "top": 82,
+            "right": 920,
+            "bottom": 638,
+            "left": 360
+          }
+        },
+        "overflowX": false,
+        "scrollHeight": 554,
+        "clientHeight": 554,
+        "scrollTop": 0,
+        "maxScrollTop": 0,
+        "actionReachable": true,
+        "actionContrast": 6.503800375757026,
+        "cancelContrast": 14.639805378106399,
+        "disabledOpacity": "1",
+        "wrap": "normal"
+      },
+      "screenshot": "admin-grant-light-1280x720-100.png"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "preGeometry": {
+        "cssViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "outer": {
+          "width": 1296,
+          "height": 854
+        },
+        "dpr": 1
+      },
+      "geometry": {
+        "cssViewport": {
+          "width": 640,
+          "height": 360
+        },
+        "outer": {
+          "width": 1296,
+          "height": 854
+        },
+        "dpr": 2,
+        "before": {
+          "scrollTop": 0,
+          "actionRect": {
+            "x": 458.578125,
+            "y": 519,
+            "width": 108.921875,
+            "height": 36,
+            "top": 519,
+            "right": 567.5,
+            "bottom": 555,
+            "left": 458.578125
+          },
+          "dialogRect": {
+            "x": 40,
+            "y": 24,
+            "width": 560,
+            "height": 312,
+            "top": 24,
+            "right": 600,
+            "bottom": 336,
+            "left": 40
+          }
+        },
+        "overflowX": false,
+        "scrollHeight": 554,
+        "clientHeight": 310,
+        "scrollTop": 244,
+        "maxScrollTop": 244,
+        "actionReachable": true,
+        "actionContrast": 6.503800375757026,
+        "cancelContrast": 14.639805378106399,
+        "disabledOpacity": "1",
+        "wrap": "normal"
+      },
+      "screenshot": "admin-grant-light-1280x720-200.png"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "preGeometry": {
+        "cssViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "outer": {
+          "width": 1296,
+          "height": 854
+        },
+        "dpr": 1
+      },
+      "geometry": {
+        "cssViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "outer": {
+          "width": 1296,
+          "height": 854
+        },
+        "dpr": 1,
+        "before": {
+          "scrollTop": 0,
+          "actionRect": {
+            "x": 786.078125,
+            "y": 577,
+            "width": 108.921875,
+            "height": 36,
+            "top": 577,
+            "right": 895,
+            "bottom": 613,
+            "left": 786.078125
+          },
+          "dialogRect": {
+            "x": 360,
+            "y": 82,
+            "width": 560,
+            "height": 556,
+            "top": 82,
+            "right": 920,
+            "bottom": 638,
+            "left": 360
+          }
+        },
+        "overflowX": false,
+        "scrollHeight": 554,
+        "clientHeight": 554,
+        "scrollTop": 0,
+        "maxScrollTop": 0,
+        "actionReachable": true,
+        "actionContrast": 6.604930441975668,
+        "cancelContrast": 10.129573328016168,
+        "disabledOpacity": "1",
+        "wrap": "normal"
+      },
+      "screenshot": "admin-grant-dark-1280x720-100.png"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "preGeometry": {
+        "cssViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "outer": {
+          "width": 1296,
+          "height": 854
+        },
+        "dpr": 1
+      },
+      "geometry": {
+        "cssViewport": {
+          "width": 640,
+          "height": 360
+        },
+        "outer": {
+          "width": 1296,
+          "height": 854
+        },
+        "dpr": 2,
+        "before": {
+          "scrollTop": 0,
+          "actionRect": {
+            "x": 458.578125,
+            "y": 519,
+            "width": 108.921875,
+            "height": 36,
+            "top": 519,
+            "right": 567.5,
+            "bottom": 555,
+            "left": 458.578125
+          },
+          "dialogRect": {
+            "x": 40,
+            "y": 24,
+            "width": 560,
+            "height": 312,
+            "top": 24,
+            "right": 600,
+            "bottom": 336,
+            "left": 40
+          }
+        },
+        "overflowX": false,
+        "scrollHeight": 554,
+        "clientHeight": 310,
+        "scrollTop": 244,
+        "maxScrollTop": 244,
+        "actionReachable": true,
+        "actionContrast": 6.604930441975668,
+        "cancelContrast": 10.129573328016168,
+        "disabledOpacity": "1",
+        "wrap": "normal"
+      },
+      "screenshot": "admin-grant-dark-1280x720-200.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "preGeometry": {
+        "cssViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "outer": {
+          "width": 1456,
+          "height": 1034
+        },
+        "dpr": 1
+      },
+      "geometry": {
+        "cssViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "outer": {
+          "width": 1456,
+          "height": 1034
+        },
+        "dpr": 1,
+        "before": {
+          "scrollTop": 0,
+          "actionRect": {
+            "x": 866.078125,
+            "y": 667,
+            "width": 108.921875,
+            "height": 36,
+            "top": 667,
+            "right": 975,
+            "bottom": 703,
+            "left": 866.078125
+          },
+          "dialogRect": {
+            "x": 440,
+            "y": 172,
+            "width": 560,
+            "height": 556,
+            "top": 172,
+            "right": 1000,
+            "bottom": 728,
+            "left": 440
+          }
+        },
+        "overflowX": false,
+        "scrollHeight": 554,
+        "clientHeight": 554,
+        "scrollTop": 0,
+        "maxScrollTop": 0,
+        "actionReachable": true,
+        "actionContrast": 6.503800375757026,
+        "cancelContrast": 14.639805378106399,
+        "disabledOpacity": "1",
+        "wrap": "normal"
+      },
+      "screenshot": "admin-grant-light-1440x900-100.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "preGeometry": {
+        "cssViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "outer": {
+          "width": 1456,
+          "height": 1034
+        },
+        "dpr": 1
+      },
+      "geometry": {
+        "cssViewport": {
+          "width": 720,
+          "height": 450
+        },
+        "outer": {
+          "width": 1456,
+          "height": 1034
+        },
+        "dpr": 2,
+        "before": {
+          "scrollTop": 0,
+          "actionRect": {
+            "x": 498.578125,
+            "y": 519,
+            "width": 108.921875,
+            "height": 36,
+            "top": 519,
+            "right": 607.5,
+            "bottom": 555,
+            "left": 498.578125
+          },
+          "dialogRect": {
+            "x": 80,
+            "y": 24,
+            "width": 560,
+            "height": 402,
+            "top": 24,
+            "right": 640,
+            "bottom": 426,
+            "left": 80
+          }
+        },
+        "overflowX": false,
+        "scrollHeight": 554,
+        "clientHeight": 400,
+        "scrollTop": 154,
+        "maxScrollTop": 154,
+        "actionReachable": true,
+        "actionContrast": 6.503800375757026,
+        "cancelContrast": 14.639805378106399,
+        "disabledOpacity": "1",
+        "wrap": "normal"
+      },
+      "screenshot": "admin-grant-light-1440x900-200.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "preGeometry": {
+        "cssViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "outer": {
+          "width": 1456,
+          "height": 1034
+        },
+        "dpr": 1
+      },
+      "geometry": {
+        "cssViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "outer": {
+          "width": 1456,
+          "height": 1034
+        },
+        "dpr": 1,
+        "before": {
+          "scrollTop": 0,
+          "actionRect": {
+            "x": 866.078125,
+            "y": 667,
+            "width": 108.921875,
+            "height": 36,
+            "top": 667,
+            "right": 975,
+            "bottom": 703,
+            "left": 866.078125
+          },
+          "dialogRect": {
+            "x": 440,
+            "y": 172,
+            "width": 560,
+            "height": 556,
+            "top": 172,
+            "right": 1000,
+            "bottom": 728,
+            "left": 440
+          }
+        },
+        "overflowX": false,
+        "scrollHeight": 554,
+        "clientHeight": 554,
+        "scrollTop": 0,
+        "maxScrollTop": 0,
+        "actionReachable": true,
+        "actionContrast": 6.604930441975668,
+        "cancelContrast": 10.129573328016168,
+        "disabledOpacity": "1",
+        "wrap": "normal"
+      },
+      "screenshot": "admin-grant-dark-1440x900-100.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "preGeometry": {
+        "cssViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "outer": {
+          "width": 1456,
+          "height": 1034
+        },
+        "dpr": 1
+      },
+      "geometry": {
+        "cssViewport": {
+          "width": 720,
+          "height": 450
+        },
+        "outer": {
+          "width": 1456,
+          "height": 1034
+        },
+        "dpr": 2,
+        "before": {
+          "scrollTop": 0,
+          "actionRect": {
+            "x": 498.578125,
+            "y": 519,
+            "width": 108.921875,
+            "height": 36,
+            "top": 519,
+            "right": 607.5,
+            "bottom": 555,
+            "left": 498.578125
+          },
+          "dialogRect": {
+            "x": 80,
+            "y": 24,
+            "width": 560,
+            "height": 402,
+            "top": 24,
+            "right": 640,
+            "bottom": 426,
+            "left": 80
+          }
+        },
+        "overflowX": false,
+        "scrollHeight": 554,
+        "clientHeight": 400,
+        "scrollTop": 154,
+        "maxScrollTop": 154,
+        "actionReachable": true,
+        "actionContrast": 6.604930441975668,
+        "cancelContrast": 10.129573328016168,
+        "disabledOpacity": "1",
+        "wrap": "normal"
+      },
+      "screenshot": "admin-grant-dark-1440x900-200.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "preGeometry": {
+        "cssViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "outer": {
+          "width": 1936,
+          "height": 1100
+        },
+        "dpr": 1
+      },
+      "geometry": {
+        "cssViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "outer": {
+          "width": 1936,
+          "height": 1100
+        },
+        "dpr": 1,
+        "before": {
+          "scrollTop": 0,
+          "actionRect": {
+            "x": 1106.078125,
+            "y": 757,
+            "width": 108.921875,
+            "height": 36,
+            "top": 757,
+            "right": 1215,
+            "bottom": 793,
+            "left": 1106.078125
+          },
+          "dialogRect": {
+            "x": 680,
+            "y": 262,
+            "width": 560,
+            "height": 556,
+            "top": 262,
+            "right": 1240,
+            "bottom": 818,
+            "left": 680
+          }
+        },
+        "overflowX": false,
+        "scrollHeight": 554,
+        "clientHeight": 554,
+        "scrollTop": 0,
+        "maxScrollTop": 0,
+        "actionReachable": true,
+        "actionContrast": 6.503800375757026,
+        "cancelContrast": 14.639805378106399,
+        "disabledOpacity": "1",
+        "wrap": "normal"
+      },
+      "screenshot": "admin-grant-light-1920x1080-100.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "preGeometry": {
+        "cssViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "outer": {
+          "width": 1936,
+          "height": 1100
+        },
+        "dpr": 1
+      },
+      "geometry": {
+        "cssViewport": {
+          "width": 960,
+          "height": 540
+        },
+        "outer": {
+          "width": 1936,
+          "height": 1100
+        },
+        "dpr": 2,
+        "before": {
+          "scrollTop": 0,
+          "actionRect": {
+            "x": 618.578125,
+            "y": 519,
+            "width": 108.921875,
+            "height": 36,
+            "top": 519,
+            "right": 727.5,
+            "bottom": 555,
+            "left": 618.578125
+          },
+          "dialogRect": {
+            "x": 200,
+            "y": 24,
+            "width": 560,
+            "height": 492,
+            "top": 24,
+            "right": 760,
+            "bottom": 516,
+            "left": 200
+          }
+        },
+        "overflowX": false,
+        "scrollHeight": 554,
+        "clientHeight": 490,
+        "scrollTop": 64,
+        "maxScrollTop": 64,
+        "actionReachable": true,
+        "actionContrast": 6.503800375757026,
+        "cancelContrast": 14.639805378106399,
+        "disabledOpacity": "1",
+        "wrap": "normal"
+      },
+      "screenshot": "admin-grant-light-1920x1080-200.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "preGeometry": {
+        "cssViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "outer": {
+          "width": 1936,
+          "height": 1100
+        },
+        "dpr": 1
+      },
+      "geometry": {
+        "cssViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "outer": {
+          "width": 1936,
+          "height": 1100
+        },
+        "dpr": 1,
+        "before": {
+          "scrollTop": 0,
+          "actionRect": {
+            "x": 1106.078125,
+            "y": 757,
+            "width": 108.921875,
+            "height": 36,
+            "top": 757,
+            "right": 1215,
+            "bottom": 793,
+            "left": 1106.078125
+          },
+          "dialogRect": {
+            "x": 680,
+            "y": 262,
+            "width": 560,
+            "height": 556,
+            "top": 262,
+            "right": 1240,
+            "bottom": 818,
+            "left": 680
+          }
+        },
+        "overflowX": false,
+        "scrollHeight": 554,
+        "clientHeight": 554,
+        "scrollTop": 0,
+        "maxScrollTop": 0,
+        "actionReachable": true,
+        "actionContrast": 6.604930441975668,
+        "cancelContrast": 10.129573328016168,
+        "disabledOpacity": "1",
+        "wrap": "normal"
+      },
+      "screenshot": "admin-grant-dark-1920x1080-100.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "preGeometry": {
+        "cssViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "outer": {
+          "width": 1936,
+          "height": 1100
+        },
+        "dpr": 1
+      },
+      "geometry": {
+        "cssViewport": {
+          "width": 960,
+          "height": 540
+        },
+        "outer": {
+          "width": 1936,
+          "height": 1100
+        },
+        "dpr": 2,
+        "before": {
+          "scrollTop": 0,
+          "actionRect": {
+            "x": 618.578125,
+            "y": 519,
+            "width": 108.921875,
+            "height": 36,
+            "top": 519,
+            "right": 727.5,
+            "bottom": 555,
+            "left": 618.578125
+          },
+          "dialogRect": {
+            "x": 200,
+            "y": 24,
+            "width": 560,
+            "height": 492,
+            "top": 24,
+            "right": 760,
+            "bottom": 516,
+            "left": 200
+          }
+        },
+        "overflowX": false,
+        "scrollHeight": 554,
+        "clientHeight": 490,
+        "scrollTop": 64,
+        "maxScrollTop": 64,
+        "actionReachable": true,
+        "actionContrast": 6.604930441975668,
+        "cancelContrast": 10.129573328016168,
+        "disabledOpacity": "1",
+        "wrap": "normal"
+      },
+      "screenshot": "admin-grant-dark-1920x1080-200.png"
+    }
+  ],
+  "forcedColors": [
+    {
+      "zoom": 100,
+      "observedZoom": 1,
+      "computed": {
+        "outlineStyle": "solid",
+        "outlineWidth": "2px",
+        "outlineColor": "rgb(0, 0, 0)",
+        "forced": true
+      },
+      "screenshot": "admin-grant-forced-100.png"
+    },
+    {
+      "zoom": 200,
+      "observedZoom": 2,
+      "computed": {
+        "outlineStyle": "solid",
+        "outlineWidth": "2px",
+        "outlineColor": "rgb(0, 0, 0)",
+        "forced": true
+      },
+      "screenshot": "admin-grant-forced-200.png"
+    }
+  ],
+  "errorMetrics": {
+    "errorContrast": 14.639805378106399,
+    "disabledContrast": 3.5495779590143246,
+    "disabledOpacity": 1,
+    "disabled": true
+  },
+  "pendingVisibility": {
+    "opacity": 1,
+    "visibility": "visible",
+    "width": 115.28125,
+    "height": 36
+  },
+  "finalResetZoom": 1,
+  "calls": [
+    {
+      "method": "GET",
+      "path": "/api/workspaces/e455a354394ae2e7f3b7188232a6d106/admin-grant-preview?principalId=acc388d6-241f-40fb-b4f2-12f7863df931"
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces/e455a354394ae2e7f3b7188232a6d106/admin-grant-preview?principalId=acc388d6-241f-40fb-b4f2-12f7863df931"
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces/e455a354394ae2e7f3b7188232a6d106/admin-grant-preview?principalId=acc388d6-241f-40fb-b4f2-12f7863df931"
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces/e455a354394ae2e7f3b7188232a6d106/admin-grant-preview?principalId=acc388d6-241f-40fb-b4f2-12f7863df931"
+    },
+    {
+      "method": "POST",
+      "path": "/api/workspaces/e455a354394ae2e7f3b7188232a6d106/admin-grants"
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces/e455a354394ae2e7f3b7188232a6d106/admin-grant-preview?principalId=acc388d6-241f-40fb-b4f2-12f7863df931"
+    },
+    {
+      "method": "POST",
+      "path": "/api/workspaces/e455a354394ae2e7f3b7188232a6d106/admin-grants"
+    },
+    {
+      "method": "GET",
+      "path": "/api/workspaces/e455a354394ae2e7f3b7188232a6d106/admin-grant-preview?principalId=acc388d6-241f-40fb-b4f2-12f7863df931"
+    }
+  ],
+  "settingsEntryCount": 1,
+  "workspaceEntryPaths": [
+    "managed",
+    "all"
+  ],
+  "syntheticIme": "compositionstart/update/end; Enter suppressed; query and selection preserved; no L2 or POST",
+  "nativeCandidateWindow": "unverified and nonblocking; no native PASS claim"
+}

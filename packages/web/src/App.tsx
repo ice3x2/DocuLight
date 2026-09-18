@@ -37,6 +37,8 @@ import {
   renameNode,
   renameWorkspace,
   createWorkspace as createWorkspaceRequest,
+  fetchWorkspaceAdminGrantPreview,
+  grantWorkspaceAdministrator,
   purgeFromTrash,
   restoreFromTrash,
   uploadNewVersion,
@@ -1295,6 +1297,17 @@ function AppBody() {
         onRename: renameSelectedWorkspace,
         onCreate: createWorkspaceAndRefresh,
         onLoadCreationWarnings: ({ administratorId, defaultGroupLevel }) => fetchGrantWarnings({ principalId: administratorId, defaultGroupLevel }),
+        onLoadAdminGrantPreview: fetchWorkspaceAdminGrantPreview,
+        onGrantAdministrator: grantWorkspaceAdministrator,
+        onAdministratorsRefresh: async () => {
+          const [administratorsResult] = await Promise.all([
+            selectedWorkspaceAdministrators.refetch(),
+            queries.invalidateQueries({ queryKey: QUERY_KEYS.workspaces('managed') }),
+            queries.invalidateQueries({ queryKey: QUERY_KEYS.workspaces('all') }),
+            queries.invalidateQueries({ queryKey: QUERY_KEYS.session }),
+          ]);
+          if (administratorsResult.isError) throw administratorsResult.error;
+        },
         creationStatus: workspaceCreationStatus,
         onRetryCreationRefresh: () => { void retryWorkspaceCreationReads(); },
         administrators: selectedWorkspaceAdministrators.isError

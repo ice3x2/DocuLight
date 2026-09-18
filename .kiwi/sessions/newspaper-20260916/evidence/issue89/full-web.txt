@@ -1,0 +1,8 @@
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0-wt-issue89/packages/web
+
+
+ Test Files  89 passed (89)
+      Tests  1107 passed (1107)
+   Start at  14:42:08
+   Duration  49.57s (transform 150.46s, setup 4.72s, import 370.17s, tests 279.89s, environment 199.35s)
