@@ -551,7 +551,7 @@ function SettingsModal({
                     })}
                   />
                 ) : category.id === 'instance' ? (
-                  <InstanceSettings />
+                  <InstanceSettings key={(indexQueueContextKey ?? 'anonymous:0:member').split(':')[1] ?? '0'} />
                 ) : category.id === 'index-queue' ? (
                   <IndexQueueSurface load={fetchIndexQueue ?? (() => Promise.reject(new Error('index queue unavailable')))} contextKey={indexQueueContextKey ?? 'anonymous:0:member'} />
                 ) : category.id === 'editor' || category.id === 'appearance' ? (

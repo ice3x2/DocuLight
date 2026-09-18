@@ -7,7 +7,9 @@ import { fileURLToPath } from 'node:url';
 import { login, WEB_URL } from './_web-harness.mjs';
 
 const root = path.resolve(fileURLToPath(new URL('../../..', import.meta.url)));
-const output = path.join(root, '.kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix');
+const configuredOutput = process.env.DOCULIGHT_ISSUE87_OUTPUT_DIR;
+if (!configuredOutput) throw new Error('DOCULIGHT_ISSUE87_OUTPUT_DIR is required');
+const output = path.resolve(configuredOutput);
 fs.mkdirSync(output, { recursive: true });
 const profileRoot = process.env.DOCULIGHT_ISSUE87_PROFILE_ROOT;
 if (!profileRoot) throw new Error('isolated profile root missing');
@@ -117,6 +119,7 @@ try {
   assert.equal(await confirmation.evaluate((node) => node.contains(document.activeElement)), true);
   await page.keyboard.press('Escape');
   await confirmation.waitFor({ state: 'hidden' });
+  await page.waitForFunction(() => document.activeElement?.getAttribute('type') === 'submit');
   assert.equal(await form.getByRole('button', { name: '저장' }).evaluate((node) => document.activeElement === node), true);
   const reopenedPreviewPromise = page.waitForResponse((response) =>
     new URL(response.url()).pathname === '/api/settings/retention-impact' && response.request().method() === 'POST');
@@ -124,6 +127,14 @@ try {
   const consentBody = await (await reopenedPreviewPromise).json();
   await confirmation.waitFor();
   const tokenInput = confirmation.getByTestId('retention-impact-token');
+  for (const outerWhitespace of [` ${consentBody.typingToken}`, `${consentBody.typingToken} `]) {
+    await tokenInput.fill(outerWhitespace);
+    assert.equal(await confirmation.getByTestId('retention-impact-confirm').isDisabled(), true);
+    const beforeRejectedConsent = traffic.length;
+    await tokenInput.press('Enter');
+    await confirmation.getByTestId('retention-impact-confirm').dispatchEvent('click');
+    assert.equal(traffic.length, beforeRejectedConsent);
+  }
   await tokenInput.fill(consentBody.typingToken);
   await tokenInput.dispatchEvent('compositionstart');
   const beforeComposition = traffic.length;
@@ -180,7 +191,11 @@ try {
   await confirmation.getByTestId('retention-impact-confirm').click();
   await form.getByText('설정을 저장했습니다.', { exact: true }).waitFor();
   assert.equal(await form.getByRole('status').filter({ hasText: '설정을 저장했습니다.' }).count(), 1);
+  await page.waitForFunction(() => document.activeElement?.getAttribute('type') === 'submit');
   assert.equal(await form.getByRole('button', { name: '저장' }).evaluate((node) => document.activeElement === node), true);
+  assert.deepEqual(traffic.slice(-4).map(({ method, pathname }) => `${method} ${pathname}`), [
+    'GET /api/settings', 'POST /api/settings/retention-impact', 'PUT /api/settings', 'GET /api/settings',
+  ]);
   const successfulReadback = await page.evaluate(async () => ({
     settings: await (await fetch('/api/settings')).json(),
     audit: await (await fetch('/api/audit-log')).json(),
@@ -189,10 +204,6 @@ try {
   assert.equal(successfulReadback.settings['audit-retention-days'], '0.000001');
   assert(successfulReadback.audit.groups.some((group) => group.operation === 'settings.trash-retention-days'));
   assert(successfulReadback.audit.groups.some((group) => group.operation === 'settings.audit-retention-days'));
-  assert.deepEqual(traffic.slice(-4).map(({ method, pathname }) => `${method} ${pathname}`), [
-    'PUT /api/settings', 'POST /api/settings/retention-impact', 'PUT /api/settings', 'GET /api/settings',
-  ]);
-
   async function setZoom(value) {
     return worker.evaluate(async ({ target, value }) => {
       const tab = (await chrome.tabs.query({})).find((candidate) => candidate.url === target);
@@ -221,6 +232,10 @@ try {
     await page.setViewportSize({ width, height });
     for (const theme of ['light', 'dark']) {
       await page.emulateMedia({ colorScheme: theme });
+      await page.waitForFunction(
+        (expectedTheme) => document.documentElement.dataset.theme === expectedTheme,
+        theme,
+      );
       for (const zoom of [1, 2]) {
         const observed = await setZoom(zoom);
         assert.equal(observed, zoom);
@@ -252,14 +267,15 @@ try {
             background: effectiveBackground(total),
             outline: actionStyle.outlineColor,
             outlineWidth: actionStyle.outlineWidth,
+            outerRing: actionStyle.boxShadow,
             actionBackground: effectiveBackground(action),
             adjacentBackground: effectiveBackground(action.parentElement ?? node),
           };
         });
         assert(contrast(visual.text, visual.background) >= 4.5);
         assert(parseFloat(visual.outlineWidth) > 0);
-        assert(contrast(visual.outline, visual.actionBackground) >= 3);
-        assert(contrast(visual.outline, visual.adjacentBackground) >= 3);
+        assert(contrast(visual.outline, visual.actionBackground) >= 3, JSON.stringify({ theme, width, height, zoom, visual, surface: 'action' }));
+        assert(contrast(visual.outerRing, visual.adjacentBackground) >= 3, JSON.stringify({ theme, width, height, zoom, visual, surface: 'adjacent' }));
         await confirmation.evaluate((node) => { node.scrollTop = node.scrollHeight; });
         const actionReachable = await confirmation.locator('[data-slot="alert-dialog-actions"]').evaluate((node) => {
           const rect = node.getBoundingClientRect();
@@ -374,6 +390,7 @@ try {
     audit: await form.getByLabel('감사 로그 보존 기간').inputValue(),
   }, draftBeforeResize);
   await confirmation.getByTestId('retention-impact-continue-edit').click();
+  await page.waitForFunction(() => document.activeElement?.getAttribute('type') === 'submit');
   assert.equal(await form.getByRole('button', { name: '저장' }).evaluate((node) => document.activeElement === node), true);
   await page.unroute('**/api/settings/retention-impact', errorRoute);
   fs.writeFileSync(path.join(output, 'browser-matrix.json'), JSON.stringify({

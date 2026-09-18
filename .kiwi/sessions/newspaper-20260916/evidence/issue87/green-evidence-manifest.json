@@ -1,0 +1,153 @@
+{
+  "requirement": "FR-CONFIRM-024",
+  "base": "f8ad7e3",
+  "head": "d5778906b1b4a37a50f34a1f9e0aea14dd1dfdd1",
+  "generatedAt": "2026-09-18T09:58:31.356Z",
+  "sourceHashes": {
+    "package.json": "9a2bbc9ce46793a55eed6936add22b3127906f0aea22e8a7c0b9cfee2731180e",
+    "packages/server/src/app/settings/retention-impact.ts": "0297ae32f80d742ff79364d8169287c06f3b220fff9a34bbc0a3e129444744c9",
+    "packages/server/src/http/routes/workspace-api.ts": "88f29d7d1163fe454f0eb3d705d7864121c9d982ec57a6b409e242c277ac9e21",
+    "packages/server/src/main.ts": "f76b113be233fb0c4bd412976882ed8cd967f89f93ab2d79cc553399a313d215",
+    "packages/server/test/http/retention-impact.test.ts": "a7845e7da0681a90175098981afce2cd80839cfb823c7e54b35415d1713afe73",
+    "packages/server/test/http/workspace-api.test.ts": "5ea01e710a53b5cd6378d1e688eb038a40d7088458d761179d8294c0a310abd2",
+    "packages/web/src/api/client.ts": "55275b0e8e06092503098a4ec4951efdab97665f48d85de9f37ce7d3afc45ad5",
+    "packages/web/src/settings/InstanceSettings.tsx": "45631bf0f749a343b4b405cc7d96606913314e626cb8a4a7c65f750fc60b488a",
+    "packages/web/src/shell/AppShell.tsx": "014daca65bd94e962828bd8e13a693f7bad04aac0ed2a3acf0add9286c7c8c00",
+    "packages/web/src/styles/shell.css": "142f181d987a01d5491d075e64136f966fcf02f042a9fc8089b623be19dda7dc",
+    "packages/web/test/issue71-instance-settings.test.tsx": "5507a6318b8a3fba058f7b4138b0bd12f90c755ca967b88829fa527fdfdccd9d",
+    "packages/web/test/issue87-retention-impact.test.tsx": "e8cf0a5231481e0e37d4125ae9fee760e204436d950512734c06c0bedefdcf2a",
+    "packages/web/test/issue87-retention-impact-product-runner.mjs": "cf41fe1e2bd4d48bd0820e426a9d49116d726cb6eff42c5d11a54e6288c15cd4",
+    "packages/web/test/issue87-retention-impact-product-check.mjs": "a6bbea9983a400c9d33d20e960d487014d821df4bf54d607f5ff51bdc2938448",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/astra-decision.md": "ed25dfa951f4938073b1e4d244af73857272da3cb6199be4d6f2b91d072fc6bc",
+    "packages/server/src/app/audit/audit-retention.ts": "3b1553856fcd0b8f0a039a0f70d6b7d6e05203ef7cb02d299601b2e28405097f",
+    "packages/server/src/domain/retention/retention.ts": "c33132c148cf4ebdb1644f44136a891adffea04d22199323b94d0e8d130326c9",
+    "docs/spec/11.confirmation-grades.srs.md": "64b771194937e56734ecca394cfc77ef4dddaf1c14df19db101aebcd54e5f70d",
+    "packages/web/test/issue87-product-evidence-isolation.mjs": "ef48c0629215afd75a2177b0e6d2e4e31916cd277da013ece68b15fe7f9efd57",
+    "packages/web/test/issue87-green-evidence-capture.mjs": "4708d4c3435ae9159fe0664ff2fa2cfe47520c598b1804ce4797222ac54a0a28"
+  },
+  "sourceAndArtifactAggregateSha256": "d40555d90bd1d6fb81c1875e3185e72c9e914e9b1cca747d0a7dc7e2711ecb08",
+  "reports": {
+    "server": {
+      "file": ".kiwi/sessions/newspaper-20260916/evidence/issue87/server-green.json",
+      "sha256": "704678de6aa8358513fc98af2806c05e209029ea20b8431e632789a0140370a1",
+      "command": "cd packages/server && npx vitest run test/http/retention-impact.test.ts --reporter=json",
+      "exitCode": 0,
+      "passed": 82,
+      "failed": 0,
+      "total": 82
+    },
+    "web": {
+      "file": ".kiwi/sessions/newspaper-20260916/evidence/issue87/web-green.json",
+      "sha256": "3cd00490860ecca825d9f95a42d4e8751767456c4553505688f5392625635233",
+      "command": "npm run test --workspace @doculight/web -- --run test/issue87-retention-impact.test.tsx --reporter=json",
+      "exitCode": 0,
+      "passed": 13,
+      "failed": 0,
+      "total": 13
+    },
+    "browser": {
+      "file": ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-green.txt",
+      "sha256": "0c3b5929d384b394737896b4e4bc8907b0400b3cb24f26b1716c3a7370264a20",
+      "command": "npm run test:browser:issue87-product",
+      "exitCode": 0,
+      "matrix": {
+        "regular": 12,
+        "forcedColors": 2,
+        "accounts": 2,
+        "contexts": 2
+      }
+    },
+    "serverFullBaseline": {
+      "file": ".kiwi/sessions/newspaper-20260916/evidence/issue87/server-full-baseline.txt",
+      "sha256": "e34aedba7f23e6d7d0ddeeeaa5e0f5859b3a315923d3d3483c9c18145480fc0d",
+      "command": "npm run test --workspace @doculight/server -- --run",
+      "exitCode": 1,
+      "passed": 1601,
+      "failed": 1,
+      "total": 1602,
+      "captures": "stdout+stderr"
+    },
+    "serverBaselineIsolate": {
+      "file": ".kiwi/sessions/newspaper-20260916/evidence/issue87/server-baseline-isolate.txt",
+      "sha256": "7492d810245726732c35df97ba1a0e9ed5b23d2b521a5a6e3d37489a1240242c",
+      "command": "npm run test --workspace @doculight/server -- --run test/http/install-assembly.test.ts",
+      "exitCode": 1,
+      "passed": 11,
+      "failed": 1,
+      "total": 12,
+      "captures": "stdout+stderr"
+    },
+    "webFullBaseline": {
+      "file": ".kiwi/sessions/newspaper-20260916/evidence/issue87/web-full-baseline.txt",
+      "sha256": "4ab2ab8dfad54a35101f91357c240d48e5d39d49d165c9b6d12cfc5bb7836b6c",
+      "command": "npm run test --workspace @doculight/web -- --run",
+      "exitCode": 1,
+      "passed": 1128,
+      "failed": 1,
+      "total": 1129,
+      "captures": "stdout+stderr"
+    },
+    "webBaselineIsolate": {
+      "file": ".kiwi/sessions/newspaper-20260916/evidence/issue87/web-baseline-isolate.txt",
+      "sha256": "92f505d1ea0afa2ec7253ef3878fd8f417b1f2c542d625344c0462b449dc402a",
+      "command": "npm run test --workspace @doculight/web -- --run test/token-panel.test.tsx",
+      "exitCode": 1,
+      "passed": 22,
+      "failed": 1,
+      "total": 23,
+      "captures": "stdout+stderr"
+    }
+  },
+  "browserArtifacts": {
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix/browser-matrix.json": "40e1f07a5e9640727c18893aa12a113e95c6e7b469c9f6d88f06614ff9fce0c6",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix/retention-dark-1280x720-100.png": "9054a036a27ab0a7015ad06b4e84949b95e17369f85ef9f014ad7b35b7db03aa",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix/retention-dark-1280x720-200.png": "e951294b9e9a1f830af1d305a87e38ea8581fee8067dd5fff915cf6e01905e42",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix/retention-dark-1440x900-100.png": "853306b7fe62e1b2ae85d88c2be0f8adeff712e72fe9148d13e1532d44fa1efa",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix/retention-dark-1440x900-200.png": "965be1ec99ca047abf9a64b5e32d8b2fcc8b1725bb4491f05455da213c5e1e50",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix/retention-dark-1920x1080-100.png": "7f3f2b8709a05d3a4c39e7ea55dd476ed4e1febfec4864067a63a4b7484f5721",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix/retention-dark-1920x1080-200.png": "4bf4f5297eac78f8d3f87f1fc23781e10d2f298eb6aa24fa3cf3855b23a8c78c",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix/retention-forced-colors-100.png": "f1a8c486c428968d20958b227d5079502d7922b9f829238b089fbe0e709a18f3",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix/retention-forced-colors-200.png": "c0cd367812b3ce6685c8c1fb7f3d774f3c82cd58ffe33369d971c2e1f52e2612",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix/retention-light-1280x720-100.png": "363f9440af65ecce498f59e563022b609c8c7c6b0916a3da5db4c99b1d59fea1",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix/retention-light-1280x720-200.png": "3e516e9e890283520e000d0a6e3c9ba2db3f1560aa341eda5747e7288bcc69c3",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix/retention-light-1440x900-100.png": "a0057145b83167227d3bbe540c30df6acd73ae51249e045d030930639e086f27",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix/retention-light-1440x900-200.png": "f41dcf0c1721fbf5608034ed81b0f2959dc50c0d7091e4822fe271fa31c49010",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix/retention-light-1920x1080-100.png": "9abfab68e0a6f04d2c3f51b137e71916332ac3c3f900f2cd0dc5e50f505322d3",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue87/browser-matrix/retention-light-1920x1080-200.png": "381208ab024bddc8d229272e780385c0069f7f4237ea2d4825804d261534d8bf"
+  },
+  "verification": {
+    "focusedWorkspaceApi": {
+      "command": "npm run test --workspace @doculight/server -- --run test/http/retention-impact.test.ts test/http/workspace-api.test.ts",
+      "exitCode": 0,
+      "passed": 197,
+      "failed": 0,
+      "total": 197
+    },
+    "combinedWebIssue71Issue87": {
+      "exitCode": 0,
+      "passed": 39,
+      "failed": 0,
+      "total": 39
+    },
+    "typecheck": {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    "build": {
+      "command": "npm run build",
+      "exitCode": 0
+    },
+    "fullServer": {
+      "passed": 1601,
+      "failed": 1,
+      "total": 1602,
+      "knownUnrelatedFailure": "test/http/install-assembly.test.ts: /theme-bootstrap.js returned 503; reproduced alone"
+    },
+    "fullWeb": {
+      "passed": 1128,
+      "failed": 1,
+      "total": 1129,
+      "knownUnrelatedFailure": "test/token-panel.test.tsx: expired/live computed inline style color was empty; reproduced alone"
+    }
+  }
+}

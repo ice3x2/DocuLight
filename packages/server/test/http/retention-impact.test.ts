@@ -12,6 +12,7 @@ import { createNode } from '../../src/app/node/node-service.js';
 import { readSetting } from '../../src/app/settings/instance-settings.js';
 import { createWorkspace } from '../../src/app/workspace/create-workspace.js';
 import { SUPERUSER_GROUP_ID } from '../../src/domain/principal/system-groups.js';
+import { hashSecretToken, newSecretToken } from '../../src/domain/auth/secret-token.js';
 import { workspaceApiRouter } from '../../src/http/routes/workspace-api.js';
 import { FsWorkspaceFiles } from '../../src/infra/fs/workspace-sidecar.js';
 import { openDatabase, type Database } from '../../src/infra/sqlite/database.js';
@@ -65,6 +66,16 @@ function appendOldAudit(id: string, occurredAt = '2026-01-01 00:00:00'): void {
     'test.old',
     root.id,
   ]);
+}
+
+function issueSession(userId: string): string {
+  const token = newSecretToken();
+  stores.sessions.create(hashSecretToken(token), {
+    userId,
+    createdAt: currentNow.toISOString(),
+    expiresAt: new Date(currentNow.getTime() + 60 * 60 * 1_000).toISOString(),
+  });
+  return token;
 }
 
 function appendFinding(id: string, auditIds: readonly string[]): void {
@@ -325,6 +336,16 @@ describe('FR-CONFIRM-024 — authoritative impact-set semantics', () => {
     expect(response.body.impact).toEqual({ trashNodes: 2, auditRows: 2, findings: 0, total: 4 });
   });
 
+  it('uses the cleanup UTC-second cutoff when now has nonzero milliseconds', async () => {
+    currentNow = new Date('2026-09-18T12:00:00.900Z');
+    appendOldAudit('audit-equal-cleanup-cutoff', '2026-09-11 12:00:00');
+    appendOldAudit('audit-before-cleanup-cutoff', '2026-09-11 11:59:59');
+
+    const response = await preview({ 'trash-retention-days': '7', 'audit-retention-days': '7' });
+
+    expect(response.body.impact).toEqual({ trashNodes: 0, auditRows: 1, findings: 0, total: 1 });
+  });
+
   it('computes each domain only when that domain shortens and leaves unchanged zero semantics alone', async () => {
     trashDirectoryWithChild();
     appendOldAudit('audit-old');
@@ -516,7 +537,7 @@ describe('FR-CONFIRM-024 — receipt binding and save-time revalidation', () => 
     expect(saved.status).toBe(204);
   });
 
-  it.each([undefined, '', ' 2', '2 ', '2,000', '1', '99'])(
+  it.each([undefined, '', '02', '2,000', '2 0', '2\t0', '+2', '2.0', '2e0', '1', '99'])(
     'rejects missing, formatted, old, and arbitrary L3 token %j with no mutation',
     async (token) => {
       trashDirectoryWithChild();
@@ -530,6 +551,135 @@ describe('FR-CONFIRM-024 — receipt binding and save-time revalidation', () => 
       expect(saved.status).toBe(409);
       expect(saved.body).toEqual({ code: 'retention-confirmation-stale' });
       expectUnchanged();
+    },
+  );
+
+  it('rejects a same-total trash root timestamp change', async () => {
+    const trash = trashDirectoryWithChild();
+    const patch = { 'trash-retention-days': '7' };
+    const response = await preview(patch);
+    db.run("UPDATE trash_entry SET deleted_at = '2025-12-31T23:59:59.000Z' WHERE node_id = ?", [trash.rootId]);
+
+    const saved = await request(app)
+      .put('/api/settings')
+      .set('X-Retention-Impact-Receipt', response.body.receipt)
+      .set('X-Retention-Impact-Token', response.body.typingToken)
+      .send(patch);
+
+    expect(saved.status).toBe(409);
+    expect(saved.body).toEqual({ code: 'retention-confirmation-stale' });
+    expectUnchanged();
+  });
+
+  it('binds a receipt to the exact authenticated session of the same account', async () => {
+    trashDirectoryWithChild();
+    const sessionA = issueSession(root.id);
+    const sessionB = issueSession(root.id);
+    const patch = { 'trash-retention-days': '7' };
+    const checked = await request(app)
+      .post('/api/settings/retention-impact')
+      .set('Cookie', `doculight_session=${encodeURIComponent(sessionA)}`)
+      .send({ patch });
+    expect(checked.status).toBe(200);
+
+    const replayed = await request(app)
+      .put('/api/settings')
+      .set('Cookie', `doculight_session=${encodeURIComponent(sessionB)}`)
+      .set('X-Retention-Impact-Receipt', checked.body.receipt)
+      .set('X-Retention-Impact-Token', checked.body.typingToken)
+      .send(patch);
+    expect(replayed.status).toBe(409);
+    expect(replayed.body).toEqual({ code: 'retention-confirmation-stale' });
+    expectUnchanged();
+
+    const accepted = await request(app)
+      .put('/api/settings')
+      .set('Cookie', `doculight_session=${encodeURIComponent(sessionA)}`)
+      .set('X-Retention-Impact-Receipt', checked.body.receipt)
+      .set('X-Retention-Impact-Token', checked.body.typingToken)
+      .send(patch);
+    expect(accepted.status).toBe(204);
+  });
+
+  it('invalidates an old receipt after logout and login of the same account', async () => {
+    trashDirectoryWithChild();
+    const oldSession = issueSession(root.id);
+    const patch = { 'trash-retention-days': '7' };
+    const checked = await request(app)
+      .post('/api/settings/retention-impact')
+      .set('Cookie', `doculight_session=${encodeURIComponent(oldSession)}`)
+      .send({ patch });
+    stores.sessions.remove(hashSecretToken(oldSession));
+    const newSession = issueSession(root.id);
+
+    const replayed = await request(app)
+      .put('/api/settings')
+      .set('Cookie', `doculight_session=${encodeURIComponent(newSession)}`)
+      .set('X-Retention-Impact-Receipt', checked.body.receipt)
+      .set('X-Retention-Impact-Token', checked.body.typingToken)
+      .send(patch);
+
+    expect(replayed.status).toBe(409);
+    expect(replayed.body).toEqual({ code: 'retention-confirmation-stale' });
+    expectUnchanged();
+  });
+
+  it('rejects a same-total change to the complete reference set of an impacted finding', async () => {
+    appendOldAudit('audit-expired');
+    appendOldAudit('audit-young-a', '2026-09-18 11:59:59');
+    appendOldAudit('audit-young-b', '2026-09-18 11:59:58');
+    appendFinding('finding-a', ['audit-expired', 'audit-young-a']);
+    const patch = { 'audit-retention-days': '30' };
+    const response = await preview(patch);
+    db.run("UPDATE reconciliation_finding_audit_ref SET audit_log_id = 'audit-young-b' WHERE finding_id = 'finding-a' AND ordinal = 1");
+
+    const saved = await request(app)
+      .put('/api/settings')
+      .set('X-Retention-Impact-Receipt', response.body.receipt)
+      .set('X-Retention-Impact-Token', response.body.typingToken)
+      .send(patch);
+
+    expect(saved.status).toBe(409);
+    expect(saved.body).toEqual({ code: 'retention-confirmation-stale' });
+    expectUnchanged();
+  });
+
+  it('invalidates a receipt when the retention receipt service is recreated', async () => {
+    trashDirectoryWithChild();
+    const patch = { 'trash-retention-days': '7' };
+    const response = await preview(patch);
+    expect(response.body.receipt).toMatch(/^v1\.[0-9a-f]{64}$/);
+    const restarted = express();
+    restarted.use(express.json());
+    restarted.use('/api', workspaceApiRouter({ stores, actorOf: () => root }));
+
+    const saved = await request(restarted)
+      .put('/api/settings')
+      .set('X-Retention-Impact-Receipt', response.body.receipt)
+      .set('X-Retention-Impact-Token', response.body.typingToken)
+      .send(patch);
+
+    expect(saved.status).toBe(409);
+    expect(saved.body).toEqual({ code: 'retention-confirmation-stale' });
+    expectUnchanged();
+  });
+
+  it.each([' 2', '2 '])(
+    'accepts HTTP outer OWS around the exact L3 token %j after field-value parsing',
+    async (token) => {
+      trashDirectoryWithChild();
+      const patch = { 'trash-retention-days': '7' };
+      const response = await preview(patch);
+      const saved = await request(app)
+        .put('/api/settings')
+        .set('X-Retention-Impact-Receipt', response.body.receipt)
+        .set('X-Retention-Impact-Token', token)
+        .send(patch);
+      expect(saved.status).toBe(204);
+      expect(readSetting(stores.settings, 'trash-retention-days')).toBe('7');
+      expect(settingsAuditRows()).toEqual([
+        { operation: 'settings.trash-retention-days', before_value: '30', after_value: '7' },
+      ]);
     },
   );
 
@@ -707,6 +857,41 @@ describe('FR-CONFIRM-024 — receipt binding and save-time revalidation', () => 
 });
 
 describe('FR-CONFIRM-024 — authorization, availability, and malformed input', () => {
+  it.each([
+    ['trash timestamp', () => { trashDirectoryWithChild('corrupt-trash', 'not-a-time'); }, { 'trash-retention-days': '7' }],
+    ['audit timestamp', () => { appendOldAudit('corrupt-audit-time', 'not-a-time'); }, { 'audit-retention-days': '30' }],
+    ['audit identity', () => { appendOldAudit('', '2026-01-01 00:00:00'); }, { 'audit-retention-days': '30' }],
+  ] as const)('returns structured no-store failure with zero mutation for corrupt stored %s', async (_label, arrange, patch) => {
+    arrange();
+    const before = databaseIdentity();
+
+    const response = await request(app).post('/api/settings/retention-impact').send({ patch });
+
+    expect(response.status).toBe(503);
+    expect(response.headers['cache-control']).toContain('no-store');
+    expect(response.body).toEqual({ code: 'retention-impact-unavailable' });
+    expect(databaseIdentity()).toEqual(before);
+  });
+
+  it('fails closed without mutation when stored time becomes corrupt after preview', async () => {
+    const trash = trashDirectoryWithChild();
+    const patch = { 'trash-retention-days': '7' };
+    const checked = await preview(patch);
+    db.run("UPDATE trash_entry SET deleted_at = 'not-a-time' WHERE node_id = ?", [trash.rootId]);
+    const before = databaseIdentity();
+
+    const response = await request(app)
+      .put('/api/settings')
+      .set('X-Retention-Impact-Receipt', checked.body.receipt)
+      .set('X-Retention-Impact-Token', checked.body.typingToken)
+      .send(patch);
+
+    expect(response.status).toBe(500);
+    expect(response.headers['cache-control']).toContain('no-store');
+    expect(response.body).toEqual({ code: 'retention-save-failed' });
+    expect(databaseIdentity()).toEqual(before);
+  });
+
   it('rejects a malformed stored raw retention baseline without silently substituting a default', async () => {
     stores.settings.set('trash-retention-days', 'corrupt-raw-baseline');
     const response = await request(app)

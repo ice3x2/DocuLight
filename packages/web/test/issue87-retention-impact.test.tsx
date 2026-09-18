@@ -85,6 +85,7 @@ describe('FR-CONFIRM-024 — retention impact confirmation UI', () => {
     await setTrashAndSubmit();
     const dialog = await screen.findByRole('alertdialog');
     expect((document.activeElement as HTMLButtonElement)?.type).toBe('button');
+    expect(within(dialog).getAllByRole('button', { name: '계속 편집' })).toHaveLength(1);
     fireEvent.pointerDown(document.body);
     fireEvent.click(document.body);
     expect(screen.getByRole('alertdialog')).toBe(dialog);
@@ -177,6 +178,13 @@ describe('FR-CONFIRM-024 — retention impact confirmation UI', () => {
     await user.clear(token);
     await user.type(token, '02');
     expect((confirm as HTMLButtonElement).disabled).toBe(true);
+    for (const outerWhitespace of [' 2', '2 ']) {
+      fireEvent.change(token, { target: { value: outerWhitespace } });
+      expect((confirm as HTMLButtonElement).disabled).toBe(true);
+      fireEvent.click(confirm);
+      fireEvent.keyDown(token, { key: 'Enter', code: 'Enter' });
+      expect(putRequests()).toHaveLength(0);
+    }
     await user.clear(token);
     fireEvent.compositionStart(token);
     fireEvent.change(token, { target: { value: '2' } });
@@ -256,7 +264,7 @@ describe('FR-CONFIRM-024 — retention impact confirmation UI', () => {
     await user.click(screen.getByTestId('retention-impact-retry'));
     expect(await screen.findByTestId('retention-impact-total')).toBeDefined();
     expect(previewRequests()).toHaveLength(2);
-    await user.click(screen.getByTestId('retention-impact-continue-edit'));
+    await user.click(screen.getByTestId('retention-impact-cancel'));
     expect(screen.queryByRole('alertdialog')).toBeNull();
     expect(document.activeElement).toBe(screen.getByRole('button', { name: '저장' }));
     expect(input.value).toBe('7');
@@ -282,9 +290,10 @@ describe('FR-CONFIRM-024 — retention impact confirmation UI', () => {
     fireEvent.click(await screen.findByTestId('retention-impact-confirm'));
     expect(putRequests()).toHaveLength(1);
     second.unmount();
+    const getCountBeforeLateCompletion = requests.filter((one) => one.method === 'GET').length;
     latePut.resolve(new Response(null, { status: 204 }));
     await Promise.resolve();
-    expect(requests.filter((one) => one.method === 'GET')).toHaveLength(2);
+    expect(requests.filter((one) => one.method === 'GET')).toHaveLength(getCountBeforeLateCompletion);
   });
 
   it('isolates late preview across same-actor new-session and A-to-B-to-A owner generations', async () => {
@@ -379,12 +388,19 @@ describe('FR-CONFIRM-024 — real App/AppShell authentication ownership', () => 
     let previewCalls = 0;
     let loginGeneration = 0;
     const settingsSentinels = new Map([
-      [0, { actor: 'actor-a', retention: '30', sentinel: 'actor-a-session-1' }],
-      [1, { actor: 'actor-a', retention: '30', sentinel: 'actor-a-session-2' }],
-      [2, { actor: 'actor-b', retention: '60', sentinel: 'actor-b-session-1' }],
-      [3, { actor: 'actor-a', retention: '30', sentinel: 'actor-a-session-3' }],
+      [0, [
+        { actor: 'actor-a', retention: '30', sentinel: 'actor-a-session-1-initial' },
+        { actor: 'actor-a', retention: '30', sentinel: 'actor-a-session-1-submit' },
+      ]],
+      [1, [
+        { actor: 'actor-a', retention: '30', sentinel: 'actor-a-session-2-initial' },
+        { actor: 'actor-a', retention: '30', sentinel: 'actor-a-session-2-submit' },
+      ]],
+      [2, [{ actor: 'actor-b', retention: '60', sentinel: 'actor-b-session-1-initial' }]],
+      [3, [{ actor: 'actor-a', retention: '30', sentinel: 'actor-a-session-3-initial' }]],
     ] as const);
     const consumedSettingsSentinels: string[] = [];
+    const settingsGetsByGeneration = new Map<number, number>();
     const appRequests: Array<{ actor: string; method: string; path: string }> = [];
     vi.stubGlobal('fetch', vi.fn((input: string | URL | Request, init?: RequestInit) => {
       const request = input instanceof Request ? input : undefined;
@@ -402,12 +418,14 @@ describe('FR-CONFIRM-024 — real App/AppShell authentication ownership', () => 
         return Promise.resolve(json({ ok: true }));
       }
       if (parsed.pathname === '/api/settings' && method === 'GET') {
-        const expected = settingsSentinels.get(loginGeneration);
-        if (expected === undefined || consumedSettingsSentinels.includes(expected.sentinel)) {
+        const generationGets = settingsGetsByGeneration.get(loginGeneration) ?? 0;
+        const expected = settingsSentinels.get(loginGeneration)?.[generationGets];
+        if (expected === undefined) {
           throw new Error(`unexpected settings GET for generation ${loginGeneration} actor ${actor}`);
         }
         expect(actor).toBe(expected.actor);
         consumedSettingsSentinels.push(expected.sentinel);
+        settingsGetsByGeneration.set(loginGeneration, generationGets + 1);
         return Promise.resolve(json({ ...CURRENT, 'trash-retention-days': expected.retention }));
       }
       if (parsed.pathname === '/api/settings/retention-impact' && method === 'POST') {
@@ -466,7 +484,9 @@ describe('FR-CONFIRM-024 — real App/AppShell authentication ownership', () => 
     form = await openInstanceSettings();
     expect((within(form).getByLabelText('휴지통 보존 일수') as HTMLInputElement).value).toBe('30');
     expect(consumedSettingsSentinels).toEqual([
-      'actor-a-session-1', 'actor-a-session-2', 'actor-b-session-1', 'actor-a-session-3',
+      'actor-a-session-1-initial', 'actor-a-session-1-submit',
+      'actor-a-session-2-initial', 'actor-a-session-2-submit',
+      'actor-b-session-1-initial', 'actor-a-session-3-initial',
     ]);
     const settingsGetsBeforeLatePut = appRequests.filter((entry) =>
       entry.method === 'GET' && entry.path === '/api/settings');
@@ -492,7 +512,9 @@ describe('FR-CONFIRM-024 — real App/AppShell authentication ownership', () => 
     expect(appRequests.filter((entry) => entry.method === 'GET' && entry.path === '/api/settings'))
       .toEqual(settingsGetsBeforeLatePut);
     expect(consumedSettingsSentinels).toEqual([
-      'actor-a-session-1', 'actor-a-session-2', 'actor-b-session-1', 'actor-a-session-3',
+      'actor-a-session-1-initial', 'actor-a-session-1-submit',
+      'actor-a-session-2-initial', 'actor-a-session-2-submit',
+      'actor-b-session-1-initial', 'actor-a-session-3-initial',
     ]);
     expect(formState()).toEqual(formBeforeLatePut);
     expect(structuredClone(client.getQueriesData())).toEqual(cacheBeforeLatePut);

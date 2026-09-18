@@ -1249,6 +1249,23 @@
 [data-instance-settings] button:focus-visible,
 [data-instance-settings-state] button:focus,
 [data-instance-settings-state] button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+[data-retention-impact-dialog] [data-testid='retention-impact-confirm']:focus {
+  outline: 2px solid var(--surface-control);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 4px var(--text-primary);
+}
+[data-retention-impact-dialog] [data-testid='retention-impact-pending'] {
+  padding: var(--space-2);
+  border: 1px solid var(--status-warning);
+  background: var(--surface-warning);
+  color: var(--status-warning);
+}
+[data-retention-impact-dialog] [data-testid='retention-impact-error'] {
+  padding: var(--space-2);
+  border: 1px solid var(--status-danger);
+  background: var(--surface-danger);
+  color: var(--status-danger);
+}
 [data-instance-setting-field] > [aria-invalid='true'] { border-color: var(--status-danger); }
 [data-instance-setting-help] { color: var(--text-secondary); font-size: 12px; line-height: 18px; }
 [data-instance-setting-error] { color: var(--status-danger); font-size: 12px; font-weight: 600; line-height: 18px; }

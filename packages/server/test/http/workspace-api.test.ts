@@ -768,11 +768,11 @@ describe('DR-SHELL-001 · IR-SHELL-002 AC-7 — 런타임 설정을 화면에서
     });
   });
 
-  it('AC-1: 값을 바꿔 저장할 수 있다', async () => {
+  it('AC-1: 확인 없이 보존 기간을 줄일 수 없다', async () => {
     const saved = await request(app).put('/api/settings').send({ 'trash-retention-days': '7' });
 
-    expect(saved.status).toBe(204);
-    expect((await request(app).get('/api/settings')).body['trash-retention-days']).toBe('7');
+    expect(saved.status).toBe(503);
+    expect((await request(app).get('/api/settings')).body['trash-retention-days']).toBe('30');
   });
 
   it('슈퍼유저가 아니면 거절한다 — 인스턴스 설정은 인스턴스의 것이다', async () => {
@@ -817,11 +817,11 @@ describe('DR-SHELL-001 · IR-SHELL-002 AC-7 — 런타임 설정을 화면에서
     // 한 키씩만 받으면 관리자가 올바른 순서를 스스로 알아내야 한다.
     const saved = await request(app)
       .put('/api/settings')
-      .send({ 'trash-retention-days': '90', 'audit-retention-days': '120' });
+      .send({ 'trash-retention-days': '90', 'audit-retention-days': '400' });
 
     expect(saved.status).toBe(204);
     const now = (await request(app).get('/api/settings')).body;
-    expect([now['trash-retention-days'], now['audit-retention-days']]).toEqual(['90', '120']);
+    expect([now['trash-retention-days'], now['audit-retention-days']]).toEqual(['90', '400']);
   });
 });
 

@@ -2,7 +2,7 @@ import type { Clock } from '../auth/login-service.js';
 import type { AuditRetention } from '../../domain/ports/audit-retention.js';
 import type { FindingRetention } from '../../domain/ports/finding-retention.js';
 import type { SettingStore } from '../../domain/ports/setting-store.js';
-import { cutoffOf } from '../../domain/retention/retention.js';
+import { cutoffOf, sqliteUtcSecond } from '../../domain/retention/retention.js';
 import { retentionDaysOf } from '../settings/instance-settings.js';
 
 export interface AuditRetentionStores {
@@ -54,7 +54,7 @@ export function sweepExpiredAudit(stores: AuditRetentionStores): { purged: numbe
 
   // `occurred_at` 이 `datetime('now')` 로 쓰인 UTC 문자열이라 같은 모양으로
   // 넘긴다 — ISO 의 `T` 와 밀리초를 그대로 두면 사전순 비교가 어긋난다.
-  const at = sqliteTime(cutoff);
+  const at = sqliteUtcSecond(cutoff);
 
   return stores.transaction(() => {
     // **항목이 먼저다.** 감사 행을 먼저 지우면 참조가 그 행을 붙들어
@@ -64,5 +64,3 @@ export function sweepExpiredAudit(stores: AuditRetentionStores): { purged: numbe
     return { purged: stores.auditRetention.purgeBefore(at) };
   });
 }
-
-const sqliteTime = (at: Date): string => at.toISOString().replace('T', ' ').slice(0, 19);

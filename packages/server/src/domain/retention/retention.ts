@@ -34,6 +34,11 @@ export function cutoffOf(retentionDays: number, now: Date): Date | null {
   return new Date(now.getTime() - retentionDays * DAY_MS);
 }
 
+/** SQLite retention timestamps are stored and compared at UTC-second precision. */
+export function sqliteUtcSecond(at: Date): string {
+  return at.toISOString().replace('T', ' ').slice(0, 19);
+}
+
 /**
  * 첫째 기간이 둘째 기간을 **덮는가** — 무제한을 무한으로 놓고 비교한다.
  *

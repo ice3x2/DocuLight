@@ -43,6 +43,10 @@ run(['run', 'build', '--workspace', '@doculight/web']);
 console.log(`ISSUE87_RED_SENTINEL ${JSON.stringify({ type: 'builds-complete', server: true, web: true })}`);
 
 const isolatedRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'doculight-issue87-product-'));
+const outputRoot = process.env.DOCULIGHT_ISSUE87_OUTPUT_DIR === undefined
+  ? path.join(isolatedRoot, 'browser-output')
+  : path.resolve(process.env.DOCULIGHT_ISSUE87_OUTPUT_DIR);
+fs.mkdirSync(outputRoot, { recursive: true });
 let runtime; let server; let checkerChild; let primary; let expectedRedObserved = false;
 try {
   const [{ bootstrap, startServer }, install, accounts, groups, database] = await Promise.all([
@@ -124,6 +128,7 @@ try {
         DOCULIGHT_E2E_USER: username, DOCULIGHT_E2E_PASS: password,
         DOCULIGHT_E2E_SECOND: secondName, DOCULIGHT_E2E_SECOND_PASS: secondPassword,
         DOCULIGHT_ISSUE87_PROFILE_ROOT: path.join(isolatedRoot, 'profiles'),
+        DOCULIGHT_ISSUE87_OUTPUT_DIR: outputRoot,
       },
     });
     checkerChild = child;

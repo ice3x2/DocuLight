@@ -1,12 +1,19 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 
-import { ApiError, loadSettings, saveSettings } from '../api/client.js';
+import { ApiError, loadSettings, previewRetentionImpact, saveSettings, type RetentionImpactPreview } from '../api/client.js';
 import { INSTANCE_SETTING_FIELDS } from '../shell/shell-contract.js';
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, Button } from '../components/ui/index.js';
 
 type SettingKey = (typeof INSTANCE_SETTING_FIELDS)[number]['key'];
 type SettingValues = Record<SettingKey, string>;
 type FieldErrors = Partial<Record<SettingKey, string>>;
 type SaveState = 'idle' | 'pending' | 'success' | 'blocked' | 'conflict' | 'rejected' | 'uncertain' | 'retry-ready' | 'accepted-refresh-error';
+type RetentionReview = {
+  state: 'pending' | 'error' | 'ready' | 'stale' | 'submitting';
+  snapshot: SettingValues;
+  patch: Partial<SettingValues>;
+  impact?: RetentionImpactPreview;
+};
 
 const FIELD_DETAILS = {
   'signup-mode': { kind: 'select', help: '새 계정이 만들어지는 방식을 선택합니다.' },
@@ -92,17 +99,22 @@ export function InstanceSettings() {
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [errors, setErrors] = useState<FieldErrors>({});
   const [statusDetail, setStatusDetail] = useState('');
+  const [retentionReview, setRetentionReview] = useState<RetentionReview | null>(null);
+  const [retentionToken, setRetentionToken] = useState('');
   const generation = useRef(0);
   const alive = useRef(true);
   const composing = useRef(new Set<SettingKey>());
   const focusInvalid = useRef(false);
   const uncertain = useRef<{ snapshot: SettingValues; patch: Partial<SettingValues> } | null>(null);
   const acceptedRefresh = useRef<SettingValues | null>(null);
+  const retentionSubmitLatch = useRef(false);
+  const saveButtonRef = useRef<HTMLButtonElement>(null);
   const dirtyKeys = useMemo(() => baseline === null || draft === null ? [] : changedKeys(baseline, draft), [baseline, draft]);
 
   function revokeAccess() {
     uncertain.current = null;
     acceptedRefresh.current = null;
+    setRetentionReview(null);
     setBaseline(null); setDraft(null); setErrors({}); setLoadState('forbidden');
   }
 
@@ -142,6 +154,32 @@ export function InstanceSettings() {
     if (saveState !== 'accepted-refresh-error') { setSaveState('idle'); setStatusDetail(''); }
   }
 
+  function closeRetentionReview() {
+    if (retentionReview?.state === 'submitting') return;
+    generation.current += 1;
+    retentionSubmitLatch.current = false;
+    setRetentionReview(null);
+    setRetentionToken('');
+    setSaveState('idle');
+    requestAnimationFrame(() => saveButtonRef.current?.focus());
+  }
+
+  async function requestRetentionPreview(snapshot: SettingValues, patch: Partial<SettingValues>) {
+    const request = ++generation.current;
+    retentionSubmitLatch.current = false;
+    setRetentionToken('');
+    setRetentionReview({ state: 'pending', snapshot, patch });
+    try {
+      const impact = await previewRetentionImpact(patch);
+      if (!alive.current || request !== generation.current) return;
+      setRetentionReview({ state: 'ready', snapshot, patch, impact });
+    } catch (error) {
+      if (!alive.current || request !== generation.current) return;
+      if (isRoleLoss(error)) { revokeAccess(); return; }
+      setRetentionReview({ state: 'error', snapshot, patch });
+    }
+  }
+
   function validateOnBlur(key: SettingKey) {
     if (draft === null || composing.current.has(key)) return;
     setErrors(validate(draft));
@@ -167,6 +205,7 @@ export function InstanceSettings() {
       const reconciled = { ...loaded };
       for (const key of newerKeys) reconciled[key] = currentDraft[key];
       setBaseline(loaded); setDraft(reconciled); setSaveState('success'); setStatusDetail(newerKeys.length === 0 ? '설정을 저장했습니다.' : SAVED_WITH_NEWER_DRAFT); uncertain.current = null; acceptedRefresh.current = null;
+      requestAnimationFrame(() => saveButtonRef.current?.focus());
     } catch (error) {
       if (!alive.current || request !== generation.current) return;
       if (isRoleLoss(error)) { revokeAccess(); return; }
@@ -220,22 +259,26 @@ export function InstanceSettings() {
     try {
       const remote = pickKnownValues(await loadSettings());
       if (!alive.current || request !== generation.current) return;
-      const reviewKeys = dirtyKeys.some((key) => RETENTION_KEYS.includes(key as typeof RETENTION_KEYS[number]))
-        ? Array.from(new Set<SettingKey>([...dirtyKeys, ...RETENTION_KEYS]))
-        : dirtyKeys;
-      const collided = reviewKeys.some((key) => remote[key] !== baseline[key] && remote[key] !== localSnapshot[key]);
       const snapshot = { ...remote };
       for (const key of dirtyKeys) snapshot[key] = localSnapshot[key];
+      const remoteRisk = retentionRisk(remote, snapshot);
+      const collided = dirtyKeys.some((key) => remote[key] !== baseline[key]
+        && remote[key] !== localSnapshot[key]
+        && (!RETENTION_KEYS.includes(key as typeof RETENTION_KEYS[number]) || remoteRisk !== 'reduction'));
       setBaseline(remote); setDraft(snapshot);
       if (collided) { setSaveState('conflict'); setStatusDetail('다른 변경을 발견했습니다. 최신 기준과 입력값을 검토한 뒤 다시 저장하세요.'); return; }
       const mergedErrors = validate(snapshot);
       if (Object.keys(mergedErrors).length > 0) { focusInvalid.current = true; setErrors(mergedErrors); setSaveState('idle'); setStatusDetail('최신 서버 값과 함께 다시 확인하세요.'); return; }
-      const risk = retentionRisk(remote, snapshot);
+      const risk = remoteRisk;
       if (risk !== 'safe') {
-        setSaveState('blocked');
-        setStatusDetail(risk === 'unknown'
-          ? '최신 보존 기준값이 유효하지 않아 축소 여부를 확인할 수 없습니다.'
-          : '영향 건수를 새로 확인할 수 없어 보존 기간 축소를 저장하지 않았습니다.');
+        if (risk === 'unknown') {
+          setSaveState('blocked');
+          setStatusDetail('현재 보존 기간 기준값을 확인할 수 없어 저장하지 않았습니다.');
+          return;
+        }
+        const patch: Partial<SettingValues> = {};
+        for (const key of SETTING_KEYS) if (intended.has(key) && snapshot[key] !== remote[key]) patch[key] = snapshot[key];
+        await requestRetentionPreview(snapshot, patch);
         return;
       }
       const patch: Partial<SettingValues> = {};
@@ -262,6 +305,41 @@ export function InstanceSettings() {
   }
 
   // @req DR-SHELL-001
+  async function confirmRetentionReview() {
+    const review = retentionReview;
+    if (review?.state !== 'ready' || review.impact?.receipt == null || retentionSubmitLatch.current) return;
+    if (review.impact.grade === 'L3' && retentionToken !== review.impact.typingToken) return;
+    retentionSubmitLatch.current = true;
+    const request = ++generation.current;
+    setRetentionReview({ ...review, state: 'submitting' });
+    try {
+      await saveSettings(review.patch, {
+        receipt: review.impact.receipt,
+        ...(review.impact.typingToken === null ? {} : { token: retentionToken }),
+      });
+    } catch (error) {
+      if (!alive.current || request !== generation.current) return;
+      retentionSubmitLatch.current = false;
+      if (isRoleLoss(error)) { revokeAccess(); return; }
+      if (error instanceof ApiError && error.status === 409 && error.detail?.rule === 'retention-confirmation-stale') {
+        setRetentionToken('');
+        setRetentionReview({ ...review, state: 'stale' });
+        return;
+      }
+      if (error instanceof ApiError) {
+        setRetentionReview(null); setSaveState('rejected'); setStatusDetail('저장 요청을 완료하지 못했습니다. 입력은 유지됩니다.');
+        return;
+      }
+      uncertain.current = { snapshot: review.snapshot, patch: review.patch };
+      setRetentionReview(null); setSaveState('uncertain'); setStatusDetail('저장 결과를 확인해야 합니다.');
+      return;
+    }
+    if (!alive.current || request !== generation.current) return;
+    acceptedRefresh.current = review.snapshot;
+    setRetentionReview(null);
+    await readAcceptedValues();
+  }
+
   function handleComposingEnter(event: KeyboardEvent<HTMLFormElement>) {
     if (event.key === 'Enter' && event.nativeEvent.isComposing) event.preventDefault();
   }
@@ -271,7 +349,7 @@ export function InstanceSettings() {
   if (loadState === 'forbidden') return <p role="alert">설정 권한을 확인할 수 없어 편집을 중단했습니다.</p>;
   if (baseline === null || draft === null) return null;
 
-  const pending = saveState === 'pending';
+  const pending = saveState === 'pending' || retentionReview !== null;
   const unresolvedRead = uncertain.current !== null || acceptedRefresh.current !== null;
   const alert = ['blocked', 'conflict', 'rejected', 'uncertain', 'accepted-refresh-error'].includes(saveState);
   const sharedRetentionError = errors['trash-retention-days'] !== undefined
@@ -310,11 +388,51 @@ export function InstanceSettings() {
       <div data-instance-settings-action="">
         <span aria-live="polite">{dirtyKeys.length === 0 ? '변경 없음' : `변경 ${dirtyKeys.length}건`}</span>
         <button type="button" disabled={pending || unresolvedRead || dirtyKeys.length === 0} onClick={resetDraft}>되돌리기</button>
-        <button type="submit" disabled={pending || dirtyKeys.length === 0}>저장</button>
+        <button ref={saveButtonRef} type="submit" disabled={pending || (dirtyKeys.length === 0 && saveState !== 'success')}>저장</button>
       </div>
       {statusDetail === '' ? null : <p role={alert ? 'alert' : 'status'}>{statusDetail}</p>}
-      {saveState === 'uncertain' ? <button type="button" onClick={() => void checkUncertainSave()}>저장 상태 확인</button> : null}
-      {saveState === 'accepted-refresh-error' ? <button type="button" onClick={() => void readAcceptedValues()}>최신 값 다시 읽기</button> : null}
+      {saveState === 'uncertain' ? <button data-testid="retention-impact-check-result" type="button" onClick={() => void checkUncertainSave()}>저장 상태 확인</button> : null}
+      {saveState === 'accepted-refresh-error' ? <button data-testid="retention-impact-readback-retry" type="button" onClick={() => void readAcceptedValues()}>최신 값 다시 읽기</button> : null}
+      {retentionReview === null ? null : <AlertDialog open onOpenChange={(open) => { if (!open) closeRetentionReview(); }}>
+        <AlertDialogContent data-retention-impact-dialog="" onOpenAutoFocus={(event) => {
+          event.preventDefault();
+          document.querySelector<HTMLElement>('[data-testid="retention-impact-cancel"]')?.focus();
+        }}>
+          <AlertDialogTitle>보존 기간 축소</AlertDialogTitle>
+          <AlertDialogDescription>권위 있는 현재 영향 범위를 확인한 뒤 저장하세요.</AlertDialogDescription>
+          {retentionReview.state === 'pending' ? <p data-testid="retention-impact-pending" aria-live="polite">영향을 계산하고 확인하는 중입니다.</p> : null}
+          {retentionReview.state === 'error' ? <div role="alert" data-testid="retention-impact-error">
+            <p>영향 건수를 새로 확인할 수 없어 보존 기간 축소를 저장하지 않았습니다.</p>
+            <Button data-testid="retention-impact-retry" type="button" onClick={() => void requestRetentionPreview(retentionReview.snapshot, retentionReview.patch)}>다시 확인</Button>
+            <Button data-testid="retention-impact-continue-edit" type="button" onClick={closeRetentionReview}>계속 편집</Button>
+          </div> : null}
+          {retentionReview.impact === undefined ? null : <>
+            <p>휴지통 보존 일수 {retentionReview.impact.proposedRetention['trash-retention-days']}</p>
+            <p>감사 로그 보존 일수 {retentionReview.impact.proposedRetention['audit-retention-days']}</p>
+            <p data-testid="retention-impact-total">총 영향 {retentionReview.impact.impact.total}건</p>
+            <p data-testid="retention-impact-breakdown">휴지통 {retentionReview.impact.impact.trashNodes} · 감사 로그 {retentionReview.impact.impact.auditRows} · 미해결 항목 {retentionReview.impact.impact.findings}</p>
+            <p data-testid="delayed-notice">저장을 눌러도 기존 데이터는 즉시 삭제되지 않으며 다음 정리 시점에 제거됩니다.</p>
+            {retentionReview.state === 'stale' ? <div role="alert" data-testid="retention-impact-stale">
+              <p>영향이 변경되었거나 대상이 달라졌습니다. 새 내용을 확인하세요.</p>
+              <Button data-testid="retention-impact-review" type="button" onClick={() => void requestRetentionPreview(retentionReview.snapshot, retentionReview.patch)}>새 내용 확인</Button>
+            </div> : null}
+            {retentionReview.impact.grade === 'L3' ? <label>정확한 영향 건수 {retentionReview.impact.typingToken} 입력
+              <input data-testid="retention-impact-token" aria-label={`영향 건수 ${retentionReview.impact.typingToken} 입력`} aria-describedby="retention-impact-token-help" value={retentionToken}
+                onCompositionStart={() => composing.current.add('trash-retention-days')}
+                onCompositionEnd={() => composing.current.delete('trash-retention-days')}
+                onKeyDown={(event) => { if (event.key === 'Enter' && event.nativeEvent.isComposing) event.preventDefault(); }}
+                onChange={(event) => setRetentionToken(event.target.value)} />
+              <span id="retention-impact-token-help">공백이나 구분자 없이 정확히 입력하세요.</span>
+            </label> : null}
+          </>}
+          <div data-slot="alert-dialog-actions">
+            <AlertDialogCancel data-testid="retention-impact-cancel" type="button" disabled={retentionReview.state === 'submitting'} onClick={closeRetentionReview}>계속 편집</AlertDialogCancel>
+            {retentionReview.state === 'ready' || retentionReview.state === 'submitting' || retentionReview.state === 'stale' ? <Button data-testid="retention-impact-confirm" type="button" variant="destructive"
+              loading={retentionReview.state === 'submitting'} disabled={retentionReview.state !== 'ready' || (retentionReview.impact?.grade === 'L3' && retentionToken !== retentionReview.impact.typingToken)}
+              onClick={() => void confirmRetentionReview()}>{retentionReview.state === 'submitting' ? '저장 중…' : '변경 저장'}</Button> : null}
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>}
     </form>
   );
 }

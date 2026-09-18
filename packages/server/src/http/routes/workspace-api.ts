@@ -18,6 +18,8 @@ import {
   readSetting,
   writeSettings,
 } from '../../app/settings/instance-settings.js';
+import { RetentionImpactReceipts, validateRetentionPatch } from '../../app/settings/retention-impact.js';
+import type { MetadataStore } from '../../domain/ports/metadata-store.js';
 import {
   attachToDocument,
   openAttachment,
@@ -147,6 +149,7 @@ export interface WorkspaceApiDeps {
       files?: WorkspaceFiles;
       textIndex?: SqliteTextIndexRepository;
       transaction?: <T>(fn: () => T) => T;
+      metadata?: MetadataStore;
     };
   /**
    * 이 요청을 누구로 볼 것인가. 세울 수 없으면 `undefined`.
@@ -218,6 +221,11 @@ interface TreeNodeBody {
 export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Router {
   const router = Router();
   const adminGrantPreviews = new AdminGrantPreviews(stores);
+  const retentionImpact = stores.metadata === undefined ? undefined : new RetentionImpactReceipts({
+    metadata: stores.metadata,
+    settings: stores.settings,
+    clock: stores.clock,
+  });
   // 본문 파서를 여기 두지 않는다 — `apiRouter` 가 `/api` 전체에 한 번만
   // 세운다. 두 곳이 세우면 먼저 선 것이 `req._body` 를 채워 뒤따르는 파서의
   // 한도가 조용히 죽고, 그 침묵은 한도를 올린 사람이 아무 변화도 못 보는
@@ -229,6 +237,17 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
 
   /** 관문 — 주체를 세우지 못하면 아무것도 하지 않는다. */
   const actorFor = (req: Request): Actor | undefined => actorOf(req);
+  const retentionContextFor = (req: Request): { actor: Actor; fingerprint: string } | undefined => {
+    const actor = actorFor(req);
+    if (actor === undefined) return undefined;
+    const token = sessionTokenOf(req.headers.cookie);
+    // Test/embedded adapters may authenticate outside the cookie session store. The production
+    // actor resolver cannot return an actor on this branch, so deployed receipts are session-bound.
+    if (token === undefined) return { actor, fingerprint: `actor-adapter:v1:${actor.id}` };
+    const session = authenticateSession(stores, token);
+    if (session === undefined || session.userId !== actor.id) return undefined;
+    return { actor, fingerprint: `session:v1:${hashSecretToken(token)}` };
+  };
   const adminGrantContextFor = (req: Request): { actor: Actor; fingerprint: string } | undefined => {
     const token = sessionTokenOf(req.headers.cookie);
     if (token === undefined) return undefined;
@@ -703,6 +722,28 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     );
   });
 
+  router.post('/settings/retention-impact', (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    const context = retentionContextFor(req);
+    if (context === undefined) { res.status(401).json({ code: 'unauthenticated' }); return; }
+    if (!isSuperuser(stores.principals.groupsOf(context.actor.id))) { res.status(403).json({ code: 'forbidden' }); return; }
+    const body = req.body;
+    if (body === null || typeof body !== 'object' || Array.isArray(body) || !Object.hasOwn(body, 'patch')) {
+      res.status(400).json({ code: 'retention-impact-invalid' }); return;
+    }
+    const validation = validateRetentionPatch(stores.settings, (body as { patch?: unknown }).patch);
+    if (!validation.ok) {
+      res.status(validation.rule === 'baseline' ? 409 : 400).json({ code: validation.rule === 'baseline' ? 'retention-baseline-invalid' : 'retention-impact-invalid' });
+      return;
+    }
+    if (retentionImpact === undefined) { res.status(503).json({ code: 'retention-impact-unavailable' }); return; }
+    try {
+      res.json(retentionImpact.preview(context.actor, context.fingerprint, validation.value));
+    } catch {
+      res.status(503).json({ code: 'retention-impact-unavailable' });
+    }
+  });
+
   router.put('/settings', (req, res) => {
     const actor = actorFor(req);
     if (actor === undefined) {
@@ -714,22 +755,57 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       return;
     }
 
-    const patch = req.body as Record<string, unknown>;
-    if (Object.values(patch).some((value) => typeof value !== 'string')) {
-      res.sendStatus(400);
-      return;
-    }
+    const parsed = validateRetentionPatch(stores.settings, req.body);
+    if (!parsed.ok) { res.status(400).json({ code: 'settings-invalid' }); return; }
+    const patch = parsed.value.patch;
 
     // 조합을 **통째로** 넘긴다 — 키마다 따로 쓰면 「감사를 올리고 휴지통을
     // 올린다」를 그 순서로만 할 수 있게 되고(`R154`), 오타 하나가 앞의
     // 값들만 바꿔 놓은 절반의 상태를 남긴다.
     // 바뀐 필드마다 감사 행이 남는다 (`OBS-AUDIT-006`). 행위자를 여기서
     // 넘기지 않으면 그 행들이 「누가 바꿨나」 없이 남는다.
-    const saved = writeSettings(stores.settings, patch as Record<string, string>, {
-      audit: stores.audit,
-      actor: actor.id,
-    });
-    res.sendStatus(saved.ok ? 204 : 400);
+    const save = () => {
+      const context = retentionContextFor(req);
+      if (context === undefined) return { status: 401, code: 'unauthenticated' };
+      const currentActor = context.actor;
+      if (!isSuperuser(stores.principals.groupsOf(currentActor.id))) return { status: 403, code: 'forbidden' };
+      const current = validateRetentionPatch(stores.settings, patch);
+      if (!current.ok) return { status: current.rule === 'baseline' ? 409 : 400, code: 'settings-invalid' };
+      if (current.value.shortened.length > 0) {
+        if (retentionImpact === undefined) return { status: 503, code: 'retention-impact-unavailable' };
+        const confirmation = retentionImpact.matches(
+          currentActor,
+          context.fingerprint,
+          one(req.header('X-Retention-Impact-Receipt')),
+          one(req.header('X-Retention-Impact-Token')),
+          current.value,
+        );
+        if (confirmation === 'required') return { status: 409, code: 'retention-confirmation-required' };
+        if (confirmation === 'stale') return { status: 409, code: 'retention-confirmation-stale' };
+      } else if (req.header('X-Retention-Impact-Receipt') !== undefined) {
+        if (retentionImpact === undefined) return { status: 409, code: 'retention-confirmation-stale' };
+        const confirmation = retentionImpact.matches(
+          currentActor,
+          context.fingerprint,
+          one(req.header('X-Retention-Impact-Receipt')),
+          one(req.header('X-Retention-Impact-Token')),
+          current.value,
+        );
+        if (confirmation !== 'accepted') return { status: 409, code: 'retention-confirmation-stale' };
+      }
+      const saved = writeSettings(stores.settings, patch, { audit: stores.audit, actor: currentActor.id });
+      return saved.ok ? { status: 204 } : { status: 400, code: 'settings-invalid' };
+    };
+    try {
+      const outcome = stores.transaction === undefined ? save() : stores.transaction(save);
+      if (outcome.status === 204) res.sendStatus(204);
+      else { res.setHeader('Cache-Control', 'no-store'); res.status(outcome.status).json({ code: outcome.code }); }
+    } catch (error) {
+      res.setHeader('Cache-Control', 'no-store');
+      const retryable = typeof error === 'object' && error !== null
+        && 'code' in error && String((error as { code?: unknown }).code).includes('BUSY');
+      res.status(retryable ? 503 : 500).json({ code: retryable ? 'retention-storage-retry' : 'retention-save-failed' });
+    }
   });
 
   /**

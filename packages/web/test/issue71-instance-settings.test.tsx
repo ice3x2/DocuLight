@@ -236,7 +236,8 @@ describe('GitHub #71 instance policy form', () => {
     await user.type(trash, '60');
     await user.click(screen.getByRole('button', { name: '저장' }));
 
-    expect(await screen.findByText(/감사 로그 보존 기간/)).toBeDefined();
+    await waitFor(() => expect((screen.getByLabelText('감사 로그 보존 기간') as HTMLInputElement).getAttribute('aria-invalid')).toBe('true'));
+    expect(requests.filter((one) => one.method === 'PUT')).toHaveLength(0);
     expect(requests.map((one) => one.method)).toEqual(['GET', 'GET']);
   });
 

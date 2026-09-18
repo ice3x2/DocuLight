@@ -33,6 +33,7 @@ import { mcpRouter } from './http/routes/mcp.js';
 import { workspaceApiRouter } from './http/routes/workspace-api.js';
 import { FsDocumentStore } from './infra/fs/document-store.js';
 import { FsTrashFiles } from './infra/fs/trash-files.js';
+import type { Database } from './infra/sqlite/database.js';
 import { FsWorkspaceFiles } from './infra/fs/workspace-sidecar.js';
 import { SqliteAclRepository } from './infra/sqlite/acl-repository.js';
 import { SqliteAttachmentRepository } from './infra/sqlite/attachment-repository.js';
@@ -182,6 +183,7 @@ type RuntimeStores = { personalSettings: SqlitePersonalSettingStore } & Attachme
   TrashStores &
   FavoriteStores &
   Parameters<typeof authRouter>[0] & {
+    metadata: Database;
     documents: FsDocumentStore;
     queue: SqliteFindingQueue;
     files: FsWorkspaceFiles;
@@ -249,6 +251,7 @@ export async function bootstrap(
   const stores: RuntimeStores = {
     // 재조정 한 회차를 통째로 묶는 자리 (`DR-STORAGE-002` AC-2).
     transaction: <T,>(fn: () => T): T => db.transaction(fn),
+    metadata: db,
     nodes: new SqliteNodeRepository(db),
     workspaces: new SqliteWorkspaceRepository(db),
     acl: new SqliteAclRepository(db),

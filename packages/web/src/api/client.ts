@@ -58,10 +58,10 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
 
   if (!response.ok) {
     const failure = (await bodyOf(response)) as
-      | { current?: string; rule?: string; state?: string; reason?: string }
+      | { current?: string; code?: string; rule?: string; state?: string; reason?: string }
       | undefined;
     throw new ApiError(response.status, failure?.current, {
-      ...(failure?.rule === undefined ? {} : { rule: failure.rule }),
+      ...(failure?.rule === undefined && failure?.code === undefined ? {} : { rule: failure.rule ?? failure.code }),
       ...(failure?.state === undefined ? {} : { state: failure.state }),
       ...(failure?.reason === undefined ? {} : { reason: failure.reason }),
     });
@@ -593,10 +593,30 @@ export const restoreVersion = (nodeId: string, seq: number) =>
 /** 런타임 설정 (`DR-SHELL-001`). 슈퍼유저만 읽고 쓴다. */
 export const loadSettings = () => call<Record<string, string>>('/settings');
 
-export const saveSettings = (patch: Record<string, string>) =>
+export interface RetentionImpactPreview {
+  beforeRetention: { 'trash-retention-days': string; 'audit-retention-days': string };
+  proposedRetention: { 'trash-retention-days': string; 'audit-retention-days': string };
+  shortened: Array<'trash-retention-days' | 'audit-retention-days'>;
+  impact: { trashNodes: number; auditRows: number; findings: number; total: number };
+  grade: 'L2' | 'L3' | null;
+  typingToken: string | null;
+  receipt: string | null;
+  computedAt: string;
+}
+
+export const previewRetentionImpact = (patch: Record<string, string>) =>
+  call<RetentionImpactPreview>('/settings/retention-impact', {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ patch }),
+  });
+
+export const saveSettings = (patch: Record<string, string>, consent?: { receipt: string; token?: string }) =>
   call<void>('/settings', {
     method: 'PUT',
-    headers: { 'content-type': 'application/json' },
+    headers: {
+      'content-type': 'application/json',
+      ...(consent === undefined ? {} : { 'X-Retention-Impact-Receipt': consent.receipt }),
+      ...(consent?.token === undefined ? {} : { 'X-Retention-Impact-Token': consent.token }),
+    },
     body: JSON.stringify(patch),
   });
 
