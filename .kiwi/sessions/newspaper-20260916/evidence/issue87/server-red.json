@@ -1,13 +1,13 @@
 {
-  "command": "\"C:\\\\Program Files\\\\nodejs\\\\node.exe\" \"C:\\\\Work\\\\git\\\\DocuLight2.0-wt-issue87\\\\node_modules\\\\vitest\\\\vitest.mjs\" \"run\" \"test/http/retention-impact.test.ts\" \"--root\" \"C:\\\\Work\\\\git\\\\DocuLight2.0-wt-issue87\\\\packages\\\\server\" \"--reporter=json\" \"--outputFile\" \"C:\\\\Users\\\\beom\\\\AppData\\\\Local\\\\Temp\\\\doculight-issue87-red-ZKTmK8\\\\server-vitest.json\"",
+  "command": "\"C:\\\\Program Files\\\\nodejs\\\\node.exe\" \"C:\\\\Work\\\\git\\\\DocuLight2.0-wt-issue87\\\\node_modules\\\\vitest\\\\vitest.mjs\" \"run\" \"test/http/retention-impact.test.ts\" \"--root\" \"C:\\\\Work\\\\git\\\\DocuLight2.0-wt-issue87\\\\packages\\\\server\" \"--reporter=json\" \"--outputFile\" \"C:\\\\Users\\\\beom\\\\AppData\\\\Local\\\\Temp\\\\doculight-issue87-red-jWakpb\\\\server-vitest.json\"",
   "cwd": "C:\\Work\\git\\DocuLight2.0-wt-issue87",
-  "startedAt": "2026-09-18T08:09:26.966Z",
-  "completedAt": "2026-09-18T08:09:30.776Z",
+  "startedAt": "2026-09-18T08:14:45.636Z",
+  "completedAt": "2026-09-18T08:14:49.691Z",
   "timeoutMs": 120000,
   "timedOut": false,
   "exitCode": 1,
   "signal": null,
-  "stdout": "JSON report written to C:/Users/beom/AppData/Local/Temp/doculight-issue87-red-ZKTmK8/server-vitest.json\n",
+  "stdout": "JSON report written to C:/Users/beom/AppData/Local/Temp/doculight-issue87-red-jWakpb/server-vitest.json\n",
   "stderr": "",
   "structuredResult": {
     "total": 66,
