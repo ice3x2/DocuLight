@@ -1,0 +1,595 @@
+{
+    "schema":  "issue74-final-review-manifest-v1",
+    "generatedAt":  "2026-09-18T02:34:06.174Z",
+    "head":  "0e52c0fd5789f302f388b962bca014df4c0c292d",
+    "aggregateAlgorithm":  "sha256(path + NUL + fileSha256 + LF), sorted by path",
+    "aggregateSha256":  "ba2b795b81c636e935e2ba9ab6602f5c7cabbca05e6b64872084d250669e9f39",
+    "fileCount":  117,
+    "files":  [
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/astra-decision.md",
+                      "sha256":  "df489c99220103c3f68f5a77cd915c6449475bf399d644a678e6ec76fe67a259",
+                      "bytes":  21394
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/baseline-delta.txt",
+                      "sha256":  "a30881a3ebf29fc7badcd17813e6dfe6ea657bd7a6fb7f4b6610e31e4c58b34c",
+                      "bytes":  172
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/forced-1280x720-z100.png",
+                      "sha256":  "c791d92779b28896067901980b1d8ec2917d5d4f05a34c753864984c0b8a86d5",
+                      "bytes":  46522
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/forced-1280x720-z200.png",
+                      "sha256":  "590aef731ffb2ae305cbd4ca9ddf427be7aec751a1412567a35710fc8d9000e5",
+                      "bytes":  57209
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/forced-1440x900-z100.png",
+                      "sha256":  "aca1e014c9f263943535ce830852016a80623b10c798b2d863c5cd1f193dd792",
+                      "bytes":  68117
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/forced-1440x900-z200.png",
+                      "sha256":  "f8b9df9f1148e155dab153d4149d92161113e5be3968688dd370cb8309584dd4",
+                      "bytes":  61121
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/forced-1920x1080-z100.png",
+                      "sha256":  "26449e2c5f4bd7075e620a2fc1714e2c0b22a1086559307141255e3a3c05095d",
+                      "bytes":  74307
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/forced-1920x1080-z200.png",
+                      "sha256":  "749134889579886a98e09d7012a1aa80ebc6a9fcf9c913baed71e2f616622462",
+                      "bytes":  97184
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/measurements.json",
+                      "sha256":  "a8ce0f69030ab70fc59a68d0291b672bb827821d9ab1ec5941a038bff0dc6e55",
+                      "bytes":  18044
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/normal-1280x720-dark-z100.png",
+                      "sha256":  "7536f7251228bfb1a8e6e580dc3650d3f398d4f90400a9a5b2024185b70a9525",
+                      "bytes":  49627
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/normal-1280x720-dark-z200.png",
+                      "sha256":  "eacbc26daaf57e84f7246d5b49ba3553c60b7c677800e0db71b4603281d899d9",
+                      "bytes":  76958
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/normal-1280x720-light-z100.png",
+                      "sha256":  "d9b82066df2eb014a50e39d1c2c806447e99c28453c3bb6685e206d850517c35",
+                      "bytes":  50028
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/normal-1280x720-light-z200.png",
+                      "sha256":  "cf803097ab262827cebcb38924d179880dd5bc4860fc7d3569cbaadf0222c8c5",
+                      "bytes":  77683
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/normal-1440x900-dark-z100.png",
+                      "sha256":  "4646343d505bcaaf0673d2b4aa4e447495b8dd3ae112f8b759af4d24a9def9f7",
+                      "bytes":  71610
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/normal-1440x900-dark-z200.png",
+                      "sha256":  "466bdeb5b8e95c31bee66214ca3b946e75101fe729f85dbc3aa7c449444af76d",
+                      "bytes":  85149
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/normal-1440x900-light-z100.png",
+                      "sha256":  "889f9399c109cd2733e694c2222ee1b9d659c471cceaf677283b94222482f525",
+                      "bytes":  72939
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/normal-1440x900-light-z200.png",
+                      "sha256":  "84d3b525b40a7a29f0142f800b22a487743c0fcd8632d944b282512edeae31f7",
+                      "bytes":  85816
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/normal-1920x1080-dark-z100.png",
+                      "sha256":  "d082000460429dd7adfddda9813aa897de41a3feb38f33d162be1d9e9602bd1b",
+                      "bytes":  78029
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/normal-1920x1080-dark-z200.png",
+                      "sha256":  "122ab356b4ed3c81675efd0ebd2f1ed12dbcb31a83ec9c192e1b085272ffe48f",
+                      "bytes":  106198
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/normal-1920x1080-light-z100.png",
+                      "sha256":  "ef3c0803aab8d5d0bb63af3053f24b9bc7501a4375f67bdd19a01c0e747657c3",
+                      "bytes":  79320
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/browser-matrix/normal-1920x1080-light-z200.png",
+                      "sha256":  "d88a799ac6a2d27c3b8ab74c62d43b2725c7e420a43a4f3cb4d072de7d300df9",
+                      "bytes":  106900
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/build-all.txt",
+                      "sha256":  "1c4fefa40bea150b92b32c6c20d0b3e80b8977e24a8a8edb8af2729c7709f321",
+                      "bytes":  157310
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/decision-review.md",
+                      "sha256":  "481b57f33b0b265b03365be9ebfb1f2799d08bb8136f80e0423e6ef9948bec07",
+                      "bytes":  10493
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/editor-regression-owned-deps.txt",
+                      "sha256":  "5bc9b85a803de048612b753e0bdc7dba3ea66f0d8e173686a958d9e5d7b6efd7",
+                      "bytes":  5544
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/editor-regression-owned-deps-final.txt",
+                      "sha256":  "828cb888a005ddb10e682715b945d9afea967e683ab416cb77e9548fc34778c0",
+                      "bytes":  5174
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/editor-regression-rereview.txt",
+                      "sha256":  "bd905721a9a65e9149a18d0dee4da23f16e448e211b919298d0371bbe78cf261",
+                      "bytes":  5204
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/editor-regression-review.txt",
+                      "sha256":  "d4dea67d3de3f20dbf6a673d547470817f71c7c8c000a260a6c83bebe517bcaf",
+                      "bytes":  5182
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/focused-web-final.txt",
+                      "sha256":  "69a133f6bce65e560d5394c76bdde50a718f24708c2784d2d1869f91dd6340aa",
+                      "bytes":  2102
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/focused-web-intermediate.txt",
+                      "sha256":  "1e9d6180fdfc97adfe67b009bad954be8ce753cfc2e90473d1db1c2d3b573f69",
+                      "bytes":  29078
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/full-regression.txt",
+                      "sha256":  "f609d2734465e07855dfab014c9e75907f3b01f421e94c9a25e222cef98f24d7",
+                      "bytes":  86640
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-back-focus-focused.txt",
+                      "sha256":  "0f6b29d96a75a729b5f9e781de5ab0c4ab3a344fe19745b886186f337b3fb05f",
+                      "bytes":  2102
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-entry-card.txt",
+                      "sha256":  "221dc2a585d266452e9e2a64ea62ec05b6376e5fa137c1d00453450eaeb65d4a",
+                      "bytes":  4282
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-exact-status.txt",
+                      "sha256":  "314e6cf32ccb92b2aa603f26e8330e7c7a075bed0de14a7ab8c782efd3029a7b",
+                      "bytes":  1948
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-final-gate-auth-mutation.txt",
+                      "sha256":  "d94b2dc1538fc573629cf8d09b8f2c0210f3cff33f2e168d69e2e2649e8e5243",
+                      "bytes":  1956
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-final-gate-focused.txt",
+                      "sha256":  "6a6a5c7928fae9c1b64b3a497893865503bfeebe90068b9805fe818136562947",
+                      "bytes":  2072
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-focused-web.txt",
+                      "sha256":  "0e1e2dcc6ccd527d319520cc493496cf13255173e4c9bad8b7f04b45d4d0a8af",
+                      "bytes":  2102
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-handoff-exact-status.txt",
+                      "sha256":  "098838a23ec6c643ad571d89589dd435182b2d6a450cb9b6529f85a34d107d67",
+                      "bytes":  1956
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-handoff-return.txt",
+                      "sha256":  "2d1ea55e0f8d626f51fddb1e637fc49e8c65d486b1f152f96c37f745c370af85",
+                      "bytes":  1998
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-last-superuser-focused.txt",
+                      "sha256":  "6b7f59092b7170959071a8ecd182283093389bb462c6675d6319e99fc0b17d35",
+                      "bytes":  2102
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-layout-css.txt",
+                      "sha256":  "80961f977e701f6764149aff8bd20839a1381aa807b25298ff39fe031f022c65",
+                      "bytes":  1940
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-membership-plan.txt",
+                      "sha256":  "66bf2c29c996e2895839b8c248a3b878757f2be234a0a872ee2143fe760c060a",
+                      "bytes":  1940
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-product-entry.txt",
+                      "sha256":  "f85fff4f01529318a9a0bf02674ee0c74f149e36946872158626d4d68a8407b7",
+                      "bytes":  1940
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-rereview-authority-guards.txt",
+                      "sha256":  "5be640f85de233a23ae48a5a297a786c6e4b541a52a0ed9facf1626d723a176b",
+                      "bytes":  1956
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-rereview-authority-guards-first.txt",
+                      "sha256":  "b694c5b279d57adf1226753b9a374040ccaf9016eabb6e3c02592c1732cba2e0",
+                      "bytes":  30854
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-rereview-focused.txt",
+                      "sha256":  "bc1f872840e3f920e0248399ef0367269dc2887ce2cd3958f7b787014754eed4",
+                      "bytes":  2076
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-review-fixes.txt",
+                      "sha256":  "6c0b632ff5a1f3aeea76a790e702b305a542c419c8464cc630045f33f1aa75ef",
+                      "bytes":  5084
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-review-fixes-final.txt",
+                      "sha256":  "20d100646ff716b63fae6d31bc074a742fe8039507a573c2d2f46d40110111cb",
+                      "bytes":  5084
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-review-fixes-first.txt",
+                      "sha256":  "e07d170e5625e25a006759aa18741e1a8e8cec679ab31aa8d4b3017e98ec3152",
+                      "bytes":  31888
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-stage-focus.txt",
+                      "sha256":  "19b0a0ca1b0b5a6c3ce3c2a2e8168e432a571e685121c738221d6bb2a3f73245",
+                      "bytes":  1956
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-stage-focus-final.txt",
+                      "sha256":  "04352ee860ede08a6ef313aa9cc258818731e8f661e2c7abda585e0b382fcd8b",
+                      "bytes":  1956
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/green-surface-refresh-preservation.txt",
+                      "sha256":  "b463083c7f3561defc59083cb0fe45fa605c3a1ad7275a30e47860a87ce48b44",
+                      "bytes":  26320
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/implementation-evidence.md",
+                      "sha256":  "a277cdf605749edeec3694937c1c194eecc2212df74686ab7193ebe7bfddd3e5",
+                      "bytes":  7522
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/npm-ci-worktree-owned.txt",
+                      "sha256":  "e65c5116da668f957dcfb0bcf866c75cbddac8edc5297e317f15cb215a795e36",
+                      "bytes":  2072
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-final-gate.txt",
+                      "sha256":  "c7e83182047159397db42bf0860034895fafafad7ef2a2be223cc293828951af",
+                      "bytes":  81226
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-product-eighth.txt",
+                      "sha256":  "63564314a4873953027c5dd27c98b6b282bcd49a5bc5bf27e1f80e3215e20b35",
+                      "bytes":  81226
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-product-fifth.txt",
+                      "sha256":  "d1b5d01a901eae2be14a35a0430171ed2185a3521d57e423ff8978dffba32a11",
+                      "bytes":  84718
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-product-final.txt",
+                      "sha256":  "676cae5054cde77efd71f86aa41ae96ff22f49a4653b6d8158915216cad3bd7d",
+                      "bytes":  81226
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-product-first.txt",
+                      "sha256":  "48def1b9fec31fdca52fd7c66b6ae9c8b2979f1df6a63f02d4a3df1d099d4c94",
+                      "bytes":  85298
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-product-fourth.txt",
+                      "sha256":  "f8444acf5be51d1cd77c20e6bad99745dabab879dd98ae9ce2d41f6ce8c4e906",
+                      "bytes":  84174
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-product-second.txt",
+                      "sha256":  "671692d412961b9ff585a986c8a724fe29f843fe77c14d97ec07447d6f08fecf",
+                      "bytes":  83742
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-product-seventh.txt",
+                      "sha256":  "e4138d40b1017f798df8baf63f616fc53e49c9b3e1643da72708166834e6f7a0",
+                      "bytes":  83730
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-product-sixth.txt",
+                      "sha256":  "341d2ebe46b649e1d60df3e554b5bcaed5116fff595d4ebf9fc1796c296e6108",
+                      "bytes":  84030
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-product-third.txt",
+                      "sha256":  "86933dc3cdf6b26d611b0dc48ae8475f889c9afbe98420f5d3fc0b55b7f1806d",
+                      "bytes":  84016
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-rereview-expanded.txt",
+                      "sha256":  "4d465c28866e09d39783cde928dfbc7eec530f73141c1a89788910a1da164ebb",
+                      "bytes":  81226
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-rereview-expanded-final.txt",
+                      "sha256":  "bd3d8213457acad94c882ca028f659e7ddf8b9364358552eabad17672323e8c9",
+                      "bytes":  81226
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-rereview-first.txt",
+                      "sha256":  "b516408e4ea102b3ee97d5f304fb3516435d86462d5fbce5470dddaf6bf76a67",
+                      "bytes":  84262
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-review-final.txt",
+                      "sha256":  "857d3b898d0c97760a3ab8a6bdbc3538e23aff7f2cc39c4d2e097db1c6127135",
+                      "bytes":  81226
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-review-final-stage3.txt",
+                      "sha256":  "5b43b8c8d4fee4ae4f16949362e67375bddfec2b3ee12c7570e976a23ddb0096",
+                      "bytes":  81948
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-review-first.txt",
+                      "sha256":  "15bfb1954075686304b580122720364dc0e335c24b3618deb72901228f8d0880",
+                      "bytes":  84312
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/playwright-review-second.txt",
+                      "sha256":  "c3c87bda131fc27f98aa9a3e8401e965d3d00d423aab04a17d0bdd1103f05872",
+                      "bytes":  81226
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-back-focus-remount.txt",
+                      "sha256":  "05ac7beb54792cea75aea5d3a574b84a4609c1b5b1274b919877570dbf24b13a",
+                      "bytes":  5242
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-entry-card.txt",
+                      "sha256":  "ed0472b3451f6ed1c5d6123153ff4e16b9bebf8a13cf4644a0f7816717855bce",
+                      "bytes":  59352
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-exact-status.txt",
+                      "sha256":  "1a4a6cb64c06f26dcb4888a202f1724af0e9b00297a4c6a01e02a1ddeffed4fb",
+                      "bytes":  4884
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-final-gate-auth-mutation.txt",
+                      "sha256":  "b9f62fdcb2577dfac457008a9f8cc7e0d401635486ada804f80fa995b15f27cb",
+                      "bytes":  82228
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-handoff-exact-status.txt",
+                      "sha256":  "37d3e726e7fd4adc80ba3ddb03c57b608dea688a96fc7513fc15f150e23be6f0",
+                      "bytes":  6766
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-handoff-return.txt",
+                      "sha256":  "a7a2659f7b8f57e80360465d42bc41612ab6dadbb704f3a9f9df8383bebb086c",
+                      "bytes":  25716
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-last-superuser-message.txt",
+                      "sha256":  "016c5b376b5d7745d39c67f146cf567657068e54955b85c741c1db784d7c8de7",
+                      "bytes":  44776
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-layout-css.txt",
+                      "sha256":  "5c1cdc08e8837ca40412320c1d83dd1181ce061a95c16a0370ec96d0bba97d84",
+                      "bytes":  116202
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-membership-plan.txt",
+                      "sha256":  "55c3a7d4b83a77d0ed7ec228c6b4467822da16686f7d27fae0baf2ab97d57f31",
+                      "bytes":  4744
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-product-entry.txt",
+                      "sha256":  "1d62d18cb8608d6532194072e93802936cbc91dd54390ca5e6a8a4d2a7142d62",
+                      "bytes":  48134
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-rereview-authority-guards.txt",
+                      "sha256":  "3ea30cf26c4f3409f0a40c0d906c1dd8b7dcb27b91678a12108e307aad1ea14a",
+                      "bytes":  274466
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-rereview-stage3-guard.txt",
+                      "sha256":  "03efbc4653c195abae9dea64e4fc8a89112acf0edd2dea5faad7881c862308b8",
+                      "bytes":  4566
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-rereview-stage4-adapter.txt",
+                      "sha256":  "557cc90f4088508c3d94966bfe6fd89be195b825d1c35990fe76183adc0e955b",
+                      "bytes":  18732
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-review-fixes.txt",
+                      "sha256":  "2f69139b0db2103c8da3a325ec6ecc85208ac2ccae64105a3ffed7b6c177189a",
+                      "bytes":  79238
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-stage-focus.txt",
+                      "sha256":  "19d2054c3b859f007f7cb6e56c3b5a71639ec158fadded6e5a5e754418dbcb21",
+                      "bytes":  43944
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/red-surface-refresh-preservation.txt",
+                      "sha256":  "529bd61b13b1b262d16ab6a9b00ccb2a684261e651a50abe7371b0fe84e9d492",
+                      "bytes":  45368
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/server-focused-final.txt",
+                      "sha256":  "b93b6435e60c6e0623cedb15b2c18e66e4ac7976560c09a81614a449e365005f",
+                      "bytes":  1948
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/server-regression-rereview.txt",
+                      "sha256":  "ce7d1da8d24c6f17b527d9f881242099f74b0ddc93a50dfa28ad7dfb19472fe9",
+                      "bytes":  4728
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/server-regression-review.txt",
+                      "sha256":  "9865ac3df7b6e39298702c2bd40cf2aa1c1aedfce27ef88828efa4052ee791d6",
+                      "bytes":  4704
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/server-review-focused.txt",
+                      "sha256":  "d76004b5d0907cd69bd237ec3fb4fb74e2a66fe2d3b4b751047c431ffbf66f13",
+                      "bytes":  4778
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/server-review-green.txt",
+                      "sha256":  "e4653086f3713b4a0c2d8fa9f56563fc8f22c6b1d33c035cbe834b6c7ecb2262",
+                      "bytes":  1960
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/speckiwi-links.json",
+                      "sha256":  "8338c04a039cb29a1859f20cfac2b671ac3ca285e859bd636d269ec525591256",
+                      "bytes":  1944
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/speckiwi-summary.json",
+                      "sha256":  "65f679816b1c00e0f640373db03aacfd280b36e14dff8b8b581c858ec591cf9b",
+                      "bytes":  15712
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/speckiwi-validate.json",
+                      "sha256":  "8f07100716dc09c08526023dcba96700e979fcfa46a3cf59ee1416d2c77baf25",
+                      "bytes":  1760
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/token-panel-rerun.txt",
+                      "sha256":  "b3d39a0562021531c7809aa4bac2615c9d1f0e67d2eb14232931b28b0d1ab444",
+                      "bytes":  4474
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/typecheck-all.txt",
+                      "sha256":  "1ac950828e0f8a1676d399d62534ecb8961ab620fcb08487cac2eff0600a022b",
+                      "bytes":  2368
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/web-regression-final.txt",
+                      "sha256":  "dc63ee0cb2841209d24bdd11850061c2a5cee88508f43df205fc52d596167c63",
+                      "bytes":  4420
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/web-regression-rereview.txt",
+                      "sha256":  "5fb51c65a558fc139e8a5da7f73ec40b05d3b20519304d087a4241baeb4e8cf6",
+                      "bytes":  4448
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/web-regression-review.txt",
+                      "sha256":  "b54b6f141ff46215f77325175e07052f16ce8b74ca1ff24c2680204d38e5c87c",
+                      "bytes":  18978
+                  },
+                  {
+                      "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue74/web-regression-review-final.txt",
+                      "sha256":  "31d8989e387f405e32360e9c55895512301af622b88d5184b1fe8850c3326624",
+                      "bytes":  4422
+                  },
+                  {
+                      "path":  "packages/server/src/app/principal/offboarding-service.ts",
+                      "sha256":  "6a0be9e2589af2976227320ec3f03d8ae48a40ad67e05ff1ba9b571f73a62317",
+                      "bytes":  5839
+                  },
+                  {
+                      "path":  "packages/server/test/app/principal/offboarding.test.ts",
+                      "sha256":  "feef8c613204bc982e47eae457507f2f92cd607399440e5987397569dd8bfb53",
+                      "bytes":  11124
+                  },
+                  {
+                      "path":  "packages/web/package.json",
+                      "sha256":  "da5ea10a33a0d06c6ea4792a8fe3c998f77deb42c5d1081be903080e98244720",
+                      "bytes":  5427
+                  },
+                  {
+                      "path":  "packages/web/src/acl/AclAuditPanel.tsx",
+                      "sha256":  "284d63dd9d26a64e1b128082f655a585a54790ce0d2eee929b6cae04afbbbbd8",
+                      "bytes":  6311
+                  },
+                  {
+                      "path":  "packages/web/src/acl/BulkRevokePanel.tsx",
+                      "sha256":  "ceb5b86353d6cf3fc717a5a570d528eaad227d389f215b73a210c3b1223e3c8a",
+                      "bytes":  13235
+                  },
+                  {
+                      "path":  "packages/web/src/api/client.ts",
+                      "sha256":  "7fedbbaf66e0c48b9f5957990c639d4861eb1a074219294bd59720ee72813eb0",
+                      "bytes":  32163
+                  },
+                  {
+                      "path":  "packages/web/src/App.tsx",
+                      "sha256":  "7863f9b6c72fddf3609291ed3299d9910b181db5035195985f7cfa23abf3fd22",
+                      "bytes":  58894
+                  },
+                  {
+                      "path":  "packages/web/src/principal/OffboardingCard.tsx",
+                      "sha256":  "624eab6a23f78761f84e45bdf7c4f8e32aeebe72a487e528d15368504752b622",
+                      "bytes":  14723
+                  },
+                  {
+                      "path":  "packages/web/src/principal/OffboardingSurface.tsx",
+                      "sha256":  "ecddea0b2f25e327422b6451500326daca57557aba4237e7f6b315c61d5f3b99",
+                      "bytes":  3722
+                  },
+                  {
+                      "path":  "packages/web/src/principal/PrincipalPicker.tsx",
+                      "sha256":  "46f70cfd788cc6a6197ad85e240fc8bd60161ab0227f42a2545c41d114ca622b",
+                      "bytes":  7905
+                  },
+                  {
+                      "path":  "packages/web/src/principal/UserRoster.tsx",
+                      "sha256":  "663b73b71e9c0d522035a8acad8e576020f735b5080319d97bced7354f902978",
+                      "bytes":  5720
+                  },
+                  {
+                      "path":  "packages/web/src/shell/AppShell.tsx",
+                      "sha256":  "4bba0b3f15b9f5b573e233f2ef41dfdcb4fc2936328388d9f77ef6ab01688b70",
+                      "bytes":  64634
+                  },
+                  {
+                      "path":  "packages/web/src/styles/shell.css",
+                      "sha256":  "a00ea5fec3b125e2de4cbf70439cf32fa3ea13f54beaea9f554c3b850631b3ce",
+                      "bytes":  57705
+                  },
+                  {
+                      "path":  "packages/web/test/issue74-offboarding-entry.test.tsx",
+                      "sha256":  "2b37a4514cd2e80d62b53d53ef53eeeadf14e7f44db9a2c1b0cefc72831c469a",
+                      "bytes":  34262
+                  },
+                  {
+                      "path":  "packages/web/test/issue74-offboarding-product-check.mjs",
+                      "sha256":  "621f4894923e4f18a5de5d52da6dcee9870d470ed14465ca3bb7116b91fe6365",
+                      "bytes":  22105
+                  },
+                  {
+                      "path":  "packages/web/test/issue74-offboarding-product-runner.mjs",
+                      "sha256":  "47649002ee86d41c9f9942c993e3c5e3351e7c8bee31da2477ac158a88170c04",
+                      "bytes":  5146
+                  },
+                  {
+                      "path":  "packages/web/test/offboarding.test.tsx",
+                      "sha256":  "8b556a39e8585fa248b9319602a558e6564831875afa279bc614300a1aacf9d5",
+                      "bytes":  10310
+                  }
+              ]
+}

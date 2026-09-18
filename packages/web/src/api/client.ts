@@ -324,11 +324,10 @@ export interface DocumentLinksBody {
 }
 
 /**
- * 검색 결과에 실려 오는 계정 상태 (`SEC-PRINCIPAL-002`).
+ * Principal state used by offboarding (SEC-PRINCIPAL-002).
  *
- * `rejected` 가 **이 union 에 없다**. 서버가 빼고 주므로 (AC-3) 여기에
- * 두면 화면이 영영 그리지 않을 갈래를 하나 떠안게 되고, 그 갈래를 채우는
- * 순간 규칙이 두 곳으로 갈린다.
+ * Search endpoints exclude rejected, but the ACL-to-offboarding handoff preserves
+ * the current subject snapshot, including a rejected status.
  */
 export type PrincipalStatus = 'active' | 'pending' | 'suspended';
 
@@ -396,6 +395,16 @@ export const fetchPrincipals = (query: string, scope: PrincipalScope) =>
  * 순간 `SEC-PRINCIPAL-002` AC-3 이 깨진다.
  */
 export type RosterUserStatus = 'active' | 'pending' | 'suspended' | 'rejected';
+
+/** Exact user snapshot handed from offboarding to the revocation flow. */
+export interface OffboardingSubject {
+  id: string;
+  name: string;
+  kind: 'user';
+  status: RosterUserStatus;
+  system: false;
+}
+export type RevocationSubject = PrincipalRow | OffboardingSubject;
 
 export interface RosterUser {
   id: string;
@@ -503,6 +512,7 @@ export interface OffboardingStepBody {
 export interface OffboardingCardBody {
   principalId: string;
   principalName: string;
+  principalStatus: RosterUserStatus;
   steps: OffboardingStepBody[];
 }
 
@@ -715,6 +725,11 @@ export const addGroupMember = (groupId: string, userId: string) =>
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ userId }),
+  });
+
+export const removeGroupMember = (groupId: string, userId: string) =>
+  call<void>(`/roster/groups/${encodeURIComponent(groupId)}/members/${encodeURIComponent(userId)}`, {
+    method: 'DELETE',
   });
 
 /**

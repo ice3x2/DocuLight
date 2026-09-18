@@ -66,10 +66,11 @@ function keepEnterInsidePicker(event: KeyboardEvent<HTMLInputElement>, composing
  * 고정한 것은 `suspended` 뿐이지만, 나머지를 새로 지으면 같은 상태가 화면
  * 마다 다른 이름으로 불린다.
  */
-const BADGE: Record<PrincipalStatus, string> = {
-  active: '활성',
-  pending: '대기',
-  suspended: '비활성',
+const badgeFor = (status: PrincipalStatus) => {
+  if (status === 'active') return '활성';
+  if (status === 'pending') return '대기';
+  if (status === 'suspended') return '비활성';
+  return null;
 };
 
 export function PrincipalPicker({
@@ -191,7 +192,7 @@ export function PrincipalPicker({
               {/* 종류를 함께 보인다 — 같은 이름의 사용자와 그룹이 있을 때
                   이름만으로는 무엇에 권한을 주는지 알 수 없다. */}
               <span>{row.kind === 'user' ? '사용자' : '그룹'}</span>
-              <span data-testid="principal-status">{BADGE[row.status]}</span>
+              {badgeFor(row.status) === null ? null : <span data-testid="principal-status">{badgeFor(row.status)}</span>}
             </Command.Item>
           ))
         ) : null}

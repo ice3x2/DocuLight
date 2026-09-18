@@ -3,6 +3,7 @@ import * as Tabs from '@radix-ui/react-tabs';
 import type {
   BrokenInheritanceBody,
   PrincipalRow,
+  RevocationSubject,
   SimulationBody,
 } from '../api/client.js';
 import { BulkRevokePanel } from './BulkRevokePanel.js';
@@ -32,16 +33,19 @@ export interface AclAuditProps {
   contextKey?: string;
   revocationPlan?: AuditQuery<BulkPlan>;
   /** 고른 주체들 — 다건이다 (`FR-CONFIRM-020`). */
-  subjects?: readonly PrincipalRow[];
+  subjects?: readonly RevocationSubject[];
   simulationSubject?: PrincipalRow | null;
   simulationQuery?: AuditQuery<SimulationBody>;
   inheritanceQuery?: AuditQuery<BrokenInheritanceBody>;
   onRevokePick?: (row: PrincipalRow) => void;
+  onRevokeReplace?: (rows: readonly RevocationSubject[]) => void;
   onRevokeRemove?: (principalId: string) => void;
-  onPreviewRevocation?: (subjects: readonly PrincipalRow[]) => Promise<BulkPlan>;
+  onPreviewRevocation?: (subjects: readonly RevocationSubject[]) => Promise<BulkPlan>;
   onRevokeSubject?: (principalId: string) => Promise<RevokeSubjectResult>;
   onSimulatePick?: (row: PrincipalRow) => void;
   onRestore?: (nodeId: string) => void;
+  onOffboard?: (subject: RevocationSubject) => void;
+  onRevokeFlowExit?: () => void;
 }
 
 export type ManagedSearchScope =
@@ -71,6 +75,8 @@ export function AclAuditPanel({
   onPreviewRevocation,
   onRevokeSubject,
   onSimulatePick,
+  onOffboard,
+  onRevokeFlowExit,
 }: AclAuditProps) {
   const scope: ManagedSearchScope = managedScope ?? { state: 'unavailable' };
   const revokeContextKey = scope.state === 'ready' && contextKey !== undefined && subjects !== undefined
@@ -109,6 +115,8 @@ export function AclAuditPanel({
             onRemove={onRevokeRemove}
             onPreview={onPreviewRevocation}
             onRevokeSubject={onRevokeSubject}
+            {...(onOffboard === undefined ? {} : { onOffboard })}
+            {...(onRevokeFlowExit === undefined ? {} : { onFlowExit: onRevokeFlowExit })}
           />
         )}
       </Tabs.Content>

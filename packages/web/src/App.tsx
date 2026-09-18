@@ -49,6 +49,7 @@ import {
   fetchRevocation,
   revokeAllFor,
   type PrincipalRow,
+  type RevocationSubject,
   type RevocationBody,
 } from './api/client.js';
 import {
@@ -809,7 +810,7 @@ function AppBody() {
    * 목록의 첫 항목을 쓴다: 주체 검색의 자격 근거일 뿐이라 어느 것이어도
    * 같은 인가를 지난다 (`R162`).
    */
-  const [회수주체, set회수주체] = useState<readonly PrincipalRow[]>([]);
+  const [회수주체, set회수주체] = useState<readonly RevocationSubject[]>([]);
   const [시뮬주체, set시뮬주체] = useState<PrincipalRow | null>(null);
   const adminScope = session.data !== undefined && session.data.adminWorkspaceCount > 0;
   const workspaceList = useWorkspaceList(signedIn && adminScope, 'managed', userId, authGeneration);
@@ -943,7 +944,7 @@ function AppBody() {
     managedAuditScope.state,
     회수주체.map((subject) => subject.id),
   ]);
-  const previewRevocations = useCallback(async (selected: readonly PrincipalRow[]): Promise<BulkPlan> => ({
+  const previewRevocations = useCallback(async (selected: readonly RevocationSubject[]): Promise<BulkPlan> => ({
     subjects: await Promise.all(selected.map(async (subject) => ({
       subject,
       response: await fetchRevocation(subject.id),
@@ -1247,6 +1248,10 @@ function AppBody() {
             : { state: 'ready', rows: tokens.data }}
       onIssueToken={토큰을발급한다}
       onRevokeToken={토큰을폐기한다}
+      onAuthenticationLoss={() => {
+        setAuthGeneration((value) => value + 1);
+        void session.refetch();
+      }}
       userRoster={users.data ?? []}
       groupRoster={groups.data ?? []}
       onGroupRemove={dropGroup}
@@ -1275,6 +1280,7 @@ function AppBody() {
             ? { state: 'loading' }
             : { state: 'ready', data: brokenInheritance.data },
         onRevokePick: (row) => set회수주체((was) => (was.some((one) => one.id === row.id) ? was : [...was, row])),
+        onRevokeReplace: set회수주체,
         onRevokeRemove: (id) => set회수주체((was) => was.filter((subject) => subject.id !== id)),
         onSimulatePick: set시뮬주체,
         onPreviewRevocation: previewRevocations,

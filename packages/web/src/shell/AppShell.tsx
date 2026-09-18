@@ -39,6 +39,7 @@ import type {
 } from '../api/client.js';
 import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
+import { OffboardingSurface } from '../principal/OffboardingSurface.js';
 import { SignupApproval } from '../principal/SignupApproval.js';
 import { TrashPanel, type TrashActionResult, type TrashLens, type TrashQueryState, type TrashRowView } from '../trash/TrashPanel.js';
 import { EmptyState, ErrorState, LoadingState } from '../components/ui/states.js';
@@ -284,6 +285,7 @@ function SettingsModal({
   onReopenUser,
   onUserStatus,
   onLogout,
+  onAuthenticationLoss,
   onPasswordChange,
   workspaceManagement,
 }: {
@@ -340,6 +342,7 @@ function SettingsModal({
   onUserStatus?: (userId: string, status: RosterUserStatus) => void;
   /** 이 브라우저의 세션을 끊는다 (`SEC-AUTH-019` AC-1). */
   onLogout?: () => void | Promise<void>;
+  onAuthenticationLoss?: () => void;
   /** 자기 비밀번호를 바꾼다 (`SEC-AUTH-018` AC-1). 거절되면 규칙 코드가 돌아온다. */
   onPasswordChange?: (input: {
     current: string;
@@ -362,6 +365,8 @@ function SettingsModal({
   const [selectedCategory, setSelectedCategory] = useState('editor');
   const [비밀번호폼, set비밀번호폼] = useState(false);
   const [tokenLostNotice, setTokenLostNotice] = useState(false);
+  const [offboardingTarget, setOffboardingTarget] = useState<{ id: string; name: string; source: 'users' | 'acl-audit'; restore: HTMLElement | null }>();
+  const [offboardingHandoff, setOffboardingHandoff] = useState(false);
   const tokenLeaveGuard = useRef<TokenLeaveGuard | null>(null);
   const titleId = useId();
   const selectedWorkspaceContext = workspaceManagement?.selectedId === undefined ? undefined : [
@@ -378,6 +383,23 @@ function SettingsModal({
   // 비활성으로 보여 주면 그것이 언젠가 열릴 것처럼 읽힌다.
   const categories = visibleCategories(viewer);
   const selectionRevoked = !categories.some((category) => category.id === selectedCategory);
+  const leaveOffboarding = () => {
+    const restore = offboardingTarget?.restore;
+    const principalId = offboardingTarget?.id;
+    setOffboardingTarget(undefined);
+    setOffboardingHandoff(false);
+    requestAnimationFrame(() => {
+      const remounted = [...document.querySelectorAll<HTMLElement>('[data-offboarding-principal-id]')]
+        .find((element) => element.dataset.offboardingPrincipalId === principalId);
+      if (restore?.isConnected) restore.focus();
+      else if (remounted !== undefined) remounted.focus();
+      else document.querySelector<HTMLElement>('[data-settings-content] h2')?.focus();
+    });
+  };
+  const openOffboarding = (id: string, name: string, source: 'users' | 'acl-audit') => {
+    setOffboardingHandoff(false);
+    setOffboardingTarget({ id, name, source, restore: document.activeElement instanceof HTMLElement ? document.activeElement : null });
+  };
   const sectionLabels = {
     personal: '개인',
     workspace: '워크스페이스 관리',
@@ -386,7 +408,7 @@ function SettingsModal({
 
   return (
     <Dialog open={open} onOpenChange={(next) => {
-      const change = () => { setOpen(next); if (next) setSelectedCategory('editor'); };
+      const change = () => { setOpen(next); setOffboardingTarget(undefined); if (next) setSelectedCategory('editor'); };
       if (!next && tokenLeaveGuard.current !== null) { tokenLeaveGuard.current(change); return; }
       change();
     }}>
@@ -422,7 +444,7 @@ function SettingsModal({
 
           {/* 좌측 카테고리 — 관리 기능이 전부 이 목록 안에 든다(AC-2). */}
           <Tabs.Root value={selectedCategory} onValueChange={(category) => {
-            const change = () => setSelectedCategory(category);
+            const change = () => { setSelectedCategory(category); setOffboardingTarget(undefined); };
             if (tokenLeaveGuard.current !== null) { tokenLeaveGuard.current(change); return; }
             change();
           }} orientation="vertical" data-settings-layout>
@@ -556,12 +578,17 @@ function SettingsModal({
                   // 부품은 `rejected` 를 아예 받지 않고 `suspended` 를
                   // 중립어로 적는데, 이 화면은 원장 `R112-d` 로 네 상태를
                   // 그대로 표시해야 한다.
-                  <UserRoster
+                  offboardingTarget?.source === 'users' && !offboardingHandoff ? <OffboardingSurface principalId={offboardingTarget.id} principalName={offboardingTarget.name} onBack={leaveOffboarding} onAuthenticationLoss={onAuthenticationLoss} {...(aclAudit?.onRevokeReplace === undefined ? {} : { onAcl: (subject: import('../api/client.js').OffboardingSubject) => {
+                    if (aclAudit?.onRevokeReplace === undefined) return;
+                    aclAudit.onRevokeReplace([subject]);
+                    setOffboardingHandoff(true); setSelectedCategory('acl-audit');
+                  } })} /> : <UserRoster
                     users={userRoster}
                     {...(onRegisterUser === undefined ? {} : { onRegister: onRegisterUser })}
                     {...(onApproveUser === undefined ? {} : { onApprove: onApproveUser })}
                     {...(onReopenUser === undefined ? {} : { onReopen: onReopenUser })}
                     {...(onUserStatus === undefined ? {} : { onStatus: onUserStatus })}
+                    onOffboard={(id) => openOffboarding(id, userRoster.find((user) => user.id === id)?.name ?? id, 'users')}
                   />
                 ) : category.id === 'signup-approval' ? (
                   // 명부와 **다른 화면**이다 (설계서 `04` §2.10) — 조작이
@@ -599,7 +626,11 @@ function SettingsModal({
                 ) : category.id === 'acl-audit' ? (
                   // 셋을 여기 모은다 — 흩어 두면 관리자가 같은 물음을 세
                   // 곳에서 세 번 묻게 된다.
-                  <AclAuditPanel {...(aclAudit ?? {})} />
+                  offboardingTarget?.source === 'acl-audit' && !offboardingHandoff ? <OffboardingSurface principalId={offboardingTarget.id} principalName={offboardingTarget.name} onBack={leaveOffboarding} onAuthenticationLoss={onAuthenticationLoss} {...(aclAudit?.onRevokeReplace === undefined ? {} : { onAcl: (subject: import('../api/client.js').OffboardingSubject) => {
+                    if (aclAudit?.onRevokeReplace === undefined) return;
+                    aclAudit.onRevokeReplace([subject]);
+                    setOffboardingHandoff(true);
+                  } })} /> : <AclAuditPanel {...(aclAudit ?? {})} {...(offboardingTarget === undefined ? {} : { onRevokeFlowExit: () => { setOffboardingHandoff(false); setSelectedCategory(offboardingTarget.source); } })} {...(viewer.superuser ? { onOffboard: (subject: import('../api/client.js').RevocationSubject) => openOffboarding(subject.id, subject.name, 'acl-audit') } : {})} />
                 ) : (
                   <p>{category.label}</p>
                 )}
@@ -684,6 +715,7 @@ export function AppShell({
   onFavorite,
   onUnfavorite,
   onLogout,
+  onAuthenticationLoss,
   onPasswordChange,
   workspaceManagement,
   onDelete,
@@ -821,6 +853,7 @@ export function AppShell({
   onUnfavorite?: (nodeId: string) => void;
   /** 이 브라우저의 세션을 끊는다 (`SEC-AUTH-019` AC-1). */
   onLogout?: () => void | Promise<void>;
+  onAuthenticationLoss?: () => void;
   /** 자기 비밀번호를 바꾼다 (`SEC-AUTH-018` AC-1). */
   onPasswordChange?: (input: {
     current: string;
@@ -1006,6 +1039,7 @@ export function AppShell({
             {...(onIssueToken === undefined ? {} : { onIssueToken })}
             {...(onRevokeToken === undefined ? {} : { onRevokeToken })}
             {...(onLogout === undefined ? {} : { onLogout })}
+            {...(onAuthenticationLoss === undefined ? {} : { onAuthenticationLoss })}
             {...(onPasswordChange === undefined ? {} : { onPasswordChange })}
             userRoster={userRoster}
             groupRoster={groupRoster}

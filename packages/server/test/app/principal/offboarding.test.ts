@@ -45,6 +45,30 @@ afterEach(async () => {
 });
 
 describe('FR-PRINCIPAL-003 · CON-PRINCIPAL-004 — 오프보딩 카드는 파생이다', () => {
+  it('IR-PRINCIPAL-001 AC-2: pending/rejected를 suspended 완료로 접지 않고 정확한 상태를 보낸다', () => {
+    stores.principals.setStatus(떠나는이.id, 'pending');
+    const pending = offboardingCard(stores, 떠나는이.id)!;
+    stores.principals.setStatus(떠나는이.id, 'rejected');
+    const rejected = offboardingCard(stores, 떠나는이.id)!;
+
+    expect({ status: pending.principalStatus, suspended: pending.steps[0]!.done }).toEqual({ status: 'pending', suspended: false });
+    expect({ status: rejected.principalStatus, suspended: rejected.steps[0]!.done }).toEqual({ status: 'rejected', suspended: false });
+  });
+
+  it('IR-PRINCIPAL-001 AC-2: token 차단 단계는 active만 미완이고 pending/rejected/suspended는 완료다', () => {
+    const observed = (['active', 'pending', 'rejected', 'suspended'] as const).map((status) => {
+      stores.principals.setStatus(떠나는이.id, status);
+      return [status, offboardingCard(stores, 떠나는이.id)!.steps[1]!.done] as const;
+    });
+
+    expect(observed).toEqual([
+      ['active', false],
+      ['pending', true],
+      ['rejected', true],
+      ['suspended', true],
+    ]);
+  });
+
   it('AC-1: 네 단계가 순서대로 온다', () => {
     const 카드 = offboardingCard(stores, 떠나는이.id)!;
 

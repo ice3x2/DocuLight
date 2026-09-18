@@ -1,11 +1,11 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
-import type { PrincipalRow, RevocationBody, RevocationScope } from '../api/client.js';
+import type { PrincipalRow, RevocationBody, RevocationScope, RevocationSubject } from '../api/client.js';
 import { ConfirmGate } from '../confirm/ConfirmGate.js';
 import { PrincipalPicker } from '../principal/PrincipalPicker.js';
 
 export type AuditQuery<T> = { state: 'idle' } | { state: 'loading' } | { state: 'ready'; data: T } | { state: 'error'; onRetry: () => void };
-export interface SubjectPlan { subject: PrincipalRow; response: RevocationBody }
+export interface SubjectPlan { subject: RevocationSubject; response: RevocationBody }
 export interface BulkPlan { subjects: readonly SubjectPlan[] }
 export interface RevokeSubjectResult { revocation: RevocationBody; refreshFailed: boolean }
 export type SubjectOutcome =
@@ -20,7 +20,7 @@ const SCOPE_NOTE: Record<RevocationScope, string> = {
 const SYSTEM_GROUP_NOTE = '시스템 그룹입니다. 걷힌 항목은 가입·활성화 절차로 되살아나지 않습니다.';
 const LEVEL = { view: '보기', edit: '편집', admin: '관리' } as const;
 
-function inspectPlan(plan: BulkPlan, subjects: readonly PrincipalRow[]) {
+function inspectPlan(plan: BulkPlan, subjects: readonly RevocationSubject[]) {
   const expected = subjects.map((subject) => subject.id);
   const actual = plan.subjects.map(({ subject }) => subject.id);
   if (new Set(expected).size !== expected.length || expected.join('\u0000') !== actual.join('\u0000')) return { valid: false, total: 0, scope: null } as const;
@@ -45,15 +45,17 @@ function identity(plan: BulkPlan) {
 export interface BulkRevokeProps {
   contextKey: string;
   workspaceId: string;
-  subjects: readonly PrincipalRow[];
+  subjects: readonly RevocationSubject[];
   plan: AuditQuery<BulkPlan>;
   onPick: (row: PrincipalRow) => void;
   onRemove: (id: string) => void;
-  onPreview: (subjects: readonly PrincipalRow[]) => Promise<BulkPlan>;
+  onPreview: (subjects: readonly RevocationSubject[]) => Promise<BulkPlan>;
   onRevokeSubject: (principalId: string) => Promise<RevokeSubjectResult>;
+  onOffboard?: (subject: RevocationSubject) => void;
+  onFlowExit?: () => void;
 }
 
-export function BulkRevokePanel({ contextKey, workspaceId, subjects, plan: current, onPick, onRemove, onPreview, onRevokeSubject }: BulkRevokeProps) {
+export function BulkRevokePanel({ contextKey, workspaceId, subjects, plan: current, onPick, onRemove, onPreview, onRevokeSubject, onOffboard, onFlowExit }: BulkRevokeProps) {
   const actionRef = useRef<HTMLButtonElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const removeRefs = useRef(new Map<string, HTMLButtonElement>());
@@ -148,6 +150,7 @@ export function BulkRevokePanel({ contextKey, workspaceId, subjects, plan: curre
       setOutcomes(next);
       if (!isCurrent(request)) return;
       setGatePlan(null);
+      onFlowExit?.();
     } catch {
       if (!isCurrent(request)) return;
       setGatePlan(null);
@@ -173,6 +176,7 @@ export function BulkRevokePanel({ contextKey, workspaceId, subjects, plan: curre
     {subjects.length === 0 ? <p>회수할 사용자 또는 그룹을 선택하세요.</p> : <ul className="acl-subject-list" data-testid="revocation-subjects">{subjects.map((subject) => <li key={subject.id}>
       <span>{subject.name} · {subject.kind === 'user' ? '사용자' : '그룹'}</span>
       {subject.system === true ? <span data-testid="system-group-notice">{SYSTEM_GROUP_NOTE}</span> : null}
+      {subject.kind === 'user' && onOffboard !== undefined ? <button type="button" aria-label="오프보딩 열기" data-offboarding-principal-id={subject.id} onClick={() => onOffboard(subject)}>오프보딩</button> : null}
       <button ref={(node) => { if (node === null) removeRefs.current.delete(subject.id); else removeRefs.current.set(subject.id, node); }} type="button" aria-label={`${subject.name} 제거`} onClick={() => removeSubject(subject.id)}>선택에서 제거</button>
     </li>)}</ul>}
     {current.state === 'idle' ? <p role="status">회수할 주체를 선택하세요.</p> : null}
@@ -186,6 +190,6 @@ export function BulkRevokePanel({ contextKey, workspaceId, subjects, plan: curre
     {message === null ? null : <p role="alert">{message}</p>}
     <button ref={actionRef} type="button" disabled={subjects.length === 0 || opening || current.state !== 'ready' || checked?.valid !== true || checked.total === 0} onClick={() => { void openGate(); }}>{opening ? '미리보기 확인 중…' : '권한 전부 회수'}</button>
     {outcomes.length === 0 ? null : <div><p>확정 합계 {confirmedTotal}건</p><ul aria-label="회수 실행 결과">{outcomes.map((outcome) => <li key={outcome.subjectId} data-subject-id={outcome.subjectId} data-outcome-state={outcome.state}>{subjects.find((item) => item.id === outcome.subjectId)?.name ?? outcome.subjectId}: {outcome.state === 'completed' ? <><span>완료 · 실제 {outcome.result.revocation.rows.length}건</span>{outcome.result.revocation.rows.length === 0 ? null : <ul>{outcome.result.revocation.rows.map((item) => <li key={item.entryId}>{item.path ?? item.workspaceName}</li>)}</ul>}{outcome.result.refreshFailed ? <p role="alert">회수는 완료되었지만 화면 새로고침에 실패했습니다.</p> : null}</> : outcome.state === 'unconfirmed' ? '결과 확인 필요' : '실행하지 않음'}</li>)}</ul></div>}
-    <ConfirmGate open={gatePlan !== null} grade="L3" title="선택한 주체의 권한을 회수합니다" token={gateInspection === null ? null : String(gateInspection.total)} restoreFocusRef={actionRef} onConfirm={execute} onCancel={() => setGatePlan(null)}>{gatePlan === null || gateInspection === null ? null : <><p data-testid="revocation-tally">주체 {gatePlan.subjects.length}개 · 항목 {gateInspection.total}건</p><ul>{gatePlan.subjects.map(({ subject }) => <li key={subject.id}>{subject.name} · {subject.kind === 'user' ? '사용자' : '그룹'}</li>)}</ul><p>{SCOPE_NOTE[gateInspection.scope!]}</p></>}</ConfirmGate>
+    <ConfirmGate open={gatePlan !== null} grade="L3" title="선택한 주체의 권한을 회수합니다" token={gateInspection === null ? null : String(gateInspection.total)} restoreFocusRef={actionRef} onConfirm={execute} onCancel={() => { setGatePlan(null); onFlowExit?.(); }}>{gatePlan === null || gateInspection === null ? null : <><p data-testid="revocation-tally">주체 {gatePlan.subjects.length}개 · 항목 {gateInspection.total}건</p><ul>{gatePlan.subjects.map(({ subject }) => <li key={subject.id}>{subject.name} · {subject.kind === 'user' ? '사용자' : '그룹'}</li>)}</ul><p>{SCOPE_NOTE[gateInspection.scope!]}</p></>}</ConfirmGate>
   </section>;
 }

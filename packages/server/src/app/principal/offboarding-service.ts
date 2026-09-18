@@ -1,7 +1,7 @@
 import type { AclRepository } from '../../domain/ports/acl-repository.js';
 import type { PrincipalRepository } from '../../domain/ports/principal-repository.js';
 import type { TokenRepository } from '../../domain/ports/token-repository.js';
-import type { PrincipalId } from '../../domain/principal/principal.js';
+import type { PrincipalId, PrincipalStatus } from '../../domain/principal/principal.js';
 import { DEFAULT_GROUP_ID, SUPERUSER_GROUP_ID, isSystemGroup } from '../../domain/principal/system-groups.js';
 
 /**
@@ -33,6 +33,7 @@ export interface OffboardingStep {
 export interface OffboardingCard {
   readonly principalId: PrincipalId;
   readonly principalName: string;
+  readonly principalStatus: PrincipalStatus;
   readonly steps: readonly OffboardingStep[];
 }
 
@@ -66,16 +67,17 @@ export function offboardingCard(
   const account = stores.principals.findById(principalId);
   if (account === undefined || account.kind !== 'user') return null;
 
-  const suspended = account.status !== 'active';
+  const suspended = account.status === 'suspended';
   const remaining = stores.acl.entriesOfPrincipal(principalId).length;
 
   return {
     principalId,
     principalName: account.name,
+    principalStatus: account.status,
     steps: [
       { id: 'suspend', done: suspended },
       // 계정이 닫히면 그 계정의 토큰도 함께 닫힌다 — 같은 사실이다.
-      { id: 'tokens', done: suspended },
+      { id: 'tokens', done: account.status !== 'active' },
       {
         id: 'memberships',
         done: nonSystemGroupsOf(stores, principalId).length === 0,

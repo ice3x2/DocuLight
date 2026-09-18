@@ -36,6 +36,7 @@ const BADGE: Record<RosterUserStatus, BadgeVariant> = {
 export function UserRoster({
   users = [],
   onRegister,
+  onOffboard,
 }: {
   users?: readonly RosterUser[];
   /**
@@ -46,6 +47,7 @@ export function UserRoster({
    * 슈퍼유저 판정은 카테고리 관문이 이미 했으므로 여기서 다시 하지 않는다.
    */
   onRegister?: (input: { name: string; password: string }) => void;
+  onOffboard?: (userId: string) => void;
 }) {
   const [이름, set이름] = useState('');
   const [비밀번호, set비밀번호] = useState('');
@@ -61,6 +63,7 @@ export function UserRoster({
             <TableRow>
               <TableHead scope="col">이름</TableHead>
               <TableHead scope="col">상태</TableHead>
+              {onOffboard === undefined ? null : <TableHead scope="col">오프보딩</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -72,6 +75,7 @@ export function UserRoster({
                 <TableCell>
                   <Badge data-testid="roster-status" variant={BADGE[user.status]}>{LABEL[user.status]}</Badge>
                 </TableCell>
+                {onOffboard === undefined ? null : <TableCell><Button type="button" variant="secondary" aria-label="오프보딩 열기" data-offboarding-principal-id={user.id} onClick={() => onOffboard(user.id)}>오프보딩</Button></TableCell>}
               </TableRow>
             ))}
           </TableBody>

@@ -17,6 +17,7 @@ const WEB = existsSync(resolve(process.cwd(), 'src/main.tsx'))
 const 카드 = (over: Partial<OffboardingCardBody> = {}): OffboardingCardBody => ({
   principalId: 'u1',
   principalName: '떠나는이',
+  principalStatus: 'active',
   steps: [
     { id: 'suspend', done: false },
     { id: 'tokens', done: false },
@@ -30,7 +31,9 @@ describe('FR-PRINCIPAL-003 — 네 단계를 한 화면에서 안내한다', () 
   it('AC-1: 네 단계가 순서대로 그려진다', () => {
     render(<OffboardingCard card={카드()} />);
 
-    const 단계 = screen.getAllByTestId('offboarding-step').map((one) => one.textContent);
+    const 단계 = screen.getAllByTestId('offboarding-step').map((one) =>
+      one.querySelector('[data-step-title]')?.textContent,
+    );
 
     expect(단계).toEqual(['계정 비활성화', '액세스 토큰 무효화', '그룹 멤버십 제거', '권한 일괄 회수']);
   });
@@ -114,6 +117,7 @@ describe('CON-PRINCIPAL-004 — 카드는 하나뿐이고 상태를 들지 않�
     const 진행중 = {
       principalId: 'u1',
       principalName: '한범',
+      principalStatus: 'active' as const,
       steps: [
         { id: 'suspend' as const, done: false },
         { id: 'tokens' as const, done: false },
@@ -131,6 +135,7 @@ describe('CON-PRINCIPAL-004 — 카드는 하나뿐이고 상태를 들지 않�
     // 않는다 — 바뀌면 화면이 서버와 어긋난 자기 진행 상태를 든 것이다.
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: '계정 비활성화' }));
+    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: '취소' }));
     await user.click(screen.getByRole('button', { name: /그룹 멤버십 제거/ }));
 
     // **확인이 열려 있는 동안에도** 아무것도 완료가 아니다 — 닫힌 뒤에만
@@ -170,6 +175,7 @@ describe('FR-CONFIRM-009 · FR-CONFIRM-023 — 오프보딩의 확인 단계', (
   const 카드 = (over: Record<string, unknown> = {}) => ({
     principalId: 'u1',
     principalName: '한범',
+    principalStatus: 'active' as const,
     steps: [
       { id: 'suspend' as const, done: false },
       { id: 'tokens' as const, done: false },
