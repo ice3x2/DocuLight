@@ -47,6 +47,7 @@ import {
   setUserStatus,
   type RosterUserStatus,
   fetchRevocation,
+  fetchIndexQueue,
   revokeAllFor,
   type PrincipalRow,
   type RevocationSubject,
@@ -1212,6 +1213,8 @@ function AppBody() {
   return (
     <AppShell
       viewer={session.data}
+      fetchIndexQueue={fetchIndexQueue}
+      indexQueueContextKey={`${userId ?? 'pending'}:${authGeneration}:${session.data.superuser ? 'super' : 'member'}`}
       workspaces={workspaces}
       treeState={treeState}
       documents={documents}

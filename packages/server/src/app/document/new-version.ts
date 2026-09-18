@@ -1,5 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { createHash } from 'node:crypto';
 
 import { permissionOf, type Actor } from '../acl/permission-service.js';
 import { uploadLimitBytes } from '../attachment/attachment-service.js';
@@ -9,6 +10,8 @@ import type { NodeId } from '../../domain/node/node-id.js';
 import { isServable } from '../../domain/serving/servable.js';
 import { beginEditSession, snapshotIfFirstSave } from './version-service.js';
 import { workspaceRootOf, type DocumentStores } from './save-service.js';
+import { contentHash } from '../../domain/document/content-hash.js';
+import { isTextIndexName } from '../search/text-index-source.js';
 
 export type NewVersionRule = 'unknown-node' | 'forbidden' | 'not-a-file' | 'too-large';
 
@@ -74,6 +77,12 @@ export async function uploadNewVersion(
 
   const root = workspaceRootOf(stores, node.workspaceId);
   const path = join(root, stores.nodes.pathOf(input.nodeId));
+  const fingerprint = node.name.toLowerCase().endsWith('.pdf')
+    ? createHash('sha256').update(input.bytes).digest('hex')
+    : contentHash(input.bytes.toString('utf8'));
+  const indexing = isTextIndexName(node.name)
+    ? stores.textIndex?.prepare(input.nodeId, fingerprint, stores.clock().toISOString())
+    : undefined;
 
   // 덮기 **전에** 스냅샷을 찍는다. md 가 아니면 스냅샷이 생기지 않고,
   // 그 사실이 `warnsIrreversible` 의 경고를 참으로 만든다.
@@ -88,6 +97,9 @@ export async function uploadNewVersion(
   }
 
   await writeFile(path, input.bytes);
+  if (indexing !== undefined) {
+    try { stores.textIndex?.ready(input.nodeId, indexing.generation, fingerprint); } catch { /* durable prepared work remains */ }
+  }
 
   // **재현처가 없는 것만** 남긴다 (`OBS-AUDIT-004`). 위에서 스냅샷이
   // 생겼다면 그 이력이 행위자와 시각을 영구히 들고, 같은 사실을 두 곳에

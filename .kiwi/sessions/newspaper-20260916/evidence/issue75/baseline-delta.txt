@@ -1,0 +1,3 @@
+﻿HEAD b4428be2aba72172ba7444fd4e69cb71261b147d
+Initial worktree status: clean before issue #75 implementation.
+Dependency environment: worktree-owned npm ci; no junction created.

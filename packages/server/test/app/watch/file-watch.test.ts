@@ -11,6 +11,7 @@ import { FINDING_TYPE } from '../../../src/domain/reconciliation/vocabulary.js';
 import { FsWorkspaceFiles } from '../../../src/infra/fs/workspace-sidecar.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
 import { attachmentStores, superuserActor } from '../../support/acl-fixture.js';
+import { SqliteTextIndexRepository } from '../../../src/infra/sqlite/text-index-repository.js';
 
 /**
  * 파일 감시가 상관 판정을 실제로 돌린다 (`REL-STORAGE-002`).
@@ -185,5 +186,18 @@ describe('파일 감시가 상관 판정을 돌린다', () => {
     await new Promise((done) => setTimeout(done, 500));
 
     expect(readsAfterStop, 'stop() 이 돌아온 뒤에도 감시자가 노드 저장소를 읽었다').toBe(0);
+  });
+
+  it('FR-STORAGE-010 AC-1: 외부 본문 변경은 같은 노드의 durable pending 색인 작업을 만든다', async () => {
+    const { id, at } = await 문서('외부.md', '처음\n');
+    const textIndex = new SqliteTextIndexRepository(db);
+    watch = await startFileWatch(Object.assign(stores, { textIndex }), docsRoot, { windowMs: 120 });
+    await watch.ready();
+
+    await writeFile(at, '외부 변경\n', 'utf8');
+    await watch.seen(1);
+    await watch.settle();
+
+    expect(textIndex.snapshot().items).toContainEqual(expect.objectContaining({ nodeId: id, status: 'pending' }));
   });
 });

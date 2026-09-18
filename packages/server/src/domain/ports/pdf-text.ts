@@ -28,3 +28,11 @@ export interface PdfTextExtractor {
    */
   extract(bytes: Uint8Array): Promise<readonly PdfPageText[]>;
 }
+
+export type PdfExtractionResult =
+  | { ok: true; pages: readonly PdfPageText[] }
+  | { ok: false; errorCode: 'parse_failed' };
+
+export interface StrictPdfTextExtractor {
+  extractStrict(bytes: Uint8Array): Promise<PdfExtractionResult>;
+}

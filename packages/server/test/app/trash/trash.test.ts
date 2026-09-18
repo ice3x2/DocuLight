@@ -30,6 +30,8 @@ import {
 import { TRASH_DIRECTORY } from '../../../src/domain/trash/trash-layout.js';
 import { FsWorkspaceFiles } from '../../../src/infra/fs/workspace-sidecar.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
+import { SqliteTextIndexRepository } from '../../../src/infra/sqlite/text-index-repository.js';
+import { contentHash } from '../../../src/domain/document/content-hash.js';
 import { documentStores, superuserActor, trashStores } from '../../support/acl-fixture.js';
 
 let dir: string;
@@ -634,5 +636,87 @@ describe('SEC-STORAGE-008 — 영구 삭제는 버전 이력도 함께 걷는다
 
     expect(existsSync(버전자리(남을것)), '남의 버전까지 걷어 갔다').toBe(true);
     expect(listVersions(docs, root, 남을것)).toHaveLength(1);
+  });
+  it('file restore는 fingerprint/prepared를 relocate 전에 만들고 같은 generation을 ready로 승격한다', async () => {
+    const doc = await place(ws, 'atomic.md');
+    const textIndex = new SqliteTextIndexRepository(db);
+    Object.assign(stores, { textIndex });
+    await moveToTrash(stores, root, doc);
+    const events: string[] = [];
+    const originalPrepare = textIndex.prepare.bind(textIndex);
+    textIndex.prepare = ((...args: Parameters<typeof textIndex.prepare>) => { events.push('prepare'); return originalPrepare(...args); }) as typeof textIndex.prepare;
+    const originalRelocate = stores.nodes.relocate.bind(stores.nodes);
+    stores.nodes.relocate = ((...args: Parameters<typeof stores.nodes.relocate>) => { events.push('relocate'); return originalRelocate(...args); }) as typeof stores.nodes.relocate;
+
+    expect(await restoreFromTrash(stores, root, doc)).toEqual({ ok: true, name: 'atomic.md' });
+
+    expect(events).toEqual(['prepare', 'relocate']);
+    expect(textIndex.prepared()).toEqual([]);
+    expect(textIndex.isCurrentOrQueued(doc, contentHash('# atomic.md\n'))).toBe(true);
+  });
+
+  it('directory restore는 모든 eligible descendant를 prepare한 뒤 root를 relocate한다', async () => {
+    const folder = idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name: 'folder' }));
+    const first = await place(ws, 'first.md', folder);
+    const second = await place(ws, 'second.pdf', folder);
+    const textIndex = new SqliteTextIndexRepository(db);
+    Object.assign(stores, { textIndex });
+    await moveToTrash(stores, root, folder);
+    const events: string[] = [];
+    const originalPrepare = textIndex.prepare.bind(textIndex);
+    textIndex.prepare = ((nodeId: string, ...rest: Parameters<typeof textIndex.prepare> extends [string, ...infer R] ? R : never) => { events.push(`prepare:${nodeId}`); return originalPrepare(nodeId, ...rest); }) as typeof textIndex.prepare;
+    const originalRelocate = stores.nodes.relocate.bind(stores.nodes);
+    stores.nodes.relocate = ((...args: Parameters<typeof stores.nodes.relocate>) => { events.push('relocate'); return originalRelocate(...args); }) as typeof stores.nodes.relocate;
+
+    expect((await restoreFromTrash(stores, root, folder)).ok).toBe(true);
+
+    expect(events).toEqual(expect.arrayContaining([`prepare:${first}`, `prepare:${second}`, 'relocate']));
+    expect(events.indexOf('relocate')).toBeGreaterThan(events.indexOf(`prepare:${first}`));
+    expect(events.indexOf('relocate')).toBeGreaterThan(events.indexOf(`prepare:${second}`));
+  });
+
+  it.each(['file', 'directory'] as const)('%s restore prepare 실패는 metadata와 trash source를 그대로 둔다', async (kind) => {
+    const target = kind === 'file'
+      ? await place(ws, 'abort.md')
+      : idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name: 'abort-folder' }));
+    if (kind === 'directory') await place(ws, 'child.md', target);
+    const textIndex = new SqliteTextIndexRepository(db);
+    Object.assign(stores, { textIndex });
+    await moveToTrash(stores, root, target);
+    textIndex.prepare = (() => { throw new Error('injected prepare failure'); }) as typeof textIndex.prepare;
+
+    await expect(restoreFromTrash(stores, root, target)).rejects.toThrow('injected prepare failure');
+
+    expect(stores.nodes.findById(target)?.trashedAt).not.toBeNull();
+    expect(stores.trash.find(target)).toBeDefined();
+  });
+
+  it('restore ready 실패는 accepted result와 durable prepared obligation을 보존한다', async () => {
+    const doc = await place(ws, 'promotion.md');
+    const textIndex = new SqliteTextIndexRepository(db);
+    Object.assign(stores, { textIndex });
+    await moveToTrash(stores, root, doc);
+    textIndex.ready = (() => false) as typeof textIndex.ready;
+
+    expect(await restoreFromTrash(stores, root, doc)).toEqual({ ok: true, name: 'promotion.md' });
+    expect(textIndex.prepared()).toMatchObject([{ nodeId: doc, expectedFingerprint: contentHash('# promotion.md\n') }]);
+  });
+  it.each(['file', 'directory'] as const)('%s restore moveOut crash는 relocated metadata와 prepared obligation을 보존한다', async (kind) => {
+    const target = kind === 'file'
+      ? await place(ws, 'crash.md')
+      : idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name: 'crash-folder' }));
+    const eligible = kind === 'file' ? [target] : [await place(ws, 'child.md', target), await place(ws, 'child.pdf', target)];
+    const textIndex = new SqliteTextIndexRepository(db);
+    Object.assign(stores, { textIndex });
+    await moveToTrash(stores, root, target);
+    if (kind === 'file') await place(ws, 'crash.md');
+    else createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name: 'crash-folder' });
+    stores.trashFiles.moveOut = async () => { throw new Error('injected moveOut crash'); };
+
+    await expect(restoreFromTrash(stores, root, target)).rejects.toThrow('injected moveOut crash');
+
+    expect(stores.nodes.findById(target)?.name).not.toBe(kind === 'file' ? 'crash.md' : 'crash-folder');
+    expect(stores.trash.find(target)).toBeDefined();
+    expect(textIndex.prepared().map((job) => job.nodeId).sort()).toEqual([...eligible].sort());
   });
 });

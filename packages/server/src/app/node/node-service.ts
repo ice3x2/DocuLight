@@ -23,6 +23,8 @@ import {
 } from '../acl/permission-service.js';
 import { replicateAttachments, type AttachmentStores } from '../attachment/attachment-service.js';
 import { workspaceRootOf } from '../document/save-service.js';
+import { isTextIndexName, textIndexFingerprint } from '../search/text-index-source.js';
+import type { SqliteTextIndexRepository } from '../../infra/sqlite/text-index-repository.js';
 
 /**
  * 복사가 요구하는 저장소 — 노드보다 넓다.
@@ -31,7 +33,7 @@ import { workspaceRootOf } from '../document/save-service.js';
  * 파일시스템과 첨부 저장소가 함께 있어야 한다. 좁은 묶음으로 받고 안에서
  * 캐스팅하면 그 사실이 타입에서 사라진다.
  */
-export type CopyStores = AttachmentStores;
+export type CopyStores = AttachmentStores & { textIndex?: SqliteTextIndexRepository };
 
 /**
  * 새 이름이 들어오는 진입점들 — 생성·개명·이동·업로드
@@ -428,17 +430,33 @@ async function replicate(
    */
   correlationId: string,
 ): Promise<Copied | Rejected> {
-  const made = createNode(
-    stores,
-    actor,
-    {
-      workspaceId: at.workspaceId,
-      parentId: at.parentId,
-      kind: source.kind,
-      name: source.name,
-    },
-    { correlationId },
-  );
+  const sourceBody = source.kind === 'file'
+    ? await readIfPresent(join(workspaceRootOf(stores, source.workspaceId), stores.nodes.pathOf(source.id)))
+    : null;
+  const fingerprint = sourceBody !== null && isTextIndexName(source.name)
+    ? textIndexFingerprint(source.name, sourceBody)
+    : undefined;
+  let prepared: { nodeId: string; generation: number } | undefined;
+  const create = () => {
+    const result = createNode(
+      stores,
+      actor,
+      {
+        workspaceId: at.workspaceId,
+        parentId: at.parentId,
+        kind: source.kind,
+        name: source.name,
+      },
+      { correlationId },
+    );
+    if (result.ok && fingerprint !== undefined && stores.textIndex !== undefined) {
+      prepared = stores.textIndex.prepare(result.id, fingerprint);
+    }
+    return result;
+  };
+  const made = fingerprint !== undefined && stores.textIndex !== undefined
+    ? stores.textIndex.transaction(create)
+    : create();
   if (!made.ok) return made;
 
   // **사본 자리 행은 언제나 생긴다** (`OBS-AUDIT-007` AC-1) — 노드가
@@ -473,8 +491,9 @@ async function replicate(
   let copied = 1;
 
   if (source.kind === 'file') {
-    await copyBody(stores, source, made.id, at.workspaceId);
+    await copyBody(stores, made.id, at.workspaceId, sourceBody);
     await replicateAttachments(stores, source.id, { nodeId: made.id, workspaceId: at.workspaceId });
+    if (prepared !== undefined && fingerprint !== undefined) stores.textIndex?.ready(made.id, prepared.generation, fingerprint);
     return { ...made, copied };
   }
 
@@ -508,14 +527,11 @@ async function replicate(
  */
 async function copyBody(
   stores: CopyStores,
-  source: NodeRecord,
   targetId: NodeId,
   workspaceId: string,
+  body: Buffer | null,
 ): Promise<void> {
-  const from = join(workspaceRootOf(stores, source.workspaceId), stores.nodes.pathOf(source.id));
   const to = join(workspaceRootOf(stores, workspaceId), stores.nodes.pathOf(targetId));
-
-  const body = await readIfPresent(from);
   if (body === null) return;
 
   await mkdir(dirname(to), { recursive: true });

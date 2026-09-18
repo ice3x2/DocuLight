@@ -78,6 +78,15 @@ export interface SessionBody {
 
 export const fetchSession = () => call<SessionBody>('/session');
 
+export interface IndexQueueBody {
+  counts: { pending: number; running: number; failed: number };
+  total: number;
+  limit: 100;
+  items: Array<{ nodeId: string; name: string; workspaceName: string; status: 'pending' | 'running' | 'failed'; requestedAt: string; errorCode?: 'read_failed' | 'parse_failed' | 'index_failed' }>;
+}
+
+export const fetchIndexQueue = () => call<IndexQueueBody>('/index-queue');
+
 /** 현재 세션의 실제 사용자 ID. 테마 캐시와 사용자별 질의 키의 주체다. */
 export const fetchIdentity = () => call<{ userId: string }>('/auth/me');
 

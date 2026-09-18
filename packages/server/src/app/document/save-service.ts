@@ -12,6 +12,8 @@ import type { VersionRepository } from '../../domain/ports/version-repository.js
 import type { VectorIndex } from '../../domain/ports/vector-index.js';
 import { indexNode } from '../search/index-node.js';
 import { snapshotIfFirstSave } from './version-service.js';
+import type { SqliteTextIndexRepository } from '../../infra/sqlite/text-index-repository.js';
+import { isTextIndexName } from '../search/text-index-source.js';
 
 export interface DocumentStores extends AclStores {
   versions: VersionRepository;
@@ -26,6 +28,7 @@ export interface DocumentStores extends AclStores {
    * 갈린다 — 없으면 없는 대로 저장은 성립한다.
    */
   vectors?: VectorIndex;
+  textIndex?: SqliteTextIndexRepository;
 }
 
 export type SaveRule = 'unknown-node' | 'forbidden' | 'conflict';
@@ -144,6 +147,12 @@ export async function saveDocument(
     return { ok: false, rule: 'conflict', current };
   }
 
+  const nextHash = contentHash(input.body);
+  const node = stores.nodes.findById(input.nodeId);
+  const indexing = node !== undefined && isTextIndexName(node.name)
+    ? stores.textIndex?.prepare(input.nodeId, nextHash, stores.clock().toISOString())
+    : undefined;
+
   await snapshotIfFirstSave(stores, actor, {
     nodeId: input.nodeId,
     workspaceId: found.workspaceId,
@@ -153,6 +162,10 @@ export async function saveDocument(
   });
 
   await writeFile(found.path, input.body, 'utf8');
+
+  if (indexing !== undefined) {
+    try { stores.textIndex?.ready(input.nodeId, indexing.generation, nextHash); } catch { /* prepared obligation remains durable */ }
+  }
 
   // **쓴 뒤에 색인한다** (`FR-ARCH-001` AC-4). 거절된 저장은 여기까지 오지
   // 못하므로 색인이 실제 문서에 없는 문장을 가리키는 일이 없다.
@@ -164,5 +177,5 @@ export async function saveDocument(
     await indexNode({ ...stores, vectors: stores.vectors }, input.nodeId);
   }
 
-  return { ok: true, hash: contentHash(input.body) };
+  return { ok: true, hash: nextHash };
 }

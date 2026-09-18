@@ -1,0 +1,13 @@
+﻿Server full regression
+command: npm test --workspace @doculight/server -- --run
+result: 1475 passed / 1476 total; 1 unchanged baseline failure
+failure: test/http/install-assembly.test.ts expects /theme-bootstrap.js 200 but HEAD INSTALL_ALLOWLIST permits /assets and returns 503. Reproduced in isolation. No issue #75 file changes install-gate.ts or static-spa.ts.
+
+Web full regression
+command: npm test --workspace @doculight/web -- --run
+result: 1094 passed / 1095 total; 1 unchanged baseline failure
+failure: test/token-panel.test.tsx happy-dom computed style returns empty color strings. Reproduced in isolation. No issue #75 TokenPanel code changed.
+
+Editor regression
+command: npm test --workspace @doculight/editor -- --run
+result: 260 passed, 1 skipped, 1 unchanged architecture oracle failure naming only pre-existing App.tsx/NewWorkspaceForm.tsx/WorkspaceList.tsx controlled-value matches.

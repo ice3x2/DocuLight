@@ -1,5 +1,5 @@
-import { rm } from 'node:fs/promises';
-import { basename } from 'node:path';
+import { readFile, rm } from 'node:fs/promises';
+import { basename, join, relative } from 'node:path';
 
 import { permissionBatch, permissionOf, type AclStores, type Actor } from '../acl/permission-service.js';
 import type { Clock } from '../auth/login-service.js';
@@ -10,6 +10,9 @@ import type { VersionRepository } from '../../domain/ports/version-repository.js
 import type { VectorIndex } from '../../domain/ports/vector-index.js';
 import { subtreeIdsOf } from '../node/node-service.js';
 import { SYSTEM_RETENTION } from '../../domain/principal/system-principals.js';
+import { isTextIndexName, textIndexFingerprint } from '../search/text-index-source.js';
+import type { SqliteTextIndexRepository } from '../../infra/sqlite/text-index-repository.js';
+import { trashDirectoryOf } from '../../domain/trash/trash-layout.js';
 
 /**
  * 영구 삭제의 조작 값 (`OBS-AUDIT-001`).
@@ -60,6 +63,7 @@ export interface TrashStores extends AclStores, AttachmentPurgeStores {
    * 안에서 따라간다.
    */
   vectors?: VectorIndex;
+  textIndex?: SqliteTextIndexRepository;
 }
 
 export type TrashRule = 'unknown-node' | 'forbidden' | 'not-in-trash' | 'parent-gone';
@@ -158,8 +162,9 @@ export async function moveToTrash(
   // (`DR-AUDIT-003` AC-3), 위치 변화는 이전값·이후값이 담는다.
   // 한 조작이 낸 행들이므로 상관 키를 함께 싣는다 (`IR-AUDIT-003` AC-9) —
   // 없으면 서브트리 하나가 뷰어에서 하위 수만큼의 줄로 갈린다.
+  const affected = subtreeIdsOf(stores.nodes, node);
   const correlationId = stores.audit.newCorrelation();
-  for (const id of subtreeIdsOf(stores.nodes, node)) {
+  for (const id of affected) {
     stores.audit.append({
       operation: NODE_TRASH,
       actor: actor.id,
@@ -169,6 +174,7 @@ export async function moveToTrash(
       correlationId,
     });
   }
+  for (const id of affected) stores.textIndex?.remove(id);
 
   return { ok: true };
 }
@@ -254,7 +260,30 @@ export async function restoreFromTrash(
       .map((sibling) => sibling.name),
   );
 
-  stores.nodes.relocate(nodeId, { parentId, name });
+  const restored = stores.nodes.findById(nodeId);
+  const plans: { nodeId: NodeId; fingerprint: string }[] = [];
+  if (stores.textIndex !== undefined && restored !== undefined) {
+    const trashRoot = join(stores.docsRoot, entry.workspaceId, trashDirectoryOf(nodeId), basename(entry.originalPath));
+    for (const id of subtreeIdsOf(stores.nodes, restored)) {
+      const candidate = stores.nodes.findById(id);
+      if (candidate?.kind !== 'file') continue;
+      const restoredName = id === nodeId ? name : candidate.name;
+      if (!isTextIndexName(restoredName)) continue;
+      const suffix = relative(entry.originalPath, stores.nodes.pathOf(id));
+      const bytes = await readFile(join(trashRoot, suffix));
+      plans.push({ nodeId: id, fingerprint: textIndexFingerprint(restoredName, bytes) });
+    }
+  }
+  const prepared: { nodeId: NodeId; generation: number; fingerprint: string }[] = [];
+  const prepareAndRelocate = () => {
+    for (const plan of plans) {
+      const job = stores.textIndex!.prepare(plan.nodeId, plan.fingerprint);
+      prepared.push({ ...job, fingerprint: plan.fingerprint });
+    }
+    stores.nodes.relocate(nodeId, { parentId, name });
+  };
+  if (stores.textIndex !== undefined && plans.length > 0) stores.textIndex.transaction(prepareAndRelocate);
+  else prepareAndRelocate();
   await stores.trashFiles.moveOut(entry, basename(entry.originalPath), stores.nodes.pathOf(nodeId));
   stores.trash.remove(nodeId);
 
@@ -268,6 +297,8 @@ export async function restoreFromTrash(
     beforeValue: entry.originalPath,
     afterValue: stores.nodes.pathOf(nodeId),
   });
+
+  for (const job of prepared) stores.textIndex?.ready(job.nodeId, job.generation, job.fingerprint);
 
   return { ok: true, name };
 }
@@ -332,6 +363,8 @@ async function hardDelete(
   /** 회차 단위 일소가 낸 행들을 한 줄로 접는 값 (`IR-AUDIT-003` AC-9). */
   options: { correlationId?: string } = {},
 ): Promise<void> {
+  const root = stores.nodes.findById(entry.nodeId);
+  const affected = root === undefined ? [entry.nodeId] : subtreeIdsOf(stores.nodes, root);
   await stores.trashFiles.purge(entry);
   // 첨부를 **여기서** 걷는다 (`FR-ATTACH-005`). 휴지통으로 보내는 경로에는
   // 걸지 않는다(AC-3) — 복구할 수 있는 상태에서 첨부를 지우면 복구된
@@ -354,6 +387,7 @@ async function hardDelete(
   // 노드 제거가 그 서브트리의 ACL 도 함께 걷는다 — 복구할 수 없다는 것이
   // 이 조작의 내용이다.
   stores.nodes.remove(entry.nodeId);
+  for (const id of affected) stores.textIndex?.remove(id);
 
   stores.audit.append({
     operation: NODE_PURGE,

@@ -15,6 +15,7 @@ import { EmptyState as AccessEmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt, type NewVersionResult } from '../tree/NewVersionPrompt.js';
 import { RelocationDialog } from './RelocationDialog.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
+import { IndexQueueSurface, type IndexQueueSnapshot } from '../settings/IndexQueuePanel.js';
 import { WorkspaceManagementPanel, type WorkspaceAdministratorState, type WorkspaceQueryState, type WorkspaceRenameResult } from '../workspace/WorkspaceList.js';
 import type { WorkspaceCreateInput } from '../workspace/NewWorkspaceForm.js';
 import type { WorkspaceCreateBody } from '../api/client.js';
@@ -288,6 +289,8 @@ function SettingsModal({
   onAuthenticationLoss,
   onPasswordChange,
   workspaceManagement,
+  fetchIndexQueue,
+  indexQueueContextKey,
 }: {
   viewer: Viewer;
   trash?: readonly TrashRowView[];
@@ -360,6 +363,8 @@ function SettingsModal({
     creationStatus?: { kind: 'success' | 'refresh-error'; message: string };
     onRetryCreationRefresh?: () => void;
   };
+  fetchIndexQueue?: () => Promise<IndexQueueSnapshot>;
+  indexQueueContextKey?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('editor');
@@ -528,6 +533,8 @@ function SettingsModal({
                   />
                 ) : category.id === 'instance' ? (
                   <InstanceSettings />
+                ) : category.id === 'index-queue' ? (
+                  <IndexQueueSurface load={fetchIndexQueue ?? (() => Promise.reject(new Error('index queue unavailable')))} contextKey={indexQueueContextKey ?? 'anonymous:0:member'} />
                 ) : category.id === 'editor' || category.id === 'appearance' ? (
                   // 두 카테고리가 담는 것은 `IR-SHELL-004` 가 정한 셋뿐이다.
                   // 목록을 여기서 손으로 적지 않는 이유는, 적는 순간 계약과
@@ -718,6 +725,8 @@ export function AppShell({
   onAuthenticationLoss,
   onPasswordChange,
   workspaceManagement,
+  fetchIndexQueue,
+  indexQueueContextKey,
   onDelete,
   onRename,
   onRelocate,
@@ -871,6 +880,8 @@ export function AppShell({
     creationStatus?: { kind: 'success' | 'refresh-error'; message: string };
     onRetryCreationRefresh?: () => void;
   };
+  fetchIndexQueue?: () => Promise<IndexQueueSnapshot>;
+  indexQueueContextKey?: string;
   onDelete?: (nodeId: string) => void;
   onRename?: (nodeId: string, name: string) => void | Promise<string | undefined>;
   onRelocate?: (nodeId: string, kind: 'move' | 'copy', destinationId: string) => void;
@@ -1059,6 +1070,8 @@ export function AppShell({
             {...(onUserStatus === undefined ? {} : { onUserStatus })}
             {...(onRegisterUser === undefined ? {} : { onRegisterUser })}
             {...(workspaceManagement === undefined ? {} : { workspaceManagement })}
+            {...(fetchIndexQueue === undefined ? {} : { fetchIndexQueue })}
+            {...(indexQueueContextKey === undefined ? {} : { indexQueueContextKey })}
           />
         }
         // 트리만 내용을 갖는다. 검색·즐겨찾기는 그것을 소유한 요구가 서는

@@ -306,4 +306,22 @@ describe('SEC-WORKSPACE-004 — 검색 결과의 권한 필터', () => {
 
     expect(본것.documents).toEqual([]);
   });
+
+  it('FR-STORAGE-010 AC-4: projection 조회 중 권한이 철회되면 반환 직전 재검사에서 결과를 버린다', async () => {
+    await 문서('권한.md', 'old source');
+    const viewer = stores.principals.createUser('final-filter-viewer');
+    const granted = grantPermission(stores, root, { nodeId: ws, principalId: viewer.id, level: 'view' }) as { ok: true; entryId: string };
+    const indexed = Object.assign(stores, {
+      textIndex: {
+        projection: () => {
+          stores.acl.revoke(granted.entryId);
+          return { body: 'secret projection', tags: [], pages: [] };
+        },
+      },
+    });
+
+    const found = await search(indexed as Parameters<typeof search>[0], actorFor(stores.principals, viewer.id), { query: 'secret', axes: ['body'] });
+
+    expect(found.documents).toEqual([]);
+  });
 });

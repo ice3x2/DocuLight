@@ -15,11 +15,13 @@ import { workspaceApiRouter } from '../../src/http/routes/workspace-api.js';
 import { FsWorkspaceFiles } from '../../src/infra/fs/workspace-sidecar.js';
 import { openDatabase, type Database } from '../../src/infra/sqlite/database.js';
 import { attachmentStores, superuserActor } from '../support/acl-fixture.js';
+import { SqliteTextIndexRepository } from '../../src/infra/sqlite/text-index-repository.js';
+import { contentHash } from '../../src/domain/document/content-hash.js';
 
 let dir: string;
 let docsRoot: string;
 let db: Database;
-let stores: ReturnType<typeof attachmentStores> & { files: FsWorkspaceFiles };
+let stores: ReturnType<typeof attachmentStores> & { files: FsWorkspaceFiles; textIndex: SqliteTextIndexRepository };
 let root: Actor;
 let me: Actor;
 let ws: string;
@@ -36,7 +38,7 @@ beforeEach(async () => {
   docsRoot = join(dir, 'docs');
   await mkdir(docsRoot, { recursive: true });
   db = openDatabase(join(dir, 'doculight.db'));
-  stores = Object.assign(attachmentStores(db, docsRoot), { files: new FsWorkspaceFiles(docsRoot) });
+  stores = Object.assign(attachmentStores(db, docsRoot), { files: new FsWorkspaceFiles(docsRoot), textIndex: new SqliteTextIndexRepository(db) });
   root = superuserActor(stores);
   ws = (await createWorkspace({ workspaces: stores.workspaces, files: new FsWorkspaceFiles(docsRoot) }, '기획팀')).id;
   doc = idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'file', name: '회의록.md' }));
@@ -77,6 +79,113 @@ describe('세션 — 화면이 표시 조건을 세울 근거를 받는다 (`IR-
     actingAs = undefined;
 
     expect((await request(app).get('/api/session')).status).toBe(401);
+  });
+});
+
+describe('FR-STORAGE-010 AC-5 — 색인 대기열 읽기 API', () => {
+  it('세션 슈퍼유저만 읽고 비인증은 401, 일반/워크스페이스 관리자는 404다', async () => {
+    expect((await request(app).get('/api/index-queue')).status).toBe(200);
+    actingAs = undefined;
+    expect((await request(app).get('/api/index-queue')).status).toBe(401);
+    grantPermission(stores, root, { nodeId: ws, principalId: me.id, level: 'admin' });
+    actingAs = actorFor(stores.principals, me.id);
+    expect((await request(app).get('/api/index-queue')).status).toBe(404);
+  });
+
+  it('현재 이름과 안전한 스냅샷만 반환한다', async () => {
+    const job = stores.textIndex.prepare(doc, 'hash', '2026-09-18T00:00:00.000Z');
+    stores.textIndex.ready(doc, job.generation, 'hash');
+    const response = await request(app).get('/api/index-queue');
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({ counts: { pending: 1, running: 0, failed: 0 }, total: 1, limit: 100, items: [{ nodeId: doc, name: '회의록.md', workspaceName: '기획팀', status: 'pending' }] });
+    expect(JSON.stringify(response.body)).not.toMatch(/body|path|token|stack|generation|claim/i);
+  });
+
+  it('101건 counts/total은 slice 전 전체이며 stale 노드는 일관되게 제외한다', async () => {
+    for (let index = 0; index < 101; index += 1) {
+      const id = index === 100 ? doc : `missing-node-${index}`;
+      const job = stores.textIndex.prepare(id, `hash-${index}`, index === 100 ? '2026-09-19T00:00:00.000Z' : '2026-09-18T00:00:00.000Z');
+      stores.textIndex.ready(id, job.generation, `hash-${index}`);
+    }
+    const response = await request(app).get('/api/index-queue');
+    expect(response.body.total).toBe(1);
+    expect(response.body.counts).toEqual({ pending: 1, running: 0, failed: 0 });
+    expect(response.body.items).toHaveLength(1);
+  });
+
+  it('숨김/휴지통 조상 아래의 작업은 이름과 counts 모두에서 제외한다', async () => {
+    const folder = idOf(createNode(stores, root, { workspaceId: ws, parentId: null, kind: 'directory', name: '묶음' }));
+    await mkdir(fileOf(folder), { recursive: true });
+    const nested = idOf(createNode(stores, root, { workspaceId: ws, parentId: folder, kind: 'file', name: '비밀.md' }));
+    const job = stores.textIndex.prepare(nested, 'hash');
+    stores.textIndex.ready(nested, job.generation, 'hash');
+    expect((await request(app).delete(`/api/nodes/${folder}`)).status).toBe(204);
+
+    const response = await request(app).get('/api/index-queue');
+
+    expect(response.body).toMatchObject({ counts: { pending: 0, running: 0, failed: 0 }, total: 0, items: [] });
+    expect(JSON.stringify(response.body)).not.toContain('비밀.md');
+  });
+});
+
+describe('FR-STORAGE-010 AC-1 — 생성 source-ready outbox', () => {
+  it('검색 대상 문서 생성은 빈 source가 쓰인 뒤 pending으로 승격한다', async () => {
+    const response = await request(app).post('/api/nodes').send({ workspaceId: ws, parentId: null, kind: 'file', name: '새 기사.md' });
+    expect(response.status).toBe(200);
+    expect(stores.textIndex.snapshot().items).toContainEqual(expect.objectContaining({ nodeId: response.body.id, status: 'pending' }));
+  });
+
+  it('이미 존재하는 source를 채택하면 빈 문서가 아니라 실제 bytes fingerprint를 pending generation에 묶는다', async () => {
+    const existing = join(docsRoot, ws, '기존.md');
+    await writeFile(existing, '# 기존 본문\n', 'utf8');
+
+    const response = await request(app).post('/api/nodes').send({ workspaceId: ws, parentId: null, kind: 'file', name: '기존.md' });
+
+    expect(response.status).toBe(200);
+    expect(stores.textIndex.isCurrentOrQueued(response.body.id, contentHash('# 기존 본문\n'))).toBe(true);
+  });
+});
+
+describe('FR-STORAGE-010 AC-1/AC-4 — 노드 수명주기 색인 훅', () => {
+  const publish = (nodeId: string, fingerprint = contentHash('# 처음\n')) => {
+    const job = stores.textIndex.prepare(nodeId, fingerprint);
+    stores.textIndex.ready(nodeId, job.generation, fingerprint);
+    const claim = stores.textIndex.claimNext(`claim-${nodeId}`)!;
+    stores.textIndex.complete(claim, { body: '# 처음\n', tags: [], pages: [] });
+  };
+
+  it('md→비검색 확장자 rename은 projection/job을 retire하고 비검색→md는 실제 source를 enqueue한다', async () => {
+    publish(doc);
+    expect((await request(app).post(`/api/nodes/${doc}/rename`).send({ name: '회의록.txt' })).status).toBe(200);
+    expect(stores.textIndex.projection(doc)).toBeUndefined();
+    expect(stores.textIndex.snapshot().items.some((item) => item.nodeId === doc)).toBe(false);
+
+    expect((await request(app).post(`/api/nodes/${doc}/rename`).send({ name: '회의록.md' })).status).toBe(200);
+    expect(stores.textIndex.isCurrentOrQueued(doc, contentHash('# 처음\n'))).toBe(true);
+  });
+
+  it('copy는 사본 ID의 실제 source를 enqueue한다', async () => {
+    const response = await request(app).post(`/api/nodes/${doc}/copy`).send({ workspaceId: ws });
+    expect(response.status).toBe(200);
+    expect(stores.textIndex.isCurrentOrQueued(response.body.id, contentHash('# 처음\n'))).toBe(true);
+  });
+
+  it('trash는 projection/job을 retire하고 restore는 같은 ID의 실제 source를 다시 enqueue한다', async () => {
+    publish(doc);
+    expect((await request(app).delete(`/api/nodes/${doc}`)).status).toBe(204);
+    expect(stores.textIndex.projection(doc)).toBeUndefined();
+    expect(stores.textIndex.snapshot().items.some((item) => item.nodeId === doc)).toBe(false);
+
+    expect((await request(app).post(`/api/trash/${doc}/restore`)).status).toBe(204);
+    expect(stores.textIndex.isCurrentOrQueued(doc, contentHash('# 처음\n'))).toBe(true);
+  });
+
+  it('purge는 휴지통 동안 생긴 stale projection/job까지 제거한다', async () => {
+    expect((await request(app).delete(`/api/nodes/${doc}`)).status).toBe(204);
+    publish(doc);
+    expect((await request(app).delete(`/api/trash/${doc}`)).status).toBe(204);
+    expect(stores.textIndex.projection(doc)).toBeUndefined();
+    expect(stores.textIndex.snapshot().items.some((item) => item.nodeId === doc)).toBe(false);
   });
 });
 
@@ -626,6 +735,7 @@ describe('IR-STORAGE-001 · FR-SHELL-002 AC-3 — 버전 목록과 복원', () =
 
     expect(res.status).toBe(204);
     expect(await readFile(fileOf(doc), 'utf8')).toBe('# 처음\n');
+    expect(stores.textIndex.isCurrentOrQueued(doc, contentHash('# 처음\n'))).toBe(true);
   });
 
   it('보기 권한만으로는 복원되지 않는다 — 복원은 본문을 바꾸는 일이다', async () => {

@@ -1,0 +1,120 @@
+{
+  "schema": "issue75-initial-red-manifest-v1",
+  "generatedAt": "2026-09-18T03:52:44.655Z",
+  "head": "b4428be2aba72172ba7444fd4e69cb71261b147d",
+  "aggregateAlgorithm": "sha256(path + NUL + fileSha256 + LF), sorted by path",
+  "aggregateSha256": "1483b2453f8ca14935b726492a9eb7971f673c3b61c73594da9343866d861d28",
+  "fileCount": 22,
+  "files": [
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-api-ancestor-filter.txt",
+      "sha256": "047cd7eb74a3445a6c5a8b4141b0ebf42f05e3e1c095f239262ea90800105e2c",
+      "bytes": 5260
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-api-snapshot.txt",
+      "sha256": "3a35f603dfdc9f04618b5322ef7998c1b5372ba8bab523f12f45c9f78ce23a0d",
+      "bytes": 4356
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-backfill.txt",
+      "sha256": "bf2cd98285d340366a8f7aafa1c6329388f38b04758b3bb4df3936e5b0f7823c",
+      "bytes": 12478
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-create-hook.txt",
+      "sha256": "0269e627138a816c3f2623ae2fc2efa8817afdf5e6db7cf43be249704d630d31",
+      "bytes": 4506
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-css.txt",
+      "sha256": "3b67283256ba18f9d53464f2d128fde13c9cf9dda3a7158c95ece211c43dc549",
+      "bytes": 117190
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-external-change.txt",
+      "sha256": "0e67c5889f81a570da778c954f0c20555e70707e39cfb5f581ed3502b789ca55",
+      "bytes": 4362
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-final-permission.txt",
+      "sha256": "f22ff3f8fdfb771e2786f6daa6e143a3903c5032f7815e752918af83ca3ef7da",
+      "bytes": 4768
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-gate-claim-aware-worker.txt",
+      "sha256": "335f0a651a33c6110986e757640c70f0c56b457a29efc8c902397f4201d55805",
+      "bytes": 7992
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-gate-copy-restore-claim.txt",
+      "sha256": "a2db11ca6244c33017ad115f54d61e560d36503dfa6972bdbd97b8e99ed0829f",
+      "bytes": 14446
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-gate-restore-crash.txt",
+      "sha256": "132672a510d0b8ade13239f4e99e5173e6f9eef413a057595556da4c5f9a4830",
+      "bytes": 6346
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-new-version.txt",
+      "sha256": "9a30deb87ee05ec2f08585463b6217a9932acd073920ed63ba114c3063895e3e",
+      "bytes": 4730
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-pdf.txt",
+      "sha256": "c0b6be0dd8377d550bf65259e6493184bcf3d466f635ccbcf8477501bb5a4daf",
+      "bytes": 5032
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-recovery-index-failure.txt",
+      "sha256": "f232e47418d35ae087a9080c83feffd182b068230724fb4a69db06c04c163fc0",
+      "bytes": 31796
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-review-auth-focus.txt",
+      "sha256": "e12a9ea07de88175f04b106c245d379a97fab07cfa7e52d1113248f95bd17b72",
+      "bytes": 11944
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-review-lifecycle-hooks.txt",
+      "sha256": "bdb20696d32506bf0125eb5f6820c5ae88a4e738b4dab58b77d076c69da712d1",
+      "bytes": 10696
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-review-save-eligibility.txt",
+      "sha256": "4332b913499a6f51a2a539b05ca159744dbd725dc82341f992e5bf9ae67c99b9",
+      "bytes": 4388
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-review-worker-eligibility.txt",
+      "sha256": "4ba5ac147ade209ca999edbd83a548e32484359c63beeb55f641aaa6ab58e89d",
+      "bytes": 7750
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-server.txt",
+      "sha256": "4dde20b6ca7f7a88a983d5047fe868b57b04887185f8dcfbe0b1e5a75650ef17",
+      "bytes": 5658
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-web.txt",
+      "sha256": "6aa0a36f4682d952342d85c48841c1eb4491891a5ad91acd2de8608e12b81524",
+      "bytes": 5524
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-wiring.txt",
+      "sha256": "5c238eb212e46c7faa9373831f615d2026daa00af1160eefcc63b588bab532ac",
+      "bytes": 34024
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-worker-loop.txt",
+      "sha256": "e4e24bd3fa34ef48896c3432538623aef6e50a43d03d7928ccb4621b9a92ddbc",
+      "bytes": 4504
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue75/red-worker.txt",
+      "sha256": "b795747bdb384a9f4a2cdd5fcc260bce7522e713cb8618c7473475cc695844ae",
+      "bytes": 4520
+    }
+  ]
+}

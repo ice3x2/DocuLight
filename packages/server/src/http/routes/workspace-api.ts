@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, rename as renameOnDisk, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
+import { createHash } from 'node:crypto';
 
 import { Router, type Request } from 'express';
 import multer from 'multer';
@@ -111,6 +112,10 @@ import {
 import { trashView, type TrashScope } from '../../app/trash/trash-view.js';
 import type { NodeId } from '../../domain/node/node-id.js';
 import { RESOURCE_DIRECTORY } from '../../domain/attachment/resource-layout.js';
+import type { SqliteTextIndexRepository } from '../../infra/sqlite/text-index-repository.js';
+import { contentHash } from '../../domain/document/content-hash.js';
+import { isServable } from '../../domain/serving/servable.js';
+import { enqueueCurrentTextSource } from '../../app/search/text-index-source.js';
 
 /**
  * 화면이 쓰는 API (`FR-WORKSPACE-003` · `FR-STORAGE-001` · `FR-SHELL-007` ·
@@ -136,6 +141,8 @@ export interface WorkspaceApiDeps {
       /** 가입 모드가 DB 에 산다 (`FR-AUTH-004` AC-4). */
       settings: Parameters<typeof currentSignupMode>[0]['settings'];
       files?: WorkspaceFiles;
+      textIndex?: SqliteTextIndexRepository;
+      transaction?: <T>(fn: () => T) => T;
     };
   /**
    * 이 요청을 누구로 볼 것인가. 세울 수 없으면 `undefined`.
@@ -160,6 +167,12 @@ const attachmentLink = (workspaceId: string, hash: string) =>
  */
 const one = (value: unknown): string | undefined =>
   typeof value === 'string' ? value : Array.isArray(value) ? one(value[0]) : undefined;
+
+const textFingerprint = (name: string, bytes: Uint8Array): string | undefined => {
+  if (name.toLowerCase().endsWith('.pdf')) return createHash('sha256').update(bytes).digest('hex');
+  if (name.toLowerCase().endsWith('.md')) return contentHash(Buffer.from(bytes).toString('utf8'));
+  return undefined;
+};
 
 /**
  * multipart 로 온 파일 이름.
@@ -229,6 +242,24 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
         (entry) => permissionOf(stores, actor, entry.workspace.id) === 'admin',
       ).length,
     });
+  });
+
+  router.get('/index-queue', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) { res.sendStatus(401); return; }
+    if (!isSuperuser(stores.principals.groupsOf(actor.id))) { res.sendStatus(404); return; }
+    if (stores.textIndex === undefined) { res.sendStatus(503); return; }
+    const snapshot = stores.textIndex.snapshot(Number.MAX_SAFE_INTEGER);
+    const eligible = snapshot.items.flatMap((item) => {
+      const node = stores.nodes.findById(item.nodeId);
+      if (node === undefined || !isServable(stores.nodes.chainOf(node.id))) return [];
+      const workspace = stores.workspaces.findById(node.workspaceId);
+      if (workspace === undefined) return [];
+      return [{ ...item, name: node.name, workspaceName: workspace.name }];
+    });
+    const counts = { pending: 0, running: 0, failed: 0 };
+    for (const item of eligible) counts[item.status] += 1;
+    res.json({ counts, total: eligible.length, limit: 100, items: eligible.slice(0, 100) });
   });
 
   router.get('/tree', (req, res) => {
@@ -515,12 +546,16 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       return;
     }
 
-    const created = createNode(stores, actor, {
-      workspaceId,
-      parentId: parentId ?? null,
-      kind: kind ?? 'file',
-      name,
-    });
+    let indexing: { generation: number } | undefined;
+    const create = () => {
+      const result = createNode(stores, actor, { workspaceId, parentId: parentId ?? null, kind: kind ?? 'file', name });
+      if (result.ok && (kind ?? 'file') === 'file') {
+        const fingerprint = textFingerprint(result.name, Buffer.alloc(0));
+        if (fingerprint !== undefined) indexing = stores.textIndex?.prepare(result.id, fingerprint);
+      }
+      return result;
+    };
+    const created = stores.transaction === undefined ? create() : stores.transaction(create);
 
     if (!created.ok) {
       // 거절 사유를 본문에 싣지 않는다 — 사유가 갈리면 그 갈림이
@@ -547,6 +582,7 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       // 있는 경우가 있고, 빈 내용으로 덮으면 그 본문이 사라진다.
       if (!existsSync(at)) await writeFile(at, '', 'utf8');
     }
+    if (indexing !== undefined) try { await enqueueCurrentTextSource(stores, created.id); } catch { /* prepared remains durable */ }
 
     res.json({
       id: created.id,
@@ -589,12 +625,17 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       return;
     }
 
-    const created = createNode(stores, actor, {
-      workspaceId: parent.workspaceId,
-      parentId,
-      kind: 'file',
-      name: decodedFileName(req.file.originalname),
-    });
+    const requestedName = decodedFileName(req.file.originalname);
+    let indexing: { generation: number } | undefined;
+    const create = () => {
+      const result = createNode(stores, actor, { workspaceId: parent.workspaceId, parentId, kind: 'file', name: requestedName });
+      if (result.ok) {
+        const fingerprint = textFingerprint(result.name, req.file!.buffer);
+        if (fingerprint !== undefined) indexing = stores.textIndex?.prepare(result.id, fingerprint);
+      }
+      return result;
+    };
+    const created = stores.transaction === undefined ? create() : stores.transaction(create);
     if (!created.ok) {
       res.sendStatus(created.violations.some((v) => v.rule === 'forbidden') ? 403 : 400);
       return;
@@ -605,6 +646,10 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     const path = join(workspaceRootOf(stores, parent.workspaceId), stores.nodes.pathOf(created.id));
     await mkdir(dirname(path), { recursive: true });
     await writeFile(path, req.file.buffer);
+    if (indexing !== undefined) {
+      const fingerprint = textFingerprint(created.name, req.file.buffer);
+      if (fingerprint !== undefined) try { stores.textIndex?.ready(created.id, indexing.generation, fingerprint); } catch { /* prepared remains durable */ }
+    }
 
     res.json({
       id: created.id,
@@ -1738,6 +1783,7 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     }
 
     await followOnDisk(before, diskPathOf(nodeId));
+    try { await enqueueCurrentTextSource(stores, nodeId); } catch { /* lifecycle recovery/backfill retains source truth */ }
     res.json({
       name: placed.name,
       ...(placed.name === name ? {} : { notice: noticeFor(placed.name) }),

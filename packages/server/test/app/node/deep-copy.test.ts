@@ -1,4 +1,5 @@
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { existsSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -11,6 +12,8 @@ import { moveToTrash } from '../../../src/app/trash/trash-service.js';
 import { createWorkspace } from '../../../src/app/workspace/create-workspace.js';
 import { FsWorkspaceFiles } from '../../../src/infra/fs/workspace-sidecar.js';
 import { openDatabase, type Database } from '../../../src/infra/sqlite/database.js';
+import { SqliteTextIndexRepository } from '../../../src/infra/sqlite/text-index-repository.js';
+import { contentHash } from '../../../src/domain/document/content-hash.js';
 import { attachmentStores, superuserActor } from '../../support/acl-fixture.js';
 
 /**
@@ -300,5 +303,57 @@ describe('복사 게이트는 그대로다', () => {
     const 하위 = dirNode('하위', 본부, SRC);
 
     expect((await copyNode(stores, root, 본부, { parentId: 하위 })).ok).toBe(false);
+  });
+  it('검색 대상 copy는 source bytes를 mutation 전에 읽고 metadata+prepared를 원자적으로 만든다', async () => {
+    const source = await place('atomic.md', null, SRC, '# original\n');
+    const sourcePath = bodyPathOf(source, SRC);
+    const textIndex = new SqliteTextIndexRepository(db);
+    const indexed = Object.assign(stores, { textIndex });
+    let preparedGeneration: number | undefined; let readyGeneration: number | undefined;
+    const originalPrepare = textIndex.prepare.bind(textIndex);
+    textIndex.prepare = ((...args: Parameters<typeof textIndex.prepare>) => { const job = originalPrepare(...args); preparedGeneration = job.generation; return job; }) as typeof textIndex.prepare;
+    const originalReady = textIndex.ready.bind(textIndex);
+    textIndex.ready = ((nodeId: string, generation: number, fingerprint: string) => { readyGeneration = generation; return originalReady(nodeId, generation, fingerprint); }) as typeof textIndex.ready;
+    const originalCreate = stores.nodes.create.bind(stores.nodes);
+    stores.nodes.create = ((node) => {
+      if (node.workspaceId === DST) writeFileSync(sourcePath, '# changed after mutation\n', 'utf8');
+      return originalCreate(node);
+    }) as typeof stores.nodes.create;
+
+    const copied = await copyNode(indexed, root, source, { workspaceId: DST });
+
+    expect(copied.ok).toBe(true);
+    const target = idOf(copied);
+    expect(await readFile(bodyPathOf(target, DST), 'utf8')).toBe('# original\n');
+    expect(textIndex.isCurrentOrQueued(target, contentHash('# original\n'))).toBe(true);
+    expect(textIndex.prepared()).toEqual([]);
+    expect(readyGeneration).toBe(preparedGeneration);
+  });
+
+  it('copy prepare 실패는 target metadata와 source mutation을 모두 중단한다', async () => {
+    const source = await place('abort.md', null, SRC, '# original\n');
+    const textIndex = new SqliteTextIndexRepository(db);
+    const indexed = Object.assign(stores, { textIndex });
+    let targetId: string | undefined;
+    textIndex.prepare = ((nodeId: string) => { targetId = nodeId; throw new Error('injected prepare failure'); }) as typeof textIndex.prepare;
+
+    await expect(copyNode(indexed, root, source, { workspaceId: DST })).rejects.toThrow('injected prepare failure');
+
+    expect(targetId).toBeDefined();
+    expect(stores.nodes.findById(targetId!)).toBeUndefined();
+    expect(stores.nodes.children({ workspaceId: DST, parentId: null })).toEqual([]);
+    expect(existsSync(join(docsRoot, DST, 'abort.md'))).toBe(false);
+  });
+
+  it('copy promotion 실패 뒤에도 성공 결과와 prepared obligation을 보존한다', async () => {
+    const source = await place('promotion.md', null, SRC, '# durable\n');
+    const textIndex = new SqliteTextIndexRepository(db);
+    const indexed = Object.assign(stores, { textIndex });
+    textIndex.ready = (() => false) as typeof textIndex.ready;
+
+    const copied = await copyNode(indexed, root, source, { workspaceId: DST });
+
+    expect(copied.ok).toBe(true);
+    expect(textIndex.prepared()).toMatchObject([{ nodeId: idOf(copied), expectedFingerprint: contentHash('# durable\n') }]);
   });
 });

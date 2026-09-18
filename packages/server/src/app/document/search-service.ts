@@ -12,6 +12,7 @@ import type { AttachmentRepository } from '../../domain/ports/attachment-reposit
 import type { PdfTextExtractor } from '../../domain/ports/pdf-text.js';
 import { pdfjsTextExtractor } from '../../infra/pdf/pdfjs-text.js';
 import { workspaceRootOf, type DocumentStores } from './save-service.js';
+import type { SqliteTextIndexRepository } from '../../infra/sqlite/text-index-repository.js';
 
 /**
  * 전역 검색 (`FR-SHELL-013`).
@@ -84,6 +85,7 @@ export type SearchStores = DocumentStores & {
    * 한다면 넘기지 않은 자리에서 조항이 조용히 꺼진다.
    */
   pdf?: PdfTextExtractor;
+  textIndex?: SqliteTextIndexRepository;
 };
 
 /** PDF 노드인가 — 본문을 읽는 방법이 마크다운과 다르다. */
@@ -118,7 +120,18 @@ export async function search(
     }
   }
 
-  return { documents };
+  const current = new Map<string, { name: string; workspaceName: string }>();
+  for (const entry of visibleWorkspacesOf(stores, actor)) {
+    for (const node of servableIn(stores, actor, entry.workspace.id)) {
+      current.set(node.id, { name: node.name, workspaceName: entry.workspace.name });
+    }
+  }
+  return {
+    documents: documents.flatMap((document) => {
+      const authoritative = current.get(document.nodeId);
+      return authoritative === undefined ? [] : [{ ...document, ...authoritative }];
+    }),
+  };
 }
 
 /**
@@ -199,6 +212,21 @@ async function matchesOf(
           add(term, { axis: 'attachment', text: one.originalName }, `attachment:${attachmentAt}:${at}`, 1_000_000 + attachmentAt * 10_000 + at);
       }
     }
+  }
+
+  const projection = stores.textIndex?.projection(node.id);
+  if (stores.textIndex !== undefined) {
+    if (projection === undefined) return matchedExcerpts(groups, hits);
+    if (on.has('tag')) for (const term of terms) for (const [tagAt, tag] of projection.tags.entries()) {
+      const at = tag.toLowerCase().indexOf(term);
+      if (at !== -1) add(term, { axis: 'tag', text: `#${term}` }, `tag:${tagAt}:${at}`, 2_000_000 + tagAt * 10_000 + at);
+    }
+    if (on.has('body')) {
+      const sources: readonly { text: string; page?: number }[] = projection.pages.length === 0 ? [{ text: projection.body }] : projection.pages;
+      for (const term of terms) for (const [sourceAt, source] of sources.entries()) for (const match of bodyMatches(source.text, term))
+        add(term, { ...match.excerpt, ...(source.page === undefined ? {} : { page: source.page }) }, `body:${sourceAt}:${match.start}`, 3_000_000 + sourceAt * 100_000 + match.start);
+    }
+    return matchedExcerpts(groups, hits);
   }
 
   // PDF 는 **본문 축의 확장**이다 (AC-4) — 다섯째 축이 아니다. 태그 축은

@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
+import { createHash } from 'node:crypto';
 
 import { hasDotSegment } from '../../domain/naming/hidden-name-rule.js';
 import { contentHash } from '../../domain/document/content-hash.js';
@@ -11,6 +12,7 @@ import {
   type UnlinkEvent,
 } from '../../domain/watch/correlation.js';
 import { applyRelocation, type RelocationStores } from './relocation-service.js';
+import type { SqliteTextIndexRepository } from '../../infra/sqlite/text-index-repository.js';
 
 /**
  * 서버 파일시스템을 감시해 직접 옮겨진 파일을 상관 판정에 넘긴다
@@ -57,6 +59,7 @@ export interface FileWatch {
 
 export interface FileWatchStores extends RelocationStores {
   nodes: RelocationStores['nodes'];
+  textIndex?: SqliteTextIndexRepository;
 }
 
 /** 감시 경로를 워크스페이스와 그 안의 상대 경로로 가른다. */
@@ -242,6 +245,35 @@ export async function startFileWatch(
     byWorkspace.set(event, at.workspaceId);
     unlinks.push(event);
     schedule();
+  });
+
+  watcher.on('change', (absolute: string) => {
+    if (stopped || stores.textIndex === undefined) return;
+    const at = split(docsRoot, absolute);
+    if (at === null || !/\.(md|pdf)$/i.test(at.path)) return;
+    seen += 1;
+    inflight += 1;
+    void (async () => {
+      try {
+        const node = nodeAt(stores, at.workspaceId, at.path);
+        if (node === undefined || stopped) return;
+        const bytes = await readFile(absolute);
+        if (stopped) return;
+        const fingerprint = at.path.toLowerCase().endsWith('.pdf')
+          ? createHash('sha256').update(bytes).digest('hex')
+          : contentHash(bytes.toString('utf8'));
+        if (stores.textIndex!.isCurrentOrQueued(node.id, fingerprint)) {
+          ignored += 1;
+          return;
+        }
+        const prepared = stores.textIndex!.prepare(node.id, fingerprint);
+        stores.textIndex!.ready(node.id, prepared.generation, fingerprint);
+      } catch {
+        // A concurrent unlink is handled by the relocation path.
+      } finally {
+        inflight -= 1;
+      }
+    })();
   });
 
   await new Promise<void>((done) => watcher.once('ready', () => done()));
