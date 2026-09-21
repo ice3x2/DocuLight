@@ -1,0 +1,1127 @@
+{
+  "requirement": "IR-PRINCIPAL-003",
+  "matrixCount": 12,
+  "forcedColorsCount": 2,
+  "sameMountedState": {
+    "resize": [
+      {
+        "width": 1280,
+        "height": 720,
+        "query": "Issue81 상태보존",
+        "focusedId": "9a0be950-dd3d-46bb-8b42-7d7ecef46d36"
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "query": "Issue81 상태보존",
+        "focusedId": "9a0be950-dd3d-46bb-8b42-7d7ecef46d36"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "query": "Issue81 상태보존",
+        "focusedId": "9a0be950-dd3d-46bb-8b42-7d7ecef46d36"
+      }
+    ],
+    "zoomReads": [
+      1,
+      2,
+      1
+    ],
+    "transition": {
+      "mountIdBefore": "issue81-mount-1790017066278",
+      "queryBefore": "Issue81 상태보존",
+      "candidateIdBefore": "9a0be950-dd3d-46bb-8b42-7d7ecef46d36",
+      "groupIdBefore": "a409a63a-c85e-48a1-9005-f33c489a83fc",
+      "focusedIdBefore": "search:a409a63a-c85e-48a1-9005-f33c489a83fc",
+      "writesBefore": 0,
+      "mountIdAfter": "issue81-mount-1790017066278",
+      "queryAfter": "Issue81 상태보존",
+      "candidateIdAfter": "9a0be950-dd3d-46bb-8b42-7d7ecef46d36",
+      "groupIdAfter": "a409a63a-c85e-48a1-9005-f33c489a83fc",
+      "focusedIdAfter": "search:a409a63a-c85e-48a1-9005-f33c489a83fc",
+      "writesAfter": 0,
+      "zoomReads": [
+        1,
+        2,
+        1
+      ]
+    }
+  },
+  "defaultActiveMembers": true,
+  "automaticGroupHasNoAdd": true,
+  "managedSuperuserHasAdd": true,
+  "focusReturnedToSearch": true,
+  "observations": [
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "screenshot": "groups-light-1280x720-100.png",
+      "geometry": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "rect": {
+          "x": 325,
+          "y": -5137,
+          "width": 875,
+          "height": 5738,
+          "top": -5137,
+          "right": 1200,
+          "bottom": 601,
+          "left": 325
+        },
+        "overflow": false,
+        "normalTextContrast": 14.004951701436438,
+        "largeTextContrast": 12.480366983720703,
+        "controlContrast": 6.604593108697848,
+        "focusContrast": 6.604593108697848,
+        "borderContrast": 14.004951701436438,
+        "firstResultReachable": true,
+        "lastResultReachable": true,
+        "manyMemberLastReachable": true,
+        "longNameReachable": true,
+        "lastRowReachable": true,
+        "rightmostActionReachable": true
+      }
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "screenshot": "groups-light-1280x720-200.png",
+      "geometry": {
+        "viewport": {
+          "width": 640,
+          "height": 360
+        },
+        "rect": {
+          "x": 228.0703125,
+          "y": -6535,
+          "width": 368.2265625,
+          "height": 6801.5,
+          "top": -6535,
+          "right": 596.296875,
+          "bottom": 266.5,
+          "left": 228.0703125
+        },
+        "overflow": false,
+        "normalTextContrast": 14.004951701436438,
+        "largeTextContrast": 12.480366983720703,
+        "controlContrast": 6.604593108697848,
+        "focusContrast": 6.604593108697848,
+        "borderContrast": 14.004951701436438,
+        "firstResultReachable": true,
+        "lastResultReachable": true,
+        "manyMemberLastReachable": true,
+        "longNameReachable": true,
+        "lastRowReachable": true,
+        "rightmostActionReachable": true
+      }
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "screenshot": "groups-dark-1280x720-100.png",
+      "geometry": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "rect": {
+          "x": 325,
+          "y": -5137,
+          "width": 875,
+          "height": 5738,
+          "top": -5137,
+          "right": 1200,
+          "bottom": 601,
+          "left": 325
+        },
+        "overflow": false,
+        "normalTextContrast": 11.430133007600727,
+        "largeTextContrast": 12.94693153574021,
+        "controlContrast": 7.751150489687093,
+        "focusContrast": 7.751150489687093,
+        "borderContrast": 11.430133007600727,
+        "firstResultReachable": true,
+        "lastResultReachable": true,
+        "manyMemberLastReachable": true,
+        "longNameReachable": true,
+        "lastRowReachable": true,
+        "rightmostActionReachable": true
+      }
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "screenshot": "groups-dark-1280x720-200.png",
+      "geometry": {
+        "viewport": {
+          "width": 640,
+          "height": 360
+        },
+        "rect": {
+          "x": 228.0703125,
+          "y": -6535,
+          "width": 368.2265625,
+          "height": 6801.5,
+          "top": -6535,
+          "right": 596.296875,
+          "bottom": 266.5,
+          "left": 228.0703125
+        },
+        "overflow": false,
+        "normalTextContrast": 11.430133007600727,
+        "largeTextContrast": 12.94693153574021,
+        "controlContrast": 7.751150489687093,
+        "focusContrast": 7.751150489687093,
+        "borderContrast": 11.430133007600727,
+        "firstResultReachable": true,
+        "lastResultReachable": true,
+        "manyMemberLastReachable": true,
+        "longNameReachable": true,
+        "lastRowReachable": true,
+        "rightmostActionReachable": true
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "screenshot": "groups-light-1440x900-100.png",
+      "geometry": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "rect": {
+          "x": 405,
+          "y": -4966,
+          "width": 875,
+          "height": 5738,
+          "top": -4966,
+          "right": 1280,
+          "bottom": 772,
+          "left": 405
+        },
+        "overflow": false,
+        "normalTextContrast": 14.004951701436438,
+        "largeTextContrast": 12.480366983720703,
+        "controlContrast": 6.604593108697848,
+        "focusContrast": 6.604593108697848,
+        "borderContrast": 14.004951701436438,
+        "firstResultReachable": true,
+        "lastResultReachable": true,
+        "manyMemberLastReachable": true,
+        "longNameReachable": true,
+        "lastRowReachable": true,
+        "rightmostActionReachable": true
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "screenshot": "groups-light-1440x900-200.png",
+      "geometry": {
+        "viewport": {
+          "width": 720,
+          "height": 450
+        },
+        "rect": {
+          "x": 254.53125,
+          "y": -6449.5,
+          "width": 419.3671875,
+          "height": 6801.5,
+          "top": -6449.5,
+          "right": 673.8984375,
+          "bottom": 352,
+          "left": 254.53125
+        },
+        "overflow": false,
+        "normalTextContrast": 14.004951701436438,
+        "largeTextContrast": 12.480366983720703,
+        "controlContrast": 6.604593108697848,
+        "focusContrast": 6.604593108697848,
+        "borderContrast": 14.004951701436438,
+        "firstResultReachable": true,
+        "lastResultReachable": true,
+        "manyMemberLastReachable": true,
+        "longNameReachable": true,
+        "lastRowReachable": true,
+        "rightmostActionReachable": true
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "screenshot": "groups-dark-1440x900-100.png",
+      "geometry": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "rect": {
+          "x": 405,
+          "y": -4966,
+          "width": 875,
+          "height": 5738,
+          "top": -4966,
+          "right": 1280,
+          "bottom": 772,
+          "left": 405
+        },
+        "overflow": false,
+        "normalTextContrast": 11.430133007600727,
+        "largeTextContrast": 12.94693153574021,
+        "controlContrast": 7.751150489687093,
+        "focusContrast": 7.751150489687093,
+        "borderContrast": 11.430133007600727,
+        "firstResultReachable": true,
+        "lastResultReachable": true,
+        "manyMemberLastReachable": true,
+        "longNameReachable": true,
+        "lastRowReachable": true,
+        "rightmostActionReachable": true
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "screenshot": "groups-dark-1440x900-200.png",
+      "geometry": {
+        "viewport": {
+          "width": 720,
+          "height": 450
+        },
+        "rect": {
+          "x": 254.53125,
+          "y": -6449.5,
+          "width": 419.3671875,
+          "height": 6801.5,
+          "top": -6449.5,
+          "right": 673.8984375,
+          "bottom": 352,
+          "left": 254.53125
+        },
+        "overflow": false,
+        "normalTextContrast": 11.430133007600727,
+        "largeTextContrast": 12.94693153574021,
+        "controlContrast": 7.751150489687093,
+        "focusContrast": 7.751150489687093,
+        "borderContrast": 11.430133007600727,
+        "firstResultReachable": true,
+        "lastResultReachable": true,
+        "manyMemberLastReachable": true,
+        "longNameReachable": true,
+        "lastRowReachable": true,
+        "rightmostActionReachable": true
+      }
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "screenshot": "groups-light-1920x1080-100.png",
+      "geometry": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "rect": {
+          "x": 645,
+          "y": -4871,
+          "width": 875,
+          "height": 5738,
+          "top": -4871,
+          "right": 1520,
+          "bottom": 867,
+          "left": 645
+        },
+        "overflow": false,
+        "normalTextContrast": 14.004951701436438,
+        "largeTextContrast": 12.480366983720703,
+        "controlContrast": 6.604593108697848,
+        "focusContrast": 6.604593108697848,
+        "borderContrast": 14.004951701436438,
+        "firstResultReachable": true,
+        "lastResultReachable": true,
+        "manyMemberLastReachable": true,
+        "longNameReachable": true,
+        "lastRowReachable": true,
+        "rightmostActionReachable": true
+      }
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "screenshot": "groups-light-1920x1080-200.png",
+      "geometry": {
+        "viewport": {
+          "width": 960,
+          "height": 540
+        },
+        "rect": {
+          "x": 313.80078125,
+          "y": -6364,
+          "width": 584.8984375,
+          "height": 6801.5,
+          "top": -6364,
+          "right": 898.69921875,
+          "bottom": 437.5,
+          "left": 313.80078125
+        },
+        "overflow": false,
+        "normalTextContrast": 14.004951701436438,
+        "largeTextContrast": 12.480366983720703,
+        "controlContrast": 6.604593108697848,
+        "focusContrast": 6.604593108697848,
+        "borderContrast": 14.004951701436438,
+        "firstResultReachable": true,
+        "lastResultReachable": true,
+        "manyMemberLastReachable": true,
+        "longNameReachable": true,
+        "lastRowReachable": true,
+        "rightmostActionReachable": true
+      }
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "screenshot": "groups-dark-1920x1080-100.png",
+      "geometry": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "rect": {
+          "x": 645,
+          "y": -4871,
+          "width": 875,
+          "height": 5738,
+          "top": -4871,
+          "right": 1520,
+          "bottom": 867,
+          "left": 645
+        },
+        "overflow": false,
+        "normalTextContrast": 11.430133007600727,
+        "largeTextContrast": 12.94693153574021,
+        "controlContrast": 7.751150489687093,
+        "focusContrast": 7.751150489687093,
+        "borderContrast": 11.430133007600727,
+        "firstResultReachable": true,
+        "lastResultReachable": true,
+        "manyMemberLastReachable": true,
+        "longNameReachable": true,
+        "lastRowReachable": true,
+        "rightmostActionReachable": true
+      }
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "screenshot": "groups-dark-1920x1080-200.png",
+      "geometry": {
+        "viewport": {
+          "width": 960,
+          "height": 540
+        },
+        "rect": {
+          "x": 313.80078125,
+          "y": -6364,
+          "width": 584.8984375,
+          "height": 6801.5,
+          "top": -6364,
+          "right": 898.69921875,
+          "bottom": 437.5,
+          "left": 313.80078125
+        },
+        "overflow": false,
+        "normalTextContrast": 11.430133007600727,
+        "largeTextContrast": 12.94693153574021,
+        "controlContrast": 7.751150489687093,
+        "focusContrast": 7.751150489687093,
+        "borderContrast": 11.430133007600727,
+        "firstResultReachable": true,
+        "lastResultReachable": true,
+        "manyMemberLastReachable": true,
+        "longNameReachable": true,
+        "lastRowReachable": true,
+        "rightmostActionReachable": true
+      }
+    }
+  ],
+  "forced": [
+    {
+      "zoom": 100,
+      "observedZoom": 1,
+      "screenshot": "groups-forced-100.png",
+      "focus": {
+        "forced": true,
+        "active": true,
+        "outline": "solid"
+      }
+    },
+    {
+      "zoom": 200,
+      "observedZoom": 2,
+      "screenshot": "groups-forced-200.png",
+      "focus": {
+        "forced": true,
+        "active": true,
+        "outline": "solid"
+      }
+    }
+  ],
+  "denials": [
+    {
+      "role": "ordinary",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "manager",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "ordinary",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "manager",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "ordinary",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "manager",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "ordinary",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "manager",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "ordinary",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "manager",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "ordinary",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "manager",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "ordinary",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "manager",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "ordinary",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "manager",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "ordinary",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "manager",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "ordinary",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "manager",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "ordinary",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "manager",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "ordinary",
+      "read": 404,
+      "write": 404
+    },
+    {
+      "role": "manager",
+      "read": 404,
+      "write": 404
+    }
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EA%B0%99%EC%9D%80%EC%9D%B4%EB%A6%84&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EA%B0%99%EC%9D%80%EC%9D%B4%EB%A6%84&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%83%81%ED%83%9C%EB%B3%B4%EC%A1%B4&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EB%B6%88%EB%AA%85%ED%99%95&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EB%B6%88%EB%AA%85%ED%99%95&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EB%B6%88%EB%AA%85%ED%99%95&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%A7%80%EC%97%B0&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/groups/a409a63a-c85e-48a1-9005-f33c489a83fc/members",
+      "search": ""
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%A7%80%EC%97%B0&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/principals",
+      "search": "?q=Issue81%20%EC%A7%80%EC%97%B0&for=group%3Aa409a63a-c85e-48a1-9005-f33c489a83fc&kind=user"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/groups",
+      "search": ""
+    }
+  ],
+  "nativeWindowsImeCandidateUi": "nonblocking-unverified",
+  "syntheticCompositionDom": "covered-by-focused-component-regression"
+}

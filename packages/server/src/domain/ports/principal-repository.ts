@@ -41,7 +41,7 @@ export interface PrincipalRepository {
    * 저장소가 던진다 — 앱 계층의 검사만으로는 「칸이 없다」가 아니라
    * 「지금은 아무도 안 쓴다」에 그친다.
    */
-  addMember(groupId: PrincipalId, userId: PrincipalId): void;
+  addMember(groupId: PrincipalId, userId: PrincipalId): boolean;
 
   removeMember(groupId: PrincipalId, userId: PrincipalId): void;
 

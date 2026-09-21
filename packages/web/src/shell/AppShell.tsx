@@ -71,7 +71,7 @@ import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
 import { OffboardingSurface } from '../principal/OffboardingSurface.js';
 import { SignupApproval } from '../principal/SignupApproval.js';
-import type { PrincipalAction, PrincipalRequestContext, RosterRead, SignupModeRead } from '../principal/request-contract.js';
+import type { GroupRosterRead, PrincipalAction, PrincipalRequestContext, RosterRead, SignupModeRead } from '../principal/request-contract.js';
 import { TrashPanel, type TrashActionResult, type TrashLens, type TrashQueryState, type TrashRowView } from '../trash/TrashPanel.js';
 import { EmptyState, ErrorState, LoadingState } from '../components/ui/states.js';
 import { Button } from '../components/ui/button.js';
@@ -295,7 +295,9 @@ function SettingsModal({
   userRoster = [],
   userRosterQuery,
   principalRequestContext,
+  groupRequestContext,
   groupRoster = [],
+  groupRosterQuery,
   aclAudit,
   audit,
   auditLog,
@@ -348,7 +350,9 @@ function SettingsModal({
   userRoster?: readonly RosterUser[];
   userRosterQuery?: RosterRead;
   principalRequestContext?: Omit<PrincipalRequestContext, 'categoryGeneration'>;
+  groupRequestContext?: Omit<PrincipalRequestContext, 'categoryGeneration'>;
   groupRoster?: readonly RosterGroup[];
+  groupRosterQuery?: GroupRosterRead;
   /** 권한 감사 구역이 그릴 것 (`FR-ACL-003`~`FR-ACL-005`). */
   aclAudit?: AclAuditProps;
   /** 감사 로그 (`R84`). 관리 범위가 없으면 안 온다. */
@@ -370,7 +374,7 @@ function SettingsModal({
   editorLoadState?: EditorPreferenceLoadState;
   editorSaveStates?: EditorPreferenceSaveStates;
   onGroupRemove?: (groupId: string) => void;
-  onGroupAddMember?: (groupId: string, userId: string) => void;
+  onGroupAddMember?: PrincipalAction<[groupId: string, userId: string]>;
   /** 슈퍼유저 직접 등록 (`FR-AUTH-003`). */
   onRegisterUser?: PrincipalAction<[input: { name: string; password: string }]>;
   /** 지금 가입 모드 (`FR-AUTH-004`). 빈 대기열의 원인이 여기서 갈린다. */
@@ -424,6 +428,10 @@ function SettingsModal({
   }
   const principalContext = principalRequestContext === undefined ? undefined : {
     ...principalRequestContext,
+    categoryGeneration: principalCategoryGeneration.current,
+  };
+  const groupContext = groupRequestContext === undefined ? undefined : {
+    ...groupRequestContext,
     categoryGeneration: principalCategoryGeneration.current,
   };
   const [ordinaryLeaveGuard, setOrdinaryLeaveGuard] = useState<ActiveSettingsLeaveGuard | null>(null);
@@ -874,6 +882,8 @@ function SettingsModal({
                 ) : category.id === 'groups' ? (
                   <GroupRoster
                     groups={groupRoster}
+                    {...(groupRosterQuery === undefined ? {} : { roster: groupRosterQuery })}
+                    {...(groupContext === undefined ? {} : { requestContext: groupContext })}
                     {...(onGroupRemove === undefined ? {} : { onRemove: onGroupRemove })}
                     {...(onGroupAddMember === undefined ? {} : { onAddMember: onGroupAddMember })}
                   />
@@ -976,7 +986,9 @@ export function AppShell({
   userRoster = [],
   userRosterQuery,
   principalRequestContext,
+  groupRequestContext,
   groupRoster = [],
+  groupRosterQuery,
   aclAudit,
   audit,
   auditLog,
@@ -1112,9 +1124,11 @@ export function AppShell({
   userRoster?: readonly RosterUser[];
   userRosterQuery?: RosterRead;
   principalRequestContext?: Omit<PrincipalRequestContext, 'categoryGeneration'>;
+  groupRequestContext?: Omit<PrincipalRequestContext, 'categoryGeneration'>;
   groupRoster?: readonly RosterGroup[];
+  groupRosterQuery?: GroupRosterRead;
   onGroupRemove?: (groupId: string) => void;
-  onGroupAddMember?: (groupId: string, userId: string) => void;
+  onGroupAddMember?: PrincipalAction<[groupId: string, userId: string]>;
   /** 슈퍼유저 직접 등록 (`FR-AUTH-003`). */
   onRegisterUser?: PrincipalAction<[input: { name: string; password: string }]>;
   /** 지금 가입 모드 (`FR-AUTH-004`). 빈 대기열의 원인이 여기서 갈린다. */
@@ -1412,7 +1426,9 @@ export function AppShell({
             userRoster={userRoster}
             {...(userRosterQuery === undefined ? {} : { userRosterQuery })}
             {...(principalRequestContext === undefined ? {} : { principalRequestContext })}
+            {...(groupRequestContext === undefined ? {} : { groupRequestContext })}
             groupRoster={groupRoster}
+            {...(groupRosterQuery === undefined ? {} : { groupRosterQuery })}
             {...(aclAudit === undefined ? {} : { aclAudit })}
             {...(audit === undefined ? {} : { audit })}
             {...(auditLog === undefined ? {} : { auditLog })}

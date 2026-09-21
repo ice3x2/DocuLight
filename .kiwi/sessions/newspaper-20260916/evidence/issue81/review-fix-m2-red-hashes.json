@@ -1,0 +1,17 @@
+﻿{
+    "finding":  "M2",
+    "files":  [
+                  {
+                      "path":  "packages/server/test/domain/principal/principal.test.ts",
+                      "sha256":  "7e25a75bd9b9440b9d710189402c25b3209281871a6ab77934a6a9a922c4c4dd"
+                  },
+                  {
+                      "path":  "packages/server/src/app/principal/principal-service.ts",
+                      "sha256":  "33a0f261d6860c581cbf99c79c3dee38f44fcceea152cc49c5e6ba4f238654ee"
+                  },
+                  {
+                      "path":  "packages/server/src/infra/sqlite/principal-repository.ts",
+                      "sha256":  "f6b0c7457eb42176ba19375aee7933dcd9eb6f98ed7de5c41bf75ba8e58b1f6e"
+                  }
+              ]
+}

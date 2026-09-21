@@ -1,0 +1,15 @@
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test
+> vitest run
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0-wt-issue81/packages/web
+
+
+ Test Files  116 passed (116)
+      Tests  1367 passed (1367)
+   Start at  03:56:46
+   Duration  42.61s (transform 41.86s, setup 3.11s, import 204.47s, tests 309.29s, environment 155.15s)
+

@@ -1,8 +1,10 @@
-import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
+import { QueryClient } from '@tanstack/react-query';
+import { act, cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { App } from '../src/App.js';
+import { QUERY_KEYS } from '../src/api/queries.js';
 
 const TREE = [
   {
@@ -22,7 +24,7 @@ const TREE = [
   },
 ];
 
-const routes = new Map<string, () => Response>();
+const routes = new Map<string, () => Response | Promise<Response>>();
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
@@ -170,10 +172,10 @@ describe('권한 감사 구역이 실제로 서버에서 값을 받아 그린다
 
   it('CON-PRINCIPAL-006: 그룹 멤버 추가가 서버로 나간다', async () => {
     routes.set('/api/roster/groups', () =>
-      json([{ id: 'g1', name: '기획팀원', system: false, members: [] }]),
+      json([{ id: 'g1', name: '기획팀원', system: false, systemType: null, mode: 'managed', canAdd: true, effectiveMembersComplete: true, members: [], effectiveMembers: [] }]),
     );
     routes.set('/api/principals', () =>
-      json([{ id: 'u9', name: '새사람', kind: 'user', status: 'active' }]),
+      json([{ id: 'u9', name: '새사람', kind: 'user', status: 'active', system: false }]),
     );
     const 보냈다: string[] = [];
     routes.set('/api/roster/groups/g1/members', () => {
@@ -188,9 +190,62 @@ describe('권한 감사 구역이 실제로 서버에서 값을 받아 그린다
     const modal = await screen.findByRole('dialog', { name: '설정' });
     await user.click(within(modal).getByRole('tab', { name: '그룹 관리' }));
 
-    await user.type(await within(modal).findByLabelText('사용자·그룹 검색'), '새사람');
+    await user.type(await within(modal).findByLabelText('기획팀원 멤버 검색'), '새사람');
     await user.click(await within(modal).findByText('새사람'));
 
     await waitFor(() => expect(보냈다).toEqual(['g1']));
+  });
+
+  it('IR-PRINCIPAL-003 H3: category leave-return keeps the same-group POST guard while another group remains independent', async () => {
+    const groups = [
+      { id: 'g1', name: '기획팀원', system: false, systemType: null, mode: 'managed', canAdd: true, effectiveMembersComplete: true, members: [], effectiveMembers: [] },
+      { id: 'g2', name: '설계팀원', system: false, systemType: null, mode: 'managed', canAdd: true, effectiveMembersComplete: true, members: [], effectiveMembers: [] },
+    ];
+    routes.set('/api/roster/groups', () => json(groups));
+    routes.set('/api/principals', () => json([{ id: 'u9', name: '새사람', kind: 'user', status: 'active', system: false }]));
+    let releaseFirst!: () => void;
+    const first = new Promise<Response>((resolve) => { releaseFirst = () => resolve(json(null, 204)); });
+    const posts: string[] = [];
+    routes.set('/api/roster/groups/g1/members', () => { posts.push('g1'); return first; });
+    routes.set('/api/roster/groups/g2/members', () => { posts.push('g2'); return json(null, 204); });
+
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(await screen.findByRole('button', { name: '설정' }));
+    const modal = await screen.findByRole('dialog', { name: '설정' });
+    await user.click(within(modal).getByRole('tab', { name: '그룹 관리' }));
+    const firstSearch = await within(modal).findByRole('combobox', { name: '기획팀원 멤버 검색' });
+    await user.type(firstSearch, '새사람');
+    await user.click((await within(modal).findAllByText('새사람'))[0]!);
+    await user.click(within(modal).getByRole('tab', { name: '사용자 관리' }));
+    await user.click(within(modal).getByRole('tab', { name: '그룹 관리' }));
+    const searches = await within(modal).findAllByRole('combobox');
+    await user.type(searches[0]!, '새사람');
+    await user.click((await within(modal).findAllByText('새사람'))[0]!);
+    await user.type(searches[1]!, '새사람');
+    await user.click((await within(modal).findAllByText('새사람')).at(-1)!);
+
+    expect(posts).toEqual(['g1', 'g2']);
+    releaseFirst();
+  });
+
+  it('IR-PRINCIPAL-003 H4: an accepted POST receipt survives an unrelated roster read completion', async () => {
+    const groups = [{ id: 'g1', name: '기획팀원', system: false, systemType: null, mode: 'managed', canAdd: true, effectiveMembersComplete: true, members: [], effectiveMembers: [] }];
+    routes.set('/api/roster/groups', () => json(groups));
+    routes.set('/api/principals', () => json([{ id: 'u9', name: '새사람', kind: 'user', status: 'active', system: false }]));
+    let accept!: () => void;
+    routes.set('/api/roster/groups/g1/members', () => new Promise<Response>((resolve) => { accept = () => resolve(json(null, 204)); }));
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const user = userEvent.setup();
+    render(<App queryClient={queryClient} />);
+    await user.click(await screen.findByRole('button', { name: '설정' }));
+    const modal = await screen.findByRole('dialog', { name: '설정' });
+    await user.click(within(modal).getByRole('tab', { name: '그룹 관리' }));
+    await user.type(await within(modal).findByRole('combobox', { name: '기획팀원 멤버 검색' }), '새사람');
+    await user.click(await within(modal).findByText('새사람'));
+    act(() => queryClient.setQueryData(QUERY_KEYS.groupRoster, groups));
+    accept();
+
+    expect(await within(modal).findByText('멤버 추가 요청이 수락되었습니다.')).toBeDefined();
   });
 });

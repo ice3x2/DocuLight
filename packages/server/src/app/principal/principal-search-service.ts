@@ -72,7 +72,11 @@ export const RESULT_LIMIT = 20;
  * 시험이 그 관측 거동을 고정한다. 정하는 조항이 생기면 그 시험이 먼저
  * 깨진다 — 규칙을 지어내는 대신 지금 무엇을 하고 있는지를 못박은 것이다.
  */
-export function searchPrincipals(principals: PrincipalRepository, query: string): PrincipalHit[] {
+function searchPrincipalsByKind(
+  principals: PrincipalRepository,
+  query: string,
+  kind?: PrincipalKind,
+): PrincipalHit[] {
   const wanted = query.trim().toLowerCase();
   if (wanted.length < MINIMUM_QUERY) return [];
 
@@ -93,5 +97,14 @@ export function searchPrincipals(principals: PrincipalRepository, query: string)
   // 종류마다 자르지 않고 **합친 뒤에** 자른다 — 종류마다 상한을 걸면 한
   // 질의로 상한의 두 배가 나간다. 사용자를 앞에 두므로 상한에 걸리면
   // 그룹이 먼저 잘려 나간다.
-  return [...matching('user'), ...matching('group')].slice(0, RESULT_LIMIT);
+  return (kind === undefined ? [...matching('user'), ...matching('group')] : matching(kind)).slice(0, RESULT_LIMIT);
+}
+
+export function searchPrincipals(principals: PrincipalRepository, query: string): PrincipalHit[] {
+  return searchPrincipalsByKind(principals, query);
+}
+
+/** 그룹 멤버십 전용 user-only view. 최소 길이와 단일 20건 상한은 공용 정본을 그대로 쓴다. */
+export function searchUserPrincipals(principals: PrincipalRepository, query: string): PrincipalHit[] {
+  return searchPrincipalsByKind(principals, query, 'user');
 }

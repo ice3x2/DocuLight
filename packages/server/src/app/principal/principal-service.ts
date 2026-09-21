@@ -4,7 +4,7 @@ import type { PrincipalRepository } from '../../domain/ports/principal-repositor
 import type { SessionRepository } from '../../domain/ports/session-repository.js';
 import type { PrincipalId, PrincipalStatus } from '../../domain/principal/principal.js';
 import { isReservedActor } from '../../domain/principal/system-principals.js';
-import { SUPERUSER_GROUP_ID, isSystemGroup } from '../../domain/principal/system-groups.js';
+import { DEFAULT_GROUP_ID, SUPERUSER_GROUP_ID, isSystemGroup } from '../../domain/principal/system-groups.js';
 
 /** 거절 사유. 예외가 아니라 값이다 — 예측 가능한 분기는 예외로 흘리지 않는다. */
 export type PrincipalRule =
@@ -12,6 +12,9 @@ export type PrincipalRule =
   | 'member-must-be-user'
   | 'unknown-principal'
   | 'not-a-group'
+  | 'already-member'
+  | 'member-not-eligible'
+  | 'automatic-membership'
   | 'last-active-superuser'
   /** 예약 주체는 계정이 아니다 (`DR-AUDIT-001` AC-4 · AC-5). */
   | 'reserved-principal';
@@ -103,12 +106,15 @@ export function addGroupMember(
   const group = principals.findById(groupId);
   if (group === undefined) return reject('unknown-principal');
   if (group.kind !== 'group') return reject('not-a-group');
+  if (groupId === DEFAULT_GROUP_ID) return reject('automatic-membership');
 
   const member = principals.findById(memberId);
   if (member === undefined) return reject('unknown-principal');
   if (member.kind !== 'user') return reject('member-must-be-user');
+  if (member.status === 'rejected') return reject('member-not-eligible');
+  if (principals.groupsOf(memberId).includes(groupId)) return reject('already-member');
 
-  principals.addMember(groupId, memberId);
+  if (!principals.addMember(groupId, memberId)) return reject('already-member');
   recording.audit.append({
     operation: MEMBER_ADD,
     actor: recording.actor,

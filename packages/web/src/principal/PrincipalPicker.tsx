@@ -41,6 +41,15 @@ const MINIMUM_QUERY = 2;
  */
 const RESULT_LIMIT = 20;
 
+const isEligibleUserRow = (row: PrincipalRow): boolean =>
+  typeof row.id === 'string'
+  && row.id.length > 0
+  && typeof row.name === 'string'
+  && row.name.length > 0
+  && row.kind === 'user'
+  && (row.status === 'active' || row.status === 'pending' || row.status === 'suspended')
+  && row.system === false;
+
 // @req IR-SHELL-006
 function keepEnterInsidePicker(event: KeyboardEvent<HTMLInputElement>, composing: boolean) {
   if (event.key !== 'Enter') return;
@@ -82,6 +91,9 @@ export function PrincipalPicker({
   onPick,
   onSelectionInvalidated,
   search = fetchPrincipals,
+  mode,
+  excludedIds = [],
+  disabled = false,
 }: {
   /**
    * 무엇에 부여하려는가 (`R162`). **필수다** — 기본값을 두면 스코프가
@@ -95,7 +107,10 @@ export function PrincipalPicker({
   ariaDescribedBy?: string;
   onPick?: (row: PrincipalRow) => void;
   onSelectionInvalidated?: () => void;
-  search?: (query: string, scope: PrincipalScope) => Promise<readonly PrincipalRow[]>;
+  search?: (query: string, scope: PrincipalScope, kind?: 'user') => Promise<readonly PrincipalRow[]>;
+  mode?: 'user-only';
+  excludedIds?: readonly string[];
+  disabled?: boolean;
 }) {
   const [query, setQuery] = useState('');
   const [rows, setRows] = useState<readonly PrincipalRow[]>([]);
@@ -134,12 +149,13 @@ export function PrincipalPicker({
     let live = true;
     setRows([]);
     setState('loading');
-    void search(query, scope)
+    void (mode === 'user-only' ? search(query, scope, 'user') : search(query, scope))
       .then((found) => {
         // 늦게 온 응답이 새 질의의 결과를 덮지 않게 한다 — 덮이면 사용자가
         // 방금 친 글자와 무관한 목록이 남는다.
         if (live && generation.current === request) {
-          const accepted = found.slice(0, RESULT_LIMIT);
+          const bounded = found.slice(0, RESULT_LIMIT);
+          const accepted = mode === 'user-only' ? bounded.filter(isEligibleUserRow) : bounded;
           setRows(accepted);
           setState('ready');
           if (selected.current !== null && !accepted.some((row) => row.id === selected.current)) {
@@ -157,7 +173,9 @@ export function PrincipalPicker({
     return () => {
       live = false;
     };
-  }, [attempt, onSelectionInvalidated, query, scope, search]);
+  }, [attempt, mode, onSelectionInvalidated, query, scope, search]);
+
+  const excluded = new Set(excludedIds);
 
   const changeQuery = (next: string) => {
     if (next !== query && selected.current !== null) {
@@ -174,6 +192,7 @@ export function PrincipalPicker({
         aria-required={ariaRequired}
         aria-describedby={ariaDescribedBy}
         value={query}
+        disabled={disabled}
         onValueChange={changeQuery}
         onCompositionStart={() => { composing.current = true; }}
         onCompositionEnd={() => { composing.current = false; }}
@@ -191,7 +210,8 @@ export function PrincipalPicker({
         {state === 'ready' && rows.length === 0 ? <Command.Empty>검색 결과가 없습니다.</Command.Empty> : null}
         {state === 'ready' && rows.length > 0 ? (
           rows.map((row) => (
-            <Command.Item key={row.id} value={row.id} onSelect={() => {
+            <Command.Item key={row.id} value={row.id} disabled={disabled || excluded.has(row.id)} onSelect={() => {
+              if (disabled || excluded.has(row.id)) return;
               selected.current = row.id;
               onPick?.(row);
             }}>
@@ -199,6 +219,8 @@ export function PrincipalPicker({
               {/* 종류를 함께 보인다 — 같은 이름의 사용자와 그룹이 있을 때
                   이름만으로는 무엇에 권한을 주는지 알 수 없다. */}
               <span>{row.kind === 'user' ? '사용자' : '그룹'}</span>
+              {mode === 'user-only' ? <span>{row.id}</span> : null}
+              {excluded.has(row.id) ? <span>이미 멤버입니다.</span> : null}
               {badgeFor(row.status) === null ? null : <span data-testid="principal-status">{badgeFor(row.status)}</span>}
             </Command.Item>
           ))

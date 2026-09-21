@@ -1,88 +1,88 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-09-21T18:21:59.426Z",
+  "generatedAt": "2026-09-21T18:49:02.038Z",
   "source": "speckiwi",
   "specFingerprint": {
     "algorithm": "sha256",
-    "value": "af2e80dc4eefabed86981db09585dce64c8bce477d416c24a56588585068a8ab",
+    "value": "1bd52cf56109d029d4598c298b43ba4789042c1d026a6b5ddeb1d0bb64066d49",
     "files": [
       {
         "path": "docs/spec/00.index.md",
-        "sha256": "c6e546f5fbfe834898daae0fa0feba76d28e4abfe0f25242eab832beac4ebcbd",
-        "size": 7698,
-        "mtimeMs": 1790014919392.3293
+        "sha256": "95f30163b633863abe97baf8e7370ac87a7c10fde0f91bf7758c46ebe3bbec2b",
+        "size": 7693,
+        "mtimeMs": 1790016517045.0835
       },
       {
         "path": "docs/spec/02.product-architecture.srs.md",
         "sha256": "ff2cdf78386fbe5bf960a555fa1efc255eea84e2489ab09c66781493c7c40678",
         "size": 95329,
-        "mtimeMs": 1790010446561.58
+        "mtimeMs": 1790008106476.2595
       },
       {
         "path": "docs/spec/07.editor.srs.md",
         "sha256": "890724b543800b7fd08be9de45957def4c123a6d29b055a052e7803186f05a9a",
         "size": 108845,
-        "mtimeMs": 1790010446572.6228
+        "mtimeMs": 1790008106487.492
       },
       {
         "path": "docs/spec/08.app-shell.srs.md",
-        "sha256": "abcdc62fb13cdcaadf81085c3c448168eecb2d22cabc5066d06c2e770c38b242",
-        "size": 275373,
-        "mtimeMs": 1790010446576.138
+        "sha256": "22b3fd536e06de60671c1bc777fb725cd37d017cac69575f0c289e1c95c2848b",
+        "size": 276961,
+        "mtimeMs": 1790016457032.4578
       },
       {
         "path": "docs/spec/09.auth.srs.md",
-        "sha256": "857e52575b1409abe150926a63b622245fe10e01c1b178ca37d90a9b7e799367",
-        "size": 166800,
-        "mtimeMs": 1790010446578.1777
+        "sha256": "a2dbdeb24eda9e62f93d08b579821363e0173cfd92820923583eb5f381681cae",
+        "size": 167325,
+        "mtimeMs": 1790016457034.463
       },
       {
         "path": "docs/spec/10.access-control.srs.md",
         "sha256": "613ca876edcb67568a970a25afa46794b150ad8d97b25bcf2e053193cd17afee",
         "size": 169336,
-        "mtimeMs": 1790010446579.6902
+        "mtimeMs": 1790008106494.5608
       },
       {
         "path": "docs/spec/11.confirmation-grades.srs.md",
-        "sha256": "64b771194937e56734ecca394cfc77ef4dddaf1c14df19db101aebcd54e5f70d",
-        "size": 156086,
-        "mtimeMs": 1790010446583.4463
+        "sha256": "c720e29ab97295c291cbae0add3c3c769ffab20bed723229d3aeff1469457244",
+        "size": 156620,
+        "mtimeMs": 1790016457035.463
       },
       {
         "path": "docs/spec/12.audit-log.srs.md",
-        "sha256": "b6a2d084057eeb1d11aca436f68f55cceb023af674824dcf281c35bebdc4e140",
-        "size": 202836,
-        "mtimeMs": 1790010446585.4688
+        "sha256": "3d0bfd4ee54e5e81c330fba4b5d4b6a1d21f9397cb59c4783806d54edfb4bdc7",
+        "size": 203331,
+        "mtimeMs": 1790016457038.4644
       },
       {
         "path": "docs/spec/13.workspace.srs.md",
         "sha256": "dc5571e3b8f3d809f2f431ba8f6eabf030b639e3932cb70e5a4f3ef62768eed5",
         "size": 118873,
-        "mtimeMs": 1790010446586.838
+        "mtimeMs": 1790016457040.4622
       },
       {
         "path": "docs/spec/14.storage.srs.md",
         "sha256": "c37d71e7fd0e953f768f01d2757ed09ddd714f1d74fb8c8a1a8feca0032882c7",
         "size": 146147,
-        "mtimeMs": 1790010446589.8447
+        "mtimeMs": 1790008106502.2876
       },
       {
         "path": "docs/spec/15.attachments.srs.md",
         "sha256": "42f736ca93c12f9e9844f1e8e52056f8333d4ce7fe097f93c0c80f4b0b3a6e54",
         "size": 75068,
-        "mtimeMs": 1790010446590.8457
+        "mtimeMs": 1790008106503.7979
       },
       {
         "path": "docs/spec/16.principal.srs.md",
-        "sha256": "211d2591875bd2a737d1a25f86b04dce376187dd0e91ed810a477f705a85c251",
-        "size": 134506,
-        "mtimeMs": 1790014919358.969
+        "sha256": "71b0377373f5e94ed6724d34cb66a0a5601ea0917a79dc480d91f75dbbb227a3",
+        "size": 136901,
+        "mtimeMs": 1790016457384.6074
       },
       {
         "path": "docs/spec/90.appendix.md",
         "sha256": "0874cdd7af91ea44b3e403d7d4824be0aea4f6f1095ebcd89eae563abe05c5d7",
         "size": 990,
-        "mtimeMs": 1790010446595.3474
+        "mtimeMs": 1790008106505.8025
       }
     ]
   },
@@ -161,7 +161,14 @@
     }
   },
   "lock": {
-    "active": false,
-    "metadata": null
+    "active": true,
+    "metadata": {
+      "schemaVersion": "1.0.0",
+      "owner": "DESKTOP-LCF0D3R:94036",
+      "operation": "sync_index_rollups",
+      "requestId": "d6aa977b-33c2-434a-a802-5cd2bc9a2023",
+      "acquiredAt": "2026-09-21T18:49:01.980Z",
+      "expiresAt": "2026-09-21T18:50:01.980Z"
+    }
   }
 }

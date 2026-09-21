@@ -39,7 +39,7 @@ import {
   renameNode,
   type Rejected,
 } from '../../app/node/node-service.js';
-import { searchPrincipals } from '../../app/principal/principal-search-service.js';
+import { searchPrincipals, searchUserPrincipals } from '../../app/principal/principal-search-service.js';
 import { maySearchFor, parseScope } from '../../app/principal/search-scope.js';
 import { shareView } from '../../app/acl/share-service.js';
 import { offboardingCard } from '../../app/principal/offboarding-service.js';
@@ -881,7 +881,11 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     // 규칙 값이 아니며(`R162-b`), 최소 길이와 상한을 질의 문자열로 받으면
     // 화면 재량을 막기 전에 아무나 값을 바꿀 수 있는 문이 열린다
     // (`SEC-PRINCIPAL-003` AC-4).
-    const rows = searchPrincipals(stores.principals, one(req.query.q) ?? '');
+    const requestedKind = one(req.query.kind);
+    const query = one(req.query.q) ?? '';
+    const rows = scope.kind === 'group' && requestedKind === 'user'
+      ? searchUserPrincipals(stores.principals, query)
+      : searchPrincipals(stores.principals, query);
     res.json(revocation
       ? rows.map((row) => ({
           ...row,
@@ -1704,7 +1708,15 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       one(req.body?.userId) ?? '',
       recording(req),
     );
-    res.sendStatus(added.ok ? 204 : 400);
+    if (added.ok) {
+      res.sendStatus(204);
+      return;
+    }
+    if (added.rule === 'already-member' || added.rule === 'member-not-eligible' || added.rule === 'automatic-membership') {
+      res.status(409).json(added);
+      return;
+    }
+    res.status(400).json(added);
   });
 
   router.delete('/roster/groups/:groupId/members/:userId', (req, res) => {

@@ -117,6 +117,48 @@ describe('FR-PRINCIPAL-001 · FR-PRINCIPAL-009 — 슈퍼유저 전용 사용자
   });
 });
 
+describe('IR-PRINCIPAL-003 — 권위 있는 그룹 멤버십 projection', () => {
+  it('H1: default effective members are active users while direct membership stays separate', () => {
+    const pending = stores.principals.createUser('가입 대기');
+    const suspended = stores.principals.createUser('정지 계정');
+    const rejected = stores.principals.createUser('거절 계정');
+    stores.principals.setStatus(pending.id, 'pending');
+    stores.principals.setStatus(suspended.id, 'suspended');
+    stores.principals.setStatus(rejected.id, 'rejected');
+    stores.principals.addMember(DEFAULT_GROUP_ID, pending.id);
+
+    expect(stores.principals.membersOf(DEFAULT_GROUP_ID)).toContain(pending.id);
+    const projection = groupRoster(stores, root)!.find((row) => row.id === DEFAULT_GROUP_ID)!;
+    expect(projection.members.map((member) => member.id)).toContain(pending.id);
+    expect(projection.effectiveMembers.map((member) => member.id)).toEqual(expect.arrayContaining([root.id, 남.id]));
+    expect(projection.effectiveMembers.map((member) => member.id)).not.toEqual(expect.arrayContaining([
+      pending.id, suspended.id, rejected.id,
+    ]));
+    expect(projection.effectiveMembers.every((member) => member.status === 'active')).toBe(true);
+  });
+
+  it('AC-7/8: default, superuser, ordinary 그룹을 이름 추정 없이 구분한다', () => {
+    const ordinary = stores.principals.createGroup('default라는 이름의 일반 그룹');
+    stores.principals.addMember(ordinary.id, 남.id);
+
+    const rows = groupRoster(stores, root)!;
+    const byId = new Map(rows.map((row) => [row.id, row]));
+
+    expect(byId.get(DEFAULT_GROUP_ID)).toMatchObject({
+      systemType: 'default', mode: 'automatic', canAdd: false, effectiveMembersComplete: true,
+    });
+    expect(byId.get(DEFAULT_GROUP_ID)?.effectiveMembers.map((member) => member.id)).toEqual(
+      expect.arrayContaining([root.id, 남.id]),
+    );
+    expect(byId.get(SUPERUSER_GROUP_ID)).toMatchObject({
+      systemType: 'superuser', mode: 'managed', canAdd: true, effectiveMembersComplete: true,
+    });
+    expect(byId.get(ordinary.id)).toMatchObject({
+      systemType: null, mode: 'managed', canAdd: true, effectiveMembersComplete: true,
+    });
+  });
+});
+
 describe('FR-PRINCIPAL-002 — 그룹 삭제는 그 그룹의 ACL 항목을 함께 걷는다', () => {
   it('AC-1 · AC-2: 삭제 뒤 그 그룹을 주체로 하는 항목이 하나도 없다', () => {
     const 팀 = stores.principals.createGroup('기획팀원');

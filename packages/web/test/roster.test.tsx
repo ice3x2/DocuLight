@@ -29,8 +29,8 @@ const USERS: RosterUser[] = [
 ];
 
 const GROUPS: RosterGroup[] = [
-  { id: 'g-default', name: 'default', system: true, members: [] },
-  { id: 'g1', name: '기획팀원', system: false, members: [USERS[0]!] },
+  { id: 'g-default', name: 'default', system: true, systemType: 'default', mode: 'automatic', canAdd: false, effectiveMembersComplete: true, members: [], effectiveMembers: USERS.filter((user) => user.status === 'active') },
+  { id: 'g1', name: '기획팀원', system: false, systemType: null, mode: 'managed', canAdd: true, effectiveMembersComplete: true, members: [USERS[0]!], effectiveMembers: [USERS[0]!] },
 ];
 
 const openCategory = async (name: string, props: Record<string, unknown> = {}) => {
@@ -78,7 +78,7 @@ describe('FR-PRINCIPAL-001 — 그룹 관리와 표시 권한', () => {
     await openCategory('그룹 관리', { groupRoster: GROUPS });
 
     expect(screen.getByText('기획팀원')).toBeDefined();
-    expect(screen.getByText('활성이')).toBeDefined();
+    expect(screen.getAllByText('활성이')).toHaveLength(2);
   });
 
   it('AC-2: 시스템 그룹은 보이되 삭제 버튼이 없다', async () => {
@@ -197,7 +197,7 @@ describe('CON-PRINCIPAL-006 — 그룹 멤버 추가도 공용 부품으로 고�
       'fetch',
       vi.fn(
         () =>
-          new Response(JSON.stringify([{ id: 'u9', name: '새사람', kind: 'user', status: 'active' }]), {
+          new Response(JSON.stringify([{ id: 'u9', name: '새사람', kind: 'user', status: 'active', system: false }]), {
             status: 200,
             headers: { 'content-type': 'application/json' },
           }),
@@ -210,13 +210,13 @@ describe('CON-PRINCIPAL-006 — 그룹 멤버 추가도 공용 부품으로 고�
     const user = userEvent.setup();
     // 그룹이 여럿이므로 검색칸도 그룹마다 선다 — 하나만 두면 어느 그룹에
     // 넣는지 화면이 표현할 수 없다.
-    const 검색칸 = screen.getAllByLabelText('사용자·그룹 검색');
-    expect(검색칸).toHaveLength(GROUPS.length);
+    const 검색칸 = screen.getAllByRole('combobox');
+    expect(검색칸).toHaveLength(1);
     await user.type(검색칸[0]!, '새사람');
     await screen.findByText('새사람');
     await user.click(screen.getByText('새사람'));
 
-    expect(더했다).toHaveBeenCalledWith(GROUPS[0]!.id, 'u9');
+    expect(더했다).toHaveBeenCalledWith(GROUPS[1]!.id, 'u9');
   });
 
   it('DR-PRINCIPAL-002: 그룹 후보는 사용자 ID 콜백으로 전달하지 않는다', async () => {
@@ -231,11 +231,10 @@ describe('CON-PRINCIPAL-006 — 그룹 멤버 추가도 공용 부품으로 고�
     render(<GroupRoster groups={[GROUPS[1]!]} onAddMember={더했다} />);
 
     const user = userEvent.setup();
-    await user.type(screen.getByLabelText('사용자·그룹 검색'), '다른');
-    await user.click(await screen.findByText('다른 그룹'));
+    await user.type(screen.getByLabelText('기획팀원 멤버 검색'), '다른');
 
     expect(더했다).not.toHaveBeenCalled();
-    expect(screen.getByText('그룹은 멤버로 추가할 수 없습니다.')).toBeDefined();
+    expect(await screen.findByText('검색 결과가 없습니다.')).toBeDefined();
   });
 });
 
@@ -243,8 +242,8 @@ describe('Issue #68 — GroupRoster 표시 계약', () => {
   it('공급 순서와 ID를 보존한 표·목록·시스템 설명을 렌더링한다', async () => {
     const { GroupRoster } = await import('../src/principal/GroupRoster.js');
     const groups: RosterGroup[] = [
-      { id: 'system-id', name: '아주 긴 시스템 그룹 이름', system: true, members: [USERS[1]!, USERS[0]!] },
-      { id: 'ordinary-id', name: '일반 그룹', system: false, members: [] },
+      { id: 'system-id', name: '아주 긴 시스템 그룹 이름', system: true, systemType: 'superuser', mode: 'managed', canAdd: true, effectiveMembersComplete: true, members: [USERS[1]!, USERS[0]!], effectiveMembers: [USERS[0]!] },
+      { id: 'ordinary-id', name: '일반 그룹', system: false, systemType: null, mode: 'managed', canAdd: true, effectiveMembersComplete: true, members: [], effectiveMembers: [] },
     ];
     render(<GroupRoster groups={groups} onAddMember={vi.fn()} />);
 
@@ -257,7 +256,7 @@ describe('Issue #68 — GroupRoster 표시 계약', () => {
     expect(within(rows[0]!).getAllByRole('listitem').map((item) => item.textContent)).toEqual(['대기자', '활성이']);
     expect(within(rows[0]!).getByText('시스템 그룹은 삭제하거나 이름을 바꿀 수 없습니다.')).toBeDefined();
     expect(within(rows[0]!).getByText('시스템 그룹의 멤버십은 해당 관리 규칙을 따릅니다.')).toBeDefined();
-    expect(within(rows[1]!).getByText('제공된 멤버 항목이 없습니다.')).toBeDefined();
+    expect(within(rows[1]!).getByText('멤버가 없습니다.')).toBeDefined();
     expect(within(rows[0]!).getByRole('region', { name: '아주 긴 시스템 그룹 이름의 멤버 추가' })).toBeDefined();
   });
 
@@ -268,6 +267,6 @@ describe('Issue #68 — GroupRoster 표시 계약', () => {
 
     view.rerender(<GroupRoster groups={[GROUPS[1]!]} />);
     expect(screen.getByText('멤버 추가 기능을 사용할 수 없습니다.')).toBeDefined();
-    expect(screen.queryByLabelText('사용자·그룹 검색')).toBeNull();
+    expect(screen.queryByLabelText('기획팀원 멤버 검색')).toBeNull();
   });
 });

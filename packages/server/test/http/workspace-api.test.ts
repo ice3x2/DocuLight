@@ -1169,6 +1169,31 @@ describe('주체 검색 — 사용자·그룹 (`CON-ARCH-004` AC-4)', () => {
     expect(stores.principals.membersOf(팀.id)).toEqual([me.id]);
   });
 
+  it('IR-PRINCIPAL-003 AC-3/7/8: user-only 검색과 typed membership race 결과를 제공한다', async () => {
+    const 팀 = stores.principals.createGroup('기획팀원');
+    stores.principals.createGroup('기획그룹');
+    const rejected = stores.principals.createUser('기획거절');
+    stores.principals.setStatus(rejected.id, 'rejected');
+
+    const candidates = await request(app).get('/api/principals').query({ q: '기획', for: `group:${팀.id}`, kind: 'user' });
+    expect(candidates.status).toBe(200);
+    expect(candidates.body.every((row: { kind: string }) => row.kind === 'user')).toBe(true);
+    expect(candidates.body.some((row: { id: string }) => row.id === rejected.id)).toBe(false);
+
+    expect((await request(app).post(`/api/roster/groups/${팀.id}/members`).send({ userId: me.id })).status).toBe(204);
+    const duplicate = await request(app).post(`/api/roster/groups/${팀.id}/members`).send({ userId: me.id });
+    expect(duplicate.status).toBe(409);
+    expect(duplicate.body).toEqual({ ok: false, rule: 'already-member' });
+
+    const rejectedRace = await request(app).post(`/api/roster/groups/${팀.id}/members`).send({ userId: rejected.id });
+    expect(rejectedRace.status).toBe(409);
+    expect(rejectedRace.body).toEqual({ ok: false, rule: 'member-not-eligible' });
+
+    const automatic = await request(app).post(`/api/roster/groups/${DEFAULT_GROUP_ID}/members`).send({ userId: me.id });
+    expect(automatic.status).toBe(409);
+    expect(automatic.body).toEqual({ ok: false, rule: 'automatic-membership' });
+  });
+
   it('DR-SHELL-002 AC-1 · AC-3: 개인 설정을 쓰면 그 사용자에게만 그 값이 나온다', async () => {
     actingAs = me;
 

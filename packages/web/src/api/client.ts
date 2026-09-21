@@ -452,9 +452,9 @@ export async function saveEditorPreference(key: string, value: string): Promise<
  */
 export type PrincipalScope = `node:${string}` | `workspace:${string}` | `group:${string}`;
 
-export const fetchPrincipals = (query: string, scope: PrincipalScope) =>
+export const fetchPrincipals = (query: string, scope: PrincipalScope, kind?: 'user') =>
   call<PrincipalRow[]>(
-    `/principals?q=${encodeURIComponent(query)}&for=${encodeURIComponent(scope)}`,
+    `/principals?q=${encodeURIComponent(query)}&for=${encodeURIComponent(scope)}${kind === undefined ? '' : `&kind=${kind}`}`,
   );
 
 export const fetchRevocationPrincipals = (query: string, scope: PrincipalScope) =>
@@ -492,6 +492,11 @@ export interface RosterGroup {
   id: string;
   name: string;
   system: boolean;
+  systemType: 'default' | 'superuser' | null;
+  mode: 'automatic' | 'managed';
+  canAdd: boolean;
+  effectiveMembers: RosterUser[];
+  effectiveMembersComplete: true;
   members: RosterUser[];
 }
 

@@ -13,6 +13,8 @@
     "test:browser:all": "npm run test:browser:all --workspace @doculight/editor && npm run test:browser:all --workspace @doculight/web",
     "test:browser:issue87-product": "npm run test:browser:issue87-product --workspace @doculight/web",
     "test:browser:issue80-product": "npm run test:browser:issue80-product --workspace @doculight/web",
+    "test:browser:issue81-product": "npm run test:browser:issue81-product --workspace @doculight/web",
+    "test:issue81:capture-evidence": "npm run test:issue81:capture-evidence --workspace @doculight/web",
     "test:issue80:capture-evidence": "npm run test:issue80:capture-evidence --workspace @doculight/web",
     "test:issue87:product-isolation": "node packages/web/test/issue87-product-evidence-isolation.mjs",
     "test:issue87:capture-evidence": "node packages/web/test/issue87-green-evidence-capture.mjs",

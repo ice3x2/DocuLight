@@ -76,10 +76,13 @@ export class SqlitePrincipalRepository implements PrincipalRepository {
     return row?.password_hash ?? null;
   }
 
-  addMember(groupId: PrincipalId, userId: PrincipalId): void {
+  addMember(groupId: PrincipalId, userId: PrincipalId): boolean {
     // 그룹을 넘기면 `006` 의 트리거가 던진다 — 검사를 여기 두면 저장소를
     // 만지는 두 번째 경로가 생기는 순간 무너진다.
-    this.store.run('INSERT INTO group_member (group_id, user_id) VALUES (?, ?)', [groupId, userId]);
+    return this.store.get<{ user_id: string }>(
+      'INSERT INTO group_member (group_id, user_id) VALUES (?, ?) ON CONFLICT DO NOTHING RETURNING user_id',
+      [groupId, userId],
+    ) !== undefined;
   }
 
   removeMember(groupId: PrincipalId, userId: PrincipalId): void {

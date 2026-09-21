@@ -681,6 +681,30 @@ function AppBody() {
   acceptPrincipalReads(principalReadCounts());
   const principalReadGeneration = principalReadTracker.current.generation;
   const groups = useGroupRoster(principalEnabled);
+  const groupReadTracker = useRef<{ owner: string | undefined; revision: number; generation: number }>({
+    owner: undefined,
+    revision: 0,
+    generation: 0,
+  });
+  const groupReadCount = () => queries.getQueryState(QUERY_KEYS.groupRoster)?.dataUpdateCount ?? 0;
+  const acceptGroupRead = (revision: number): number => {
+    const tracker = groupReadTracker.current;
+    if (tracker.owner !== principalOwner) {
+      tracker.owner = principalOwner;
+      tracker.revision = 0;
+      tracker.generation += 1;
+    }
+    if (tracker.revision !== revision) {
+      tracker.revision = revision;
+      tracker.generation += 1;
+    }
+    return tracker.generation;
+  };
+  const groupReadGeneration = acceptGroupRead(groupReadCount());
+  const pendingGroupMemberWrites = useRef(new Set<string>());
+  useEffect(() => {
+    pendingGroupMemberWrites.current.clear();
+  }, [principalOwner]);
   const previousPrincipalOwner = useRef<string | undefined>(undefined);
   useEffect(() => {
     const owner = principalEnabled && userId !== undefined ? `${userId}:${authGeneration}` : undefined;
@@ -1600,13 +1624,28 @@ function AppBody() {
   );
 
   const addMember = useCallback(
-    async (groupId: string, userId: string) => {
-      if (!allowsProtected()) return;
-      await addGroupMember(groupId, userId).catch(() => undefined);
-      if (!allowsProtected()) return;
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.groupRoster });
+    async (groupId: string, memberId: string): Promise<PrincipalActionResult> => {
+      if (!allowsProtected()) return { ok: false, kind: 'stale' };
+      const guardKey = `${principalOwner ?? 'anonymous'}\u0000${groupId}`;
+      if (pendingGroupMemberWrites.current.has(guardKey)) return { ok: false, kind: 'stale' };
+      pendingGroupMemberWrites.current.add(guardKey);
+      try {
+        await addGroupMember(groupId, memberId);
+        if (!allowsProtected()) return { ok: false, kind: 'stale' };
+        const refreshed = await groups.refetch();
+        if (!allowsProtected()) return { ok: false, kind: 'stale' };
+        return {
+          ok: true,
+          refreshFailed: refreshed.isError,
+          acceptedReadGeneration: acceptGroupRead(groupReadCount()),
+        };
+      } catch (error) {
+        return failedPrincipalAction(error);
+      } finally {
+        pendingGroupMemberWrites.current.delete(guardKey);
+      }
     },
-    [allowsProtected, queries],
+    [allowsProtected, groups.refetch, principalOwner],
   );
 
   const saveTheme = useCallback(
@@ -2139,6 +2178,14 @@ function AppBody() {
       }
       principalRequestContext={{ principalId: userId ?? 'anonymous', authGeneration, queryGeneration: principalReadGeneration }}
       groupRoster={groups.data ?? []}
+      groupRosterQuery={
+        groups.isError
+          ? { state: 'error', revision: groups.dataUpdatedAt, onRetry: () => void groups.refetch() }
+          : groups.isFetching || groups.data === undefined
+            ? { state: 'loading', revision: groups.dataUpdatedAt }
+            : { state: 'ready', revision: groups.dataUpdatedAt, groups: groups.data, onRetry: () => void groups.refetch() }
+      }
+      groupRequestContext={{ principalId: userId ?? 'anonymous', authGeneration, queryGeneration: groupReadGeneration }}
       onGroupRemove={dropGroup}
       onGroupAddMember={addMember}
       onRegisterUser={makeUser}

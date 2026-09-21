@@ -1,0 +1,13 @@
+﻿{
+    "finding":  "H5",
+    "files":  [
+                  {
+                      "path":  "packages/web/test/issue81-group-request-results.test.tsx",
+                      "sha256":  "d619b315d64b4fa8f23a325dca63f9b461ecf6618a90eb65b657a03ae0c355d5"
+                  },
+                  {
+                      "path":  "packages/web/src/principal/PrincipalPicker.tsx",
+                      "sha256":  "9a60388126a13f4a7701c92d130909ad657f9178275d94b22b3629347807b486"
+                  }
+              ]
+}

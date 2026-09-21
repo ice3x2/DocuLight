@@ -1,0 +1,17 @@
+﻿{
+    "finding":  "H3",
+    "files":  [
+                  {
+                      "path":  "packages/web/test/app-wiring.test.tsx",
+                      "sha256":  "85828a441ef1b078879c495330a1842362310424051ddd86cc6dc0460c5b2589"
+                  },
+                  {
+                      "path":  "packages/web/src/App.tsx",
+                      "sha256":  "35537a9e9698331729bc742b0b96515f5a67bef9846c5ad68b6abe5a11383996"
+                  },
+                  {
+                      "path":  "packages/web/src/principal/GroupRoster.tsx",
+                      "sha256":  "a887c849fdcf8ae70dd755a93927474acb04e2849b6dcf45605045d6879e28fc"
+                  }
+              ]
+}

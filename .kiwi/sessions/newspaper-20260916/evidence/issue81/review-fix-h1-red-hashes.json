@@ -1,0 +1,13 @@
+﻿{
+    "finding":  "H1",
+    "files":  [
+                  {
+                      "path":  "packages/server/test/app/principal/roster.test.ts",
+                      "sha256":  "9b818879ea7831ac1d0d175dcd7ece2dafca1572d32bef747ef68813dd8bdc73"
+                  },
+                  {
+                      "path":  "packages/server/src/app/principal/roster-service.ts",
+                      "sha256":  "3e893d716c62bd3795f9f0efb1b2a7f74dfa5b7f587383b70c151f8298f6fbd0"
+                  }
+              ]
+}

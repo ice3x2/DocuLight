@@ -2,7 +2,7 @@ import type { AclRepository } from '../../domain/ports/acl-repository.js';
 import type { PrincipalRepository } from '../../domain/ports/principal-repository.js';
 import type { PrincipalId, PrincipalStatus } from '../../domain/principal/principal.js';
 import { isSuperuser } from '../../domain/principal/subject.js';
-import { isSystemGroup } from '../../domain/principal/system-groups.js';
+import { DEFAULT_GROUP_ID, SUPERUSER_GROUP_ID, isSystemGroup } from '../../domain/principal/system-groups.js';
 import type { Actor } from '../acl/permission-service.js';
 
 /**
@@ -37,6 +37,11 @@ export interface RosterGroup {
   readonly name: string;
   /** 시스템 그룹인가 — 지우려다 거절당하는 이유를 화면이 미리 알아야 한다. */
   readonly system: boolean;
+  readonly systemType: 'default' | 'superuser' | null;
+  readonly mode: 'automatic' | 'managed';
+  readonly canAdd: boolean;
+  readonly effectiveMembers: readonly RosterUser[];
+  readonly effectiveMembersComplete: true;
   readonly members: readonly RosterUser[];
 }
 
@@ -60,10 +65,18 @@ export function groupRoster(stores: RosterStores, actor: Actor): RosterGroup[] |
     id: group.id,
     name: group.name,
     system: isSystemGroup(group.id),
-    members: stores.principals
-      .membersOf(group.id)
+    systemType: group.id === DEFAULT_GROUP_ID ? 'default' : group.id === SUPERUSER_GROUP_ID ? 'superuser' : null,
+    mode: group.id === DEFAULT_GROUP_ID ? 'automatic' : 'managed',
+    canAdd: group.id !== DEFAULT_GROUP_ID,
+    effectiveMembersComplete: true,
+    members: stores.principals.membersOf(group.id)
       .map((id) => stores.principals.findById(id))
       .filter((record): record is NonNullable<typeof record> => record !== undefined)
+      .map((record) => ({ id: record.id, name: record.name, status: record.status })),
+    effectiveMembers: (group.id === DEFAULT_GROUP_ID
+      ? stores.principals.list('user')
+      : stores.principals.membersOf(group.id).map((id) => stores.principals.findById(id)).filter((record): record is NonNullable<typeof record> => record !== undefined))
+      .filter((record) => record.status === 'active')
       .map((record) => ({ id: record.id, name: record.name, status: record.status })),
   }));
 }

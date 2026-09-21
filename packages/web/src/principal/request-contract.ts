@@ -1,4 +1,4 @@
-import type { RosterUser } from '../api/client.js';
+import type { RosterGroup, RosterUser } from '../api/client.js';
 
 export type RosterRead =
   | { state: 'loading'; revision?: number }
@@ -8,6 +8,10 @@ export type SignupModeRead =
   | { state: 'loading' }
   | { state: 'error'; onRetry: () => void }
   | { state: 'ready'; mode: string };
+export type GroupRosterRead =
+  | { state: 'loading'; revision?: number }
+  | { state: 'error'; revision?: number; onRetry: () => void }
+  | { state: 'ready'; revision?: number; groups: readonly RosterGroup[]; onRetry?: () => void };
 
 export type PrincipalActionResult =
   | { ok: true; id?: string; refreshFailed: boolean; acceptedReadGeneration?: number }

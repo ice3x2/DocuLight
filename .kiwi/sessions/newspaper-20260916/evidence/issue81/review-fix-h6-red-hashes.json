@@ -1,0 +1,13 @@
+﻿{
+    "finding":  "H6",
+    "files":  [
+                  {
+                      "path":  "packages/web/test/issue81-product-contract.test.ts",
+                      "sha256":  "9703679bc6ae77455d0697d87be6b3c07ce0c3e25686af1f6922cbfda3ca842d"
+                  },
+                  {
+                      "path":  "packages/web/test/issue81-group-product-check.mjs",
+                      "sha256":  "5181e3c3e7f4490cba0f619be77837da34e279657da45ba4d6e9dd513bcb142a"
+                  }
+              ]
+}

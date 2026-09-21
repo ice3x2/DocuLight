@@ -77,6 +77,28 @@ describe('DR-PRINCIPAL-001 — 슈퍼유저 여부는 슈퍼유저 그룹 소속
 });
 
 describe('DR-PRINCIPAL-002 — 그룹은 사용자만을 멤버로 가지며 중첩되지 않는다', () => {
+  it('IR-PRINCIPAL-003 M1: same-transaction SQLite race has one winner, one false loser, one row, and one audit', () => {
+    const team = principals.createGroup('경합 팀');
+    const user = principals.createUser('경합 사용자');
+    const audit = new SqliteAuditLog(db);
+    const raced = new Proxy(principals, {
+      get(target, property, receiver) {
+        if (property === 'groupsOf') return () => [];
+        const value = Reflect.get(target, property, receiver) as unknown;
+        return typeof value === 'function' ? value.bind(target) : value;
+      },
+    });
+
+    const outcomes = db.transaction(() => [
+      addGroupMember(raced, team.id, user.id, { audit, actor: 'race:one' }),
+      addGroupMember(raced, team.id, user.id, { audit, actor: 'race:two' }),
+    ]);
+
+    expect(outcomes).toEqual([{ ok: true }, { ok: false, rule: 'already-member' }]);
+    expect(principals.membersOf(team.id)).toEqual([user.id]);
+    expect(db.all<{ actor: string }>("SELECT actor FROM audit_log WHERE operation = 'principal.member-add'")).toEqual([{ actor: 'race:one' }]);
+  });
+
   it('AC-1: 그룹을 멤버로 지정하는 요청이 거부된다', () => {
     const outer = principals.createGroup('기획팀');
     const inner = principals.createGroup('기획팀-리드');
