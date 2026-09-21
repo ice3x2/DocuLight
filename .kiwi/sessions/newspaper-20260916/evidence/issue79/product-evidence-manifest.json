@@ -1,0 +1,92 @@
+{
+  "requirementId": "IR-SHELL-011",
+  "capturedAt": "2026-09-21T13:44:11.980Z",
+  "files": [
+    {
+      "path": "product-evidence/browser-observation.json",
+      "sha256": "77ffb0b69f7c7b161025fda52b61c7af15956d2fa07e7ad83e79b07af8e9d91b"
+    },
+    {
+      "path": "product-evidence/dark-1280x720-zoom100.png",
+      "sha256": "50f1a2c180e9b5b583954a51a158b1a4b521fa332698ea91e769d096da421e23"
+    },
+    {
+      "path": "product-evidence/dark-1280x720-zoom200.png",
+      "sha256": "18e55575ef994bd9181a5476576638fad674270eb6ec0c397af46b43e794cb65"
+    },
+    {
+      "path": "product-evidence/dark-1440x900-zoom100.png",
+      "sha256": "f051f7c0b603b119e80965849d14e3db4e6d5b54b151c8a5996be33a8c8f9f77"
+    },
+    {
+      "path": "product-evidence/dark-1440x900-zoom200.png",
+      "sha256": "39314b4f0f9e584515f45e4e3442ce01992cb11352ba9d82d36a4c8b5544136d"
+    },
+    {
+      "path": "product-evidence/dark-1920x1080-zoom100.png",
+      "sha256": "31119a162bf24df111b59f264f40543bf650f628d561d3fed91ed2f94b7b83df"
+    },
+    {
+      "path": "product-evidence/dark-1920x1080-zoom200.png",
+      "sha256": "bab2e5ca8b8e081821399bfcc4911fb111cfd0bdb53108784b5fabc9000d67a8"
+    },
+    {
+      "path": "product-evidence/forced-colors-1440x900-zoom100.png",
+      "sha256": "8b10882131b7f0ad3606aa173755f4f784bc648f0f8890f8e8c6f83318359648"
+    },
+    {
+      "path": "product-evidence/forced-colors-1440x900-zoom200.png",
+      "sha256": "d6a1a613fb042ec0bc05cea4437bcf58af2ee64831fce72a7b2e9acc09632d5c"
+    },
+    {
+      "path": "product-evidence/light-1280x720-zoom100.png",
+      "sha256": "88c03463384082b26b2508dd7e7beb963d0c8506ccf32568c5cccc3828a24dac"
+    },
+    {
+      "path": "product-evidence/light-1280x720-zoom200.png",
+      "sha256": "c40e1f00414f1d2bb6c0e63d1b1dd57ab8f067440664c86f9da89a2c4f88565c"
+    },
+    {
+      "path": "product-evidence/light-1440x900-zoom100.png",
+      "sha256": "9024b8939c54af9d109e9424f918c716e870b74e605757a008606acc65c9e57a"
+    },
+    {
+      "path": "product-evidence/light-1440x900-zoom200.png",
+      "sha256": "dd598bfb546c6d1a16cd4d38821b914570d2da5fbb1098fc6846e58f87172ab4"
+    },
+    {
+      "path": "product-evidence/light-1920x1080-zoom100.png",
+      "sha256": "025b2eacd7157d34158c8c5ed6992485ca597648da5cb00a9c84f53dab2c8516"
+    },
+    {
+      "path": "product-evidence/light-1920x1080-zoom200.png",
+      "sha256": "84f1f725d23f02384505d0e306def80186ae5cecbfcf1bd8f0672d21046a8561"
+    },
+    {
+      "path": "product-evidence/persistence.json",
+      "sha256": "e75a1e811f0d4c21fb0a7177278226e03b4042241fb3bc990fadaab4d5e53afa"
+    }
+  ],
+  "sourceHashes": {
+    "docs/spec/00.index.md": "95c8ed839aa6df0ea339f1e253a18f4bcb3d8a88abe4322b488c558ff651815b",
+    "docs/spec/08.app-shell.srs.md": "89dc618ba8b6ad134a2d73dc361111716024801d26c95204a8c462e91d2deeda",
+    "packages/web/package.json": "18c42b9c5f6cec58cf37d24e09ebb29fdfe30f4e880f5587b685e44debeac92b",
+    "packages/web/src/App.tsx": "b59d44cedb12dbe28cada6e7cf6cdca7ebc5d68e26448fc2e9902ab469badff6",
+    "packages/web/src/api/client.ts": "25abed04c94a752555bde0d4b3d4f74857c274792c207343606638dc1b0b47f3",
+    "packages/web/src/shell/AppShell.tsx": "8b1b7e031a3ce6c76f7716792613d570c0c85d603be78cba9b9fa60d9d21b008",
+    "packages/web/src/shell/RelocationDialog.tsx": "fb021c7aad2b5fd02fe96d11d756d19ba231e12d571c3b0e6f3a815999dc081e",
+    "packages/web/src/tree/DocumentTree.tsx": "dce88774e8bba41ea7dbef8edffda0f07bd9884d47feaf55ba56abc89a1ab677",
+    "packages/web/src/tree/tree-contract.ts": "8a521924f30f58f190e3d1f4dcd2db8171a66030a3773ffed586e0813944b843",
+    "packages/web/test/api-client.test.ts": "5765869a7ef561366fba13d152b3f8b2cd771ed6c1055eea82297749f1fa060d",
+    "packages/web/test/screen-wiring.test.tsx": "05ba3217af86efa89a193af905a46abe66cf6dbf0f3aa8ba6a34fdab7ccea347",
+    "packages/web/test/issue79-relocation-integration.test.tsx": "0072507d350cd879ec5e9dbab2b15059add5ea63884df72d389f768d0573a032",
+    "packages/web/test/issue79-relocation-transport.test.ts": "1b3baeddf6630c9ae6efa6c28bd8cec48d98ac2cba1c383999c724b632bec753",
+    "packages/web/test/issue79-relocation-product-check.mjs": "00ffb222ab5b29c96d3a97eb159e7cb9c404a65355067602d0e49d49cf326666",
+    "packages/web/test/issue79-relocation-product-runner.mjs": "3844757befac7826245bba5e8e9e05b1a4e6cb3952b7cdc34bcff5a7f4b9e7e0",
+    "packages/web/test/issue79-green-evidence-capture.mjs": "cfafc746d5ef6c5b0d258fb17d3b6afbec6005158246897d9d81a3a2a2079f9d",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue79/astra-post-reconciliation-authorization.md": "bcf954146d3544eaee622f4e0edd47f8dc6e90a51cec800ce4af0a19795f10f6",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue79/review-red-allowlist.json": "873ea653a7f8c0730a271a729901c1bd1b504299e9211fb7c846c8eee7db089f",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue79/review-red-raw.txt": "db07c2800bc2712d5bdb2c1901ad344c58f23be0f55006822528b382368a01fe",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue79/final-independent-review.md": "667876e950f688ec4ca02a08bf49e55758888b2bc250b385e0dec0402a10d803"
+  }
+}

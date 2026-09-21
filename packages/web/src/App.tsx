@@ -28,6 +28,7 @@ import {
   moveNodeToTrash,
   moveNode,
   copyNode,
+  fetchRelocationPreview,
   breakInheritance,
   inheritFromParent,
   fetchShareView,
@@ -95,7 +96,7 @@ import { nodeIdOf, urlForNode } from './routing/deep-link.js';
 import type { SaveState } from './document/tab-state.js';
 import type { TrashLens } from './trash/TrashPanel.js';
 import type { ShareQueryState } from './acl/ShareModal.js';
-import { CREATE_DEFAULTS } from './tree/tree-contract.js';
+import { CREATE_DEFAULTS, relocationTransportFor } from './tree/tree-contract.js';
 import type { WorkspaceTreeView, TreeNodeView } from './tree/tree-contract.js';
 import { rememberTheme, useThemeRuntime, type ThemePreference } from './theme/runtime.js';
 import type { ThemeLoadState, ThemeSaveState } from './settings/PersonalSettings.js';
@@ -195,6 +196,15 @@ export async function refetchWorkspaceCreationReads(queries: QueryClient): Promi
   return refreshed.every((result) => result.status === 'fulfilled');
 }
 
+// @req IR-SHELL-011 AC-8
+async function refetchRelocationTree(queries: QueryClient): Promise<void> {
+  await queries.fetchQuery({
+    queryKey: QUERY_KEYS.tree,
+    queryFn: () => fetchTree<WorkspaceTreeView[]>(),
+    staleTime: 0,
+  });
+}
+
 function AppBody() {
   const queries = useQueryClient();
   const session = useSession();
@@ -205,11 +215,11 @@ function AppBody() {
 
   const tree = useTree(signedIn);
   const workspaces: readonly WorkspaceTreeView[] = tree.data ?? [];
-  const treeState: ShellPanelState = tree.data !== undefined
-    ? { state: 'ready' }
-    : tree.isError
+  const treeState: ShellPanelState = tree.isError
       ? { state: 'error', message: '잠시 후 다시 시도하십시오.', onRetry: () => void tree.refetch() }
-      : { state: 'loading' };
+      : tree.isFetching || tree.data === undefined
+        ? { state: 'loading' }
+        : { state: 'ready' };
 
   const [documents, setDocuments] = useState<TabState>({ tabs: [], activeId: null });
   /**
@@ -227,6 +237,7 @@ function AppBody() {
    * 충돌의 문구가 갈리고, 그 차이가 존재 오라클이 된다.
    */
   const [notice, setNotice] = useState<string | undefined>(undefined);
+  const [relocationRefreshError, setRelocationRefreshError] = useState(false);
   /**
    * 지금 서 있는 인증 전 화면 (`IR-AUTH-001`).
    *
@@ -275,6 +286,9 @@ function AppBody() {
   const themeRequest = useRef(0);
   const currentUser = useRef<string | undefined>(userId);
   currentUser.current = userId;
+  const currentAuthGeneration = useRef(authGeneration);
+  currentAuthGeneration.current = authGeneration;
+  const currentRelocationOwner = useRef<string | undefined>(undefined);
   const resolvedTheme = optimisticTheme ?? personal.data?.theme;
   const themeLoadState: ThemeLoadState = userId === undefined
     ? identity.isFetching
@@ -508,22 +522,58 @@ function AppBody() {
    * 여기서 한 번에 갈라 보낸다.
    */
   const relocate = useCallback(
-    async (nodeId: string, kind: 'move' | 'copy', destinationId: string) => {
-      const 루트로 = workspaces.some((entry) => entry.workspace.id === destinationId);
-
+    async (nodeId: string, kind: 'move' | 'copy', destinationId: string, ownerKey: string) => {
+      const owner = userId;
+      const generation = authGeneration;
+      const transport = relocationTransportFor(workspaces, nodeId, kind, destinationId);
+      if (transport === null) throw new Error('invalid relocation destination');
       if (kind === 'move') {
-        await moveNode(nodeId, 루트로 ? null : destinationId).catch(() => undefined);
-      } else {
-        await copyNode(
-          nodeId,
-          루트로 ? { workspaceId: destinationId } : { parentId: destinationId },
-        ).catch(() => undefined);
+        const moved = await moveNode(nodeId, transport.writeDestination as string | null);
+        if (currentUser.current !== owner || currentAuthGeneration.current !== generation || currentRelocationOwner.current !== ownerKey) return { kind: 'move' as const, name: moved.name };
+        try {
+          await refetchRelocationTree(queries);
+          if (currentUser.current === owner && currentAuthGeneration.current === generation && currentRelocationOwner.current === ownerKey) setRelocationRefreshError(false);
+        } catch {
+          if (currentUser.current === owner && currentAuthGeneration.current === generation && currentRelocationOwner.current === ownerKey) setRelocationRefreshError(true);
+        }
+        if (currentUser.current === owner && currentAuthGeneration.current === generation && currentRelocationOwner.current === ownerKey) {
+          setNotice(`항목을 이동했습니다. 결과 이름: ${moved.name}`);
+        }
+        return { kind: 'move' as const, name: moved.name };
       }
-
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
+      const copied = await copyNode(nodeId, transport.writeDestination as { parentId: string } | { workspaceId: string });
+      if (currentUser.current !== owner || currentAuthGeneration.current !== generation || currentRelocationOwner.current !== ownerKey) return { kind: 'copy' as const, ...copied };
+      try {
+        await refetchRelocationTree(queries);
+        if (currentUser.current === owner && currentAuthGeneration.current === generation && currentRelocationOwner.current === ownerKey) setRelocationRefreshError(false);
+      } catch {
+        if (currentUser.current === owner && currentAuthGeneration.current === generation && currentRelocationOwner.current === ownerKey) setRelocationRefreshError(true);
+      }
+      if (currentUser.current === owner && currentAuthGeneration.current === generation && currentRelocationOwner.current === ownerKey) {
+        setNotice(`${copied.copied}개 항목을 복사했습니다. 결과 이름: ${copied.name}`);
+      }
+      return { kind: 'copy' as const, ...copied };
     },
-    [workspaces, queries],
+    [workspaces, queries, userId, authGeneration],
   );
+
+  const previewRelocation = useCallback(
+    async (nodeId: string, kind: 'move' | 'copy', destinationId: string) => {
+      const transport = relocationTransportFor(workspaces, nodeId, kind, destinationId);
+      if (transport === null) throw new Error('invalid relocation destination');
+      return fetchRelocationPreview(nodeId, kind, transport.previewDestinationId);
+    },
+    [workspaces],
+  );
+
+  const retryRelocationRefresh = useCallback(() => {
+    const owner = currentUser.current;
+    const generation = currentAuthGeneration.current;
+    void refetchRelocationTree(queries).then(
+      () => { if (currentUser.current === owner && currentAuthGeneration.current === generation) setRelocationRefreshError(false); },
+      () => { if (currentUser.current === owner && currentAuthGeneration.current === generation) setRelocationRefreshError(true); },
+    );
+  }, [queries]);
 
   /**
    * 공유 화면 (`IR-ACL-002` · `IR-ACL-003`).
@@ -1357,6 +1407,12 @@ function AppBody() {
       onDelete={deleteNode}
       onRename={rename}
       onRelocate={relocate}
+      onRelocationPreview={previewRelocation}
+      relocationContextKey={`${userId ?? 'anonymous'}:${authGeneration}`}
+      relocationTreeGeneration={tree.dataUpdatedAt}
+      onRelocationOwnerChange={(ownerKey) => { currentRelocationOwner.current = ownerKey; }}
+      relocationRefreshError={relocationRefreshError}
+      onRetryRelocationRefresh={retryRelocationRefresh}
       share={share}
       onNewVersion={newVersion}
       onNoticeDismiss={() => setNotice(undefined)}

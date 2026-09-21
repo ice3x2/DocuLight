@@ -1,0 +1,53 @@
+IR-SHELL-011 independent-review fix RED evidence
+Generated from actual command output in C:\Work\git\DocuLight2.0-wt-issue79. This file does not claim unverifiable RED provenance for earlier implementation work.
+
+COMMAND
+npx vitest run test/issue79-relocation-transport.test.ts test/issue79-relocation-integration.test.tsx
+
+RAW RESULT EXCERPT
+Test Files  2 failed (2)
+Tests  3 failed | 13 passed (16)
+FAIL  test/issue79-relocation-integration.test.tsx > IR-SHELL-011 — authoritative relocation lifecycle > uses the accepted L2 mismatch as the next form baseline after cancellation
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+FAIL  test/issue79-relocation-integration.test.tsx > IR-SHELL-011 — authoritative relocation lifecycle > invalidates an actionable preview when the authoritative tree generation changes with the same ids
+AssertionError: expected <button type="button" …(4)></button> to have property "disabled" with value true
+FAIL  test/issue79-relocation-transport.test.ts > IR-SHELL-011 relocation destination transport > refuses a file as a relocation destination
+AssertionError: expected { Object (previewDestinationId, writeDestination) } to be null
+Received: { "previewDestinationId": "file-1", "writeDestination": "file-1" }
+
+COMMAND
+npx vitest run test/issue79-relocation-integration.test.tsx -t "retries the captured workspace fallback"
+
+RAW RESULT EXCERPT
+Test Files  1 failed (1)
+Tests  1 failed | 11 skipped (12)
+FAIL  test/issue79-relocation-integration.test.tsx > IR-SHELL-011 — post-refresh focus restoration > retries the captured workspace fallback when the refreshed tree mounts after the first focus frame
+AssertionError: expected <div role="tree" …(6)>…(1)</div> to be <div role="treeitem" …(6)>…(2)</div>
+
+COMMAND
+npx vitest run test/screen-wiring.test.tsx -t "accepted 이동"
+
+RAW RESULT EXCERPT
+Test Files  1 failed (1)
+Tests  1 failed | 60 skipped (61)
+FAIL  test/screen-wiring.test.tsx > FR-SHELL-015 — 이동과 복사가 화면에서 서버까지 닿는다 > accepted 이동은 실제 이름을 알리고 tree refresh 실패를 write 실패와 분리해 GET만 재시도한다
+AssertionError: expected <body><div>…(1)</div></body> to be <button type="button" …(8)></button>
+
+COMMAND
+npx vitest run test/issue79-relocation-integration.test.tsx -t "ignores an obsolete execute refresh failure"
+
+RAW RESULT EXCERPT
+Test Files  1 failed (1)
+Tests  1 failed | 12 skipped (13)
+FAIL  test/issue79-relocation-integration.test.tsx > IR-SHELL-011 — authoritative relocation lifecycle > ignores an obsolete execute refresh failure after owner replacement
+TestingLibraryElementError: Unable to find an element by: [data-testid="relocation-preview"]
+Observed replacement owner UI: 영향 정보를 불러오지 못했습니다.
+
+COMMAND
+npx vitest run test/issue79-relocation-integration.test.tsx -t "keeps an accepted write owner"
+
+RAW RESULT EXCERPT
+Test Files  1 failed (1)
+Tests  1 failed | 13 skipped (14)
+FAIL  test/issue79-relocation-integration.test.tsx > IR-SHELL-011 — authoritative relocation lifecycle > keeps an accepted write owner while its authoritative post-write tree refresh changes query state
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times

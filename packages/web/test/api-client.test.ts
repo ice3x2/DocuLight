@@ -13,6 +13,9 @@ import {
   issueToken,
   revokeToken,
   grantShare,
+  fetchRelocationPreview,
+  moveNode,
+  copyNode,
 } from '../src/api/client.js';
 
 const respond = (status: number, body?: unknown) =>
@@ -28,6 +31,39 @@ const stub = (impl: (url: string, init?: RequestInit) => Response | Promise<Resp
 };
 
 afterEach(() => vi.unstubAllGlobals());
+
+describe('IR-SHELL-011 relocation wire contracts', () => {
+  it('sends the operation kind and omits a move root destination', async () => {
+    const spy = stub(() => respond(200, { kind: 'move', before: 2, after: 1, grade: 'L2' }));
+    await expect(fetchRelocationPreview('node-1', 'move', null)).resolves.toEqual({ kind: 'move', before: 2, after: 1, grade: 'L2' });
+    expect(spy.mock.calls[0]?.[0]).toBe('/api/nodes/node-1/relocation-preview?kind=move');
+  });
+
+  it('keeps a copy root destination in the preview query', async () => {
+    const spy = stub(() => respond(200, { kind: 'copy', reachable: 3, grade: 'L2' }));
+    await fetchRelocationPreview('node-1', 'copy', 'workspace-2');
+    expect(spy.mock.calls[0]?.[0]).toBe('/api/nodes/node-1/relocation-preview?kind=copy&destinationId=workspace-2');
+  });
+
+  it.each([
+    { kind: 'move', before: 2, after: 1 },
+    { kind: 'move', before: 2, after: -1, grade: 'L1' },
+    { kind: 'copy', reachable: 3, grade: 'L1' },
+    { kind: 'copy', reachable: '3', grade: 'L2' },
+  ])('rejects malformed preview bodies without manufacturing impact: %j', async (body) => {
+    stub(() => respond(200, body));
+    await expect(fetchRelocationPreview('node-1', body.kind as 'move' | 'copy', 'directory-1')).rejects.toThrow('invalid relocation preview response');
+  });
+
+  it('validates move and copy receipts exactly once', async () => {
+    const moveSpy = stub(() => respond(200, { name: 4 }));
+    await expect(moveNode('node-1', null)).rejects.toThrow('invalid relocation result');
+    expect(moveSpy).toHaveBeenCalledTimes(1);
+    const copySpy = stub(() => respond(200, { id: 'copy-1', name: 'copy.md', copied: -1 }));
+    await expect(copyNode('node-1', { workspaceId: 'workspace-2' })).rejects.toThrow('invalid relocation result');
+    expect(copySpy).toHaveBeenCalledTimes(1);
+  });
+});
 
 describe('IR-ACL-004 grant receipt client', () => {
   it('opts into a representation and accepts only the minimal typed receipt', async () => {

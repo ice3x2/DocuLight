@@ -1,0 +1,49 @@
+{
+  "requirementId": "IR-SHELL-011",
+  "scope": "independent-review-fix",
+  "provenance": "Only failures actually observed in this worktree are listed. No earlier RED provenance is inferred.",
+  "tests": [
+    {
+      "file": "packages/web/test/issue79-relocation-integration.test.tsx",
+      "name": "uses the accepted L2 mismatch as the next form baseline after cancellation",
+      "sha256AtRed": "921DF2FD717F5FAB3FBFAB4BFD7E765B600284550DDF1C2CA872550E0FCA1D99",
+      "gitBlobAtRed": "d4bfa9ba19b278448418a4afd036cfe74d033490"
+    },
+    {
+      "file": "packages/web/test/issue79-relocation-integration.test.tsx",
+      "name": "invalidates an actionable preview when the authoritative tree generation changes with the same ids",
+      "sha256AtRed": "921DF2FD717F5FAB3FBFAB4BFD7E765B600284550DDF1C2CA872550E0FCA1D99",
+      "gitBlobAtRed": "d4bfa9ba19b278448418a4afd036cfe74d033490"
+    },
+    {
+      "file": "packages/web/test/issue79-relocation-transport.test.ts",
+      "name": "refuses a file as a relocation destination",
+      "sha256AtRed": "1B3BAEDDF6630C9AE6EFA6C28BD8CEC48D98AC2CBA1C383999C724B632BEC753",
+      "gitBlobAtRed": "295463104afe900cea1c51ad456354f4a6671dc4"
+    },
+    {
+      "file": "packages/web/test/issue79-relocation-integration.test.tsx",
+      "name": "retries the captured workspace fallback when the refreshed tree mounts after the first focus frame",
+      "sha256AtRed": "5117E490086148506AB2AF8DD701EF541C0443D66A45BF6696D8915A3DDC88CA",
+      "gitBlobAtRed": "d2df894ff6816f44b1185d00733e0f61dc9d1c46"
+    },
+    {
+      "file": "packages/web/test/screen-wiring.test.tsx",
+      "name": "accepted 이동은 실제 이름을 알리고 tree refresh 실패를 write 실패와 분리해 GET만 재시도한다",
+      "sha256AtRed": "05BA3217AF86EFA89A193AF905A46ABE66CF6DBF0F3AA8BA6A34FDAB7CCEA347",
+      "gitBlobAtRed": "b9e7f04062da7834cb1b98c300741fcc9f17afbf"
+    },
+    {
+      "file": "packages/web/test/issue79-relocation-integration.test.tsx",
+      "name": "ignores an obsolete execute refresh failure after owner replacement",
+      "sha256AtRed": "1B8C1450682408C45DE0966E405803E797D5F85EFCB437C9FADF7C9BD22BBB9A",
+      "gitBlobAtRed": "cd62e3c328ec0f0314b80a90a12e3d12e13748d7"
+    },
+    {
+      "file": "packages/web/test/issue79-relocation-integration.test.tsx",
+      "name": "keeps an accepted write owner while its authoritative post-write tree refresh changes query state",
+      "sha256AtRed": "0072507D350CD879EC5E9DBAB2B15059ADD5EA63884DF72D389F768D0573A032",
+      "gitBlobAtRed": "c15b5efbcdf32ea0d66c4b50e5fccfbd954889c2"
+    }
+  ]
+}

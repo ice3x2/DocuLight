@@ -426,7 +426,7 @@ export function DocumentTree({
   /** 그 파일을 덮어쓰겠다 (`FR-SHELL-008` AC-2). 확인과 파일 고르기는 바깥이 한다. */
   onNewVersion?: (node: TreeNodeView) => void;
   /** 닫힌 셸 표면에서 안정된 노드 ID로 초점을 돌리고, 사라진 대상은 안전한 트리 표면으로 내린다. */
-  focusRequest?: { nodeId: string; sequence: number };
+  focusRequest?: { nodeId: string; fallbackIds?: readonly string[]; sequence: number };
   onFocusUnavailable?: () => void;
   /** 지금 이름을 정하는 자리. 없으면 트리는 평소대로 선다. */
   naming?: Naming;
@@ -463,6 +463,13 @@ export function DocumentTree({
         tree.current?.focus(focusRequest.nodeId);
         return;
       }
+      for (const fallbackId of focusRequest.fallbackIds ?? []) {
+        const fallback = rowFor(fallbackId);
+        if (fallback !== undefined && fallback !== null) {
+          tree.current?.focus(fallbackId);
+          return;
+        }
+      }
       const lastFocused = lastFocusedNodeId.current === undefined
         ? undefined
         : rowFor(lastFocusedNodeId.current);
@@ -483,7 +490,7 @@ export function DocumentTree({
       onFocusUnavailable?.();
     });
     return () => cancelAnimationFrame(frame);
-  }, [focusRequest, onFocusUnavailable]);
+  }, [focusRequest, onFocusUnavailable, workspaces]);
 
   useEffect(() => {
     const element = viewport.current;

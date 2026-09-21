@@ -13,7 +13,7 @@ import { DocumentTree, type Naming } from '../tree/DocumentTree.js';
 import type { UploadRequest } from '../attachment/upload-contract.js';
 import { EmptyState as AccessEmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt, type NewVersionResult } from '../tree/NewVersionPrompt.js';
-import { RelocationDialog } from './RelocationDialog.js';
+import { RelocationDialog, type RelocationPreviewResult, type RelocationWriteResult } from './RelocationDialog.js';
 import { InstanceSettings } from '../settings/InstanceSettings.js';
 import { IndexQueueSurface, type IndexQueueSnapshot } from '../settings/IndexQueuePanel.js';
 import { WorkspaceManagementPanel, type WorkspaceAdministratorState, type WorkspaceQueryState, type WorkspaceRenameResult } from '../workspace/WorkspaceList.js';
@@ -61,7 +61,7 @@ import {
   AlertDialogTitle,
 } from '../components/ui/alert-dialog.js';
 import type { RosterGroup, RosterUser, RosterUserStatus } from '../api/client.js';
-import { containerFor, destinationsFor, nodeById } from '../tree/tree-contract.js';
+import { containerFor, destinationsFor, nodeById, relocationFocusFallback } from '../tree/tree-contract.js';
 import type { TreeNodeView, WorkspaceTreeView } from '../tree/tree-contract.js';
 import {
   LEFT_TABS,
@@ -749,6 +749,12 @@ export function AppShell({
   onDelete,
   onRename,
   onRelocate,
+  onRelocationPreview,
+  relocationContextKey,
+  relocationTreeGeneration = 0,
+  onRelocationOwnerChange,
+  relocationRefreshError = false,
+  onRetryRelocationRefresh,
   share,
   onNewVersion,
   onNoticeDismiss,
@@ -911,7 +917,13 @@ export function AppShell({
   indexQueueContextKey?: string;
   onDelete?: (nodeId: string) => void;
   onRename?: (nodeId: string, name: string) => void | Promise<string | undefined>;
-  onRelocate?: (nodeId: string, kind: 'move' | 'copy', destinationId: string) => void;
+  onRelocate?: (nodeId: string, kind: 'move' | 'copy', destinationId: string, ownerKey: string) => Promise<RelocationWriteResult>;
+  onRelocationPreview?: (nodeId: string, kind: 'move' | 'copy', destinationId: string) => Promise<RelocationPreviewResult>;
+  relocationContextKey?: string;
+  relocationTreeGeneration?: number;
+  onRelocationOwnerChange?: (ownerKey: string | undefined) => void;
+  relocationRefreshError?: boolean;
+  onRetryRelocationRefresh?: () => void;
   /**
    * 공유 화면의 배선 (`IR-ACL-002` · `IR-ACL-003`).
    *
@@ -954,6 +966,7 @@ export function AppShell({
    */
   const [leftTab, setLeftTab] = useState(LEFT_TABS[0]!.id);
   const favoritesTab = useRef<HTMLButtonElement>(null);
+  const treeTab = useRef<HTMLButtonElement>(null);
   const [rightTab, setRightTab] = useState(RIGHT_TABS[0]!.id);
   const replaceInvoker = useRef<HTMLElement | null>(null);
 
@@ -976,7 +989,7 @@ export function AppShell({
   /** 새 버전을 올릴 대상. 골라 둔 뒤 확인과 파일 고르기가 이어진다. */
   const [overwriting, setOverwriting] = useState<TreeNodeView | null>(null);
   const newVersionFocusSequence = useRef(0);
-  const [newVersionFocusRequest, setNewVersionFocusRequest] = useState<{ nodeId: string; sequence: number }>();
+  const [newVersionFocusRequest, setNewVersionFocusRequest] = useState<{ nodeId: string; fallbackIds?: readonly string[]; sequence: number }>();
   const closeNewVersion = useCallback(() => {
     if (overwriting === null) return;
     newVersionFocusSequence.current += 1;
@@ -998,9 +1011,31 @@ export function AppShell({
   const [relocating, setRelocating] = useState<{
     node: TreeNodeView;
     kind: 'move' | 'copy';
+    focusFallbackIds: readonly string[];
+    owner: number;
   } | null>(null);
+  const relocationOwnerSequence = useRef(0);
+  const relocationOwnerKey = relocating === null
+    ? undefined
+    : `${relocationContextKey ?? 'relocation'}:${relocating.node.id}:${relocating.kind}:${relocating.owner}`;
+  useEffect(() => {
+    onRelocationOwnerChange?.(relocationOwnerKey);
+    return () => onRelocationOwnerChange?.(undefined);
+  }, [onRelocationOwnerChange, relocationOwnerKey]);
+  const closeRelocation = useCallback(() => {
+    if (relocating !== null) {
+      newVersionFocusSequence.current += 1;
+      setNewVersionFocusRequest({ nodeId: relocating.node.id, fallbackIds: relocating.focusFallbackIds, sequence: newVersionFocusSequence.current });
+    }
+    setRelocating(null);
+  }, [relocating]);
+  useEffect(() => {
+    if (newVersionFocusRequest === undefined || treeState.state === 'ready') return;
+    setLeftTab('tree');
+    const frame = requestAnimationFrame(() => treeTab.current?.focus());
+    return () => cancelAnimationFrame(frame);
+  }, [newVersionFocusRequest, treeState.state]);
   /** 고른 목적지. 다이얼로그가 제어 상태로 받으므로 여기서 든다. */
-  const [destinationId, setDestinationId] = useState('');
   /** 공유 화면을 연 노드 (`IR-ACL-002`). */
   const [sharing, setSharing] = useState<TreeNodeView | null>(null);
 
@@ -1053,7 +1088,9 @@ export function AppShell({
           ...(treeState.state === 'loading' ? ['tree'] : []),
           ...(favoritesState.state === 'loading' ? ['favorites'] : []),
         ]}
-        focusTarget={{ tabId: 'favorites', ref: favoritesTab }}
+        focusTarget={newVersionFocusRequest !== undefined && treeState.state !== 'ready'
+          ? { tabId: 'tree', ref: treeTab }
+          : { tabId: 'favorites', ref: favoritesTab }}
         footer={
           <SettingsModal
             viewer={viewer}
@@ -1189,8 +1226,8 @@ export function AppShell({
                   setSharing(node);
                 }}
                 onRelocate={(node, kind) => {
-                  setDestinationId('');
-                  setRelocating({ node, kind });
+                  relocationOwnerSequence.current += 1;
+                  setRelocating({ node, kind, focusFallbackIds: relocationFocusFallback(workspaces, node.id), owner: relocationOwnerSequence.current });
                 }}
                 onNewVersion={setOverwriting}
                 focusRequest={newVersionFocusRequest}
@@ -1262,6 +1299,12 @@ export function AppShell({
             </button>
           </div>
         )}
+        {relocationRefreshError ? (
+          <p role="alert" data-testid="relocation-refresh-error">
+            목록을 새로 불러오지 못했습니다.{' '}
+            <Button type="button" variant="secondary" onClick={onRetryRelocationRefresh}>목록 다시 불러오기</Button>
+          </p>
+        ) : null}
         <DocumentArea
           {...(share === undefined ? {} : { share })}
           state={documents}
@@ -1344,14 +1387,19 @@ export function AppShell({
           kind={relocating.kind}
           open
           sourceName={relocating.node.name}
-          destinations={destinationsFor(workspaces, relocating.kind, relocating.node.id)}
-          destinationId={destinationId}
-          onDestination={setDestinationId}
-          onConfirm={() => {
-            onRelocate?.(relocating.node.id, relocating.kind, destinationId);
-            setRelocating(null);
-          }}
-          onCancel={() => setRelocating(null)}
+          sourceLevel={relocating.node.level}
+          contextKey={relocationOwnerKey as string}
+          destinationsState={treeState.state === 'loading'
+            ? { state: 'loading' }
+            : treeState.state === 'error'
+              ? { state: 'error', onRetry: treeState.onRetry ?? (() => undefined) }
+              : { state: 'ready', generation: relocationTreeGeneration, destinations: destinationsFor(workspaces, relocating.kind, relocating.node.id) }}
+          loadPreview={(nextDestinationId) => onRelocationPreview?.(relocating.node.id, relocating.kind, nextDestinationId)
+            ?? Promise.reject(new Error('relocation preview unavailable'))}
+          onExecute={(nextDestinationId) => onRelocate?.(relocating.node.id, relocating.kind, nextDestinationId, relocationOwnerKey as string)
+            ?? Promise.reject(new Error('relocation unavailable'))}
+          onAccepted={closeRelocation}
+          onCancel={closeRelocation}
         />
       )}
 

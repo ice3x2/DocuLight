@@ -1,0 +1,472 @@
+{
+  "ownedPersistentContexts": 1,
+  "tabId": 1720496606,
+  "matrixCount": 12,
+  "forcedColorsCount": 2,
+  "observations": [
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "requestedZoom": 1,
+      "getZoom": 1,
+      "geometry": {
+        "rect": {
+          "left": 360,
+          "top": 160.40000915527344,
+          "right": 920,
+          "bottom": 559.6000213623047,
+          "width": 560
+        },
+        "actionBottom": 558.8000183105469,
+        "color": "rgb(36, 37, 33)",
+        "backgroundColor": "rgb(250, 249, 245)",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "dpr": 1.0000000149011612
+      },
+      "contrast": 14.639805378106399,
+      "selected": "0f289d67e44a5559971d282d71dd6053",
+      "screenshot": "light-1280x720-zoom100.png"
+    },
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "requestedZoom": 2,
+      "getZoom": 2,
+      "geometry": {
+        "rect": {
+          "left": 40,
+          "top": 24,
+          "right": 600,
+          "bottom": 336,
+          "width": 560
+        },
+        "actionBottom": 335.20001220703125,
+        "color": "rgb(36, 37, 33)",
+        "backgroundColor": "rgb(250, 249, 245)",
+        "viewport": {
+          "width": 640,
+          "height": 360
+        },
+        "dpr": 2.0000000298023224
+      },
+      "contrast": 14.639805378106399,
+      "selected": "0f289d67e44a5559971d282d71dd6053",
+      "screenshot": "light-1280x720-zoom200.png"
+    },
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "requestedZoom": 1,
+      "getZoom": 1,
+      "geometry": {
+        "rect": {
+          "left": 440,
+          "top": 250.40000915527344,
+          "right": 1000,
+          "bottom": 649.6000213623047,
+          "width": 560
+        },
+        "actionBottom": 648.7999877929688,
+        "color": "rgb(36, 37, 33)",
+        "backgroundColor": "rgb(250, 249, 245)",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dpr": 1.0000000149011612
+      },
+      "contrast": 14.639805378106399,
+      "selected": "0f289d67e44a5559971d282d71dd6053",
+      "screenshot": "light-1440x900-zoom100.png"
+    },
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "requestedZoom": 2,
+      "getZoom": 2,
+      "geometry": {
+        "rect": {
+          "left": 80,
+          "top": 25.399999618530273,
+          "right": 640,
+          "bottom": 424.6000118255615,
+          "width": 560
+        },
+        "actionBottom": 423.8000183105469,
+        "color": "rgb(36, 37, 33)",
+        "backgroundColor": "rgb(250, 249, 245)",
+        "viewport": {
+          "width": 720,
+          "height": 450
+        },
+        "dpr": 2.0000000298023224
+      },
+      "contrast": 14.639805378106399,
+      "selected": "0f289d67e44a5559971d282d71dd6053",
+      "screenshot": "light-1440x900-zoom200.png"
+    },
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "requestedZoom": 1,
+      "getZoom": 1,
+      "geometry": {
+        "rect": {
+          "left": 680,
+          "top": 340.3999938964844,
+          "right": 1240,
+          "bottom": 739.6000061035156,
+          "width": 560
+        },
+        "actionBottom": 738.7999877929688,
+        "color": "rgb(36, 37, 33)",
+        "backgroundColor": "rgb(250, 249, 245)",
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "dpr": 1.0000000149011612
+      },
+      "contrast": 14.639805378106399,
+      "selected": "0f289d67e44a5559971d282d71dd6053",
+      "screenshot": "light-1920x1080-zoom100.png"
+    },
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "requestedZoom": 2,
+      "getZoom": 2,
+      "geometry": {
+        "rect": {
+          "left": 200,
+          "top": 70.4000015258789,
+          "right": 760,
+          "bottom": 469.60001373291016,
+          "width": 560
+        },
+        "actionBottom": 468.8000183105469,
+        "color": "rgb(36, 37, 33)",
+        "backgroundColor": "rgb(250, 249, 245)",
+        "viewport": {
+          "width": 960,
+          "height": 540
+        },
+        "dpr": 2.0000000298023224
+      },
+      "contrast": 14.639805378106399,
+      "selected": "0f289d67e44a5559971d282d71dd6053",
+      "screenshot": "light-1920x1080-zoom200.png"
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "requestedZoom": 1,
+      "getZoom": 1,
+      "geometry": {
+        "rect": {
+          "left": 360,
+          "top": 160.40000915527344,
+          "right": 920,
+          "bottom": 559.6000213623047,
+          "width": 560
+        },
+        "actionBottom": 558.8000183105469,
+        "color": "rgb(233, 231, 223)",
+        "backgroundColor": "rgb(48, 53, 46)",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "dpr": 1.0000000149011612
+      },
+      "contrast": 10.129573328016168,
+      "selected": "0f289d67e44a5559971d282d71dd6053",
+      "screenshot": "dark-1280x720-zoom100.png"
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "requestedZoom": 2,
+      "getZoom": 2,
+      "geometry": {
+        "rect": {
+          "left": 40,
+          "top": 24,
+          "right": 600,
+          "bottom": 336,
+          "width": 560
+        },
+        "actionBottom": 335.20001220703125,
+        "color": "rgb(233, 231, 223)",
+        "backgroundColor": "rgb(48, 53, 46)",
+        "viewport": {
+          "width": 640,
+          "height": 360
+        },
+        "dpr": 2.0000000298023224
+      },
+      "contrast": 10.129573328016168,
+      "selected": "0f289d67e44a5559971d282d71dd6053",
+      "screenshot": "dark-1280x720-zoom200.png"
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "requestedZoom": 1,
+      "getZoom": 1,
+      "geometry": {
+        "rect": {
+          "left": 440,
+          "top": 250.40000915527344,
+          "right": 1000,
+          "bottom": 649.6000213623047,
+          "width": 560
+        },
+        "actionBottom": 648.7999877929688,
+        "color": "rgb(233, 231, 223)",
+        "backgroundColor": "rgb(48, 53, 46)",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dpr": 1.0000000149011612
+      },
+      "contrast": 10.129573328016168,
+      "selected": "0f289d67e44a5559971d282d71dd6053",
+      "screenshot": "dark-1440x900-zoom100.png"
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "requestedZoom": 2,
+      "getZoom": 2,
+      "geometry": {
+        "rect": {
+          "left": 80,
+          "top": 25.399999618530273,
+          "right": 640,
+          "bottom": 424.6000118255615,
+          "width": 560
+        },
+        "actionBottom": 423.8000183105469,
+        "color": "rgb(233, 231, 223)",
+        "backgroundColor": "rgb(48, 53, 46)",
+        "viewport": {
+          "width": 720,
+          "height": 450
+        },
+        "dpr": 2.0000000298023224
+      },
+      "contrast": 10.129573328016168,
+      "selected": "0f289d67e44a5559971d282d71dd6053",
+      "screenshot": "dark-1440x900-zoom200.png"
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "requestedZoom": 1,
+      "getZoom": 1,
+      "geometry": {
+        "rect": {
+          "left": 680,
+          "top": 340.3999938964844,
+          "right": 1240,
+          "bottom": 739.6000061035156,
+          "width": 560
+        },
+        "actionBottom": 738.7999877929688,
+        "color": "rgb(233, 231, 223)",
+        "backgroundColor": "rgb(48, 53, 46)",
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "dpr": 1.0000000149011612
+      },
+      "contrast": 10.129573328016168,
+      "selected": "0f289d67e44a5559971d282d71dd6053",
+      "screenshot": "dark-1920x1080-zoom100.png"
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "requestedZoom": 2,
+      "getZoom": 2,
+      "geometry": {
+        "rect": {
+          "left": 200,
+          "top": 70.4000015258789,
+          "right": 760,
+          "bottom": 469.60001373291016,
+          "width": 560
+        },
+        "actionBottom": 468.8000183105469,
+        "color": "rgb(233, 231, 223)",
+        "backgroundColor": "rgb(48, 53, 46)",
+        "viewport": {
+          "width": 960,
+          "height": 540
+        },
+        "dpr": 2.0000000298023224
+      },
+      "contrast": 10.129573328016168,
+      "selected": "0f289d67e44a5559971d282d71dd6053",
+      "screenshot": "dark-1920x1080-zoom200.png"
+    },
+    {
+      "theme": "forced-colors",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "requestedZoom": 1,
+      "getZoom": 1,
+      "screenshotDimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "screenshot": "forced-colors-1440x900-zoom100.png"
+    },
+    {
+      "theme": "forced-colors",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "requestedZoom": 2,
+      "getZoom": 2,
+      "screenshotDimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "screenshot": "forced-colors-1440x900-zoom200.png"
+    }
+  ],
+  "relocationRequests": [
+    {
+      "method": "GET",
+      "pathname": "/api/nodes/e4935057-b651-4c72-a76c-1468e9465c01/relocation-preview",
+      "search": "?kind=copy&destinationId=94ee6126-b57f-49ad-b6e9-b40873d5de46",
+      "postData": null
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/nodes/e4935057-b651-4c72-a76c-1468e9465c01/relocation-preview",
+      "search": "?kind=copy&destinationId=0f289d67e44a5559971d282d71dd6053",
+      "postData": null
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/nodes/e4935057-b651-4c72-a76c-1468e9465c01/relocation-preview",
+      "search": "?kind=copy&destinationId=0f289d67e44a5559971d282d71dd6053",
+      "postData": null
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/nodes/e4935057-b651-4c72-a76c-1468e9465c01/relocation-preview",
+      "search": "?kind=copy&destinationId=0f289d67e44a5559971d282d71dd6053",
+      "postData": null
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/nodes/e4935057-b651-4c72-a76c-1468e9465c01/relocation-preview",
+      "search": "?kind=copy&destinationId=0f289d67e44a5559971d282d71dd6053",
+      "postData": null
+    },
+    {
+      "method": "POST",
+      "pathname": "/api/nodes/e4935057-b651-4c72-a76c-1468e9465c01/copy",
+      "search": "",
+      "postData": "{\"workspaceId\":\"0f289d67e44a5559971d282d71dd6053\"}"
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/nodes/e4935057-b651-4c72-a76c-1468e9465c01/relocation-preview",
+      "search": "?kind=copy&destinationId=5c17534b-065b-46d2-8143-e521eef4c5a4",
+      "postData": null
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/nodes/e4935057-b651-4c72-a76c-1468e9465c01/relocation-preview",
+      "search": "?kind=copy&destinationId=0f289d67e44a5559971d282d71dd6053",
+      "postData": null
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/nodes/e4935057-b651-4c72-a76c-1468e9465c01/relocation-preview",
+      "search": "?kind=copy&destinationId=5c17534b-065b-46d2-8143-e521eef4c5a4",
+      "postData": null
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/nodes/e4935057-b651-4c72-a76c-1468e9465c01/relocation-preview",
+      "search": "?kind=copy&destinationId=0f289d67e44a5559971d282d71dd6053",
+      "postData": null
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/nodes/e4935057-b651-4c72-a76c-1468e9465c01/relocation-preview",
+      "search": "?kind=copy&destinationId=5c17534b-065b-46d2-8143-e521eef4c5a4",
+      "postData": null
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/nodes/e4935057-b651-4c72-a76c-1468e9465c01/relocation-preview",
+      "search": "?kind=copy&destinationId=0f289d67e44a5559971d282d71dd6053",
+      "postData": null
+    }
+  ],
+  "copyReceipt": {
+    "id": "5c17534b-065b-46d2-8143-e521eef4c5a4",
+    "name": "프로젝트 자료 (2)",
+    "copied": 2
+  },
+  "previewResponses": [
+    {
+      "rosterRendered": 0,
+      "administratorGuidanceVisible": false,
+      "copyCaveatVisible": true
+    }
+  ],
+  "nativeWindowsImeCandidateUi": "nonblocking-unverified",
+  "syntheticCompositionBoundary": "covered by existing web regression"
+}

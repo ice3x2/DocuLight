@@ -851,6 +851,7 @@ describe('FR-SHELL-015 — 이동과 복사가 화면에서 서버까지 닿는�
   };
 
   it('AC-2: 이동은 고른 자리로 나가고 워크스페이스를 고르면 루트다', async () => {
+    routes.set('/api/nodes/n1/relocation-preview', () => json({ kind: 'move', before: 1, after: 1, grade: 'L2' }));
     routes.set('/api/nodes/n1/move', () => json({ name: '회의록.md' }));
 
     await 자리를고르고실행한다('이동', 'ws-1');
@@ -865,6 +866,7 @@ describe('FR-SHELL-015 — 이동과 복사가 화면에서 서버까지 닿는�
   });
 
   it('AC-4: 복사는 같은 자리를 워크스페이스로 표현한다 — 두 조작의 계약이 다르다', async () => {
+    routes.set('/api/nodes/n1/relocation-preview', () => json({ kind: 'copy', reachable: 1, grade: 'L2' }));
     routes.set('/api/nodes/n1/copy', () => json({ id: 'n9', name: '회의록 (2).md', copied: 1 }));
 
     await 자리를고르고실행한다('복사', 'ws-1');
@@ -878,6 +880,33 @@ describe('FR-SHELL-015 — 이동과 복사가 화면에서 서버까지 닿는�
         body: { workspaceId: 'ws-1' },
       }),
     );
+  });
+
+  // @req IR-SHELL-011 AC-7 AC-8 AC-9 AC-13
+  it('accepted 이동은 실제 이름을 알리고 tree refresh 실패를 write 실패와 분리해 GET만 재시도한다', async () => {
+    let treeReads = 0;
+    let refreshFails = true;
+    routes.set('/api/tree', () => {
+      treeReads += 1;
+      return treeReads === 1 || !refreshFails ? json(TREE) : json({ message: 'read failed' }, 500);
+    });
+    routes.set('/api/nodes/n1/relocation-preview', () => json({ kind: 'move', before: 1, after: 1, grade: 'L2' }));
+    routes.set('/api/nodes/n1/move', () => json({ name: '회의록 (2).md' }));
+
+    const user = await 자리를고르고실행한다('이동', 'ws-1');
+
+    expect(await screen.findByText('항목을 이동했습니다. 결과 이름: 회의록 (2).md')).toBeDefined();
+    const refreshError = await screen.findByTestId('relocation-refresh-error');
+    expect(refreshError.textContent).toContain('목록을 새로 불러오지 못했습니다.');
+    expect(sent.filter((one) => one.path === '/api/nodes/n1/move')).toHaveLength(1);
+    expect(document.activeElement).toBe(screen.getByRole('tab', { name: '문서 트리' }));
+
+    refreshFails = false;
+    await user.click(within(refreshError).getByRole('button', { name: '목록 다시 불러오기' }));
+    await waitFor(() => expect(screen.queryByTestId('relocation-refresh-error')).toBeNull());
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('treeitem', { name: /회의록/ })));
+    expect(sent.filter((one) => one.path === '/api/nodes/n1/move')).toHaveLength(1);
+    expect(treeReads).toBeGreaterThanOrEqual(3);
   });
 
   it('AC-2: 목적지를 고르지 않으면 실행할 수 없다', async () => {

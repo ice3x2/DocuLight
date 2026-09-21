@@ -43,6 +43,66 @@ export interface WorkspaceTreeView {
   roots: TreeNodeView[];
 }
 
+export type RelocationTransport =
+  | { previewDestinationId: string | null; writeDestination: string | null }
+  | { previewDestinationId: string; writeDestination: { parentId: string } | { workspaceId: string } };
+
+// @req IR-SHELL-011
+export function relocationTransportFor(
+  workspaces: readonly WorkspaceTreeView[], sourceId: string, kind: 'move' | 'copy', destinationId: string,
+): RelocationTransport | null {
+  const contains = (nodes: readonly TreeNodeView[], id: string): boolean =>
+    nodes.some((entry) => entry.id === id || contains(entry.children, id));
+  const findNode = (nodes: readonly TreeNodeView[], id: string): TreeNodeView | undefined => {
+    for (const entry of nodes) {
+      if (entry.id === id) return entry;
+      const found = findNode(entry.children, id);
+      if (found !== undefined) return found;
+    }
+    return undefined;
+  };
+  const sourceWorkspace = workspaces.find((entry) => contains(entry.roots, sourceId));
+  if (sourceWorkspace === undefined) return null;
+  const destinationWorkspace = workspaces.find((entry) => entry.workspace.id === destinationId);
+  if (destinationWorkspace !== undefined) {
+    if (kind === 'move') {
+      return destinationWorkspace.workspace.id === sourceWorkspace.workspace.id
+        ? { previewDestinationId: null, writeDestination: null }
+        : null;
+    }
+    return { previewDestinationId: destinationId, writeDestination: { workspaceId: destinationId } };
+  }
+  const destinationNode = workspaces
+    .map((entry) => findNode(entry.roots, destinationId))
+    .find((entry) => entry !== undefined);
+  if (destinationNode?.kind !== 'directory') return null;
+  return kind === 'move'
+    ? { previewDestinationId: destinationId, writeDestination: destinationId }
+    : { previewDestinationId: destinationId, writeDestination: { parentId: destinationId } };
+}
+
+// @req IR-SHELL-011
+export function relocationFocusFallback(workspaces: readonly WorkspaceTreeView[], sourceId: string): string[] {
+  for (const workspace of workspaces) {
+    const visit = (nodes: readonly TreeNodeView[], ancestors: readonly string[]): string[] | undefined => {
+      const index = nodes.findIndex((entry) => entry.id === sourceId);
+      if (index >= 0) {
+        const next = nodes[index + 1]?.id;
+        const previous = nodes[index - 1]?.id;
+        return [next, previous, ...ancestors].filter((id): id is string => id !== undefined);
+      }
+      for (const entry of nodes) {
+        const found = visit(entry.children, [entry.id, ...ancestors]);
+        if (found !== undefined) return found;
+      }
+      return undefined;
+    };
+    const found = visit(workspace.roots, [workspace.workspace.id]);
+    if (found !== undefined) return found;
+  }
+  return [];
+}
+
 /** 한 메뉴 항목이 열리려면 무엇이 필요한가. */
 export interface ContextMenuItem {
   id: string;

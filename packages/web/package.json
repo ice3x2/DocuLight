@@ -36,6 +36,8 @@
     "test:issue67:validation": "node test/issue67-validation-runner.cjs",
     "test:browser:share65-product": "node test/issue65-share-product-runner.mjs",
     "test:browser:grant78-product": "node test/issue78-grant-product-runner.mjs",
+    "test:browser:relocation79-product": "node test/issue79-relocation-product-runner.mjs",
+    "test:issue79:capture-evidence": "node test/issue79-green-evidence-capture.mjs",
     "test:browser:pre-auth": "node test/newspaper-pre-auth-check.cjs",
     "test:browser:pre-auth-product": "node test/newspaper-pre-auth-product-runner.mjs",
     "test:browser:install-product": "node test/newspaper-install-product-runner.mjs",

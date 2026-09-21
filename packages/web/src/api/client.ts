@@ -256,10 +256,13 @@ export const renameNode = (nodeId: string, name: string) =>
 
 /** 자리를 옮긴다 (`FR-SHELL-015` AC-2). 목적지를 비우면 워크스페이스 루트다. */
 export const moveNode = (nodeId: string, parentId: string | null) =>
-  call<{ name: string }>(`/nodes/${encodeURIComponent(nodeId)}/move`, {
+  call<unknown>(`/nodes/${encodeURIComponent(nodeId)}/move`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ parentId }),
+  }).then((body) => {
+    if (!isRecord(body) || typeof body.name !== 'string') throw new Error('invalid relocation result');
+    return { name: body.name };
   });
 
 /**
@@ -273,14 +276,19 @@ export const copyNode = (
   nodeId: string,
   destination: { parentId: string } | { workspaceId: string },
 ) =>
-  call<{ id: string; name: string; copied: number }>(
+  call<unknown>(
     `/nodes/${encodeURIComponent(nodeId)}/copy`,
     {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(destination),
     },
-  );
+  ).then((body) => {
+    if (!isRecord(body) || typeof body.id !== 'string' || typeof body.name !== 'string' || !isCount(body.copied)) {
+      throw new Error('invalid relocation result');
+    }
+    return { id: body.id, name: body.name, copied: body.copied };
+  });
 
 export const moveNodeToTrash = (nodeId: string) =>
   call<void>(`/nodes/${encodeURIComponent(nodeId)}`, { method: 'DELETE' });
@@ -713,6 +721,33 @@ export interface MovePreviewBody {
   before: number;
   after: number;
 }
+
+export type RelocationPreviewBody =
+  | { kind: 'move'; before: number; after: number; grade: 'L1' | 'L2' }
+  | { kind: 'copy'; reachable: number; grade: 'L2' };
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+const isCount = (value: unknown): value is number => Number.isInteger(value) && Number(value) >= 0;
+
+// @req IR-SHELL-011
+export const fetchRelocationPreview = async (
+  nodeId: string,
+  kind: 'move' | 'copy',
+  destinationId: string | null,
+): Promise<RelocationPreviewBody> => {
+  const query = new URLSearchParams({ kind });
+  if (destinationId !== null) query.set('destinationId', destinationId);
+  const body = await call<unknown>(`/nodes/${encodeURIComponent(nodeId)}/relocation-preview?${query.toString()}`);
+  if (!isRecord(body) || body.kind !== kind) throw new Error('invalid relocation preview response');
+  if (kind === 'move' && body.kind === 'move' && isCount(body.before) && isCount(body.after) && (body.grade === 'L1' || body.grade === 'L2')) {
+    return { kind: 'move', before: body.before, after: body.after, grade: body.grade };
+  }
+  if (kind === 'copy' && body.kind === 'copy' && isCount(body.reachable) && body.grade === 'L2') {
+    return { kind: 'copy', reachable: body.reachable, grade: 'L2' };
+  }
+  throw new Error('invalid relocation preview response');
+};
 
 /** 목적지를 비우면 워크스페이스 루트로 옮기는 것이다. */
 export const fetchMovePreview = (nodeId: string, destinationId: string | null) => {
