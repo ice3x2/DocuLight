@@ -48,7 +48,7 @@ async function bodyOf(response: Response): Promise<unknown> {
   }
 }
 
-async function call<T>(path: string, init?: RequestInit): Promise<T> {
+async function call<T>(path: string, init?: RequestInit, expected?: { status: number; message: string }): Promise<T> {
   const response = await fetch(`${BASE}${path}`, {
     // 세션 쿠키가 실려야 한다 — 같은 오리진이라 기본값으로도 실리지만,
     // 그 사실이 배포 구성에 달려 있으면 안 된다.
@@ -65,6 +65,10 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
       ...(failure?.state === undefined ? {} : { state: failure.state }),
       ...(failure?.reason === undefined ? {} : { reason: failure.reason }),
     });
+  }
+
+  if (expected !== undefined && response.status !== expected.status) {
+    throw new Error(expected.message);
   }
 
   return (await bodyOf(response)) as T;
@@ -984,6 +988,9 @@ export const registerUser = (input: { name: string; password: string }) =>
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(input),
+  }, { status: 201, message: 'invalid registration response' }).then((body) => {
+    if (typeof body?.id !== 'string' || body.id === '') throw new Error('invalid registration response');
+    return body;
   });
 
 /**

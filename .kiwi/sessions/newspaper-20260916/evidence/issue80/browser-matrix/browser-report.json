@@ -1,0 +1,1268 @@
+{
+  "requirement": "IR-PRINCIPAL-002",
+  "ownedPersistentContexts": 1,
+  "isolatedProfile": true,
+  "matrixCount": 12,
+  "forcedColorsCount": 2,
+  "observations": [
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "dpr": 1,
+        "overflowX": false,
+        "dialogRect": {
+          "left": 40,
+          "right": 1240,
+          "top": 36,
+          "bottom": 684
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(245, 244, 239)"
+        },
+        "action": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(223, 231, 233)"
+        },
+        "actionReachable": true
+      },
+      "textRatio": 14.004951701436438,
+      "screenshot": "principal-light-1280x720-100.png"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "viewport": {
+          "width": 640,
+          "height": 360
+        },
+        "dpr": 2,
+        "overflowX": false,
+        "dialogRect": {
+          "left": 19.203125,
+          "right": 620.796875,
+          "top": 18,
+          "bottom": 342
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(245, 244, 239)"
+        },
+        "action": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(223, 231, 233)"
+        },
+        "actionReachable": true
+      },
+      "textRatio": 14.004951701436438,
+      "screenshot": "principal-light-1280x720-200.png"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "dpr": 1,
+        "overflowX": false,
+        "dialogRect": {
+          "left": 40,
+          "right": 1240,
+          "top": 36,
+          "bottom": 684
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(41, 44, 39)"
+        },
+        "action": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(52, 70, 80)"
+        },
+        "actionReachable": true
+      },
+      "textRatio": 11.430133007600727,
+      "screenshot": "principal-dark-1280x720-100.png"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "viewport": {
+          "width": 640,
+          "height": 360
+        },
+        "dpr": 2,
+        "overflowX": false,
+        "dialogRect": {
+          "left": 19.203125,
+          "right": 620.796875,
+          "top": 18,
+          "bottom": 342
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(41, 44, 39)"
+        },
+        "action": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(52, 70, 80)"
+        },
+        "actionReachable": true
+      },
+      "textRatio": 11.430133007600727,
+      "screenshot": "principal-dark-1280x720-200.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dpr": 1,
+        "overflowX": false,
+        "dialogRect": {
+          "left": 120,
+          "right": 1320,
+          "top": 45,
+          "bottom": 855
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(245, 244, 239)"
+        },
+        "action": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(223, 231, 233)"
+        },
+        "actionReachable": true
+      },
+      "textRatio": 14.004951701436438,
+      "screenshot": "principal-light-1440x900-100.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "viewport": {
+          "width": 720,
+          "height": 450
+        },
+        "dpr": 2,
+        "overflowX": false,
+        "dialogRect": {
+          "left": 21.6015625,
+          "right": 698.3984375,
+          "top": 22.5,
+          "bottom": 427.5
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(245, 244, 239)"
+        },
+        "action": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(223, 231, 233)"
+        },
+        "actionReachable": true
+      },
+      "textRatio": 14.004951701436438,
+      "screenshot": "principal-light-1440x900-200.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dpr": 1,
+        "overflowX": false,
+        "dialogRect": {
+          "left": 120,
+          "right": 1320,
+          "top": 45,
+          "bottom": 855
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(41, 44, 39)"
+        },
+        "action": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(52, 70, 80)"
+        },
+        "actionReachable": true
+      },
+      "textRatio": 11.430133007600727,
+      "screenshot": "principal-dark-1440x900-100.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "viewport": {
+          "width": 720,
+          "height": 450
+        },
+        "dpr": 2,
+        "overflowX": false,
+        "dialogRect": {
+          "left": 21.6015625,
+          "right": 698.3984375,
+          "top": 22.5,
+          "bottom": 427.5
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(41, 44, 39)"
+        },
+        "action": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(52, 70, 80)"
+        },
+        "actionReachable": true
+      },
+      "textRatio": 11.430133007600727,
+      "screenshot": "principal-dark-1440x900-200.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "dpr": 1,
+        "overflowX": false,
+        "dialogRect": {
+          "left": 360,
+          "right": 1560,
+          "top": 130,
+          "bottom": 950
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(245, 244, 239)"
+        },
+        "action": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(223, 231, 233)"
+        },
+        "actionReachable": true
+      },
+      "textRatio": 14.004951701436438,
+      "screenshot": "principal-light-1920x1080-100.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "viewport": {
+          "width": 960,
+          "height": 540
+        },
+        "dpr": 2,
+        "overflowX": false,
+        "dialogRect": {
+          "left": 28.80078125,
+          "right": 931.19921875,
+          "top": 27,
+          "bottom": 513
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(245, 244, 239)"
+        },
+        "action": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(223, 231, 233)"
+        },
+        "actionReachable": true
+      },
+      "textRatio": 14.004951701436438,
+      "screenshot": "principal-light-1920x1080-200.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "dpr": 1,
+        "overflowX": false,
+        "dialogRect": {
+          "left": 360,
+          "right": 1560,
+          "top": 130,
+          "bottom": 950
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(41, 44, 39)"
+        },
+        "action": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(52, 70, 80)"
+        },
+        "actionReachable": true
+      },
+      "textRatio": 11.430133007600727,
+      "screenshot": "principal-dark-1920x1080-100.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "viewport": {
+          "width": 960,
+          "height": 540
+        },
+        "dpr": 2,
+        "overflowX": false,
+        "dialogRect": {
+          "left": 28.80078125,
+          "right": 931.19921875,
+          "top": 27,
+          "bottom": 513
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(41, 44, 39)"
+        },
+        "action": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(52, 70, 80)"
+        },
+        "actionReachable": true
+      },
+      "textRatio": 11.430133007600727,
+      "screenshot": "principal-dark-1920x1080-200.png"
+    }
+  ],
+  "forcedColors": [
+    {
+      "zoom": 100,
+      "observedZoom": 1,
+      "focus": {
+        "forced": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "2px"
+      },
+      "screenshot": "principal-forced-colors-100.png"
+    },
+    {
+      "zoom": 200,
+      "observedZoom": 2,
+      "focus": {
+        "forced": true,
+        "outlineStyle": "solid",
+        "outlineWidth": "2px"
+      },
+      "screenshot": "principal-forced-colors-200.png"
+    }
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/missing/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/instance/signup-mode"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/7594b7b8-96a7-48e7-9cf2-e40e2324beb3/status"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/7594b7b8-96a7-48e7-9cf2-e40e2324beb3/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/7594b7b8-96a7-48e7-9cf2-e40e2324beb3/approve"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/b14db611-dc05-40b2-8172-f700aefb576e/reopen"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/63039380-5741-4951-9166-c9ebd38b7eae/approve"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    },
+    {
+      "method": "POST",
+      "path": "/api/roster/users/63039380-5741-4951-9166-c9ebd38b7eae/approve"
+    },
+    {
+      "method": "GET",
+      "path": "/api/roster/users"
+    }
+  ],
+  "writeCounts": {
+    "register": 2,
+    "approve": 3,
+    "reject": 1,
+    "reopen": 2
+  },
+  "deniedWriteCounts": {
+    "register": 24,
+    "approve": 24,
+    "reject": 24,
+    "reopen": 24
+  },
+  "accessibility": {
+    "unauthorizedRolesAbsent": [
+      {
+        "role": "ordinary",
+        "width": 1280,
+        "height": 720,
+        "theme": "light",
+        "zoom": 100
+      },
+      {
+        "role": "manager",
+        "width": 1280,
+        "height": 720,
+        "theme": "light",
+        "zoom": 100
+      },
+      {
+        "role": "ordinary",
+        "width": 1280,
+        "height": 720,
+        "theme": "light",
+        "zoom": 200
+      },
+      {
+        "role": "manager",
+        "width": 1280,
+        "height": 720,
+        "theme": "light",
+        "zoom": 200
+      },
+      {
+        "role": "ordinary",
+        "width": 1280,
+        "height": 720,
+        "theme": "dark",
+        "zoom": 100
+      },
+      {
+        "role": "manager",
+        "width": 1280,
+        "height": 720,
+        "theme": "dark",
+        "zoom": 100
+      },
+      {
+        "role": "ordinary",
+        "width": 1280,
+        "height": 720,
+        "theme": "dark",
+        "zoom": 200
+      },
+      {
+        "role": "manager",
+        "width": 1280,
+        "height": 720,
+        "theme": "dark",
+        "zoom": 200
+      },
+      {
+        "role": "ordinary",
+        "width": 1440,
+        "height": 900,
+        "theme": "light",
+        "zoom": 100
+      },
+      {
+        "role": "manager",
+        "width": 1440,
+        "height": 900,
+        "theme": "light",
+        "zoom": 100
+      },
+      {
+        "role": "ordinary",
+        "width": 1440,
+        "height": 900,
+        "theme": "light",
+        "zoom": 200
+      },
+      {
+        "role": "manager",
+        "width": 1440,
+        "height": 900,
+        "theme": "light",
+        "zoom": 200
+      },
+      {
+        "role": "ordinary",
+        "width": 1440,
+        "height": 900,
+        "theme": "dark",
+        "zoom": 100
+      },
+      {
+        "role": "manager",
+        "width": 1440,
+        "height": 900,
+        "theme": "dark",
+        "zoom": 100
+      },
+      {
+        "role": "ordinary",
+        "width": 1440,
+        "height": 900,
+        "theme": "dark",
+        "zoom": 200
+      },
+      {
+        "role": "manager",
+        "width": 1440,
+        "height": 900,
+        "theme": "dark",
+        "zoom": 200
+      },
+      {
+        "role": "ordinary",
+        "width": 1920,
+        "height": 1080,
+        "theme": "light",
+        "zoom": 100
+      },
+      {
+        "role": "manager",
+        "width": 1920,
+        "height": 1080,
+        "theme": "light",
+        "zoom": 100
+      },
+      {
+        "role": "ordinary",
+        "width": 1920,
+        "height": 1080,
+        "theme": "light",
+        "zoom": 200
+      },
+      {
+        "role": "manager",
+        "width": 1920,
+        "height": 1080,
+        "theme": "light",
+        "zoom": 200
+      },
+      {
+        "role": "ordinary",
+        "width": 1920,
+        "height": 1080,
+        "theme": "dark",
+        "zoom": 100
+      },
+      {
+        "role": "manager",
+        "width": 1920,
+        "height": 1080,
+        "theme": "dark",
+        "zoom": 100
+      },
+      {
+        "role": "ordinary",
+        "width": 1920,
+        "height": 1080,
+        "theme": "dark",
+        "zoom": 200
+      },
+      {
+        "role": "manager",
+        "width": 1920,
+        "height": 1080,
+        "theme": "dark",
+        "zoom": 200
+      }
+    ],
+    "authorizedFocusChecks": [
+      "stable-id-next-action"
+    ]
+  },
+  "refreshFailed": "covered by intercepted post-write roster GET only",
+  "registrationRefusal": "covered by intercepted 400 with raw detail; raw name and masked password retained without detail disclosure",
+  "uncertain": "covered by intercepted transport abort followed by explicit GET reconciliation",
+  "sameTick": "button click plus requestSubmit dispatched in one browser task",
+  "nativeWindowsImeCandidateUi": "nonblocking-unverified",
+  "passwordManagerUi": "nonblocking-unverified",
+  "autofillNativeUi": "nonblocking-unverified",
+  "syntheticCompositionBoundary": "covered"
+}

@@ -58,12 +58,12 @@ export const QUERY_KEYS = {
   identity: ['identity'] as const,
   tree: ['tree'] as const,
   favorites: ['favorites'] as const,
-  signupMode: ['signup-mode'] as const,
+  signupMode: (userId: string, generation: number) => ['signup-mode', userId, generation] as const,
   trash: (scope: 'mine' | 'all', workspaceId?: string) => ['trash', scope, workspaceId] as const,
   links: (nodeId: string) => ['links', nodeId] as const,
   personalSettings: (userId: string) => ['personal-settings', userId] as const,
   tokens: (userId: string, generation: number) => ['tokens', userId, generation] as const,
-  userRoster: ['roster', 'users'] as const,
+  userRoster: (userId: string, generation: number) => ['roster', 'users', userId, generation] as const,
   groupRoster: ['roster', 'groups'] as const,
   document: (nodeId: string) => ['document', nodeId] as const,
   workspaces: (scope: 'visible' | 'managed' | 'all' = 'visible', userId?: string, authGeneration?: number) =>
@@ -120,15 +120,15 @@ export const useTokens = (userId: string | undefined, generation: number): UseQu
   });
 
 /** 슈퍼유저 전용 명부 (`R163`). 슈퍼유저가 아니면 서버가 404 로 답한다. */
-export const useUserRoster = (enabled: boolean): UseQueryResult<RosterUser[]> =>
-  useQuery({ queryKey: QUERY_KEYS.userRoster, queryFn: fetchUserRoster, enabled, retry: false });
+export const useUserRoster = (userId: string | undefined, generation: number, enabled: boolean): UseQueryResult<RosterUser[]> =>
+  useQuery({ queryKey: QUERY_KEYS.userRoster(userId ?? `authenticated-${generation}`, generation), queryFn: fetchUserRoster, enabled, retry: false });
 
 export const useGroupRoster = (enabled: boolean): UseQueryResult<RosterGroup[]> =>
   useQuery({ queryKey: QUERY_KEYS.groupRoster, queryFn: fetchGroupRoster, enabled, retry: false });
 
 /** 지금 가입 모드 (`FR-AUTH-004`). 슈퍼유저만 받는다. */
-export const useSignupMode = (enabled: boolean): UseQueryResult<{ mode: string }> =>
-  useQuery({ queryKey: QUERY_KEYS.signupMode, queryFn: fetchSignupMode, enabled });
+export const useSignupMode = (userId: string | undefined, generation: number, enabled: boolean): UseQueryResult<{ mode: string }> =>
+  useQuery({ queryKey: QUERY_KEYS.signupMode(userId ?? `authenticated-${generation}`, generation), queryFn: fetchSignupMode, enabled, retry: false });
 
 export const useFavorites = (enabled: boolean): UseQueryResult<FavoriteRow[]> =>
   useQuery({ queryKey: QUERY_KEYS.favorites, queryFn: fetchFavorites, enabled });

@@ -71,6 +71,7 @@ import { GroupRoster } from '../principal/GroupRoster.js';
 import { UserRoster } from '../principal/UserRoster.js';
 import { OffboardingSurface } from '../principal/OffboardingSurface.js';
 import { SignupApproval } from '../principal/SignupApproval.js';
+import type { PrincipalAction, PrincipalRequestContext, RosterRead, SignupModeRead } from '../principal/request-contract.js';
 import { TrashPanel, type TrashActionResult, type TrashLens, type TrashQueryState, type TrashRowView } from '../trash/TrashPanel.js';
 import { EmptyState, ErrorState, LoadingState } from '../components/ui/states.js';
 import { Button } from '../components/ui/button.js';
@@ -292,6 +293,8 @@ function SettingsModal({
   onIssueToken,
   onRevokeToken,
   userRoster = [],
+  userRosterQuery,
+  principalRequestContext,
   groupRoster = [],
   aclAudit,
   audit,
@@ -313,6 +316,7 @@ function SettingsModal({
   onGroupAddMember,
   onRegisterUser,
   signupMode,
+  signupModeQuery,
   onApproveUser,
   onReopenUser,
   onUserStatus,
@@ -342,6 +346,8 @@ function SettingsModal({
   onRevokeToken?: (id: string) => Promise<{ ok: true } | { ok: false }>;
   /** 슈퍼유저 전용 명부 (`R163`). 슈퍼유저가 아니면 비어 있다. */
   userRoster?: readonly RosterUser[];
+  userRosterQuery?: RosterRead;
+  principalRequestContext?: Omit<PrincipalRequestContext, 'categoryGeneration'>;
   groupRoster?: readonly RosterGroup[];
   /** 권한 감사 구역이 그릴 것 (`FR-ACL-003`~`FR-ACL-005`). */
   aclAudit?: AclAuditProps;
@@ -366,15 +372,16 @@ function SettingsModal({
   onGroupRemove?: (groupId: string) => void;
   onGroupAddMember?: (groupId: string, userId: string) => void;
   /** 슈퍼유저 직접 등록 (`FR-AUTH-003`). */
-  onRegisterUser?: (input: { name: string; password: string }) => void;
+  onRegisterUser?: PrincipalAction<[input: { name: string; password: string }]>;
   /** 지금 가입 모드 (`FR-AUTH-004`). 빈 대기열의 원인이 여기서 갈린다. */
   signupMode?: string;
+  signupModeQuery?: SignupModeRead;
   /** 가입 승인 (`SEC-AUTH-004` AC-1). */
-  onApproveUser?: (userId: string) => void;
+  onApproveUser?: PrincipalAction<[userId: string]>;
   /** 거절된 계정의 재심사 (`FR-AUTH-002`). */
-  onReopenUser?: (userId: string) => void;
+  onReopenUser?: PrincipalAction<[userId: string]>;
   /** 계정 상태 전환 (`R112-d`). */
-  onUserStatus?: (userId: string, status: RosterUserStatus) => void;
+  onUserStatus?: PrincipalAction<[userId: string, status: RosterUserStatus]>;
   /** 이 브라우저의 세션을 끊는다 (`SEC-AUTH-019` AC-1). */
   onLogout?: () => void | Promise<void>;
   onAuthenticationLoss?: () => void;
@@ -409,6 +416,16 @@ function SettingsModal({
 }) {
   const [open, setOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('editor');
+  const previousPrincipalCategory = useRef(selectedCategory);
+  const principalCategoryGeneration = useRef(0);
+  if (previousPrincipalCategory.current !== selectedCategory) {
+    previousPrincipalCategory.current = selectedCategory;
+    principalCategoryGeneration.current += 1;
+  }
+  const principalContext = principalRequestContext === undefined ? undefined : {
+    ...principalRequestContext,
+    categoryGeneration: principalCategoryGeneration.current,
+  };
   const [ordinaryLeaveGuard, setOrdinaryLeaveGuard] = useState<ActiveSettingsLeaveGuard | null>(null);
   const [pendingLeave, setPendingLeave] = useState<{ intent: { kind: 'category'; targetId: string } | { kind: 'close' }; ownerId: string; epoch: number; category: string } | null>(null);
   const [leaveFailure, setLeaveFailure] = useState('');
@@ -827,6 +844,8 @@ function SettingsModal({
                     setOffboardingHandoff(true); setSelectedCategory('acl-audit');
                   } })} /> : <UserRoster
                     users={userRoster}
+                    {...(userRosterQuery === undefined ? {} : { roster: userRosterQuery })}
+                    {...(principalContext === undefined ? {} : { requestContext: principalContext })}
                     {...(onRegisterUser === undefined ? {} : { onRegister: onRegisterUser })}
                     {...(onApproveUser === undefined ? {} : { onApprove: onApproveUser })}
                     {...(onReopenUser === undefined ? {} : { onReopen: onReopenUser })}
@@ -838,7 +857,10 @@ function SettingsModal({
                   // 동질적이고 대상이 대기 건수로 한정되기 때문이다.
                   <SignupApproval
                     users={userRoster}
+                    {...(userRosterQuery === undefined ? {} : { roster: userRosterQuery })}
+                    {...(principalContext === undefined ? {} : { requestContext: principalContext })}
                     {...(signupMode === undefined ? {} : { signupMode })}
+                    {...(signupModeQuery === undefined ? {} : { signupModeQuery })}
                     {...(onApproveUser === undefined ? {} : { onApprove: onApproveUser })}
                     {...(onReopenUser === undefined ? {} : { onReopen: onReopenUser })}
                     {...(onUserStatus === undefined ? {} : { onStatus: onUserStatus })}
@@ -946,6 +968,8 @@ export function AppShell({
   onIssueToken,
   onRevokeToken,
   userRoster = [],
+  userRosterQuery,
+  principalRequestContext,
   groupRoster = [],
   aclAudit,
   audit,
@@ -971,6 +995,7 @@ export function AppShell({
   onGroupAddMember,
   onRegisterUser,
   signupMode,
+  signupModeQuery,
   onApproveUser,
   onReopenUser,
   onUserStatus,
@@ -1079,19 +1104,22 @@ export function AppShell({
   onRevokeToken?: (id: string) => Promise<{ ok: true } | { ok: false }>;
   /** 슈퍼유저 전용 명부 (`R163`). 슈퍼유저가 아니면 서버가 주지 않는다. */
   userRoster?: readonly RosterUser[];
+  userRosterQuery?: RosterRead;
+  principalRequestContext?: Omit<PrincipalRequestContext, 'categoryGeneration'>;
   groupRoster?: readonly RosterGroup[];
   onGroupRemove?: (groupId: string) => void;
   onGroupAddMember?: (groupId: string, userId: string) => void;
   /** 슈퍼유저 직접 등록 (`FR-AUTH-003`). */
-  onRegisterUser?: (input: { name: string; password: string }) => void;
+  onRegisterUser?: PrincipalAction<[input: { name: string; password: string }]>;
   /** 지금 가입 모드 (`FR-AUTH-004`). 빈 대기열의 원인이 여기서 갈린다. */
   signupMode?: string;
+  signupModeQuery?: SignupModeRead;
   /** 가입 승인 (`SEC-AUTH-004` AC-1). */
-  onApproveUser?: (userId: string) => void;
+  onApproveUser?: PrincipalAction<[userId: string]>;
   /** 거절된 계정의 재심사 (`FR-AUTH-002`). */
-  onReopenUser?: (userId: string) => void;
+  onReopenUser?: PrincipalAction<[userId: string]>;
   /** 계정 상태 전환 (`R112-d`). */
-  onUserStatus?: (userId: string, status: RosterUserStatus) => void;
+  onUserStatus?: PrincipalAction<[userId: string, status: RosterUserStatus]>;
   /**
    * 권한 감사 구역이 그릴 것 (`FR-ACL-003`~`FR-ACL-005`).
    *
@@ -1376,6 +1404,8 @@ export function AppShell({
             {...(onPasswordChange === undefined ? {} : { onPasswordChange })}
             handoffOpen={authHandoffOpen}
             userRoster={userRoster}
+            {...(userRosterQuery === undefined ? {} : { userRosterQuery })}
+            {...(principalRequestContext === undefined ? {} : { principalRequestContext })}
             groupRoster={groupRoster}
             {...(aclAudit === undefined ? {} : { aclAudit })}
             {...(audit === undefined ? {} : { audit })}
@@ -1388,6 +1418,7 @@ export function AppShell({
             {...(onGroupRemove === undefined ? {} : { onGroupRemove })}
             {...(onGroupAddMember === undefined ? {} : { onGroupAddMember })}
             {...(signupMode === undefined ? {} : { signupMode })}
+            {...(signupModeQuery === undefined ? {} : { signupModeQuery })}
             {...(onApproveUser === undefined ? {} : { onApproveUser })}
             {...(onReopenUser === undefined ? {} : { onReopenUser })}
             {...(onUserStatus === undefined ? {} : { onUserStatus })}

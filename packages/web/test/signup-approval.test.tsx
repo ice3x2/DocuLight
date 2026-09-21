@@ -62,7 +62,7 @@ describe('설계서 §2.10 — 가입 승인은 자기 카테고리를 갖는다
 describe('SEC-AUTH-004 — 승인과 거절', () => {
   it('승인하면 그 계정 id 가 밖으로 나간다', async () => {
     const 승인한것: string[] = [];
-    render(<SignupApproval users={넷} onApprove={(id) => 승인한것.push(id)} />);
+    render(<SignupApproval users={넷} onApprove={async (id) => { 승인한것.push(id); return { ok: true, refreshFailed: false }; }} />);
 
     await userEvent.setup().click(within(행('대기자')).getByRole('button', { name: '대기자 승인' }));
 
@@ -71,7 +71,7 @@ describe('SEC-AUTH-004 — 승인과 거절', () => {
 
   it('거절하면 상태 전환이 나간다', async () => {
     const 바꾼것: { id: string; status: string }[] = [];
-    render(<SignupApproval users={넷} onStatus={(id, status) => 바꾼것.push({ id, status })} />);
+    render(<SignupApproval users={넷} onStatus={async (id, status) => { 바꾼것.push({ id, status }); return { ok: true, refreshFailed: false }; }} />);
 
     await userEvent.setup().click(within(행('대기자')).getByRole('button', { name: '대기자 거절' }));
 
@@ -96,7 +96,7 @@ describe('FR-AUTH-002 — 거절됨 탭에서 재심사한다', () => {
 
   it('거절됨 탭에는 `rejected` 만 서고 재심사가 붙는다', async () => {
     const 되돌린것: string[] = [];
-    render(<SignupApproval users={넷} onReopen={(id) => 되돌린것.push(id)} />);
+    render(<SignupApproval users={넷} onReopen={async (id) => { 되돌린것.push(id); return { ok: true, refreshFailed: false }; }} />);
     const user = await 거절됨탭으로();
 
     expect(screen.queryByRole('row', { name: /대기자/ })).toBeNull();
@@ -106,7 +106,7 @@ describe('FR-AUTH-002 — 거절됨 탭에서 재심사한다', () => {
   });
 
   it('거절됨 탭에는 승인 버튼이 없다 — 그 상태에서 바로 승인하는 경로는 없다', async () => {
-    render(<SignupApproval users={넷} onApprove={() => undefined} onReopen={() => undefined} />);
+    render(<SignupApproval users={넷} onApprove={async () => ({ ok: true, refreshFailed: false })} onReopen={async () => ({ ok: true, refreshFailed: false })} />);
     await 거절됨탭으로();
 
     // `R60-b` 는 `rejected → pending → active` 를 정한다. 여기서 바로
@@ -153,7 +153,7 @@ describe('설계서 §2.10 — 빈 상태는 원인을 설명한다', () => {
 
 describe('IR-SHELL-006 — 승인 목록의 공통 표·탭 표현', () => {
   it('탭 건수·선택 상태와 대기 표의 이름/조작 계약을 유지한다', () => {
-    render(<SignupApproval users={넷} onApprove={() => undefined} onStatus={() => undefined} />);
+    render(<SignupApproval users={넷} onApprove={async () => ({ ok: true, refreshFailed: false })} onStatus={async () => ({ ok: true, refreshFailed: false })} />);
 
     const pending = screen.getByRole('tab', { name: '대기 중 (1)' });
     const rejected = screen.getByRole('tab', { name: '거절됨 (1)' });

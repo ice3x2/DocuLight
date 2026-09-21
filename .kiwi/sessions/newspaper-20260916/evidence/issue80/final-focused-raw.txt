@@ -1,0 +1,11 @@
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0-wt-issue80/packages/web
+
+
+ Test Files  11 passed (11)
+      Tests  173 passed (173)
+   Start at  01:18:09
+   Duration  16.36s (transform 7.95s, setup 292ms, import 18.75s, tests 25.27s, environment 10.00s)
+

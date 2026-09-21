@@ -110,6 +110,7 @@ import type { WorkspaceTreeView, TreeNodeView } from './tree/tree-contract.js';
 import { rememberTheme, useThemeRuntime, type ThemePreference } from './theme/runtime.js';
 import type { ThemeLoadState, ThemeSaveState } from './settings/PersonalSettings.js';
 import { useEditorPreferenceController, type EditorPreferenceKey } from './settings/editor-preferences.js';
+import type { PrincipalActionResult } from './principal/request-contract.js';
 
 export async function revokeSubjectAndRefresh(
   principalId: string,
@@ -628,10 +629,56 @@ function AppBody() {
   // 목록이 비어 있는 것과 아직 안 온 것이 화면에서 같아 보인다.
   const tokens = useTokens(protectedEnabled ? userId : undefined, authGeneration);
   // 슈퍼유저가 아니면 서버가 404 로 답한다 — 화면이 다시 판정하지 않는다.
-  const users = useUserRoster(protectedEnabled && session.data?.superuser === true);
+  const principalEnabled = protectedEnabled && session.data?.superuser === true;
+  const users = useUserRoster(userId, authGeneration, principalEnabled);
   // 가입 승인 화면이 빈 대기열의 **원인**을 말하려면 모드를 알아야 한다.
-  const signupMode = useSignupMode(protectedEnabled && session.data?.superuser === true);
-  const groups = useGroupRoster(protectedEnabled && session.data?.superuser === true);
+  const signupMode = useSignupMode(userId, authGeneration, principalEnabled);
+  const principalReadTracker = useRef<{
+    owner: string | undefined;
+    rosterRevision: number;
+    modeRevision: number;
+    generation: number;
+  }>({ owner: undefined, rosterRevision: 0, modeRevision: 0, generation: 0 });
+  const principalOwner = principalEnabled && userId !== undefined ? `${userId}:${authGeneration}` : undefined;
+  const principalRosterKey = QUERY_KEYS.userRoster(userId ?? `authenticated-${authGeneration}`, authGeneration);
+  const principalModeKey = QUERY_KEYS.signupMode(userId ?? `authenticated-${authGeneration}`, authGeneration);
+  const principalReadCounts = () => ({
+    roster: queries.getQueryState(principalRosterKey)?.dataUpdateCount ?? 0,
+    mode: queries.getQueryState(principalModeKey)?.dataUpdateCount ?? 0,
+  });
+  const samePrincipalReads = (left: { roster: number; mode: number }, right: { roster: number; mode: number }) =>
+    left.roster === right.roster && left.mode === right.mode;
+  const acceptPrincipalReads = (counts: { roster: number; mode: number }): number => {
+    const tracker = principalReadTracker.current;
+    if (tracker.owner !== principalOwner) {
+      tracker.owner = principalOwner;
+      tracker.rosterRevision = 0;
+      tracker.modeRevision = 0;
+      tracker.generation += 1;
+    }
+    if (counts.roster !== tracker.rosterRevision) {
+      tracker.rosterRevision = counts.roster;
+      tracker.generation += 1;
+    }
+    if (counts.mode !== tracker.modeRevision) {
+      tracker.modeRevision = counts.mode;
+      tracker.generation += 1;
+    }
+    return tracker.generation;
+  };
+  acceptPrincipalReads(principalReadCounts());
+  const principalReadGeneration = principalReadTracker.current.generation;
+  const groups = useGroupRoster(principalEnabled);
+  const previousPrincipalOwner = useRef<string | undefined>(undefined);
+  useEffect(() => {
+    const owner = principalEnabled && userId !== undefined ? `${userId}:${authGeneration}` : undefined;
+    if (owner === previousPrincipalOwner.current) return;
+    const lostOrChangedOwner = previousPrincipalOwner.current !== undefined || owner === undefined;
+    previousPrincipalOwner.current = owner;
+    if (!lostOrChangedOwner) return;
+    queries.removeQueries({ queryKey: ['roster'] });
+    queries.removeQueries({ queryKey: ['signup-mode'] });
+  }, [authGeneration, principalEnabled, queries, userId]);
   const links = useLinks(protectedEnabled ? documents.activeId : null);
   const linksState: ShellPanelState = links.isError
     ? { state: 'error', message: '잠시 후 다시 시도하십시오.', onRetry: () => void links.refetch() }
@@ -778,15 +825,32 @@ function AppBody() {
    * 끝나면 명부를 다시 받는다 — 방금 만든 계정이 목록에 없으면 사용자는
    * 등록이 안 된 줄 안다.
    */
-  const makeUser = useCallback(
-    async (input: { name: string; password: string }) => {
-      if (!allowsProtected()) return;
-      await registerUser(input).catch(() => undefined);
-      if (!allowsProtected()) return;
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.userRoster });
-    },
-    [allowsProtected, queries],
-  );
+  const refreshUserRoster = useCallback(async (): Promise<{ failed: boolean; generation: number }> => {
+    const refreshed = await users.refetch();
+    const generation = acceptPrincipalReads(principalReadCounts());
+    return { failed: refreshed.isError, generation };
+  }, [users.refetch, principalOwner]);
+
+  const failedPrincipalAction = (error: unknown): PrincipalActionResult => ({
+    ok: false,
+    kind: error instanceof ApiError ? 'rejected' : 'uncertain',
+  });
+
+  const makeUser = useCallback(async (input: { name: string; password: string }): Promise<PrincipalActionResult> => {
+    if (!allowsProtected()) return { ok: false, kind: 'stale' };
+    const capturedReads = principalReadCounts();
+    try {
+      const created = await registerUser(input);
+      if (typeof created.id !== 'string' || created.id === '') return { ok: false, kind: 'uncertain' };
+      if (!allowsProtected()) return { ok: false, kind: 'stale' };
+      if (!samePrincipalReads(principalReadCounts(), capturedReads)) return { ok: false, kind: 'stale' };
+      const refresh = await refreshUserRoster();
+      if (!allowsProtected()) return { ok: false, kind: 'stale' };
+      return { ok: true, id: created.id, refreshFailed: refresh.failed, acceptedReadGeneration: refresh.generation };
+    } catch (error) {
+      return failedPrincipalAction(error);
+    }
+  }, [allowsProtected, refreshUserRoster]);
 
   /**
    * 가입 승인·재심사·상태 전환 (`SEC-AUTH-004` · `FR-AUTH-002` · `R112-d`).
@@ -794,26 +858,33 @@ function AppBody() {
    * 셋이 같은 뒷정리를 한다 — 명부를 다시 받는다. 화면에서 상태를 지어
    * 넣으면 서버가 거절했을 때 그 사실이 드러나지 않고, 사용자는 바뀐 줄 안다.
    */
-  const 명부를다시받는다 = useCallback(
-    async (조작: Promise<unknown>) => {
-      await 조작.catch(() => undefined);
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.userRoster });
-    },
-    [queries],
-  );
+  const 명부를다시받는다 = useCallback(async (조작: () => Promise<unknown>): Promise<PrincipalActionResult> => {
+    if (!allowsProtected()) return { ok: false, kind: 'stale' };
+    const capturedReads = principalReadCounts();
+    try {
+      await 조작();
+      if (!allowsProtected()) return { ok: false, kind: 'stale' };
+      if (!samePrincipalReads(principalReadCounts(), capturedReads)) return { ok: false, kind: 'stale' };
+      const refresh = await refreshUserRoster();
+      if (!allowsProtected()) return { ok: false, kind: 'stale' };
+      return { ok: true, refreshFailed: refresh.failed, acceptedReadGeneration: refresh.generation };
+    } catch (error) {
+      return failedPrincipalAction(error);
+    }
+  }, [allowsProtected, refreshUserRoster]);
 
   const approve = useCallback(
-    (userId: string) => { if (allowsProtected()) void 명부를다시받는다(approveUser(userId)); },
+    (userId: string) => allowsProtected() ? 명부를다시받는다(() => approveUser(userId)) : Promise.resolve({ ok: false as const, kind: 'stale' as const }),
     [allowsProtected, 명부를다시받는다],
   );
   const reopen = useCallback(
-    (userId: string) => { if (allowsProtected()) void 명부를다시받는다(reopenUser(userId)); },
+    (userId: string) => allowsProtected() ? 명부를다시받는다(() => reopenUser(userId)) : Promise.resolve({ ok: false as const, kind: 'stale' as const }),
     [allowsProtected, 명부를다시받는다],
   );
   const changeUserStatus = useCallback(
-    (userId: string, status: RosterUserStatus) => {
-      if (allowsProtected()) void 명부를다시받는다(setUserStatus(userId, status));
-    },
+    (userId: string, status: RosterUserStatus) => allowsProtected()
+      ? 명부를다시받는다(() => setUserStatus(userId, status))
+      : Promise.resolve({ ok: false as const, kind: 'stale' as const }),
     [allowsProtected, 명부를다시받는다],
   );
 
@@ -2018,12 +2089,27 @@ function AppBody() {
         }
         endAuthentication(false, true);
       }}
-      userRoster={users.data ?? []}
+      userRoster={principalEnabled ? users.data ?? [] : []}
+      userRosterQuery={
+        users.isError
+          ? { state: 'error', revision: users.dataUpdatedAt, onRetry: () => void users.refetch() }
+          : users.isFetching || users.data === undefined
+            ? { state: 'loading', revision: users.dataUpdatedAt }
+            : { state: 'ready', revision: users.dataUpdatedAt, users: users.data, onRetry: () => void users.refetch() }
+      }
+      principalRequestContext={{ principalId: userId ?? 'anonymous', authGeneration, queryGeneration: principalReadGeneration }}
       groupRoster={groups.data ?? []}
       onGroupRemove={dropGroup}
       onGroupAddMember={addMember}
       onRegisterUser={makeUser}
       {...(signupMode.data === undefined ? {} : { signupMode: signupMode.data.mode })}
+      signupModeQuery={
+        signupMode.isError
+          ? { state: 'error', onRetry: () => void signupMode.refetch() }
+          : signupMode.isFetching || signupMode.data === undefined
+            ? { state: 'loading' }
+            : { state: 'ready', mode: signupMode.data.mode }
+      }
       onApproveUser={approve}
       onReopenUser={reopen}
       onUserStatus={changeUserStatus}

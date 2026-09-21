@@ -1,0 +1,7 @@
+COMMAND_HEAD: git rev-parse HEAD
+HEAD: b2b126c3ee04602e1ace3e256d2816b32aefc930
+COMMAND_STATUS: git status --porcelain=v1
+STATUS_BEGIN
+STATUS_END
+WORKTREE: C:/Work/git/DocuLight2.0-wt-issue80-baseline-proof
+RESULT: exact detached ref with empty porcelain status

@@ -61,13 +61,14 @@ function Fixture() {
         viewer={viewer}
         userRoster={config.empty ? [] : fullUsers}
         {...(config.signupMode === undefined ? {} : { signupMode: config.signupMode })}
-        {...(config.noRegister ? {} : { onRegisterUser: (input: { name: string; password: string }) => {
+        {...(config.noRegister ? {} : { onRegisterUser: async (input: { name: string; password: string }) => {
           window.__issue67.registerCount += 1;
           window.__issue67.registerExact = input.name === ' 한글 이름 ' && input.password === registrationPassword;
+          return { ok: true as const, id: 'fixture-registration', refreshFailed: false };
         } })}
-        onApproveUser={(id) => window.__issue67.approveIds.push(id)}
-        onReopenUser={(id) => window.__issue67.reopenIds.push(id)}
-        onUserStatus={(id, status) => { if (status === 'rejected') window.__issue67.rejectIds.push(id); }}
+        onApproveUser={async (id) => { window.__issue67.approveIds.push(id); return { ok: true, refreshFailed: false }; }}
+        onReopenUser={async (id) => { window.__issue67.reopenIds.push(id); return { ok: true, refreshFailed: false }; }}
+        onUserStatus={async (id, status) => { if (status === 'rejected') window.__issue67.rejectIds.push(id); return { ok: true, refreshFailed: false }; }}
       />
     </main>
   );

@@ -1,0 +1,25 @@
+Command: npm exec --workspace @doculight/web -- vitest run test/issue80-principal-request-results.test.tsx
+Exit code: 1
+
+RUN v4.1.11 C:/Work/git/DocuLight2.0-wt-issue80/packages/web
+
+test/issue80-principal-request-results.test.tsx (12 tests | 4 failed)
+
+FAIL AC-3/9: uncertain registration stays locked through loading/error and unlocks only on a newer ready snapshot
+AssertionError: expected false to be true
+packages/web/test/issue80-principal-request-results.test.tsx:88
+
+FAIL AC-8: stale registration completion cannot clear fields or publish a notice
+TestingLibraryElementError: stale completion rendered "사용자를 등록했습니다." and cleared the captured fields.
+packages/web/test/issue80-principal-request-results.test.tsx:112
+
+FAIL AC-5: snapshot status와 ID별 동기 guard를 지키고 unrelated ID는 독립 실행한다
+AssertionError: expected false to be true
+packages/web/test/issue80-principal-request-results.test.tsx:185
+
+FAIL AC-8/10: stale row completion cannot publish notice or move focus after request context changes
+AssertionError: expected <p>가입을 승인했습니다.</p> to be null
+packages/web/test/issue80-principal-request-results.test.tsx:208
+
+Test Files  1 failed (1)
+Tests       4 failed | 8 passed (12)

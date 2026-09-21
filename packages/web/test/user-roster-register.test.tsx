@@ -33,7 +33,7 @@ describe('FR-AUTH-003 — 직접 등록은 사용자 관리 안의 조작이다'
   });
 
   it('네 상태를 의미 배지로 표시하고 명부가 비면 중립 안내를 표시한다', () => {
-    const { rerender } = render(<UserRoster users={명부} onRegister={() => undefined} />);
+    const { rerender } = render(<UserRoster users={명부} onRegister={async () => ({ ok: true, id: 'fixture', refreshFailed: false })} />);
 
     expect(screen.getAllByTestId('roster-status').map((badge) => [badge.textContent, badge.getAttribute('data-variant')])).toEqual([
       ['활성', 'success'],
@@ -43,7 +43,7 @@ describe('FR-AUTH-003 — 직접 등록은 사용자 관리 안의 조작이다'
     ]);
     expect(screen.getByRole('table', { name: '사용자 관리' }).getAttribute('data-slot')).toBe('table');
 
-    rerender(<UserRoster users={[]} onRegister={() => undefined} />);
+    rerender(<UserRoster users={[]} onRegister={async () => ({ ok: true, id: 'fixture', refreshFailed: false })} />);
     expect(screen.getByRole('note', { name: '빈 상태 안내' }).textContent).toBe('표시할 사용자 항목이 없습니다.');
     expect(screen.getByRole('heading', { name: '사용자 직접 등록' })).toBeDefined();
   });
@@ -57,7 +57,7 @@ describe('FR-AUTH-003 — 직접 등록은 사용자 관리 안의 조작이다'
   it('채워서 누르면 그 값이 밖으로 나간다', async () => {
     const 나간것: { name: string; password: string }[] = [];
     const 합성비밀번호 = runtimePassword(1);
-    render(<UserRoster users={명부} onRegister={(one) => 나간것.push(one)} />);
+    render(<UserRoster users={명부} onRegister={async (one) => { 나간것.push(one); return { ok: true, id: 'fixture', refreshFailed: false }; }} />);
     const user = userEvent.setup();
 
     await user.type(screen.getByLabelText('새 사용자 이름'), '새사람');
@@ -68,7 +68,7 @@ describe('FR-AUTH-003 — 직접 등록은 사용자 관리 안의 조작이다'
   });
 
   it('이름이나 비밀번호가 비면 누를 수 없다 — 서버가 거절할 요청을 보내지 않는다', async () => {
-    render(<UserRoster users={명부} onRegister={() => undefined} />);
+    render(<UserRoster users={명부} onRegister={async () => ({ ok: true, id: 'fixture', refreshFailed: false })} />);
     const 등록 = screen.getByRole('button', { name: '등록' }) as HTMLButtonElement;
 
     expect(등록.disabled).toBe(true);
@@ -102,7 +102,7 @@ describe('FR-AUTH-003 — 직접 등록은 사용자 관리 안의 조작이다'
   it('공백을 포함한 원값과 합성 중 Enter를 보존하고 명시적 버튼 조작만 한 번 보낸다', async () => {
     const 나간것: { name: string; password: string }[] = [];
     const 합성비밀번호 = ` ${runtimePassword(3)} `;
-    render(<UserRoster users={명부} onRegister={(one) => 나간것.push(one)} />);
+    render(<UserRoster users={명부} onRegister={async (one) => { 나간것.push(one); return { ok: true, id: 'fixture', refreshFailed: false }; }} />);
     const 이름 = screen.getByLabelText('새 사용자 이름') as HTMLInputElement;
     const 비밀번호 = screen.getByLabelText('임시 비밀번호') as HTMLInputElement;
 

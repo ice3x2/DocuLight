@@ -16,6 +16,7 @@ import {
   fetchRelocationPreview,
   moveNode,
   copyNode,
+  registerUser,
 } from '../src/api/client.js';
 
 const respond = (status: number, body?: unknown) =>
@@ -31,6 +32,21 @@ const stub = (impl: (url: string, init?: RequestInit) => Response | Promise<Resp
 };
 
 afterEach(() => vi.unstubAllGlobals());
+
+describe('IR-PRINCIPAL-002 registration receipt', () => {
+  it('accepts only 201 with one nonempty ID and sends the raw credentials once', async () => {
+    const spy = stub(() => respond(201, { id: 'created-1' }));
+    await expect(registerUser({ name: ' 원값 ', password: ' secret ' })).resolves.toEqual({ id: 'created-1' });
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(String(spy.mock.calls[0]?.[1]?.body))).toEqual({ name: ' 원값 ', password: ' secret ' });
+
+    for (const [status, body] of [[200, { id: 'created-2' }], [201, {}], [201, { id: '' }]] as const) {
+      const malformed = stub(() => respond(status, body));
+      await expect(registerUser({ name: 'n', password: 'p' })).rejects.toThrow('invalid registration response');
+      expect(malformed).toHaveBeenCalledTimes(1);
+    }
+  });
+});
 
 describe('IR-SHELL-011 relocation wire contracts', () => {
   it('sends the operation kind and omits a move root destination', async () => {
