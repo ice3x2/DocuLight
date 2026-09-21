@@ -1,11 +1,11 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
-import type { PrincipalRow, RevocationBody, RevocationScope, RevocationSubject } from '../api/client.js';
+import { fetchRevocationPrincipals, type PrincipalRow, type RevocationBody, type RevocationPreviewBody, type RevocationScope, type RevocationSubject } from '../api/client.js';
 import { ConfirmGate } from '../confirm/ConfirmGate.js';
 import { PrincipalPicker } from '../principal/PrincipalPicker.js';
 
 export type AuditQuery<T> = { state: 'idle' } | { state: 'loading' } | { state: 'ready'; data: T } | { state: 'error'; onRetry: () => void };
-export interface SubjectPlan { subject: RevocationSubject; response: RevocationBody }
+export interface SubjectPlan { subject: RevocationSubject; response: RevocationPreviewBody }
 export interface BulkPlan { subjects: readonly SubjectPlan[] }
 export interface CompletedRevokeSubjectResult { revocation: RevocationBody; refreshFailed: boolean }
 export type RevokeSubjectResult =
@@ -21,6 +21,7 @@ const SCOPE_NOTE: Record<RevocationScope, string> = {
   'managed-workspaces': '이 회수는 당신이 관리하는 워크스페이스에만 적용됩니다.',
 };
 const SYSTEM_GROUP_NOTE = '시스템 그룹입니다. 걷힌 항목은 가입·활성화 절차로 되살아나지 않습니다.';
+const SUPERUSER_BYPASS_NOTE = 'ACL 회수로 슈퍼유저 우회 접근은 제거되지 않음';
 const LEVEL = { view: '보기', edit: '편집', admin: '관리' } as const;
 
 function inspectPlan(plan: BulkPlan, subjects: readonly RevocationSubject[]) {
@@ -30,6 +31,8 @@ function inspectPlan(plan: BulkPlan, subjects: readonly RevocationSubject[]) {
   const scopes = new Set(plan.subjects.map(({ response }) => response.scope));
   const entries = new Map<string, { owner: string; data: string }>();
   for (const item of plan.subjects) {
+    if (item.response.subject?.id !== item.subject.id
+      || typeof item.response.subject.aclRevokePreservesSuperuserBypass !== 'boolean') return { valid: false, total: 0, scope: null } as const;
     for (const row of item.response.rows) {
       const previous = entries.get(row.entryId);
       const data = JSON.stringify(row);
@@ -42,7 +45,7 @@ function inspectPlan(plan: BulkPlan, subjects: readonly RevocationSubject[]) {
 }
 
 function identity(plan: BulkPlan) {
-  return JSON.stringify(plan.subjects.map(({ subject, response }) => ({ subjectId: subject.id, scope: response.scope, entryIds: response.rows.map((row) => row.entryId).sort() })));
+  return JSON.stringify(plan.subjects.map(({ subject, response }) => ({ subjectId: subject.id, bypass: response.subject.aclRevokePreservesSuperuserBypass, scope: response.scope, entryIds: response.rows.map((row) => row.entryId).sort() })));
 }
 
 export interface BulkRevokeProps {
@@ -77,6 +80,11 @@ export function BulkRevokePanel({ contextKey, pickerContextKey = contextKey, wor
   const [outcomes, setOutcomes] = useState<readonly SubjectOutcome[]>([]);
   const contractReady = contextKey !== undefined && current !== undefined && onPick !== undefined && onRemove !== undefined && onPreview !== undefined && onRevokeSubject !== undefined;
   const checked = contractReady && current.state === 'ready' ? inspectPlan(current.data, subjects) : null;
+  const authoritativeBypassFor = (subjectId: string) => current.state === 'ready'
+    && checked?.valid === true
+    && current.data.subjects.some((item) => item.subject.id === subjectId
+      && item.response.subject.id === subjectId
+      && item.response.subject.aclRevokePreservesSuperuserBypass === true);
   const subjectKey = subjects.map((subject) => subject.id).join('\u0000');
 
   useEffect(() => {
@@ -177,10 +185,11 @@ export function BulkRevokePanel({ contextKey, pickerContextKey = contextKey, wor
 
   return <section ref={sectionRef} className="acl-audit-section" aria-labelledby="bulk-revoke-heading">
     <h2 id="bulk-revoke-heading">주체 단위 권한 회수</h2>
-    <PrincipalPicker contextKey={pickerContextKey} scope={`workspace:${workspaceId}`} onPick={onPick} />
+    <PrincipalPicker contextKey={pickerContextKey} scope={`workspace:${workspaceId}`} search={fetchRevocationPrincipals} onPick={onPick} />
     {subjects.length === 0 ? <p>회수할 사용자 또는 그룹을 선택하세요.</p> : <ul className="acl-subject-list" data-testid="revocation-subjects">{subjects.map((subject) => <li key={subject.id}>
       <span>{subject.name} · {subject.kind === 'user' ? '사용자' : '그룹'}</span>
       {subject.system === true ? <span data-testid="system-group-notice">{SYSTEM_GROUP_NOTE}</span> : null}
+      {authoritativeBypassFor(subject.id) ? <span role="status" aria-live="polite" data-testid="superuser-bypass-notice">{SUPERUSER_BYPASS_NOTE}</span> : null}
       {subject.kind === 'user' && onOffboard !== undefined ? <button type="button" aria-label="오프보딩 열기" data-offboarding-principal-id={subject.id} onClick={() => onOffboard(subject)}>오프보딩</button> : null}
       <button ref={(node) => { if (node === null) removeRefs.current.delete(subject.id); else removeRefs.current.set(subject.id, node); }} type="button" aria-label={`${subject.name} 제거`} onClick={() => removeSubject(subject.id)}>선택에서 제거</button>
     </li>)}</ul>}
@@ -195,6 +204,6 @@ export function BulkRevokePanel({ contextKey, pickerContextKey = contextKey, wor
     {message === null ? null : <p role="alert">{message}</p>}
     <button ref={actionRef} type="button" disabled={subjects.length === 0 || opening || current.state !== 'ready' || checked?.valid !== true || checked.total === 0} onClick={() => { void openGate(); }}>{opening ? '미리보기 확인 중…' : '권한 전부 회수'}</button>
     {outcomes.length === 0 ? null : <div><p>확정 합계 {confirmedTotal}건</p><ul aria-label="회수 실행 결과">{outcomes.map((outcome) => <li key={outcome.subjectId} data-subject-id={outcome.subjectId} data-outcome-state={outcome.state}>{subjects.find((item) => item.id === outcome.subjectId)?.name ?? outcome.subjectId}: {outcome.state === 'completed' ? <><span>완료 · 실제 {outcome.result.revocation.rows.length}건</span>{outcome.result.revocation.rows.length === 0 ? null : <ul>{outcome.result.revocation.rows.map((item) => <li key={item.entryId}>{item.path ?? item.workspaceName}</li>)}</ul>}{outcome.result.refreshFailed ? <p role="alert">회수는 완료되었지만 화면 새로고침에 실패했습니다.</p> : null}</> : outcome.state === 'unconfirmed' ? '결과 확인 필요' : '실행하지 않음'}</li>)}</ul></div>}
-    <ConfirmGate open={gatePlan !== null} grade="L3" title="선택한 주체의 권한을 회수합니다" token={gateInspection === null ? null : String(gateInspection.total)} restoreFocusRef={actionRef} onConfirm={execute} onCancel={() => { setGatePlan(null); onFlowExit?.(); }}>{gatePlan === null || gateInspection === null ? null : <><p data-testid="revocation-tally">주체 {gatePlan.subjects.length}개 · 항목 {gateInspection.total}건</p><ul>{gatePlan.subjects.map(({ subject }) => <li key={subject.id}>{subject.name} · {subject.kind === 'user' ? '사용자' : '그룹'}</li>)}</ul><p>{SCOPE_NOTE[gateInspection.scope!]}</p></>}</ConfirmGate>
+    <ConfirmGate open={gatePlan !== null} grade="L3" title="선택한 주체의 권한을 회수합니다" token={gateInspection === null ? null : String(gateInspection.total)} restoreFocusRef={actionRef} onConfirm={execute} onCancel={() => { setGatePlan(null); onFlowExit?.(); }}>{gatePlan === null || gateInspection === null ? null : <><p data-testid="revocation-tally">주체 {gatePlan.subjects.length}개 · 항목 {gateInspection.total}건</p><ul>{gatePlan.subjects.map(({ subject, response }) => <li key={subject.id}>{subject.name} · {subject.kind === 'user' ? '사용자' : '그룹'}{response.subject.aclRevokePreservesSuperuserBypass ? <span data-testid="superuser-bypass-confirm-notice">{SUPERUSER_BYPASS_NOTE}</span> : null}</li>)}</ul><p>{SCOPE_NOTE[gateInspection.scope!]}</p></>}</ConfirmGate>
   </section>;
 }

@@ -520,8 +520,8 @@ describe('IR-PRINCIPAL-001 review fixes — authority, snapshots, and identity',
     const subject: PrincipalRow = { id: 'u-2', name: '같은 이름', kind: 'user', status: 'active', system: false };
     const exit = vi.fn();
     render(<BulkRevokePanel contextKey="handoff" workspaceId="ws" subjects={[subject]}
-      plan={{ state: 'ready', data: { subjects: [{ subject, response: { scope: 'workspace', rows: [{ entryId: 'e-1', workspaceId: 'ws', workspaceName: '업무', path: null, level: 'view', grantedBy: null, grantedAt: '2026-09-18T00:00:00.000Z' }] } }] } }}
-      onPick={vi.fn()} onRemove={vi.fn()} onPreview={vi.fn().mockResolvedValue({ subjects: [{ subject, response: { scope: 'workspace', rows: [{ entryId: 'e-1', workspaceId: 'ws', workspaceName: '업무', path: null, level: 'view', grantedBy: null, grantedAt: '2026-09-18T00:00:00.000Z' }] } }] })}
+      plan={{ state: 'ready', data: { subjects: [{ subject, response: { subject: { id: subject.id, aclRevokePreservesSuperuserBypass: false }, scope: 'workspace', rows: [{ entryId: 'e-1', workspaceId: 'ws', workspaceName: '업무', path: null, level: 'view', grantedBy: null, grantedAt: '2026-09-18T00:00:00.000Z' }] } }] } }}
+      onPick={vi.fn()} onRemove={vi.fn()} onPreview={vi.fn().mockResolvedValue({ subjects: [{ subject, response: { subject: { id: subject.id, aclRevokePreservesSuperuserBypass: false }, scope: 'workspace', rows: [{ entryId: 'e-1', workspaceId: 'ws', workspaceName: '업무', path: null, level: 'view', grantedBy: null, grantedAt: '2026-09-18T00:00:00.000Z' }] } }] })}
       onRevokeSubject={vi.fn()} onFlowExit={exit} />);
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: '권한 전부 회수' }));

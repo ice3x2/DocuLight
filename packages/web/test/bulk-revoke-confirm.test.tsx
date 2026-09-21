@@ -35,7 +35,7 @@ const 패널 = ({
   const plan = {
     subjects: subjects.map((subject, index) => ({
       subject,
-      response: { scope: 'instance' as const, rows: index === 0 ? rows : [] },
+      response: { subject: { id: subject.id, aclRevokePreservesSuperuserBypass: false }, scope: 'instance' as const, rows: index === 0 ? rows : [] },
     })),
   };
   render(

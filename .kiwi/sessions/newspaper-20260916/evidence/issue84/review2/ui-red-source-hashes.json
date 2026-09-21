@@ -1,0 +1,13 @@
+﻿{
+    "sources":  [
+                    {
+                        "sha256":  "3ffbfb68b87fa0f5e33c25abec613b0b593b047d06f5598e81aa16e75ea63257",
+                        "source":  "packages/web/test/issue84-revocation-bypass.test.tsx"
+                    },
+                    {
+                        "sha256":  "8bb51ea66a838c4762649bdb625892fef02fb470b9711a471bec630283e4aa52",
+                        "source":  "packages/web/src/acl/BulkRevokePanel.tsx"
+                    }
+                ],
+    "phase":  "RED"
+}

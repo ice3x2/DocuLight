@@ -414,6 +414,10 @@ export interface PrincipalRow {
   system: boolean;
 }
 
+export interface RevocationPrincipalRow extends PrincipalRow {
+  aclRevokePreservesSuperuserBypass: boolean;
+}
+
 /**
  * 이 사용자의 개인 설정 (`DR-SHELL-002` · `IR-SHELL-004`).
  *
@@ -451,6 +455,11 @@ export type PrincipalScope = `node:${string}` | `workspace:${string}` | `group:$
 export const fetchPrincipals = (query: string, scope: PrincipalScope) =>
   call<PrincipalRow[]>(
     `/principals?q=${encodeURIComponent(query)}&for=${encodeURIComponent(scope)}`,
+  );
+
+export const fetchRevocationPrincipals = (query: string, scope: PrincipalScope) =>
+  call<RevocationPrincipalRow[]>(
+    `/principals?q=${encodeURIComponent(query)}&for=${encodeURIComponent(scope)}&purpose=revocation`,
   );
 
 /** 위키링크 자동완성 후보 (`CON-EDITOR-002` AC-1). 거르는 일은 서버가 한다. */
@@ -853,8 +862,15 @@ export interface RevocationBody {
   rows: RevocationRow[];
 }
 
+export interface RevocationPreviewBody extends RevocationBody {
+  subject: {
+    id: string;
+    aclRevokePreservesSuperuserBypass: boolean;
+  };
+}
+
 export const fetchRevocation = (principalId: string) =>
-  call<RevocationBody>(`/principals/${encodeURIComponent(principalId)}/revocation`);
+  call<RevocationPreviewBody>(`/principals/${encodeURIComponent(principalId)}/revocation`);
 
 export const revokeAllFor = (principalId: string) =>
   call<RevocationBody>(`/principals/${encodeURIComponent(principalId)}/revocation`, { method: 'POST' });

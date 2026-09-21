@@ -1,0 +1,11 @@
+﻿{
+    "phase":  "RED",
+    "helper":  {
+                   "sha256":  "0ae808a682b29dc67c4a89ece40e55a6268ea7c21d31e12419625de9cabe0991",
+                   "path":  "packages/web/test/issue84-zoom-convergence.mjs"
+               },
+    "test":  {
+                 "sha256":  "aa05976d0ddcf4fbf892273f4fcbbf9fda1961c2bfe6196165358691d939f0a6",
+                 "path":  "packages/web/test/issue84-zoom-convergence.test.ts"
+             }
+}

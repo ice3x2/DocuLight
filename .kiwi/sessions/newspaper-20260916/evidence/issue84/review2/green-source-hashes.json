@@ -1,0 +1,21 @@
+﻿{
+    "sources":  [
+                    {
+                        "sha256":  "3ffbfb68b87fa0f5e33c25abec613b0b593b047d06f5598e81aa16e75ea63257",
+                        "source":  "packages/web/test/issue84-revocation-bypass.test.tsx"
+                    },
+                    {
+                        "sha256":  "ae607e438204337870b40a830fa351a3056ad69ff967f6c3ab8c6c6ba7c2dcae",
+                        "source":  "packages/web/src/acl/BulkRevokePanel.tsx"
+                    },
+                    {
+                        "sha256":  "1e8d26d48f45a46733ff0ffe6444599e236e54bb9ab71897707b353edada46f6",
+                        "source":  "packages/web/test/issue84-revocation-bypass-product-check.mjs"
+                    },
+                    {
+                        "sha256":  "d4e2294eff495dc9e80584dbf09b91d42776863b0410b1ab984dbebea041da9b",
+                        "source":  "packages/web/test/issue84-revocation-bypass-product-runner.mjs"
+                    }
+                ],
+    "phase":  "GREEN"
+}

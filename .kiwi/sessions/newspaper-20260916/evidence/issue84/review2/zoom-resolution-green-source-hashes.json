@@ -1,0 +1,15 @@
+﻿{
+    "phase":  "GREEN",
+    "probe":  {
+                  "sha256":  "29f82230b93fc81f93733d612d1aa156a99cd5def2965f9d413074d8acd0c61a",
+                  "path":  "packages/web/test/issue84-revocation-bypass-product-check.mjs"
+              },
+    "helper":  {
+                   "sha256":  "129535e711b984fb7ef2eb1ef307dd6ae0808ef9aa7da31a126237b21e43e601",
+                   "path":  "packages/web/test/issue84-zoom-convergence.mjs"
+               },
+    "test":  {
+                 "sha256":  "aa05976d0ddcf4fbf892273f4fcbbf9fda1961c2bfe6196165358691d939f0a6",
+                 "path":  "packages/web/test/issue84-zoom-convergence.test.ts"
+             }
+}

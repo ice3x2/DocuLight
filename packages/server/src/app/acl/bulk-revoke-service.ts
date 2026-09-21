@@ -1,6 +1,7 @@
 import type { AclEntry } from '../../domain/acl/acl-entry.js';
 import type { PermissionLevel } from '../../domain/acl/level.js';
 import type { PrincipalId } from '../../domain/principal/principal.js';
+import { SUPERUSER_GROUP_ID } from '../../domain/principal/system-groups.js';
 import { pathIndex } from '../node/node-paths.js';
 import { managedWorkspacesOf } from './admin-scope.js';
 import { revokePermission } from './grant-service.js';
@@ -38,6 +39,19 @@ export interface Revocation {
   readonly rows: readonly RevocationRow[];
 }
 
+export interface RevocationPreview extends Revocation {
+  readonly subject: {
+    readonly id: PrincipalId;
+    readonly aclRevokePreservesSuperuserBypass: boolean;
+  };
+}
+
+export function aclRevokePreservesSuperuserBypass(stores: AclStores, principalId: PrincipalId): boolean {
+  const principal = stores.principals.findById(principalId);
+  if (principal?.kind === 'group') return principal.id === SUPERUSER_GROUP_ID;
+  return principal?.kind === 'user' && stores.principals.groupsOf(principal.id).includes(SUPERUSER_GROUP_ID);
+}
+
 /**
  * 걷힐 것들. 이 화면을 열 자격이 없으면 `null`.
  *
@@ -49,8 +63,16 @@ export function previewRevocation(
   stores: AclStores,
   actor: Actor,
   principalId: PrincipalId,
-): Revocation | null {
-  return plan(stores, actor, principalId);
+): RevocationPreview | null {
+  if (stores.principals.findById(principalId) === undefined) return null;
+  const planned = plan(stores, actor, principalId);
+  return planned === null ? null : {
+    ...planned,
+    subject: {
+      id: principalId,
+      aclRevokePreservesSuperuserBypass: aclRevokePreservesSuperuserBypass(stores, principalId),
+    },
+  };
 }
 
 /**

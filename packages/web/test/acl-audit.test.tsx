@@ -139,7 +139,7 @@ describe('주체 축 일괄 회수 (`FR-ACL-003` · `FR-PRINCIPAL-004` · `FR-PR
     grantedAt: '2026-08-20T01:02:03.000Z',
   };
   const 회수패널 = (response: RevocationBody, subjects: readonly PrincipalRow[] = [대상], onPick = vi.fn()) => {
-    const plan = { subjects: subjects.map((subject, index) => ({ subject, response: index === 0 ? response : { scope: response.scope, rows: [] } })) };
+    const plan = { subjects: subjects.map((subject, index) => ({ subject, response: { ...(index === 0 ? response : { scope: response.scope, rows: [] }), subject: { id: subject.id, aclRevokePreservesSuperuserBypass: false } } })) };
     return <BulkRevokePanel contextKey={`ctx:${subjects.map((subject) => subject.id).join(',')}`} workspaceId="ws1" subjects={subjects} plan={{ state: 'ready', data: plan }} onPick={onPick} onRemove={vi.fn()} onPreview={vi.fn().mockResolvedValue(plan)} onRevokeSubject={vi.fn()} />;
   };
 

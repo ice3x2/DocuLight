@@ -30,7 +30,10 @@ const row = (entryId: string, workspaceId = 'ws-1'): RevocationRow => ({
 });
 
 const plan = (parts: Array<[PrincipalRow, RevocationBody]>) => ({
-  subjects: parts.map(([selected, response]) => ({ subject: selected, response })),
+  subjects: parts.map(([selected, response]) => ({
+    subject: selected,
+    response: { ...response, subject: { id: selected.id, aclRevokePreservesSuperuserBypass: false } },
+  })),
 });
 
 function deferred<T>() {

@@ -81,6 +81,7 @@ export function PrincipalPicker({
   ariaDescribedBy,
   onPick,
   onSelectionInvalidated,
+  search = fetchPrincipals,
 }: {
   /**
    * 무엇에 부여하려는가 (`R162`). **필수다** — 기본값을 두면 스코프가
@@ -94,6 +95,7 @@ export function PrincipalPicker({
   ariaDescribedBy?: string;
   onPick?: (row: PrincipalRow) => void;
   onSelectionInvalidated?: () => void;
+  search?: (query: string, scope: PrincipalScope) => Promise<readonly PrincipalRow[]>;
 }) {
   const [query, setQuery] = useState('');
   const [rows, setRows] = useState<readonly PrincipalRow[]>([]);
@@ -132,7 +134,7 @@ export function PrincipalPicker({
     let live = true;
     setRows([]);
     setState('loading');
-    void fetchPrincipals(query, scope)
+    void search(query, scope)
       .then((found) => {
         // 늦게 온 응답이 새 질의의 결과를 덮지 않게 한다 — 덮이면 사용자가
         // 방금 친 글자와 무관한 목록이 남는다.
@@ -155,7 +157,7 @@ export function PrincipalPicker({
     return () => {
       live = false;
     };
-  }, [attempt, onSelectionInvalidated, query, scope]);
+  }, [attempt, onSelectionInvalidated, query, scope, search]);
 
   const changeQuery = (next: string) => {
     if (next !== query && selected.current !== null) {

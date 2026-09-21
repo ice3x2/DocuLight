@@ -1,88 +1,88 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-09-21T16:52:40.181Z",
+  "generatedAt": "2026-09-21T18:21:59.426Z",
   "source": "speckiwi",
   "specFingerprint": {
     "algorithm": "sha256",
-    "value": "afc3ba1c33b69a621892ce34cbe5762be180d744561ba6194f745c44857cc3a1",
+    "value": "af2e80dc4eefabed86981db09585dce64c8bce477d416c24a56588585068a8ab",
     "files": [
       {
         "path": "docs/spec/00.index.md",
-        "sha256": "ad9b816fbe361155323f323c30af80f2862f9fecba0b781bd1273cd23399440a",
+        "sha256": "c6e546f5fbfe834898daae0fa0feba76d28e4abfe0f25242eab832beac4ebcbd",
         "size": 7698,
-        "mtimeMs": 1790009560129.2354
+        "mtimeMs": 1790014919392.3293
       },
       {
         "path": "docs/spec/02.product-architecture.srs.md",
         "sha256": "ff2cdf78386fbe5bf960a555fa1efc255eea84e2489ab09c66781493c7c40678",
         "size": 95329,
-        "mtimeMs": 1790005912571.9739
+        "mtimeMs": 1790010446561.58
       },
       {
         "path": "docs/spec/07.editor.srs.md",
         "sha256": "890724b543800b7fd08be9de45957def4c123a6d29b055a052e7803186f05a9a",
         "size": 108845,
-        "mtimeMs": 1790005912586.2036
+        "mtimeMs": 1790010446572.6228
       },
       {
         "path": "docs/spec/08.app-shell.srs.md",
         "sha256": "abcdc62fb13cdcaadf81085c3c448168eecb2d22cabc5066d06c2e770c38b242",
         "size": 275373,
-        "mtimeMs": 1790005912588.798
+        "mtimeMs": 1790010446576.138
       },
       {
         "path": "docs/spec/09.auth.srs.md",
         "sha256": "857e52575b1409abe150926a63b622245fe10e01c1b178ca37d90a9b7e799367",
         "size": 166800,
-        "mtimeMs": 1790005912592.0508
+        "mtimeMs": 1790010446578.1777
       },
       {
         "path": "docs/spec/10.access-control.srs.md",
         "sha256": "613ca876edcb67568a970a25afa46794b150ad8d97b25bcf2e053193cd17afee",
         "size": 169336,
-        "mtimeMs": 1790005912594.0566
+        "mtimeMs": 1790010446579.6902
       },
       {
         "path": "docs/spec/11.confirmation-grades.srs.md",
         "sha256": "64b771194937e56734ecca394cfc77ef4dddaf1c14df19db101aebcd54e5f70d",
         "size": 156086,
-        "mtimeMs": 1790005912597.0547
+        "mtimeMs": 1790010446583.4463
       },
       {
         "path": "docs/spec/12.audit-log.srs.md",
         "sha256": "b6a2d084057eeb1d11aca436f68f55cceb023af674824dcf281c35bebdc4e140",
         "size": 202836,
-        "mtimeMs": 1790005912599.161
+        "mtimeMs": 1790010446585.4688
       },
       {
         "path": "docs/spec/13.workspace.srs.md",
         "sha256": "dc5571e3b8f3d809f2f431ba8f6eabf030b639e3932cb70e5a4f3ef62768eed5",
         "size": 118873,
-        "mtimeMs": 1790009350313.6377
+        "mtimeMs": 1790010446586.838
       },
       {
         "path": "docs/spec/14.storage.srs.md",
         "sha256": "c37d71e7fd0e953f768f01d2757ed09ddd714f1d74fb8c8a1a8feca0032882c7",
         "size": 146147,
-        "mtimeMs": 1790005912604.6743
+        "mtimeMs": 1790010446589.8447
       },
       {
         "path": "docs/spec/15.attachments.srs.md",
         "sha256": "42f736ca93c12f9e9844f1e8e52056f8333d4ce7fe097f93c0c80f4b0b3a6e54",
         "size": 75068,
-        "mtimeMs": 1790005912606.4167
+        "mtimeMs": 1790010446590.8457
       },
       {
         "path": "docs/spec/16.principal.srs.md",
-        "sha256": "dc99c41603acd8488fca75e03ad1c1027d65e9bcc01e401745663d18381c1498",
-        "size": 132745,
-        "mtimeMs": 1790009349759.2478
+        "sha256": "211d2591875bd2a737d1a25f86b04dce376187dd0e91ed810a477f705a85c251",
+        "size": 134506,
+        "mtimeMs": 1790014919358.969
       },
       {
         "path": "docs/spec/90.appendix.md",
         "sha256": "0874cdd7af91ea44b3e403d7d4824be0aea4f6f1095ebcd89eae563abe05c5d7",
         "size": 990,
-        "mtimeMs": 1790005912610.4265
+        "mtimeMs": 1790010446595.3474
       }
     ]
   },

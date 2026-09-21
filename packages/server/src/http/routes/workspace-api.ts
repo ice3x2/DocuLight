@@ -68,7 +68,7 @@ import {
 import { accessorsOf } from '../../app/acl/accessor-service.js';
 import { copyPreview, movePreview } from '../../app/acl/relocation-preview-service.js';
 import { ASSIGNED_GRADES, moveGrade } from '../../domain/confirm/grade.js';
-import { previewRevocation, revokeAllFor } from '../../app/acl/bulk-revoke-service.js';
+import { aclRevokePreservesSuperuserBypass, previewRevocation, revokeAllFor } from '../../app/acl/bulk-revoke-service.js';
 import { simulate } from '../../app/acl/simulation-service.js';
 import { brokenInheritanceOf } from '../../app/acl/inheritance-audit-service.js';
 import { auditView } from '../../app/audit/audit-view.js';
@@ -865,7 +865,14 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     // 자격 없는 대상이 **같은 404** 를 받는다 (`R162-a` · `R94`) — 갈리면
     // 이 자리가 곧 존재 오라클이 된다.
     const scope = parseScope(one(req.query.for));
-    if (scope === null || !maySearchFor(stores, actor, scope)) {
+    const purpose = one(req.query.purpose);
+    if (purpose !== undefined && purpose !== 'revocation') {
+      res.sendStatus(400);
+      return;
+    }
+    const revocation = purpose === 'revocation';
+    if (scope === null || !maySearchFor(stores, actor, scope)
+      || (revocation && scope.kind !== 'workspace')) {
       res.sendStatus(404);
       return;
     }
@@ -874,7 +881,13 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     // 규칙 값이 아니며(`R162-b`), 최소 길이와 상한을 질의 문자열로 받으면
     // 화면 재량을 막기 전에 아무나 값을 바꿀 수 있는 문이 열린다
     // (`SEC-PRINCIPAL-003` AC-4).
-    res.json(searchPrincipals(stores.principals, one(req.query.q) ?? ''));
+    const rows = searchPrincipals(stores.principals, one(req.query.q) ?? '');
+    res.json(revocation
+      ? rows.map((row) => ({
+          ...row,
+          aclRevokePreservesSuperuserBypass: aclRevokePreservesSuperuserBypass(stores, row.id),
+        }))
+      : rows);
   });
 
   /**
