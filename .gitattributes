@@ -30,6 +30,7 @@
 # Persisted independent-review hashes are byte-for-byte evidence.
 .kiwi/sessions/newspaper-20260916/evidence/issue83/final-independent-review.md -text
 .kiwi/sessions/newspaper-20260916/evidence/issue83/final-independent-review.sha256 -text
+.kiwi/sessions/newspaper-20260916/evidence/issue82/independent-review.md -text
 
 # 배치 파일은 반대다 — cmd 는 CRLF 를 기대한다.
 *.bat text eol=crlf

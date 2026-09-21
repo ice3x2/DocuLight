@@ -23,6 +23,7 @@ import type { Actor } from '../acl/permission-service.js';
 export interface RosterStores {
   readonly principals: PrincipalRepository;
   readonly acl: AclRepository;
+  readonly transaction?: <T>(fn: () => T) => T;
 }
 
 export interface RosterUser {
@@ -83,6 +84,45 @@ export function groupRoster(stores: RosterStores, actor: Actor): RosterGroup[] |
 
 export type RosterRule = 'needs-superuser' | 'system-group-immutable' | 'unknown-principal' | 'not-a-group';
 export type RosterOutcome = { ok: true } | { ok: false; rule: RosterRule };
+
+export interface GroupDeletePreview {
+  readonly id: PrincipalId;
+  readonly name: string;
+  readonly system: false;
+  readonly memberCount: number;
+  readonly aclEntryCount: number;
+}
+
+export type GroupDeletePreviewOutcome =
+  | { ok: true; preview: GroupDeletePreview }
+  | { ok: false; rule: RosterRule };
+
+/** Authoritative, uncapped impact of the existing group-delete cascade (`IR-PRINCIPAL-004`). */
+export function groupDeletePreview(
+  stores: RosterStores,
+  actor: Actor,
+  groupId: PrincipalId,
+): GroupDeletePreviewOutcome {
+  if (!superuser(stores, actor)) return { ok: false, rule: 'needs-superuser' };
+  if (isSystemGroup(groupId)) return { ok: false, rule: 'system-group-immutable' };
+
+  const read = () => {
+    const group = stores.principals.findById(groupId);
+    if (group === undefined) return { ok: false, rule: 'unknown-principal' } as const;
+    if (group.kind !== 'group') return { ok: false, rule: 'not-a-group' } as const;
+    return {
+      ok: true,
+      preview: {
+        id: group.id,
+        name: group.name,
+        system: false,
+        memberCount: stores.principals.membersOf(group.id).length,
+        aclEntryCount: stores.acl.entriesOfPrincipal(group.id).length,
+      },
+    } as const;
+  };
+  return stores.transaction === undefined ? read() : stores.transaction(read);
+}
 
 /**
  * 그룹을 지운다 (`FR-PRINCIPAL-002`).

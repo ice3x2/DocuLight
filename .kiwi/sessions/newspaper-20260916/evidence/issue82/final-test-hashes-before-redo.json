@@ -1,0 +1,12 @@
+﻿[
+    {
+        "Algorithm":  "SHA256",
+        "Hash":  "87B9E8BF4549495DC72D7B7B491E59FA4F837F8816058742B7641ABD6908697C",
+        "Path":  "C:\\Work\\git\\DocuLight2.0-wt-issue82\\packages\\server\\test\\http\\group-delete-preview.test.ts"
+    },
+    {
+        "Algorithm":  "SHA256",
+        "Hash":  "ACF9BA79FF8998E048011A474C111157118AF473B6BDDC4F62258F424B04CD93",
+        "Path":  "C:\\Work\\git\\DocuLight2.0-wt-issue82\\packages\\web\\test\\issue82-group-delete-confirmation.test.tsx"
+    }
+]

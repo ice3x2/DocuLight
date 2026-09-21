@@ -84,6 +84,7 @@ import type { PersonalSettingStore } from '../../domain/ports/personal-setting-s
 import type { SessionRepository } from '../../domain/ports/session-repository.js';
 import {
   groupRoster,
+  groupDeletePreview,
   removeGroupWithGrants,
   userRoster,
 } from '../../app/principal/roster-service.js';
@@ -1676,6 +1677,21 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     }
 
     res.json(roster);
+  });
+
+  router.get('/roster/groups/:groupId/delete-preview', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const result = groupDeletePreview(stores, actor, req.params.groupId!);
+    if (result.ok) {
+      res.set('Cache-Control', 'private, no-store').json(result.preview);
+      return;
+    }
+    res.sendStatus(result.rule === 'system-group-immutable' ? 403 : 404);
   });
 
   router.delete('/roster/groups/:groupId', (req, res) => {

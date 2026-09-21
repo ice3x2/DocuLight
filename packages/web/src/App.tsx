@@ -17,6 +17,7 @@ import {
   requestPasswordChange,
   requestSignup,
   removeGroup,
+  fetchGroupDeletePreview,
   savePersonalSetting,
   saveEditorPreference,
   issueToken,
@@ -1401,17 +1402,22 @@ function AppBody() {
    * 거절했을 때(모르는 키·값) 화면만 바뀐 채 남는다.
    */
   /** 그룹을 지운다 (`FR-PRINCIPAL-002`). 그 그룹의 ACL 항목도 함께 걷힌다. */
-  const dropGroup = useCallback(
-    async (groupId: string) => {
-      if (!allowsProtected()) return;
-      await removeGroup(groupId).catch(() => undefined);
-      if (!allowsProtected()) return;
-      // 트리도 다시 받는다 — 그 그룹으로 보이던 노드가 사라질 수 있다.
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.groupRoster });
-      await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
-    },
-    [allowsProtected, queries],
-  );
+  const dropGroup = useCallback(async (groupId: string): Promise<PrincipalActionResult> => {
+    if (!allowsProtected()) return { ok: false, kind: 'stale' };
+    try {
+      await removeGroup(groupId);
+      if (!allowsProtected()) return { ok: false, kind: 'stale' };
+      const [groupResult, treeResult] = await Promise.all([groups.refetch(), tree.refetch()]);
+      if (!allowsProtected()) return { ok: false, kind: 'stale' };
+      return {
+        ok: true,
+        refreshFailed: groupResult.isError || treeResult.isError,
+        acceptedReadGeneration: acceptGroupRead(groupReadCount()),
+      };
+    } catch (error) {
+      return failedPrincipalAction(error);
+    }
+  }, [allowsProtected, groups.refetch, tree.refetch]);
 
   /**
    * 권한 감사 구역 (`FR-ACL-003`~`FR-ACL-005`).
@@ -2189,6 +2195,7 @@ function AppBody() {
       }
       groupRequestContext={{ principalId: userId ?? 'anonymous', authGeneration, queryGeneration: groupReadGeneration }}
       onGroupRemove={dropGroup}
+      onGroupDeletePreview={fetchGroupDeletePreview}
       onGroupAddMember={addMember}
       onRegisterUser={makeUser}
       {...(signupMode.data === undefined ? {} : { signupMode: signupMode.data.mode })}

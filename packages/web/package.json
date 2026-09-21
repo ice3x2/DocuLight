@@ -40,6 +40,7 @@
     "test:issue79:capture-evidence": "node test/issue79-green-evidence-capture.mjs",
     "test:browser:issue80-product": "node test/issue80-principal-product-runner.mjs",
     "test:browser:issue81-product": "node test/issue81-group-product-runner.mjs",
+    "test:browser:issue82-product": "node test/issue82-group-delete-product-runner.mjs",
     "test:issue81:capture-evidence": "node test/issue81-green-evidence-capture.mjs",
     "test:issue80:capture-evidence": "node test/issue80-green-evidence-capture.mjs",
     "test:browser:pre-auth": "node test/newspaper-pre-auth-check.cjs",

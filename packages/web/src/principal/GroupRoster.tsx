@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 
-import type { RosterGroup } from '../api/client.js';
+import type { GroupDeletePreview, RosterGroup } from '../api/client.js';
 import { Button } from '../components/ui/button.js';
+import { Input } from '../components/ui/input.js';
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle } from '../components/ui/alert-dialog.js';
 import { PrincipalPicker } from './PrincipalPicker.js';
 import {
   principalActionResultIsCurrent,
@@ -37,12 +39,15 @@ export function GroupRoster({
   groups = [],
   roster,
   requestContext,
+  onRemove,
+  onLoadDeletePreview,
   onAddMember,
 }: {
   groups?: readonly RosterGroup[];
   roster?: GroupRosterRead;
   requestContext?: PrincipalRequestContext;
-  onRemove?: (groupId: string) => void;
+  onRemove?: PrincipalAction<[groupId: string]>;
+  onLoadDeletePreview?: (groupId: string) => Promise<GroupDeletePreview>;
   onAddMember?: PrincipalAction<[groupId: string, userId: string]> | ((groupId: string, userId: string) => void);
 }) {
   const [invalidGroup, setInvalidGroup] = useState<string | null>(null);
@@ -56,6 +61,21 @@ export function GroupRoster({
   const actionGenerations = useRef(new Map<string, number>());
   const selectionGenerations = useRef(new Map<string, number>());
   const uncertainSnapshots = useRef(new Map<string, { revision?: number; groups?: readonly RosterGroup[] }>());
+  const [deleteDialog, setDeleteDialog] = useState<{
+    group: RosterGroup;
+    state: 'loading' | 'ready' | 'error' | 'changed' | 'pending';
+    preview?: GroupDeletePreview;
+    token: string;
+    attempted: boolean;
+    ownerKey: string;
+    restoreIds: readonly string[];
+    ownedFocus: boolean;
+  } | null>(null);
+  const [deleteNotice, setDeleteNotice] = useState<{ kind: 'success' | 'failure' | 'uncertain'; refreshFailed?: boolean } | null>(null);
+  const deleteGuard = useRef(false);
+  const deleteFocusOwnership = useRef(false);
+  const deleteTriggerRefs = useRef(new Map<string, HTMLButtonElement>());
+  const tableHeadingRef = useRef<HTMLTableCaptionElement>(null);
   const context = requestContext ?? { principalId: 'legacy', authGeneration: 0, categoryGeneration: 0, queryGeneration: 0 };
   const currentContext = useRef(context);
   currentContext.current = context;
@@ -69,7 +89,113 @@ export function GroupRoster({
     uncertainSnapshots.current.clear();
     setBusyGroups(new Set());
     setOutcomes({});
+    setDeleteDialog(null);
+    deleteGuard.current = false;
+    deleteFocusOwnership.current = false;
   }, [ownerKey]);
+
+  useEffect(() => {
+    if (deleteDialog === null) return;
+    const trackFocus = (event: FocusEvent) => {
+      const target = event.target;
+      const dialog = document.querySelector('[data-group-delete-dialog]');
+      if (target instanceof HTMLElement && dialog instanceof HTMLElement && !dialog.contains(target)) {
+        deleteFocusOwnership.current = false;
+      }
+    };
+    document.addEventListener('focusin', trackFocus, true);
+    return () => document.removeEventListener('focusin', trackFocus, true);
+  }, [deleteDialog !== null]);
+
+  const samePreview = (left: GroupDeletePreview, right: GroupDeletePreview) =>
+    left.id === right.id && left.name === right.name && left.system === right.system
+      && left.memberCount === right.memberCount && left.aclEntryCount === right.aclEntryCount;
+
+  const openDelete = (group: RosterGroup) => {
+    if (group.system || onRemove === undefined || onLoadDeletePreview === undefined) return;
+    const capturedOwner = ownerKey;
+    const restoreIds = currentGroups.map((item) => item.id);
+    const ownedFocus = document.activeElement === deleteTriggerRefs.current.get(group.id);
+    deleteFocusOwnership.current = ownedFocus;
+    setDeleteNotice(null);
+    setDeleteDialog({ group, state: 'loading', token: '', attempted: false, ownerKey: capturedOwner, restoreIds, ownedFocus });
+    void onLoadDeletePreview(group.id).then((fresh) => {
+      setDeleteDialog((current) => {
+        if (current === null || current.ownerKey !== capturedOwner || current.group.id !== group.id) return current;
+        if (fresh.system !== false || fresh.id !== group.id || fresh.name !== group.name
+          || !Number.isInteger(fresh.memberCount) || fresh.memberCount < 0
+          || !Number.isInteger(fresh.aclEntryCount) || fresh.aclEntryCount < 0) {
+          return { ...current, state: 'changed', token: '' };
+        }
+        return { ...current, state: 'ready', preview: fresh };
+      });
+    }).catch(() => {
+      setDeleteDialog((current) => current?.ownerKey === capturedOwner && current.group.id === group.id
+        ? { ...current, state: 'error', token: '' }
+        : current);
+    });
+  };
+
+  const closeDelete = () => {
+    if (deleteDialog === null || deleteDialog.state === 'pending') return;
+    const target = deleteDialog.ownedFocus ? deleteTriggerRefs.current.get(deleteDialog.group.id) : undefined;
+    setDeleteDialog(null);
+    requestAnimationFrame(() => target?.focus());
+  };
+
+  const acceptDelete = async () => {
+    const captured = deleteDialog;
+    if (captured === null || captured.state !== 'ready' || captured.preview === undefined
+      || captured.token !== captured.preview.name || deleteGuard.current || captured.ownerKey !== ownerKey
+      || onRemove === undefined || onLoadDeletePreview === undefined) {
+      setDeleteDialog((current) => current === null ? current : { ...current, attempted: true });
+      return;
+    }
+    deleteGuard.current = true;
+    setBusyGroups((was) => new Set(was).add(captured.group.id));
+    setDeleteDialog({ ...captured, state: 'pending' });
+    let finalPreview: GroupDeletePreview;
+    try {
+      finalPreview = await onLoadDeletePreview(captured.group.id);
+    } catch {
+      deleteGuard.current = false;
+      setBusyGroups((was) => { const next = new Set(was); next.delete(captured.group.id); return next; });
+      setDeleteDialog((current) => current?.group.id === captured.group.id ? { ...current, state: 'error', token: '' } : current);
+      return;
+    }
+    if (captured.ownerKey !== principalRequestOwnerKey(currentContext.current) || !samePreview(captured.preview, finalPreview)) {
+      deleteGuard.current = false;
+      setBusyGroups((was) => { const next = new Set(was); next.delete(captured.group.id); return next; });
+      setDeleteDialog((current) => current?.group.id === captured.group.id ? { ...current, state: 'changed', preview: finalPreview, token: '' } : current);
+      return;
+    }
+    let result: PrincipalActionResult;
+    try {
+      result = await onRemove(captured.group.id);
+    } catch {
+      result = { ok: false, kind: 'uncertain' };
+    }
+    deleteGuard.current = false;
+    if (captured.ownerKey !== principalRequestOwnerKey(currentContext.current)) return;
+    const confirmationStillOwnedFocus = captured.ownedFocus && deleteFocusOwnership.current;
+    setDeleteDialog(null);
+    if (!result.ok) {
+      setBusyGroups((was) => { const next = new Set(was); next.delete(captured.group.id); return next; });
+      setDeleteNotice({ kind: result.kind === 'uncertain' ? 'uncertain' : 'failure' });
+      return;
+    }
+    setDeleteNotice({ kind: 'success', refreshFailed: result.refreshFailed });
+    if (!confirmationStillOwnedFocus) return;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (captured.ownerKey !== principalRequestOwnerKey(currentContext.current)) return;
+      const index = captured.restoreIds.indexOf(captured.group.id);
+      const nextId = captured.restoreIds[index + 1];
+      const previousId = captured.restoreIds[index - 1];
+      const next = nextId === undefined ? undefined : deleteTriggerRefs.current.get(nextId);
+      const previous = previousId === undefined ? undefined : deleteTriggerRefs.current.get(previousId);
+      (next ?? previous ?? tableHeadingRef.current)?.focus();
+    }));
+  };
 
   useEffect(() => {
     if (read.state !== 'ready' || uncertainSnapshots.current.size === 0) return;
@@ -190,6 +316,10 @@ export function GroupRoster({
 
   return (
     <section data-group-roster>
+      {deleteNotice?.kind === 'success' ? <p role="status">그룹을 삭제했습니다.</p> : null}
+      {deleteNotice?.kind === 'success' && deleteNotice.refreshFailed ? <p role="alert">그룹 목록을 새로 불러오지 못했습니다. 화면 정보 다시 불러오기를 사용하십시오.</p> : null}
+      {deleteNotice?.kind === 'failure' ? <p role="alert">그룹을 삭제하지 못했습니다. 목록을 새로 불러온 뒤 다시 확인하십시오.</p> : null}
+      {deleteNotice?.kind === 'uncertain' ? <p role="alert">처리 결과를 확인하지 못했습니다. 목록을 새로 불러오십시오.</p> : null}
       {read.state === 'loading' ? <p role="status">그룹 목록을 불러오는 중입니다.</p> : null}
       {read.state === 'error' ? <div role="alert">그룹 목록을 불러오지 못했습니다. <Button variant="secondary" onClick={read.onRetry}>그룹 목록 다시 불러오기</Button></div> : null}
       {read.state === 'ready' ? null : Object.keys(outcomes).map((groupId) => <div key={groupId}>{renderOutcome(groupId)}</div>)}
@@ -199,7 +329,7 @@ export function GroupRoster({
         {...(scrollable ? { 'aria-label': '그룹 표 가로 스크롤', tabIndex: 0 } : {})}
       >
         <table>
-          <caption>그룹 관리</caption>
+          <caption ref={tableHeadingRef} tabIndex={-1}>그룹 관리</caption>
           <thead>
             <tr>
               <th scope="col">이름</th>
@@ -268,8 +398,14 @@ export function GroupRoster({
                     <p data-group-help>시스템 그룹은 삭제하거나 이름을 바꿀 수 없습니다.</p>
                   ) : (
                     <>
-                      <button type="button" aria-label={`${group.name} 삭제`} disabled>삭제</button>
-                      <p data-group-help>삭제 확인 기능이 연결되지 않아 여기서 삭제할 수 없습니다.</p>
+                      <button
+                        ref={(element) => { if (element === null) deleteTriggerRefs.current.delete(group.id); else deleteTriggerRefs.current.set(group.id, element); }}
+                        type="button"
+                        aria-label={`${group.name} 삭제`}
+                        disabled={onRemove === undefined || onLoadDeletePreview === undefined || busyGroups.has(group.id)}
+                        onClick={() => openDelete(group)}
+                      >삭제</button>
+                      {onRemove === undefined || onLoadDeletePreview === undefined ? <p data-group-help>삭제 확인 기능이 연결되지 않아 여기서 삭제할 수 없습니다.</p> : null}
                     </>
                   )}
                 </td>
@@ -278,6 +414,51 @@ export function GroupRoster({
           </tbody>
         </table>
       </div> : null}
+      <AlertDialog open={deleteDialog !== null} onOpenChange={(open) => { if (!open) closeDelete(); }}>
+        {deleteDialog === null ? null : <AlertDialogContent
+          data-grade="L3"
+          data-group-delete-dialog
+          onOpenAutoFocus={(event) => { event.preventDefault(); document.querySelector<HTMLElement>('[data-group-delete-cancel]')?.focus(); }}
+          onCloseAutoFocus={(event) => { event.preventDefault(); }}
+          onEscapeKeyDown={(event) => { if (deleteDialog.state === 'pending') event.preventDefault(); }}
+          onBlurCapture={(event) => {
+            const next = event.relatedTarget;
+            if (next instanceof HTMLElement && !event.currentTarget.contains(next)) deleteFocusOwnership.current = false;
+          }}
+        >
+          <AlertDialogTitle>{deleteDialog.group.name} 그룹 삭제</AlertDialogTitle>
+          <AlertDialogDescription>현재 삭제 영향을 확인하고 정확한 그룹 이름을 입력하십시오.</AlertDialogDescription>
+          {deleteDialog.state === 'loading' ? <p role="status">삭제 영향을 불러오는 중입니다.</p> : null}
+          {deleteDialog.state === 'error' ? <p role="alert">삭제 영향을 불러오지 못했습니다.</p> : null}
+          {deleteDialog.state === 'changed' ? <p role="alert">삭제 영향이 바뀌었습니다. 취소하고 다시 확인하십시오.</p> : null}
+          {deleteDialog.preview !== undefined ? <div data-group-delete-impact>
+            <p>멤버 {deleteDialog.preview.memberCount}명</p>
+            <p>멤버의 계정은 삭제되지 않습니다.</p>
+            <p>이 그룹에 부여된 권한 항목 {deleteDialog.preview.aclEntryCount}건이 함께 제거됩니다. 되돌릴 수 없습니다.</p>
+          </div> : null}
+          {deleteDialog.state === 'ready' || deleteDialog.state === 'pending' ? <label>
+            정확한 그룹 이름 {deleteDialog.preview?.name} 입력
+            <Input
+              style={{ border: '1px solid var(--border-strong)' }}
+              value={deleteDialog.token}
+              aria-invalid={deleteDialog.attempted && deleteDialog.token !== deleteDialog.preview?.name ? true : undefined}
+              disabled={deleteDialog.state === 'pending'}
+              onChange={(event) => setDeleteDialog((current) => current === null ? current : { ...current, token: event.target.value, attempted: false })}
+              onKeyDown={(event) => { if (event.key === 'Enter') event.preventDefault(); }}
+            />
+          </label> : null}
+          <div data-group-delete-actions>
+            <AlertDialogCancel data-group-delete-cancel type="button" disabled={deleteDialog.state === 'pending'} onClick={closeDelete}>취소</AlertDialogCancel>
+            {deleteDialog.state === 'error' ? <Button type="button" variant="secondary" onClick={() => openDelete(deleteDialog.group)}>다시 불러오기</Button> : null}
+            <Button
+              type="button"
+              variant="destructive"
+              disabled={deleteDialog.state !== 'ready' || deleteDialog.token !== deleteDialog.preview?.name}
+              onClick={() => { void acceptDelete(); }}
+            >그룹 삭제</Button>
+          </div>
+        </AlertDialogContent>}
+      </AlertDialog>
     </section>
   );
 }

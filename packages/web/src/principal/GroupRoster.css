@@ -26,9 +26,18 @@
 [data-group-picker] [cmdk-item][aria-selected='true'] { background: var(--surface-selected); }
 [data-group-delete] button { min-height: var(--control-height); padding: 6px 12px; border: 1px solid var(--border-subtle); border-radius: var(--radius-control); background: var(--surface-app); color: var(--text-secondary); font: inherit; }
 [data-group-delete] button:disabled { cursor: not-allowed; opacity: 1; }
+[data-group-delete-dialog] { width: min(35rem, calc(100vw - 3rem)); }
+[data-group-delete-dialog] [data-group-delete-impact] { user-select: text; }
+[data-group-delete-dialog] [data-group-delete-impact] p { margin: 8px 0; overflow-wrap: anywhere; }
+[data-group-delete-dialog] label { display: grid; margin-top: 16px; gap: 6px; font-weight: 600; overflow-wrap: anywhere; }
+[data-group-delete-dialog] input { box-sizing: border-box; width: 100%; min-height: var(--control-height); padding: 6px 8px; border: 1px solid var(--border-strong); border-radius: var(--radius-control); outline: 2px solid transparent; outline-offset: 2px; background: var(--surface-document); color: var(--text-primary); font: inherit; }
+[data-group-delete-dialog] input:focus, [data-group-delete-dialog] button:focus,
+[data-group-delete-dialog] input:focus-visible, [data-group-delete-dialog] button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+[data-group-delete-actions] { display: flex; margin-top: 20px; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+[data-group-delete-actions] button { min-height: var(--control-height); }
 @media (forced-colors: active) {
-  [data-group-table-scroll], [data-group-roster] th, [data-group-roster] td, [data-system-group], [data-group-picker] [cmdk-input], [data-group-delete] button { border-color: CanvasText; }
-  [data-group-picker] [cmdk-input]:focus-visible { outline-color: Highlight; }
+  [data-group-table-scroll], [data-group-roster] th, [data-group-roster] td, [data-system-group], [data-group-picker] [cmdk-input], [data-group-delete] button, [data-group-delete-dialog], [data-group-delete-dialog] input { border-color: CanvasText; }
+  [data-group-picker] [cmdk-input]:focus-visible, [data-group-delete-dialog] input:focus, [data-group-delete-dialog] button:focus, [data-group-delete-dialog] input:focus-visible, [data-group-delete-dialog] button:focus-visible { outline-color: Highlight; }
   [data-group-table-scroll]:focus-visible { outline-color: Highlight; }
   [data-group-picker] [cmdk-item][aria-selected='true'] { background: Highlight; color: HighlightText; }
   [data-group-delete] button:disabled { color: GrayText; }

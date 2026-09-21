@@ -504,6 +504,17 @@ export const fetchUserRoster = () => call<RosterUser[]>('/roster/users');
 
 export const fetchGroupRoster = () => call<RosterGroup[]>('/roster/groups');
 
+export interface GroupDeletePreview {
+  id: string;
+  name: string;
+  system: false;
+  memberCount: number;
+  aclEntryCount: number;
+}
+
+export const fetchGroupDeletePreview = (groupId: string) =>
+  call<GroupDeletePreview>(`/roster/groups/${encodeURIComponent(groupId)}/delete-preview`);
+
 export const removeGroup = (groupId: string) =>
   call<void>(`/roster/groups/${encodeURIComponent(groupId)}`, { method: 'DELETE' });
 

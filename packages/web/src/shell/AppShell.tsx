@@ -72,6 +72,7 @@ import { UserRoster } from '../principal/UserRoster.js';
 import { OffboardingSurface } from '../principal/OffboardingSurface.js';
 import { SignupApproval } from '../principal/SignupApproval.js';
 import type { GroupRosterRead, PrincipalAction, PrincipalRequestContext, RosterRead, SignupModeRead } from '../principal/request-contract.js';
+import type { GroupDeletePreview } from '../api/client.js';
 import { TrashPanel, type TrashActionResult, type TrashLens, type TrashQueryState, type TrashRowView } from '../trash/TrashPanel.js';
 import { EmptyState, ErrorState, LoadingState } from '../components/ui/states.js';
 import { Button } from '../components/ui/button.js';
@@ -315,6 +316,7 @@ function SettingsModal({
   editorLoadState,
   editorSaveStates,
   onGroupRemove,
+  onGroupDeletePreview,
   onGroupAddMember,
   onRegisterUser,
   signupMode,
@@ -373,7 +375,8 @@ function SettingsModal({
   themeSaveState?: ThemeSaveState;
   editorLoadState?: EditorPreferenceLoadState;
   editorSaveStates?: EditorPreferenceSaveStates;
-  onGroupRemove?: (groupId: string) => void;
+  onGroupRemove?: PrincipalAction<[groupId: string]>;
+  onGroupDeletePreview?: (groupId: string) => Promise<GroupDeletePreview>;
   onGroupAddMember?: PrincipalAction<[groupId: string, userId: string]>;
   /** 슈퍼유저 직접 등록 (`FR-AUTH-003`). */
   onRegisterUser?: PrincipalAction<[input: { name: string; password: string }]>;
@@ -885,6 +888,7 @@ function SettingsModal({
                     {...(groupRosterQuery === undefined ? {} : { roster: groupRosterQuery })}
                     {...(groupContext === undefined ? {} : { requestContext: groupContext })}
                     {...(onGroupRemove === undefined ? {} : { onRemove: onGroupRemove })}
+                    {...(onGroupDeletePreview === undefined ? {} : { onLoadDeletePreview: onGroupDeletePreview })}
                     {...(onGroupAddMember === undefined ? {} : { onAddMember: onGroupAddMember })}
                   />
                 ) : category.id === 'audit-log' ? (
@@ -1010,6 +1014,7 @@ export function AppShell({
   editorLoadState,
   editorSaveStates,
   onGroupRemove,
+  onGroupDeletePreview,
   onGroupAddMember,
   onRegisterUser,
   signupMode,
@@ -1127,7 +1132,8 @@ export function AppShell({
   groupRequestContext?: Omit<PrincipalRequestContext, 'categoryGeneration'>;
   groupRoster?: readonly RosterGroup[];
   groupRosterQuery?: GroupRosterRead;
-  onGroupRemove?: (groupId: string) => void;
+  onGroupRemove?: PrincipalAction<[groupId: string]>;
+  onGroupDeletePreview?: (groupId: string) => Promise<GroupDeletePreview>;
   onGroupAddMember?: PrincipalAction<[groupId: string, userId: string]>;
   /** 슈퍼유저 직접 등록 (`FR-AUTH-003`). */
   onRegisterUser?: PrincipalAction<[input: { name: string; password: string }]>;
@@ -1438,6 +1444,7 @@ export function AppShell({
             {...(auditOperation === undefined ? {} : { auditOperation })}
             {...(onAuditOperation === undefined ? {} : { onAuditOperation })}
             {...(onGroupRemove === undefined ? {} : { onGroupRemove })}
+            {...(onGroupDeletePreview === undefined ? {} : { onGroupDeletePreview })}
             {...(onGroupAddMember === undefined ? {} : { onGroupAddMember })}
             {...(signupMode === undefined ? {} : { signupMode })}
             {...(signupModeQuery === undefined ? {} : { signupModeQuery })}

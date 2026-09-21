@@ -1,0 +1,22 @@
+{
+  "requirement": "IR-PRINCIPAL-004",
+  "files": {
+    "browser-report.json": "93eaebada9b9e419d8c3b1be9b220aeefb67bb3551569a69573cda59b4ccc97f",
+    "group-delete-dark-1280x720-100.png": "7130c42c49880790deed9cc679c09d01b42d3711f1fc1bba490072fc69327fa9",
+    "group-delete-dark-1280x720-200.png": "8f1547325a579873eda0ddba5b0bd1fda68041fded67c26eb5fa36617698c570",
+    "group-delete-dark-1440x900-100.png": "eba7afb905a8aa610c348db4ea96f4d250df99936288b7392e76e4d9d8ae88b7",
+    "group-delete-dark-1440x900-200.png": "7d83bea870974715500bc3eab2c90e9f8204487c35ced86ddba603515f06c7d4",
+    "group-delete-dark-1920x1080-100.png": "eb0fc1ad7714bbb20f4f0b1988edd006113144ed769c611c3e047b19ffd8bfa7",
+    "group-delete-dark-1920x1080-200.png": "c65857d5b7b152f5523e515e873c17896d0c36ba7f1e8c5f1347ab8d3b29956f",
+    "group-delete-forced-100.png": "92b07382892643cf7665f138346824eab268add9127c39fbfbc82811cfcbae19",
+    "group-delete-forced-200.png": "3087699e58e5f4fc6de83815f32c1e07ddb6c77e3e246c8feaa7745e58eca3b1",
+    "group-delete-light-1280x720-100.png": "e1f19ffdc072f56f3900c5c7ff220b605054cbe43d1dd7ef87458fb00aa0fa48",
+    "group-delete-light-1280x720-200.png": "c75bfbef40bc0dd2babcdc18443e65add3ba967276fd71fd13650c607e2a9a9e",
+    "group-delete-light-1440x900-100.png": "f5c161a77924b2de9acf429f8b7bc688d7fbac3fadfebac7b709e07c59339d20",
+    "group-delete-light-1440x900-200.png": "66c111b1b57d7b8db26ce689708a80140bd3ca35c5bc1cd8af73e091c9581e00",
+    "group-delete-light-1920x1080-100.png": "c3d3b8293f8d0dbce71ec6f68cf677368baec2f12b5b2700c9417edd327c7da8",
+    "group-delete-light-1920x1080-200.png": "4a1a553bd1b08e2ff30ad87de72b4bcb43f3877ce3d92938dc1447fe719d0204"
+  },
+  "secretScan": "pass",
+  "publishedLast": true
+}
