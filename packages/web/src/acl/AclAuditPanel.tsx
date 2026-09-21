@@ -1,4 +1,5 @@
 import * as Tabs from '@radix-ui/react-tabs';
+import { useLayoutEffect, useRef } from 'react';
 
 import type {
   BrokenInheritanceBody,
@@ -51,15 +52,15 @@ export interface AclAuditProps {
 export type ManagedSearchScope =
   | { state: 'unavailable' }
   | { state: 'loading' }
-  | { state: 'ready'; workspaceId: string }
-  | { state: 'empty' }
+  | { state: 'ready'; workspaceId: string; authorityScope?: 'instance' | 'managed-workspaces' }
+  | { state: 'empty'; authorityScope?: 'instance' | 'managed-workspaces' }
   | { state: 'error'; onRetry: () => void };
 
-function ScopeState({ scope }: { scope: Exclude<ManagedSearchScope, { state: 'ready' }> }) {
-  if (scope.state === 'unavailable') return <p role="alert">관리 범위 정보를 사용할 수 없습니다.</p>;
-  if (scope.state === 'loading') return <p role="status">관리 범위를 확인하는 중…</p>;
-  if (scope.state === 'error') return <div role="alert"><p>관리 범위를 확인하지 못했습니다.</p><button type="button" onClick={scope.onRetry}>관리 범위 다시 시도</button></div>;
-  return <p data-testid="audit-no-workspace">관리 권한이 있는 워크스페이스가 없습니다.</p>;
+function ScopeState({ scope, onRetryStart }: { scope: Exclude<ManagedSearchScope, { state: 'ready' }>; onRetryStart: () => void }) {
+  if (scope.state === 'unavailable') return <p role="alert" tabIndex={-1} data-scope-focus>관리 범위 정보를 사용할 수 없습니다.</p>;
+  if (scope.state === 'loading') return <p role="status" tabIndex={-1} data-scope-focus>관리 범위를 확인하는 중…</p>;
+  if (scope.state === 'error') return <div role="alert"><p>관리 범위를 확인하지 못했습니다.</p><button type="button" data-scope-retry onClick={() => { onRetryStart(); scope.onRetry(); }}>관리 범위 다시 시도</button></div>;
+  return <p data-testid="audit-no-workspace" tabIndex={-1} data-scope-focus>관리 권한이 있는 워크스페이스가 없습니다.</p>;
 }
 
 export function AclAuditPanel({
@@ -79,6 +80,27 @@ export function AclAuditPanel({
   onRevokeFlowExit,
 }: AclAuditProps) {
   const scope: ManagedSearchScope = managedScope ?? { state: 'unavailable' };
+  const root = useRef<HTMLDivElement>(null);
+  const moveFocusAfterRetry = useRef(false);
+  const invalidatedFocusOwner = useRef<HTMLElement | null>(null);
+  const scopeIdentity = scope.state === 'ready'
+    ? `${contextKey ?? ''}:${scope.authorityScope ?? ''}:${scope.workspaceId}`
+    : `${contextKey ?? ''}:${scope.state}`;
+  const renderedScopeIdentity = useRef(scopeIdentity);
+  if (renderedScopeIdentity.current !== scopeIdentity) {
+    const active = document.activeElement;
+    invalidatedFocusOwner.current = active instanceof HTMLElement && root.current?.contains(active) === true
+      ? active
+      : null;
+    renderedScopeIdentity.current = scopeIdentity;
+  }
+  useLayoutEffect(() => {
+    const activeWasRemoved = invalidatedFocusOwner.current !== null && !invalidatedFocusOwner.current.isConnected;
+    if (!moveFocusAfterRetry.current && !activeWasRemoved) return;
+    moveFocusAfterRetry.current = false;
+    invalidatedFocusOwner.current = null;
+    root.current?.querySelector<HTMLElement>('[aria-label="사용자·그룹 검색"], [data-scope-retry], [data-scope-focus], h2')?.focus();
+  }, [scope.state, scopeIdentity]);
   const revokeContextKey = scope.state === 'ready' && contextKey !== undefined && subjects !== undefined
     ? JSON.stringify([contextKey, scope.state, scope.workspaceId, subjects.map((subject) => subject.id)])
     : undefined;
@@ -93,7 +115,7 @@ export function AclAuditPanel({
     && simulationQuery !== undefined
     && onSimulatePick !== undefined;
   return (
-    <Tabs.Root defaultValue="revoke" className="acl-audit">
+    <Tabs.Root ref={root} defaultValue="revoke" className="acl-audit">
       <Tabs.List aria-label="권한 감사" className="acl-audit-tabs">
         <Tabs.Trigger value="revoke">권한 회수</Tabs.Trigger>
         <Tabs.Trigger value="simulate">유효 권한 시뮬레이션</Tabs.Trigger>
@@ -102,12 +124,13 @@ export function AclAuditPanel({
 
       <Tabs.Content value="revoke">
         {scope.state !== 'ready' ? (
-          <ScopeState scope={scope} />
+          <ScopeState scope={scope} onRetryStart={() => { moveFocusAfterRetry.current = document.activeElement?.hasAttribute('data-scope-retry') === true; }} />
         ) : !revokeContractReady ? (
           <p role="alert">회수 상태를 사용할 수 없습니다.</p>
         ) : (
           <BulkRevokePanel
             contextKey={revokeContextKey!}
+            pickerContextKey={contextKey!}
             workspaceId={scope.workspaceId}
             subjects={subjects}
             plan={revocationPlan}
@@ -123,11 +146,12 @@ export function AclAuditPanel({
 
       <Tabs.Content value="simulate">
         {scope.state !== 'ready' ? (
-          <ScopeState scope={scope} />
+          <ScopeState scope={scope} onRetryStart={() => { moveFocusAfterRetry.current = document.activeElement?.hasAttribute('data-scope-retry') === true; }} />
         ) : !simulationContractReady ? (
           <p role="alert">시뮬레이션 상태를 사용할 수 없습니다.</p>
         ) : (
           <SimulationPanel
+            contextKey={contextKey ?? ''}
             workspaceId={scope.workspaceId}
             selectedSubject={simulationSubject}
             query={simulationQuery}

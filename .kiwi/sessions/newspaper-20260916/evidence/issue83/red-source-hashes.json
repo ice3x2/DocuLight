@@ -1,0 +1,18 @@
+﻿[
+    {
+        "path":  "packages/server/test/http/workspace-api.test.ts",
+        "sha256":  "9757237b272b8595260543a1e03d7470af6afa6585c7f6dc178fa557fe9e9795"
+    },
+    {
+        "path":  "packages/web/test/issue83-managed-workspaces.test.tsx",
+        "sha256":  "55c3fd2077ec2383b6d63d2b3b0fc730917f9628b270f553c3ecc275b05206cd"
+    },
+    {
+        "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue83/red-server-raw.txt",
+        "sha256":  "e48e89fd0c12d30662bb743bc2d9acdc2163e8dfc25345a77e70fb7ab59ff50d"
+    },
+    {
+        "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue83/red-web-raw.txt",
+        "sha256":  "5d265c12e7a41613d34ad507cd608d33b4874cf09aa86701425ce413d4422874"
+    }
+]

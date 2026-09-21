@@ -1,5 +1,5 @@
 import { Command } from 'cmdk';
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
 
 import {
   fetchPrincipals,
@@ -75,6 +75,7 @@ const badgeFor = (status: PrincipalStatus) => {
 
 export function PrincipalPicker({
   scope,
+  contextKey = scope,
   label = '사용자·그룹 검색',
   ariaRequired,
   ariaDescribedBy,
@@ -86,6 +87,8 @@ export function PrincipalPicker({
    * 조용히 사라지고, 그것이 곧 명부를 여는 경로가 된다.
    */
   scope: PrincipalScope;
+  /** Dependent authorization context. It can change while the anchor scope stays the same. */
+  contextKey?: string;
   label?: string;
   ariaRequired?: boolean;
   ariaDescribedBy?: string;
@@ -100,10 +103,12 @@ export function PrincipalPicker({
   const composing = useRef(false);
   const generation = useRef(0);
   const previousScope = useRef(scope);
+  const previousContext = useRef(contextKey);
 
-  useEffect(() => {
-    if (previousScope.current === scope) return;
+  useLayoutEffect(() => {
+    if (previousScope.current === scope && previousContext.current === contextKey) return;
     previousScope.current = scope;
+    previousContext.current = contextKey;
     generation.current += 1;
     setQuery('');
     setRows([]);
@@ -112,7 +117,7 @@ export function PrincipalPicker({
       selected.current = null;
       onSelectionInvalidated?.();
     }
-  }, [onSelectionInvalidated, scope]);
+  }, [contextKey, onSelectionInvalidated, scope]);
 
   useEffect(() => {
     // 짧은 질의는 **묻지도 않는다**. 서버가 거절하더라도 한 글자씩 묻는

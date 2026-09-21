@@ -82,6 +82,55 @@ describe('세션 — 화면이 표시 조건을 세울 근거를 받는다 (`IR-
   });
 });
 
+describe('IR-WORKSPACE-002 managed workspace authority projection', () => {
+  it('returns only direct and group-derived managed workspaces, sorted by stable id', async () => {
+    const second = (await createWorkspace(
+      { workspaces: stores.workspaces, files: new FsWorkspaceFiles(docsRoot) },
+      'second',
+    )).id;
+    const group = stores.principals.createGroup('workspace managers');
+    stores.principals.addMember(group.id, me.id);
+    grantPermission(stores, root, { nodeId: second, principalId: group.id, level: 'admin' });
+    actingAs = actorFor(stores.principals, me.id);
+
+    const response = await request(app).get('/api/managed-workspaces');
+
+    expect(response.status).toBe(200);
+    expect(response.headers['cache-control']).toBe('private, no-store');
+    expect(response.body).toEqual({
+      scope: 'managed-workspaces',
+      workspaces: [{ id: second, name: 'second' }],
+    });
+    expect(JSON.stringify(response.body)).not.toContain(ws);
+    expect(JSON.stringify(response.body)).not.toMatch(/path|count|candidate|reason/i);
+  });
+
+  it('distinguishes superuser instance scope from an ordinary empty authorization set', async () => {
+    const superuser = await request(app).get('/api/managed-workspaces');
+    expect(superuser.body).toEqual({
+      scope: 'instance',
+      workspaces: [{ id: ws, name: stores.workspaces.findById(ws)!.name }],
+    });
+
+    actingAs = actorFor(stores.principals, me.id);
+    const ordinary = await request(app).get('/api/managed-workspaces');
+    expect(ordinary.status).toBe(200);
+    expect(ordinary.body).toEqual({ scope: 'managed-workspaces', workspaces: [] });
+    expect(ordinary.headers['cache-control']).toBe('private, no-store');
+  });
+
+  it('returns 401 without authentication and leaves the visible-workspaces byte shape unchanged', async () => {
+    const visibleBefore = await request(app).get('/api/workspaces');
+    actingAs = undefined;
+    const unauthenticated = await request(app).get('/api/managed-workspaces');
+    expect(unauthenticated.status).toBe(401);
+    expect(unauthenticated.headers['cache-control']).toBe('private, no-store');
+    actingAs = root;
+    const visibleAfter = await request(app).get('/api/workspaces');
+    expect(visibleAfter.text).toBe(visibleBefore.text);
+  });
+});
+
 describe('FR-STORAGE-010 AC-5 — 색인 대기열 읽기 API', () => {
   it('세션 슈퍼유저만 읽고 비인증은 401, 일반/워크스페이스 관리자는 404다', async () => {
     expect((await request(app).get('/api/index-queue')).status).toBe(200);

@@ -73,6 +73,7 @@ import {
   usePersonalSettings,
   useTokens,
   useSimulation,
+  useManagedWorkspaces,
   useUserRoster,
   useLinks,
   useSession,
@@ -127,6 +128,17 @@ export async function revokeSubjectAndRefresh(
     }
   }
   return { revocation: removed, refreshFailed };
+}
+
+export async function refreshAfterSubjectRevoke(
+  queries: QueryClient,
+  dependentContext: string,
+  principalId: string,
+): Promise<void> {
+  await queries.invalidateQueries(
+    { queryKey: QUERY_KEYS.revocation(principalId, dependentContext), exact: true, refetchType: 'active' },
+    { throwOnError: true },
+  );
 }
 
 /** 트리에서 그 노드를 찾는다 — 문서를 열 때 이름과 권한이 필요하다. */
@@ -1385,8 +1397,10 @@ function AppBody() {
    */
   const [회수주체, set회수주체] = useState<readonly RevocationSubject[]>([]);
   const [시뮬주체, set시뮬주체] = useState<PrincipalRow | null>(null);
+  const auditSelectionContext = useRef<string | undefined>(undefined);
   const adminScope = session.data !== undefined && session.data.adminWorkspaceCount > 0;
   const workspaceList = useWorkspaceList(protectedEnabled && adminScope, 'managed', userId, authGeneration);
+  const managedWorkspaceScope = useManagedWorkspaces(userId, authGeneration, protectedEnabled);
   const allWorkspaces = useWorkspaceList(protectedEnabled && session.data?.superuser === true, 'all', userId, authGeneration);
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState(undefined as string | undefined);
   const selectionInitialized = useRef(false);
@@ -1505,15 +1519,40 @@ function AppBody() {
       : searchResults.isError
         ? { state: 'error' as const, onRetry: () => void searchResults.refetch() }
         : { state: 'success' as const };
+  const managedScopeFingerprint = managedWorkspaceScope.data === undefined
+    ? undefined
+    : QUERY_KEYS.managedScopeFingerprint(managedWorkspaceScope.data);
+  const [auditWorkspaceId, setAuditWorkspaceId] = useState(undefined as string | undefined);
+  useEffect(() => {
+    if (managedWorkspaceScope.data === undefined) return;
+    setAuditWorkspaceId((current) => current !== undefined
+      && managedWorkspaceScope.data.workspaces.some(({ id }) => id === current)
+      ? current
+      : managedWorkspaceScope.data.workspaces[0]?.id);
+  }, [managedScopeFingerprint, managedWorkspaceScope.data]);
+  const authorizedAuditWorkspaceId = auditWorkspaceId !== undefined
+    && managedWorkspaceScope.data?.workspaces.some(({ id }) => id === auditWorkspaceId)
+    ? auditWorkspaceId
+    : managedWorkspaceScope.data?.workspaces[0]?.id;
+  useEffect(() => {
+    if (auditSelectionContext.current === managedScopeFingerprint) return;
+    auditSelectionContext.current = managedScopeFingerprint;
+    set회수주체([]);
+    set시뮬주체(null);
+  }, [managedScopeFingerprint]);
+  const auditSelectionsCurrent = auditSelectionContext.current === managedScopeFingerprint;
+  const currentRevocationSubjects = auditSelectionsCurrent ? 회수주체 : [];
+  const currentSimulationSubject = auditSelectionsCurrent ? 시뮬주체 : null;
+  const dependentContext = `${userId ?? 'anonymous'}:${authGeneration}:${managedScopeFingerprint ?? 'unresolved'}`;
   const revocations = useQueries({
-    queries: 회수주체.map((subject) => ({
-      queryKey: QUERY_KEYS.revocation(subject.id),
+    queries: currentRevocationSubjects.map((subject) => ({
+      queryKey: QUERY_KEYS.revocation(subject.id, dependentContext),
       queryFn: () => fetchRevocation(subject.id),
-      enabled: protectedEnabled,
+      enabled: protectedEnabled && managedScopeFingerprint !== undefined,
       retry: false,
     })),
   });
-  const revocationPlan: AuditQuery<BulkPlan> = 회수주체.length === 0
+  const revocationPlan: AuditQuery<BulkPlan> = currentRevocationSubjects.length === 0
     ? { state: 'idle' }
     : revocations.some((query) => query.isError)
       ? { state: 'error', onRetry: () => { for (const query of revocations) void query.refetch(); } }
@@ -1522,24 +1561,24 @@ function AppBody() {
         : {
           state: 'ready',
           data: {
-            subjects: 회수주체.map((subject, index) => ({
+            subjects: currentRevocationSubjects.map((subject, index) => ({
               subject,
               response: revocations[index]!.data!,
             })),
           },
         };
-  const managedAuditScope = workspaceList.isError
-    ? { state: 'error' as const, onRetry: () => { void workspaceList.refetch(); } }
-    : workspaceList.data === undefined || workspaceList.isFetching
+  const managedAuditScope = managedWorkspaceScope.isError
+    ? { state: 'error' as const, onRetry: () => { void managedWorkspaceScope.refetch(); } }
+    : managedWorkspaceScope.data === undefined || managedWorkspaceScope.isFetching
       ? { state: 'loading' as const }
-      : authorizedSelectedWorkspaceId === undefined
-        ? { state: 'empty' as const }
-        : { state: 'ready' as const, workspaceId: authorizedSelectedWorkspaceId };
+      : authorizedAuditWorkspaceId === undefined
+        ? { state: 'empty' as const, authorityScope: managedWorkspaceScope.data.scope }
+        : { state: 'ready' as const, workspaceId: authorizedAuditWorkspaceId, authorityScope: managedWorkspaceScope.data.scope };
   const aclAuditContextKey = JSON.stringify([
     userId ?? 'anonymous',
     authGeneration,
-    managedAuditScope.state,
-    회수주체.map((subject) => subject.id),
+    managedScopeFingerprint ?? managedAuditScope.state,
+    currentRevocationSubjects.map((subject) => subject.id),
   ]);
   const previewRevocations = useCallback(async (selected: readonly RevocationSubject[]): Promise<BulkPlan> => ({
     subjects: allowsProtected() ? await Promise.all(selected.map(async (subject) => ({
@@ -1547,16 +1586,17 @@ function AppBody() {
       response: await fetchRevocation(subject.id),
     }))) : [],
   }), [allowsProtected]);
-  const simulation = useSimulation(protectedEnabled ? (시뮬주체?.id ?? null) : null);
+  const simulation = useSimulation(protectedEnabled ? (currentSimulationSubject?.id ?? null) : null, dependentContext);
 
   const revokeOneSubject = useCallback(
     async (principalId: string) => {
       if (!allowsProtected()) return { kind: 'blocked' as const };
       return revokeSubjectAndRefresh(principalId, revokeAllFor, async (target, id) => {
-      await queries.invalidateQueries({ queryKey: target === 'revocation' ? QUERY_KEYS.revocation(id) : QUERY_KEYS.tree });
+      if (target === 'revocation') await refreshAfterSubjectRevoke(queries, dependentContext, id);
+      else await queries.invalidateQueries({ queryKey: QUERY_KEYS.tree });
       });
     },
-    [allowsProtected, queries],
+    [allowsProtected, dependentContext, queries],
   );
 
   const addMember = useCallback(
@@ -2116,10 +2156,10 @@ function AppBody() {
       aclAudit={{
         contextKey: aclAuditContextKey,
         managedScope: managedAuditScope,
-        subjects: 회수주체,
+        subjects: currentRevocationSubjects,
         revocationPlan,
-        simulationSubject: 시뮬주체,
-        simulationQuery: 시뮬주체 === null
+        simulationSubject: currentSimulationSubject,
+        simulationQuery: currentSimulationSubject === null
           ? { state: 'idle' }
           : simulation.isError
             ? { state: 'error', onRetry: () => { void simulation.refetch(); } }
@@ -2131,10 +2171,16 @@ function AppBody() {
           : brokenInheritance.isFetching || brokenInheritance.data === undefined
             ? { state: 'loading' }
             : { state: 'ready', data: brokenInheritance.data },
-        onRevokePick: (row) => set회수주체((was) => (was.some((one) => one.id === row.id) ? was : [...was, row])),
+        onRevokePick: (row) => {
+          auditSelectionContext.current = managedScopeFingerprint;
+          set회수주체((was) => (was.some((one) => one.id === row.id) ? was : [...was, row]));
+        },
         onRevokeReplace: set회수주체,
         onRevokeRemove: (id) => set회수주체((was) => was.filter((subject) => subject.id !== id)),
-        onSimulatePick: set시뮬주체,
+        onSimulatePick: (row) => {
+          auditSelectionContext.current = managedScopeFingerprint;
+          set시뮬주체(row);
+        },
         onPreviewRevocation: previewRevocations,
         onRevokeSubject: revokeOneSubject,
       }}

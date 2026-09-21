@@ -706,6 +706,32 @@ export interface WorkspaceListRow {
 export const fetchWorkspaceList = (scope?: 'managed' | 'all') =>
   call<WorkspaceListRow[]>(`/workspaces${scope === undefined ? '' : `?scope=${scope}`}`);
 
+export interface ManagedWorkspacesBody {
+  scope: 'instance' | 'managed-workspaces';
+  workspaces: readonly { id: string; name: string }[];
+}
+
+// @req IR-WORKSPACE-002
+export const fetchManagedWorkspaces = async (): Promise<ManagedWorkspacesBody> => {
+  const body = await call<unknown>('/managed-workspaces');
+  if (typeof body !== 'object' || body === null) throw new Error('invalid managed-workspaces response');
+  const candidate = body as { scope?: unknown; workspaces?: unknown };
+  if ((candidate.scope !== 'instance' && candidate.scope !== 'managed-workspaces')
+    || !Array.isArray(candidate.workspaces)
+    || !candidate.workspaces.every((row) => typeof row === 'object' && row !== null
+      && typeof (row as { id?: unknown }).id === 'string'
+      && typeof (row as { name?: unknown }).name === 'string')) {
+    throw new Error('invalid managed-workspaces response');
+  }
+  return {
+    scope: candidate.scope,
+    workspaces: candidate.workspaces.map((row) => {
+      const workspace = row as { id: string; name: string };
+      return { id: workspace.id, name: workspace.name };
+    }),
+  };
+};
+
 export interface WorkspaceRenameBody {
   workspace: { id: string; name: string; createdAt: string };
   sidecarSync: 'synced' | 'pending';

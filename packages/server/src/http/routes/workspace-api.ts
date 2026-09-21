@@ -1300,6 +1300,22 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
    * `adminless` 를 서버가 판정해 보내는 이유는, 화면이 접근자를 세면
    * 슈퍼유저의 상방 게이트가 「관리자 있음」으로 잘못 세어지기 때문이다.
    */
+  // @req IR-WORKSPACE-002
+  router.get('/managed-workspaces', (req, res) => {
+    res.setHeader('Cache-Control', 'private, no-store');
+    const actor = actorFor(req);
+    if (actor === undefined) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const superuser = isSuperuser(stores.principals.groupsOf(actor.id));
+    const workspaces = managedWorkspacesOf(stores, actor)
+      .map(({ id, name }) => ({ id, name }))
+      .sort((left, right) => left.id.localeCompare(right.id));
+    res.json({ scope: superuser ? 'instance' : 'managed-workspaces', workspaces });
+  });
+
   router.get('/workspaces', (req, res) => {
     const actor = actorFor(req);
     if (actor === undefined) {

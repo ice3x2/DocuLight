@@ -18,11 +18,13 @@ const SOURCE: Record<'direct' | 'inherited', string> = {
 };
 
 export function SimulationPanel({
+  contextKey = '',
   workspaceId,
   selectedSubject,
   query,
   onPick,
 }: {
+  contextKey?: string;
   /** 주체 검색의 부여 자격 근거 (`R162`). 이 화면은 관리 전용이다. */
   workspaceId: string;
   selectedSubject: PrincipalRow | null;
@@ -36,7 +38,7 @@ export function SimulationPanel({
     <section className="acl-audit-section">
       <h2>유효 권한 시뮬레이션</h2>
 
-      <PrincipalPicker scope={`workspace:${workspaceId}`} onPick={onPick} />
+      <PrincipalPicker contextKey={contextKey} scope={`workspace:${workspaceId}`} onPick={onPick} />
 
       {selectedSubject === null && current.state === 'idle' ? <p>시뮬레이션할 주체를 선택하세요.</p> : null}
       {selectedSubject === null ? null : <p data-testid="simulation-subject">{selectedSubject.name} · {selectedSubject.kind === 'user' ? '사용자' : '그룹'}</p>}

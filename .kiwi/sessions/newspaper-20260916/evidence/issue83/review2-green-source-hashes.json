@@ -1,0 +1,37 @@
+﻿{
+    "sources":  [
+                    {
+                        "sha256":  "c38ecfa57ea8c38e1d7d0474d36ec78239b16c2ebd0d3424c5022c8d3ca45a1d",
+                        "source":  "packages/web/test/issue83-managed-workspaces.test.tsx"
+                    },
+                    {
+                        "sha256":  "85c3b9ac9663ffba74f14909959782a3b3dd5d1317ffb20794c6d75ddbe43488",
+                        "source":  "packages/web/src/App.tsx"
+                    },
+                    {
+                        "sha256":  "9874aecea14495bd0fb23b1a944cad05c42d03ac85df1cae02bbf7f244efd031",
+                        "source":  "packages/web/src/acl/AclAuditPanel.tsx"
+                    },
+                    {
+                        "sha256":  "49a973a63e1131ef8dd5663aa932c8fc14233d34f3ecf1462694ba5734f5d36c",
+                        "source":  "packages/web/src/acl/BulkRevokePanel.tsx"
+                    },
+                    {
+                        "sha256":  "127461c09750d5c6317fb1b125a3a422aa57cbd805be95c9afa53e08f916b2ce",
+                        "source":  "packages/web/src/acl/SimulationPanel.tsx"
+                    },
+                    {
+                        "sha256":  "23be5e4dd59ed0eb5ba87dea68ce1834ffadfa2e25f88b5e6a9b3bc8e7d139db",
+                        "source":  "packages/web/src/principal/PrincipalPicker.tsx"
+                    },
+                    {
+                        "sha256":  "d2555ee3cb9b63d19af305270dcbd1dd273fa200b7dd282b0d858b63cc635f12",
+                        "source":  "packages/web/src/api/client.ts"
+                    },
+                    {
+                        "sha256":  "99ece635ad6091f3f254b987c6adbee48ae73503181272f64164413bde7d9815",
+                        "source":  "packages/web/src/api/queries.ts"
+                    }
+                ],
+    "phase":  "GREEN"
+}

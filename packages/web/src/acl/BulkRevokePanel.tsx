@@ -47,6 +47,7 @@ function identity(plan: BulkPlan) {
 
 export interface BulkRevokeProps {
   contextKey: string;
+  pickerContextKey?: string;
   workspaceId: string;
   subjects: readonly RevocationSubject[];
   plan: AuditQuery<BulkPlan>;
@@ -58,7 +59,7 @@ export interface BulkRevokeProps {
   onFlowExit?: () => void;
 }
 
-export function BulkRevokePanel({ contextKey, workspaceId, subjects, plan: current, onPick, onRemove, onPreview, onRevokeSubject, onOffboard, onFlowExit }: BulkRevokeProps) {
+export function BulkRevokePanel({ contextKey, pickerContextKey = contextKey, workspaceId, subjects, plan: current, onPick, onRemove, onPreview, onRevokeSubject, onOffboard, onFlowExit }: BulkRevokeProps) {
   const actionRef = useRef<HTMLButtonElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const removeRefs = useRef(new Map<string, HTMLButtonElement>());
@@ -176,7 +177,7 @@ export function BulkRevokePanel({ contextKey, workspaceId, subjects, plan: curre
 
   return <section ref={sectionRef} className="acl-audit-section" aria-labelledby="bulk-revoke-heading">
     <h2 id="bulk-revoke-heading">주체 단위 권한 회수</h2>
-    <PrincipalPicker scope={`workspace:${workspaceId}`} onPick={onPick} />
+    <PrincipalPicker contextKey={pickerContextKey} scope={`workspace:${workspaceId}`} onPick={onPick} />
     {subjects.length === 0 ? <p>회수할 사용자 또는 그룹을 선택하세요.</p> : <ul className="acl-subject-list" data-testid="revocation-subjects">{subjects.map((subject) => <li key={subject.id}>
       <span>{subject.name} · {subject.kind === 'user' ? '사용자' : '그룹'}</span>
       {subject.system === true ? <span data-testid="system-group-notice">{SYSTEM_GROUP_NOTE}</span> : null}

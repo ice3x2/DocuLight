@@ -66,7 +66,8 @@
     "test:browser:issue87-product": "node test/issue87-retention-impact-product-runner.mjs",
     "test:browser:issue88-product": "node test/issue88-settings-leave-product-runner.mjs",
     "test:browser:issue89-product": "node test/issue89-admin-grant-product-runner.mjs",
-    "test:browser:issue86-product": "node test/issue86-audit-entry-product-runner.mjs"
+    "test:browser:issue86-product": "node test/issue86-audit-entry-product-runner.mjs",
+    "test:browser:issue83-product": "node test/issue83-managed-workspaces-product-runner.mjs"
   },
   "dependencies": {
     "@codemirror/merge": "^6.10.4",

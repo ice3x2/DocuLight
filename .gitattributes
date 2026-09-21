@@ -27,5 +27,9 @@
 # 찾지 못하고 실행 자체가 깨진다 — 바이너리와 달리 이쪽은 관용이 없다.
 *.sh text eol=lf
 
+# Persisted independent-review hashes are byte-for-byte evidence.
+.kiwi/sessions/newspaper-20260916/evidence/issue83/final-independent-review.md -text
+.kiwi/sessions/newspaper-20260916/evidence/issue83/final-independent-review.sha256 -text
+
 # 배치 파일은 반대다 — cmd 는 CRLF 를 기대한다.
 *.bat text eol=crlf

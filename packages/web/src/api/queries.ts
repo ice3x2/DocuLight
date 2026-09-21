@@ -8,6 +8,7 @@ import {
   fetchRevocation,
   fetchSimulation,
   fetchWorkspaceList,
+  fetchManagedWorkspaces,
   fetchShareView,
   fetchLinks,
   fetchGroupRoster,
@@ -37,6 +38,7 @@ import {
   type SessionBody,
   type TokenRow,
   type WorkspaceListRow,
+  type ManagedWorkspacesBody,
   type ShareRow,
 } from './client.js';
 import type { TrashRowView } from '../trash/TrashPanel.js';
@@ -68,6 +70,10 @@ export const QUERY_KEYS = {
   document: (nodeId: string) => ['document', nodeId] as const,
   workspaces: (scope: 'visible' | 'managed' | 'all' = 'visible', userId?: string, authGeneration?: number) =>
     userId === undefined ? ['workspaces', scope] as const : ['workspaces', scope, userId, authGeneration] as const,
+  managedWorkspaces: (userId: string, authGeneration: number) =>
+    ['managed-workspaces', userId, authGeneration] as const,
+  managedScopeFingerprint: (data: ManagedWorkspacesBody) =>
+    `${data.scope}:${data.workspaces.map(({ id }) => id).sort().join('\u0000')}`,
   workspaceAdministrators: (workspaceId: string, userId: string, authGeneration: number) =>
     ['workspace-administrators', workspaceId, userId, authGeneration] as const,
   brokenInheritance: ['broken-inheritance'] as const,
@@ -75,8 +81,8 @@ export const QUERY_KEYS = {
   reconciliationQueue: (contextKey: string) => ['reconciliation-queue', contextKey] as const,
   tags: (workspaceId: string) => ['tags', workspaceId] as const,
   search: (query: string, axes: string) => ['search', query, axes] as const,
-  revocation: (principalId: string) => ['revocation', principalId] as const,
-  simulation: (subjectId: string) => ['simulation', subjectId] as const,
+  revocation: (principalId: string, context = '') => ['revocation', context, principalId] as const,
+  simulation: (subjectId: string, context = '') => ['simulation', context, subjectId] as const,
 };
 
 export const useSession = (): UseQueryResult<SessionBody> =>
@@ -183,6 +189,20 @@ export const useWorkspaceList = (
 ): UseQueryResult<WorkspaceListRow[]> =>
   useQuery({ queryKey: QUERY_KEYS.workspaces(scope, userId, authGeneration), queryFn: () => fetchWorkspaceList(scope === 'visible' ? undefined : scope), enabled, retry: false });
 
+// @req IR-WORKSPACE-002
+export const useManagedWorkspaces = (
+  userId: string | undefined,
+  authGeneration: number,
+  enabled: boolean,
+): UseQueryResult<ManagedWorkspacesBody> => useQuery({
+  queryKey: userId === undefined
+    ? ['managed-workspaces-disabled', authGeneration] as const
+    : QUERY_KEYS.managedWorkspaces(userId, authGeneration),
+  queryFn: fetchManagedWorkspaces,
+  enabled: enabled && userId !== undefined,
+  retry: false,
+});
+
 export const useWorkspaceAdministrators = (
   enabled: boolean,
   workspaceId: string,
@@ -216,9 +236,9 @@ export const useRevocation = (principalId: string | null): UseQueryResult<Revoca
     retry: false,
   });
 
-export const useSimulation = (subjectId: string | null): UseQueryResult<SimulationBody> =>
+export const useSimulation = (subjectId: string | null, context = ''): UseQueryResult<SimulationBody> =>
   useQuery({
-    queryKey: QUERY_KEYS.simulation(subjectId ?? ''),
+    queryKey: QUERY_KEYS.simulation(subjectId ?? '', context),
     queryFn: () => fetchSimulation(subjectId!),
     enabled: subjectId !== null,
     retry: false,
