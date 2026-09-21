@@ -148,12 +148,14 @@ describe('권한 감사 구역이 실제로 서버에서 값을 받아 그린다
     expect(row.textContent ?? '').toContain('권한으로 접근할 수 있는 사람이 없습니다');
   });
 
-  it('FR-ACL-005: 관리 워크스페이스가 없는 슈퍼유저도 상속 감사를 조회한다', async () => {
+  it('IR-SHELL-002: 관리 워크스페이스가 없는 슈퍼유저에게 권한 감사 진입점을 열지 않는다', async () => {
     routes.set('/api/session', () => json({ superuser: true, workspaceCount: 1, adminWorkspaceCount: 0 }));
-    routes.set('/api/broken-inheritance', () => json({ rows: [{ nodeId: 'n-super', workspaceId: 'ws-1', workspaceName: '기획팀', path: '슈퍼유저 진단', aclAccessors: 1 }] }));
-    const { user, modal } = await 감사구역();
-    await user.click(within(modal).getByRole('tab', { name: '상속 끊김' }));
-    expect(await screen.findByTestId('broken-row-n-super')).toBeDefined();
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(await screen.findByRole('button', { name: '설정' }));
+    const modal = await screen.findByRole('dialog', { name: '설정' });
+    expect(within(modal).queryByRole('tab', { name: '권한 감사' })).toBeNull();
+    expect(within(modal).getByRole('tab', { name: '감사 로그' })).toBeDefined();
   });
 
   it('IR-WORKSPACE-002: 가시 워크스페이스를 관리 범위 증거로 사용하지 않는다', async () => {

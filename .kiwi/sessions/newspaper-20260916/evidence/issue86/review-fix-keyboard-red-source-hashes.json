@@ -1,0 +1,15 @@
+﻿{
+    "stage":  "review-fix-keyboard-red",
+    "capturedAt":  "2026-09-21T14:59:02.9332962Z",
+    "raw":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review-fix-product12plus2-raw.txt",
+    "files":  [
+                  {
+                      "path":  "packages/web/test/issue86-audit-entry-product-check.mjs",
+                      "sha256":  "5a5c38c520189c6d45227346ac55dcea343d68fb787e78717baeaa194f7ef366"
+                  },
+                  {
+                      "path":  "packages/web/src/shell/AppShell.tsx",
+                      "sha256":  "36346f8cbbf85e431d8a09d957179f1e00ee8a48877b56aabd6c26aabf0a885f"
+                  }
+              ]
+}

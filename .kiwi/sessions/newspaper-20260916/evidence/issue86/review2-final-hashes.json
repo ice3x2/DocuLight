@@ -1,0 +1,55 @@
+﻿{
+    "stage":  "review2-final",
+    "capturedAt":  "2026-09-21T15:35:04.2659379Z",
+    "head":  "b2b126c3ee04602e1ace3e256d2816b32aefc930",
+    "manifestLastObserved":  true,
+    "artifactSetExact":  true,
+    "source":  [
+                   {
+                       "path":  "packages/web/src/shell/AppShell.tsx",
+                       "sha256":  "362b4d0b87b3daffaa4d44f5ed10b4b116b0c34201f57f2e93ff66686c311ca5"
+                   },
+                   {
+                       "path":  "packages/web/test/issue86-audit-entry.test.tsx",
+                       "sha256":  "868dec4c45a1351f884f0e3b4197ea16bfe99c8c186b8d2e9ed2078eccd4db10"
+                   },
+                   {
+                       "path":  "packages/web/src/shell/shell-contract.ts",
+                       "sha256":  "271ca8c5dfa29a78d8fc6ac66169307bf0530cc4a810caecc70f3664855a63dd"
+                   },
+                   {
+                       "path":  "packages/web/test/issue86-audit-entry-product-check.mjs",
+                       "sha256":  "3fede2f35a409b10af0bd13efc3027e6445d2875e8224bd4f0be3c9f8e6ca175"
+                   }
+               ],
+    "evidence":  [
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review2-focus-preservation-red-raw.txt",
+                         "sha256":  "22b212549f4050b06ee104fae93b131cca4bd971fe01204548f3da5cf1f2487c"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review2-focus-preservation-red-source-hashes.json",
+                         "sha256":  "ca8b51f7f5013930092697610aa5c17674e66596d81ce5e581df7b6c582044f7"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review2-focus-preservation-green-raw.txt",
+                         "sha256":  "39848042fc76b11cf86805abe5c429e1ac457ecb2779c134a96d0044c1143f32"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review2-transition-focused-green-raw.txt",
+                         "sha256":  "c8c61d9937adc22fa0cacadbafad6f0d2dfaee6c038df0994de4828da433bf9f"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review2-typecheck-raw.txt",
+                         "sha256":  "6bc765610c564fb39a9062b5be481fc5e5590552ce1973291eef865435c050bc"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review2-product12plus2-raw.txt",
+                         "sha256":  "a8b2d55579f5a2173853bb2467eeb1bef5e39243dedc7682762db5995c2c9c32"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/browser-matrix/capture-manifest.json",
+                         "sha256":  "68401ba4346331b66059c5ad5080c2bc00b4b2ed07c24b56b11b77cecaa9c808"
+                     }
+                 ]
+}

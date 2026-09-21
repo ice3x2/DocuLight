@@ -1,0 +1,17 @@
+﻿{
+    "phase":  "RED",
+    "expectedFailures":  [
+                             "superuser -\u003e ordinary focus recovery",
+                             "superuser -\u003e workspace-manager focus recovery"
+                         ],
+    "sources":  [
+                    {
+                        "sha256":  "b29bb169c0e10db1a7a2a585aea151d95d2918024cf19f6886bf8b2adc235a0e",
+                        "source":  "packages/web/test/issue86-audit-entry.test.tsx"
+                    },
+                    {
+                        "sha256":  "4cfa0d1a1debac12736fdd9fec0816f2500320cb3704e11e88923d055bd8eb2c",
+                        "source":  "packages/web/src/shell/AppShell.tsx"
+                    }
+                ]
+}

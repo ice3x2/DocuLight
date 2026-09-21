@@ -1,0 +1,105 @@
+{
+  "stage": "closeout-post-rebase",
+  "capturedAt": "2026-09-21T15:47:28.633Z",
+  "base": "4cb4457b694f8ec286023f5406e7386cfb52be79",
+  "integrationTests": {
+    "files": 10,
+    "passed": 108,
+    "preRebaseReviewedCount": 104,
+    "note": "integration added four preserved tests"
+  },
+  "product": {
+    "normal": 12,
+    "forcedColors": 2,
+    "badgeStates": 3
+  },
+  "source": [
+    {
+      "path": "docs/spec/00.index.md",
+      "sha256": "7ea71e346f543394cfd986ba922f42a9ce31186d0bdfd85793990e23f5e23bca"
+    },
+    {
+      "path": "docs/spec/08.app-shell.srs.md",
+      "sha256": "abcdc62fb13cdcaadf81085c3c448168eecb2d22cabc5066d06c2e770c38b242"
+    },
+    {
+      "path": "kiwi/.status.json",
+      "sha256": "5fbe759aabf449eccbec4b626fa1659c7b4a0be8cd7147670e6cda5ed444acbb"
+    },
+    {
+      "path": "packages/web/package.json",
+      "sha256": "fccd03019c2960f2101cb6b7cea8fd4e9b0dc4a1b0bd8a9141dc2d3f45370ee2"
+    },
+    {
+      "path": "packages/web/src/shell/AppShell.tsx",
+      "sha256": "143dfab0902820efc86e872a28f2b57f676d3c3f0139f8fec8e693bbdc0e045c"
+    },
+    {
+      "path": "packages/web/src/shell/shell-contract.ts",
+      "sha256": "db8620fcac6fb959d510e73f92cf32da89e57fdfbc937a0fad9520b91ac857bf"
+    },
+    {
+      "path": "packages/web/test/app-wiring.test.tsx",
+      "sha256": "ff06c70cb0438592f3ec5568bb773080f9da8afdd8d4dd072884a5667f95ed43"
+    },
+    {
+      "path": "packages/web/test/settings-categories.test.tsx",
+      "sha256": "760c92e38839f40c92aa9e7fd4137cdd57309b2189783e30ca4844207dbd26f8"
+    },
+    {
+      "path": "packages/web/test/newspaper-settings-modal.test.tsx",
+      "sha256": "77459dca75e1b1bc667d794d5cd562e09fb917d207dba448cfcc8c5441d271de"
+    },
+    {
+      "path": "packages/web/test/reconciliation-queue.test.tsx",
+      "sha256": "116ce056bca592fb34979bfd0759279bdbe8a6baaa2ed1ca1ea13e40a9dce7a4"
+    },
+    {
+      "path": "packages/web/test/issue86-audit-entry.test.tsx",
+      "sha256": "68fc3457a0de20b94a21c79dfe91d726c73fd45ef3b20c257694ec2a2d9d6d6f"
+    },
+    {
+      "path": "packages/web/test/issue86-audit-entry-product-runner.mjs",
+      "sha256": "9a26d6d10f597578b1612068ca9a2b5c1103d11d0b8e95fbda1f4ede849ac9c6"
+    },
+    {
+      "path": "packages/web/test/issue86-audit-entry-product-check.mjs",
+      "sha256": "cf17d44850686bb7683a1eb5eb9dfdec00a231a9b11fe297b0499dc57347f708"
+    }
+  ],
+  "evidence": [
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue86/browser-matrix/capture-manifest.json",
+      "sha256": "72c5689e1a0937d089464305597970cef498d3962079bd1160bbf06ebb057428"
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue86/closeout-post-rebase-104-raw.txt",
+      "sha256": "488b0c324a687d96e95e0bddbfd2facbb2c844f8985099823f6a259c23a0d514"
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue86/closeout-post-rebase-product12plus2-raw.txt",
+      "sha256": "debd5dd13957558372761b7f6ca6ec6658d0f90d0ba1b72c6f6a85bb66c84df1"
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue86/closeout-post-rebase-typecheck-raw.txt",
+      "sha256": "6bc765610c564fb39a9062b5be481fc5e5590552ce1973291eef865435c050bc"
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue86/closeout-post-rebase-speckiwi-validate.json",
+      "sha256": "8f07100716dc09c08526023dcba96700e979fcfa46a3cf59ee1416d2c77baf25"
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue86/closeout-post-rebase-speckiwi-summary.json",
+      "sha256": "dbdeaafc85cc61579be6780d4abfa69663a89984bc811da6b8f5c6fb55a8d90b"
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue86/closeout-post-rebase-speckiwi-links.json",
+      "sha256": "6acaaeca77c36ccce351ef88e3dcfca71e54004ec21fba9834bb99c304a94345"
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue86/final-independent-review.md",
+      "sha256": "8f7078d32637e8a61c44587030c47d26693bcd14fc64b17ac7278ece3fec2aed",
+      "normalization": "LF"
+    }
+  ]
+}

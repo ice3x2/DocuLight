@@ -1,0 +1,14 @@
+﻿{
+    "stage":  "review-fix-red",
+    "capturedAt":  "2026-09-21T14:53:56.5993594Z",
+    "files":  [
+                  {
+                      "path":  "packages/web/test/settings-categories.test.tsx",
+                      "sha256":  "b58d275008cebff34c5285fbd772ccbafab2cbccce2c58d5e21f6c8ecaf08f1a"
+                  },
+                  {
+                      "path":  "packages/web/src/shell/shell-contract.ts",
+                      "sha256":  "e9ecdaa2880c6af19bfab74ff793c06a22f39f876f850bdfa272546c9e68d07a"
+                  }
+              ]
+}

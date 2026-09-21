@@ -1,0 +1,21 @@
+﻿{
+    "sources":  [
+                    {
+                        "sha256":  "b29bb169c0e10db1a7a2a585aea151d95d2918024cf19f6886bf8b2adc235a0e",
+                        "source":  "packages/web/test/issue86-audit-entry.test.tsx"
+                    },
+                    {
+                        "sha256":  "ccd188584c75d174b97ec216872a1c0e8a9a74806c742251512340feb31491f0",
+                        "source":  "packages/web/src/shell/AppShell.tsx"
+                    },
+                    {
+                        "sha256":  "3fede2f35a409b10af0bd13efc3027e6445d2875e8224bd4f0be3c9f8e6ca175",
+                        "source":  "packages/web/test/issue86-audit-entry-product-check.mjs"
+                    },
+                    {
+                        "sha256":  "34f18906ef61bbe4019fcc6b732ead15bd1ae71917a913755200c2325279af74",
+                        "source":  "packages/web/test/issue86-audit-entry-product-runner.mjs"
+                    }
+                ],
+    "phase":  "GREEN"
+}

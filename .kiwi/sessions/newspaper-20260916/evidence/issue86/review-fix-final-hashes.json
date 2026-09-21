@@ -1,0 +1,88 @@
+﻿{
+    "capturedAt":  "2026-09-21T15:11:01.1211783Z",
+    "head":  "b2b126c3ee04602e1ace3e256d2816b32aefc930",
+    "source":  [
+                   {
+                       "path":  "packages/web/package.json",
+                       "sha256":  "8121ea028489f51160874d2ac14719c2223854c7b2f074c066c971e3c275b002"
+                   },
+                   {
+                       "path":  "packages/web/src/shell/AppShell.tsx",
+                       "sha256":  "0ca5bdb35ea25ada7c44badfca62e647f57c2597242da88ad511b17247b6cc40"
+                   },
+                   {
+                       "path":  "packages/web/src/shell/shell-contract.ts",
+                       "sha256":  "271ca8c5dfa29a78d8fc6ac66169307bf0530cc4a810caecc70f3664855a63dd"
+                   },
+                   {
+                       "path":  "packages/web/test/app-wiring.test.tsx",
+                       "sha256":  "dded3cf6ef8b4f25b4223edd86187bc9bb5512b0d5aed71b008b1bc8530db914"
+                   },
+                   {
+                       "path":  "packages/web/test/reconciliation-queue.test.tsx",
+                       "sha256":  "bf5588775e65d2cc1f795f58679f05bd4daa59143bd7eda63dc4a424b83da87f"
+                   },
+                   {
+                       "path":  "packages/web/test/settings-categories.test.tsx",
+                       "sha256":  "b58d275008cebff34c5285fbd772ccbafab2cbccce2c58d5e21f6c8ecaf08f1a"
+                   },
+                   {
+                       "path":  "packages/web/test/issue86-audit-entry.test.tsx",
+                       "sha256":  "8033337cc153156d6b29c8049545d555d9b89cad0c503b13b0c7fef14b32af74"
+                   },
+                   {
+                       "path":  "packages/web/test/issue86-audit-entry-product-check.mjs",
+                       "sha256":  "3e640aeafc6f30efb8d168d36082af17757a5800259ef986d6972a093b72754a"
+                   },
+                   {
+                       "path":  "packages/web/test/issue86-audit-entry-product-runner.mjs",
+                       "sha256":  "de98de98535c9a42124c98988dd70bffefd6a2bc8a1bc39f0ffde494ed42e641"
+                   }
+               ],
+    "evidence":  [
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review-fix-red-raw.txt",
+                         "sha256":  "80c74c93cf8ddf9f8617d95590e5ae8cc470c1e3de7d584ae7ded83039fb04ce"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review-fix-focused-cross-green-raw.txt",
+                         "sha256":  "ae4051e80888a06538d650a355ba92344bb792dc656d5e119b9d4c0915efdd50"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review-fix-product12plus2-raw.txt",
+                         "sha256":  "a568df02d3898b80e7bd43f3a67ab9d6200a3ed3d0e14a8f67eab374086781a9"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review-fix-full-web-raw.txt",
+                         "sha256":  "c8c4fa7fe2e5878fc2d25b7e91d908824e19264835bfb61aff1acd5f2ea339f8"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review-fix-token-baseline-raw.txt",
+                         "sha256":  "1fefa94454aa216151de6a11f1ec127a9d25e6fa714a4d5cf01699676d826573"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review-fix-typecheck-raw.txt",
+                         "sha256":  "6bc765610c564fb39a9062b5be481fc5e5590552ce1973291eef865435c050bc"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review-fix-build-raw.txt",
+                         "sha256":  "d46ebc2aa927ecbc1dec43e10078ab81c502f5431af6e6023281548c245b8a09"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review-fix-speckiwi-validate-raw.txt",
+                         "sha256":  "8f07100716dc09c08526023dcba96700e979fcfa46a3cf59ee1416d2c77baf25"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review-fix-speckiwi-summary-raw.txt",
+                         "sha256":  "c4453c319e4ad4e9fcc721f93140b323b602f5e696293c7c2a10b8f9d175926d"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/review-fix-speckiwi-links-raw.txt",
+                         "sha256":  "8338c04a039cb29a1859f20cfac2b671ac3ca285e859bd636d269ec525591256"
+                     },
+                     {
+                         "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue86/browser-matrix/capture-manifest.json",
+                         "sha256":  "727d671a8c331c28370c031b91155f834f3362444583ebf219ac63327b56ef95"
+                     }
+                 ]
+}

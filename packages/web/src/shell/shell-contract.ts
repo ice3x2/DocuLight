@@ -78,8 +78,9 @@ export const SETTINGS_CATEGORIES: readonly SettingsCategory[] = [
   { id: 'trash', label: '휴지통', section: 'personal', gate: 'has-workspace' },
 
   { id: 'workspace', label: '워크스페이스', section: 'workspace', gate: 'workspace-admin' },
-  { id: 'acl-audit', label: '권한 감사', section: 'workspace', gate: 'workspace-admin-or-superuser' },
-  { id: 'audit-log', label: '감사 로그', section: 'workspace', gate: 'workspace-admin' },
+  { id: 'acl-audit', label: '권한 감사', section: 'workspace', gate: 'workspace-admin' },
+  // @req IR-SHELL-012 AC-1 AC-2 AC-3
+  { id: 'audit-log', label: '감사 로그', section: 'workspace', gate: 'workspace-admin-or-superuser' },
 
   { id: 'users', label: '사용자 관리', section: 'instance', gate: 'superuser' },
   { id: 'groups', label: '그룹 관리', section: 'instance', gate: 'superuser' },

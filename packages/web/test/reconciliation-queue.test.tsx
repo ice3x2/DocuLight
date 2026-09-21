@@ -78,7 +78,7 @@ describe('IR-AUDIT-002 — 재조정 대기열의 소재', () => {
 
     expect({ section: 감사.section, gate: 감사.gate }).toEqual({
       section: 'workspace',
-      gate: 'workspace-admin',
+      gate: 'workspace-admin-or-superuser',
     });
   });
 });

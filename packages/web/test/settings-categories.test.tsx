@@ -17,6 +17,26 @@ const viewer = (over: Partial<Viewer> = {}): Viewer => ({
   ...over,
 });
 
+describe('IR-SHELL-012 zero-workspace superuser audit entry', () => {
+  it('keeps the fourteen categories and exposes only audit log through the workspace group exception', () => {
+    const ordinaryManager = labelsFor(viewer({ superuser: false, workspaceCount: 1, adminWorkspaceCount: 1 }));
+    const managedSuperuser = labelsFor(viewer({ superuser: true, workspaceCount: 1, adminWorkspaceCount: 1 }));
+    const zeroWorkspaceSuperuser = labelsFor(viewer({ superuser: true, workspaceCount: 0, adminWorkspaceCount: 0 }));
+    const ordinaryUser = labelsFor(viewer({ superuser: false, workspaceCount: 0, adminWorkspaceCount: 0 }));
+
+    for (const allowed of [ordinaryManager, managedSuperuser, zeroWorkspaceSuperuser]) {
+      expect(allowed.filter((label) => label === '감사 로그')).toHaveLength(1);
+    }
+    expect(ordinaryUser).not.toContain('감사 로그');
+    expect(zeroWorkspaceSuperuser).not.toContain('워크스페이스');
+    expect(zeroWorkspaceSuperuser).not.toContain('권한 감사');
+    expect(zeroWorkspaceSuperuser).not.toContain('휴지통');
+    expect(SETTINGS_CATEGORIES.find((category) => category.id === 'acl-audit')?.gate).toBe('workspace-admin');
+    expect(SETTINGS_CATEGORIES.find((category) => category.id === 'audit-log')?.gate).toBe('workspace-admin-or-superuser');
+    expect(SETTINGS_CATEGORIES.map((category) => category.id)).toHaveLength(14);
+  });
+});
+
 const labelsFor = (v: Viewer) => visibleCategories(v).map((c) => c.label);
 
 const WEB = existsSync(resolve(process.cwd(), 'src/main.tsx'))

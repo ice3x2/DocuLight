@@ -1,0 +1,21 @@
+﻿{
+    "fullWebExit":  1,
+    "fullWebPassed":  1189,
+    "fullWebTotal":  1190,
+    "fullWebFailed":  1,
+    "testFilesPassed":  97,
+    "testFilesTotal":  98,
+    "isolatedTokenExit":  1,
+    "isolatedTokenPassed":  22,
+    "isolatedTokenTotal":  23,
+    "expectedEstablishedFailureCount":  1,
+    "failingTest":  "04 §2.3 — 목록 \u003e 만료된 행은 산 행보다 흐리다 — §2.3 은 배지와 함께 「행 흐리게」를 요구한다",
+    "failure":  "happy-dom computed styles return empty color strings, so expected \u0027\u0027 not to be \u0027\u0027 at token-panel.test.tsx:117",
+    "issue86Focused":  "84/84 passed including #79/#88 cross-feature",
+    "scope":  "pre-existing token-panel computed-style baseline unrelated to IR-SHELL-002/IR-SHELL-012",
+    "raw":  [
+                "review-fix-full-web-raw.txt",
+                "review-fix-token-baseline-raw.txt",
+                "review-fix-app-wiring-green-raw.txt"
+            ]
+}

@@ -1,0 +1,14 @@
+﻿{
+    "phase":  "RED",
+    "sources":  [
+                    {
+                        "sha256":  "3fede2f35a409b10af0bd13efc3027e6445d2875e8224bd4f0be3c9f8e6ca175",
+                        "source":  "packages/web/test/issue86-audit-entry-product-check.mjs"
+                    },
+                    {
+                        "sha256":  "de98de98535c9a42124c98988dd70bffefd6a2bc8a1bc39f0ffde494ed42e641",
+                        "source":  "packages/web/test/issue86-audit-entry-product-runner.mjs"
+                    }
+                ],
+    "expectedFailure":  "long Korean audit row target absent from owned product fixture"
+}

@@ -427,6 +427,9 @@ function SettingsModal({
   const leaveFocusRef = useRef<HTMLElement | null>(null);
   const pointerFocusRef = useRef<HTMLElement | null>(null);
   const settingsTriggerRef = useRef<HTMLButtonElement>(null);
+  const unavailableContinuationRef = useRef<HTMLButtonElement>(null);
+  const selectionRevokedRef = useRef(false);
+  const revokedSelectionOwnedFocusRef = useRef(false);
   const titleId = useId();
   const selectedWorkspaceContext = workspaceManagement?.selectedId === undefined ? undefined : [
     ...(workspaceManagement.managed.state === 'ready' ? workspaceManagement.managed.rows : []),
@@ -447,6 +450,16 @@ function SettingsModal({
   categoriesRef.current = categories;
   openRef.current = open;
   const selectionRevoked = !categories.some((category) => category.id === selectedCategory);
+  if (!selectionRevokedRef.current && selectionRevoked) {
+    const focused = document.activeElement;
+    const selectedTab = document.querySelector<HTMLElement>(`[data-settings-category="${selectedCategory}"]`);
+    const selectedPanel = document.querySelector<HTMLElement>('[role="tabpanel"][data-state="active"]');
+    revokedSelectionOwnedFocusRef.current = focused instanceof HTMLElement
+      && (selectedTab?.contains(focused) === true || selectedPanel?.contains(focused) === true);
+  } else if (!selectionRevoked) {
+    revokedSelectionOwnedFocusRef.current = false;
+  }
+  selectionRevokedRef.current = selectionRevoked;
 
   // @req IR-SHELL-013
   const registerLeaveGuard = useCallback<SettingsLeaveGuardRegistrar>((registration) => {
@@ -573,6 +586,7 @@ function SettingsModal({
     pendingLeaveRef.current = null;
     setOrdinaryLeaveGuard(null);
     setPendingLeave(null);
+    if (revokedSelectionOwnedFocusRef.current) unavailableContinuationRef.current?.focus();
   }, [selectionRevoked]);
   const leaveOffboarding = () => {
     const restore = offboardingTarget?.restore;
@@ -661,15 +675,22 @@ function SettingsModal({
               aria-label="설정 카테고리"
               data-settings-navigation
               onKeyDown={(event) => {
-                if (event.key !== 'Home' && event.key !== 'End') return;
+                if (!['Home', 'End', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
                 event.preventDefault();
                 const tabs = event.currentTarget.querySelectorAll<HTMLElement>('[role="tab"]');
-                tabs[event.key === 'Home' ? 0 : tabs.length - 1]?.focus();
+                if (event.key === 'Home' || event.key === 'End') {
+                  tabs[event.key === 'Home' ? 0 : tabs.length - 1]?.focus();
+                  return;
+                }
+                const current = [...tabs].indexOf(event.target as HTMLElement);
+                if (current < 0) return;
+                const direction = event.key === 'ArrowDown' ? 1 : -1;
+                tabs[(current + direction + tabs.length) % tabs.length]?.focus();
               }}
             >
-              {categories.map((category) => (
+              {categories.map((category, index) => (
                 <Fragment key={category.id}>
-                {category.id === 'editor' || category.id === 'workspace' || category.id === 'users' ? (
+                {index === 0 || categories[index - 1]?.section !== category.section ? (
                   <h2>{sectionLabels[category.section]}</h2>
                 ) : null}
                 <Tabs.Trigger data-settings-category={category.id} aria-label={category.label} value={category.id} onFocus={(event) => event.currentTarget.scrollIntoView({ block: 'nearest' })}>
@@ -697,9 +718,9 @@ function SettingsModal({
 
             <div data-settings-content>
             {selectionRevoked ? (
-              <div role="status" data-settings-unavailable>
+              <div role="status" aria-live="polite" aria-atomic="true" data-settings-unavailable>
                 <p>선택한 설정을 더 이상 사용할 수 없습니다.</p>
-                <Button type="button" variant="secondary" onClick={() => setSelectedCategory('editor')}>
+                <Button ref={unavailableContinuationRef} type="button" variant="secondary" onClick={() => performLeave({ kind: 'category', targetId: 'editor' })}>
                   에디터로 이동
                 </Button>
               </div>

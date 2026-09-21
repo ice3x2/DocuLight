@@ -1,0 +1,14 @@
+﻿{
+    "stage":  "review2-focus-preservation-red",
+    "capturedAt":  "2026-09-21T15:33:06.4914993Z",
+    "files":  [
+                  {
+                      "path":  "packages/web/test/issue86-audit-entry.test.tsx",
+                      "sha256":  "868dec4c45a1351f884f0e3b4197ea16bfe99c8c186b8d2e9ed2078eccd4db10"
+                  },
+                  {
+                      "path":  "packages/web/src/shell/AppShell.tsx",
+                      "sha256":  "ccd188584c75d174b97ec216872a1c0e8a9a74806c742251512340feb31491f0"
+                  }
+              ]
+}
