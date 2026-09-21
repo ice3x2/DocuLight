@@ -1,0 +1,7 @@
+REQUIREMENT=IR-SHELL-013
+RAW_TEST_SHA256=67943df6b6f5eaa0308325d8d15bfc45be77a98dff18de890224ff822068dd7d
+COMMAND=npm run test:browser:issue71-product --workspace @doculight/web
+EXIT_CODE=1
+RESULT=RED
+FAILURE=escape: false !== true at issue71-instance-settings-product-check.mjs leave-route retained-focus assertion
+INTERPRETATION=Escape reused a connected stale pointer focus record instead of the currently active edited field. Continue Editing preserved the draft but restored the wrong focus owner.

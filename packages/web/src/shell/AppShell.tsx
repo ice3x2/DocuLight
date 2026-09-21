@@ -443,6 +443,7 @@ function SettingsModal({
   const leaveSuppression = useRef(false);
   const leaveFocusRef = useRef<HTMLElement | null>(null);
   const pointerFocusRef = useRef<HTMLElement | null>(null);
+  const lastContentFocusRef = useRef<HTMLElement | null>(null);
   const settingsTriggerRef = useRef<HTMLButtonElement>(null);
   const unavailableContinuationRef = useRef<HTMLButtonElement>(null);
   const selectionRevokedRef = useRef(false);
@@ -536,7 +537,9 @@ function SettingsModal({
     if (guard !== null && guard.dirtyCount > 0) {
       leaveFocusRef.current = pointerFocusRef.current?.isConnected
         ? pointerFocusRef.current
-        : document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        : lastContentFocusRef.current?.isConnected
+          ? lastContentFocusRef.current
+          : document.activeElement instanceof HTMLElement ? document.activeElement : null;
       pointerFocusRef.current = null;
       setLeaveFailure('');
       const pending = { intent, ownerId: guard.ownerId, epoch: guard.epoch, category: guard.category };
@@ -642,6 +645,7 @@ function SettingsModal({
       <DialogContent
         data-settings-dialog
         aria-labelledby={titleId}
+        onFocusCapture={(event) => { if (event.target instanceof HTMLElement) lastContentFocusRef.current = event.target; }}
         onPointerDownCapture={() => {
           if (pendingLeaveRef.current === null && document.activeElement instanceof HTMLElement) pointerFocusRef.current = document.activeElement;
         }}
@@ -652,6 +656,7 @@ function SettingsModal({
           }
           if ((ordinaryLeaveGuardRef.current?.dirtyCount ?? 0) > 0) {
             event.preventDefault();
+            pointerFocusRef.current = null;
             requestLeave({ kind: 'close' });
           }
         }}
@@ -662,6 +667,7 @@ function SettingsModal({
           }
           if ((ordinaryLeaveGuardRef.current?.dirtyCount ?? 0) > 0) {
             event.preventDefault();
+            pointerFocusRef.current = null;
             requestLeave({ kind: 'close' });
           }
         }}

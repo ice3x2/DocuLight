@@ -1,0 +1,14 @@
+{
+  "capturedAtPhase": "after remediation implementation and product PASS",
+  "head": "62338d93a28c0ee4bf2f4aee47701f07a41ec23a",
+  "command": "npm test --workspace @doculight/web -- --run test/issue71-closure-audit-contract.test.ts test/issue71-instance-settings.test.tsx test/issue88-settings-leave-guard.test.tsx test/confirm-gate.test.tsx",
+  "exitCode": 0,
+  "result": "4 files, 76 passed",
+  "sha256": {
+    "packages/web/test/issue71-closure-audit-contract.test.ts": "0bfd46f9a5266f4dc323935762e58e35896fe24e3f61664dad43ef0430784e4c",
+    "packages/web/test/issue71-instance-settings-product-check.mjs": "90beb0093b9217befa797f7d4acd30e2e4d72bc07bce9997321dfd4251bfd50a",
+    "packages/web/src/styles/shell.css": "3c0c2fa01a1da8e15aa94f113e5a7e01ab7ec5d59e8ff17197fdad11303c1c81",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation-green-raw.txt": "0da13c2e244d1887aec121785a63e66d64a652360644fd7c29215318251573fb"
+  },
+  "note": "These are ordinary filesystem SHA-256 values captured after the recorded GREEN command. They are not Git object IDs."
+}

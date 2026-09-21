@@ -56,6 +56,7 @@ export function ConfirmGate({
   children,
 }: ConfirmGateProps) {
   const cancelRef = useRef<HTMLButtonElement>(null);
+  const composing = useRef(false);
   const wasOpenRef = useRef(open);
   const l1Confirmed = useRef(false);
   const [typed, setTyped] = useState('');
@@ -118,6 +119,14 @@ export function ConfirmGate({
     <AlertDialog open onOpenChange={(nextOpen) => { if (!nextOpen && !submitting) onCancel(); }}>
       <AlertDialogContent
         data-grade={grade}
+        onCompositionStartCapture={() => { composing.current = true; }}
+        onCompositionEndCapture={() => { composing.current = false; }}
+        onKeyDownCapture={(event) => {
+          if (event.key === 'Enter' && (composing.current || event.nativeEvent.isComposing)) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        }}
         onEscapeKeyDown={(event) => {
           event.preventDefault();
           event.stopPropagation();

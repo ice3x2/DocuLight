@@ -1,0 +1,212 @@
+{
+  "head": "deacb8ccffa66783adafd2672596f313b12b89e1",
+  "sources": [
+    {
+      "path": "packages/web/src/settings/InstanceSettings.tsx",
+      "sha256": "7b0ea7ca5663abb11945901c3f37b899c5b14cb1df46b9905a61ecb0c481e12c"
+    },
+    {
+      "path": "packages/web/src/confirm/ConfirmGate.tsx",
+      "sha256": "5c65cb213b02bb8db4e04187ea08f9aac9bba6a0dd71f1a6a71a84d6781ae9e8"
+    },
+    {
+      "path": "packages/web/src/shell/AppShell.tsx",
+      "sha256": "290bb22f31bb737b0970ca5e929f5368f2dedbce4e970933c00d93343f2ad8bf"
+    },
+    {
+      "path": "packages/web/src/styles/shell.css",
+      "sha256": "3c0c2fa01a1da8e15aa94f113e5a7e01ab7ec5d59e8ff17197fdad11303c1c81"
+    },
+    {
+      "path": "packages/web/test/issue71-closure-audit-contract.test.ts",
+      "sha256": "8ae683404e49ff0f493d3297fddf16b7b96c310a8a50d948fe14d8d09a3d48d6"
+    },
+    {
+      "path": "packages/web/test/issue71-instance-settings-product-check.mjs",
+      "sha256": "1899c06017ec0a2926be427a9d24b9f2142f60e7b42ef7ca5476e9bf559770fd"
+    },
+    {
+      "path": "packages/web/test/issue71-instance-settings-product-runner.mjs",
+      "sha256": "aa7de5a75e2f3569d4dc548f4a6ed97315c036cba5ae8a3c989167e1ed9ddd9c"
+    },
+    {
+      "path": "packages/web/test/issue88-settings-leave-guard.test.tsx",
+      "sha256": "489ef6425998f6b34540c4d73aadb6e17b40a4af527a743c7a033e052c3a4aed"
+    }
+  ],
+  "bundles": [
+    {
+      "path": "packages/web/dist/assets/index-D12Yi8Qw.css",
+      "sha256": "378b8373968cfb38a5457a901bf5ae17eb72802b1811fd212ecd78cba7a361f1"
+    },
+    {
+      "path": "packages/web/dist/assets/index-Da0OUdwP.js",
+      "sha256": "995c7e7a64d43080df563cb8fae6e262db12b998bdeb32645e39bd7770e7dc4f"
+    }
+  ],
+  "files": [
+    {
+      "path": "browser-matrix.json",
+      "sha256": "5de9877cc56cf0c52204c96d444f16b65f0e12cc9d6fd9cfdf8776046c01538b"
+    },
+    {
+      "path": "focused-71-87-88.txt",
+      "sha256": "5939bd469b8ec5c7500a7ea2faa2aba59a6598bd7186599751d9fae85035d1eb"
+    },
+    {
+      "path": "full-web.txt",
+      "sha256": "da184f8162b65cbb078519ffaf1ca2975e07a6eb0b866d34bed68c8542952459"
+    },
+    {
+      "path": "green-closure-contract.txt",
+      "sha256": "b7b7fd2436c2db49423fbfd62c91dfee770eea84cb6756da74b9a9c96942ced5"
+    },
+    {
+      "path": "instance-dark-1280x720-100.png",
+      "sha256": "5a97706186b5679e76dd8fe92d4bebce2568790cadc48d05dff5dc5809688296"
+    },
+    {
+      "path": "instance-dark-1280x720-200.png",
+      "sha256": "6ff35a5d1bd262064a5079d253e971e157210f207af61766eb1b49f7b8430698"
+    },
+    {
+      "path": "instance-dark-1440x900-100.png",
+      "sha256": "b25a8bd7788691f9932f76fb0179c56541ddc0c4a3d19d440c59a36f55ed0db8"
+    },
+    {
+      "path": "instance-dark-1440x900-200.png",
+      "sha256": "43a75429c04b3c22ea787781595165a8b0ebb5ce309c7665b33c65ea58df572b"
+    },
+    {
+      "path": "instance-dark-1920x1080-100.png",
+      "sha256": "449865ed678042c0e8ca0a2f3f76acc77e642cb0c441792a14aff8d7d36c77ca"
+    },
+    {
+      "path": "instance-dark-1920x1080-200.png",
+      "sha256": "9a73fd1e95ad8376ae559f50189086360f685e86177fd360e0889968fc47a897"
+    },
+    {
+      "path": "instance-forced-colors-dark-100.png",
+      "sha256": "12edef8810c7df1f9af1c8dc2f365a92565cf8e13d5554cc0a17bd7ebf9e76ac"
+    },
+    {
+      "path": "instance-forced-colors-dark-200.png",
+      "sha256": "02d018e89b14aae2b7ea228f713a5616fbc30a823122d46673acc07a7ebf2551"
+    },
+    {
+      "path": "instance-forced-colors-light-100.png",
+      "sha256": "b611fe2e6f5a95470691e43ef78592d2cb866b7521daba29139e8e9d4076ec3c"
+    },
+    {
+      "path": "instance-forced-colors-light-200.png",
+      "sha256": "c85e1ed59279b34b963ade5b2420ac6d91f87c6a07a7e055602603c797f03100"
+    },
+    {
+      "path": "instance-light-1280x720-100.png",
+      "sha256": "61c3dba84fd9cf29c275f5d977270e979a2b9f821bf2ae4470e0d3acb4127110"
+    },
+    {
+      "path": "instance-light-1280x720-200.png",
+      "sha256": "fbf26182718d94bcea3676b961b18997c213ad79d52c4ef36ceb1e94f3fe3788"
+    },
+    {
+      "path": "instance-light-1440x900-100.png",
+      "sha256": "34e6b364a25f6b1d7fe389af9e12b30790701a9782de7b2b64244de103a7d9a1"
+    },
+    {
+      "path": "instance-light-1440x900-200.png",
+      "sha256": "54369742022a6337f2a335d97bc69f6cc2b385cff95653a84db9eef45fb7f8ae"
+    },
+    {
+      "path": "instance-light-1920x1080-100.png",
+      "sha256": "22cbc4dbc694e9b056100994a2685e4d2a3e5630f695467873d0cec55361c8e5"
+    },
+    {
+      "path": "instance-light-1920x1080-200.png",
+      "sha256": "7ab991c5043cd66e007827287012be069f16f1d03401f0e36de8e151fd4ffe8e"
+    },
+    {
+      "path": "red-closure-contract.txt",
+      "sha256": "6de0f27896c408515dc74f4952ae85d466e5694440e736f83eb1b2fd6de574da"
+    },
+    {
+      "path": "red-escape-focus-product.txt",
+      "sha256": "34304cd576b2b5f1fd49c1e7ad29bd18efff89b20f8c9423d0cde85ddccc4b5b"
+    },
+    {
+      "path": "red-outside-focus-product.txt",
+      "sha256": "f362e749d6f78ddf0efd5c40d7e8a0128bc438f66f3e2adb2e7ba4367f17d453"
+    },
+    {
+      "path": "speckiwi-links.json",
+      "sha256": "4d35fe15fde66339c40fd42d95e85cbedc433b8d31c61e1400223f9eeaa302c4"
+    },
+    {
+      "path": "speckiwi-summary.json",
+      "sha256": "d41151228980ac15ac5f3e9eae71cf18d0be63df2bd6049dab16cd02c25cbb38"
+    },
+    {
+      "path": "speckiwi-validate.json",
+      "sha256": "48654114eecd9275502c39eb2656041145b4afcbf756e3b5963f25481ac1ccd4"
+    },
+    {
+      "path": "typecheck-web.txt",
+      "sha256": "ecf5af4dfc9475fc29b589fdf8d39ea385197acb2a88ea83c5501e45b3f3c631"
+    }
+  ],
+  "rawCommands": [
+    {
+      "path": "focused-71-87-88.txt",
+      "sha256": "5939bd469b8ec5c7500a7ea2faa2aba59a6598bd7186599751d9fae85035d1eb"
+    },
+    {
+      "path": "full-web.txt",
+      "sha256": "da184f8162b65cbb078519ffaf1ca2975e07a6eb0b866d34bed68c8542952459"
+    },
+    {
+      "path": "green-closure-contract.txt",
+      "sha256": "b7b7fd2436c2db49423fbfd62c91dfee770eea84cb6756da74b9a9c96942ced5"
+    },
+    {
+      "path": "red-closure-contract.txt",
+      "sha256": "6de0f27896c408515dc74f4952ae85d466e5694440e736f83eb1b2fd6de574da"
+    },
+    {
+      "path": "red-escape-focus-product.txt",
+      "sha256": "34304cd576b2b5f1fd49c1e7ad29bd18efff89b20f8c9423d0cde85ddccc4b5b"
+    },
+    {
+      "path": "red-outside-focus-product.txt",
+      "sha256": "f362e749d6f78ddf0efd5c40d7e8a0128bc438f66f3e2adb2e7ba4367f17d453"
+    },
+    {
+      "path": "speckiwi-links.json",
+      "sha256": "4d35fe15fde66339c40fd42d95e85cbedc433b8d31c61e1400223f9eeaa302c4"
+    },
+    {
+      "path": "speckiwi-summary.json",
+      "sha256": "d41151228980ac15ac5f3e9eae71cf18d0be63df2bd6049dab16cd02c25cbb38"
+    },
+    {
+      "path": "speckiwi-validate.json",
+      "sha256": "48654114eecd9275502c39eb2656041145b4afcbf756e3b5963f25481ac1ccd4"
+    },
+    {
+      "path": "typecheck-web.txt",
+      "sha256": "ecf5af4dfc9475fc29b589fdf8d39ea385197acb2a88ea83c5501e45b3f3c631"
+    }
+  ],
+  "authoritativeDenial": {
+    "key": "signup-mode",
+    "before": "approval",
+    "after": "approval",
+    "unchanged": true
+  },
+  "commands": [
+    {
+      "command": "npm run test:browser:issue71-product --workspace @doculight/web",
+      "exitCode": 0
+    }
+  ],
+  "manifestLast": true
+}

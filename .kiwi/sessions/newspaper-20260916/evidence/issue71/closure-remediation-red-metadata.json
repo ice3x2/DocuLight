@@ -1,0 +1,14 @@
+{
+  "capturedAtPhase": "after audit-gap tests, before remediation implementation",
+  "head": "62338d93a28c0ee4bf2f4aee47701f07a41ec23a",
+  "command": "npm test --workspace @doculight/web -- --run test/issue71-closure-audit-contract.test.ts",
+  "exitCode": 1,
+  "result": "3 failed, 4 passed",
+  "sha256": {
+    "packages/web/test/issue71-closure-audit-contract.test.ts": "0bfd46f9a5266f4dc323935762e58e35896fe24e3f61664dad43ef0430784e4c",
+    "packages/web/test/issue71-instance-settings-product-check.mjs": "0b3c3290f2f5f45f788d1ded473b01103686bbce1576cb6ac47ce5ba27d77a1a",
+    "packages/web/src/styles/shell.css": "696c7dd7e67ac6b9d9afbdbc59a66c8b56a5cb82551d95c073238cbaddd71499",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation-red-raw.txt": "80f2c07dc955ae87328eedc9ec51a05dfbaa760b711d24c5aa47c85f7bb6f9ec"
+  },
+  "note": "These are ordinary filesystem SHA-256 values captured at the stated chronology point. They are not Git object IDs and do not describe any earlier RED run."
+}

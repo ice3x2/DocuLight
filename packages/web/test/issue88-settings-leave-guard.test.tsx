@@ -105,6 +105,23 @@ describe('IR-SHELL-013 — secret-free settings leave guard', () => {
     expect(vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === 'PUT')).toHaveLength(0);
   });
 
+  it('AC-3 · AC-4: composing Enter cannot discard the leave confirmation', async () => {
+    const { user, settings } = await openDirtyInstanceSettings();
+    await user.click(within(settings).getByRole('tab', { name: '에디터' }));
+    const warning = leaveDialog();
+    const discard = within(warning).getByRole('button', { name: '변경 버리고 나가기' });
+
+    fireEvent.compositionStart(warning);
+    expect(fireEvent.keyDown(discard, { key: 'Enter', code: 'Enter', isComposing: true })).toBe(false);
+    expect(screen.getByRole('dialog', { name: '설정', hidden: true })).toBeDefined();
+    expect(within(settings).getByRole('tab', { name: '인스턴스 설정', hidden: true }).getAttribute('aria-selected')).toBe('true');
+
+    fireEvent.compositionEnd(warning);
+    await user.click(discard);
+    const remaining = await screen.findByRole('dialog', { name: '설정' });
+    expect(within(remaining).getByRole('tab', { name: '에디터' }).getAttribute('aria-selected')).toBe('true');
+  });
+
   it('AC-2 · AC-3: Escape uses the same warning and never clicks through', async () => {
     const background = vi.fn();
     const user = userEvent.setup();

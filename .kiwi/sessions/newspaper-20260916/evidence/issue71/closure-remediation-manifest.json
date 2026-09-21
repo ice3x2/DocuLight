@@ -1,0 +1,370 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 71,
+  "head": "deacb8ccffa66783adafd2672596f313b12b89e1",
+  "ordering": "utf8-bytewise-ascending",
+  "fileCount": 72,
+  "aggregateSha256": "f6fd5e18af4aa030ab605969774745b696ce6cf1a9798ae80ea751ea0a92d35a",
+  "files": [
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/astra-closure-decision.md",
+      "sha256": "cec78cfbe35b50d16e8901bb394e8c87e73a291b2956d3998288d93d9d473e55",
+      "bytes": 21923
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/astra-decision.md",
+      "sha256": "8b9b472d1ac77413173fcf4c1a87d64cf55441e929a23edbce41281fb9b3c564",
+      "bytes": 21465
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/browser-matrix/browser-matrix.json",
+      "sha256": "63abeeddb59164a858d001ed4d5c92fdcf5625e4ad0ec2f889b2d6f446ee3584",
+      "bytes": 10700
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/browser-matrix/instance-dark-1280x720-100.png",
+      "sha256": "d0a372e5394852eb34eae168db9668635b3265f5ddcc8ca6b0032af57c727f87",
+      "bytes": 39448
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/browser-matrix/instance-dark-1280x720-200.png",
+      "sha256": "49385004b55d222bd515e082300a1dc5eee89b10467ab9cfb38cf3951eb9e6eb",
+      "bytes": 19536
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/browser-matrix/instance-dark-1440x900-100.png",
+      "sha256": "33d9f5567856d9e99a7e2756bb4d4a2bd356d208499df7164dfab5328ba6e4a6",
+      "bytes": 48208
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/browser-matrix/instance-dark-1440x900-200.png",
+      "sha256": "ce34a2f381f067f625c376fc2677ff6e904d4a20e57f9c94ea23d2c6ad01be74",
+      "bytes": 23702
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/browser-matrix/instance-dark-1920x1080-100.png",
+      "sha256": "fa763a5499982e06501653aab6add2336d48518583075c43cd95088c5a35e4c0",
+      "bytes": 54342
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/browser-matrix/instance-dark-1920x1080-200.png",
+      "sha256": "7cc290bde7fa1ae3d913098e4193b33edbbf17009a483fe9127aaec1da8cff48",
+      "bytes": 29351
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/browser-matrix/instance-forced-colors-100.png",
+      "sha256": "ce48cdc37543008e1ccf789c1cab8682ade673851dad99d1e19d733c312ecf7a",
+      "bytes": 53194
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/browser-matrix/instance-forced-colors-200.png",
+      "sha256": "c1ec0c6e8941e29ac576e7a4e1c852b73bd4c2c5eb97a2dbb547f8dd42c3db46",
+      "bytes": 27119
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/browser-matrix/instance-light-1280x720-100.png",
+      "sha256": "29f682ac6dc371695de68d165efbe23a6d7f0ea93b5454c2fc092d1806fd1b9b",
+      "bytes": 39802
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/browser-matrix/instance-light-1280x720-200.png",
+      "sha256": "16dcaaea5f960d2f6c25e41d7600e0198a2d4b3358fe6f3f38126d134d1205e0",
+      "bytes": 19570
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/browser-matrix/instance-light-1440x900-100.png",
+      "sha256": "acbe3f25fb6dd0805579dc3e58cb23142999d28646a4d8546fae9157464fc04e",
+      "bytes": 49050
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/browser-matrix/instance-light-1440x900-200.png",
+      "sha256": "33bf0e0cf923c8d3f8a52a61ff5c1b76a0ec2cfa740c3067fce3713e2162bc1c",
+      "bytes": 23823
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/browser-matrix/instance-light-1920x1080-100.png",
+      "sha256": "da4828bc237a89287a0bd91e520cae377556e8e444b7d0f3179e316790027c7a",
+      "bytes": 55052
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/browser-matrix/instance-light-1920x1080-200.png",
+      "sha256": "3a1d2de4cc3231bfe5d5040ce232726d9a6bcf7b3b7c327fff859422d4a10929",
+      "bytes": 29480
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation-green-metadata.json",
+      "sha256": "c83d2e1f3fa554ae211b25f95aab9c8029f46a95c73ec2b1489bc6cca4936fb6",
+      "bytes": 1097
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation-green-raw.txt",
+      "sha256": "0da13c2e244d1887aec121785a63e66d64a652360644fd7c29215318251573fb",
+      "bytes": 2226
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation-ready.md",
+      "sha256": "1cbf6014c251b8a40b783bf44b4dc843dcf8fb82278833fd6e66ae4870f1b3ed",
+      "bytes": 4586
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation-red-metadata.json",
+      "sha256": "d31426cc738cc14bb1d5d0859a40304311cfbcd3d8e3d80a8e0dbb418c26f667",
+      "bytes": 1030
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation-red-raw.txt",
+      "sha256": "80f2c07dc955ae87328eedc9ec51a05dfbaa760b711d24c5aa47c85f7bb6f9ec",
+      "bytes": 162458
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/browser-matrix.json",
+      "sha256": "5de9877cc56cf0c52204c96d444f16b65f0e12cc9d6fd9cfdf8776046c01538b",
+      "bytes": 142455
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/capture-manifest.json",
+      "sha256": "f4d4373ace999a51773eb2c2e9f4c417070bf4ffd62b27b126435944e65c3ba7",
+      "bytes": 7224
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/focused-71-87-88.txt",
+      "sha256": "5939bd469b8ec5c7500a7ea2faa2aba59a6598bd7186599751d9fae85035d1eb",
+      "bytes": 1212
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/full-web.txt",
+      "sha256": "da184f8162b65cbb078519ffaf1ca2975e07a6eb0b866d34bed68c8542952459",
+      "bytes": 798
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/green-closure-contract.txt",
+      "sha256": "b7b7fd2436c2db49423fbfd62c91dfee770eea84cb6756da74b9a9c96942ced5",
+      "bytes": 861
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-dark-1280x720-100.png",
+      "sha256": "5a97706186b5679e76dd8fe92d4bebce2568790cadc48d05dff5dc5809688296",
+      "bytes": 39561
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-dark-1280x720-200.png",
+      "sha256": "6ff35a5d1bd262064a5079d253e971e157210f207af61766eb1b49f7b8430698",
+      "bytes": 19546
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-dark-1440x900-100.png",
+      "sha256": "b25a8bd7788691f9932f76fb0179c56541ddc0c4a3d19d440c59a36f55ed0db8",
+      "bytes": 48985
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-dark-1440x900-200.png",
+      "sha256": "43a75429c04b3c22ea787781595165a8b0ebb5ce309c7665b33c65ea58df572b",
+      "bytes": 23771
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-dark-1920x1080-100.png",
+      "sha256": "449865ed678042c0e8ca0a2f3f76acc77e642cb0c441792a14aff8d7d36c77ca",
+      "bytes": 55687
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-dark-1920x1080-200.png",
+      "sha256": "9a73fd1e95ad8376ae559f50189086360f685e86177fd360e0889968fc47a897",
+      "bytes": 29547
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-forced-colors-dark-100.png",
+      "sha256": "12edef8810c7df1f9af1c8dc2f365a92565cf8e13d5554cc0a17bd7ebf9e76ac",
+      "bytes": 54393
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-forced-colors-dark-200.png",
+      "sha256": "02d018e89b14aae2b7ea228f713a5616fbc30a823122d46673acc07a7ebf2551",
+      "bytes": 27273
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-forced-colors-light-100.png",
+      "sha256": "b611fe2e6f5a95470691e43ef78592d2cb866b7521daba29139e8e9d4076ec3c",
+      "bytes": 54631
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-forced-colors-light-200.png",
+      "sha256": "c85e1ed59279b34b963ade5b2420ac6d91f87c6a07a7e055602603c797f03100",
+      "bytes": 27299
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-light-1280x720-100.png",
+      "sha256": "61c3dba84fd9cf29c275f5d977270e979a2b9f821bf2ae4470e0d3acb4127110",
+      "bytes": 39934
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-light-1280x720-200.png",
+      "sha256": "fbf26182718d94bcea3676b961b18997c213ad79d52c4ef36ceb1e94f3fe3788",
+      "bytes": 19587
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-light-1440x900-100.png",
+      "sha256": "34e6b364a25f6b1d7fe389af9e12b30790701a9782de7b2b64244de103a7d9a1",
+      "bytes": 49855
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-light-1440x900-200.png",
+      "sha256": "54369742022a6337f2a335d97bc69f6cc2b385cff95653a84db9eef45fb7f8ae",
+      "bytes": 23916
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-light-1920x1080-100.png",
+      "sha256": "22cbc4dbc694e9b056100994a2685e4d2a3e5630f695467873d0cec55361c8e5",
+      "bytes": 56465
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/instance-light-1920x1080-200.png",
+      "sha256": "7ab991c5043cd66e007827287012be069f16f1d03401f0e36de8e151fd4ffe8e",
+      "bytes": 29684
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/red-closure-contract.txt",
+      "sha256": "6de0f27896c408515dc74f4952ae85d466e5694440e736f83eb1b2fd6de574da",
+      "bytes": 587
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/red-escape-focus-product.txt",
+      "sha256": "34304cd576b2b5f1fd49c1e7ad29bd18efff89b20f8c9423d0cde85ddccc4b5b",
+      "bytes": 510
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/red-outside-focus-product.txt",
+      "sha256": "f362e749d6f78ddf0efd5c40d7e8a0128bc438f66f3e2adb2e7ba4367f17d453",
+      "bytes": 504
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/speckiwi-links.json",
+      "sha256": "4d35fe15fde66339c40fd42d95e85cbedc433b8d31c61e1400223f9eeaa302c4",
+      "bytes": 1086
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/speckiwi-summary.json",
+      "sha256": "d41151228980ac15ac5f3e9eae71cf18d0be63df2bd6049dab16cd02c25cbb38",
+      "bytes": 10264
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/speckiwi-validate.json",
+      "sha256": "48654114eecd9275502c39eb2656041145b4afcbf756e3b5963f25481ac1ccd4",
+      "bytes": 991
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/closure-remediation/typecheck-web.txt",
+      "sha256": "ecf5af4dfc9475fc29b589fdf8d39ea385197acb2a88ea83c5501e45b3f3c631",
+      "bytes": 536
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/decision-independent-review.md",
+      "sha256": "faf44b952d2ac300bb433feec6eb3571c34e2ac6f126b25536e89bd85e851637",
+      "bytes": 4884
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/decision-review.md",
+      "sha256": "5692ac0e23bc8e7a5f71c70bfb301f7d7573179168a049f872923d6a7d482091",
+      "bytes": 7857
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/final-independent-review.md",
+      "sha256": "d13dd00ceb38b6c614981678dfe78025847ab4256c43b1e7b6cef95a6121dac6",
+      "bytes": 4872
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/green-current-metadata.txt",
+      "sha256": "0574a007fce608afd32b75e01fa7f2d642ebd6ed44f2b6ab37cb5ed199d1dbfc",
+      "bytes": 447
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/green-current-raw.txt",
+      "sha256": "edf06e776540cea247360887a540b6ae84d6de02cc5a2150bb44fee0eacd6221",
+      "bytes": 1952
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/implementation-verification.md",
+      "sha256": "72e715948f0caf7572ba63ff482523d27a430d8376ae9f9c5cccfccc5fd2249e",
+      "bytes": 2436
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/red-head-metadata.txt",
+      "sha256": "089c46647cdda1874edf7183e278125d40cc50667d70a15c106d755d4bed5778",
+      "bytes": 207
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/red-head-raw.txt",
+      "sha256": "643f52376dfbe08fa85a7bcd0c1aa66f92825fb24a88274430792da180be524c",
+      "bytes": 113128
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue71/tdd-chronology.md",
+      "sha256": "96d9862ee84ef1c94af37328f5a3fcadd405a40c76a3056a93d47b653533fd5f",
+      "bytes": 4144
+    },
+    {
+      "path": "docs/spec/08.app-shell.srs.md",
+      "sha256": "22b3fd536e06de60671c1bc777fb725cd37d017cac69575f0c289e1c95c2848b",
+      "bytes": 276961
+    },
+    {
+      "path": "docs/spec/09.auth.srs.md",
+      "sha256": "a2dbdeb24eda9e62f93d08b579821363e0173cfd92820923583eb5f381681cae",
+      "bytes": 167325
+    },
+    {
+      "path": "docs/spec/11.confirmation-grades.srs.md",
+      "sha256": "c720e29ab97295c291cbae0add3c3c769ffab20bed723229d3aeff1469457244",
+      "bytes": 156620
+    },
+    {
+      "path": "docs/spec/12.audit-log.srs.md",
+      "sha256": "3d0bfd4ee54e5e81c330fba4b5d4b6a1d21f9397cb59c4783806d54edfb4bdc7",
+      "bytes": 203331
+    },
+    {
+      "path": "kiwi/.status.json",
+      "sha256": "87586845e89c97f0a01c4e9350da951dc34b544a857014a0f57a1dac43039ee9",
+      "bytes": 4544
+    },
+    {
+      "path": "packages/web/src/confirm/ConfirmGate.tsx",
+      "sha256": "5c65cb213b02bb8db4e04187ea08f9aac9bba6a0dd71f1a6a71a84d6781ae9e8",
+      "bytes": 5712
+    },
+    {
+      "path": "packages/web/src/settings/InstanceSettings.tsx",
+      "sha256": "7b0ea7ca5663abb11945901c3f37b899c5b14cb1df46b9905a61ecb0c481e12c",
+      "bytes": 28375
+    },
+    {
+      "path": "packages/web/src/shell/AppShell.tsx",
+      "sha256": "290bb22f31bb737b0970ca5e929f5368f2dedbce4e970933c00d93343f2ad8bf",
+      "bytes": 86097
+    },
+    {
+      "path": "packages/web/src/styles/shell.css",
+      "sha256": "3c0c2fa01a1da8e15aa94f113e5a7e01ab7ec5d59e8ff17197fdad11303c1c81",
+      "bytes": 65367
+    },
+    {
+      "path": "packages/web/test/issue71-closure-audit-contract.test.ts",
+      "sha256": "8ae683404e49ff0f493d3297fddf16b7b96c310a8a50d948fe14d8d09a3d48d6",
+      "bytes": 3825
+    },
+    {
+      "path": "packages/web/test/issue71-instance-settings-product-check.mjs",
+      "sha256": "1899c06017ec0a2926be427a9d24b9f2142f60e7b42ef7ca5476e9bf559770fd",
+      "bytes": 42111
+    },
+    {
+      "path": "packages/web/test/issue71-instance-settings-product-runner.mjs",
+      "sha256": "aa7de5a75e2f3569d4dc548f4a6ed97315c036cba5ae8a3c989167e1ed9ddd9c",
+      "bytes": 10416
+    },
+    {
+      "path": "packages/web/test/issue88-settings-leave-guard.test.tsx",
+      "sha256": "489ef6425998f6b34540c4d73aadb6e17b40a4af527a743c7a033e052c3a4aed",
+      "bytes": 21973
+    }
+  ]
+}
