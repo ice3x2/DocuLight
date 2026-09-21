@@ -32,6 +32,7 @@ export interface ConfirmGateProps {
   onCancel: () => void;
   restoreFocusRef?: RefObject<HTMLElement | null>;
   confirmLabel?: string;
+  cancelLabel?: string;
   pendingLabel?: string;
   children?: ReactNode;
 }
@@ -50,6 +51,7 @@ export function ConfirmGate({
   onCancel,
   restoreFocusRef,
   confirmLabel = '실행',
+  cancelLabel = '취소',
   pendingLabel,
   children,
 }: ConfirmGateProps) {
@@ -116,6 +118,11 @@ export function ConfirmGate({
     <AlertDialog open onOpenChange={(nextOpen) => { if (!nextOpen && !submitting) onCancel(); }}>
       <AlertDialogContent
         data-grade={grade}
+        onEscapeKeyDown={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          if (!submitting) onCancel();
+        }}
         onOpenAutoFocus={(event) => {
           event.preventDefault();
           cancelRef.current?.focus();
@@ -156,7 +163,7 @@ export function ConfirmGate({
         ) : null}
 
         <div data-slot="alert-dialog-actions">
-          <AlertDialogCancel ref={cancelRef} type="button" disabled={submitting}>취소</AlertDialogCancel>
+          <AlertDialogCancel ref={cancelRef} type="button" disabled={submitting}>{cancelLabel}</AlertDialogCancel>
           <Button
             type="button"
             variant="destructive"

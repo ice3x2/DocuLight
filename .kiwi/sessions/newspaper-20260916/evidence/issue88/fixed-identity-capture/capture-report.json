@@ -1,0 +1,77 @@
+{
+  "schema": "issue88-product-capture-v1",
+  "sources": [
+    {
+      "path": "test/issue88-settings-leave-product-check.mjs",
+      "sha256": "3c01a5cb69ba1bb125bcf994f9ae4692e03d69d7e5a8780283f32f9e5c2bea57"
+    },
+    {
+      "path": "test/issue88-settings-leave-product-runner.mjs",
+      "sha256": "7ee9cd140a6825909e3b621713df12c836d105ac55ed89fe8fc7c10fdfd6f5f7"
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "browser-matrix.json",
+      "sha256": "9842edcf9b4a873347b45a9ce433a68e9a5993d82076057001485c43f468a628"
+    },
+    {
+      "name": "leave-dark-1280x720-100.png",
+      "sha256": "079088636c24da234523de7f8bb4eaf80096f77e6855f893a9a4205092dafb95"
+    },
+    {
+      "name": "leave-dark-1280x720-200.png",
+      "sha256": "21f6b33ea2f1fea9f6d5191732ce67dcbea7cebf74f7ef0f0af5ed3ada05a878"
+    },
+    {
+      "name": "leave-dark-1440x900-100.png",
+      "sha256": "bdc7201ea1686ff2d10d6d370e15df6e66a571bc5a0b7fa6df9ff6903d21d51c"
+    },
+    {
+      "name": "leave-dark-1440x900-200.png",
+      "sha256": "2e0b2c76f68952635691cc5a2aa5feed0e4f8d93c383a182b31d6d2b3629feee"
+    },
+    {
+      "name": "leave-dark-1920x1080-100.png",
+      "sha256": "897d4874a4603cd54f0f8c57db734a89550d06cee14fb9eea2cd2849ff8e2f8e"
+    },
+    {
+      "name": "leave-dark-1920x1080-200.png",
+      "sha256": "ed09a3cd836b3f10777b2a68404ef535fa615469b8118a7f6d95fb1f6fc08942"
+    },
+    {
+      "name": "leave-forced-colors-100.png",
+      "sha256": "0dbb59ce4f57c9b8deee11a1e0fc73562ff2c2bd97f581b66edc39b013a378c4"
+    },
+    {
+      "name": "leave-forced-colors-200.png",
+      "sha256": "0eed22941038bc06cc35afb2a17ad3fd198b968e504615dd7b2ab9bbe317c9cb"
+    },
+    {
+      "name": "leave-light-1280x720-100.png",
+      "sha256": "f374f7a42ffc20124798949b0b19598ea519f077a87702f092999bd305f04d52"
+    },
+    {
+      "name": "leave-light-1280x720-200.png",
+      "sha256": "3b0b0b7a86da936b217da656c8b3f142fa0a8b12e6d4367eddd21c75507f09a7"
+    },
+    {
+      "name": "leave-light-1440x900-100.png",
+      "sha256": "e6910fe2de1d193d1932be686caa2f5701a267ed19f5b8eddedb4c4e51bfc189"
+    },
+    {
+      "name": "leave-light-1440x900-200.png",
+      "sha256": "9744af36e93c140f1706541acb736d4240c769d589cca898e5bc2ec010e3c6d7"
+    },
+    {
+      "name": "leave-light-1920x1080-100.png",
+      "sha256": "4fc9b42e49cf4bb6014431fd3697995d82237f45857121228dd60ba5ef8d61a8"
+    },
+    {
+      "name": "leave-light-1920x1080-200.png",
+      "sha256": "97194bdb2ec82fd3833bd040883930b4c0425d424bf15f8144dec6848d4cfd63"
+    }
+  ],
+  "environmentCount": 12,
+  "forcedCount": 2
+}

@@ -1,0 +1,15 @@
+{
+  "requirement": "IR-SHELL-013",
+  "baselineRevision": "4f1ae41a03337449e45feb1a7dd689a5086ec19d",
+  "files": {
+    "packages/web/package.json": "2a692a1a7346753c2dffce8f0bc66df854ecc4d764fd74d2ee8f93cf778b8a37",
+    "packages/web/src/confirm/ConfirmGate.tsx": "023514ecacdec6ba300c0e394a59d7601db8f675f3652f32ab3583fe35fc042f",
+    "packages/web/src/settings/InstanceSettings.tsx": "a31b52b6aef9fb49aaa2f287705faccf4e192c0bf56d6d9f1f354bc8a0712e1b",
+    "packages/web/src/shell/AppShell.tsx": "d0df47accaa4f314b5ad9beaf40fecca0832f0541848170997d2741a241e0af4",
+    "packages/web/src/styles/shell.css": "a9a467629a9cebdf8e7f2975996dfa4be7fdeb77027c850f413e62736a2bd5f1",
+    "packages/web/test/issue88-settings-leave-guard.test.tsx": "5adca3b11b79d2a98fe8ea0c61ab7025a664f62867b40b3e4c3f669184ac783b",
+    "packages/web/test/issue88-audit-contract.test.ts": "bbe44fe1b2e7e3cd3363f7c823694330e9ea52322545ba2931462da50f7d134c",
+    "packages/web/test/issue88-settings-leave-product-check.mjs": "fb4ae30315b8ce25292a6051aaae227e5bc1ba0036f2d09bf55b7e8bd8b41249",
+    "packages/web/test/issue88-settings-leave-product-runner.mjs": "7ee9cd140a6825909e3b621713df12c836d105ac55ed89fe8fc7c10fdfd6f5f7"
+  }
+}

@@ -1,0 +1,1 @@
+{"schema":"fixture","ordering":{"algorithm":"utf8-bytewise-ascending","fields":["sources[].path","artifacts[].name"]}}

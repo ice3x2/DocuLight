@@ -1,0 +1,45 @@
+IR-SHELL-013 independent re-audit RED captures (2026-09-21 Asia/Seoul)
+
+RED 1 — missing lifecycle primitive
+test sha256: 44064C60EC5B3802DED5BD1324E1B213921453BDB490749AA9A7FBC3DB5ED0E4
+command: npm exec vitest run test/issue88-settings-leave-guard.test.tsx test/issue88-audit-contract.test.ts
+exit: 1
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0-wt-issue88/packages/web
+ ❯ test/issue88-settings-leave-guard.test.tsx (12 tests | 1 failed) 3033ms
+     × AC-5: competing owner cannot replace the active owner 3ms
+ FAIL  test/issue88-settings-leave-guard.test.tsx > IR-SHELL-013 — secret-free settings leave guard > AC-5: competing owner cannot replace the active owner
+TypeError: nextSettingsLeaveGuard is not a function
+ ❯ test/issue88-settings-leave-guard.test.tsx:201:12
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 14 passed (15)
+
+RED 2 — callback containment and category focus
+test sha256: D38082963B2A5F42FF57D3B3C703997CBEC2A19BFFD7FEB220C8130FDCB3F29A
+command: npm exec vitest run test/issue88-settings-leave-guard.test.tsx
+exit: 1
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0-wt-issue88/packages/web
+ ❯ test/issue88-settings-leave-guard.test.tsx (21 tests | 2 failed) 5780ms
+     × AC-3 · AC-4: callback failure is contained and reported to the leave coordinator 3ms
+     × AC-4: category discard focuses the activated category tab 1243ms
+TypeError: invokeSettingsLeaveCallback is not a function
+AssertionError: expected the active element (settings dialog) to be the activated editor tab
+ Test Files  1 failed (1)
+      Tests  2 failed | 19 passed (21)
+
+RED 3 — real product focus ring
+source assertion retained: assert(parseFloat(geometry.focusOutlineWidth) >= 2)
+command: npm run test:browser:issue88-product
+exit: 1
+
+AssertionError [ERR_ASSERTION]: computed focus outline was 1.6px
+    at packages/web/test/issue88-settings-leave-product-check.mjs:142:9
+
+RED 4 — real product header-close focus restoration
+command: npm run test:browser:issue88-product
+exit: 1
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+false !== true
+    at packages/web/test/issue88-settings-leave-product-check.mjs:82:10

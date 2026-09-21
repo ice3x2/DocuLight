@@ -1,0 +1,88 @@
+{
+  "schema": "issue88-product-capture-v1",
+  "ordering": {
+    "algorithm": "utf8-bytewise-ascending",
+    "fields": [
+      "sources[].path",
+      "artifacts[].name"
+    ]
+  },
+  "sources": [
+    {
+      "path": "test/issue88-evidence-publication.mjs",
+      "sha256": "e39d3a42a844d64a64de70c2b3ce8bd70d1bc16b271d5ea64d86d3fb19d27949"
+    },
+    {
+      "path": "test/issue88-settings-leave-product-check.mjs",
+      "sha256": "796a9aefa8ee3114db0e5ba83e59b64bd72340a89dc7ab69acfa7ef88b0bd5e9"
+    },
+    {
+      "path": "test/issue88-settings-leave-product-runner.mjs",
+      "sha256": "3cb002c737f80ffdc77c5f0d9bf94e8f2d32643c4bb67cb0dd7a1730d9e6adf6"
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "browser-matrix.json",
+      "sha256": "79ce05be77c7e9e530b2b60b82937a9bd41c83b2e17d34fa10d0f2c29cc4a27c"
+    },
+    {
+      "name": "leave-dark-1280x720-100.png",
+      "sha256": "cefc27e4a5a21914daf19463f1b778ec6bc88c147b7c82eeb017692b839ff29e"
+    },
+    {
+      "name": "leave-dark-1280x720-200.png",
+      "sha256": "45e9f59397a5dc2230162e30f1fae93082ed7f73cd5ed535b5ba08319a2003c7"
+    },
+    {
+      "name": "leave-dark-1440x900-100.png",
+      "sha256": "32ce9fa218af58857423c1765473e1266e2a820ce0e272a68e0aac5e3de65c94"
+    },
+    {
+      "name": "leave-dark-1440x900-200.png",
+      "sha256": "d08a1c5928e0a2009be2f78d50ac51d576a3e735b34ec6766c3ab1ac917393d1"
+    },
+    {
+      "name": "leave-dark-1920x1080-100.png",
+      "sha256": "10d507e27c25f1b9faa24a85c876e33eb855e7d2a627f35e54b10275a96865e1"
+    },
+    {
+      "name": "leave-dark-1920x1080-200.png",
+      "sha256": "e1351d18f0933bc368586712dcddefc84bd97422fedb0a364819a361e2718e47"
+    },
+    {
+      "name": "leave-forced-colors-100.png",
+      "sha256": "9fa9604e631cfa332c3892d7b3a2a70b8decd3ff3e1e843a84237efc7ae4ea74"
+    },
+    {
+      "name": "leave-forced-colors-200.png",
+      "sha256": "9a0a505084267ea65b317a2d63a391840a6ce7b5dcc002cddb7673c5bab26003"
+    },
+    {
+      "name": "leave-light-1280x720-100.png",
+      "sha256": "78fc74439a8087eaad7c6aafc4f22dee96d35f634a19a2ab448dcb5156fe7385"
+    },
+    {
+      "name": "leave-light-1280x720-200.png",
+      "sha256": "3b2bfc2cd9b7618f08541bedf0edda4787a0ef2390235ff0c3b3e20d004154b8"
+    },
+    {
+      "name": "leave-light-1440x900-100.png",
+      "sha256": "106d32bcfc09f60c6600e01c2a5103e8377317bb3db8093820adf5ee37d94802"
+    },
+    {
+      "name": "leave-light-1440x900-200.png",
+      "sha256": "d3a1b2d723d19075de69049561972c58d56fee57af6c1dc01d0da2295af9412d"
+    },
+    {
+      "name": "leave-light-1920x1080-100.png",
+      "sha256": "8aa08288f997125bd36d44a537fd5859e1b413339551153c00007c65d5bb30dc"
+    },
+    {
+      "name": "leave-light-1920x1080-200.png",
+      "sha256": "02eae6e8f18273fc5d9087f57d2162af3324b162040413beb2ad103991bb4046"
+    }
+  ],
+  "environmentCount": 12,
+  "forcedCount": 2
+}

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 
 import { ApiError, loadSettings, previewRetentionImpact, saveSettings, type RetentionImpactPreview } from '../api/client.js';
 import { INSTANCE_SETTING_FIELDS } from '../shell/shell-contract.js';
@@ -14,6 +14,14 @@ type RetentionReview = {
   patch: Partial<SettingValues>;
   impact?: RetentionImpactPreview;
 };
+
+export type SettingsLeaveGuardRegistration = {
+  readonly ownerId: string;
+  readonly dirtyCount: number;
+  readonly onContinue: () => void;
+  readonly onCancel: () => void;
+};
+export type SettingsLeaveGuardRegistrar = (registration: SettingsLeaveGuardRegistration) => () => void;
 
 const FIELD_DETAILS = {
   'signup-mode': { kind: 'select', help: '새 계정이 만들어지는 방식을 선택합니다.' },
@@ -92,7 +100,8 @@ function changedKeys(before: SettingValues, after: SettingValues): SettingKey[] 
  * 인스턴스 설정 (`IR-SHELL-002` AC-7 · `DR-SHELL-001` AC-3).
  * 서버가 제공하지 않는 보존 영향 건수나 revision을 추측하지 않는다.
  */
-export function InstanceSettings() {
+export function InstanceSettings({ registerLeaveGuard }: { registerLeaveGuard?: SettingsLeaveGuardRegistrar } = {}) {
+  const leaveOwnerId = useId();
   const [baseline, setBaseline] = useState<SettingValues | null>(null);
   const [draft, setDraft] = useState<SettingValues | null>(null);
   const [loadState, setLoadState] = useState<'loading' | 'error' | 'ready' | 'forbidden'>('loading');
@@ -110,6 +119,29 @@ export function InstanceSettings() {
   const retentionSubmitLatch = useRef(false);
   const saveButtonRef = useRef<HTMLButtonElement>(null);
   const dirtyKeys = useMemo(() => baseline === null || draft === null ? [] : changedKeys(baseline, draft), [baseline, draft]);
+  const leaveCleanup = useRef<(() => void) | null>(null);
+
+  // @req IR-SHELL-013
+  const continueLeave = useCallback(() => {
+    generation.current += 1;
+  }, []);
+  // @req IR-SHELL-013
+  const cancelLeave = useCallback(() => undefined, []);
+
+  useLayoutEffect(() => {
+    if (registerLeaveGuard === undefined) return;
+    leaveCleanup.current = registerLeaveGuard({
+      ownerId: leaveOwnerId,
+      dirtyCount: dirtyKeys.length,
+      onContinue: continueLeave,
+      onCancel: cancelLeave,
+    });
+  }, [cancelLeave, continueLeave, dirtyKeys.length, leaveOwnerId, registerLeaveGuard]);
+
+  useLayoutEffect(() => () => {
+    leaveCleanup.current?.();
+    leaveCleanup.current = null;
+  }, [registerLeaveGuard]);
 
   function revokeAccess() {
     uncertain.current = null;

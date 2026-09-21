@@ -570,7 +570,8 @@
 }
 [data-grade='L2'] button:focus,
 [data-grade='L2'] button:focus-visible {
-  outline: 2px solid var(--token-focus-ring, var(--focus-ring));
+  /* Keep at least 2 computed CSS px after Chromium quantizes at fractional device scales. */
+  outline: 3px solid var(--token-focus-ring, var(--focus-ring));
   outline-offset: 2px;
 }
 [data-token-list-region] { margin-top: 16px; }

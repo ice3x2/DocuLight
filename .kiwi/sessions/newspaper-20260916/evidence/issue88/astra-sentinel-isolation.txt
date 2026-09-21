@@ -1,0 +1,13 @@
+IR-SHELL-013 explicit sentinel isolation probe (2026-09-21 Asia/Seoul)
+
+sentinelBefore=260F3A6A51064721AB0DD0863BBBB7D15C5DF977CC7ABA4C0D93BD4F7D2995F0
+PASS issue88 actual settings leave guard and exact browser matrix
+productExit=0
+sentinelAfter=260F3A6A51064721AB0DD0863BBBB7D15C5DF977CC7ABA4C0D93BD4F7D2995F0
+sentinelContent=issue88-sentinel-unchanged
+sentinelUnchanged=True
+artifactExists=True
+reportExists=True
+manifestExists=True
+
+The product runner wrote the live checker output to its own staging directory, verified exact checker/runner source hashes and artifact/report identity, wrote capture-manifest.json last, and only then published to a separate run-owned output directory. The protected preseeded sentinel was outside that output and remained byte-identical.

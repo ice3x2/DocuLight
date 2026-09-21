@@ -1,0 +1,506 @@
+{
+  "runner": "isolated Playwright-owned persistent Chromium with extension chrome.tabs.setZoom/getZoom",
+  "actualAppShell": true,
+  "environments": [
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "left": 360,
+        "right": 920,
+        "top": 258.20001220703125,
+        "bottom": 461.8000183105469,
+        "width": 1280,
+        "height": 720,
+        "dpr": 1.0000000149011612,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 637.2250366210938,
+            "right": 731.7500381469727,
+            "top": 401,
+            "bottom": 437
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 739.75,
+            "right": 895.1999969482422,
+            "top": 401,
+            "bottom": 437
+          }
+        ],
+        "focusOutlineWidth": "2.4px"
+      },
+      "screenshot": "leave-light-1280x720-100.png"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "left": 40,
+        "right": 600,
+        "top": 78.20000457763672,
+        "bottom": 281.80001068115234,
+        "width": 640,
+        "height": 360,
+        "dpr": 2.0000000298023224,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 317.23126220703125,
+            "right": 411.75626373291016,
+            "top": 221,
+            "bottom": 257
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 419.7562561035156,
+            "right": 575.2000122070312,
+            "top": 221,
+            "bottom": 257
+          }
+        ],
+        "focusOutlineWidth": "2.8px"
+      },
+      "screenshot": "leave-light-1280x720-200.png"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "left": 360,
+        "right": 920,
+        "top": 258.20001220703125,
+        "bottom": 461.8000183105469,
+        "width": 1280,
+        "height": 720,
+        "dpr": 1.0000000149011612,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 637.2250366210938,
+            "right": 731.7500381469727,
+            "top": 401,
+            "bottom": 437
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 739.75,
+            "right": 895.1999969482422,
+            "top": 401,
+            "bottom": 437
+          }
+        ],
+        "focusOutlineWidth": "2.4px"
+      },
+      "screenshot": "leave-dark-1280x720-100.png"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "left": 40,
+        "right": 600,
+        "top": 78.20000457763672,
+        "bottom": 281.80001068115234,
+        "width": 640,
+        "height": 360,
+        "dpr": 2.0000000298023224,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 317.23126220703125,
+            "right": 411.75626373291016,
+            "top": 221,
+            "bottom": 257
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 419.7562561035156,
+            "right": 575.2000122070312,
+            "top": 221,
+            "bottom": 257
+          }
+        ],
+        "focusOutlineWidth": "2.8px"
+      },
+      "screenshot": "leave-dark-1280x720-200.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "left": 440,
+        "right": 1000,
+        "top": 348.20001220703125,
+        "bottom": 551.8000183105469,
+        "width": 1440,
+        "height": 900,
+        "dpr": 1.0000000149011612,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 717.2250366210938,
+            "right": 811.7500381469727,
+            "top": 491,
+            "bottom": 527
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 819.75,
+            "right": 975.1999969482422,
+            "top": 491,
+            "bottom": 527
+          }
+        ],
+        "focusOutlineWidth": "2.4px"
+      },
+      "screenshot": "leave-light-1440x900-100.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "left": 80,
+        "right": 640,
+        "top": 123.20000457763672,
+        "bottom": 326.80001068115234,
+        "width": 720,
+        "height": 450,
+        "dpr": 2.0000000298023224,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 357.23126220703125,
+            "right": 451.75626373291016,
+            "top": 266,
+            "bottom": 302
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 459.7562561035156,
+            "right": 615.2000122070312,
+            "top": 266,
+            "bottom": 302
+          }
+        ],
+        "focusOutlineWidth": "2.8px"
+      },
+      "screenshot": "leave-light-1440x900-200.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "left": 440,
+        "right": 1000,
+        "top": 348.20001220703125,
+        "bottom": 551.8000183105469,
+        "width": 1440,
+        "height": 900,
+        "dpr": 1.0000000149011612,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 717.2250366210938,
+            "right": 811.7500381469727,
+            "top": 491,
+            "bottom": 527
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 819.75,
+            "right": 975.1999969482422,
+            "top": 491,
+            "bottom": 527
+          }
+        ],
+        "focusOutlineWidth": "2.4px"
+      },
+      "screenshot": "leave-dark-1440x900-100.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "left": 80,
+        "right": 640,
+        "top": 123.20000457763672,
+        "bottom": 326.80001068115234,
+        "width": 720,
+        "height": 450,
+        "dpr": 2.0000000298023224,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 357.23126220703125,
+            "right": 451.75626373291016,
+            "top": 266,
+            "bottom": 302
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 459.7562561035156,
+            "right": 615.2000122070312,
+            "top": 266,
+            "bottom": 302
+          }
+        ],
+        "focusOutlineWidth": "2.8px"
+      },
+      "screenshot": "leave-dark-1440x900-200.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "left": 680,
+        "right": 1240,
+        "top": 438.20001220703125,
+        "bottom": 641.8000183105469,
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1.0000000149011612,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 957.2250366210938,
+            "right": 1051.7500381469727,
+            "top": 581,
+            "bottom": 617
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 1059.75,
+            "right": 1215.1999969482422,
+            "top": 581,
+            "bottom": 617
+          }
+        ],
+        "focusOutlineWidth": "2.4px"
+      },
+      "screenshot": "leave-light-1920x1080-100.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "left": 200,
+        "right": 760,
+        "top": 168.1999969482422,
+        "bottom": 371.8000030517578,
+        "width": 960,
+        "height": 540,
+        "dpr": 2.0000000298023224,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 477.23126220703125,
+            "right": 571.7562637329102,
+            "top": 311,
+            "bottom": 347
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 579.7562866210938,
+            "right": 735.2000427246094,
+            "top": 311,
+            "bottom": 347
+          }
+        ],
+        "focusOutlineWidth": "2.8px"
+      },
+      "screenshot": "leave-light-1920x1080-200.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "left": 680,
+        "right": 1240,
+        "top": 438.20001220703125,
+        "bottom": 641.8000183105469,
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1.0000000149011612,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 957.2250366210938,
+            "right": 1051.7500381469727,
+            "top": 581,
+            "bottom": 617
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 1059.75,
+            "right": 1215.1999969482422,
+            "top": 581,
+            "bottom": 617
+          }
+        ],
+        "focusOutlineWidth": "2.4px"
+      },
+      "screenshot": "leave-dark-1920x1080-100.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "left": 200,
+        "right": 760,
+        "top": 168.1999969482422,
+        "bottom": 371.8000030517578,
+        "width": 960,
+        "height": 540,
+        "dpr": 2.0000000298023224,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 477.23126220703125,
+            "right": 571.7562637329102,
+            "top": 311,
+            "bottom": 347
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 579.7562866210938,
+            "right": 735.2000427246094,
+            "top": 311,
+            "bottom": 347
+          }
+        ],
+        "focusOutlineWidth": "2.8px"
+      },
+      "screenshot": "leave-dark-1920x1080-200.png"
+    }
+  ],
+  "forcedColors": [
+    {
+      "zoom": 100,
+      "observedZoom": 1,
+      "state": {
+        "active": true,
+        "outline": "solid",
+        "actions": [
+          {
+            "left": 637.2250366210938,
+            "right": 731.7500381469727,
+            "top": 401,
+            "bottom": 437
+          },
+          {
+            "left": 739.75,
+            "right": 895.1999969482422,
+            "top": 401,
+            "bottom": 437
+          }
+        ],
+        "width": 1280,
+        "height": 720
+      },
+      "screenshot": "leave-forced-colors-100.png"
+    },
+    {
+      "zoom": 200,
+      "observedZoom": 2,
+      "state": {
+        "active": true,
+        "outline": "solid",
+        "actions": [
+          {
+            "left": 317.23126220703125,
+            "right": 411.75626373291016,
+            "top": 221,
+            "bottom": 257
+          },
+          {
+            "left": 419.7562561035156,
+            "right": 575.2000122070312,
+            "top": 221,
+            "bottom": 257
+          }
+        ],
+        "width": 640,
+        "height": 360
+      },
+      "screenshot": "leave-forced-colors-200.png"
+    }
+  ],
+  "storage": {
+    "local": {},
+    "session": {}
+  },
+  "putCount": 0,
+  "headerCloseDiscardPersisted": true,
+  "headerCloseRestoredGearFocus": true,
+  "followUpOutsideBlocked": true,
+  "keyboardRadixActivation": true,
+  "categoryDiscardRestoredTabFocus": true,
+  "persistedValueAfterReopen": "104857600",
+  "persistedFromActualGet": "104857600",
+  "lastFormFieldReachable": true,
+  "longKoreanWarningCount": true,
+  "keyboardFocusTrap": true,
+  "forcedActionGeometry": true
+}

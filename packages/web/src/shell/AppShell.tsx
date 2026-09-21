@@ -14,10 +14,38 @@ import type { UploadRequest } from '../attachment/upload-contract.js';
 import { EmptyState as AccessEmptyState } from '../tree/EmptyState.js';
 import { NewVersionPrompt, type NewVersionResult } from '../tree/NewVersionPrompt.js';
 import { RelocationDialog, type RelocationPreviewResult, type RelocationWriteResult } from './RelocationDialog.js';
-import { InstanceSettings } from '../settings/InstanceSettings.js';
+import { InstanceSettings, type SettingsLeaveGuardRegistration, type SettingsLeaveGuardRegistrar } from '../settings/InstanceSettings.js';
+import { ConfirmGate } from '../confirm/ConfirmGate.js';
 import { IndexQueueSurface, type IndexQueueSnapshot } from '../settings/IndexQueuePanel.js';
 import { WorkspaceManagementPanel, type WorkspaceAdministratorState, type WorkspaceQueryState, type WorkspaceRenameResult } from '../workspace/WorkspaceList.js';
 import type { WorkspaceCreateInput } from '../workspace/NewWorkspaceForm.js';
+
+type ActiveSettingsLeaveGuard = SettingsLeaveGuardRegistration & { epoch: number; category: string };
+
+// @req IR-SHELL-013
+export function nextSettingsLeaveGuard(
+  current: ActiveSettingsLeaveGuard | null,
+  registration: SettingsLeaveGuardRegistration,
+  category: string,
+  nextEpoch: number,
+): ActiveSettingsLeaveGuard | undefined {
+  if (current !== null && current.ownerId !== registration.ownerId) return undefined;
+  return { ...registration, epoch: current?.epoch ?? nextEpoch, category };
+}
+
+// @req IR-SHELL-013
+export function invokeSettingsLeaveCallback(
+  guard: SettingsLeaveGuardRegistration,
+  kind: 'continue' | 'cancel',
+): boolean {
+  try {
+    if (kind === 'continue') guard.onContinue();
+    else guard.onCancel();
+    return true;
+  } catch {
+    return false;
+  }
+}
 import type { WorkspaceAdminGrantPreview, WorkspaceAdminGrantReceipt, WorkspaceCreateBody } from '../api/client.js';
 import {
   PersonalSettings,
@@ -376,11 +404,24 @@ function SettingsModal({
 }) {
   const [open, setOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('editor');
+  const [ordinaryLeaveGuard, setOrdinaryLeaveGuard] = useState<ActiveSettingsLeaveGuard | null>(null);
+  const [pendingLeave, setPendingLeave] = useState<{ intent: { kind: 'category'; targetId: string } | { kind: 'close' }; ownerId: string; epoch: number; category: string } | null>(null);
+  const [leaveFailure, setLeaveFailure] = useState('');
   const [비밀번호폼, set비밀번호폼] = useState(false);
   const [tokenLostNotice, setTokenLostNotice] = useState(false);
   const [offboardingTarget, setOffboardingTarget] = useState<{ id: string; name: string; source: 'users' | 'acl-audit'; restore: HTMLElement | null }>();
   const [offboardingHandoff, setOffboardingHandoff] = useState(false);
   const tokenLeaveGuard = useRef<TokenLeaveGuard | null>(null);
+  const ordinaryLeaveGuardRef = useRef<typeof ordinaryLeaveGuard>(null);
+  const pendingLeaveRef = useRef<typeof pendingLeave>(null);
+  const selectedCategoryRef = useRef(selectedCategory);
+  const categoriesRef = useRef<ReturnType<typeof visibleCategories>>([]);
+  const openRef = useRef(open);
+  const leaveEpoch = useRef(0);
+  const leaveSuppression = useRef(false);
+  const leaveFocusRef = useRef<HTMLElement | null>(null);
+  const pointerFocusRef = useRef<HTMLElement | null>(null);
+  const settingsTriggerRef = useRef<HTMLButtonElement>(null);
   const titleId = useId();
   const selectedWorkspaceContext = workspaceManagement?.selectedId === undefined ? undefined : [
     ...(workspaceManagement.managed.state === 'ready' ? workspaceManagement.managed.rows : []),
@@ -395,7 +436,139 @@ function SettingsModal({
   // 조작이기 때문이다. 여기 감춰지는 것들은 권한 자체를 못 얻는 자리다 —
   // 비활성으로 보여 주면 그것이 언젠가 열릴 것처럼 읽힌다.
   const categories = visibleCategories(viewer);
+  ordinaryLeaveGuardRef.current = ordinaryLeaveGuard;
+  pendingLeaveRef.current = pendingLeave;
+  selectedCategoryRef.current = selectedCategory;
+  categoriesRef.current = categories;
+  openRef.current = open;
   const selectionRevoked = !categories.some((category) => category.id === selectedCategory);
+
+  // @req IR-SHELL-013
+  const registerLeaveGuard = useCallback<SettingsLeaveGuardRegistrar>((registration) => {
+    if (!openRef.current || selectedCategoryRef.current !== 'instance') return () => undefined;
+    const current = ordinaryLeaveGuardRef.current;
+    const next = nextSettingsLeaveGuard(current, registration, selectedCategoryRef.current, leaveEpoch.current + 1);
+    if (next === undefined) return () => undefined;
+    if (current === null) leaveEpoch.current = next.epoch;
+    ordinaryLeaveGuardRef.current = next;
+    setOrdinaryLeaveGuard(next);
+    return () => {
+      const live = ordinaryLeaveGuardRef.current;
+      if (live?.ownerId !== registration.ownerId || live.epoch !== next.epoch) return;
+      ordinaryLeaveGuardRef.current = null;
+      setOrdinaryLeaveGuard(null);
+      const pending = pendingLeaveRef.current;
+      if (pending?.ownerId === registration.ownerId && pending.epoch === next.epoch) {
+        pendingLeaveRef.current = null;
+        setPendingLeave(null);
+      }
+    };
+  }, []);
+
+  // @req IR-SHELL-013
+  function performLeave(intent: { kind: 'category'; targetId: string } | { kind: 'close' }) {
+    if (intent.kind === 'close') {
+      setOpen(false);
+      setOffboardingTarget(undefined);
+      requestAnimationFrame(() => settingsTriggerRef.current?.focus());
+      return;
+    }
+    if (!categoriesRef.current.some((category) => category.id === intent.targetId)) {
+      setLeaveFailure('선택한 설정을 더 이상 사용할 수 없습니다. 다시 선택하세요.');
+      return;
+    }
+    setSelectedCategory(intent.targetId);
+    setOffboardingTarget(undefined);
+    requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>(`[data-settings-category="${intent.targetId}"]`)?.focus();
+    });
+  }
+
+  // @req IR-SHELL-013
+  function requestLeave(intent: { kind: 'category'; targetId: string } | { kind: 'close' }, tokenCleared = false) {
+    if (leaveSuppression.current) return;
+    if (intent.kind === 'category' && intent.targetId === selectedCategoryRef.current) return;
+    if (intent.kind === 'category' && !categoriesRef.current.some((category) => category.id === intent.targetId)) return;
+    if (pendingLeaveRef.current !== null) {
+      document.querySelector<HTMLElement>('[role="alertdialog"] [data-alert-dialog-cancel]')?.focus();
+      return;
+    }
+    if (!tokenCleared && tokenLeaveGuard.current !== null) {
+      tokenLeaveGuard.current(() => requestLeave(intent, true));
+      return;
+    }
+    const guard = ordinaryLeaveGuardRef.current;
+    if (guard !== null && guard.dirtyCount > 0) {
+      leaveFocusRef.current = pointerFocusRef.current?.isConnected
+        ? pointerFocusRef.current
+        : document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      pointerFocusRef.current = null;
+      setLeaveFailure('');
+      const pending = { intent, ownerId: guard.ownerId, epoch: guard.epoch, category: guard.category };
+      pendingLeaveRef.current = pending;
+      setPendingLeave(pending);
+      return;
+    }
+    performLeave(intent);
+  }
+
+  // @req IR-SHELL-013
+  function cancelPendingLeave() {
+    const pending = pendingLeaveRef.current;
+    if (pending === null) return;
+    pendingLeaveRef.current = null;
+    setPendingLeave(null);
+    leaveSuppression.current = true;
+    queueMicrotask(() => { leaveSuppression.current = false; });
+    const guard = ordinaryLeaveGuardRef.current;
+    if (guard?.ownerId !== pending.ownerId || guard.epoch !== pending.epoch) return;
+    if (!invokeSettingsLeaveCallback(guard, 'cancel')) {
+      setLeaveFailure('이동 취소를 처리하지 못했습니다. 현재 설정은 그대로 유지됩니다.');
+    }
+  }
+
+  // @req IR-SHELL-013
+  function confirmPendingLeave() {
+    const pending = pendingLeaveRef.current;
+    if (pending === null) return;
+    const requestedCategory = pending.intent.kind === 'category' ? pending.intent.targetId : undefined;
+    if (requestedCategory !== undefined
+      && !categoriesRef.current.some((category) => category.id === requestedCategory)) {
+      pendingLeaveRef.current = null;
+      setPendingLeave(null);
+      setLeaveFailure('선택한 설정을 더 이상 사용할 수 없습니다. 입력은 그대로 유지됩니다. 다른 설정을 선택하세요.');
+      requestAnimationFrame(() => leaveFocusRef.current?.isConnected && leaveFocusRef.current.focus());
+      return;
+    }
+    pendingLeaveRef.current = null;
+    setPendingLeave(null);
+    leaveSuppression.current = true;
+    queueMicrotask(() => { leaveSuppression.current = false; });
+    const guard = ordinaryLeaveGuardRef.current;
+    if (guard?.ownerId !== pending.ownerId || guard.epoch !== pending.epoch || guard.category !== pending.category) return;
+    if (!invokeSettingsLeaveCallback(guard, 'continue')) {
+      setLeaveFailure('변경을 버리는 처리를 완료하지 못했습니다. 현재 설정은 그대로 유지됩니다.');
+      return;
+    }
+    const afterCallback = ordinaryLeaveGuardRef.current;
+    if (afterCallback?.ownerId !== pending.ownerId || afterCallback.epoch !== pending.epoch) return;
+    performLeave(pending.intent);
+  }
+
+  useLayoutEffect(() => {
+    if (pendingLeave === null || ordinaryLeaveGuard === null || ordinaryLeaveGuard.dirtyCount > 0) return;
+    pendingLeaveRef.current = null;
+    setPendingLeave(null);
+    requestAnimationFrame(() => leaveFocusRef.current?.isConnected && leaveFocusRef.current.focus());
+  }, [ordinaryLeaveGuard, pendingLeave]);
+
+  useLayoutEffect(() => {
+    if (!selectionRevoked) return;
+    ordinaryLeaveGuardRef.current = null;
+    pendingLeaveRef.current = null;
+    setOrdinaryLeaveGuard(null);
+    setPendingLeave(null);
+  }, [selectionRevoked]);
   const leaveOffboarding = () => {
     const restore = offboardingTarget?.restore;
     const principalId = offboardingTarget?.id;
@@ -421,28 +594,48 @@ function SettingsModal({
 
   return (
     <Dialog open={open} onOpenChange={(next) => {
-      const change = () => { setOpen(next); setOffboardingTarget(undefined); if (next) setSelectedCategory('editor'); };
-      if (!next && tokenLeaveGuard.current !== null) { tokenLeaveGuard.current(change); return; }
-      change();
+      if (!next) { requestLeave({ kind: 'close' }); return; }
+      setOpen(true); setOffboardingTarget(undefined); setSelectedCategory('editor'); setLeaveFailure('');
     }}>
       {/* 좌하단 기어가 자리다 (`IR-SHELL-002` AC-1) — 어디에 있어도 되는
           버튼이면 사용자가 매번 찾아야 한다. */}
       <div data-shell="settings-corner">
-        <DialogTrigger aria-label="설정">⚙</DialogTrigger>
+        <DialogTrigger ref={settingsTriggerRef} aria-label="설정">⚙</DialogTrigger>
       </div>
 
       <DialogContent
         data-settings-dialog
         aria-labelledby={titleId}
+        onPointerDownCapture={() => {
+          if (pendingLeaveRef.current === null && document.activeElement instanceof HTMLElement) pointerFocusRef.current = document.activeElement;
+        }}
         onEscapeKeyDown={(event) => {
-          if (tokenLeaveGuard.current !== null) event.preventDefault();
+          if (tokenLeaveGuard.current !== null) {
+            event.preventDefault();
+            return;
+          }
+          if ((ordinaryLeaveGuardRef.current?.dirtyCount ?? 0) > 0) {
+            event.preventDefault();
+            requestLeave({ kind: 'close' });
+          }
         }}
         onPointerDownOutside={(event) => {
-          if (tokenLeaveGuard.current !== null) event.preventDefault();
+          if (tokenLeaveGuard.current !== null) {
+            event.preventDefault();
+            return;
+          }
+          if ((ordinaryLeaveGuardRef.current?.dirtyCount ?? 0) > 0) {
+            event.preventDefault();
+            requestLeave({ kind: 'close' });
+          }
         }}
         onOpenAutoFocus={(event) => {
           event.preventDefault();
           requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-settings-dialog] [role="tab"][data-state="active"]')?.focus());
+        }}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          settingsTriggerRef.current?.focus();
         }}
       >
           <header data-settings-header>
@@ -457,9 +650,7 @@ function SettingsModal({
 
           {/* 좌측 카테고리 — 관리 기능이 전부 이 목록 안에 든다(AC-2). */}
           <Tabs.Root value={selectedCategory} onValueChange={(category) => {
-            const change = () => { setSelectedCategory(category); setOffboardingTarget(undefined); };
-            if (tokenLeaveGuard.current !== null) { tokenLeaveGuard.current(change); return; }
-            change();
+            requestLeave({ kind: 'category', targetId: category });
           }} orientation="vertical" data-settings-layout>
             <Tabs.List
               aria-label="설정 카테고리"
@@ -476,7 +667,7 @@ function SettingsModal({
                 {category.id === 'editor' || category.id === 'workspace' || category.id === 'users' ? (
                   <h2>{sectionLabels[category.section]}</h2>
                 ) : null}
-                <Tabs.Trigger aria-label={category.label} value={category.id} onFocus={(event) => event.currentTarget.scrollIntoView({ block: 'nearest' })}>
+                <Tabs.Trigger data-settings-category={category.id} aria-label={category.label} value={category.id} onFocus={(event) => event.currentTarget.scrollIntoView({ block: 'nearest' })}>
                   {category.label}
                   {/* 미해소 건수 배지 (`IR-AUDIT-002` AC-5~AC-7). Phase 1 에
                       알림 체계가 없어(`R110-a`) 이것이 통지 수단이다.
@@ -551,7 +742,7 @@ function SettingsModal({
                     })}
                   />
                 ) : category.id === 'instance' ? (
-                  <InstanceSettings key={(indexQueueContextKey ?? 'anonymous:0:member').split(':')[1] ?? '0'} />
+                  <InstanceSettings key={(indexQueueContextKey ?? 'anonymous:0:member').split(':')[1] ?? '0'} registerLeaveGuard={registerLeaveGuard} />
                 ) : category.id === 'index-queue' ? (
                   <IndexQueueSurface load={fetchIndexQueue ?? (() => Promise.reject(new Error('index queue unavailable')))} contextKey={indexQueueContextKey ?? 'anonymous:0:member'} />
                 ) : category.id === 'editor' || category.id === 'appearance' ? (
@@ -664,7 +855,23 @@ function SettingsModal({
             ))}
             </div>
           </Tabs.Root>
+          {leaveFailure === '' ? null : <p role="alert" data-settings-leave-failure>{leaveFailure}</p>}
       </DialogContent>
+      <ConfirmGate
+        open={pendingLeave !== null}
+        grade="L2"
+        title="저장하지 않은 변경"
+        description={`저장하지 않은 변경 ${ordinaryLeaveGuard?.dirtyCount ?? 0}건이 있습니다.`}
+        cancelLabel="계속 편집"
+        confirmLabel="변경 버리고 나가기"
+        restoreFocusRef={leaveFocusRef}
+        onCancel={cancelPendingLeave}
+        onConfirm={confirmPendingLeave}
+      >
+        <div data-settings-leave-dialog>
+          <p>이미 요청한 저장은 취소되지 않습니다.</p>
+        </div>
+      </ConfirmGate>
     </Dialog>
   );
 }

@@ -1,0 +1,18 @@
+IR-SHELL-013 final re-audit GREEN summary (2026-09-21 Asia/Seoul)
+
+focused: 2 files passed, 29 tests passed
+cross-feature: 5 files passed, 89 tests passed (#63 PAT, #71 settings, #87 retention, #88 leave guard)
+product run 1: PASS issue88 actual settings leave guard and exact browser matrix
+product run 2: PASS issue88 actual settings leave guard and exact browser matrix
+product matrix: 12 light/dark/viewport/zoom environments + 2 forced-color environments
+root typecheck: PASS (editor, server, web)
+root build: PASS (editor, server, web)
+SpecKiwi validate: exit 0, errors 0, existing SRS-W072 warning 1
+SpecKiwi summary phase-1: exit 0, stability blockers 0, stability warnings 0
+SpecKiwi links check: exit 0, existing unrelated IR-AUDIT-004 invalid issue reference 32
+
+Full regression known unrelated failures:
+- editor: 260 passed, 1 failed, 1 skipped; architecture-contract flags pre-existing App.tsx/NewWorkspaceForm.tsx/WorkspaceList.tsx.
+- server: 1601 passed, 1 failed; install-assembly expected /theme-bootstrap.js 200 but received 503.
+- web: 1157 passed, 1 failed; token-panel computed color is empty in happy-dom.
+- All issue88 tests passed in the full web run.
