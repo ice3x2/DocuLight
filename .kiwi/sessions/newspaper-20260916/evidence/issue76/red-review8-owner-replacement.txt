@@ -1,0 +1,9 @@
+REQUIREMENTS=IR-SHELL-009,FR-EDITOR-005
+RAW_TEST_SHA256=4722a6adf85910873cef953dcd11a366cadf9cbada46777f7d962560419247f0
+COMMAND=npm test --workspace @doculight/web -- --run test/issue76-app-states.test.tsx -t "captures the mounted live draft before a spontaneous identity replacement tears down the old owner"
+EXIT_CODE=1
+RESULT=RED
+FAILURE=Unable to find a label with the text of: 로컬 편집 내용
+LOCATION=test/issue76-app-states.test.tsx:261
+INTERPRETATION=After React Query identity data changed from user-a to user-b and then back to user-a, no owner-bound recovery record existed. The live source bytes had been removed before the passive owner-mismatch quarantine could capture them.
+

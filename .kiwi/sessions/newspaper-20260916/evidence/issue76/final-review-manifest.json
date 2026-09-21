@@ -1,0 +1,176 @@
+{
+  "schema": "issue76-final-review-manifest-v7",
+  "head": "9f76d0dc51d3a45141c0ae4b3719d936e618a435",
+  "generatedAt": "2026-09-21T15:11:24.211Z",
+  "aggregateAlgorithm": "sha256(path + NUL + fileSha256 + LF), sorted by path",
+  "aggregateSha256": "05318e988065864c15c2dbc9f20409a5e4a6cb885ae64920f62b950ef712109e",
+  "fileCount": 32,
+  "productRows": {
+    "authentication": 24,
+    "recovery": 4,
+    "normal": 12,
+    "forced": 6
+  },
+  "files": [
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/astra-decision.md",
+      "sha256": "64d1f540d0779e3ff2249e63eb3dcc86f6850d6a8bae6c5ac8188f1997fee246",
+      "bytes": 7119
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/browser-matrix/measurements.json",
+      "sha256": "0fdd0f64d38791c665f5a99d67fdce20871f1031bc8ffe03caff7440f7f8cf42",
+      "bytes": 42742
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/build-review7.txt",
+      "sha256": "e607a17b34ca72f48e63fce8ea14b9334a2e25c99c0eb520d48fe80783bfffef",
+      "bytes": 79109
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/diff-check-review7.txt",
+      "sha256": "b74c21d9fb6bc784f8786177613e6c030f74bbd345623e734cc382de53c27d9b",
+      "bytes": 68
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/final-independent-review.md",
+      "sha256": "991a2057c8951b6a3fd779e100552fd0fb8d3eafdb19844537bcd057e5a1ec01",
+      "bytes": 2973
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/focused-review7.txt",
+      "sha256": "c981ec65a74c13544cad1680eef08e2a64030d07fb446543817c4c8585623620",
+      "bytes": 1497
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/full-review7.txt",
+      "sha256": "5c426813dd801a3ab213f7c456af995c0b4a4cdde32aa6e7efa54cd623db2a9e",
+      "bytes": 1722
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/implementation-evidence.md",
+      "sha256": "13f5f0000ff4422dee8e630f4405fa86746817d75f59a1145430d4612373b682",
+      "bytes": 11170
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/playwright-review7.txt",
+      "sha256": "3257f0c3188936a1b57abc0bf9c6ae134beb0f9e41f5e27530cf4d8d43dec390",
+      "bytes": 40760
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/product-isolation-review7.txt",
+      "sha256": "0e6c7ca8069a17e2a7a40ed4f2db8f05cbfb126a1b5aec12f996721d6815d9b9",
+      "bytes": 41209
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/red-review8-owner-replacement.txt",
+      "sha256": "fc12cf9dc7be31b83981657b59fba4faa58cc6a28e67e38491693d60035ff531",
+      "bytes": 706
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/review8-failure-ledger.md",
+      "sha256": "dc5446facc773766b7deed1d4aadd1ed11da7be29997c64cbb6f3880a0d76520",
+      "bytes": 3405
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/speckiwi-links-review7.json",
+      "sha256": "4d35fe15fde66339c40fd42d95e85cbedc433b8d31c61e1400223f9eeaa302c4",
+      "bytes": 1086
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/speckiwi-summary-review7.json",
+      "sha256": "cc56f4d41cdf7525bb23338e7025e590c63ab293d939e69cae091fc88036368d",
+      "bytes": 10318
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/speckiwi-validate-review7.json",
+      "sha256": "48654114eecd9275502c39eb2656041145b4afcbf756e3b5963f25481ac1ccd4",
+      "bytes": 991
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue76/typecheck-review7.txt",
+      "sha256": "932b0c76e0019abba8d8bc503e9b8b12ff2ffa13b3bd18d2e6c16d582b5ced2c",
+      "bytes": 987
+    },
+    {
+      "path": "docs/spec/00.index.md",
+      "sha256": "dd254d16c797bb55cae844140992551c58f79fa26daf61c40f4d09fc6326bee9",
+      "bytes": 7698
+    },
+    {
+      "path": "docs/spec/07.editor.srs.md",
+      "sha256": "890724b543800b7fd08be9de45957def4c123a6d29b055a052e7803186f05a9a",
+      "bytes": 108845
+    },
+    {
+      "path": "docs/spec/08.app-shell.srs.md",
+      "sha256": "5db07a50d96c10ac4661924171977dff0a4b75f89424ca40d4d30ba93e3c29cd",
+      "bytes": 273346
+    },
+    {
+      "path": "package.json",
+      "sha256": "038918fcc5f39a1e61430cd92178cf9ae83c1b2b55d3e3316bb90970af62b189",
+      "bytes": 1435
+    },
+    {
+      "path": "packages/web/package.json",
+      "sha256": "0695cfab6dbc26f64c23e013f1e31d910f579fc87a4a967d3deea53faedf07de",
+      "bytes": 6190
+    },
+    {
+      "path": "packages/web/src/App.tsx",
+      "sha256": "05d75f4a12e310309a3483857d1e715e5398b98ec3bef889c782fb685d79dbe6",
+      "bytes": 102791
+    },
+    {
+      "path": "packages/web/src/auth/auth-boundary.ts",
+      "sha256": "e86cc902f908ddb0663d01d3618bb37d0cc3e2e9ba79040434ea14e1feb718e3",
+      "bytes": 8785
+    },
+    {
+      "path": "packages/web/src/document/DocumentArea.tsx",
+      "sha256": "d0eaf9bac6a5a7bb90e1abb178e76e37aa0d78ac72fedd73ab9cd6ecdc7516d0",
+      "bytes": 20160
+    },
+    {
+      "path": "packages/web/src/document/DocumentSurface.tsx",
+      "sha256": "a71a9d093f45fc049fb83926c0f165de0713c2984b695bb28ce880bb1e4b06d1",
+      "bytes": 24037
+    },
+    {
+      "path": "packages/web/src/shell/AppShell.tsx",
+      "sha256": "11998aaccf597cb4245424707f88bcb6f4323ed5312d69159af33c2f1406cb7f",
+      "bytes": 82477
+    },
+    {
+      "path": "packages/web/test/issue76-app-states-product-check.mjs",
+      "sha256": "77a7060125e856af369f1573a42b25ac9aa2ab857bc7c0a3dabe12342561eb2d",
+      "bytes": 75998
+    },
+    {
+      "path": "packages/web/test/issue76-app-states-product-runner.mjs",
+      "sha256": "b8e6e9d7ae140ae807b45b6ec18a05320a40fbd1a3cfbf3403e54d22a5f54ae5",
+      "bytes": 4693
+    },
+    {
+      "path": "packages/web/test/issue76-app-states.test.tsx",
+      "sha256": "da6a5e604efe38ab6d847e7b1a4ecf1b5c304b294d873a60b3b72c7bca680784",
+      "bytes": 50989
+    },
+    {
+      "path": "packages/web/test/issue76-green-evidence-capture.mjs",
+      "sha256": "a18627491c5dd514fc54cd0809b33115a7cf26cb1b84bd9bb1ada2843e7ebb5a",
+      "bytes": 7868
+    },
+    {
+      "path": "packages/web/test/issue76-product-coverage.test.ts",
+      "sha256": "8e9f5c3f5c025f93bce4ee393891d6477bf74bb7b96a94201d0af45516c91b1e",
+      "bytes": 5655
+    },
+    {
+      "path": "packages/web/test/issue76-product-evidence-isolation.mjs",
+      "sha256": "90ac11ab83cc28a8fd1f2bc848cc8f56c39658a24fcaa50ec2b5ac23243cca57",
+      "bytes": 1755
+    }
+  ]
+}

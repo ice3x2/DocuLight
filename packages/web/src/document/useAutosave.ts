@@ -37,6 +37,7 @@ export interface Autosave {
    * 보내므로 그 저장은 다시 충돌하지 않는다.
    */
   resolve: (body: string) => void;
+  pause: (paused: boolean) => void;
 }
 
 export function useAutosave(
@@ -50,10 +51,13 @@ export function useAutosave(
    * 글자가 그 시점에 밀린다.
    */
   onSaved?: (body: string, hash: string) => void,
+  onAuthenticationLoss?: () => void,
+  allowsContinuation: () => boolean = () => true,
 ): Autosave {
   const [state, setState] = useState<AutosaveState>(() => initialAutosave(baseHash ?? ''));
   const session = useRef<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const paused = useRef(false);
 
   // 문서가 바뀌면 상태도 갈아 낀다 — 앞 문서의 더티 표식이 남으면 그것이
   // 새 문서에 대한 저장으로 나간다.
@@ -64,13 +68,19 @@ export function useAutosave(
 
   const send = useCallback(
     async (body: string, current: AutosaveState, forceSnapshot = false) => {
-      if (nodeId === null) return;
+      if (nodeId === null || paused.current || !allowsContinuation()) return;
 
       // 세션은 **첫 저장에** 연다. 문서를 열자마자 열면 읽기만 하고 닫은
       // 문서마다 빈 세션이 쌓인다.
       if (session.current === null) {
-        session.current = await openEditSession(nodeId).catch(() => null);
+        session.current = await openEditSession(nodeId).catch((error: unknown) => {
+          if (error instanceof ApiError && error.status === 401) onAuthenticationLoss?.();
+          return null;
+        });
+        if (paused.current || !allowsContinuation()) return;
       }
+
+      if (!allowsContinuation()) return;
 
       try {
         const { hash } = await saveBody(nodeId, {
@@ -81,9 +91,15 @@ export function useAutosave(
           // 사라지고 보관 디렉토리가 저장 횟수만큼 늘어난다.
           ...(forceSnapshot ? { forceSnapshot: true } : {}),
         });
+        if (paused.current || !allowsContinuation()) return;
         setState((was) => saveSucceeded(was, hash));
         onSaved?.(body, hash);
       } catch (error) {
+        if (paused.current || !allowsContinuation()) return;
+        if (error instanceof ApiError && error.status === 401) {
+          onAuthenticationLoss?.();
+          return;
+        }
         if (error instanceof ApiError && error.status === 409) {
           setState((was) => conflictDetected(was, error.current ?? ''));
           return;
@@ -91,11 +107,12 @@ export function useAutosave(
         setState((was) => saveRejected(was));
       }
     },
-    [nodeId, onSaved],
+    [allowsContinuation, nodeId, onAuthenticationLoss, onSaved],
   );
 
   const changed = useCallback(
     (body: string) => {
+      if (paused.current) return;
       setState((was) => {
         const next = edited(was, body);
         if (timer.current !== null) clearTimeout(timer.current);
@@ -113,6 +130,7 @@ export function useAutosave(
 
   const saveNow = useCallback(
     (body: string) => {
+      if (paused.current) return;
       setState((was) => {
         const next = edited(was, body);
         const intent = forceSave(next);
@@ -125,20 +143,20 @@ export function useAutosave(
 
   const resolve = useCallback(
     (body: string) => {
-      if (nodeId === null) return;
+      if (nodeId === null || paused.current || !allowsContinuation()) return;
 
       void (async () => {
         // 서버의 현재 해시를 다시 받아 그것을 기준으로 보낸다 — 낡은
         // 기준으로 보내면 해소 직후의 저장이 곧바로 다시 충돌한다.
         const fresh = await loadDocument(nodeId).catch(() => null);
-        if (fresh === null) return;
+        if (fresh === null || paused.current || !allowsContinuation()) return;
 
         const resumed = resolvedOnce(state, { body, hash: fresh.hash });
         setState(resumed);
         await send(body, resumed);
       })();
     },
-    [nodeId, send, state],
+    [allowsContinuation, nodeId, send, state],
   );
 
   useEffect(
@@ -148,5 +166,13 @@ export function useAutosave(
     [],
   );
 
-  return { status: state.status, serverBody: state.serverBody, changed, saveNow, resolve };
+  const pause = useCallback((next: boolean) => {
+    paused.current = next;
+    if (next && timer.current !== null) {
+      clearTimeout(timer.current);
+      timer.current = null;
+    }
+  }, []);
+
+  return { status: state.status, serverBody: state.serverBody, changed, saveNow, resolve, pause };
 }

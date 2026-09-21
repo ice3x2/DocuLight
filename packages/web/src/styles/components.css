@@ -133,6 +133,17 @@
   outline-offset: 2px;
 }
 
+@media (forced-colors: active) {
+  [data-slot='button']:focus-visible,
+  [data-slot='input']:focus-visible,
+  [data-slot='textarea']:focus-visible,
+  [data-slot='select']:focus-visible {
+    forced-color-adjust: none;
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}
+
 [data-slot='input'][aria-invalid='true'],
 [data-slot='textarea'][aria-invalid='true'],
 [data-slot='select'][aria-invalid='true'] {

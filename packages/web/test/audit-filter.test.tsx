@@ -79,6 +79,7 @@ describe('IR-AUDIT-001 — 조작 필터가 실제로 거른다', () => {
         const path = full.split('?')[0]!;
         if (path === '/api/session')
           return Promise.resolve(json({ superuser: true, workspaceCount: 1, adminWorkspaceCount: 1 }));
+        if (path === '/api/auth/me') return Promise.resolve(json({ userId: 'user-a' }));
         if (path === '/api/tree') return Promise.resolve(json([]));
         if (path === '/api/audit-log') return Promise.resolve(json(view([행()])));
         return Promise.resolve(json(null, 404));

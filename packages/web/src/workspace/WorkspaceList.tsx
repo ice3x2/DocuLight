@@ -4,8 +4,7 @@ import type { PrincipalRow, ShareRow, WorkspaceAdminGrantPreview, WorkspaceAdmin
 import { PrincipalPicker } from '../principal/PrincipalPicker.js';
 import { WorkspaceAdminGrantDialog } from './WorkspaceAdminGrantDialog.js';
 import { WorkspaceAdminRevokeDialog } from './WorkspaceAdminRevokeDialog.js';
-import { NewWorkspaceForm, type WorkspaceCreateInput } from './NewWorkspaceForm.js';
-import type { WorkspaceCreateBody } from '../api/client.js';
+import { NewWorkspaceForm, type WorkspaceCreateInput, type WorkspaceCreateOutcome } from './NewWorkspaceForm.js';
 import type { GrantWarning } from '../acl/GrantConfirm.js';
 
 /**
@@ -76,6 +75,7 @@ export interface WorkspaceRenameResult {
   workspace: { id: string; name: string; createdAt: string };
   sidecarSync: 'synced' | 'pending';
 }
+export type WorkspaceRenameOutcome = WorkspaceRenameResult | { blocked: 'authentication' };
 
 // @req IR-WORKSPACE-001
 export function validateWorkspaceDisplayName(raw: string): { name?: string; error?: string } {
@@ -104,7 +104,7 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
   query: WorkspaceQueryState;
   selectedId?: string;
   onSelect?: (workspaceId: string) => void;
-  onRename?: (workspaceId: string, name: string) => Promise<WorkspaceRenameResult>;
+  onRename?: (workspaceId: string, name: string) => Promise<WorkspaceRenameOutcome>;
   administrators?: WorkspaceAdministratorState;
   administratorSearchEnabled?: boolean;
   onLoadAdminGrantPreview?: (workspaceId: string, principalId: string) => Promise<WorkspaceAdminGrantPreview>;
@@ -116,7 +116,7 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
   onAdministratorMutationStatus?: (status: { kind: 'success' | 'refresh-error'; message: string }) => void;
   onRetryAdministratorRefresh?: () => void;
   onAuthenticationLoss?: () => void;
-  onCreate?: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateBody>;
+  onCreate?: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateOutcome>;
   onLoadCreationWarnings?: (input: Pick<WorkspaceCreateInput, 'administratorId' | 'defaultGroupLevel'>) => Promise<readonly GrantWarning[]>;
   creationStatus?: { kind: 'success' | 'refresh-error'; message: string };
   onRetryCreationRefresh?: () => void;
@@ -234,6 +234,7 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
     {surface === 'create' && mode === 'all' && onCreate !== undefined && onLoadCreationWarnings !== undefined
       ? <NewWorkspaceForm onCancel={cancelCreation} onLoadWarnings={onLoadCreationWarnings} onCreate={async (input) => {
         const result = await onCreate(input);
+        if ('blocked' in result) return result;
         setCreatedFocusId(result.workspace.id);
         setSurface('list');
         return result;
@@ -287,6 +288,10 @@ export function WorkspaceManagementPanel({ mode, query, selectedId, onSelect, on
       try {
         const result = await onRename(capturedId, valid.name);
         if (!mounted.current || operationGeneration.current !== generation || currentSelectedId.current !== capturedId) return;
+        if ('blocked' in result) {
+          setError('로그인 상태가 변경되어 표시 이름을 바꾸지 않았습니다.');
+          return;
+        }
         baselineName.current = result.workspace.name;
         setDraft(result.workspace.name);
         setConflictingBaseline(undefined);

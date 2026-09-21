@@ -88,7 +88,22 @@ export interface IndexQueueBody {
 export const fetchIndexQueue = () => call<IndexQueueBody>('/index-queue');
 
 /** 현재 세션의 실제 사용자 ID. 테마 캐시와 사용자별 질의 키의 주체다. */
-export const fetchIdentity = () => call<{ userId: string }>('/auth/me');
+export type IdentityResult =
+  | { kind: 'ok'; userId: string }
+  | { kind: 'malformed' }
+  | { kind: 'http-error'; status: number };
+
+export const fetchIdentity = async (): Promise<IdentityResult> => {
+  const response = await fetch(`${BASE}/auth/me`, { credentials: 'same-origin' });
+  if (!response.ok) return { kind: 'http-error', status: response.status };
+  const identity = await bodyOf(response);
+  if (
+    typeof identity !== 'object' || identity === null ||
+    typeof (identity as { userId?: unknown }).userId !== 'string' ||
+    (identity as { userId: string }).userId.trim() === ''
+  ) return { kind: 'malformed' };
+  return { kind: 'ok', userId: (identity as { userId: string }).userId };
+};
 
 /**
  * 로그인한다 (`SEC-AUTH-001` · R57).
@@ -119,6 +134,30 @@ export const requestSignup = (input: { name: string; password: string }) =>
 /** 로그아웃한다 (`SEC-AUTH-019`). 이 브라우저의 세션 하나만 끊는다. */
 export const logOut = () => call<void>('/auth/logout', { method: 'POST' });
 
+export type AuthMutationResponse =
+  | { kind: 'accepted' }
+  | { kind: 'malformed'; status: number }
+  | { kind: 'http-error'; status: number; rule?: string };
+
+async function authMutation(path: string, init: RequestInit): Promise<AuthMutationResponse> {
+  const response = await fetch(`${BASE}${path}`, { credentials: 'same-origin', ...init });
+  if (!response.ok) {
+    const failure = (await bodyOf(response)) as { rule?: string } | undefined;
+    return {
+      kind: 'http-error',
+      status: response.status,
+      ...(failure?.rule === undefined ? {} : { rule: failure.rule }),
+    };
+  }
+  const body = await response.text();
+  return response.status === 204 && body.trim() === ''
+    ? { kind: 'accepted' }
+    : { kind: 'malformed', status: response.status };
+}
+
+/** #76 인증 경계는 204와 그 밖의 성공 모양을 구분해야 한다. */
+export const requestLogout = () => authMutation('/auth/logout', { method: 'POST' });
+
 /**
  * 자기 비밀번호를 바꾼다 (`SEC-AUTH-018`).
  *
@@ -127,6 +166,13 @@ export const logOut = () => call<void>('/auth/logout', { method: 'POST' });
  */
 export const changePassword = (input: { current: string; next: string }) =>
   call<void>('/auth/password', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+
+export const requestPasswordChange = (input: { current: string; next: string }) =>
+  authMutation('/auth/password', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(input),

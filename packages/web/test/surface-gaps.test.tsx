@@ -28,6 +28,7 @@ beforeEach(() => {
     vi.fn((url: string | URL | Request, init?: RequestInit) => {
       const path = String(url).split('?')[0]!;
       if (path === '/api/session') return Promise.resolve(json({ superuser: true, workspaceCount: 1, adminWorkspaceCount: 1 }));
+      if (path === '/api/auth/me') return Promise.resolve(json({ userId: 'user-a' }));
       if (path === '/api/tree') return Promise.resolve(json(TREE));
       if (path === '/api/trash') return Promise.resolve(json([]));
       if (path.endsWith('/session')) return Promise.resolve(json({ session: 's1' }));
@@ -105,6 +106,7 @@ describe('FR-SHELL-003 AC-1 — 새 노트 버튼이 실제로 문서를 만든�
       vi.fn((url: string | URL | Request, init?: RequestInit) => {
         const path = String(url).split('?')[0]!;
         if (path === '/api/session') return Promise.resolve(json({ superuser: true, workspaceCount: 1, adminWorkspaceCount: 1 }));
+        if (path === '/api/auth/me') return Promise.resolve(json({ userId: 'user-a' }));
         if (path === '/api/tree') return Promise.resolve(json(TREE));
         if (path === '/api/trash') return Promise.resolve(json([]));
         if (path === '/api/nodes' && init?.method === 'POST') {

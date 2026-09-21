@@ -34,6 +34,7 @@ beforeEach(() => {
     vi.fn((url: string | URL | Request, init?: RequestInit) => {
       const path = String(url).split('?')[0]!;
       if (path === '/api/session') return Promise.resolve(json({ superuser: true, workspaceCount: 1, adminWorkspaceCount: 1 }));
+      if (path === '/api/auth/me') return Promise.resolve(json({ userId: 'user-a' }));
       if (path === '/api/tree') return Promise.resolve(json(TREE));
       if (path === '/api/documents/n1/session') return Promise.resolve(json({ session: 's1' }));
       if (path === '/api/documents/n1' && init?.method === 'PUT') {
@@ -52,6 +53,18 @@ beforeEach(() => {
       return Promise.resolve(json(null, 404));
     }),
   );
+});
+
+describe('IR-SHELL-009 AC-9 document-save authentication boundary', () => {
+  it('terminalizes the established owner after a save 401', async () => {
+    saveResponse = () => json(null, 401);
+    const user = await openDocument();
+    await user.click(screen.getByRole('button', { name: '편집' }));
+    await user.keyboard('{Control>}s{/Control}');
+
+    expect(await screen.findByRole('main', { name: '로그인' })).toBeDefined();
+    expect(document.querySelector('[data-shell="root"]')).toBeNull();
+  });
 });
 
 afterEach(() => {

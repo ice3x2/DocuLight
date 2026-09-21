@@ -1,5 +1,6 @@
 import { commitInstall, verifyInstallToken } from '../api/client.js';
 import { Button } from '../components/ui/button.js';
+import { InlineNotice } from '../components/ui/states.js';
 import { CredentialForm } from './CredentialForm.js';
 import { InstallWizard } from './InstallWizard.js';
 import type { InstallInput } from './InstallWizard.js';
@@ -25,6 +26,7 @@ export function PreAuthScreen({
   onInstallVerify = verifyInstallToken,
   onInstallCommit = async (input) => { await commitInstall({ ...input }); },
   onInstallStart = () => window.location.assign('/'),
+  notice,
 }: {
   screen: PreAuthScreenId;
   onScreen?: (screen: PreAuthScreenId) => void;
@@ -33,6 +35,7 @@ export function PreAuthScreen({
   onInstallVerify?: (token: string) => Promise<string>;
   onInstallCommit?: (input: InstallInput) => Promise<void>;
   onInstallStart?: () => void;
+  notice?: string;
 }) {
   const spec = PRE_AUTH_SCREENS.find((candidate) => candidate.id === screen)!;
 
@@ -55,6 +58,7 @@ export function PreAuthScreen({
       <section data-pre-auth-column>
         <div data-pre-auth-product>DocuLight</div>
         <h1>{spec.label}</h1>
+        {notice === undefined ? null : <InlineNotice title={notice} />}
         <CredentialForm
           key={spec.id}
           formId={spec.id}

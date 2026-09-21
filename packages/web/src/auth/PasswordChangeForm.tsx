@@ -4,7 +4,9 @@ import { Button, Field, InlineNotice, Input } from '../components/ui/index.js';
 export const PASSWORD_REASONS: Readonly<Record<string, string>> = { 'wrong-password': '현재 비밀번호가 올바르지 않습니다', 'empty-password': '새 비밀번호를 입력하세요', 'self-only': '자기 비밀번호만 바꿀 수 있습니다', 'unknown-account': '계정을 찾을 수 없습니다' };
 const GENERIC_FAILURE = '비밀번호를 바꾸지 못했습니다. 잠시 후 다시 시도하십시오.';
 
-export function PasswordChangeForm({ onSubmit }: { onSubmit?: (input: { current: string; next: string }) => Promise<string | undefined | void> }) {
+export interface PasswordChangeLifecycle { dispatched: () => void }
+
+export function PasswordChangeForm({ onSubmit }: { onSubmit?: (input: { current: string; next: string }, lifecycle: PasswordChangeLifecycle) => Promise<string | undefined | void> }) {
   const currentRef = useRef<HTMLInputElement>(null); const nextRef = useRef<HTMLInputElement>(null); const lock = useRef(false);
   const [feedback, setFeedback] = useState<string | null>(null); const [submitting, setSubmitting] = useState(false);
   const currentError = feedback === 'wrong-password' ? PASSWORD_REASONS[feedback] : undefined;
@@ -13,7 +15,16 @@ export function PasswordChangeForm({ onSubmit }: { onSubmit?: (input: { current:
     event.preventDefault(); if (lock.current) return; lock.current = true; setSubmitting(true); setFeedback(null);
     try {
       if (onSubmit === undefined) throw new Error('unavailable');
-      const result = await onSubmit({ current: currentRef.current?.value ?? '', next: nextRef.current?.value ?? '' });
+      let dispatched = false;
+      const result = await onSubmit(
+        { current: currentRef.current?.value ?? '', next: nextRef.current?.value ?? '' },
+        { dispatched: () => {
+          if (dispatched) return;
+          dispatched = true;
+          if (currentRef.current !== null) currentRef.current.value = '';
+          if (nextRef.current !== null) nextRef.current.value = '';
+        } },
+      );
       if (typeof result === 'string') { const known = Object.hasOwn(PASSWORD_REASONS, result); setFeedback(known ? result : 'generic'); if (result === 'wrong-password') currentRef.current?.focus(); if (result === 'empty-password') nextRef.current?.focus(); }
     } catch { setFeedback('generic'); } finally { lock.current = false; setSubmitting(false); }
   };

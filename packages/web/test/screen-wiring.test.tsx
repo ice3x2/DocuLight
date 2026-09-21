@@ -84,6 +84,7 @@ beforeEach(() => {
   routes.set('/api/session', () =>
     json({ superuser: true, workspaceCount: 1, adminWorkspaceCount: 1 }),
   );
+  routes.set('/api/auth/me', () => json({ userId: 'user-a' }));
   routes.set('/api/tree', () => json(TREE));
   routes.set('/api/favorites', () => json([]));
   routes.set('/api/documents/n1', () => json({ body: '회의를 했다\n\n#할일 을 적는다\n', hash: 'h1' }));

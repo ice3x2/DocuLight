@@ -1,0 +1,789 @@
+﻿node.exe : npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\beom\AppData\Roaming\n ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn Unknow...version of npm.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test
+> vitest run --run test/issue76-app-states.test.tsx -t automatic query retry
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0-wt-issue76/packages/web
+
+stderr | test/issue76-app-states.test.tsx
+Warning: KaTeX doesn't work in quirks mode. Make sure your website has a suitable doctype.
+
+ ❯ test/issue76-app-states.test.tsx (20 tests | 1 failed | 19 skipped) 1141ms
+     × does not hide a document 500 behind an automatic query retry 1139ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/issue76-app-states.test.tsx > IR-SHELL-009 AC-5 App document query handoff > does not hide a document 500 behind an automatic query retry
+TestingLibraryElementError: Unable to find role="alert" and name "문서 오류"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mdata-shell[39m=[32m"root"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"좌측 사이드바"[39m
+        [33mdata-side[39m=[32m"left"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"좌측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_0_-content-tree"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_0_-trigger-tree"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m문서 트리[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_0_-content-search"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_0_-trigger-search"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m검색[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_0_-content-favorites"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_0_-trigger-favorites"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m즐겨찾기[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_0_-trigger-tree"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"active"[39m
+            [33mid[39m=[32m"radix-_r_0_-content-tree"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-document-tree[39m=[32m""[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mdata-tree-toolbar[39m=[32m""[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"dl-button dl-button-primary dl-control-default"[39m
+                  [33mdata-size[39m=[32m"default"[39m
+                  [33mdata-slot[39m=[32m"button"[39m
+                  [33mdata-variant[39m=[32m"primary"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0m새 노트[0m
+                [36m</button>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mdata-tree-viewport[39m=[32m""[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33maria-label[39m=[32m"문서 트리"[39m
+                  [33maria-multiselectable[39m=[32m"true"[39m
+                  [33mdata-indent[39m=[32m"16"[39m
+                  [33mdata-row-height[39m=[32m"40"[39m
+                  [33mrole[39m=[32m"tree"[39m
+                  [33mstyle[39m=[32m"height: 1px; width: 300px; min-height: 0; min-width: 0;"[39m
+                  [33mtabindex[39m=[32m"0"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"document-tree-list"[39m
+                    [33mstyle[39m=[32m"position: relative; height: 1px; width: 300px; overflow: auto; will-change: transform; direction: ltr;"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mstyle[39m=[32m"height: 80px; width: 100%; position: absolute; left: 0px; right: 0px;"[39m
+                    [36m/>[39m
+                    [36m<div[39m
+                      [33mstyle[39m=[32m"height: 80px; width: 100%;"[39m
+                    [36m>[39m
+                      [36m<div[39m
+                        [33maria-describedby[39m=[32m"tree-name-ws-1"[39m
+                        [33maria-expanded[39m=[32m"true"[39m
+                        [33maria-level[39m=[32m"1"[39m
+                        [33maria-selected[39m=[32m"false"[39m
+                        [33mrole[39m=[32m"treeitem"[39m
+                        [33mstyle[39m=[32m"position: absolute; left: 0px; top: 0px; height: 40px; width: 100%; min-width: max-content;"[39m
+                        [33mtabindex[39m=[32m"-1"[39m
+                      [36m>[39m
+                        [36m<div[39m
+                          [33mstyle[39m=[32m"padding-left: 0px;"[39m
+                        [36m>[39m
+                          [36m<div[39m
+                            [33mdata-kind[39m=[32m"workspace"[39m
+                            [33mdata-node-id[39m=[32m"ws-1"[39m
+                            [33mdata-tree-row[39m=[32m""[39m
+                          [36m>[39m
+                            [36m<button[39m
+                              [33maria-label[39m=[32m"기획팀 접기"[39m
+                              [33mtype[39m=[32m"button"[39m
+                            [36m>[39m
+                              [36m<span[39m
+                                [33maria-hidden[39m=[32m"true"[39m
+                                [33mdata-tree-expander[39m=[32m""[39m
+                              [36m/>[39m
+                            [36m</button>[39m
+                            [36m<span[39m
+                              [33maria-hidden[39m=[32m"true"[39m
+                              [33mdata-tree-icon[39m=[32m"workspace"[39m
+                            [36m/>[39m
+                            [36m<span[39m
+                              [33mdata-tree-name[39m=[32m""[39m
+                            [36m>[39m
+                              [0m기획팀[0m
+                            [36m</span>[39m
+                            [36m<span[39m
+                              [33mdata-tree-name-description[39m=[32m""[39m
+                              [33mid[39m=[32m"tree-name-ws-1"[39m
+                              [33mrole[39m=[32m"tooltip"[39m
+                            [36m>[39m
+                              [0m기획팀[0m
+                            [36m</span>[39m
+                          [36m</div>[39m
+                        [36m</div>[39m
+                        [36m<span[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mdata-upload-drop-label[39m=[32m""[39m
+                        [36m>[39m
+                          [0m파일 업로드[0m
+                        [36m</span>[39m
+                      [36m</div>[39m
+                      [36m<div[39m
+                        [33maria-describedby[39m=[32m"tree-name-n1"[39m
+                        [33maria-expanded[39m=[32m"false"[39m
+                        [33maria-level[39m=[32m"2"[39m
+                        [33maria-selected[39m=[32m"false"[39m
+                        [33mclass[39m=[32m""[39m
+                        [33mdata-state[39m=[32m"closed"[39m
+                        [33mrole[39m=[32m"treeitem"[39m
+                        [33mstyle[39m=[32m"position: absolute; left: 0px; top: 40px; height: 40px; width: 100%; min-width: max-content;"[39m
+                        [33mtabindex[39m=[32m"-1"[39m
+                      [36m>[39m
+                        [36m<div[39m
+                          [33mstyle[39m=[32m"padding-left: 16px;"[39m
+                        [36m>[39m
+                          [36m<div[39m
+                            [33mdata-kind[39m=[32m"file"[39m
+                            [33mdata-level[39m=[32m"edit"[39m
+                            [33mdata-node-id[39m=[32m"n1"[39m
+                            [33mdata-tree-row[39m=[32m""[39m
+                            [33mdata-visibility[39m=[32m"full"[39m
+                          [36m>[39m
+                            [36m<span[39m
+                              [33maria-hidden[39m=[32m"true"[39m
+                              [33mdata-tree-icon[39m=[32m"file"[39m
+                            [36m/>[39m
+                            [36m<button[39m
+                              [33mtype[39m=[32m"button"[39m
+                            [36m>[39m
+                              [36m<span[39m
+                                [33mdata-tree-name[39m=[32m""[39m
+                              [36m>[39m
+                                [0m회의록.md[0m
+                              [36m</span>[39m
+                            [36m</button>[39m
+                            [36m<span[39m
+                              [33mdata-tree-name-description[39m=[32m""[39m
+                              [33mid[39m=[32m"tree-name-n1"[39m
+                              [33mrole[39m=[32m"tooltip"[39m
+                            [36m>[39m
+                              [0m회의록.md[0m
+                            [36m</span>[39m
+                          [36m</div>[39m
+                        [36m</div>[39m
+                        [36m<span[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mdata-upload-drop-label[39m=[32m""[39m
+                        [36m>[39m
+                          [0m파일 업로드[0m
+                        [36m</span>[39m
+                      [36m</div>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_0_-trigger-search"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_0_-content-search"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_0_-trigger-favorites"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_0_-content-favorites"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mdata-shell[39m=[32m"settings-corner"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-expanded[39m=[32m"false"[39m
+            [33maria-haspopup[39m=[32m"dialog"[39m
+            [33maria-label[39m=[32m"설정"[39m
+            [33mdata-state[39m=[32m"closed"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m⚙[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+      [36m<main>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dl-empty-state"[39m
+          [33mdata-empty[39m=[32m"documents"[39m
+          [33mdata-slot[39m=[32m"empty-state"[39m
+        [36m>[39m
+          [36m<strong[39m
+            [33mdata-slot[39m=[32m"empty-state-title"[39m
+          [36m>[39m
+            [0m문서를 선택하세요.[0m
+          [36m</strong>[39m
+          [36m<p[39m
+            [33mdata-slot[39m=[32m"empty-state-description"[39m
+          [36m>[39m
+            [0m왼쪽 목록에서 문서를 열 수 있습니다.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</main>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"우측 사이드바"[39m
+        [33mdata-side[39m=[32m"right"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"우측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_9_-content-backlinks"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_9_-trigger-backlinks"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m백링크[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_9_-content-outgoing"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_9_-trigger-outgoing"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m아웃고잉 링크[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_9_-content-tags"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_9_-trigger-tags"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m태그[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_9_-trigger-backlinks"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"active"[39m
+            [33mid[39m=[32m"radix-_r_9_-content-backlinks"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-panel-focus-boundary[39m=[32m"true"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"dl-empty-state"[39m
+                [33mdata-slot[39m=[32m"empty-state"[39m
+              [36m>[39m
+                [36m<strong[39m
+                  [33mdata-slot[39m=[32m"empty-state-title"[39m
+                [36m>[39m
+                  [0m문서를 선택하면 링크를 볼 수 있습니다.[0m
+                [36m</strong>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_9_-trigger-outgoing"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_9_-content-outgoing"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_9_-trigger-tags"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_9_-content-tags"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mdata-shell[39m=[32m"root"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"좌측 사이드바"[39m
+        [33mdata-side[39m=[32m"left"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"좌측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_0_-content-tree"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_0_-trigger-tree"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m문서 트리[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_0_-content-search"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_0_-trigger-search"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m검색[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_0_-content-favorites"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_0_-trigger-favorites"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m즐겨찾기[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_0_-trigger-tree"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"active"[39m
+            [33mid[39m=[32m"radix-_r_0_-content-tree"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-document-tree[39m=[32m""[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mdata-tree-toolbar[39m=[32m""[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"dl-button dl-button-primary dl-control-default"[39m
+                  [33mdata-size[39m=[32m"default"[39m
+                  [33mdata-slot[39m=[32m"button"[39m
+                  [33mdata-variant[39m=[32m"primary"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0m새 노트[0m
+                [36m</button>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mdata-tree-viewport[39m=[32m""[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33maria-label[39m=[32m"문서 트리"[39m
+                  [33maria-multiselectable[39m=[32m"true"[39m
+                  [33mdata-indent[39m=[32m"16"[39m
+                  [33mdata-row-height[39m=[32m"40"[39m
+                  [33mrole[39m=[32m"tree"[39m
+                  [33mstyle[39m=[32m"height: 1px; width: 300px; min-height: 0; min-width: 0;"[39m
+                  [33mtabindex[39m=[32m"0"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"document-tree-list"[39m
+                    [33mstyle[39m=[32m"position: relative; height: 1px; width: 300px; overflow: auto; will-change: transform; direction: ltr;"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mstyle[39m=[32m"height: 80px; width: 100%; position: absolute; left: 0px; right: 0px;"[39m
+                    [36m/>[39m
+                    [36m<div[39m
+                      [33mstyle[39m=[32m"height: 80px; width: 100%;"[39m
+                    [36m>[39m
+                      [36m<div[39m
+                        [33maria-describedby[39m=[32m"tree-name-ws-1"[39m
+                        [33maria-expanded[39m=[32m"true"[39m
+                        [33maria-level[39m=[32m"1"[39m
+                        [33maria-selected[39m=[32m"false"[39m
+                        [33mrole[39m=[32m"treeitem"[39m
+                        [33mstyle[39m=[32m"position: absolute; left: 0px; top: 0px; height: 40px; width: 100%; min-width: max-content;"[39m
+                        [33mtabindex[39m=[32m"-1"[39m
+                      [36m>[39m
+                        [36m<div[39m
+                          [33mstyle[39m=[32m"padding-left: 0px;"[39m
+                        [36m>[39m
+                          [36m<div[39m
+                            [33mdata-kind[39m=[32m"workspace"[39m
+                            [33mdata-node-id[39m=[32m"ws-1"[39m
+                            [33mdata-tree-row[39m=[32m""[39m
+                          [36m>[39m
+                            [36m<button[39m
+                              [33maria-label[39m=[32m"기획팀 접기"[39m
+                              [33mtype[39m=[32m"button"[39m
+                            [36m>[39m
+                              [36m<span[39m
+                                [33maria-hidden[39m=[32m"true"[39m
+                                [33mdata-tree-expander[39m=[32m""[39m
+                              [36m/>[39m
+                            [36m</button>[39m
+                            [36m<span[39m
+                              [33maria-hidden[39m=[32m"true"[39m
+                              [33mdata-tree-icon[39m=[32m"workspace"[39m
+                            [36m/>[39m
+                            [36m<span[39m
+                              [33mdata-tree-name[39m=[32m""[39m
+                            [36m>[39m
+                              [0m기획팀[0m
+                            [36m</span>[39m
+                            [36m<span[39m
+                              [33mdata-tree-name-description[39m=[32m""[39m
+                              [33mid[39m=[32m"tree-name-ws-1"[39m
+                              [33mrole[39m=[32m"tooltip"[39m
+                            [36m>[39m
+                              [0m기획팀[0m
+                            [36m</span>[39m
+                          [36m</div>[39m
+                        [36m</div>[39m
+                        [36m<span[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mdata-upload-drop-label[39m=[32m""[39m
+                        [36m>[39m
+                          [0m파일 업로드[0m
+                        [36m</span>[39m
+                      [36m</div>[39m
+                      [36m<div[39m
+                        [33maria-describedby[39m=[32m"tree-name-n1"[39m
+                        [33maria-expanded[39m=[32m"false"[39m
+                        [33maria-level[39m=[32m"2"[39m
+                        [33maria-selected[39m=[32m"false"[39m
+                        [33mclass[39m=[32m""[39m
+                        [33mdata-state[39m=[32m"closed"[39m
+                        [33mrole[39m=[32m"treeitem"[39m
+                        [33mstyle[39m=[32m"position: absolute; left: 0px; top: 40px; height: 40px; width: 100%; min-width: max-content;"[39m
+                        [33mtabindex[39m=[32m"-1"[39m
+                      [36m>[39m
+                        [36m<div[39m
+                          [33mstyle[39m=[32m"padding-left: 16px;"[39m
+                        [36m>[39m
+                          [36m<div[39m
+                            [33mdata-kind[39m=[32m"file"[39m
+                            [33mdata-level[39m=[32m"edit"[39m
+                            [33mdata-node-id[39m=[32m"n1"[39m
+                            [33mdata-tree-row[39m=[32m""[39m
+                            [33mdata-visibility[39m=[32m"full"[39m
+                          [36m>[39m
+                            [36m<span[39m
+                              [33maria-hidden[39m=[32m"true"[39m
+                              [33mdata-tree-icon[39m=[32m"file"[39m
+                            [36m/>[39m
+                            [36m<button[39m
+                              [33mtype[39m=[32m"button"[39m
+                            [36m>[39m
+                              [36m<span[39m
+                                [33mdata-tree-name[39m=[32m""[39m
+                              [36m>[39m
+                                [0m회의록.md[0m
+                              [36m</span>[39m
+                            [36m</button>[39m
+                            [36m<span[39m
+                              [33mdata-tree-name-description[39m=[32m""[39m
+                              [33mid[39m=[32m"tree-name-n1"[39m
+                              [33mrole[39m=[32m"tooltip"[39m
+                            [36m>[39m
+                              [0m회의록.md[0m
+                            [36m</span>[39m
+                          [36m</div>[39m
+                        [36m</div>[39m
+                        [36m<span[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mdata-upload-drop-label[39m=[32m""[39m
+                        [36m>[39m
+                          [0m파일 업로드[0m
+                        [36m</span>[39m
+                      [36m</div>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_0_-trigger-search"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_0_-content-search"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_0_-trigger-favorites"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_0_-content-favorites"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mdata-shell[39m=[32m"settings-corner"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-expanded[39m=[32m"false"[39m
+            [33maria-haspopup[39m=[32m"dialog"[39m
+            [33maria-label[39m=[32m"설정"[39m
+            [33mdata-state[39m=[32m"closed"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m⚙[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+      [36m<main>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"dl-empty-state"[39m
+          [33mdata-empty[39m=[32m"documents"[39m
+          [33mdata-slot[39m=[32m"empty-state"[39m
+        [36m>[39m
+          [36m<strong[39m
+            [33mdata-slot[39m=[32m"empty-state-title"[39m
+          [36m>[39m
+            [0m문서를 선택하세요.[0m
+          [36m</strong>[39m
+          [36m<p[39m
+            [33mdata-slot[39m=[32m"empty-state-description"[39m
+          [36m>[39m
+            [0m왼쪽 목록에서 문서를 열 수 있습니다.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</main>[39m
+      [36m<aside[39m
+        [33maria-label[39m=[32m"우측 사이드바"[39m
+        [33mdata-side[39m=[32m"right"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdir[39m=[32m"ltr"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"우측 사이드바"[39m
+            [33maria-orientation[39m=[32m"horizontal"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mrole[39m=[32m"tablist"[39m
+            [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_9_-content-backlinks"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"active"[39m
+              [33mid[39m=[32m"radix-_r_9_-trigger-backlinks"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m백링크[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_9_-content-outgoing"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_9_-trigger-outgoing"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m아웃고잉 링크[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"radix-_r_9_-content-tags"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mdata-orientation[39m=[32m"horizontal"[39m
+              [33mdata-radix-collection-item[39m=[32m""[39m
+              [33mdata-state[39m=[32m"inactive"[39m
+              [33mid[39m=[32m"radix-_r_9_-trigger-tags"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtabindex[39m=[32m"-1"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m태그[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_9_-trigger-backlinks"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"active"[39m
+            [33mid[39m=[32m"radix-_r_9_-content-backlinks"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-panel-focus-boundary[39m=[32m"true"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"dl-empty-state"[39m
+                [33mdata-slot[39m=[32m"empty-state"[39m
+              [36m>[39m
+                [36m<strong[39m
+                  [33mdata-slot[39m=[32m"empty-state-title"[39m
+                [36m>[39m
+                  [0m문서를 선택하면 링크를 볼 수 있습니다.[0m
+                [36m</strong>[39m
+              [36m</div>[39m
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 19 skipped (20)
+   Start at  13:11:36
+   Duration  3.45s (transform 874ms, setup 37ms, import 1.79s, tests 1.14s, environment 324ms)
+
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_9_-trigger-outgoing"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_9_-content-outgoing"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"radix-_r_9_-trigger-tags"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-state[39m=[32m"inactive"[39m
+            [33mhidden[39m=[32m""[39m
+            [33mid[39m=[32m"radix-_r_9_-content-tags"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ test/issue76-app-states.test.tsx:229:25
+    227|     const sidebar = await screen.findByRole('complementary', { name: '…
+    228|     await user.click(await within(sidebar).findByRole('button', { name…
+    229|     expect(await screen.findByRole('alert', { name: '문서 오류' })).toBeDe…
+       |                         ^
+    230|     expect(reads).toBe(1);
+    231|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Work\git\DocuLight2.0-wt-issue76\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0-wt-issue76\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --run test/issue76-app-states.test.tsx -t ^^^"automatic^^^ query^^^ retry^^^"
+

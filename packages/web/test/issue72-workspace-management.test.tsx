@@ -138,4 +138,13 @@ describe('워크스페이스 관리 화면 (`IR-WORKSPACE-001` AC-1 · AC-2 · A
     expect(described).toContain(help.id);
     expect(described).toContain(error.id);
   });
+  it('handles an authentication boundary result without an exception', async () => {
+    const rename = vi.fn().mockResolvedValue({ blocked: 'authentication' as const });
+    render(<WorkspaceManagementPanel mode="managed" query={{ state: 'ready', rows }} selectedId={rows[0]!.id} onRename={rename} />);
+    const input = screen.getByRole('textbox', { name: '표시 이름' });
+    fireEvent.change(input, { target: { value: 'blocked rename' } });
+    fireEvent.submit(input.closest('form')!);
+    await waitFor(() => expect(rename).toHaveBeenCalledOnce());
+    expect((await screen.findByRole('alert')).textContent).toContain('로그인');
+  });
 });

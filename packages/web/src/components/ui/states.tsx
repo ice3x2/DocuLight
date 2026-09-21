@@ -57,16 +57,17 @@ export interface ErrorStateProps extends Omit<HTMLAttributes<HTMLDivElement>, 't
   description?: ReactNode;
   label: string;
   onRetry?: () => void;
+  retrying?: boolean;
   title: ReactNode;
 }
 
 // @req IR-SHELL-006
-export function ErrorState({ className, description, label, onRetry, title, ...props }: ErrorStateProps) {
+export function ErrorState({ className, description, label, onRetry, retrying = false, title, ...props }: ErrorStateProps) {
   return (
-    <div role="alert" aria-label={label} data-slot="error-state" className={cn('dl-error-state', className)} {...props}>
+    <div role="alert" aria-label={label} aria-busy={retrying || undefined} data-slot="error-state" className={cn('dl-error-state', className)} {...props}>
       <strong data-slot="error-state-title">{title}</strong>
       {description === undefined ? null : <p data-slot="error-state-description">{description}</p>}
-      {onRetry === undefined ? null : <Button variant="secondary" onClick={onRetry}>다시 시도</Button>}
+      {onRetry === undefined ? null : <Button variant="secondary" loading={retrying} onClick={onRetry}>{retrying ? '다시 확인하는 중…' : '다시 시도'}</Button>}
     </div>
   );
 }

@@ -271,6 +271,162 @@
   background: var(--surface-document);
 }
 
+/* IR-SHELL-009 AC-5: application and document read states share a quiet,
+   bounded newspaper column without changing the surrounding shell owner. */
+[data-app-bootstrap='error'] {
+  min-height: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+  overflow: auto;
+  background: var(--surface-app);
+}
+
+[data-app-bootstrap='error'] > [data-slot='error-state'] {
+  width: min(100%, 560px);
+  margin: auto;
+  box-sizing: border-box;
+}
+
+[data-shell='root'] > main > [data-slot='empty-state'],
+[data-document-content] > [data-slot='empty-state'],
+[data-document-content] > [data-slot='error-state'],
+[data-document-content] > [data-slot='loading-state'] {
+  width: min(calc(100% - 48px), 560px);
+  min-height: auto;
+  flex: 0 0 auto;
+  align-self: center;
+  margin: auto;
+  box-sizing: border-box;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: left;
+}
+
+[data-shell='root'] > main > [data-slot='empty-state'] > [data-slot='empty-state-title'],
+[data-document-content] > [data-slot='empty-state'] > [data-slot='empty-state-title'],
+[data-document-content] > [data-slot='error-state'] > [data-slot='error-state-title'] {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+@media (max-width: 720px) {
+  [data-shell='root'] > main > [data-slot='empty-state'],
+  [data-document-content] > [data-slot='empty-state'],
+  [data-document-content] > [data-slot='error-state'],
+  [data-document-content] > [data-slot='loading-state'] {
+    width: min(calc(100% - 32px), 560px);
+  }
+}
+
+[data-auth-draft-handoff] {
+  position: fixed;
+  z-index: 1000;
+  inset: 50% auto auto 50%;
+  width: min(calc(100% - 32px), 560px);
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  padding: 24px;
+  border: 1px solid var(--border-control);
+  background: var(--surface-document);
+  color: var(--text-primary);
+  box-shadow: 0 16px 48px rgb(0 0 0 / 24%);
+}
+
+[data-auth-draft-list],
+[data-auth-draft-actions],
+[data-document-recovery] {
+  display: grid;
+  gap: 12px;
+}
+
+[data-auth-draft-list] > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+[data-auth-uncertainty] {
+  position: fixed;
+  z-index: 900;
+  inset: 16px 16px auto auto;
+  width: min(calc(100% - 32px), 480px);
+  padding: 16px;
+  border: 2px solid var(--border-control);
+  background: var(--surface-document);
+  color: var(--text-primary);
+}
+
+[data-local-recovery] {
+  box-sizing: border-box;
+  width: min(100%, 56rem);
+  min-height: 100%;
+  margin-inline: auto;
+  padding: 24px;
+  overflow: auto;
+}
+
+[data-local-recovery] section,
+[data-document-recovery] {
+  display: grid;
+  gap: 12px;
+  margin-block: 20px;
+}
+
+[data-local-recovery] textarea,
+[data-document-recovery] textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 12rem;
+  padding: 12px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  resize: vertical;
+}
+
+[data-local-recovery-actions] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (forced-colors: active) {
+  [data-local-recovery] textarea,
+  [data-document-recovery] textarea {
+    border: 1px solid CanvasText;
+  }
+}
+
+[data-document-recovery] {
+  width: min(calc(100% - 48px), 560px);
+  margin: 16px auto;
+}
+
+[data-document-recovery] textarea {
+  min-height: 180px;
+  resize: vertical;
+}
+
+@media (forced-colors: active) {
+  [data-auth-draft-handoff],
+  [data-auth-uncertainty],
+  [data-document-recovery] {
+    border: 2px solid CanvasText;
+  }
+
+  [data-auth-draft-handoff] button:focus-visible,
+  [data-auth-uncertainty] button:focus-visible,
+  [data-document-recovery] button:focus-visible,
+  [data-document-recovery] textarea:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}
+
 [data-shell='settings-corner'] {
   display: flex;
   flex: 0 0 52px;
@@ -285,6 +441,15 @@
 [data-shell='settings-corner'] > button {
   min-width: 36px;
   min-height: 36px;
+}
+
+@media (forced-colors: active) {
+  [data-shell='settings-corner'] > button:focus,
+  [data-shell='settings-corner'] > button:focus-visible {
+    forced-color-adjust: none;
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
 }
 
 /* IR-SHELL-008 AC-1/2: the settings dialog owns two independent scrollports. */

@@ -1,0 +1,52 @@
+COMMAND=C:\Program Files\nodejs\node.exe C:\Users\beom\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js run test
+EXIT_CODE=0
+--- STDOUT ---
+
+> doculight2@0.1.0 test
+> npm run test --workspaces --if-present
+
+
+> @doculight/editor@0.1.0 test
+> vitest run
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0-wt-issue76/packages/editor
+
+
+ Test Files  23 passed (23)
+      Tests  261 passed | 1 skipped (262)
+   Start at  22:25:01
+   Duration  13.09s (transform 47.37s, setup 8.40s, import 61.89s, tests 5.33s, environment 107.47s)
+
+
+> @doculight/server@0.1.0 test
+> vitest run
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0-wt-issue76/packages/server
+
+
+ Test Files  142 passed (142)
+      Tests  1500 passed (1500)
+   Start at  22:25:15
+   Duration  33.09s (transform 139.80s, setup 0ms, import 236.77s, tests 476.48s, environment 18ms)
+
+
+> @doculight/web@0.1.0 test
+> vitest run
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0-wt-issue76/packages/web
+
+
+ Test Files  98 passed (98)
+      Tests  1210 passed (1210)
+   Start at  22:25:49
+   Duration  46.10s (transform 103.17s, setup 6.40s, import 364.72s, tests 248.14s, environment 262.61s)
+
+
+--- STDERR ---
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.

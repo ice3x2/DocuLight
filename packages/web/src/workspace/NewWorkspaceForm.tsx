@@ -18,6 +18,7 @@ export interface WorkspaceCreateInput {
   administratorId: string;
   defaultGroupLevel: DefaultGroupLevel;
 }
+export type WorkspaceCreateOutcome = WorkspaceCreateBody | { blocked: 'authentication' };
 
 type FrozenCreation = WorkspaceCreateInput & {
   administrator: PrincipalRow;
@@ -37,7 +38,7 @@ export function validateWorkspaceDisplayName(raw: string): { name?: string; erro
 
 // @req IR-WORKSPACE-001
 export function NewWorkspaceForm({ onCreate, onLoadWarnings, onCancel }: {
-  onCreate: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateBody>;
+  onCreate: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateOutcome>;
   onLoadWarnings: (input: Pick<WorkspaceCreateInput, 'administratorId' | 'defaultGroupLevel'>) => Promise<readonly GrantWarning[]>;
   onCancel?: () => void;
 }) {
@@ -56,7 +57,7 @@ export function NewWorkspaceForm({ onCreate, onLoadWarnings, onCancel }: {
   const [administrator, setAdministrator] = useState<PrincipalRow | null>(null);
   const [level, setLevel] = useState<DefaultGroupLevel>('none');
   const [frozen, setFrozen] = useState<FrozenCreation | null>(null);
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState(undefined as string | undefined);
   const [warningRetry, setWarningRetry] = useState<WorkspaceCreateInput>();
   const [warningChanged, setWarningChanged] = useState(false);
   const [pending, setPending] = useState(false);
@@ -138,7 +139,13 @@ export function NewWorkspaceForm({ onCreate, onLoadWarnings, onCancel }: {
         return;
       }
       setWarningChanged(false);
-      await onCreate({ name: frozen.name, administratorId: frozen.administratorId, defaultGroupLevel: frozen.defaultGroupLevel });
+      const outcome = await onCreate({ name: frozen.name, administratorId: frozen.administratorId, defaultGroupLevel: frozen.defaultGroupLevel });
+      if ('blocked' in outcome) {
+        setFrozen(null);
+        setUncertain(true);
+        setError('로그인 상태가 변경되어 워크스페이스를 만들지 않았습니다.');
+        return;
+      }
       setFrozen(null);
       setName('');
       setAdministrator(null);

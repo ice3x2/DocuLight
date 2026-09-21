@@ -1,0 +1,35 @@
+﻿node.exe : npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\beom\AppData\Roaming\n ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn Unknow...version of npm.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+⎯⎯⎯⎯⎯⎯⎯ Startup Error ⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find native binding. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+    at file:///C:/Users/beom/AppData/Local/npm-cache/_npx/69c381f8ad94b576/node_modules/rolldown/dist/shared/binding-DH95uVkp.mjs:597:34
+    at file:///C:/Users/beom/AppData/Local/npm-cache/_npx/69c381f8ad94b576/node_modules/rolldown/dist/shared/binding-DH95uVkp.mjs:9:49
+    ... 4 lines matching cause stack trace ...
+    at async CAC.run (file:///C:/Users/beom/AppData/Local/npm-cache/_npx/69c381f8ad94b576/node_modules/vitest/dist/chunks/cac.fSuRXrAx.js:2346:2) {
+  cause: Error: Cannot find module '@rolldown/binding-wasm32-wasi'
+  Require stack:
+  - C:\Users\beom\AppData\Local\npm-cache\_npx\69c381f8ad94b576\node_modules\rolldown\dist\shared\binding-DH95uVkp.mjs
+      at file:///C:/Users/beom/AppData/Local/npm-cache/_npx/69c381f8ad94b576/node_modules/rolldown/dist/shared/binding-DH95uVkp.mjs:494:18
+      ... 8 lines matching cause stack trace ...
+      at async CAC.run (file:///C:/Users/beom/AppData/Local/npm-cache/_npx/69c381f8ad94b576/node_modules/vitest/dist/chunks/cac.fSuRXrAx.js:2346:2) {
+    cause: Error: Cannot find module './rolldown-binding.wasi.cjs'
+    Require stack:
+    - C:\Users\beom\AppData\Local\npm-cache\_npx\69c381f8ad94b576\node_modules\rolldown\dist\shared\binding-DH95uVkp.mjs
+        at file:///C:/Users/beom/AppData/Local/npm-cache/_npx/69c381f8ad94b576/node_modules/rolldown/dist/shared/binding-DH95uVkp.mjs:494:18
+        ... 8 lines matching cause stack trace ...
+        at async CAC.run (file:///C:/Users/beom/AppData/Local/npm-cache/_npx/69c381f8ad94b576/node_modules/vitest/dist/chunks/cac.fSuRXrAx.js:2346:2) {
+      cause: [Error]
+    }
+  }
+}
+
+
+
+

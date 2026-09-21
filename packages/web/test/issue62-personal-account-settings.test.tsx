@@ -118,6 +118,27 @@ describe('SEC-AUTH-018 — #62 비밀번호 변경 폼', () => {
     await waitFor(() => expect(form.getAttribute('aria-busy')).toBeNull());
   });
 
+  it('POST dispatch 신호를 받는 즉시 두 DOM 비밀번호 값을 지운다', async () => {
+    let finish!: () => void;
+    const submit = vi.fn((_input, lifecycle: { dispatched: () => void }) => {
+      lifecycle.dispatched();
+      return new Promise<void>((resolve) => { finish = resolve; });
+    });
+    render(<PasswordChangeForm onSubmit={submit} />);
+    const current = screen.getByLabelText('현재 비밀번호') as HTMLInputElement;
+    const next = screen.getByLabelText('새 비밀번호') as HTMLInputElement;
+    fireEvent.change(current, { target: { value: 'current-secret' } });
+    fireEvent.change(next, { target: { value: 'next-secret' } });
+
+    fireEvent.submit(screen.getByTestId('password-change-form'));
+
+    expect(submit).toHaveBeenCalledOnce();
+    expect(current.value).toBe('');
+    expect(next.value).toBe('');
+    finish();
+    await waitFor(() => expect(screen.getByTestId('password-change-form').getAttribute('aria-busy')).toBeNull());
+  });
+
   it.each([
     ['rejected request', () => Promise.reject(new Error('secret stack'))],
     ['unknown returned rule', () => Promise.resolve('future-rule')],
@@ -165,7 +186,7 @@ describe('SEC-AUTH-018 — #62 비밀번호 변경 폼', () => {
     await waitFor(() => expect(submit).toHaveBeenCalledWith({
       current: '자동완성-현재',
       next: '자동완성-새값',
-    }));
+    }, expect.objectContaining({ dispatched: expect.any(Function) })));
   });
 
   it('조합 확정 Enter는 제출하지 않고 뒤의 의도한 제출만 한 번 보낸다', async () => {

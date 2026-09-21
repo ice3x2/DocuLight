@@ -88,7 +88,7 @@ export const useSession = (): UseQueryResult<SessionBody> =>
     retry: false,
   });
 
-export const useIdentity = (enabled: boolean): UseQueryResult<{ userId: string }> =>
+export const useIdentity = (enabled: boolean): UseQueryResult<import('./client.js').IdentityResult> =>
   useQuery({ queryKey: QUERY_KEYS.identity, queryFn: fetchIdentity, enabled, retry: false });
 
 export const useTree = (enabled: boolean): UseQueryResult<WorkspaceTreeView[]> =>

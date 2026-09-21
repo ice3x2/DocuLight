@@ -41,6 +41,7 @@ beforeEach(() => {
     vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
       const path = String(url).split('?')[0]!;
       if (path === '/api/session') return json({ superuser: true, workspaceCount: 1, adminWorkspaceCount: 1 });
+      if (path === '/api/auth/me') return json({ userId: 'user-a' });
       if (path === '/api/tree') {
         treeFetches += 1;
         return json(TREE);

@@ -126,6 +126,7 @@ describe('FR-SHELL-010 — 태그를 누르면 검색 탭이 그 질의를 든�
         const path = String(url).split('?')[0]!;
         if (path === '/api/session')
           return Promise.resolve(json({ superuser: false, workspaceCount: 1, adminWorkspaceCount: 0 }));
+        if (path === '/api/auth/me') return Promise.resolve(json({ userId: 'user-a' }));
         if (path === '/api/tree')
           return Promise.resolve(
             json([{ workspace: { id: 'ws-1', name: '기획팀' }, visibility: 'full', roots: [] }]),

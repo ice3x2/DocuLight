@@ -47,6 +47,7 @@ beforeEach(() => {
           json({ superuser: false, workspaceCount: 1, adminWorkspaceCount: 0 }),
         );
       }
+      if (path === '/api/auth/me') return Promise.resolve(json({ userId: 'user-a' }));
       if (path === '/api/tree') return Promise.resolve(json(TREE));
       return Promise.resolve(json(null, 404));
     }),

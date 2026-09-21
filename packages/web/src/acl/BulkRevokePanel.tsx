@@ -7,9 +7,12 @@ import { PrincipalPicker } from '../principal/PrincipalPicker.js';
 export type AuditQuery<T> = { state: 'idle' } | { state: 'loading' } | { state: 'ready'; data: T } | { state: 'error'; onRetry: () => void };
 export interface SubjectPlan { subject: RevocationSubject; response: RevocationBody }
 export interface BulkPlan { subjects: readonly SubjectPlan[] }
-export interface RevokeSubjectResult { revocation: RevocationBody; refreshFailed: boolean }
+export interface CompletedRevokeSubjectResult { revocation: RevocationBody; refreshFailed: boolean }
+export type RevokeSubjectResult =
+  | CompletedRevokeSubjectResult
+  | { kind: 'blocked' };
 export type SubjectOutcome =
-  | { subjectId: string; state: 'completed'; result: RevokeSubjectResult }
+  | { subjectId: string; state: 'completed'; result: CompletedRevokeSubjectResult }
   | { subjectId: string; state: 'unconfirmed' }
   | { subjectId: string; state: 'not-run' };
 
@@ -138,6 +141,7 @@ export function BulkRevokePanel({ contextKey, workspaceId, subjects, plan: curre
         try {
           const result = await onRevokeSubject(subjectId);
           if (!isCurrent(request)) return;
+          if (!('revocation' in result)) return;
           next.push({ subjectId, state: 'completed', result });
         } catch {
           if (!isCurrent(request)) return;

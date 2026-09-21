@@ -44,6 +44,7 @@ const 서버 = (path: string) => {
   if (path === '/api/session') {
     return json({ superuser: false, workspaceCount: 1, adminWorkspaceCount: 0 });
   }
+  if (path === '/api/auth/me') return json({ userId: 'user-a' });
   if (path === '/api/tree') return json(TREE);
   if (path === '/api/documents/n1') return json({ body: '# 회의록\n\n본문이다', hash: 'h1' });
   return json(null, 404);

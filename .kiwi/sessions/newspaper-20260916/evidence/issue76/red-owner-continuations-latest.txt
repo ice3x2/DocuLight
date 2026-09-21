@@ -1,0 +1,3 @@
+RED: npx vitest run test/issue76-owner-continuations.test.tsx
+Observed before implementation: 2 tests failed. A delayed openEditSession dispatched saveBody after authority ended, and a delayed save response invoked the old owner's continuation.
+GREEN: 2 tests passed after exact owner/surface continuation checks were added.

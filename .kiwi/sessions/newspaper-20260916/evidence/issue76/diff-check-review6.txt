@@ -1,0 +1,46 @@
+COMMAND=git diff --check
+EXIT_CODE=0
+--- STDOUT ---
+
+--- STDERR ---
+warning: in the working copy of '.kiwi/sessions/newspaper-20260916/evidence/issue76/astra-decision.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/editor/src/index.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/server/src/http/middleware/install-gate.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/package.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/App.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/acl/BulkRevokePanel.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/api/client.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/api/queries.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/auth/PasswordChangeForm.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/auth/PreAuthScreen.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/components/ui/states.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/document/DocumentArea.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/document/DocumentSurface.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/document/MergeView.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/document/VersionHistory.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/document/useAutosave.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/settings/TokenPanel.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/shell/AppShell.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/styles/components.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/styles/shell.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/workspace/NewWorkspaceForm.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/src/workspace/WorkspaceList.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/app-wiring.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/audit-filter.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/audit-log.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/auth-wiring.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/autosave-wiring.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/deep-link-hiding.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/issue62-personal-account-settings.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/issue70-audit-app-race.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/issue72-workspace-management.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/reconciliation-queue.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/right-panel-wiring.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/screen-wiring.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/search-wiring.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/surface-gaps.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/tag-panel.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/theme-runtime.test.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/web/test/upload-wiring.test.tsx', LF will be replaced by CRLF the next time Git touches it

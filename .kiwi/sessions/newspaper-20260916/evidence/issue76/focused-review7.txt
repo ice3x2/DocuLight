@@ -1,0 +1,20 @@
+COMMAND=C:\Program Files\nodejs\node.exe C:\Users\beom\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js test --workspace @doculight/web -- --run test/issue76-app-states.test.tsx test/issue76-auth-boundary.test.ts test/issue76-auth-check.test.ts test/issue76-auth-results.test.ts test/issue76-control-flow.test.ts test/issue76-frozen-surface.test.tsx test/issue76-local-recovery.test.tsx test/issue76-owner-continuations.test.tsx test/issue76-product-coverage.test.ts test/issue76-version-owner.test.tsx
+EXIT_CODE=0
+--- STDOUT ---
+
+> @doculight/web@0.1.0 test
+> vitest run --run test/issue76-app-states.test.tsx test/issue76-auth-boundary.test.ts test/issue76-auth-check.test.ts test/issue76-auth-results.test.ts test/issue76-control-flow.test.ts test/issue76-frozen-surface.test.tsx test/issue76-local-recovery.test.tsx test/issue76-owner-continuations.test.tsx test/issue76-product-coverage.test.ts test/issue76-version-owner.test.tsx
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0-wt-issue76/packages/web
+
+
+ Test Files  10 passed (10)
+      Tests  111 passed (111)
+   Start at  00:04:13
+   Duration  22.53s (transform 4.00s, setup 310ms, import 8.12s, tests 18.32s, environment 11.48s)
+
+
+--- STDERR ---
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.

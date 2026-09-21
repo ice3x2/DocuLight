@@ -1,7 +1,7 @@
 import * as Tabs from '@radix-ui/react-tabs';
 import { Fragment, useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type RefObject } from 'react';
 
-import { DocumentArea } from '../document/DocumentArea.js';
+import { DocumentArea, type DocumentReadState } from '../document/DocumentArea.js';
 import { PasswordChangeForm } from '../auth/PasswordChangeForm.js';
 import { FavoritesView, type Favorite } from '../favorites/FavoritesView.js';
 import { LinkPanel, type LinkRowView } from '../links/LinkPanel.js';
@@ -17,8 +17,9 @@ import { RelocationDialog, type RelocationPreviewResult, type RelocationWriteRes
 import { InstanceSettings, type SettingsLeaveGuardRegistration, type SettingsLeaveGuardRegistrar } from '../settings/InstanceSettings.js';
 import { ConfirmGate } from '../confirm/ConfirmGate.js';
 import { IndexQueueSurface, type IndexQueueSnapshot } from '../settings/IndexQueuePanel.js';
-import { WorkspaceManagementPanel, type WorkspaceAdministratorState, type WorkspaceQueryState, type WorkspaceRenameResult } from '../workspace/WorkspaceList.js';
-import type { WorkspaceCreateInput } from '../workspace/NewWorkspaceForm.js';
+import { WorkspaceManagementPanel, type WorkspaceAdministratorState, type WorkspaceQueryState, type WorkspaceRenameOutcome } from '../workspace/WorkspaceList.js';
+import type { WorkspaceCreateInput, WorkspaceCreateOutcome } from '../workspace/NewWorkspaceForm.js';
+import type { AuthOwner, AuthPhase, LiveDraftRegistration, RecoveryRecord } from '../auth/auth-boundary.js';
 
 type ActiveSettingsLeaveGuard = SettingsLeaveGuardRegistration & { epoch: number; category: string };
 
@@ -46,7 +47,7 @@ export function invokeSettingsLeaveCallback(
     return false;
   }
 }
-import type { WorkspaceAdminGrantPreview, WorkspaceAdminGrantReceipt, WorkspaceCreateBody } from '../api/client.js';
+import type { WorkspaceAdminGrantPreview, WorkspaceAdminGrantReceipt } from '../api/client.js';
 import {
   PersonalSettings,
   type ThemeLoadState,
@@ -107,7 +108,9 @@ export type ShellPanelState =
 function ReplaceConfirmation({ request, restoreFocus }: { request: { name: string; accept: () => void; cancel: () => void }; restoreFocus: HTMLElement | null }) {
   const cancelRef = useRef<HTMLButtonElement>(null);
   const invoker = useRef<HTMLElement | null>(
-    restoreFocus ?? (typeof document === 'undefined' ? null : document.activeElement instanceof HTMLElement ? document.activeElement : null),
+    typeof document !== 'undefined' && document.activeElement instanceof HTMLElement && document.activeElement !== document.body
+      ? document.activeElement
+      : restoreFocus,
   );
   const activated = useRef(false);
   const composing = useRef(false);
@@ -319,6 +322,7 @@ function SettingsModal({
   workspaceManagement,
   fetchIndexQueue,
   indexQueueContextKey,
+  handoffOpen = false,
 }: {
   viewer: Viewer;
   trash?: readonly TrashRowView[];
@@ -378,15 +382,15 @@ function SettingsModal({
   onPasswordChange?: (input: {
     current: string;
     next: string;
-  }) => Promise<string | undefined | void>;
+  }, lifecycle: { dispatched: () => void }) => Promise<string | undefined | void>;
   workspaceManagement?: {
     managed: WorkspaceQueryState;
     all: WorkspaceQueryState;
     administrators: WorkspaceAdministratorState;
     selectedId?: string;
     onSelect: (workspaceId: string) => void;
-    onRename: (workspaceId: string, name: string) => Promise<WorkspaceRenameResult>;
-    onCreate?: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateBody>;
+    onRename: (workspaceId: string, name: string) => Promise<WorkspaceRenameOutcome>;
+    onCreate?: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateOutcome>;
     onLoadCreationWarnings?: (input: Pick<WorkspaceCreateInput, 'administratorId' | 'defaultGroupLevel'>) => Promise<readonly GrantWarning[]>;
     onLoadAdminGrantPreview?: (workspaceId: string, principalId: string) => Promise<WorkspaceAdminGrantPreview>;
     onGrantAdministrator?: (workspaceId: string, principalId: string, previewToken: string) => Promise<WorkspaceAdminGrantReceipt>;
@@ -401,6 +405,7 @@ function SettingsModal({
   };
   fetchIndexQueue?: () => Promise<IndexQueueSnapshot>;
   indexQueueContextKey?: string;
+  handoffOpen?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('editor');
@@ -593,7 +598,7 @@ function SettingsModal({
   } as const;
 
   return (
-    <Dialog open={open} onOpenChange={(next) => {
+    <Dialog open={open && !handoffOpen} onOpenChange={(next) => {
       if (!next) { requestLeave({ kind: 'close' }); return; }
       setOpen(true); setOffboardingTarget(undefined); setSelectedCategory('editor'); setLeaveFailure('');
     }}>
@@ -888,6 +893,7 @@ export function AppShell({
   workspaces = [],
   documents = { tabs: [], activeId: null },
   missingDocument = false,
+  requestedDocumentState,
   favorites = [],
   treeState = { state: 'ready' },
   favoritesState = { state: 'ready' },
@@ -896,6 +902,14 @@ export function AppShell({
   notice,
   bodies = {},
   hashes = {},
+  documentReadStates = {},
+  registerDraft,
+  beforeDraftUnmount,
+  allowsProtected,
+  authorizationPhase = 'active',
+  authorizationEpoch = 0,
+  documentRecovery = {},
+  onDiscardDocumentRecovery,
   searchResults = [],
   searchState,
   searchAxes,
@@ -950,6 +964,7 @@ export function AppShell({
   onLogout,
   onAuthenticationLoss,
   onPasswordChange,
+  authHandoffOpen = false,
   workspaceManagement,
   fetchIndexQueue,
   indexQueueContextKey,
@@ -975,6 +990,7 @@ export function AppShell({
   documents?: TabState;
   /** 주소가 가리킨 문서에 닿지 못했다 (`SEC-ACL-006` AC-6). 문서 영역이 그린다. */
   missingDocument?: boolean;
+  requestedDocumentState?: DocumentReadState;
   favorites?: readonly Favorite[];
   treeState?: ShellPanelState;
   favoritesState?: ShellPanelState;
@@ -982,6 +998,14 @@ export function AppShell({
   bodies?: Readonly<Record<string, string>>;
   /** 노드 ID → 그 본문의 기준 해시. */
   hashes?: Readonly<Record<string, string>>;
+  documentReadStates?: Readonly<Record<string, DocumentReadState>>;
+  registerDraft?: (surface: LiveDraftRegistration) => () => void;
+  beforeDraftUnmount?: (surface: LiveDraftRegistration) => void;
+  allowsProtected?: (owner: AuthOwner) => boolean;
+  authorizationPhase?: AuthPhase;
+  authorizationEpoch?: number;
+  documentRecovery?: Readonly<Record<string, readonly RecoveryRecord[]>>;
+  onDiscardDocumentRecovery?: (nodeId: string, recordId: string) => void;
   /** 검색 결과. 서버가 이미 거르고 발췌까지 만든 것이다 (`FR-SHELL-013`). */
   searchResults?: readonly SearchDocumentBody[];
   searchState?: SearchPanelState;
@@ -1099,15 +1123,16 @@ export function AppShell({
   onPasswordChange?: (input: {
     current: string;
     next: string;
-  }) => Promise<string | undefined | void>;
+  }, lifecycle: { dispatched: () => void }) => Promise<string | undefined | void>;
+  authHandoffOpen?: boolean;
   workspaceManagement?: {
     managed: WorkspaceQueryState;
     all: WorkspaceQueryState;
     administrators: WorkspaceAdministratorState;
     selectedId?: string;
     onSelect: (workspaceId: string) => void;
-    onRename: (workspaceId: string, name: string) => Promise<WorkspaceRenameResult>;
-    onCreate?: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateBody>;
+    onRename: (workspaceId: string, name: string) => Promise<WorkspaceRenameOutcome>;
+    onCreate?: (input: WorkspaceCreateInput) => Promise<WorkspaceCreateOutcome>;
     onLoadCreationWarnings?: (input: Pick<WorkspaceCreateInput, 'administratorId' | 'defaultGroupLevel'>) => Promise<readonly GrantWarning[]>;
     onLoadAdminGrantPreview?: (workspaceId: string, principalId: string) => Promise<WorkspaceAdminGrantPreview>;
     onGrantAdministrator?: (workspaceId: string, principalId: string, previewToken: string) => Promise<WorkspaceAdminGrantReceipt>;
@@ -1185,11 +1210,16 @@ export function AppShell({
     const rememberKey = (event: KeyboardEvent) => {
       if ((event.key === 'Enter' || event.key === ' ') && event.target instanceof HTMLElement) replaceInvoker.current = event.target.closest<HTMLElement>('button, [href], [tabindex]');
     };
+    const rememberFocus = (event: FocusEvent) => {
+      if (event.target instanceof HTMLElement) replaceInvoker.current = event.target.closest<HTMLElement>('button, [href], [tabindex], input, textarea, select');
+    };
     document.addEventListener('pointerdown', rememberPointer, true);
     document.addEventListener('keydown', rememberKey, true);
+    document.addEventListener('focusin', rememberFocus, true);
     return () => {
       document.removeEventListener('pointerdown', rememberPointer, true);
       document.removeEventListener('keydown', rememberKey, true);
+      document.removeEventListener('focusin', rememberFocus, true);
     };
   }, [confirmReplace]);
   const rightTabTrigger = useRef<HTMLButtonElement>(null);
@@ -1323,6 +1353,7 @@ export function AppShell({
             {...(onLogout === undefined ? {} : { onLogout })}
             {...(onAuthenticationLoss === undefined ? {} : { onAuthenticationLoss })}
             {...(onPasswordChange === undefined ? {} : { onPasswordChange })}
+            handoffOpen={authHandoffOpen}
             userRoster={userRoster}
             groupRoster={groupRoster}
             {...(aclAudit === undefined ? {} : { aclAudit })}
@@ -1516,11 +1547,22 @@ export function AppShell({
           {...(share === undefined ? {} : { share })}
           state={documents}
           missing={missingDocument}
+          {...(requestedDocumentState === undefined ? {} : { requestedState: requestedDocumentState })}
           onState={(next) => onDocuments?.(next)}
           bodies={bodies}
           hashes={hashes}
+          readStates={documentReadStates}
+          {...(registerDraft === undefined ? {} : { registerDraft })}
+          {...(beforeDraftUnmount === undefined ? {} : { beforeDraftUnmount })}
+          {...(allowsProtected === undefined ? {} : { allowsProtected })}
+          authorizationPhase={authorizationPhase}
+          authorizationEpoch={authorizationEpoch}
+          {...(tokenOwner === undefined ? {} : { draftOwner: tokenOwner })}
+          recovery={documentRecovery}
+          {...(onDiscardDocumentRecovery === undefined ? {} : { onDiscardRecovery: onDiscardDocumentRecovery })}
           {...(onSaveState === undefined ? {} : { onSaveState })}
           {...(onSaved === undefined ? {} : { onSaved })}
+          {...(onAuthenticationLoss === undefined ? {} : { onAuthenticationLoss })}
           onTagClick={searchForTag}
           onOpenWikiLink={openByName}
         />

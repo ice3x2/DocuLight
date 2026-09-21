@@ -1,0 +1,3 @@
+RED command: npx vitest run test/issue76-app-states.test.tsx -t "authoritative tree omission"
+Observed: 1 failed; neutral not-found appeared but data-document-surface remained mounted and no recovery record rendered.
+GREEN: 1 passed, 31 skipped. Exact local bytes are recovered after authoritative tree omission.

@@ -39,7 +39,7 @@ const client = () => {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false, staleTime: Number.POSITIVE_INFINITY } },
   });
-  queryClient.setQueryData(['identity'], { userId: 'user-a' });
+  queryClient.setQueryData(['identity'], { kind: 'ok', userId: 'user-a' });
   queryClient.setQueryData(['workspaces'], [{ id: 'ws-1', name: '기획팀', adminless: false }]);
   return queryClient;
 };
@@ -151,17 +151,18 @@ describe('GitHub #70 — 실제 App 감사 읽기 세대와 상태 어댑터', (
     const modal = await openAudit(user);
     await waitFor(() => expect(auditCall).toBe(1));
 
-    act(() => queryClient.setQueryData(['identity'], { userId: 'user-b' }));
+    act(() => queryClient.setQueryData(['identity'], { kind: 'ok', userId: 'user-b' }));
     await waitFor(() => expect(auditCall).toBe(2));
+    const replacementModal = await openAudit(user);
     auditRequests[1]!.resolve(json(audit('account-b-row', 'new.operation')));
     queueRequests[1]!.resolve(json(queue(1)));
-    await within(modal).findByRole('button', { name: /new\.operation/ });
+    await within(replacementModal).findByRole('button', { name: /new\.operation/ });
     auditRequests[0]!.resolve(json(audit('account-a-row', 'old.operation')));
     queueRequests[0]!.resolve(json(queue(7)));
     await act(async () => { await Promise.all([auditRequests[0]!.promise, queueRequests[0]!.promise]); });
 
-    expect(within(modal).queryByRole('button', { name: /old\.operation/ })).toBeNull();
-    expect(within(modal).getByTestId('queue-badge').textContent).toBe('1');
+    expect(within(replacementModal).queryByRole('button', { name: /old\.operation/ })).toBeNull();
+    expect(within(replacementModal).getByTestId('queue-badge').textContent).toBe('1');
   });
 
   it('캐시 데이터가 있어도 실패한 authoritative 재읽기를 오류로 보인다', async () => {
@@ -239,11 +240,12 @@ describe('GitHub #70 — 실제 App 감사 읽기 세대와 상태 어댑터', (
     act(() => queryClient.setQueryData(['session'], session));
     await waitFor(() => expect(within(modal).queryByRole('tab', { name: '감사 로그' })).toBeNull());
     act(() => {
-      queryClient.setQueryData(['identity'], { userId: 'user-b' });
+      queryClient.setQueryData(['identity'], { kind: 'ok', userId: 'user-b' });
       session = { superuser: false, workspaceCount: 1, adminWorkspaceCount: 1 };
       queryClient.setQueryData(['session'], session);
     });
-    const auditTab = await within(modal).findByRole('tab', { name: '감사 로그' });
+    const replacementModal = await openAudit(user);
+    const auditTab = await within(replacementModal).findByRole('tab', { name: '감사 로그' });
     expect(within(auditTab).getByTestId('queue-badge').textContent).toBe('…');
     expect(queueCalls).toBe(2);
   });

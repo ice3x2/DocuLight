@@ -35,6 +35,7 @@ beforeEach(() => {
       ? json({ superuser: false, workspaceCount: 1, adminWorkspaceCount: 0 })
       : json(null, 401),
   );
+  routes.set('/api/auth/me', () => json({ userId: 'user-a' }));
   routes.set('/api/tree', () =>
     json([{ workspace: { id: 'ws-1', name: '기획팀' }, visibility: 'full', roots: [] }]),
   );
@@ -136,7 +137,7 @@ describe('수용 기준 14 — 로그아웃 (R145) · 비밀번호 변경 (R144)
   it('SEC-AUTH-019 AC-1 · AC-2: 로그아웃하면 서버로 나가고 인증 상태가 풀린다', async () => {
     routes.set('/api/auth/logout', () => {
       로그인됨 = false;
-      return json(null, 204);
+      return new Response(null, { status: 204 });
     });
     const user = await 로그인한채로연다();
 
@@ -153,7 +154,7 @@ describe('수용 기준 14 — 로그아웃 (R145) · 비밀번호 변경 (R144)
     routes.set('/api/auth/password', () => {
       // 서버가 그 계정의 모든 세션을 끊는다 — 이 세션도 함께 끊긴다.
       로그인됨 = false;
-      return json(null, 204);
+      return new Response(null, { status: 204 });
     });
     const user = await 로그인한채로연다();
 
@@ -206,7 +207,6 @@ describe('수용 기준 14 — 로그아웃 (R145) · 비밀번호 변경 (R144)
 
   it.each([
     ['rule-less 400', 400, undefined],
-    ['401', 401, undefined],
     ['429', 429, undefined],
     ['500', 500, undefined],
     ['unknown rule', 400, 'future-rule'],
@@ -225,7 +225,18 @@ describe('수용 기준 14 — 로그아웃 (R145) · 비밀번호 변경 (R144)
     expect(screen.getByRole('dialog', { name: '설정' })).toBeDefined();
   });
 
-  it('전송 자체가 거부되면 App은 성공 후 세션 갱신을 하지 않고 폼에 일반 오류를 남긴다', async () => {
+  it('401은 성공을 주장하지 않고 즉시 인증 종료로 전환한다', async () => {
+    routes.set('/api/auth/password', () => json({}, 401));
+    const user = await 로그인한채로연다();
+    await user.click(screen.getByRole('button', { name: '비밀번호 변경' }));
+    await user.type(await screen.findByLabelText('현재 비밀번호'), '현재-값');
+    await user.type(screen.getByLabelText('새 비밀번호'), '새-값');
+    await user.click(screen.getByRole('button', { name: '비밀번호 바꾸기' }));
+    expect(await screen.findByRole('main', { name: '로그인' })).toBeDefined();
+    expect(screen.queryByText('비밀번호가 변경되었습니다. 다시 로그인하세요.')).toBeNull();
+  });
+
+  it('전송 자체가 거부되면 App은 세션을 재확인하고 폼에 일반 오류를 남긴다', async () => {
     let sessionReads = 0;
     routes.set('/api/session', () => {
       sessionReads += 1;
@@ -246,7 +257,7 @@ describe('수용 기준 14 — 로그아웃 (R145) · 비밀번호 변경 (R144)
       '비밀번호를 바꾸지 못했습니다. 잠시 후 다시 시도하십시오.',
     );
     expect(sent.filter(({ path }) => path === '/api/auth/password')).toHaveLength(1);
-    expect(sessionReads).toBe(readsBeforeSubmit);
+    expect(sessionReads).toBe(readsBeforeSubmit + 1);
     expect(screen.getByRole('dialog', { name: '설정' })).toBeDefined();
   });
 

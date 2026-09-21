@@ -1,0 +1,2 @@
+RED: mounted DocumentRecoveryRecords did not prevent a beforeunload event while unresolved local bytes existed.
+GREEN: the shared recovery surface installs and removes beforeunload according to unresolved record count.

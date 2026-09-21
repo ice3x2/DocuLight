@@ -1,0 +1,940 @@
+﻿node.exe : npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\beom\AppData\Roaming\n ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn Unknow...version of npm.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test
+> vitest run --run test/issue76-app-states.test.tsx
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0-wt-issue76/packages/web
+
+stderr | test/issue76-app-states.test.tsx
+Warning: KaTeX doesn't work in quirks mode. Make sure your website has a suitable doctype.
+
+ ❯ test/issue76-app-states.test.tsx (11 tests | 10 failed) 5169ms
+     × 500 terminal failure shows a retryable request error instead of loading/login/install 1040ms
+     × 429 terminal failure shows a retryable request error instead of loading/login/install 1012ms
+     × bare 503 terminal failure shows a retryable request error instead of loading/login/install 1017ms
+     × transport rejection terminal failure shows a retryable request error instead of loading/login/install 1013ms
+     × only authoritative uninstalled 503 opens installation 1015ms
+     × no route and no tabs explains how to select a document 2ms
+     × an unavailable initial route has the indistinguishable exact copy and no action 3ms
+     × does not mount the document surface while the initial body is pending 21ms
+     × shows a safe exact-read retry for a failed initial body request 10ms
+     × shows the same unavailable copy for an initial body 404 6ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/issue76-app-states.test.tsx > IR-SHELL-009 AC-5 session bootstrap precedence > 500 terminal failure shows a retryable request error instead of loading/login/install
+ FAIL  test/issue76-app-states.test.tsx > IR-SHELL-009 AC-5 session bootstrap precedence > 429 terminal failure shows a retryable request error instead of loading/login/install
+ FAIL  test/issue76-app-states.test.tsx > IR-SHELL-009 AC-5 session bootstrap precedence > bare 503 terminal failure shows a retryable request error instead of loading/login/install
+ FAIL  test/issue76-app-states.test.tsx > IR-SHELL-009 AC-5 session bootstrap precedence > transport rejection terminal failure shows a retryable request error instead of loading/login/install
+TestingLibraryElementError: Unable to find role="alert" and name "애플리케이션 오류"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33maria-label[39m=[32m"애플리케이션 불러오는 중"[39m
+      [33mclass[39m=[32m"dl-loading-state"[39m
+      [33mdata-slot[39m=[32m"loading-state"[39m
+      [33mdata-state[39m=[32m"loading"[39m
+      [33mrole[39m=[32m"status"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mdata-slot[39m=[32m"loading-state-marker"[39m
+      [36m/>[39m
+      [36m<span>[39m
+        [0m애플리케이션 불러오는 중[0m
+      [36m</span>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33maria-label[39m=[32m"애플리케이션 불러오는 중"[39m
+      [33mclass[39m=[32m"dl-loading-state"[39m
+      [33mdata-slot[39m=[32m"loading-state"[39m
+      [33mdata-state[39m=[32m"loading"[39m
+      [33mrole[39m=[32m"status"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mdata-slot[39m=[32m"loading-state-marker"[39m
+      [36m/>[39m
+      [36m<span>[39m
+        [0m애플리케이션 불러오는 중[0m
+      [36m</span>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ test/issue76-app-states.test.tsx:43:32
+     41|     render(<App queryClient={client()} />);
+     42|
+     43|     const alert = await screen.findByRole('alert', { name: '애플리케이션 오류'…
+       |                                ^
+     44|     expect(alert.textContent).toContain('애플리케이션을 불러오지 못했습니다.');
+     45|     expect(alert.textContent).toContain('연결 상태를 확인한 뒤 다시 시도하세요.');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  test/issue76-app-states.test.tsx > IR-SHELL-009 AC-5 session bootstrap precedence > only authoritative uninstalled 503 opens installation
+TestingLibraryElementError: Unable to find role="main" and name "설치"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<main[39m
+      [33maria-label[39m=[32m"설치 마법사"[39m
+      [33mdata-pre-auth[39m=[32m"install"[39m
+    [36m>[39m
+      [36m<h1>[39m
+        [0m설치 마법사[0m
+      [36m</h1>[39m
+      [36m<form[39m
+        [33maria-label[39m=[32m"설치 마법사"[39m
+        [33mdata-install-step[39m=[32m"1"[39m
+        [33mdata-install-wizard[39m=[32m"true"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"설치 진행 1/4"[39m
+          [33mdata-install-progress[39m=[32m"true"[39m
+        [36m>[39m
+          [0m1[0m
+          [0m/4[0m
+        [36m</div>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"_r_0_-token-title"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mid[39m=[32m"_r_0_-token-title"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+          [36m>[39m
+            [0m설치 토큰[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"dl-field"[39m
+            [33mdata-slot[39m=[32m"field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mfor[39m=[32m"field-_r_1_"[39m
+            [36m>[39m
+              [0m설치 토큰[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33maria-describedby[39m=[32m"field-_r_1_-description"[39m
+              [33mautocapitalize[39m=[32m"none"[39m
+              [33mautocomplete[39m=[32m"off"[39m
+              [33mclass[39m=[32m"dl-input"[39m
+              [33mdata-slot[39m=[32m"input"[39m
+              [33mid[39m=[32m"field-_r_1_"[39m
+              [33mname[39m=[32m"installToken"[39m
+              [33mspellcheck[39m=[32m"false"[39m
+              [33mtype[39m=[32m"password"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mdata-slot[39m=[32m"field-description"[39m
+              [33mid[39m=[32m"field-_r_1_-description"[39m
+            [36m>[39m
+              [0m서버 콘솔에 출력된 설치 토큰을 입력하세요. 토큰은 출력 후 30분 동안 유효하며, 정확한 만료 시각은 콘솔에서 확인할 수 있습니다. 분실하거나 만료된 경우 서버를 다시 시작해 새 토큰을 확인하세요.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+        [36m<div[39m
+          [33mdata-install-actions[39m=[32m"true"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"dl-button dl-button-primary dl-control-auth"[39m
+            [33mdata-size[39m=[32m"auth"[39m
+            [33mdata-slot[39m=[32m"button"[39m
+            [33mdata-variant[39m=[32m"primary"[39m
+            [33mtype[39m=[32m"submit"[39m
+          [36m>[39m
+            [0m다음[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</form>[39m
+    [36m</main>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<main[39m
+      [33maria-label[39m=[32m"설치 마법사"[39m
+      [33mdata-pre-auth[39m=[32m"install"[39m
+    [36m>[39m
+      [36m<h1>[39m
+        [0m설치 마법사[0m
+      [36m</h1>[39m
+      [36m<form[39m
+        [33maria-label[39m=[32m"설치 마법사"[39m
+        [33mdata-install-step[39m=[32m"1"[39m
+        [33mdata-install-wizard[39m=[32m"true"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"설치 진행 1/4"[39m
+          [33mdata-install-progress[39m=[32m"true"[39m
+        [36m>[39m
+          [0m1[0m
+          [0m/4[0m
+        [36m</div>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"_r_0_-token-title"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mid[39m=[32m"_r_0_-token-title"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+          [36m>[39m
+            [0m설치 토큰[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"dl-field"[39m
+            [33mdata-slot[39m=[32m"field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mfor[39m=[32m"field-_r_1_"[39m
+            [36m>[39m
+              [0m설치 토큰[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33maria-describedby[39m=[32m"field-_r_1_-description"[39m
+              [33mautocapitalize[39m=[32m"none"[39m
+              [33mautocomplete[39m=[32m"off"[39m
+              [33mclass[39m=[32m"dl-input"[39m
+              [33mdata-slot[39m=[32m"input"[39m
+              [33mid[39m=[32m"field-_r_1_"[39m
+              [33mname[39m=[32m"installToken"[39m
+              [33mspellcheck[39m=[32m"false"[39m
+              [33mtype[39m=[32m"password"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mdata-slot[39m=[32m"field-description"[39m
+              [33mid[39m=[32m"field-_r_1_-description"[39m
+            [36m>[39m
+              [0m서버 콘솔에 출력된 설치 토큰을 입력하세요. 토큰은 출력 후 30분 동안 유효하며, 정확한 만료 시각은 콘솔에서 확인할 수 있습니다. 분실하거나 만료된 경우 서버를 다시 시작해 새 토큰을 확인하세요.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+        [36m<div[39m
+          [33mdata-install-actions[39m=[32m"true"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"dl-button dl-button-primary dl-control-auth"[39m
+            [33mdata-size[39m=[32m"auth"[39m
+            [33mdata-slot[39m=[32m"button"[39m
+            [33mdata-variant[39m=[32m"primary"[39m
+            [33mtype[39m=[32m"submit"[39m
+          [36m>[39m
+            [0m다음[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</form>[39m
+    [36m</main>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ test/issue76-app-states.test.tsx:57:25
+     55|     routes.set('/api/session', () => json({ state: 'uninstalled' }, 50…
+     56|     render(<App queryClient={client()} />);
+     57|     expect(await screen.findByRole('main', { name: '설치' })).toBeDefine…
+       |                         ^
+     58|     expect(screen.queryByRole('alert', { name: '애플리케이션 오류' })).toBeNul…
+     59|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  test/issue76-app-states.test.tsx > IR-SHELL-009 AC-5 document state ownership > no route and no tabs explains how to select a document
+TestingLibraryElementError: Unable to find an element with the text: 문서를 선택하세요.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher mor
+e flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mdata-empty[39m=[32m"documents"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue76-app-states.test.tsx:82:19
+     80|   it('no route and no tabs explains how to select a document', () => {
+     81|     render(<DocumentArea state={{ tabs: [], activeId: null }} onState=…
+     82|     expect(screen.getByText('문서를 선택하세요.')).toBeDefined();
+       |                   ^
+     83|     expect(screen.getByText('왼쪽 목록에서 문서를 열 수 있습니다.')).toBeDefined();
+     84|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  test/issue76-app-states.test.tsx > IR-SHELL-009 AC-5 document state ownership > an unavailable initial route has the indistinguishable exact copy and no action
+AssertionError: expected null not to be null
+ ❯ test/issue76-app-states.test.tsx:89:62
+     87|     render(<DocumentArea state={{ tabs: [], activeId: null }} onState=…
+     88|     const missing = screen.getByText('문서를 찾을 수 없습니다');
+     89|     expect(missing.closest('[data-slot="empty-state"]')).not.toBeNull(…
+       |                                                              ^
+     90|     expect(screen.queryByRole('button')).toBeNull();
+     91|     expect(document.body.textContent).not.toContain('권한');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  test/issue76-app-states.test.tsx > IR-SHELL-009 AC-5 document state ownership > does not mount the document surface while the initial body is pending
+TestingLibraryElementError: Unable to find an accessible element with the role "status" and name "문서를 불러오는 중입니다."
+
+Here are the accessible roles:
+
+  tablist:
+
+  Name "열린 문서":
+  [36m<div[39m
+    [33maria-label[39m=[32m"열린 문서"[39m
+    [33maria-orientation[39m=[32m"horizontal"[39m
+    [33mdata-document-tab-strip[39m=[32m""[39m
+    [33mdata-orientation[39m=[32m"horizontal"[39m
+    [33mrole[39m=[32m"tablist"[39m
+    [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  tab:
+
+  Name "회의록.md":
+  [36m<button[39m
+    [33maria-controls[39m=[32m"radix-_r_2_-content-n1"[39m
+    [33maria-selected[39m=[32m"true"[39m
+    [33mdata-orientation[39m=[32m"horizontal"[39m
+    [33mdata-radix-collection-item[39m=[32m""[39m
+    [33mdata-state[39m=[32m"active"[39m
+    [33mid[39m=[32m"radix-_r_2_-trigger-n1"[39m
+    [33mrole[39m=[32m"tab"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "문서 헤더":
+  [36m<header[39m
+    [33maria-label[39m=[32m"문서 헤더"[39m
+    [33mdata-document-header[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  navigation:
+
+  Name "브레드크럼":
+  [36m<nav[39m
+    [33maria-label[39m=[32m"브레드크럼"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  status:
+
+  Name "":
+  [36m<span[39m
+    [33mrole[39m=[32m"status"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "회의록.md 문서 메뉴":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-haspopup[39m=[32m"menu"[39m
+    [33maria-label[39m=[32m"회의록.md 문서 메뉴"[39m
+    [33mdata-state[39m=[32m"closed"[39m
+    [33mid[39m=[32m"radix-_r_4_"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "회의록.md 닫기":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "보기":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "편집":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  tabpanel:
+
+  Name "회의록.md":
+  [36m<div[39m
+    [33maria-labelledby[39m=[32m"radix-_r_2_-trigger-n1"[39m
+    [33mdata-document-content[39m=[32m""[39m
+    [33mdata-orientation[39m=[32m"horizontal"[39m
+    [33mdata-state[39m=[32m"active"[39m
+    [33mid[39m=[32m"radix-_r_2_-content-n1"[39m
+    [33mrole[39m=[32m"tabpanel"[39m
+    [33mstyle[39m=[32m"animation-duration: 0s;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  group:
+
+  Name "모드":
+  [36m<div[39m
+    [33maria-label[39m=[32m"모드"[39m
+    [33mrole[39m=[32m"group"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  region:
+
+  Name "읽기":
+  [36m<div[39m
+    [33maria-label[39m=[32m"읽기"[39m
+    [33mdata-document-body[39m=[32m"true"[39m
+    [33mdata-node[39m=[32m"n1"[39m
+    [33mrole[39m=[32m"region"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mdata-document-area[39m=[32m""[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mdata-document-tabs[39m=[32m""[39m
+        [33mdata-orientation[39m=[32m"horizontal"[39m
+        [33mdir[39m=[32m"ltr"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"열린 문서"[39m
+          [33maria-orientation[39m=[32m"horizontal"[39m
+          [33mdata-document-tab-strip[39m=[32m""[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mrole[39m=[32m"tablist"[39m
+          [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+          [33mtabindex[39m=[32m"0"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"radix-_r_2_-content-n1"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-radix-collection-item[39m=[32m""[39m
+            [33mdata-state[39m=[32m"active"[39m
+            [33mid[39m=[32m"radix-_r_2_-trigger-n1"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m회의록.md[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<header[39m
+          [33maria-label[39m=[32m"문서 헤더"[39m
+          [33mdata-document-header[39m=[32m""[39m
+        [36m>[39m
+          [36m<nav[39m
+            [33maria-label[39m=[32m"브레드크럼"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [0m기획팀 / 회의록.md[0m
+          [36m</nav>[39m
+          [36m<span[39m
+            [33mrole[39m=[32m"status"[39m
+          [36m>[39m
+            [0m저장됨[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-expanded[39m=[32m"false"[39m
+            [33maria-haspopup[39m=[32m"menu"[39m
+            [33maria-label[39m=[32m"회의록.md 문서 메뉴"[39m
+            [33mdata-state[39m=[32m"closed"[39m
+            [33mid[39m=[32m"radix-_r_4_"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m⋯[0m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"radix-_r_2_-trigger-n1"[39m
+          [33mdata-document-content[39m=[32m""[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdata-state[39m=[32m"active"[39m
+          [33mid[39m=[32m"radix-_r_2_-content-n1"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+          [33mstyle[39m=[32m"animation-duration: 0s;"[39m
+          [33mtabindex[39m=[32m"0"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m회의록.md[0m
+            [0m 닫기[0m
+          [36m</button>[39m
+          [36m<div[39m
+            [33mdata-document-surface[39m=[32m"true"[39m
+            [33mdata-editor-mode[39m=[32m"read"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"모드"[39m
+              [33mrole[39m=[32m"group"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"true"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m보기[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m편집[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"읽기"[39m
+              [33mdata-document-body[39m=[32m"true"[39m
+              [33mdata-node[39m=[32m"n1"[39m
+              [33mrole[39m=[32m"region"[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue76-app-states.test.tsx:96:19
+     94|   it('does not mount the document surface while the initial body is pe…
+     95|     area({ state: 'loading' });
+     96|     expect(screen.getByRole('status', { name: '문서를 불러오는 중입니다.' })).toB…
+       |                   ^
+     97|     expect(document.querySelector('[data-document-surface]')).toBeNull…
+     98|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  test/issue76-app-states.test.tsx > IR-SHELL-009 AC-5 document state ownership > shows a safe exact-read retry for a failed initial body request
+TestingLibraryElementError: Unable to find an accessible element with the role "alert" and name "문서 오류"
+
+Here are the accessible roles:
+
+  tablist:
+
+  Name "열린 문서":
+  [36m<div[39m
+    [33maria-label[39m=[32m"열린 문서"[39m
+    [33maria-orientation[39m=[32m"horizontal"[39m
+    [33mdata-document-tab-strip[39m=[32m""[39m
+    [33mdata-orientation[39m=[32m"horizontal"[39m
+    [33mrole[39m=[32m"tablist"[39m
+    [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  tab:
+
+  Name "회의록.md":
+  [36m<button[39m
+    [33maria-controls[39m=[32m"radix-_r_a_-content-n1"[39m
+    [33maria-selected[39m=[32m"true"[39m
+    [33mdata-orientation[39m=[32m"horizontal"[39m
+    [33mdata-radix-collection-item[39m=[32m""[39m
+    [33mdata-state[39m=[32m"active"[39m
+    [33mid[39m=[32m"radix-_r_a_-trigger-n1"[39m
+    [33mrole[39m=[32m"tab"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "문서 헤더":
+  [36m<header[39m
+    [33maria-label[39m=[32m"문서 헤더"[39m
+    [33mdata-document-header[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  navigation:
+
+  Name "브레드크럼":
+  [36m<nav[39m
+    [33maria-label[39m=[32m"브레드크럼"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  status:
+
+  Name "":
+  [36m<span[39m
+    [33mrole[39m=[32m"status"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "회의록.md 문서 메뉴":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-haspopup[39m=[32m"menu"[39m
+    [33maria-label[39m=[32m"회의록.md 문서 메뉴"[39m
+    [33mdata-state[39m=[32m"closed"[39m
+    [33mid[39m=[32m"radix-_r_c_"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "회의록.md 닫기":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "보기":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "편집":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  tabpanel:
+
+  Name "회의록.md":
+  [36m<div[39m
+    [33maria-labelledby[39m=[32m"radix-_r_a_-trigger-n1"[39m
+    [33mdata-document-content[39m=[32m""[39m
+    [33mdata-orientation[39m=[32m"horizontal"[39m
+    [33mdata-state[39m=[32m"active"[39m
+    [33mid[39m=[32m"radix-_r_a_-content-n1"[39m
+    [33mrole[39m=[32m"tabpanel"[39m
+    [33mstyle[39m=[32m"animation-duration: 0s;"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  group:
+
+  Name "모드":
+  [36m<div[39m
+    [33maria-label[39m=[32m"모드"[39m
+    [33mrole[39m=[32m"group"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  region:
+
+  Name "읽기":
+  [36m<div[39m
+    [33maria-label[39m=[32m"읽기"[39m
+    [33mdata-document-body[39m=[32m"true"[39m
+    [33mdata-node[39m=[32m"n1"[39m
+    [33mrole[39m=[32m"region"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mdata-document-area[39m=[32m""[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mdata-document-tabs[39m=[32m""[39m
+        [33mdata-orientation[39m=[32m"horizontal"[39m
+        [33mdir[39m=[32m"ltr"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"열린 문서"[39m
+          [33maria-orientation[39m=[32m"horizontal"[39m
+          [33mdata-document-tab-strip[39m=[32m""[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mrole[39m=[32m"tablist"[39m
+          [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+          [33mtabindex[39m=[32m"0"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"radix-_r_a_-content-n1"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-radix-collection-item[39m=[32m""[39m
+            [33mdata-state[39m=[32m"active"[39m
+            [33mid[39m=[32m"radix-_r_a_-trigger-n1"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m회의록.md[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<header[39m
+          [33maria-label[39m=[32m"문서 헤더"[39m
+          [33mdata-document-header[39m=[32m""[39m
+        [36m>[39m
+          [36m<nav[39m
+            [33maria-label[39m=[32m"브레드크럼"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [0m기획팀 / 회의록.md[0m
+          [36m</nav>[39m
+          [36m<span[39m
+            [33mrole[39m=[32m"status"[39m
+          [36m>[39m
+            [0m저장됨[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-expanded[39m=[32m"false"[39m
+            [33maria-haspopup[39m=[32m"menu"[39m
+            [33maria-label[39m=[32m"회의록.md 문서 메뉴"[39m
+            [33mdata-state[39m=[32m"closed"[39m
+            [33mid[39m=[32m"radix-_r_c_"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m⋯[0m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"radix-_r_a_-trigger-n1"[39m
+          [33mdata-document-content[39m=[32m""[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdata-state[39m=[32m"active"[39m
+          [33mid[39m=[32m"radix-_r_a_-content-n1"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+          [33mstyle[39m=[32m"animation-duration: 0s;"[39m
+          [33mtabindex[39m=[32m"0"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m회의록.md[0m
+            [0m 닫기[0m
+          [36m</button>[39m
+          [36m<div[39m
+            [33mdata-document-surface[39m=[32m"true"[39m
+            [33mdata-editor-mode[39m=[32m"read"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"모드"[39m
+              [33mrole[39m=[32m"group"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"true"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m보기[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m편집[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"읽기"[39m
+              [33mdata-document-body[39m=[32m"true"[39m
+              [33mdata-node[39m=[32m"n1"[39m
+              [33mrole[39m=[32m"region"[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue76-app-states.test.tsx:103:26
+    101|     const retry = vi.fn();
+    102|     area({ state: 'error', onRetry: retry });
+    103|     const alert = screen.getByRole('alert', { name: '문서 오류' });
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 1 passed (11)
+   Start at  13:00:06
+   Duration  7.15s (transform 735ms, setup 21ms, import 1.44s, tests 5.17s, environment 310ms)
+
+       |                          ^
+    104|     expect(alert.textContent).toContain('문서를 불러오지 못했습니다.');
+    105|     expect(alert.textContent).toContain('연결 상태를 확인한 뒤 다시 시도하세요.');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  test/issue76-app-states.test.tsx > IR-SHELL-009 AC-5 document state ownership > shows the same unavailable copy for an initial body 404
+TestingLibraryElementError: Unable to find an element with the text: 문서를 찾을 수 없습니다. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher 
+more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mdata-document-area[39m=[32m""[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mdata-document-tabs[39m=[32m""[39m
+        [33mdata-orientation[39m=[32m"horizontal"[39m
+        [33mdir[39m=[32m"ltr"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"열린 문서"[39m
+          [33maria-orientation[39m=[32m"horizontal"[39m
+          [33mdata-document-tab-strip[39m=[32m""[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mrole[39m=[32m"tablist"[39m
+          [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+          [33mtabindex[39m=[32m"0"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"radix-_r_i_-content-n1"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mdata-orientation[39m=[32m"horizontal"[39m
+            [33mdata-radix-collection-item[39m=[32m""[39m
+            [33mdata-state[39m=[32m"active"[39m
+            [33mid[39m=[32m"radix-_r_i_-trigger-n1"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m회의록.md[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<header[39m
+          [33maria-label[39m=[32m"문서 헤더"[39m
+          [33mdata-document-header[39m=[32m""[39m
+        [36m>[39m
+          [36m<nav[39m
+            [33maria-label[39m=[32m"브레드크럼"[39m
+            [33mtabindex[39m=[32m"0"[39m
+          [36m>[39m
+            [0m기획팀 / 회의록.md[0m
+          [36m</nav>[39m
+          [36m<span[39m
+            [33mrole[39m=[32m"status"[39m
+          [36m>[39m
+            [0m저장됨[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-expanded[39m=[32m"false"[39m
+            [33maria-haspopup[39m=[32m"menu"[39m
+            [33maria-label[39m=[32m"회의록.md 문서 메뉴"[39m
+            [33mdata-state[39m=[32m"closed"[39m
+            [33mid[39m=[32m"radix-_r_k_"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m⋯[0m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"radix-_r_i_-trigger-n1"[39m
+          [33mdata-document-content[39m=[32m""[39m
+          [33mdata-orientation[39m=[32m"horizontal"[39m
+          [33mdata-state[39m=[32m"active"[39m
+          [33mid[39m=[32m"radix-_r_i_-content-n1"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+          [33mstyle[39m=[32m"animation-duration: 0s;"[39m
+          [33mtabindex[39m=[32m"0"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m회의록.md[0m
+            [0m 닫기[0m
+          [36m</button>[39m
+          [36m<div[39m
+            [33mdata-document-surface[39m=[32m"true"[39m
+            [33mdata-editor-mode[39m=[32m"read"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"모드"[39m
+              [33mrole[39m=[32m"group"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"true"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m보기[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m편집[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"읽기"[39m
+              [33mdata-document-body[39m=[32m"true"[39m
+              [33mdata-node[39m=[32m"n1"[39m
+              [33mrole[39m=[32m"region"[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue76-app-states.test.tsx:113:19
+    111|   it('shows the same unavailable copy for an initial body 404', () => {
+    112|     area({ state: 'missing' });
+    113|     expect(screen.getByText('문서를 찾을 수 없습니다')).toBeDefined();
+       |                   ^
+    114|     expect(document.querySelector('[data-document-surface]')).toBeNull…
+    115|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Work\git\DocuLight2.0-wt-issue76\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0-wt-issue76\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --run test/issue76-app-states.test.tsx
+

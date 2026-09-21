@@ -34,4 +34,4 @@ export {
 
 // vendor 재수출 — 소비자가 vendor 경로를 직접 알 필요가 없게 한다.
 // 자체 래퍼(src/react/)로 교체되면 이 줄이 사라진다.
-export { AtomicCodeMirrorEditor } from './vendor/atomic-editor/index';
+export { AtomicCodeMirrorEditor, type AtomicCodeMirrorEditorHandle } from './vendor/atomic-editor/index';

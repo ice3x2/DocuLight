@@ -92,6 +92,7 @@ describe('IR-AUDIT-002 — 미해소 건수 배지', () => {
       });
     const routes = new Map<string, () => Response>([
       ['/api/session', () => json({ superuser: true, workspaceCount: 1, adminWorkspaceCount: 1 })],
+      ['/api/auth/me', () => json({ userId: 'user-a' })],
       ['/api/tree', () => json([])],
       ['/api/audit-log', () => json(view)],
       ['/api/reconciliation-queue', () => json(body)],

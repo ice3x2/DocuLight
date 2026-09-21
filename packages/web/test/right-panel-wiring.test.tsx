@@ -14,7 +14,9 @@ it('실제 links/tags query 오류가 stale 성공 행보다 우선하고 실제
   const fetcher = vi.fn((input: string | URL | Request) => {
     const url = String(input);
     if (url.endsWith('/api/session')) return json({ superuser: false, workspaceCount: 1, adminWorkspaceCount: 0 });
+    if (url.endsWith('/api/auth/me')) return json({ userId: 'user-a' });
     if (url.endsWith('/api/tree')) return json([{ workspace: { id: 'ws', name: '작업공간' }, visibility: 'full', roots: [{ id: 'active', name: '현재.md', kind: 'file', visibility: 'full', level: 'edit', parentLevel: 'edit', children: [] }] }]);
+    if (url.endsWith('/api/documents/active')) return json({ body: '# 현재', revision: 'rev-1' });
     if (url.includes('/documents/active/links') || url.includes('/tags')) return json({ message: 'internal secret' }, 500);
     return json(null, 404);
   });

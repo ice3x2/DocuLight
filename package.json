@@ -17,7 +17,9 @@
     "test:issue87:red-evidence": "node packages/web/test/issue87-red-evidence-runner.mjs",
     "build": "npm run build --workspaces --if-present",
     "dev": "npm run dev --workspace @doculight/web",
-    "dev:all": "node scripts/dev.mjs"
+    "dev:all": "node scripts/dev.mjs",
+    "test:issue76:product-isolation": "node packages/web/test/issue76-product-evidence-isolation.mjs",
+    "test:issue76:capture-evidence": "node packages/web/test/issue76-green-evidence-capture.mjs"
   },
   "devDependencies": {
     "happy-dom": "^20.10.6"

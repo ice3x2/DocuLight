@@ -250,16 +250,19 @@ describe('IR-SHELL-007 AC-4 — DB 저장 상태와 복원', () => {
       personalAttempts += 1;
       return json({ theme: 'dark' });
     });
-    const user = await openAppearanceWhileLoading();
+    const user = userEvent.setup();
+    render(<App />);
 
-    const select = screen.getByLabelText('테마');
-    expect(select).toHaveProperty('disabled', true);
-    expect(screen.getByRole('alert').textContent).toContain('테마 설정을 불러오지 못했습니다.');
+    expect((await screen.findByRole('alert', { name: '로그인 계정 확인 오류' })).textContent).toContain('로그인 계정을 확인하지 못했습니다.');
+    expect(document.querySelector('[data-shell="root"]')).toBeNull();
     expect(personalAttempts).toBe(0);
 
-    await user.click(screen.getByRole('button', { name: '다시 불러오기' }));
-    expect(screen.getByRole('status').textContent).toBe('테마 설정을 불러오는 중…');
+    await user.click(screen.getByRole('button', { name: '다시 시도' }));
+    expect(screen.getByRole('status').textContent).toBe('로그인 계정 확인 중');
     finishIdentity(json({ userId: 'u1' }));
+    await user.click(await screen.findByRole('button', { name: '설정' }));
+    await user.click(within(await screen.findByRole('dialog', { name: '설정' })).getByRole('tab', { name: '외모(테마)' }));
+    const select = screen.getByLabelText('테마');
     await waitFor(() => expect(select).toHaveProperty('disabled', false));
     expect(select).toHaveProperty('value', 'dark');
     expect(identityAttempts).toBe(2);

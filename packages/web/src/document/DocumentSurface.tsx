@@ -1,5 +1,5 @@
-import { AtomicCodeMirrorEditor, doculightExtensions } from '@doculight/editor';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AtomicCodeMirrorEditor, doculightExtensions, type AtomicCodeMirrorEditorHandle } from '@doculight/editor';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import { fetchWikiTargets, uploadAttachment } from '../api/client.js';
 import { pasteUpload } from '../attachment/upload-contract.js';
@@ -18,6 +18,8 @@ import {
 } from './surface-contract.js';
 import type { SaveState } from './tab-state.js';
 import { useAutosave } from './useAutosave.js';
+import type { AuthOwner, LiveDraftRegistration } from '../auth/auth-boundary.js';
+import type { MergeViewHandle } from './MergeView.js';
 
 export interface OpenFile {
   nodeId: string;
@@ -58,10 +60,12 @@ function ModeToggle({
   file,
   mode,
   onChange,
+  disabled = false,
 }: {
   file: OpenFile;
   mode: Mode;
   onChange: (to: Mode) => void;
+  disabled?: boolean;
 }) {
   if (!isMarkdown(file.name)) return null;
 
@@ -69,11 +73,12 @@ function ModeToggle({
 
   return (
     <div role="group" aria-label="모드">
-      <button type="button" aria-pressed={!isEditing(mode)} onClick={() => onChange('read')}>
+      <button type="button" disabled={disabled} aria-pressed={!isEditing(mode)} onClick={() => onChange('read')}>
         보기
       </button>
       <button
         type="button"
+        disabled={disabled}
         aria-pressed={isEditing(mode)}
         aria-disabled={editable ? undefined : 'true'}
         onClick={() => onChange('live')}
@@ -85,10 +90,10 @@ function ModeToggle({
         // 하위 토글은 편집 계열 안에서만 뜻이 있다 — 읽기 중에 소스로 가는
         // 길을 열면 「읽기」와 「편집」의 경계가 사라진다.
         <>
-          <button type="button" aria-pressed={mode === 'live'} onClick={() => onChange('live')}>
+          <button type="button" disabled={disabled} aria-pressed={mode === 'live'} onClick={() => onChange('live')}>
             라이브 프리뷰
           </button>
-          <button type="button" aria-pressed={mode === 'source'} onClick={() => onChange('source')}>
+          <button type="button" disabled={disabled} aria-pressed={mode === 'source'} onClick={() => onChange('source')}>
             소스
           </button>
         </>
@@ -114,7 +119,12 @@ export function DocumentSurface({
   onTagClick,
   onOpenWikiLink,
   onSaved,
+  onAuthenticationLoss,
   onSaveState,
+  registerDraft,
+  beforeDraftUnmount,
+  draftOwner,
+  allowsProtected,
 }: {
   file: OpenFile;
   initialMode?: Mode;
@@ -141,6 +151,7 @@ export function DocumentSurface({
    * 열었을 때 저장 전 본문이 돌아온다.
    */
   onSaved?: (body: string, hash: string) => void;
+  onAuthenticationLoss?: () => void;
   /**
    * 저장 상태가 바뀌었다.
    *
@@ -149,9 +160,19 @@ export function DocumentSurface({
    * 바깥이 알 수 없어 그대로 교체한다.
    */
   onSaveState?: (state: SaveState) => void;
+  registerDraft?: (surface: LiveDraftRegistration) => () => void;
+  beforeDraftUnmount?: (surface: LiveDraftRegistration) => void;
+  draftOwner?: AuthOwner;
+  allowsProtected?: (owner: AuthOwner) => boolean;
 }) {
   const [mode, setMode] = useState<Mode>(initialMode);
+  const frozen = useRef(false);
+  const [isFrozen, setIsFrozen] = useState(false);
   const surface = surfaceOf(file.name);
+  const ownerAllowsProtected = useCallback(
+    () => !frozen.current && (draftOwner === undefined || allowsProtected === undefined || allowsProtected(draftOwner)),
+    [allowsProtected, draftOwner],
+  );
   /**
    * 첨부 업로드 (`FR-ATTACH-004`).
    *
@@ -160,16 +181,18 @@ export function DocumentSurface({
    */
   const attach = useCallback(
     async (file: File): Promise<string | null> => {
+      if (!ownerAllowsProtected()) return null;
+      const ownerNodeId = fileRef.current.nodeId;
       const allowed = pasteUpload(
-        { nodeId: fileRef.current.nodeId, level: fileRef.current.level },
+        { nodeId: ownerNodeId, level: fileRef.current.level },
         [file],
       );
       if (!allowed.ok) return null;
 
-      const done = await uploadAttachment(fileRef.current.nodeId, file).catch(() => null);
-      return done === null ? null : done.link;
+      const done = await uploadAttachment(ownerNodeId, file).catch(() => null);
+      return done === null || !ownerAllowsProtected() || fileRef.current.nodeId !== ownerNodeId ? null : done.link;
     },
-    [],
+    [ownerAllowsProtected],
   );
 
   /**
@@ -179,11 +202,14 @@ export function DocumentSurface({
    * 멈추고, 그 뒤로는 후보가 다시 뜨지 않는다.
    */
   const suggest = useCallback(
-    (query: string) =>
-      fetchWikiTargets(query)
-        .then((rows) => rows.map((row) => ({ target: row.target, label: row.label, detail: row.detail })))
-        .catch(() => []),
-    [],
+    (query: string) => ownerAllowsProtected()
+      ? fetchWikiTargets(query)
+        .then((rows) => ownerAllowsProtected()
+          ? rows.map((row) => ({ target: row.target, label: row.label, detail: row.detail }))
+          : [])
+        .catch(() => [])
+      : Promise.resolve([]),
+    [ownerAllowsProtected],
   );
 
   // 확장 묶음을 마운트마다 다시 만들면 그때마다 편집기가 재구성된다.
@@ -191,17 +217,22 @@ export function DocumentSurface({
     () =>
       doculightExtensions({
         ...(onTagClick === undefined ? {} : { onTagClick }),
-        ...(onOpenWikiLink === undefined ? {} : { onOpenWikiLink }),
+        ...(onOpenWikiLink === undefined ? {} : { onOpenWikiLink: (target: string) => {
+          if (ownerAllowsProtected()) onOpenWikiLink(target);
+        } }),
         onAttach: attach,
         suggestWikiLinks: suggest,
         // 푸는 규칙은 `wiki-link-resolve` 한 자리다 — 여기서 감싸면
         // 없는 문서와 권한 없는 문서를 가르는 자리가 하나 더 생긴다.
         resolveWikiLink,
       }),
-    [onTagClick, onOpenWikiLink, attach, suggest],
+    [onTagClick, onOpenWikiLink, ownerAllowsProtected, attach, suggest],
   );
 
-  const change = (to: Mode) => setMode((from) => nextMode(from, to, { canEdit: canEditFile(file) }));
+  const change = (to: Mode) => {
+    if (frozen.current) return;
+    setMode((from) => nextMode(from, to, { canEdit: canEditFile(file) }));
+  };
 
   // 업로드 콜백이 파일 정보를 참조하되 그때마다 새로 만들어지지 않게 한다 —
   // 새로 만들면 확장 묶음이 바뀌어 편집기가 재구성되고 편집이 흔들린다.
@@ -219,13 +250,17 @@ export function DocumentSurface({
       // 이 판본은 **우리가 만든 것**이다. 적어 두지 않으면 그것이 캐시를
       // 타고 돌아올 때 남이 갈아 끼운 것으로 읽힌다.
       knownHashes.current.add(hash);
-      onSaved?.(savedBody, hash);
+      if (ownerAllowsProtected()) onSaved?.(savedBody, hash);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps -- ref 는 의도적으로 뺀다
-    [onSaved],
+    [onSaved, ownerAllowsProtected],
   );
 
-  const autosave = useAutosave(file.nodeId, baseHash, noteSaved);
+  const autosave = useAutosave(file.nodeId, baseHash, noteSaved, onAuthenticationLoss, ownerAllowsProtected);
+  const editorHandle = useRef<AtomicCodeMirrorEditorHandle | null>(null);
+  const sourceHandle = useRef<HTMLTextAreaElement | null>(null);
+  const mergeHandle = useRef<MergeViewHandle | null>(null);
+  const frozenSnapshot = useRef<string | null>(null);
   /**
    * 편집기에 넘길 문서.
    *
@@ -282,6 +317,7 @@ export function DocumentSurface({
   const readBody = () => lastBody.current ?? '';
   const compositionStartBody = useRef<string | null>(null);
   const bodyChanged = (next: string) => {
+    if (frozen.current) return;
     lastBody.current = next;
     if (compositionStartBody.current === null) autosave.changed(next);
   };
@@ -309,9 +345,10 @@ export function DocumentSurface({
     (event: KeyboardEvent) => {
       if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== 's') return;
       event.preventDefault();
+      if (!ownerAllowsProtected()) return;
       autosave.saveNow(readBody());
     },
-    [autosave],
+    [autosave, ownerAllowsProtected],
   );
 
   useEffect(() => {
@@ -326,6 +363,50 @@ export function DocumentSurface({
   const conflictBody = autosave.serverBody ?? serverBody;
 
   useEffect(() => onSaveState?.(shown), [shown, onSaveState]);
+
+  const registeredDraft = useRef<LiveDraftRegistration | undefined>(undefined);
+  useEffect(() => {
+    if (registerDraft === undefined || draftOwner === undefined || baseHash === undefined) return;
+    const registration: LiveDraftRegistration = {
+      owner: draftOwner,
+      nodeId: file.nodeId,
+      revision: baseHash,
+      get mode() { return shown === 'conflict' ? 'merge' : mode; },
+      read: () => frozenSnapshot.current ?? mergeHandle.current?.getRight()
+        ?? sourceHandle.current?.value
+        ?? editorHandle.current?.getMarkdown()
+        ?? readBody(),
+      acknowledged: () => body ?? '',
+      state: () => shown === 'rejected' || shown === 'conflict' || shown === 'saving' ? shown : 'saved',
+      composing: () => compositionStartBody.current !== null,
+      freeze: (next) => {
+        if (next && !frozen.current) {
+          frozenSnapshot.current = mergeHandle.current?.getRight()
+            ?? sourceHandle.current?.value
+            ?? editorHandle.current?.getMarkdown()
+            ?? readBody();
+        } else if (!next) {
+          frozenSnapshot.current = null;
+        }
+        frozen.current = next;
+        setIsFrozen(next);
+        autosave.pause(next);
+        editorHandle.current?.setReadOnly(next || mode === 'read');
+        if (sourceHandle.current !== null) sourceHandle.current.readOnly = next;
+        mergeHandle.current?.setReadOnly(next);
+      },
+    };
+    registeredDraft.current = registration;
+    const unregister = registerDraft(registration);
+    return () => {
+      if (registeredDraft.current === registration) registeredDraft.current = undefined;
+      unregister();
+    };
+  }, [registerDraft, draftOwner, file.nodeId, baseHash, body, mode, shown, autosave]);
+
+  useLayoutEffect(() => () => {
+    if (registeredDraft.current !== undefined) beforeDraftUnmount?.(registeredDraft.current);
+  }, [beforeDraftUnmount]);
 
   if (surface === 'image') {
     return <ImageSurface nodeId={file.nodeId} name={file.name} />;
@@ -345,7 +426,7 @@ export function DocumentSurface({
 
   return (
     <div data-document-surface data-editor-mode={mode}>
-      <ModeToggle file={file} mode={mode} onChange={change} />
+      <ModeToggle file={file} mode={mode} onChange={change} disabled={isFrozen} />
 
       {shown === 'rejected' && (
         <div role="alert" data-save-rejected>
@@ -370,7 +451,9 @@ export function DocumentSurface({
             right={readBody()}
             leftLabel="서버 내용"
             rightLabel="내 편집 내용"
+            editorHandleRef={mergeHandle}
             onResolve={(merged) => {
+              if (!ownerAllowsProtected()) return;
               lastBody.current = merged;
               autosave.resolve(merged);
             }}
@@ -392,9 +475,11 @@ export function DocumentSurface({
           // 표 구분선이나 각주 정의를 손보려면 여기가 유일한 자리다
           // (`FR-EDITOR-003` AC-2).
           <textarea
+            ref={sourceHandle}
             aria-label="원문"
             data-source-editor
             defaultValue={documentText}
+            readOnly={isFrozen}
             onChange={(event) => bodyChanged(event.target.value)}
           />
         ) : (
@@ -416,7 +501,8 @@ export function DocumentSurface({
             documentId={`${file.nodeId}:${adopted.current}`}
             markdownSource={documentText}
             extensions={extensions}
-            readOnly={mode === 'read'}
+            editorHandleRef={editorHandle}
+            readOnly={mode === 'read' || isFrozen}
             onMarkdownChange={(next: string) => {
               // 본문을 상태에 올리지 않고 **ref 한 곳**만 갱신한다
               // (`CON-ARCH-006` AC-1) — 올리면 정본이 둘이 된다. 두 ref 로

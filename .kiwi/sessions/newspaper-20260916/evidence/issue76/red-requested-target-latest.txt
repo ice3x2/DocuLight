@@ -1,0 +1,2 @@
+RED: popstate A to delayed B could not find the document loading state and retained A's visible body under B's URL.
+GREEN: requestedTarget loading/error owns the visible pane, and retry repeats only the current GET resolution.

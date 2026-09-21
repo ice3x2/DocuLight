@@ -1,7 +1,7 @@
 import { MergeView as CodeMirrorMergeView } from '@codemirror/merge';
-import { EditorState, type Extension } from '@codemirror/state';
+import { Compartment, EditorState, type Extension } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type MutableRefObject } from 'react';
 import { Button } from '../components/ui/button.js';
 
 /**
@@ -19,6 +19,11 @@ export function mergeEngine(): string {
 
 export function diffCueText(side: 'a' | 'b'): string {
   return side === 'a' ? '− 삭제' : '+ 추가';
+}
+
+export interface MergeViewHandle {
+  getRight: () => string;
+  setReadOnly: (readOnly: boolean) => void;
 }
 
 function renderDiffCueLayer(merge: CodeMirrorMergeView, side: 'a' | 'b'): void {
@@ -65,6 +70,7 @@ export function MergeView({
   mode = 'conflict',
   leftLabel = '왼쪽',
   rightLabel = '오른쪽',
+  editorHandleRef,
 }: {
   label: string;
   /** 왼쪽 — 보관된 버전 또는 서버의 현재 내용. */
@@ -75,6 +81,7 @@ export function MergeView({
   mode?: 'conflict' | 'version';
   leftLabel?: string;
   rightLabel?: string;
+  editorHandleRef?: MutableRefObject<MergeViewHandle | null>;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const view = useRef<CodeMirrorMergeView | null>(null);
@@ -84,6 +91,7 @@ export function MergeView({
 
   useEffect(() => {
     if (host.current === null) return;
+    const editability = new Compartment();
     view.current = new CodeMirrorMergeView({
       a: {
         doc: left,
@@ -96,8 +104,10 @@ export function MergeView({
       b: {
         doc: right,
         extensions: [
-          EditorState.readOnly.of(mode === 'version'),
-          EditorView.editable.of(mode !== 'version'),
+          editability.of([
+            EditorState.readOnly.of(mode === 'version'),
+            EditorView.editable.of(mode !== 'version'),
+          ]),
           diffCueExtension('b', () => view.current),
           EditorView.updateListener.of((update) => {
             if (update.docChanged && mode === 'conflict') setDraftAlternative(update.state.doc.toString());
@@ -106,6 +116,19 @@ export function MergeView({
       },
       parent: host.current,
     });
+    if (editorHandleRef !== undefined) {
+      editorHandleRef.current = {
+        getRight: () => view.current?.b.state.doc.toString() ?? right,
+        setReadOnly: (readOnly) => {
+          const current = view.current;
+          if (current === null) return;
+          current.b.dispatch({ effects: editability.reconfigure([
+            EditorState.readOnly.of(readOnly),
+            EditorView.editable.of(!readOnly),
+          ]) });
+        },
+      };
+    }
     const paneScrollers = host.current.querySelectorAll<HTMLElement>('.cm-mergeViewEditor .cm-scroller');
     const paneLabels = [leftLabel, rightLabel];
     paneScrollers.forEach((scroller, index) => {
@@ -122,8 +145,9 @@ export function MergeView({
     return () => {
       view.current?.destroy();
       view.current = null;
+      if (editorHandleRef !== undefined) editorHandleRef.current = null;
     };
-  }, [left, right, mode, leftLabel, rightLabel]);
+  }, [left, right, mode, leftLabel, rightLabel, editorHandleRef]);
 
   return (
     <div role="region" aria-label={label} data-merge-view data-merge-mode={mode}>

@@ -214,9 +214,12 @@ export function TokenPanel({
           {tokenQuery.state === 'ready' && tokenQuery.rows.length > 0 ? <div tabIndex={0} aria-label="액세스 토큰 표" data-token-table-scroll><table><thead><tr><th scope="col">이름</th><th scope="col">스코프</th><th scope="col">만료일</th><th scope="col">마지막 사용</th><th scope="col">조작</th></tr></thead><tbody>
             {tokenQuery.rows.map((token) => {
               const expired = isExpired(token.expiresAt);
+              const rootStyle = getComputedStyle(document.documentElement);
               const semanticStyle = {
-                color: expired ? 'var(--text-secondary, rgb(85, 85, 85))' : 'var(--text-primary, rgb(18, 18, 18))',
-                backgroundColor: 'var(--surface-document, rgb(255, 255, 255))',
+                color: expired
+                  ? rootStyle.getPropertyValue('--text-secondary') || 'rgb(85, 85, 85)'
+                  : rootStyle.getPropertyValue('--text-primary') || 'rgb(18, 18, 18)',
+                backgroundColor: rootStyle.getPropertyValue('--surface-document') || 'rgb(255, 255, 255)',
               };
               return <tr key={token.id} data-expired={expired || undefined}><td style={semanticStyle}>{token.name}</td><td style={semanticStyle}>{SCOPE_LABELS[token.scope]}</td><td style={semanticStyle}>{date(token.expiresAt)}{expired ? ' (만료됨)' : ''}</td><td style={semanticStyle}>{token.lastUsedAt === null ? '사용 안 함' : date(token.lastUsedAt)}</td><td>{token.revokedAt === null ? <button type="button" disabled={!canMutate} onClick={() => { setRevokeError(false); setRevokeTarget(token); }}>{token.name} 폐기</button> : '폐기됨'}</td></tr>;
             })}
