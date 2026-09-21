@@ -3,6 +3,8 @@ import { useLayoutEffect, useRef } from 'react';
 
 import type {
   BrokenInheritanceBody,
+  RestoreInheritanceOutcome,
+  RestoreInheritancePreview,
   PrincipalRow,
   RevocationSubject,
   SimulationBody,
@@ -45,6 +47,9 @@ export interface AclAuditProps {
   onRevokeSubject?: (principalId: string) => Promise<RevokeSubjectResult>;
   onSimulatePick?: (row: PrincipalRow) => void;
   onRestore?: (nodeId: string) => void;
+  onLoadRestorePreview?: (nodeId: string) => Promise<RestoreInheritancePreview>;
+  onRestoreInheritance?: (nodeId: string, revision: string) => Promise<RestoreInheritanceOutcome>;
+  onRefreshInheritance?: () => Promise<unknown>;
   onOffboard?: (subject: RevocationSubject) => void;
   onRevokeFlowExit?: () => void;
 }
@@ -76,6 +81,9 @@ export function AclAuditPanel({
   onPreviewRevocation,
   onRevokeSubject,
   onSimulatePick,
+  onLoadRestorePreview,
+  onRestoreInheritance,
+  onRefreshInheritance,
   onOffboard,
   onRevokeFlowExit,
 }: AclAuditProps) {
@@ -164,7 +172,7 @@ export function AclAuditPanel({
         {/* 이 탭만 주체를 고르지 않는다 — 목록이 이미 관리 범위로 잘려 온다. */}
         {inheritanceQuery === undefined
           ? <p role="alert">상속 감사 상태를 사용할 수 없습니다.</p>
-          : <InheritanceAuditPanel query={inheritanceQuery} />}
+          : <InheritanceAuditPanel query={inheritanceQuery} contextKey={contextKey} onLoadRestorePreview={onLoadRestorePreview} onRestoreInheritance={onRestoreInheritance} onRefresh={onRefreshInheritance} />}
       </Tabs.Content>
     </Tabs.Root>
   );

@@ -62,7 +62,6 @@ import {
   grantCapabilityReceipt,
   grantPermission,
   inheritFromParent,
-  restoreInheritance,
   revokePermission,
 } from '../../app/acl/grant-service.js';
 import { accessorsOf } from '../../app/acl/accessor-service.js';
@@ -71,6 +70,7 @@ import { ASSIGNED_GRADES, moveGrade } from '../../domain/confirm/grade.js';
 import { aclRevokePreservesSuperuserBypass, previewRevocation, revokeAllFor } from '../../app/acl/bulk-revoke-service.js';
 import { simulate } from '../../app/acl/simulation-service.js';
 import { brokenInheritanceOf } from '../../app/acl/inheritance-audit-service.js';
+import { InheritanceRestorePreviews } from '../../app/acl/inheritance-restore.js';
 import { auditView } from '../../app/audit/audit-view.js';
 import { queueView } from '../../app/reconciliation/queue-view.js';
 import type { FindingQueue } from '../../domain/ports/finding-queue.js';
@@ -220,6 +220,7 @@ interface TreeNodeBody {
 
 export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Router {
   const router = Router();
+  const inheritanceRestores = new InheritanceRestorePreviews(stores);
   const adminGrantPreviews = new AdminGrantPreviews(stores);
   const retentionImpact = stores.metadata === undefined ? undefined : new RetentionImpactReceipts({
     metadata: stores.metadata,
@@ -237,6 +238,10 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
 
   /** 관문 — 주체를 세우지 못하면 아무것도 하지 않는다. */
   const actorFor = (req: Request): Actor | undefined => actorOf(req);
+  const restoreAuthContext = (req: Request, actor: Actor): string => {
+    const session = sessionTokenOf(req.headers.cookie);
+    return session === undefined ? `actor:${actor.id}` : `session:${hashSecretToken(session)}`;
+  };
   const retentionContextFor = (req: Request): { actor: Actor; fingerprint: string } | undefined => {
     const actor = actorFor(req);
     if (actor === undefined) return undefined;
@@ -1212,6 +1217,15 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
     res.json(audit);
   });
 
+  router.get('/nodes/:nodeId/restore-inheritance-preview', (req, res) => {
+    const actor = actorFor(req);
+    if (actor === undefined) { res.sendStatus(401); return; }
+    const preview = inheritanceRestores.preview(actor, restoreAuthContext(req, actor), req.params.nodeId!);
+    if (preview === undefined) { res.sendStatus(404); return; }
+    res.setHeader('Cache-Control', 'no-store');
+    res.json(preview);
+  });
+
   /**
    * 상속을 끊는다 (`SEC-ACL-003`). 좁히기라 `관리` 를 요구한다.
    *
@@ -1254,8 +1268,9 @@ export function workspaceApiRouter({ stores, actorOf }: WorkspaceApiDeps): Route
       return;
     }
 
-    const restored = restoreInheritance(stores, actor, req.params.nodeId!);
-    res.sendStatus(restored.ok ? 204 : 404);
+    const restored = inheritanceRestores.restore(() => actorFor(req), restoreAuthContext(req, actor), req.params.nodeId!, req.body?.revision);
+    if (restored.ok) { res.sendStatus(204); return; }
+    res.sendStatus(restored.rule === 'precondition' ? 428 : restored.rule === 'stale' ? 409 : restored.rule === 'unavailable' ? 503 : 404);
   });
 
   /** 직접 부여 항목을 회수한다 (`IR-ACL-003` AC-4). 상속 항목에는 ID 가 없다. */

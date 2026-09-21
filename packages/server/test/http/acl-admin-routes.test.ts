@@ -47,7 +47,7 @@ beforeEach(async () => {
   // 운영과 같은 순서로 세운다 — `apiRouter` 가 파서를 먼저 세우고 그 뒤에
   // 이 라우터가 붙는다. 라우터 자신은 파서를 갖지 않는다.
   app.use(express.json({ limit: '1mb' }));
-  app.use('/api', workspaceApiRouter({ stores, actorOf: () => actingAs }));
+  app.use('/api', workspaceApiRouter({ stores: { ...stores, transaction: <T,>(fn: () => T): T => db.transaction(fn) }, actorOf: () => actingAs }));
 });
 
 afterEach(async () => {
@@ -396,7 +396,8 @@ describe('상속 끊김 감사 (`FR-ACL-005`)', () => {
     breakInheritance(stores, root, 닫힌방);
     expect(permissionOf(stores, actorFor(stores.principals, 한범.id), 닫힌방)).toBeNull();
 
-    const res = await request(app).post(`/api/nodes/${닫힌방}/restore-inheritance`);
+    const preview = await request(app).get(`/api/nodes/${닫힌방}/restore-inheritance-preview`);
+    const res = await request(app).post(`/api/nodes/${닫힌방}/restore-inheritance`).send({ revision: preview.body.revision });
 
     expect(res.status).toBe(204);
     expect(permissionOf(stores, actorFor(stores.principals, 한범.id), 닫힌방)).toBe('view');

@@ -58,6 +58,8 @@ import {
   type PrincipalRow,
   type RevocationSubject,
   type RevocationBody,
+  fetchRestoreInheritancePreview,
+  restoreInheritance,
 } from './api/client.js';
 import {
   QUERY_KEYS,
@@ -2230,6 +2232,17 @@ function AppBody() {
         },
         onPreviewRevocation: previewRevocations,
         onRevokeSubject: revokeOneSubject,
+        onLoadRestorePreview: fetchRestoreInheritancePreview,
+        onRestoreInheritance: restoreInheritance,
+        onRefreshInheritance: async () => {
+          const [inheritanceResult] = await Promise.all([
+            brokenInheritance.refetch(),
+            queries.invalidateQueries({ queryKey: QUERY_KEYS.tree }),
+            queries.invalidateQueries({ queryKey: ['simulation'] }),
+            queries.invalidateQueries({ queryKey: ['share'] }),
+          ]);
+          if (inheritanceResult.isError) throw inheritanceResult.error;
+        },
       }}
       workspaceManagement={{
         selectedId: selectedWorkspaceId,

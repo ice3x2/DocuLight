@@ -912,8 +912,41 @@ export interface BrokenInheritanceBody {
 
 export const fetchBrokenInheritance = () => call<BrokenInheritanceBody>('/broken-inheritance');
 
-export const restoreInheritance = (nodeId: string) =>
-  call<void>(`/nodes/${encodeURIComponent(nodeId)}/restore-inheritance`, { method: 'POST' });
+export interface RestoreAclRowBody {
+  principalId: string;
+  principalName: string;
+  principalKind: 'user' | 'group';
+  level: 'view' | 'edit' | 'admin';
+  source: string | null;
+}
+
+export interface RestoreInheritancePreview {
+  nodeId: string;
+  workspace: { id: string; name: string };
+  path: string;
+  kind: 'file' | 'directory';
+  retainedDirectAcl: RestoreAclRowBody[];
+  incomingParentAcl: RestoreAclRowBody[];
+  applicableDescendants: number | null;
+  revision: string;
+}
+
+export const fetchRestoreInheritancePreview = (nodeId: string) =>
+  call<RestoreInheritancePreview>(`/nodes/${encodeURIComponent(nodeId)}/restore-inheritance-preview`);
+
+export type RestoreInheritanceOutcome = { status: 'completed' | 'rejected' | 'unconfirmed' };
+
+export const restoreInheritance = async (nodeId: string, revision: string): Promise<RestoreInheritanceOutcome> => {
+  try {
+    await call<void>(`/nodes/${encodeURIComponent(nodeId)}/restore-inheritance`, {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ revision }),
+    });
+    return { status: 'completed' };
+  } catch (error) {
+    if (error instanceof ApiError && error.status >= 400 && error.status < 500) return { status: 'rejected' };
+    return { status: 'unconfirmed' };
+  }
+};
 
 export const addGroupMember = (groupId: string, userId: string) =>
   call<void>(`/roster/groups/${encodeURIComponent(groupId)}/members`, {

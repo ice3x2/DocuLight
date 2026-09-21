@@ -70,6 +70,17 @@
   overflow-wrap: anywhere;
 }
 
+.inheritance-restore-preview {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.inheritance-restore-preview section ul {
+  max-height: min(12rem, 30vh);
+  overflow: auto;
+  padding-inline-start: var(--space-5);
+}
+
 .acl-subject-list > li {
   display: flex;
   flex-wrap: wrap;
