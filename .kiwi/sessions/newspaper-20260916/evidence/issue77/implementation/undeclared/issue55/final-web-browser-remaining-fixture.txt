@@ -1,0 +1,129 @@
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test:browser:search
+> node test/search-layout-check.mjs
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for getByPlaceholder(/문서 제목|검색/).first()[22m
+
+    at C:\Work\git\DocuLight2.0\packages\web\test\search-layout-check.mjs:52:14
+    at async runBrowserChecks (C:\Work\git\DocuLight2.0\packages\editor\test\_browser-harness.mjs:140:5)
+    at async file:///C:/Work/git/DocuLight2.0/packages/web/test/search-layout-check.mjs:32:1 {
+  log: [ '  - waiting for getByPlaceholder(/문서 제목|검색/).first()' ],
+  name: 'TimeoutError'
+}
+npm error Lifecycle script `test:browser:search` failed with error:
+npm error code 2
+npm error path C:\Work\git\DocuLight2.0\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c node test/search-layout-check.mjs
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test:browser:merge
+> node test/merge-view-check.mjs
+
+PASS  기준 6 두 세션이 같은 문서를 저장하면 뒤엣것이 충돌한다  — 둘째 탭에 병합 안내가 떴다
+PASS  기준 6 병합 화면에 머지 뷰가 실제로 서고 기하를 갖는다  — .cm-mergeView 680×86px · 편집기 2개
+PASS  기준 6 서버 판본과 내 판본이 각각의 편집기에 들어간다  — 왼쪽 17자(첫째 true) · 오른쪽 17자(둘째 true)
+PASS  기준 6 다른 자리가 머지 뷰에 표시된다  — 바뀐 줄 2개 · 지워진 덩이 0개
+PASS  기준 6 병합 화면에서 고른 내용이 저장까지 간다  — 서버 본문 20자 · 둘째의 편집 true
+PASS  기준 12 버전 비교도 같은 머지 뷰로 실제로 선다  — .cm-mergeView 680×86px · 편집기 2개 · 판 1개
+PASS  기준 12 버전 비교에서도 다른 자리가 표시된다  — 바뀐 줄 1개 · 지워진 덩이 0개
+
+7/7 통과
+(두 기준은 `MergeView` 한 부품을 쓴다 — 이 검사 하나가 둘의 브라우저 잔여를 닫는다)
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test:browser:styles
+> node test/editor-styles-check.mjs
+
+PASS  AC-1 제품 화면에서 태그가 칩으로 보인다  — 배경 rgb(223, 231, 233) · 테두리 반경 3px
+PASS  AC-2 편집기 스타일 규칙이 제품 화면에 실려 있다  — 데코레이션 true · 인라인 프리뷰 true · 수식 true
+PASS  AC-4 수식도 같은 진입점에서 스타일을 받는다  — 글꼴 KaTeX_Main, "Times New Roman", serif · MathML 사본 너비 1px
+
+3/3 통과
+(계산된 스타일을 잰다 — 클래스의 존재는 스타일이 빠진 화면에서도 참이다)
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test:browser:theme
+> node test/theme-runtime-check.mjs
+
+오전 8:27:21 [vite] (client) Re-optimizing dependencies because vite config has changed
+오전 8:27:23 [vite] (client) [optimizer] bundling dependencies...
+PASS OS dark is present before the runtime fixture settles — {"theme":"dark","firstTheme":"dark","scheme":"dark","body":{"background":"rgb(32, 34, 31)","color":"rgb(233, 231, 223)","border":"rgb(233, 231, 223)"},"document":{"background":"rgb(41, 44, 39)","color":"rgb(233, 231, 223)","border":"rgb(233, 231, 223)"},"sidebar":{"background":"rgb(26, 29, 25)","color":"rgb(233, 231, 223)","border":"rgb(233, 231, 223)"},"primary":{"background":"rgb(168, 196, 211)","color":"rgb(25, 35, 31)","border":"rgb(168, 196, 211)"},"input":{"background":"rgb(48, 53, 46)","color":"rgb(233, 231, 223)","border":"rgb(135, 145, 127)"},"selected":{"background":"rgb(52, 70, 80)","color":"rgb(233, 231, 223)","border":"rgb(233, 231, 223)"},"portal":{"background":"rgb(48, 53, 46)","color":"rgb(233, 231, 223)","border":"rgb(135, 145, 127)"},"mounts":1}
+PASS dark root and controls use exact computed colors — {"theme":"dark","firstTheme":"dark","scheme":"dark","body":{"background":"rgb(32, 34, 31)","color":"rgb(233, 231, 223)","border":"rgb(233, 231, 223)"},"document":{"background":"rgb(41, 44, 39)","color":"rgb(233, 231, 223)","border":"rgb(233, 231, 223)"},"sidebar":{"background":"rgb(26, 29, 25)","color":"rgb(233, 231, 223)","border":"rgb(233, 231, 223)"},"primary":{"background":"rgb(168, 196, 211)","color":"rgb(25, 35, 31)","border":"rgb(168, 196, 211)"},"input":{"background":"rgb(48, 53, 46)","color":"rgb(233, 231, 223)","border":"rgb(135, 145, 127)"},"selected":{"background":"rgb(52, 70, 80)","color":"rgb(233, 231, 223)","border":"rgb(233, 231, 223)"},"portal":{"background":"rgb(48, 53, 46)","color":"rgb(233, 231, 223)","border":"rgb(135, 145, 127)"},"mounts":1}
+PASS body portal inherits the same dark semantic map — {"background":"rgb(48, 53, 46)","color":"rgb(233, 231, 223)","border":"rgb(135, 145, 127)"}
+PASS system follows a live OS change without remounting the editor — {"theme":"light","body":"rgb(233, 231, 226)","mounts":1,"editorValue":"선택과 실행취소 이력을 가진 본문"}
+PASS fixed dark ignores OS changes at the 200% effective viewport — {"theme":"dark","scheme":"dark","width":640,"height":360,"mounts":1}
+
+PASS: 0 failed assertions
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test:browser:acl
+> node test/acl-two-account-check.mjs
+
+PASS  기준 4 R25 권한이 없으면 그 노드가 화면에 아예 없다  — 둘째의 트리 항목 1개 — 셋 다 없다: true
+PASS  기준 4 R25 같은 자리를 첫째는 본다 — 두 화면이 실제로 다르다  — 첫째의 트리 항목 4개 · 둘째 1개
+PASS  기준 4 첫째가 화면 경로로 권한을 준다  — share 응답 204
+PASS  기준 4 준 자리가 둘째의 화면에 나타난다  — 둘째의 트리 항목 3개
+PASS  기준 4 R25 주지 않은 자리는 여전히 없다 — 준 것만 보인다  — 비밀 문서 노출 false
+FAIL  기준 4 R14 부모에 준 권한이 그 아래 문서까지 상속된다  — 펼친 뒤 항목 3개 · 자식 노출 false
+PASS  기준 4 첫째가 같은 화면에서 권한을 거둔다  — 회수 응답 204
+PASS  기준 4 거둔 자리가 둘째의 화면에서 사라진다  — 둘째의 트리 항목 1개
+
+7/8 통과
+(둘째 계정은 지우지 않는다 — 계정 삭제 경로가 아직 화면에 없다. 이름에 시각이 들어 있어 회차마다 다른 계정이 선다)
+npm error Lifecycle script `test:browser:acl` failed with error:
+npm error code 1
+npm error path C:\Work\git\DocuLight2.0\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c node test/acl-two-account-check.mjs
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test:browser:trash
+> node test/trash-round-trip-check.mjs
+
+FAIL  기준 11 지우기 전에는 그 자리에 서 있다  — 트리 항목 3개
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('treeitem', { name: /trash-문서-1789601276356.md/ }).first()[22m
+
+    at C:\Work\git\DocuLight2.0\packages\web\test\trash-round-trip-check.mjs:107:74
+    at async runBrowserChecks (C:\Work\git\DocuLight2.0\packages\editor\test\_browser-harness.mjs:140:5)
+    at async file:///C:/Work/git/DocuLight2.0/packages/web/test/trash-round-trip-check.mjs:41:1 {
+  log: [
+    "  - waiting for getByRole('treeitem', { name: /trash-문서-1789601276356.md/ }).first()"
+  ],
+  name: 'TimeoutError'
+}
+npm error Lifecycle script `test:browser:trash` failed with error:
+npm error code 2
+npm error path C:\Work\git\DocuLight2.0\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c node test/trash-round-trip-check.mjs
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test:browser:gestures
+> node test/input-gestures-check.mjs
+
+PASS  기준 8 트리에 실제로 떨군 파일이 업로드로 나간다  — 업로드 요청 1건
+PASS  기준 8 편집기에 실제로 붙여넣은 그림이 업로드로 나간다  — 업로드 요청 1건
+PASS  기준 3 `[[` 를 실제로 치면 후보 팝오버가 뜬다  — 후보 2개
+PASS  기준 3 키보드로 고른 후보가 본문에 링크로 들어간다  — 본문에 링크 원문이 닫혔다
+
+4/4 통과
+(세 축을 한 검사에 묶은 이유는 로그인 제한이다 — 축마다 나누면 한 창에 전체를 돌리지 못한다)

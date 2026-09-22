@@ -1,0 +1,212 @@
+{
+  "head": "83ae0fc9808e1edc5e049e17e1d9b5657aef29aa",
+  "sources": [
+    {
+      "path": "packages/web/src/settings/InstanceSettings.tsx",
+      "sha256": "7b0ea7ca5663abb11945901c3f37b899c5b14cb1df46b9905a61ecb0c481e12c"
+    },
+    {
+      "path": "packages/web/src/confirm/ConfirmGate.tsx",
+      "sha256": "5c65cb213b02bb8db4e04187ea08f9aac9bba6a0dd71f1a6a71a84d6781ae9e8"
+    },
+    {
+      "path": "packages/web/src/shell/AppShell.tsx",
+      "sha256": "255895d945dbf6590045064f910865ba82b70acecfb2f94a21c81dc382c4f7bc"
+    },
+    {
+      "path": "packages/web/src/styles/shell.css",
+      "sha256": "1f11edb7539005a4507e71961bf058a5ea5caaaa863eaa4648786728a0dac958"
+    },
+    {
+      "path": "packages/web/test/issue71-closure-audit-contract.test.ts",
+      "sha256": "8ae683404e49ff0f493d3297fddf16b7b96c310a8a50d948fe14d8d09a3d48d6"
+    },
+    {
+      "path": "packages/web/test/issue71-instance-settings-product-check.mjs",
+      "sha256": "efded8f3268e8dea09dc6118d147890b435d2f2189378124c5855d8105ffc9d3"
+    },
+    {
+      "path": "packages/web/test/issue71-instance-settings-product-runner.mjs",
+      "sha256": "d2160190d51b91a1e334336239a441b0119f34e14398ad34e534c3f9b02c14bf"
+    },
+    {
+      "path": "packages/web/test/issue88-settings-leave-guard.test.tsx",
+      "sha256": "489ef6425998f6b34540c4d73aadb6e17b40a4af527a743c7a033e052c3a4aed"
+    }
+  ],
+  "bundles": [
+    {
+      "path": "packages/web/dist/assets/index-CND22ps2.css",
+      "sha256": "ad2b8f9d25cfa42fc0a9998f6d775dd81dd064a79e865aaf66b73936ddd83cb5"
+    },
+    {
+      "path": "packages/web/dist/assets/index-DIPefyD0.js",
+      "sha256": "2cf395fa863da771f7e635fbc36a5417786e6c021626b69f0fe1a59011f72f65"
+    }
+  ],
+  "files": [
+    {
+      "path": "browser-matrix.json",
+      "sha256": "c105f74b9cac3f532bd7d06b3fd237960c54aa20b51d5c16e993b1f3ebfe9064"
+    },
+    {
+      "path": "focused-71-87-88.txt",
+      "sha256": "37243f86a7cb8ef051a8c8eb80e6f78648272c2700c81984b52a0e9912dcbe38"
+    },
+    {
+      "path": "full-web.txt",
+      "sha256": "db6f7e767d8d3e98a77a404b922db868d931a5a954d715531335c8144fa56c4d"
+    },
+    {
+      "path": "green-closure-contract.txt",
+      "sha256": "1e461ab7e62740e7587b685b289bb4acaeb6d02814e5ff447b53fbb2e863bc12"
+    },
+    {
+      "path": "instance-dark-1280x720-100.png",
+      "sha256": "0d67b8d7aadca029e65242ad58fc6ad1b5b08582b328d01525d21e8852c2c3ee"
+    },
+    {
+      "path": "instance-dark-1280x720-200.png",
+      "sha256": "6ff35a5d1bd262064a5079d253e971e157210f207af61766eb1b49f7b8430698"
+    },
+    {
+      "path": "instance-dark-1440x900-100.png",
+      "sha256": "072bf162f98139443b5be237f1d60d74ffb5d436465d345a9c7cb74521a73393"
+    },
+    {
+      "path": "instance-dark-1440x900-200.png",
+      "sha256": "43a75429c04b3c22ea787781595165a8b0ebb5ce309c7665b33c65ea58df572b"
+    },
+    {
+      "path": "instance-dark-1920x1080-100.png",
+      "sha256": "b51da6872d84c2edac0d2eb9c48ef411062e9594bb467988e806ab9845ad51df"
+    },
+    {
+      "path": "instance-dark-1920x1080-200.png",
+      "sha256": "9a73fd1e95ad8376ae559f50189086360f685e86177fd360e0889968fc47a897"
+    },
+    {
+      "path": "instance-forced-colors-dark-100.png",
+      "sha256": "884363c33b2c863aeaf9fb8d6473597b25da28102a9e217ed2ec2acc34d7ee61"
+    },
+    {
+      "path": "instance-forced-colors-dark-200.png",
+      "sha256": "02d018e89b14aae2b7ea228f713a5616fbc30a823122d46673acc07a7ebf2551"
+    },
+    {
+      "path": "instance-forced-colors-light-100.png",
+      "sha256": "06b129770ddece6261356ffe03da51aad0d29f35e9bac5f552c9172587ef6450"
+    },
+    {
+      "path": "instance-forced-colors-light-200.png",
+      "sha256": "c85e1ed59279b34b963ade5b2420ac6d91f87c6a07a7e055602603c797f03100"
+    },
+    {
+      "path": "instance-light-1280x720-100.png",
+      "sha256": "7911477984a9d2cb6d1d0c8ecbf88a89ac88d1902f4a4c745e68516cb6e16cd7"
+    },
+    {
+      "path": "instance-light-1280x720-200.png",
+      "sha256": "fbf26182718d94bcea3676b961b18997c213ad79d52c4ef36ceb1e94f3fe3788"
+    },
+    {
+      "path": "instance-light-1440x900-100.png",
+      "sha256": "0ed1f12ca3f8528673d42f970a5f09eb864b17ec08bc5122cb331365581bae2a"
+    },
+    {
+      "path": "instance-light-1440x900-200.png",
+      "sha256": "54369742022a6337f2a335d97bc69f6cc2b385cff95653a84db9eef45fb7f8ae"
+    },
+    {
+      "path": "instance-light-1920x1080-100.png",
+      "sha256": "4edb72efa227da5a8bd4e67a1c3998042d67dcf60d800f6b0648bb182d339bb1"
+    },
+    {
+      "path": "instance-light-1920x1080-200.png",
+      "sha256": "7ab991c5043cd66e007827287012be069f16f1d03401f0e36de8e151fd4ffe8e"
+    },
+    {
+      "path": "red-closure-contract.txt",
+      "sha256": "6de0f27896c408515dc74f4952ae85d466e5694440e736f83eb1b2fd6de574da"
+    },
+    {
+      "path": "red-escape-focus-product.txt",
+      "sha256": "34304cd576b2b5f1fd49c1e7ad29bd18efff89b20f8c9423d0cde85ddccc4b5b"
+    },
+    {
+      "path": "red-outside-focus-product.txt",
+      "sha256": "f362e749d6f78ddf0efd5c40d7e8a0128bc438f66f3e2adb2e7ba4367f17d453"
+    },
+    {
+      "path": "speckiwi-links.json",
+      "sha256": "4d35fe15fde66339c40fd42d95e85cbedc433b8d31c61e1400223f9eeaa302c4"
+    },
+    {
+      "path": "speckiwi-summary.json",
+      "sha256": "5e5261d750a125144550473f9166c8b7c31c3c8d4f437ea82dcc2d0c0910d93f"
+    },
+    {
+      "path": "speckiwi-validate.json",
+      "sha256": "48654114eecd9275502c39eb2656041145b4afcbf756e3b5963f25481ac1ccd4"
+    },
+    {
+      "path": "typecheck-web.txt",
+      "sha256": "ecf5af4dfc9475fc29b589fdf8d39ea385197acb2a88ea83c5501e45b3f3c631"
+    }
+  ],
+  "rawCommands": [
+    {
+      "path": "focused-71-87-88.txt",
+      "sha256": "37243f86a7cb8ef051a8c8eb80e6f78648272c2700c81984b52a0e9912dcbe38"
+    },
+    {
+      "path": "full-web.txt",
+      "sha256": "db6f7e767d8d3e98a77a404b922db868d931a5a954d715531335c8144fa56c4d"
+    },
+    {
+      "path": "green-closure-contract.txt",
+      "sha256": "1e461ab7e62740e7587b685b289bb4acaeb6d02814e5ff447b53fbb2e863bc12"
+    },
+    {
+      "path": "red-closure-contract.txt",
+      "sha256": "6de0f27896c408515dc74f4952ae85d466e5694440e736f83eb1b2fd6de574da"
+    },
+    {
+      "path": "red-escape-focus-product.txt",
+      "sha256": "34304cd576b2b5f1fd49c1e7ad29bd18efff89b20f8c9423d0cde85ddccc4b5b"
+    },
+    {
+      "path": "red-outside-focus-product.txt",
+      "sha256": "f362e749d6f78ddf0efd5c40d7e8a0128bc438f66f3e2adb2e7ba4367f17d453"
+    },
+    {
+      "path": "speckiwi-links.json",
+      "sha256": "4d35fe15fde66339c40fd42d95e85cbedc433b8d31c61e1400223f9eeaa302c4"
+    },
+    {
+      "path": "speckiwi-summary.json",
+      "sha256": "5e5261d750a125144550473f9166c8b7c31c3c8d4f437ea82dcc2d0c0910d93f"
+    },
+    {
+      "path": "speckiwi-validate.json",
+      "sha256": "48654114eecd9275502c39eb2656041145b4afcbf756e3b5963f25481ac1ccd4"
+    },
+    {
+      "path": "typecheck-web.txt",
+      "sha256": "ecf5af4dfc9475fc29b589fdf8d39ea385197acb2a88ea83c5501e45b3f3c631"
+    }
+  ],
+  "authoritativeDenial": {
+    "key": "signup-mode",
+    "before": "approval",
+    "after": "approval",
+    "unchanged": true
+  },
+  "commands": [
+    {
+      "command": "npm run test:browser:issue71-product --workspace @doculight/web",
+      "exitCode": 0
+    }
+  ],
+  "manifestLast": true
+}

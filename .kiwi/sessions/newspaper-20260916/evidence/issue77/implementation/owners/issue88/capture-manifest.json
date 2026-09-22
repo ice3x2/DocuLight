@@ -1,0 +1,92 @@
+{
+  "schema": "issue88-product-capture-v1",
+  "ordering": {
+    "algorithm": "utf8-bytewise-ascending",
+    "fields": [
+      "sources[].path",
+      "artifacts[].name"
+    ]
+  },
+  "sources": [
+    {
+      "path": "test/issue88-evidence-publication.mjs",
+      "sha256": "e39d3a42a844d64a64de70c2b3ce8bd70d1bc16b271d5ea64d86d3fb19d27949"
+    },
+    {
+      "path": "test/issue88-settings-leave-product-check.mjs",
+      "sha256": "796a9aefa8ee3114db0e5ba83e59b64bd72340a89dc7ab69acfa7ef88b0bd5e9"
+    },
+    {
+      "path": "test/issue88-settings-leave-product-runner.mjs",
+      "sha256": "3cb002c737f80ffdc77c5f0d9bf94e8f2d32643c4bb67cb0dd7a1730d9e6adf6"
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "browser-matrix.json",
+      "sha256": "5ac1b3944d54c1bf6063affee84d1d40db0c48d436812a69226f85103d52a026"
+    },
+    {
+      "name": "capture-report.json",
+      "sha256": "f05d14b398c1f30bc800901bbaecae28fc88a2131af4b49166b24e77df824f2b"
+    },
+    {
+      "name": "leave-dark-1280x720-100.png",
+      "sha256": "ab2328f911148e288931e134d2af287eb303faa9eaa6191685fba5d0d986fc7f"
+    },
+    {
+      "name": "leave-dark-1280x720-200.png",
+      "sha256": "379165f60530aeb5379c7fd68337c79acb077624eefa501873ed4d4ee09d9d6f"
+    },
+    {
+      "name": "leave-dark-1440x900-100.png",
+      "sha256": "178c56b1b273cc65d3207279cbeae529af0f55a294c356de5a943b253c2d9866"
+    },
+    {
+      "name": "leave-dark-1440x900-200.png",
+      "sha256": "da63e3b50d83fa85e90c905c0852a620351126b19bf28dbb53633609eb37154d"
+    },
+    {
+      "name": "leave-dark-1920x1080-100.png",
+      "sha256": "f02e6a5444b8b0ef09b439349aaf58486632e1c41e10e2733b23fd1115a47fdf"
+    },
+    {
+      "name": "leave-dark-1920x1080-200.png",
+      "sha256": "8733d2aad24599a27d30230de8728d78cebff30613518344b556eb244c929c47"
+    },
+    {
+      "name": "leave-forced-colors-100.png",
+      "sha256": "804a1835ef3960055293f130e6f1f52557427afa9182f5f01e24c184af241b77"
+    },
+    {
+      "name": "leave-forced-colors-200.png",
+      "sha256": "7cb81360766507cd60406f88c14e2a3f90836bf31a17c689a11ec2eb8b5ac303"
+    },
+    {
+      "name": "leave-light-1280x720-100.png",
+      "sha256": "d4c9f4fc5701d6a4af2bcc6d50d880932eb7374418dde5bbca27fbfb197519f7"
+    },
+    {
+      "name": "leave-light-1280x720-200.png",
+      "sha256": "53790e131921dd500fa551066f52053cf4686266331df2fc9b2ab587849a0674"
+    },
+    {
+      "name": "leave-light-1440x900-100.png",
+      "sha256": "6a7fbea7134d36cebea9d472d809eab5c1abcd8b81c44962ab525e32a20581ef"
+    },
+    {
+      "name": "leave-light-1440x900-200.png",
+      "sha256": "7f56e0d7ab644c69f3ace86c804105bae1f0a123562a3c759e14ea94c8e16793"
+    },
+    {
+      "name": "leave-light-1920x1080-100.png",
+      "sha256": "02b5f4204cb627491d203acb5299c62b0733426989342531af7c121de106b008"
+    },
+    {
+      "name": "leave-light-1920x1080-200.png",
+      "sha256": "ae2ff9f57c4048b45a208fdd0cf871250ced3858010f693b979bdd2c29a29d6c"
+    }
+  ],
+  "environmentCount": 12,
+  "forcedCount": 2
+}

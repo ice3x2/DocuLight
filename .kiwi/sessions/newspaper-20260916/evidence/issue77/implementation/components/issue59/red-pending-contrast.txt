@@ -1,0 +1,7 @@
+Command: npm run test:browser:pre-auth --workspace @doculight/web
+Exit code: 1
+
+AssertionError: submit text contrast 3.5495779590143246: rgb(116, 118, 109) on rgb(227, 226, 219)
+at assertGeometry (packages/web/test/newspaper-pre-auth-check.cjs:136)
+
+This is the raw RED from the computed-color contrast assertion with the scoped pending override removed.

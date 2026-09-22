@@ -1,0 +1,303 @@
+{
+  "sourceIdentity": {
+    "revision": "83ae0fc9808e1edc5e049e17e1d9b5657aef29aa",
+    "files": {
+      "packages/web/src/tree/DocumentTree.tsx": "e6ffc69f53667f195b19bec93c1e0265d58db9322bee3fc402bd3c286bc54b6d",
+      "packages/web/test/newspaper-tree-fixture.tsx": "4df888d3046c24b321bcf9531c74ed2df2ddb70f58a14b9b95f1ba3cd96fb38d",
+      "packages/web/test/newspaper-tree-layout-check.cjs": "f2fa02a80351de405871a0954e950e96dc05d169d5fbc0bd1f75eb339f9ff959",
+      "package-lock.json": "63dbd37d72e838dc5f0e5ba437864d2a4cc4770b93ff00e91b574db594117167"
+    },
+    "aggregateSha256": "073b62e8781a433baac9cf99f5399ca7a95b82110d2a94e4e6c9da964d24b936"
+  },
+  "results": [
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "tree": {
+        "x": 0,
+        "y": 77,
+        "width": 300,
+        "height": 541,
+        "top": 77,
+        "right": 300,
+        "bottom": 618,
+        "left": 0
+      }
+    },
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "tree": {
+        "x": 0,
+        "y": 77,
+        "width": 300,
+        "height": 737,
+        "top": 77,
+        "right": 300,
+        "bottom": 814,
+        "left": 0
+      }
+    },
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "tree": {
+        "x": 0,
+        "y": 77,
+        "width": 300,
+        "height": 917,
+        "top": 77,
+        "right": 300,
+        "bottom": 994,
+        "left": 0
+      }
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "tree": {
+        "x": 0,
+        "y": 77,
+        "width": 300,
+        "height": 557,
+        "top": 77,
+        "right": 300,
+        "bottom": 634,
+        "left": 0
+      }
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "tree": {
+        "x": 0,
+        "y": 77,
+        "width": 300,
+        "height": 721,
+        "top": 77,
+        "right": 300,
+        "bottom": 798,
+        "left": 0
+      }
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "tree": {
+        "x": 0,
+        "y": 77,
+        "width": 300,
+        "height": 901,
+        "top": 77,
+        "right": 300,
+        "bottom": 978,
+        "left": 0
+      }
+    }
+  ],
+  "largeTree": {
+    "topLevel": {
+      "total": 1000,
+      "renderedAtTop": 23,
+      "renderedAtEnd": 23
+    },
+    "descendants": {
+      "expandedLogicalRows": 1001,
+      "descendantsAtTop": 23,
+      "descendantsAfterResize": 23,
+      "scrollExtent": {
+        "scrollHeight": 40040,
+        "styledHeight": 40040,
+        "clientHeight": 589
+      },
+      "endExtent": {
+        "maxScrollTop": 39451,
+        "maxScrollHeight": 40066
+      }
+    }
+  },
+  "actualZoom": {
+    "method": "isolated persistent Chromium + extension chrome.tabs.setZoom(2)",
+    "zoom": 2,
+    "viewport": {
+      "width": 720,
+      "height": 407
+    }
+  },
+  "largeTransitions": [
+    {
+      "state": "large-workspaces",
+      "total": 1000,
+      "kind": "workspace",
+      "firstId": "large-workspace-0",
+      "middleId": "large-workspace-499",
+      "lastId": "large-workspace-999",
+      "transitions": [
+        {
+          "position": "first",
+          "expectedId": "large-workspace-0",
+          "actionId": "large-workspace-0",
+          "activeBeforeZoom": "large-workspace-0",
+          "activeAt200": "large-workspace-0",
+          "activeAfterResize": "large-workspace-0",
+          "activeAfterReset": "large-workspace-0",
+          "mountedAt100": 23,
+          "mountedAt200": 14,
+          "mountedAfterResize": 16,
+          "resizeEvents": {
+            "window": 1,
+            "visual": 1
+          },
+          "zoomSequence": [
+            1,
+            2,
+            1
+          ]
+        },
+        {
+          "position": "middle",
+          "expectedId": "large-workspace-499",
+          "actionId": "large-workspace-499",
+          "activeBeforeZoom": "large-workspace-499",
+          "activeAt200": "large-workspace-499",
+          "activeAfterResize": "large-workspace-499",
+          "activeAfterReset": "large-workspace-499",
+          "mountedAt100": 24,
+          "mountedAt200": 15,
+          "mountedAfterResize": 17,
+          "resizeEvents": {
+            "window": 1,
+            "visual": 1
+          },
+          "zoomSequence": [
+            1,
+            2,
+            1
+          ]
+        },
+        {
+          "position": "last",
+          "expectedId": "large-workspace-999",
+          "actionId": "large-workspace-999",
+          "activeBeforeZoom": "large-workspace-999",
+          "activeAt200": "large-workspace-999",
+          "activeAfterResize": "large-workspace-999",
+          "activeAfterReset": "large-workspace-999",
+          "mountedAt100": 23,
+          "mountedAt200": 7,
+          "mountedAfterResize": 16,
+          "resizeEvents": {
+            "window": 1,
+            "visual": 1
+          },
+          "zoomSequence": [
+            1,
+            2,
+            1
+          ]
+        }
+      ],
+      "viewportAfterResize": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1.0000000149011612
+      }
+    },
+    {
+      "state": "large-descendants",
+      "total": 1001,
+      "kind": "descendant",
+      "firstId": "large-descendant-workspace",
+      "middleId": "large-descendant-499",
+      "lastId": "large-descendant-999",
+      "transitions": [
+        {
+          "position": "first",
+          "expectedId": "large-descendant-workspace",
+          "actionId": "large-descendant-workspace",
+          "activeBeforeZoom": "large-descendant-workspace",
+          "activeAt200": "large-descendant-workspace",
+          "activeAfterResize": "large-descendant-workspace",
+          "activeAfterReset": "large-descendant-workspace",
+          "mountedAt100": 1,
+          "mountedAt200": 1,
+          "mountedAfterResize": 1,
+          "resizeEvents": {
+            "window": 1,
+            "visual": 1
+          },
+          "zoomSequence": [
+            1,
+            2,
+            1
+          ]
+        },
+        {
+          "position": "middle",
+          "expectedId": "large-descendant-499",
+          "actionId": "large-descendant-499",
+          "activeBeforeZoom": "large-descendant-499",
+          "activeAt200": "large-descendant-499",
+          "activeAfterResize": "large-descendant-499",
+          "activeAfterReset": "large-descendant-499",
+          "mountedAt100": 24,
+          "mountedAt200": 15,
+          "mountedAfterResize": 17,
+          "resizeEvents": {
+            "window": 1,
+            "visual": 1
+          },
+          "zoomSequence": [
+            1,
+            2,
+            1
+          ]
+        },
+        {
+          "position": "last",
+          "expectedId": "large-descendant-999",
+          "actionId": "large-descendant-999",
+          "activeBeforeZoom": "large-descendant-999",
+          "activeAt200": "large-descendant-999",
+          "activeAfterResize": "large-descendant-999",
+          "activeAfterReset": "large-descendant-999",
+          "mountedAt100": 23,
+          "mountedAt200": 7,
+          "mountedAfterResize": 16,
+          "resizeEvents": {
+            "window": 1,
+            "visual": 1
+          },
+          "zoomSequence": [
+            1,
+            2,
+            1
+          ]
+        }
+      ],
+      "viewportAfterResize": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1.0000000149011612
+      }
+    }
+  ]
+}

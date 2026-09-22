@@ -1,0 +1,36 @@
+ISSUE67_VALIDATION_STARTED_AT_UTC=2026-09-17T17:54:32.869Z
+WORKDIR=C:\Work\git\DocuLight2.0\packages\web
+
+COMMAND_STARTED_AT_UTC=2026-09-17T17:54:32.870Z
+COMMAND=npm test -- --run
+
+> @doculight/web@0.1.0 test
+> vitest run --run
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+
+ Test Files  78 passed (78)
+      Tests  951 passed (951)
+   Start at  02:54:33
+   Duration  35.36s (transform 21.91s, setup 2.37s, import 106.36s, tests 186.82s, environment 83.36s)
+
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+COMMAND_FINISHED_AT_UTC=2026-09-17T17:55:08.912Z
+EXIT_CODE=0
+
+COMMAND_STARTED_AT_UTC=2026-09-17T17:55:08.912Z
+COMMAND=npm run typecheck
+
+> @doculight/web@0.1.0 typecheck
+> tsc --noEmit
+
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+COMMAND_FINISHED_AT_UTC=2026-09-17T17:55:09.709Z
+EXIT_CODE=0
+
+ISSUE67_VALIDATION_FINISHED_AT_UTC=2026-09-17T17:55:09.709Z
+RESULT=PASS

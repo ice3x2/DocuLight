@@ -1,0 +1,1134 @@
+{
+  "regular": [
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "zoom": 1,
+      "measurements": {
+        "listMetrics": {
+          "height": 216,
+          "clientHeight": 216,
+          "scrollHeight": 2426,
+          "overflowY": "auto"
+        },
+        "rowMetrics": {
+          "width": 638,
+          "height": 93,
+          "metaBottom": 269,
+          "actionsTop": 213,
+          "actionHeights": [
+            36,
+            36
+          ],
+          "variants": [
+            "secondary",
+            "ghost"
+          ],
+          "background": "rgb(245, 244, 239)",
+          "textColor": "rgb(36, 37, 33)",
+          "markerWidth": "auto",
+          "markerBackground": "rgba(0, 0, 0, 0)"
+        },
+        "hoverStyle": {
+          "actual": "rgb(250, 249, 245)",
+          "expected": "rgb(250, 249, 245)"
+        },
+        "focusStyle": {
+          "outlineStyle": "solid",
+          "outlineColor": "rgb(54, 91, 112)",
+          "surrounding": "rgb(245, 244, 239)"
+        },
+        "focusExtent": {
+          "inside": true,
+          "extent": 4
+        },
+        "primaryColors": {
+          "color": "rgb(250, 249, 245)",
+          "background": "rgb(54, 91, 112)"
+        },
+        "paneMetrics": {
+          "panes": [
+            322,
+            322
+          ],
+          "editable": [
+            "false",
+            "false"
+          ],
+          "clientWidth": 644,
+          "scrollWidth": 644,
+          "overflowX": "auto"
+        },
+        "hiddenSources": [
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          },
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          }
+        ],
+        "selected": {
+          "markerWidth": "2px",
+          "markerBackground": "rgb(54, 91, 112)",
+          "background": "rgb(223, 231, 233)"
+        },
+        "shellBefore": [
+          280,
+          680,
+          320
+        ],
+        "shellAfter": [
+          280,
+          680,
+          320
+        ],
+        "cssViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "zoom": 1,
+      "measurements": {
+        "listMetrics": {
+          "height": 240,
+          "clientHeight": 240,
+          "scrollHeight": 2426,
+          "overflowY": "auto"
+        },
+        "rowMetrics": {
+          "width": 798,
+          "height": 93,
+          "metaBottom": 269,
+          "actionsTop": 213,
+          "actionHeights": [
+            36,
+            36
+          ],
+          "variants": [
+            "secondary",
+            "ghost"
+          ],
+          "background": "rgb(245, 244, 239)",
+          "textColor": "rgb(36, 37, 33)",
+          "markerWidth": "auto",
+          "markerBackground": "rgba(0, 0, 0, 0)"
+        },
+        "hoverStyle": {
+          "actual": "rgb(250, 249, 245)",
+          "expected": "rgb(250, 249, 245)"
+        },
+        "focusStyle": {
+          "outlineStyle": "solid",
+          "outlineColor": "rgb(54, 91, 112)",
+          "surrounding": "rgb(245, 244, 239)"
+        },
+        "focusExtent": {
+          "inside": true,
+          "extent": 4
+        },
+        "primaryColors": {
+          "color": "rgb(250, 249, 245)",
+          "background": "rgb(54, 91, 112)"
+        },
+        "paneMetrics": {
+          "panes": [
+            402,
+            402
+          ],
+          "editable": [
+            "false",
+            "false"
+          ],
+          "clientWidth": 804,
+          "scrollWidth": 804,
+          "overflowX": "auto"
+        },
+        "hiddenSources": [
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          },
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          }
+        ],
+        "selected": {
+          "markerWidth": "2px",
+          "markerBackground": "rgb(54, 91, 112)",
+          "background": "rgb(223, 231, 233)"
+        },
+        "shellBefore": [
+          280,
+          840,
+          320
+        ],
+        "shellAfter": [
+          280,
+          840,
+          320
+        ],
+        "cssViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 1,
+      "measurements": {
+        "listMetrics": {
+          "height": 240,
+          "clientHeight": 240,
+          "scrollHeight": 1490,
+          "overflowY": "auto"
+        },
+        "rowMetrics": {
+          "width": 1278,
+          "height": 57,
+          "metaBottom": 232,
+          "actionsTop": 194,
+          "actionHeights": [
+            36,
+            36
+          ],
+          "variants": [
+            "secondary",
+            "ghost"
+          ],
+          "background": "rgb(245, 244, 239)",
+          "textColor": "rgb(36, 37, 33)",
+          "markerWidth": "auto",
+          "markerBackground": "rgba(0, 0, 0, 0)"
+        },
+        "hoverStyle": {
+          "actual": "rgb(250, 249, 245)",
+          "expected": "rgb(250, 249, 245)"
+        },
+        "focusStyle": {
+          "outlineStyle": "solid",
+          "outlineColor": "rgb(54, 91, 112)",
+          "surrounding": "rgb(245, 244, 239)"
+        },
+        "focusExtent": {
+          "inside": true,
+          "extent": 4
+        },
+        "primaryColors": {
+          "color": "rgb(250, 249, 245)",
+          "background": "rgb(54, 91, 112)"
+        },
+        "paneMetrics": {
+          "panes": [
+            642,
+            642
+          ],
+          "editable": [
+            "false",
+            "false"
+          ],
+          "clientWidth": 1284,
+          "scrollWidth": 1284,
+          "overflowX": "auto"
+        },
+        "hiddenSources": [
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          },
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          }
+        ],
+        "selected": {
+          "markerWidth": "2px",
+          "markerBackground": "rgb(54, 91, 112)",
+          "background": "rgb(223, 231, 233)"
+        },
+        "shellBefore": [
+          280,
+          1320,
+          320
+        ],
+        "shellAfter": [
+          280,
+          1320,
+          320
+        ],
+        "cssViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "zoom": 1,
+      "measurements": {
+        "listMetrics": {
+          "height": 216,
+          "clientHeight": 216,
+          "scrollHeight": 2426,
+          "overflowY": "auto"
+        },
+        "rowMetrics": {
+          "width": 638,
+          "height": 93,
+          "metaBottom": 269,
+          "actionsTop": 213,
+          "actionHeights": [
+            36,
+            36
+          ],
+          "variants": [
+            "secondary",
+            "ghost"
+          ],
+          "background": "rgb(41, 44, 39)",
+          "textColor": "rgb(233, 231, 223)",
+          "markerWidth": "auto",
+          "markerBackground": "rgba(0, 0, 0, 0)"
+        },
+        "hoverStyle": {
+          "actual": "rgb(48, 53, 46)",
+          "expected": "rgb(48, 53, 46)"
+        },
+        "focusStyle": {
+          "outlineStyle": "solid",
+          "outlineColor": "rgb(168, 196, 211)",
+          "surrounding": "rgb(41, 44, 39)"
+        },
+        "focusExtent": {
+          "inside": true,
+          "extent": 4
+        },
+        "primaryColors": {
+          "color": "rgb(25, 35, 31)",
+          "background": "rgb(168, 196, 211)"
+        },
+        "paneMetrics": {
+          "panes": [
+            322,
+            322
+          ],
+          "editable": [
+            "false",
+            "false"
+          ],
+          "clientWidth": 644,
+          "scrollWidth": 644,
+          "overflowX": "auto"
+        },
+        "hiddenSources": [
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          },
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          }
+        ],
+        "selected": {
+          "markerWidth": "2px",
+          "markerBackground": "rgb(168, 196, 211)",
+          "background": "rgb(52, 70, 80)"
+        },
+        "shellBefore": [
+          280,
+          680,
+          320
+        ],
+        "shellAfter": [
+          280,
+          680,
+          320
+        ],
+        "cssViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "zoom": 1,
+      "measurements": {
+        "listMetrics": {
+          "height": 240,
+          "clientHeight": 240,
+          "scrollHeight": 2426,
+          "overflowY": "auto"
+        },
+        "rowMetrics": {
+          "width": 798,
+          "height": 93,
+          "metaBottom": 269,
+          "actionsTop": 213,
+          "actionHeights": [
+            36,
+            36
+          ],
+          "variants": [
+            "secondary",
+            "ghost"
+          ],
+          "background": "rgb(41, 44, 39)",
+          "textColor": "rgb(233, 231, 223)",
+          "markerWidth": "auto",
+          "markerBackground": "rgba(0, 0, 0, 0)"
+        },
+        "hoverStyle": {
+          "actual": "rgb(48, 53, 46)",
+          "expected": "rgb(48, 53, 46)"
+        },
+        "focusStyle": {
+          "outlineStyle": "solid",
+          "outlineColor": "rgb(168, 196, 211)",
+          "surrounding": "rgb(41, 44, 39)"
+        },
+        "focusExtent": {
+          "inside": true,
+          "extent": 4
+        },
+        "primaryColors": {
+          "color": "rgb(25, 35, 31)",
+          "background": "rgb(168, 196, 211)"
+        },
+        "paneMetrics": {
+          "panes": [
+            402,
+            402
+          ],
+          "editable": [
+            "false",
+            "false"
+          ],
+          "clientWidth": 804,
+          "scrollWidth": 804,
+          "overflowX": "auto"
+        },
+        "hiddenSources": [
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          },
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          }
+        ],
+        "selected": {
+          "markerWidth": "2px",
+          "markerBackground": "rgb(168, 196, 211)",
+          "background": "rgb(52, 70, 80)"
+        },
+        "shellBefore": [
+          280,
+          840,
+          320
+        ],
+        "shellAfter": [
+          280,
+          840,
+          320
+        ],
+        "cssViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 1,
+      "measurements": {
+        "listMetrics": {
+          "height": 240,
+          "clientHeight": 240,
+          "scrollHeight": 1490,
+          "overflowY": "auto"
+        },
+        "rowMetrics": {
+          "width": 1278,
+          "height": 57,
+          "metaBottom": 232,
+          "actionsTop": 194,
+          "actionHeights": [
+            36,
+            36
+          ],
+          "variants": [
+            "secondary",
+            "ghost"
+          ],
+          "background": "rgb(41, 44, 39)",
+          "textColor": "rgb(233, 231, 223)",
+          "markerWidth": "auto",
+          "markerBackground": "rgba(0, 0, 0, 0)"
+        },
+        "hoverStyle": {
+          "actual": "rgb(48, 53, 46)",
+          "expected": "rgb(48, 53, 46)"
+        },
+        "focusStyle": {
+          "outlineStyle": "solid",
+          "outlineColor": "rgb(168, 196, 211)",
+          "surrounding": "rgb(41, 44, 39)"
+        },
+        "focusExtent": {
+          "inside": true,
+          "extent": 4
+        },
+        "primaryColors": {
+          "color": "rgb(25, 35, 31)",
+          "background": "rgb(168, 196, 211)"
+        },
+        "paneMetrics": {
+          "panes": [
+            642,
+            642
+          ],
+          "editable": [
+            "false",
+            "false"
+          ],
+          "clientWidth": 1284,
+          "scrollWidth": 1284,
+          "overflowX": "auto"
+        },
+        "hiddenSources": [
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          },
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          }
+        ],
+        "selected": {
+          "markerWidth": "2px",
+          "markerBackground": "rgb(168, 196, 211)",
+          "background": "rgb(52, 70, 80)"
+        },
+        "shellBefore": [
+          280,
+          1320,
+          320
+        ],
+        "shellAfter": [
+          280,
+          1320,
+          320
+        ],
+        "cssViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        }
+      }
+    }
+  ],
+  "zoom": [
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "zoom": 2,
+      "measurements": {
+        "listMetrics": {
+          "height": 108,
+          "clientHeight": 108,
+          "scrollHeight": 5249,
+          "overflowY": "auto"
+        },
+        "rowMetrics": {
+          "width": 210.8000030517578,
+          "height": 216.8000030517578,
+          "metaBottom": 328,
+          "actionsTop": 336,
+          "actionHeights": [
+            36,
+            36
+          ],
+          "variants": [
+            "secondary",
+            "ghost"
+          ],
+          "background": "rgb(245, 244, 239)",
+          "textColor": "rgb(36, 37, 33)",
+          "markerWidth": "auto",
+          "markerBackground": "rgba(0, 0, 0, 0)"
+        },
+        "hoverStyle": {
+          "actual": "rgb(250, 249, 245)",
+          "expected": "rgb(250, 249, 245)"
+        },
+        "focusStyle": {
+          "outlineStyle": "solid",
+          "outlineColor": "rgb(54, 91, 112)",
+          "surrounding": "rgb(245, 244, 239)"
+        },
+        "focusExtent": {
+          "inside": true,
+          "extent": 4
+        },
+        "primaryColors": {
+          "color": "rgb(250, 249, 245)",
+          "background": "rgb(54, 91, 112)"
+        },
+        "paneMetrics": {
+          "panes": [
+            240,
+            240
+          ],
+          "editable": [
+            "false",
+            "false"
+          ],
+          "clientWidth": 225,
+          "scrollWidth": 480,
+          "overflowX": "auto"
+        },
+        "hiddenSources": [
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          },
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          }
+        ],
+        "selected": {
+          "markerWidth": "2px",
+          "markerBackground": "rgb(54, 91, 112)",
+          "background": "rgb(223, 231, 233)"
+        },
+        "shellBefore": [
+          188.3312530517578,
+          260,
+          191.66250610351562
+        ],
+        "shellAfter": [
+          188.3312530517578,
+          260,
+          191.66250610351562
+        ],
+        "cssViewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "zoom": 2,
+      "measurements": {
+        "listMetrics": {
+          "height": 108,
+          "clientHeight": 108,
+          "scrollHeight": 5249,
+          "overflowY": "auto"
+        },
+        "rowMetrics": {
+          "width": 210.8000030517578,
+          "height": 216.8000030517578,
+          "metaBottom": 328,
+          "actionsTop": 336,
+          "actionHeights": [
+            36,
+            36
+          ],
+          "variants": [
+            "secondary",
+            "ghost"
+          ],
+          "background": "rgb(41, 44, 39)",
+          "textColor": "rgb(233, 231, 223)",
+          "markerWidth": "auto",
+          "markerBackground": "rgba(0, 0, 0, 0)"
+        },
+        "hoverStyle": {
+          "actual": "rgb(48, 53, 46)",
+          "expected": "rgb(48, 53, 46)"
+        },
+        "focusStyle": {
+          "outlineStyle": "solid",
+          "outlineColor": "rgb(168, 196, 211)",
+          "surrounding": "rgb(41, 44, 39)"
+        },
+        "focusExtent": {
+          "inside": true,
+          "extent": 4
+        },
+        "primaryColors": {
+          "color": "rgb(25, 35, 31)",
+          "background": "rgb(168, 196, 211)"
+        },
+        "paneMetrics": {
+          "panes": [
+            240,
+            240
+          ],
+          "editable": [
+            "false",
+            "false"
+          ],
+          "clientWidth": 225,
+          "scrollWidth": 480,
+          "overflowX": "auto"
+        },
+        "hiddenSources": [
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          },
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          }
+        ],
+        "selected": {
+          "markerWidth": "2px",
+          "markerBackground": "rgb(168, 196, 211)",
+          "background": "rgb(52, 70, 80)"
+        },
+        "shellBefore": [
+          188.3312530517578,
+          260,
+          191.66250610351562
+        ],
+        "shellAfter": [
+          188.3312530517578,
+          260,
+          191.66250610351562
+        ],
+        "cssViewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "zoom": 2,
+      "measurements": {
+        "listMetrics": {
+          "height": 135,
+          "clientHeight": 135,
+          "scrollHeight": 4501,
+          "overflowY": "auto"
+        },
+        "rowMetrics": {
+          "width": 250.8000030517578,
+          "height": 172.8000030517578,
+          "metaBottom": 328,
+          "actionsTop": 336,
+          "actionHeights": [
+            36,
+            36
+          ],
+          "variants": [
+            "secondary",
+            "ghost"
+          ],
+          "background": "rgb(245, 244, 239)",
+          "textColor": "rgb(36, 37, 33)",
+          "markerWidth": "auto",
+          "markerBackground": "rgba(0, 0, 0, 0)"
+        },
+        "hoverStyle": {
+          "actual": "rgb(250, 249, 245)",
+          "expected": "rgb(250, 249, 245)"
+        },
+        "focusStyle": {
+          "outlineStyle": "solid",
+          "outlineColor": "rgb(54, 91, 112)",
+          "surrounding": "rgb(245, 244, 239)"
+        },
+        "focusExtent": {
+          "inside": true,
+          "extent": 4
+        },
+        "primaryColors": {
+          "color": "rgb(250, 249, 245)",
+          "background": "rgb(54, 91, 112)"
+        },
+        "paneMetrics": {
+          "panes": [
+            240,
+            240
+          ],
+          "editable": [
+            "false",
+            "false"
+          ],
+          "clientWidth": 265,
+          "scrollWidth": 480,
+          "overflowX": "auto"
+        },
+        "hiddenSources": [
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          },
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          }
+        ],
+        "selected": {
+          "markerWidth": "2px",
+          "markerBackground": "rgb(54, 91, 112)",
+          "background": "rgb(223, 231, 233)"
+        },
+        "shellBefore": [
+          205,
+          300,
+          215
+        ],
+        "shellAfter": [
+          205,
+          300,
+          215
+        ],
+        "cssViewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "zoom": 2,
+      "measurements": {
+        "listMetrics": {
+          "height": 135,
+          "clientHeight": 135,
+          "scrollHeight": 4501,
+          "overflowY": "auto"
+        },
+        "rowMetrics": {
+          "width": 250.8000030517578,
+          "height": 172.8000030517578,
+          "metaBottom": 328,
+          "actionsTop": 336,
+          "actionHeights": [
+            36,
+            36
+          ],
+          "variants": [
+            "secondary",
+            "ghost"
+          ],
+          "background": "rgb(41, 44, 39)",
+          "textColor": "rgb(233, 231, 223)",
+          "markerWidth": "auto",
+          "markerBackground": "rgba(0, 0, 0, 0)"
+        },
+        "hoverStyle": {
+          "actual": "rgb(48, 53, 46)",
+          "expected": "rgb(48, 53, 46)"
+        },
+        "focusStyle": {
+          "outlineStyle": "solid",
+          "outlineColor": "rgb(168, 196, 211)",
+          "surrounding": "rgb(41, 44, 39)"
+        },
+        "focusExtent": {
+          "inside": true,
+          "extent": 4
+        },
+        "primaryColors": {
+          "color": "rgb(25, 35, 31)",
+          "background": "rgb(168, 196, 211)"
+        },
+        "paneMetrics": {
+          "panes": [
+            240,
+            240
+          ],
+          "editable": [
+            "false",
+            "false"
+          ],
+          "clientWidth": 265,
+          "scrollWidth": 480,
+          "overflowX": "auto"
+        },
+        "hiddenSources": [
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          },
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          }
+        ],
+        "selected": {
+          "markerWidth": "2px",
+          "markerBackground": "rgb(168, 196, 211)",
+          "background": "rgb(52, 70, 80)"
+        },
+        "shellBefore": [
+          205,
+          300,
+          215
+        ],
+        "shellAfter": [
+          205,
+          300,
+          215
+        ],
+        "cssViewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 2,
+      "measurements": {
+        "listMetrics": {
+          "height": 162,
+          "clientHeight": 162,
+          "scrollHeight": 3565,
+          "overflowY": "auto"
+        },
+        "rowMetrics": {
+          "width": 370.8000183105469,
+          "height": 136.8000030517578,
+          "metaBottom": 292,
+          "actionsTop": 300,
+          "actionHeights": [
+            36,
+            36
+          ],
+          "variants": [
+            "secondary",
+            "ghost"
+          ],
+          "background": "rgb(245, 244, 239)",
+          "textColor": "rgb(36, 37, 33)",
+          "markerWidth": "auto",
+          "markerBackground": "rgba(0, 0, 0, 0)"
+        },
+        "hoverStyle": {
+          "actual": "rgb(250, 249, 245)",
+          "expected": "rgb(250, 249, 245)"
+        },
+        "focusStyle": {
+          "outlineStyle": "solid",
+          "outlineColor": "rgb(54, 91, 112)",
+          "surrounding": "rgb(245, 244, 239)"
+        },
+        "focusExtent": {
+          "inside": true,
+          "extent": 4
+        },
+        "primaryColors": {
+          "color": "rgb(250, 249, 245)",
+          "background": "rgb(54, 91, 112)"
+        },
+        "paneMetrics": {
+          "panes": [
+            240,
+            240
+          ],
+          "editable": [
+            "false",
+            "false"
+          ],
+          "clientWidth": 385,
+          "scrollWidth": 480,
+          "overflowX": "auto"
+        },
+        "hiddenSources": [
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          },
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          }
+        ],
+        "selected": {
+          "markerWidth": "2px",
+          "markerBackground": "rgb(54, 91, 112)",
+          "background": "rgb(223, 231, 233)"
+        },
+        "shellBefore": [
+          255,
+          420,
+          285
+        ],
+        "shellAfter": [
+          255,
+          420,
+          285
+        ],
+        "cssViewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2.0000000298023224
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 2,
+      "measurements": {
+        "listMetrics": {
+          "height": 162,
+          "clientHeight": 162,
+          "scrollHeight": 3565,
+          "overflowY": "auto"
+        },
+        "rowMetrics": {
+          "width": 370.8000183105469,
+          "height": 136.8000030517578,
+          "metaBottom": 292,
+          "actionsTop": 300,
+          "actionHeights": [
+            36,
+            36
+          ],
+          "variants": [
+            "secondary",
+            "ghost"
+          ],
+          "background": "rgb(41, 44, 39)",
+          "textColor": "rgb(233, 231, 223)",
+          "markerWidth": "auto",
+          "markerBackground": "rgba(0, 0, 0, 0)"
+        },
+        "hoverStyle": {
+          "actual": "rgb(48, 53, 46)",
+          "expected": "rgb(48, 53, 46)"
+        },
+        "focusStyle": {
+          "outlineStyle": "solid",
+          "outlineColor": "rgb(168, 196, 211)",
+          "surrounding": "rgb(41, 44, 39)"
+        },
+        "focusExtent": {
+          "inside": true,
+          "extent": 4
+        },
+        "primaryColors": {
+          "color": "rgb(25, 35, 31)",
+          "background": "rgb(168, 196, 211)"
+        },
+        "paneMetrics": {
+          "panes": [
+            240,
+            240
+          ],
+          "editable": [
+            "false",
+            "false"
+          ],
+          "clientWidth": 385,
+          "scrollWidth": 480,
+          "overflowX": "auto"
+        },
+        "hiddenSources": [
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          },
+          {
+            "width": 1,
+            "height": 1,
+            "pointerEvents": "none"
+          }
+        ],
+        "selected": {
+          "markerWidth": "2px",
+          "markerBackground": "rgb(168, 196, 211)",
+          "background": "rgb(52, 70, 80)"
+        },
+        "shellBefore": [
+          255,
+          420,
+          285
+        ],
+        "shellAfter": [
+          255,
+          420,
+          285
+        ],
+        "cssViewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2.0000000298023224
+        }
+      }
+    }
+  ]
+}

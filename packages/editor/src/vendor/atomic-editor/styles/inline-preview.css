@@ -746,6 +746,12 @@
   animation: atomic-initial-reveal-fade 3.2s ease-out forwards;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .cm-initialRevealMatch {
+    animation: none;
+  }
+}
+
 @keyframes atomic-initial-reveal-fade {
   0% {
     background: var(

@@ -1,0 +1,901 @@
+{
+  "requirement": "IR-ACL-005",
+  "runner": "temporary seeded backend/database/docs root and isolated persistent Chromium",
+  "roles": {
+    "superuser": {
+      "preview": 200,
+      "ui": true
+    },
+    "ordinary": {
+      "preview": 404,
+      "privilegedDom": false
+    },
+    "unauthenticated": 401
+  },
+  "matrix": {
+    "normal": 12,
+    "forcedColors": 2,
+    "zoom": "chrome.tabs.setZoom/getZoom/reset",
+    "computedStyleAndGeometryPerCapture": true,
+    "contrast": {
+      "body": 4.5,
+      "large": 3,
+      "controlsAndFocus": 3
+    }
+  },
+  "flow": {
+    "missingRevision": 428,
+    "staleImpactBlocked": true,
+    "successfulPosts": 1,
+    "retainedDirectAcl": true,
+    "auditCheckedByRunner": true,
+    "cancelFocus": true,
+    "removedRowFocusFallback": "section-heading"
+  },
+  "observations": [
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "none",
+      "observedZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1.0000000149011612
+        },
+        "overflowX": false,
+        "dialogOverflowX": false,
+        "focusedInside": true,
+        "forced": false,
+        "scroll": {
+          "height": 698,
+          "client": 670
+        },
+        "computed": {
+          "title": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "18px",
+            "fontWeight": "700"
+          },
+          "body": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "cancel": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "actionBoundary": {
+            "color": "rgb(150, 63, 56)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.503800375757026
+          },
+          "focusBoundary": {
+            "color": "rgb(0, 94, 168)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.2951238421201055,
+            "style": "solid",
+            "width": "2.4px"
+          }
+        }
+      },
+      "name": "restore-light-1280x720-100-none.png",
+      "sha256": "0e7c6f79053b1472c41716edf10aff4ae00466f7aca903514b087a84aa443365"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "none",
+      "observedZoom": 2,
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "overflowX": false,
+        "dialogOverflowX": false,
+        "focusedInside": true,
+        "forced": false,
+        "scroll": {
+          "height": 698,
+          "client": 310
+        },
+        "computed": {
+          "title": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "18px",
+            "fontWeight": "700"
+          },
+          "body": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "cancel": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "actionBoundary": {
+            "color": "rgb(150, 63, 56)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.503800375757026
+          },
+          "focusBoundary": {
+            "color": "rgb(0, 94, 168)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.2951238421201055,
+            "style": "solid",
+            "width": "2.8px"
+          }
+        }
+      },
+      "name": "restore-light-1280x720-200-none.png",
+      "sha256": "cc54bbaf42b769d10668133b236884a15f5bd5a63a9f529c7d20379312e5abb7"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "forcedColors": "none",
+      "observedZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1.0000000149011612
+        },
+        "overflowX": false,
+        "dialogOverflowX": false,
+        "focusedInside": true,
+        "forced": false,
+        "scroll": {
+          "height": 698,
+          "client": 670
+        },
+        "computed": {
+          "title": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "18px",
+            "fontWeight": "700"
+          },
+          "body": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "cancel": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "actionBoundary": {
+            "color": "rgb(240, 171, 163)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.604930441975668
+          },
+          "focusBoundary": {
+            "color": "rgb(142, 203, 255)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 7.248424050705157,
+            "style": "solid",
+            "width": "2.4px"
+          }
+        }
+      },
+      "name": "restore-dark-1280x720-100-none.png",
+      "sha256": "7dbf851836c3c5b1a5f8a93a8611c0324cd96a701f5dcf3c5635611e7456d999"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "forcedColors": "none",
+      "observedZoom": 2,
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "overflowX": false,
+        "dialogOverflowX": false,
+        "focusedInside": true,
+        "forced": false,
+        "scroll": {
+          "height": 698,
+          "client": 310
+        },
+        "computed": {
+          "title": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "18px",
+            "fontWeight": "700"
+          },
+          "body": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "cancel": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "actionBoundary": {
+            "color": "rgb(240, 171, 163)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.604930441975668
+          },
+          "focusBoundary": {
+            "color": "rgb(142, 203, 255)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 7.248424050705157,
+            "style": "solid",
+            "width": "2.8px"
+          }
+        }
+      },
+      "name": "restore-dark-1280x720-200-none.png",
+      "sha256": "4f693d3910196f78423fd19e190351bee826a89e2f9aaee723123417e8867db4"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "none",
+      "observedZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1.0000000149011612
+        },
+        "overflowX": false,
+        "dialogOverflowX": false,
+        "focusedInside": true,
+        "forced": false,
+        "scroll": {
+          "height": 698,
+          "client": 698
+        },
+        "computed": {
+          "title": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "18px",
+            "fontWeight": "700"
+          },
+          "body": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "cancel": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "actionBoundary": {
+            "color": "rgb(150, 63, 56)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.503800375757026
+          },
+          "focusBoundary": {
+            "color": "rgb(0, 94, 168)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.2951238421201055,
+            "style": "solid",
+            "width": "2.4px"
+          }
+        }
+      },
+      "name": "restore-light-1440x900-100-none.png",
+      "sha256": "d29030bc03b1adbbd6036d960df3f39e8e0901ecf432fa35e9ae09d1bfada743"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "none",
+      "observedZoom": 2,
+      "metrics": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        },
+        "overflowX": false,
+        "dialogOverflowX": false,
+        "focusedInside": true,
+        "forced": false,
+        "scroll": {
+          "height": 698,
+          "client": 400
+        },
+        "computed": {
+          "title": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "18px",
+            "fontWeight": "700"
+          },
+          "body": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "cancel": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "actionBoundary": {
+            "color": "rgb(150, 63, 56)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.503800375757026
+          },
+          "focusBoundary": {
+            "color": "rgb(0, 94, 168)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.2951238421201055,
+            "style": "solid",
+            "width": "2.8px"
+          }
+        }
+      },
+      "name": "restore-light-1440x900-200-none.png",
+      "sha256": "21f060e7b9f84de4aabb0035b9c0f73b186079ca0ed641a84837a3aa2a1b8935"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "forcedColors": "none",
+      "observedZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1.0000000149011612
+        },
+        "overflowX": false,
+        "dialogOverflowX": false,
+        "focusedInside": true,
+        "forced": false,
+        "scroll": {
+          "height": 698,
+          "client": 698
+        },
+        "computed": {
+          "title": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "18px",
+            "fontWeight": "700"
+          },
+          "body": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "cancel": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "actionBoundary": {
+            "color": "rgb(240, 171, 163)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.604930441975668
+          },
+          "focusBoundary": {
+            "color": "rgb(142, 203, 255)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 7.248424050705157,
+            "style": "solid",
+            "width": "2.4px"
+          }
+        }
+      },
+      "name": "restore-dark-1440x900-100-none.png",
+      "sha256": "2811bdf8a70abea2db080f28ee22688abb270dbdfd370888b057f8fa1fd6ebe7"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "forcedColors": "none",
+      "observedZoom": 2,
+      "metrics": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        },
+        "overflowX": false,
+        "dialogOverflowX": false,
+        "focusedInside": true,
+        "forced": false,
+        "scroll": {
+          "height": 698,
+          "client": 400
+        },
+        "computed": {
+          "title": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "18px",
+            "fontWeight": "700"
+          },
+          "body": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "cancel": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "actionBoundary": {
+            "color": "rgb(240, 171, 163)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.604930441975668
+          },
+          "focusBoundary": {
+            "color": "rgb(142, 203, 255)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 7.248424050705157,
+            "style": "solid",
+            "width": "2.8px"
+          }
+        }
+      },
+      "name": "restore-dark-1440x900-200-none.png",
+      "sha256": "3f6785fa81cbe472bc8d821cac9271e4149c42338872913f2e2f770b73487e5f"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "none",
+      "observedZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1.0000000149011612
+        },
+        "overflowX": false,
+        "dialogOverflowX": false,
+        "focusedInside": true,
+        "forced": false,
+        "scroll": {
+          "height": 698,
+          "client": 698
+        },
+        "computed": {
+          "title": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "18px",
+            "fontWeight": "700"
+          },
+          "body": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "cancel": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "actionBoundary": {
+            "color": "rgb(150, 63, 56)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.503800375757026
+          },
+          "focusBoundary": {
+            "color": "rgb(0, 94, 168)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.2951238421201055,
+            "style": "solid",
+            "width": "2.4px"
+          }
+        }
+      },
+      "name": "restore-light-1920x1080-100-none.png",
+      "sha256": "f78626de841535eac1e10219c69438bb4d705160dfe2ddd9daf9ed46e080850e"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "none",
+      "observedZoom": 2,
+      "metrics": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2.0000000298023224
+        },
+        "overflowX": false,
+        "dialogOverflowX": false,
+        "focusedInside": true,
+        "forced": false,
+        "scroll": {
+          "height": 698,
+          "client": 490
+        },
+        "computed": {
+          "title": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "18px",
+            "fontWeight": "700"
+          },
+          "body": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "cancel": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "actionBoundary": {
+            "color": "rgb(150, 63, 56)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.503800375757026
+          },
+          "focusBoundary": {
+            "color": "rgb(0, 94, 168)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.2951238421201055,
+            "style": "solid",
+            "width": "2.8px"
+          }
+        }
+      },
+      "name": "restore-light-1920x1080-200-none.png",
+      "sha256": "a3c3711439afa88a1acaf230ac443cfc7692eaf6e9d7346f6a96dccbf523973c"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "forcedColors": "none",
+      "observedZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1.0000000149011612
+        },
+        "overflowX": false,
+        "dialogOverflowX": false,
+        "focusedInside": true,
+        "forced": false,
+        "scroll": {
+          "height": 698,
+          "client": 698
+        },
+        "computed": {
+          "title": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "18px",
+            "fontWeight": "700"
+          },
+          "body": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "cancel": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "actionBoundary": {
+            "color": "rgb(240, 171, 163)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.604930441975668
+          },
+          "focusBoundary": {
+            "color": "rgb(142, 203, 255)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 7.248424050705157,
+            "style": "solid",
+            "width": "2.4px"
+          }
+        }
+      },
+      "name": "restore-dark-1920x1080-100-none.png",
+      "sha256": "43eda0c977149fac9b83b75df6539c2fc5444b0cc056d5578f92cdee322af11f"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "forcedColors": "none",
+      "observedZoom": 2,
+      "metrics": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2.0000000298023224
+        },
+        "overflowX": false,
+        "dialogOverflowX": false,
+        "focusedInside": true,
+        "forced": false,
+        "scroll": {
+          "height": 698,
+          "client": 490
+        },
+        "computed": {
+          "title": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "18px",
+            "fontWeight": "700"
+          },
+          "body": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "cancel": {
+            "color": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "actionBoundary": {
+            "color": "rgb(240, 171, 163)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.604930441975668
+          },
+          "focusBoundary": {
+            "color": "rgb(142, 203, 255)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 7.248424050705157,
+            "style": "solid",
+            "width": "2.8px"
+          }
+        }
+      },
+      "name": "restore-dark-1920x1080-200-none.png",
+      "sha256": "506a2bf928d6e11cacdd350f730ba2f4bc986309a40201e54d7d0fd29e382c75"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "active",
+      "observedZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1.0000000149011612
+        },
+        "overflowX": false,
+        "dialogOverflowX": false,
+        "focusedInside": true,
+        "forced": true,
+        "scroll": {
+          "height": 698,
+          "client": 670
+        },
+        "computed": {
+          "title": {
+            "color": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "fontSize": "18px",
+            "fontWeight": "700"
+          },
+          "body": {
+            "color": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "cancel": {
+            "color": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "actionBoundary": {
+            "color": "rgb(255, 255, 255)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 1
+          },
+          "focusBoundary": {
+            "color": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "style": "solid",
+            "width": "2.4px"
+          }
+        }
+      },
+      "name": "restore-light-1280x720-100-active.png",
+      "sha256": "277f37963fb45411ebe0ff52ec94f9d8f8894b10e46bd9cc948e35fc77ba628a"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "active",
+      "observedZoom": 2,
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "overflowX": false,
+        "dialogOverflowX": false,
+        "focusedInside": true,
+        "forced": true,
+        "scroll": {
+          "height": 698,
+          "client": 310
+        },
+        "computed": {
+          "title": {
+            "color": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "fontSize": "18px",
+            "fontWeight": "700"
+          },
+          "body": {
+            "color": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "cancel": {
+            "color": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "fontSize": "14px",
+            "fontWeight": "400"
+          },
+          "actionBoundary": {
+            "color": "rgb(255, 255, 255)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 1
+          },
+          "focusBoundary": {
+            "color": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "style": "solid",
+            "width": "2.8px"
+          }
+        }
+      },
+      "name": "restore-light-1280x720-200-active.png",
+      "sha256": "4d769894f1e4ef045224bf96b2f89014cab9eaebaabea387b2e9e820937a891d"
+    }
+  ],
+  "artifactSet": {
+    "expectedImages": [
+      "restore-dark-1280x720-100-none.png",
+      "restore-dark-1280x720-200-none.png",
+      "restore-dark-1440x900-100-none.png",
+      "restore-dark-1440x900-200-none.png",
+      "restore-dark-1920x1080-100-none.png",
+      "restore-dark-1920x1080-200-none.png",
+      "restore-light-1280x720-100-active.png",
+      "restore-light-1280x720-100-none.png",
+      "restore-light-1280x720-200-active.png",
+      "restore-light-1280x720-200-none.png",
+      "restore-light-1440x900-100-none.png",
+      "restore-light-1440x900-200-none.png",
+      "restore-light-1920x1080-100-none.png",
+      "restore-light-1920x1080-200-none.png"
+    ],
+    "manifestWrittenLast": true,
+    "atomicPublish": true
+  },
+  "secretScan": {
+    "values": 4,
+    "matches": 0
+  }
+}

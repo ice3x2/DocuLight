@@ -1,0 +1,5 @@
+Commands and results:
+- npm test --workspace @doculight/web: exit 0; 69 files, 771 tests passed
+- npm run typecheck --workspace @doculight/web: exit 0
+- npm run build --workspace @doculight/web: exit 0; existing Vite chunk-size warning only
+- git diff --check: exit 0; line-ending notices only

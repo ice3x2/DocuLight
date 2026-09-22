@@ -45,7 +45,7 @@ function Fixture() {
     <main data-product-shell style={{ width: '100vw', height: '100vh', display: 'flex', minWidth: 0, minHeight: 0 }}>
       <DocumentSurface file={{ nodeId: 'issue54', name: '신문지.md', level: 'edit' }} body={markdown} baseHash="h1" initialMode="read" />
       <aside data-merge-fixture style={{ position: 'fixed', right: 0, bottom: 0, width: 420, height: 150, overflow: 'auto', background: 'var(--surface-document)' }}>
-        <MergeView label="테마 병합" left={'# 이전\n'} right={'# 현재\n초안'} />
+        <div data-merge-case="theme-transition"><MergeView label="테마 병합" left={'# 이전\n'} right={'# 현재\n초안'} /></div>
         <div data-pure-insert><MergeView label="순수 추가" left={'같음\n'} right={'같음\n추가\n'} /></div>
         <div data-pure-delete><MergeView label="순수 삭제" left={'같음\n삭제\n'} right={'같음\n'} /></div>
       </aside>

@@ -1,0 +1,5340 @@
+{
+  "runner": "isolated Playwright-owned persistent Chromium with extension chrome.tabs.setZoom/getZoom",
+  "actualAppShell": true,
+  "actualSettingsApi": true,
+  "stateChecks": [
+    "pending-lock",
+    "transport-uncertain-reconciliation",
+    "load-error-retry",
+    "role-loss-stop",
+    "invalid",
+    "retention-blocked"
+  ],
+  "environments": [
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "zoom": 100,
+      "observedZoom": 1,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "form": {
+          "width": 640,
+          "right": 965
+        },
+        "action": {
+          "top": 582,
+          "bottom": 659
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 638,
+          "clientWidth": 638
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-light-1280x720-100.png"
+    },
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "zoom": 200,
+      "observedZoom": 2,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "form": {
+          "width": 368.2265625,
+          "right": 596.296875
+        },
+        "action": {
+          "top": 248,
+          "bottom": 325
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 86,
+          "scrollWidth": 366,
+          "clientWidth": 366
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-light-1280x720-200.png"
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "zoom": 100,
+      "observedZoom": 1,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "form": {
+          "width": 640,
+          "right": 965
+        },
+        "action": {
+          "top": 582,
+          "bottom": 659
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 638,
+          "clientWidth": 638
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-dark-1280x720-100.png"
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "zoom": 200,
+      "observedZoom": 2,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "form": {
+          "width": 368.2265625,
+          "right": 596.296875
+        },
+        "action": {
+          "top": 248,
+          "bottom": 325
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 86,
+          "scrollWidth": 366,
+          "clientWidth": 366
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-dark-1280x720-200.png"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "zoom": 100,
+      "observedZoom": 1,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "form": {
+          "width": 640,
+          "right": 1045
+        },
+        "action": {
+          "top": 677,
+          "bottom": 754
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 638,
+          "clientWidth": 638
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-light-1440x900-100.png"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "zoom": 200,
+      "observedZoom": 2,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "form": {
+          "width": 419.3671875,
+          "right": 673.8984375
+        },
+        "action": {
+          "top": 333.5,
+          "bottom": 410.5
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 417,
+          "clientWidth": 417
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-light-1440x900-200.png"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "zoom": 100,
+      "observedZoom": 1,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "form": {
+          "width": 640,
+          "right": 1045
+        },
+        "action": {
+          "top": 677,
+          "bottom": 754
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 638,
+          "clientWidth": 638
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-dark-1440x900-100.png"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "zoom": 200,
+      "observedZoom": 2,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "form": {
+          "width": 419.3671875,
+          "right": 673.8984375
+        },
+        "action": {
+          "top": 333.5,
+          "bottom": 410.5
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 417,
+          "clientWidth": 417
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-dark-1440x900-200.png"
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 100,
+      "observedZoom": 1,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "form": {
+          "width": 640,
+          "right": 1285
+        },
+        "action": {
+          "top": 772,
+          "bottom": 849
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 638,
+          "clientWidth": 638
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-light-1920x1080-100.png"
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 200,
+      "observedZoom": 2,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "form": {
+          "width": 584.8984375,
+          "right": 898.69921875
+        },
+        "action": {
+          "top": 411,
+          "bottom": 488
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 583,
+          "clientWidth": 583
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-light-1920x1080-200.png"
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 100,
+      "observedZoom": 1,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "form": {
+          "width": 640,
+          "right": 1285
+        },
+        "action": {
+          "top": 772,
+          "bottom": 849
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 638,
+          "clientWidth": 638
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-dark-1920x1080-100.png"
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 200,
+      "observedZoom": 2,
+      "resetZoom": 1,
+      "metrics": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "form": {
+          "width": 584.8984375,
+          "right": 898.69921875
+        },
+        "action": {
+          "top": 411,
+          "bottom": 488
+        },
+        "controls": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "note": {
+          "height": 66,
+          "scrollWidth": 583,
+          "clientWidth": 583
+        },
+        "fieldGap": "32px"
+      },
+      "screenshot": "instance-dark-1920x1080-200.png"
+    }
+  ],
+  "forcedColors": [
+    {
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "state": {
+        "forced": true,
+        "invalidStyle": "double",
+        "actionVisible": true
+      },
+      "screenshot": "instance-forced-colors-light-100.png"
+    },
+    {
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "state": {
+        "forced": true,
+        "invalidStyle": "double",
+        "actionVisible": true
+      },
+      "screenshot": "instance-forced-colors-light-200.png"
+    },
+    {
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "state": {
+        "forced": true,
+        "invalidStyle": "double",
+        "actionVisible": true
+      },
+      "screenshot": "instance-forced-colors-dark-100.png"
+    },
+    {
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "state": {
+        "forced": true,
+        "invalidStyle": "double",
+        "actionVisible": true
+      },
+      "screenshot": "instance-forced-colors-dark-200.png"
+    }
+  ],
+  "requestMethods": [
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "GET",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "PUT",
+    "GET",
+    "PUT",
+    "GET",
+    "PUT",
+    "GET",
+    "PUT",
+    "GET",
+    "PUT",
+    "GET",
+    "PUT",
+    "GET",
+    "PUT",
+    "GET",
+    "PUT",
+    "GET",
+    "PUT",
+    "GET",
+    "PUT",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "PUT",
+    "GET",
+    "GET",
+    "GET",
+    "GET",
+    "GET"
+  ],
+  "roleObservations": [
+    {
+      "role": "superuser",
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 1,
+      "direct": {
+        "get": 200,
+        "put": 204
+      },
+      "keyboardTraversal": {
+        "arrowValue": "invite-only",
+        "selectedValueObserved": "invite-only",
+        "forwardOrder": [
+          "instance-setting-signup-mode",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-retained-version-count",
+          "instance-setting-trash-retention-days",
+          "instance-setting-audit-retention-days",
+          "되돌리기",
+          "저장"
+        ],
+        "reverseOrder": [
+          "저장",
+          "되돌리기",
+          "instance-setting-audit-retention-days",
+          "instance-setting-trash-retention-days",
+          "instance-setting-retained-version-count",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-signup-mode"
+        ]
+      }
+    },
+    {
+      "role": "superuser",
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 1,
+      "direct": {
+        "get": 200,
+        "put": 204
+      },
+      "keyboardTraversal": {
+        "arrowValue": "invite-only",
+        "selectedValueObserved": "invite-only",
+        "forwardOrder": [
+          "instance-setting-signup-mode",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-retained-version-count",
+          "instance-setting-trash-retention-days",
+          "instance-setting-audit-retention-days",
+          "되돌리기",
+          "저장"
+        ],
+        "reverseOrder": [
+          "저장",
+          "되돌리기",
+          "instance-setting-audit-retention-days",
+          "instance-setting-trash-retention-days",
+          "instance-setting-retained-version-count",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-signup-mode"
+        ]
+      }
+    },
+    {
+      "role": "superuser",
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 1,
+      "direct": {
+        "get": 200,
+        "put": 204
+      },
+      "keyboardTraversal": {
+        "arrowValue": "invite-only",
+        "selectedValueObserved": "invite-only",
+        "forwardOrder": [
+          "instance-setting-signup-mode",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-retained-version-count",
+          "instance-setting-trash-retention-days",
+          "instance-setting-audit-retention-days",
+          "되돌리기",
+          "저장"
+        ],
+        "reverseOrder": [
+          "저장",
+          "되돌리기",
+          "instance-setting-audit-retention-days",
+          "instance-setting-trash-retention-days",
+          "instance-setting-retained-version-count",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-signup-mode"
+        ]
+      }
+    },
+    {
+      "role": "superuser",
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 1,
+      "direct": {
+        "get": 200,
+        "put": 204
+      },
+      "keyboardTraversal": {
+        "arrowValue": "invite-only",
+        "selectedValueObserved": "invite-only",
+        "forwardOrder": [
+          "instance-setting-signup-mode",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-retained-version-count",
+          "instance-setting-trash-retention-days",
+          "instance-setting-audit-retention-days",
+          "되돌리기",
+          "저장"
+        ],
+        "reverseOrder": [
+          "저장",
+          "되돌리기",
+          "instance-setting-audit-retention-days",
+          "instance-setting-trash-retention-days",
+          "instance-setting-retained-version-count",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-signup-mode"
+        ]
+      }
+    },
+    {
+      "role": "superuser",
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 1,
+      "direct": {
+        "get": 200,
+        "put": 204
+      },
+      "keyboardTraversal": {
+        "arrowValue": "invite-only",
+        "selectedValueObserved": "invite-only",
+        "forwardOrder": [
+          "instance-setting-signup-mode",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-retained-version-count",
+          "instance-setting-trash-retention-days",
+          "instance-setting-audit-retention-days",
+          "되돌리기",
+          "저장"
+        ],
+        "reverseOrder": [
+          "저장",
+          "되돌리기",
+          "instance-setting-audit-retention-days",
+          "instance-setting-trash-retention-days",
+          "instance-setting-retained-version-count",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-signup-mode"
+        ]
+      }
+    },
+    {
+      "role": "superuser",
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 1,
+      "direct": {
+        "get": 200,
+        "put": 204
+      },
+      "keyboardTraversal": {
+        "arrowValue": "invite-only",
+        "selectedValueObserved": "invite-only",
+        "forwardOrder": [
+          "instance-setting-signup-mode",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-retained-version-count",
+          "instance-setting-trash-retention-days",
+          "instance-setting-audit-retention-days",
+          "되돌리기",
+          "저장"
+        ],
+        "reverseOrder": [
+          "저장",
+          "되돌리기",
+          "instance-setting-audit-retention-days",
+          "instance-setting-trash-retention-days",
+          "instance-setting-retained-version-count",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-signup-mode"
+        ]
+      }
+    },
+    {
+      "role": "superuser",
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 1,
+      "direct": {
+        "get": 200,
+        "put": 204
+      },
+      "keyboardTraversal": {
+        "arrowValue": "invite-only",
+        "selectedValueObserved": "invite-only",
+        "forwardOrder": [
+          "instance-setting-signup-mode",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-retained-version-count",
+          "instance-setting-trash-retention-days",
+          "instance-setting-audit-retention-days",
+          "되돌리기",
+          "저장"
+        ],
+        "reverseOrder": [
+          "저장",
+          "되돌리기",
+          "instance-setting-audit-retention-days",
+          "instance-setting-trash-retention-days",
+          "instance-setting-retained-version-count",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-signup-mode"
+        ]
+      }
+    },
+    {
+      "role": "superuser",
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 1,
+      "direct": {
+        "get": 200,
+        "put": 204
+      },
+      "keyboardTraversal": {
+        "arrowValue": "invite-only",
+        "selectedValueObserved": "invite-only",
+        "forwardOrder": [
+          "instance-setting-signup-mode",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-retained-version-count",
+          "instance-setting-trash-retention-days",
+          "instance-setting-audit-retention-days",
+          "되돌리기",
+          "저장"
+        ],
+        "reverseOrder": [
+          "저장",
+          "되돌리기",
+          "instance-setting-audit-retention-days",
+          "instance-setting-trash-retention-days",
+          "instance-setting-retained-version-count",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-signup-mode"
+        ]
+      }
+    },
+    {
+      "role": "superuser",
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 1,
+      "direct": {
+        "get": 200,
+        "put": 204
+      },
+      "keyboardTraversal": {
+        "arrowValue": "invite-only",
+        "selectedValueObserved": "invite-only",
+        "forwardOrder": [
+          "instance-setting-signup-mode",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-retained-version-count",
+          "instance-setting-trash-retention-days",
+          "instance-setting-audit-retention-days",
+          "되돌리기",
+          "저장"
+        ],
+        "reverseOrder": [
+          "저장",
+          "되돌리기",
+          "instance-setting-audit-retention-days",
+          "instance-setting-trash-retention-days",
+          "instance-setting-retained-version-count",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-signup-mode"
+        ]
+      }
+    },
+    {
+      "role": "superuser",
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 1,
+      "direct": {
+        "get": 200,
+        "put": 204
+      },
+      "keyboardTraversal": {
+        "arrowValue": "invite-only",
+        "selectedValueObserved": "invite-only",
+        "forwardOrder": [
+          "instance-setting-signup-mode",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-retained-version-count",
+          "instance-setting-trash-retention-days",
+          "instance-setting-audit-retention-days",
+          "되돌리기",
+          "저장"
+        ],
+        "reverseOrder": [
+          "저장",
+          "되돌리기",
+          "instance-setting-audit-retention-days",
+          "instance-setting-trash-retention-days",
+          "instance-setting-retained-version-count",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-signup-mode"
+        ]
+      }
+    },
+    {
+      "role": "superuser",
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 1,
+      "direct": {
+        "get": 200,
+        "put": 204
+      },
+      "keyboardTraversal": {
+        "arrowValue": "invite-only",
+        "selectedValueObserved": "invite-only",
+        "forwardOrder": [
+          "instance-setting-signup-mode",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-retained-version-count",
+          "instance-setting-trash-retention-days",
+          "instance-setting-audit-retention-days",
+          "되돌리기",
+          "저장"
+        ],
+        "reverseOrder": [
+          "저장",
+          "되돌리기",
+          "instance-setting-audit-retention-days",
+          "instance-setting-trash-retention-days",
+          "instance-setting-retained-version-count",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-signup-mode"
+        ]
+      }
+    },
+    {
+      "role": "superuser",
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 1,
+      "direct": {
+        "get": 200,
+        "put": 204
+      },
+      "keyboardTraversal": {
+        "arrowValue": "invite-only",
+        "selectedValueObserved": "invite-only",
+        "forwardOrder": [
+          "instance-setting-signup-mode",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-retained-version-count",
+          "instance-setting-trash-retention-days",
+          "instance-setting-audit-retention-days",
+          "되돌리기",
+          "저장"
+        ],
+        "reverseOrder": [
+          "저장",
+          "되돌리기",
+          "instance-setting-audit-retention-days",
+          "instance-setting-trash-retention-days",
+          "instance-setting-retained-version-count",
+          "instance-setting-upload-size-limit-bytes",
+          "instance-setting-signup-mode"
+        ]
+      }
+    },
+    {
+      "role": "ordinary",
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "ordinary",
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "ordinary",
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "ordinary",
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "ordinary",
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "ordinary",
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "ordinary",
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "ordinary",
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "ordinary",
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "ordinary",
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "ordinary",
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "ordinary",
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "workspace-admin",
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "workspace-admin",
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "workspace-admin",
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "workspace-admin",
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "workspace-admin",
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "workspace-admin",
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "workspace-admin",
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "workspace-admin",
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "workspace-admin",
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "workspace-admin",
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "workspace-admin",
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    },
+    {
+      "role": "workspace-admin",
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "instanceTabCount": 0,
+      "direct": {
+        "get": 403,
+        "put": 403
+      }
+    }
+  ],
+  "fieldObservations": [
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "label": "가입 모드",
+      "unit": "새 계정이 만들어지는 방식을 선택합니다.",
+      "keyboardFocus": true,
+      "textSelection": null,
+      "accessibleLabel": "가입 모드",
+      "value": "approval",
+      "tag": "SELECT",
+      "help": "새 계정이 만들어지는 방식을 선택합니다.",
+      "error": null,
+      "geometry": {
+        "left": 325,
+        "right": 965,
+        "top": 230,
+        "bottom": 266,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 325,
+        "right": 965,
+        "top": 206,
+        "bottom": 288
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(54, 91, 112)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 6.903983660507881,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": false,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "label": "업로드 크기 제한",
+      "unit": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 9
+      },
+      "accessibleLabel": "업로드 크기 제한",
+      "value": "104857600",
+      "tag": "INPUT",
+      "help": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 325,
+        "right": 965,
+        "top": 344,
+        "bottom": 380,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 325,
+        "right": 965,
+        "top": 320,
+        "bottom": 402
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(54, 91, 112)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 6.903983660507881,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": false,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "label": "보관 버전 개수",
+      "unit": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "보관 버전 개수",
+      "value": "20",
+      "tag": "INPUT",
+      "help": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 325,
+        "right": 965,
+        "top": 458,
+        "bottom": 494,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 325,
+        "right": 965,
+        "top": 434,
+        "bottom": 516
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(54, 91, 112)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 6.903983660507881,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": false,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "label": "휴지통 보존 일수",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "휴지통 보존 일수",
+      "value": "30",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 325,
+        "right": 965,
+        "top": 379,
+        "bottom": 415,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 325,
+        "right": 965,
+        "top": 355,
+        "bottom": 437
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(54, 91, 112)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 6.903983660507881,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": false,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "label": "감사 로그 보존 기간",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 3
+      },
+      "accessibleLabel": "감사 로그 보존 기간",
+      "value": "365",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 325,
+        "right": 965,
+        "top": 493,
+        "bottom": 529,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 325,
+        "right": 965,
+        "top": 469,
+        "bottom": 551
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(54, 91, 112)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 6.903983660507881,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": false,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "label": "가입 모드",
+      "unit": "새 계정이 만들어지는 방식을 선택합니다.",
+      "keyboardFocus": true,
+      "textSelection": null,
+      "accessibleLabel": "가입 모드",
+      "value": "approval",
+      "tag": "SELECT",
+      "help": "새 계정이 만들어지는 방식을 선택합니다.",
+      "error": null,
+      "geometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 204,
+        "bottom": 240,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 180,
+        "bottom": 262
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "label": "업로드 크기 제한",
+      "unit": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 9
+      },
+      "accessibleLabel": "업로드 크기 제한",
+      "value": "104857600",
+      "tag": "INPUT",
+      "help": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 199.5,
+        "bottom": 235.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 175.5,
+        "bottom": 257.5
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "label": "보관 버전 개수",
+      "unit": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "보관 버전 개수",
+      "value": "20",
+      "tag": "INPUT",
+      "help": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 199.5,
+        "bottom": 235.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 175.5,
+        "bottom": 257.5
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "label": "휴지통 보존 일수",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "휴지통 보존 일수",
+      "value": "30",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 199.5,
+        "bottom": 235.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 175.5,
+        "bottom": 257.5
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "label": "감사 로그 보존 기간",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 3
+      },
+      "accessibleLabel": "감사 로그 보존 기간",
+      "value": "365",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 199.5,
+        "bottom": 235.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 175.5,
+        "bottom": 257.5
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "가입 모드",
+      "unit": "새 계정이 만들어지는 방식을 선택합니다.",
+      "keyboardFocus": true,
+      "textSelection": null,
+      "accessibleLabel": "가입 모드",
+      "value": "approval",
+      "tag": "SELECT",
+      "help": "새 계정이 만들어지는 방식을 선택합니다.",
+      "error": null,
+      "geometry": {
+        "left": 325,
+        "right": 965,
+        "top": 225,
+        "bottom": 261,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 325,
+        "right": 965,
+        "top": 201,
+        "bottom": 283
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "업로드 크기 제한",
+      "unit": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 9
+      },
+      "accessibleLabel": "업로드 크기 제한",
+      "value": "104857600",
+      "tag": "INPUT",
+      "help": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 325,
+        "right": 965,
+        "top": 339,
+        "bottom": 375,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 325,
+        "right": 965,
+        "top": 315,
+        "bottom": 397
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "보관 버전 개수",
+      "unit": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "보관 버전 개수",
+      "value": "20",
+      "tag": "INPUT",
+      "help": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 325,
+        "right": 965,
+        "top": 453,
+        "bottom": 489,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 325,
+        "right": 965,
+        "top": 429,
+        "bottom": 511
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "휴지통 보존 일수",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "휴지통 보존 일수",
+      "value": "30",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 325,
+        "right": 965,
+        "top": 379,
+        "bottom": 415,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 325,
+        "right": 965,
+        "top": 355,
+        "bottom": 437
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "감사 로그 보존 기간",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 3
+      },
+      "accessibleLabel": "감사 로그 보존 기간",
+      "value": "365",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 325,
+        "right": 965,
+        "top": 493,
+        "bottom": 529,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 325,
+        "right": 965,
+        "top": 469,
+        "bottom": 551
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "가입 모드",
+      "unit": "새 계정이 만들어지는 방식을 선택합니다.",
+      "keyboardFocus": true,
+      "textSelection": null,
+      "accessibleLabel": "가입 모드",
+      "value": "approval",
+      "tag": "SELECT",
+      "help": "새 계정이 만들어지는 방식을 선택합니다.",
+      "error": null,
+      "geometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 204,
+        "bottom": 240,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 180,
+        "bottom": 262
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "업로드 크기 제한",
+      "unit": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 9
+      },
+      "accessibleLabel": "업로드 크기 제한",
+      "value": "104857600",
+      "tag": "INPUT",
+      "help": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 199.5,
+        "bottom": 235.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 175.5,
+        "bottom": 257.5
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "보관 버전 개수",
+      "unit": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "보관 버전 개수",
+      "value": "20",
+      "tag": "INPUT",
+      "help": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 199.5,
+        "bottom": 235.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 175.5,
+        "bottom": 257.5
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "휴지통 보존 일수",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "휴지통 보존 일수",
+      "value": "30",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 199.5,
+        "bottom": 235.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 175.5,
+        "bottom": 257.5
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "감사 로그 보존 기간",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 3
+      },
+      "accessibleLabel": "감사 로그 보존 기간",
+      "value": "365",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 199.5,
+        "bottom": 235.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 228.0703125,
+        "right": 596.296875,
+        "top": 175.5,
+        "bottom": 257.5
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "label": "가입 모드",
+      "unit": "새 계정이 만들어지는 방식을 선택합니다.",
+      "keyboardFocus": true,
+      "textSelection": null,
+      "accessibleLabel": "가입 모드",
+      "value": "approval",
+      "tag": "SELECT",
+      "help": "새 계정이 만들어지는 방식을 선택합니다.",
+      "error": null,
+      "geometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 234,
+        "bottom": 270,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 210,
+        "bottom": 292
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "label": "업로드 크기 제한",
+      "unit": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 9
+      },
+      "accessibleLabel": "업로드 크기 제한",
+      "value": "104857600",
+      "tag": "INPUT",
+      "help": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 348,
+        "bottom": 384,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 324,
+        "bottom": 406
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "label": "보관 버전 개수",
+      "unit": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "보관 버전 개수",
+      "value": "20",
+      "tag": "INPUT",
+      "help": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 462,
+        "bottom": 498,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 438,
+        "bottom": 520
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "label": "휴지통 보존 일수",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "휴지통 보존 일수",
+      "value": "30",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 576,
+        "bottom": 612,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 552,
+        "bottom": 634
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "label": "감사 로그 보존 기간",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 3
+      },
+      "accessibleLabel": "감사 로그 보존 기간",
+      "value": "365",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 690,
+        "bottom": 726,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 666,
+        "bottom": 748
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "label": "가입 모드",
+      "unit": "새 계정이 만들어지는 방식을 선택합니다.",
+      "keyboardFocus": true,
+      "textSelection": null,
+      "accessibleLabel": "가입 모드",
+      "value": "approval",
+      "tag": "SELECT",
+      "help": "새 계정이 만들어지는 방식을 선택합니다.",
+      "error": null,
+      "geometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 203.5,
+        "bottom": 239.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 179.5,
+        "bottom": 261.5
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "label": "업로드 크기 제한",
+      "unit": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 9
+      },
+      "accessibleLabel": "업로드 크기 제한",
+      "value": "104857600",
+      "tag": "INPUT",
+      "help": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 244.5,
+        "bottom": 280.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 220.5,
+        "bottom": 302.5
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "label": "보관 버전 개수",
+      "unit": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "보관 버전 개수",
+      "value": "20",
+      "tag": "INPUT",
+      "help": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 244.5,
+        "bottom": 280.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 220.5,
+        "bottom": 302.5
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "label": "휴지통 보존 일수",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "휴지통 보존 일수",
+      "value": "30",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 244.5,
+        "bottom": 280.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 220.5,
+        "bottom": 302.5
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "label": "감사 로그 보존 기간",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 3
+      },
+      "accessibleLabel": "감사 로그 보존 기간",
+      "value": "365",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 244.5,
+        "bottom": 280.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 220.5,
+        "bottom": 302.5
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "가입 모드",
+      "unit": "새 계정이 만들어지는 방식을 선택합니다.",
+      "keyboardFocus": true,
+      "textSelection": null,
+      "accessibleLabel": "가입 모드",
+      "value": "approval",
+      "tag": "SELECT",
+      "help": "새 계정이 만들어지는 방식을 선택합니다.",
+      "error": null,
+      "geometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 239,
+        "bottom": 275,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 215,
+        "bottom": 297
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "업로드 크기 제한",
+      "unit": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 9
+      },
+      "accessibleLabel": "업로드 크기 제한",
+      "value": "104857600",
+      "tag": "INPUT",
+      "help": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 353,
+        "bottom": 389,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 329,
+        "bottom": 411
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "보관 버전 개수",
+      "unit": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "보관 버전 개수",
+      "value": "20",
+      "tag": "INPUT",
+      "help": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 467,
+        "bottom": 503,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 443,
+        "bottom": 525
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "휴지통 보존 일수",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "휴지통 보존 일수",
+      "value": "30",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 581,
+        "bottom": 617,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 557,
+        "bottom": 639
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "감사 로그 보존 기간",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 3
+      },
+      "accessibleLabel": "감사 로그 보존 기간",
+      "value": "365",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 695,
+        "bottom": 731,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 405,
+        "right": 1045,
+        "top": 671,
+        "bottom": 753
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "가입 모드",
+      "unit": "새 계정이 만들어지는 방식을 선택합니다.",
+      "keyboardFocus": true,
+      "textSelection": null,
+      "accessibleLabel": "가입 모드",
+      "value": "approval",
+      "tag": "SELECT",
+      "help": "새 계정이 만들어지는 방식을 선택합니다.",
+      "error": null,
+      "geometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 208.5,
+        "bottom": 244.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 184.5,
+        "bottom": 266.5
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "업로드 크기 제한",
+      "unit": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 9
+      },
+      "accessibleLabel": "업로드 크기 제한",
+      "value": "104857600",
+      "tag": "INPUT",
+      "help": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 244.5,
+        "bottom": 280.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 220.5,
+        "bottom": 302.5
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "보관 버전 개수",
+      "unit": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "보관 버전 개수",
+      "value": "20",
+      "tag": "INPUT",
+      "help": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 244.5,
+        "bottom": 280.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 220.5,
+        "bottom": 302.5
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "휴지통 보존 일수",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "휴지통 보존 일수",
+      "value": "30",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 244.5,
+        "bottom": 280.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 220.5,
+        "bottom": 302.5
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "감사 로그 보존 기간",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 3
+      },
+      "accessibleLabel": "감사 로그 보존 기간",
+      "value": "365",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 244.5,
+        "bottom": 280.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 254.53125,
+        "right": 673.8984375,
+        "top": 220.5,
+        "bottom": 302.5
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "label": "가입 모드",
+      "unit": "새 계정이 만들어지는 방식을 선택합니다.",
+      "keyboardFocus": true,
+      "textSelection": null,
+      "accessibleLabel": "가입 모드",
+      "value": "approval",
+      "tag": "SELECT",
+      "help": "새 계정이 만들어지는 방식을 선택합니다.",
+      "error": null,
+      "geometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 324,
+        "bottom": 360,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 300,
+        "bottom": 382
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "label": "업로드 크기 제한",
+      "unit": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 9
+      },
+      "accessibleLabel": "업로드 크기 제한",
+      "value": "104857600",
+      "tag": "INPUT",
+      "help": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 438,
+        "bottom": 474,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 414,
+        "bottom": 496
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "label": "보관 버전 개수",
+      "unit": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "보관 버전 개수",
+      "value": "20",
+      "tag": "INPUT",
+      "help": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 552,
+        "bottom": 588,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 528,
+        "bottom": 610
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "label": "휴지통 보존 일수",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "휴지통 보존 일수",
+      "value": "30",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 666,
+        "bottom": 702,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 642,
+        "bottom": 724
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "label": "감사 로그 보존 기간",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 3
+      },
+      "accessibleLabel": "감사 로그 보존 기간",
+      "value": "365",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 780,
+        "bottom": 816,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 756,
+        "bottom": 838
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "label": "가입 모드",
+      "unit": "새 계정이 만들어지는 방식을 선택합니다.",
+      "keyboardFocus": true,
+      "textSelection": null,
+      "accessibleLabel": "가입 모드",
+      "value": "approval",
+      "tag": "SELECT",
+      "help": "새 계정이 만들어지는 방식을 선택합니다.",
+      "error": null,
+      "geometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 221,
+        "bottom": 257,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 197,
+        "bottom": 279
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "label": "업로드 크기 제한",
+      "unit": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 9
+      },
+      "accessibleLabel": "업로드 크기 제한",
+      "value": "104857600",
+      "tag": "INPUT",
+      "help": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 335,
+        "bottom": 371,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 311,
+        "bottom": 393
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "label": "보관 버전 개수",
+      "unit": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "보관 버전 개수",
+      "value": "20",
+      "tag": "INPUT",
+      "help": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 289.5,
+        "bottom": 325.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 265.5,
+        "bottom": 347.5
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "label": "휴지통 보존 일수",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "휴지통 보존 일수",
+      "value": "30",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 472,
+        "bottom": 508,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 448,
+        "bottom": 530
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "label": "감사 로그 보존 기간",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 3
+      },
+      "accessibleLabel": "감사 로그 보존 기간",
+      "value": "365",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 289.5,
+        "bottom": 325.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 265.5,
+        "bottom": 347.5
+      },
+      "color": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "labelBackground": "rgb(245, 244, 239)",
+      "helpBackground": "rgb(245, 244, 239)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(233, 231, 226)",
+      "contrastRatio": 14.639805378106399,
+      "labelContrast": 14.004951701436438,
+      "helpContrast": 5.268987227065019,
+      "errorContrast": null,
+      "borderContrast": 4.068785011047702,
+      "focusContrast": 6.903983660507881,
+      "buttonContrast": 4.695403142273151,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "가입 모드",
+      "unit": "새 계정이 만들어지는 방식을 선택합니다.",
+      "keyboardFocus": true,
+      "textSelection": null,
+      "accessibleLabel": "가입 모드",
+      "value": "approval",
+      "tag": "SELECT",
+      "help": "새 계정이 만들어지는 방식을 선택합니다.",
+      "error": null,
+      "geometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 278,
+        "bottom": 314,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 254,
+        "bottom": 336
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "업로드 크기 제한",
+      "unit": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 9
+      },
+      "accessibleLabel": "업로드 크기 제한",
+      "value": "104857600",
+      "tag": "INPUT",
+      "help": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 392,
+        "bottom": 428,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 368,
+        "bottom": 450
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "보관 버전 개수",
+      "unit": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "보관 버전 개수",
+      "value": "20",
+      "tag": "INPUT",
+      "help": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 506,
+        "bottom": 542,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 482,
+        "bottom": 564
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "휴지통 보존 일수",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "휴지통 보존 일수",
+      "value": "30",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 620,
+        "bottom": 656,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 596,
+        "bottom": 678
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "감사 로그 보존 기간",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 3
+      },
+      "accessibleLabel": "감사 로그 보존 기간",
+      "value": "365",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 734,
+        "bottom": 770,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 645,
+        "right": 1285,
+        "top": 710,
+        "bottom": 792
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 1,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "가입 모드",
+      "unit": "새 계정이 만들어지는 방식을 선택합니다.",
+      "keyboardFocus": true,
+      "textSelection": null,
+      "accessibleLabel": "가입 모드",
+      "value": "approval",
+      "tag": "SELECT",
+      "help": "새 계정이 만들어지는 방식을 선택합니다.",
+      "error": null,
+      "geometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 175,
+        "bottom": 211,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 151,
+        "bottom": 233
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "업로드 크기 제한",
+      "unit": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 9
+      },
+      "accessibleLabel": "업로드 크기 제한",
+      "value": "104857600",
+      "tag": "INPUT",
+      "help": "바이트 단위 · 제한을 넘는 업로드는 거부됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 289,
+        "bottom": 325,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 265,
+        "bottom": 347
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "보관 버전 개수",
+      "unit": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "보관 버전 개수",
+      "value": "20",
+      "tag": "INPUT",
+      "help": "개 단위 · 한도를 넘는 가장 오래된 버전부터 정리됩니다.",
+      "error": null,
+      "geometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 289.5,
+        "bottom": 325.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 265.5,
+        "bottom": 347.5
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "휴지통 보존 일수",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 2
+      },
+      "accessibleLabel": "휴지통 보존 일수",
+      "value": "30",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 472,
+        "bottom": 508,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 448,
+        "bottom": 530
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "감사 로그 보존 기간",
+      "unit": "일 단위 · 0은 무제한",
+      "keyboardFocus": true,
+      "textSelection": {
+        "start": 0,
+        "end": 3
+      },
+      "accessibleLabel": "감사 로그 보존 기간",
+      "value": "365",
+      "tag": "INPUT",
+      "help": "일 단위 · 0은 무제한",
+      "error": null,
+      "geometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 289.5,
+        "bottom": 325.5,
+        "height": 36
+      },
+      "fieldGeometry": {
+        "left": 313.80078125,
+        "right": 898.69921875,
+        "top": 265.5,
+        "bottom": 347.5
+      },
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "labelBackground": "rgb(41, 44, 39)",
+      "helpBackground": "rgb(41, 44, 39)",
+      "errorBackground": null,
+      "buttonBackground": "rgb(32, 34, 31)",
+      "contrastRatio": 10.129573328016168,
+      "labelContrast": 11.430133007600727,
+      "helpContrast": 7.030444819993569,
+      "errorContrast": null,
+      "borderContrast": 3.8144537109684373,
+      "focusContrast": 6.869198040789459,
+      "buttonContrast": 7.963397074183524,
+      "focusOutlineWidth": "2px",
+      "focusOutlineOffset": "2px",
+      "clipped": false,
+      "adjacentSeparation": 0,
+      "buttonDisabled": true,
+      "dpr": 2,
+      "hoverObserved": true
+    }
+  ],
+  "errorObservations": [
+    {
+      "kind": "numeric",
+      "label": "업로드 크기 제한",
+      "text": "0보다 큰 유한한 숫자를 입력하세요.",
+      "color": "rgb(240, 171, 163)",
+      "errorBackground": "rgb(41, 44, 39)",
+      "contrastRatio": 7.452952953993607
+    },
+    {
+      "kind": "numeric",
+      "label": "보관 버전 개수",
+      "text": "0보다 큰 유한한 숫자를 입력하세요.",
+      "color": "rgb(240, 171, 163)",
+      "errorBackground": "rgb(41, 44, 39)",
+      "contrastRatio": 7.452952953993607
+    },
+    {
+      "kind": "numeric",
+      "label": "휴지통 보존 일수",
+      "text": "0 이상의 유한한 숫자를 입력하세요.",
+      "color": "rgb(240, 171, 163)",
+      "errorBackground": "rgb(41, 44, 39)",
+      "contrastRatio": 7.452952953993607
+    },
+    {
+      "kind": "numeric",
+      "label": "감사 로그 보존 기간",
+      "text": "0 이상의 유한한 숫자를 입력하세요.",
+      "color": "rgb(240, 171, 163)",
+      "errorBackground": "rgb(41, 44, 39)",
+      "contrastRatio": 7.452952953993607
+    },
+    {
+      "kind": "cross-field",
+      "label": "감사 로그 보존 기간",
+      "text": "감사 로그 보존 기간은 휴지통 보존 기간보다 짧을 수 없습니다. 0은 무제한입니다.",
+      "color": "rgb(240, 171, 163)",
+      "errorBackground": "rgb(41, 44, 39)",
+      "contrastRatio": 7.452952953993607
+    }
+  ],
+  "stateApplicability": [
+    {
+      "state": "default",
+      "applicable": true,
+      "evidence": {
+        "observedRows": 60
+      }
+    },
+    {
+      "state": "hover",
+      "applicable": true,
+      "evidence": {
+        "hoverRows": 60
+      }
+    },
+    {
+      "state": "focus",
+      "applicable": true,
+      "evidence": {
+        "measuredRows": 60
+      }
+    },
+    {
+      "state": "selected",
+      "applicable": true,
+      "evidence": {
+        "keyboardRows": 12
+      }
+    },
+    {
+      "state": "disabled",
+      "applicable": true,
+      "evidence": {
+        "pendingDisabledObserved": true
+      }
+    },
+    {
+      "state": "readonly",
+      "applicable": false,
+      "reason": "no readonly state in the five-field contract",
+      "evidence": {
+        "readonlyCount": 0
+      }
+    },
+    {
+      "state": "invalid",
+      "applicable": true,
+      "evidence": {
+        "invalidRows": 16
+      }
+    },
+    {
+      "state": "loading",
+      "applicable": true,
+      "evidence": {
+        "delayedPreflight": true
+      }
+    },
+    {
+      "state": "empty",
+      "applicable": false,
+      "reason": "empty numeric input is invalid, not successful-empty",
+      "evidence": {
+        "emptySuccessCount": 0
+      }
+    },
+    {
+      "state": "error",
+      "applicable": true,
+      "evidence": {
+        "failedLoad": true,
+        "abortedPut": true
+      }
+    }
+  ],
+  "compositionObservations": [
+    {
+      "surface": "base-field",
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "label": "업로드 크기 제한",
+      "baselineValue": "104857600",
+      "invalidValue": "한",
+      "correctedValue": "104857601",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "104857601"
+      }
+    },
+    {
+      "surface": "base-field",
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "label": "보관 버전 개수",
+      "baselineValue": "20",
+      "invalidValue": "한",
+      "correctedValue": "21",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "21"
+      }
+    },
+    {
+      "surface": "base-field",
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "label": "휴지통 보존 일수",
+      "baselineValue": "30",
+      "invalidValue": "한",
+      "correctedValue": "31",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "31"
+      }
+    },
+    {
+      "surface": "base-field",
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "label": "감사 로그 보존 기간",
+      "baselineValue": "365",
+      "invalidValue": "한",
+      "correctedValue": "366",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "366"
+      }
+    },
+    {
+      "surface": "issue87-L3",
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "defaultPrevented": true,
+      "focused": true,
+      "value": "한",
+      "isTrusted": false,
+      "putOrPreviewDelta": 0,
+      "tokenMatched": true,
+      "tokenLength": 4,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-confirm",
+        "putDelta": 1,
+        "readbackDelta": 1,
+        "readbackValue": "1"
+      }
+    },
+    {
+      "surface": "issue88-leave",
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "defaultPrevented": true,
+      "focused": true,
+      "isTrusted": false,
+      "putOrPreviewDelta": 0,
+      "retainedDraft": "104857602",
+      "retainedFocus": true,
+      "deliberatePostCompositionAction": {
+        "kind": "discard-category-leave",
+        "destinationObserved": "true"
+      }
+    },
+    {
+      "surface": "base-field",
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "업로드 크기 제한",
+      "baselineValue": "104857601",
+      "invalidValue": "한",
+      "correctedValue": "104857602",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "104857602"
+      }
+    },
+    {
+      "surface": "base-field",
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "보관 버전 개수",
+      "baselineValue": "21",
+      "invalidValue": "한",
+      "correctedValue": "22",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "22"
+      }
+    },
+    {
+      "surface": "base-field",
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "휴지통 보존 일수",
+      "baselineValue": "31",
+      "invalidValue": "한",
+      "correctedValue": "32",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "32"
+      }
+    },
+    {
+      "surface": "base-field",
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "label": "감사 로그 보존 기간",
+      "baselineValue": "366",
+      "invalidValue": "한",
+      "correctedValue": "367",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "367"
+      }
+    },
+    {
+      "surface": "issue87-L3",
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "defaultPrevented": true,
+      "focused": true,
+      "value": "한",
+      "isTrusted": false,
+      "putOrPreviewDelta": 0,
+      "tokenMatched": true,
+      "tokenLength": 4,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-confirm",
+        "putDelta": 1,
+        "readbackDelta": 1,
+        "readbackValue": "1"
+      }
+    },
+    {
+      "surface": "issue88-leave",
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "defaultPrevented": true,
+      "focused": true,
+      "isTrusted": false,
+      "putOrPreviewDelta": 0,
+      "retainedDraft": "104857603",
+      "retainedFocus": true,
+      "deliberatePostCompositionAction": {
+        "kind": "discard-category-leave",
+        "destinationObserved": "true"
+      }
+    },
+    {
+      "surface": "base-field",
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "업로드 크기 제한",
+      "baselineValue": "104857602",
+      "invalidValue": "한",
+      "correctedValue": "104857603",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "104857603"
+      }
+    },
+    {
+      "surface": "base-field",
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "보관 버전 개수",
+      "baselineValue": "22",
+      "invalidValue": "한",
+      "correctedValue": "23",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "23"
+      }
+    },
+    {
+      "surface": "base-field",
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "휴지통 보존 일수",
+      "baselineValue": "32",
+      "invalidValue": "한",
+      "correctedValue": "33",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "33"
+      }
+    },
+    {
+      "surface": "base-field",
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "label": "감사 로그 보존 기간",
+      "baselineValue": "367",
+      "invalidValue": "한",
+      "correctedValue": "368",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "368"
+      }
+    },
+    {
+      "surface": "issue87-L3",
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "defaultPrevented": true,
+      "focused": true,
+      "value": "한",
+      "isTrusted": false,
+      "putOrPreviewDelta": 0,
+      "tokenMatched": true,
+      "tokenLength": 4,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-confirm",
+        "putDelta": 1,
+        "readbackDelta": 1,
+        "readbackValue": "1"
+      }
+    },
+    {
+      "surface": "issue88-leave",
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "defaultPrevented": true,
+      "focused": true,
+      "isTrusted": false,
+      "putOrPreviewDelta": 0,
+      "retainedDraft": "104857604",
+      "retainedFocus": true,
+      "deliberatePostCompositionAction": {
+        "kind": "discard-category-leave",
+        "destinationObserved": "true"
+      }
+    },
+    {
+      "surface": "base-field",
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "label": "업로드 크기 제한",
+      "baselineValue": "104857603",
+      "invalidValue": "한",
+      "correctedValue": "104857604",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "104857604"
+      }
+    },
+    {
+      "surface": "base-field",
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "label": "보관 버전 개수",
+      "baselineValue": "23",
+      "invalidValue": "한",
+      "correctedValue": "24",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "24"
+      }
+    },
+    {
+      "surface": "base-field",
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "label": "휴지통 보존 일수",
+      "baselineValue": "33",
+      "invalidValue": "한",
+      "correctedValue": "34",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "34"
+      }
+    },
+    {
+      "surface": "base-field",
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "label": "감사 로그 보존 기간",
+      "baselineValue": "368",
+      "invalidValue": "한",
+      "correctedValue": "369",
+      "defaultPrevented": true,
+      "dispatched": false,
+      "focused": false,
+      "value": "한",
+      "isTrusted": false,
+      "activeBlur": {
+        "value": "한",
+        "invalid": null,
+        "focused": false
+      },
+      "postEndInvalid": true,
+      "putOrPreviewDelta": 0,
+      "putDelta": 1,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-save",
+        "key": "Enter",
+        "observedPut": 1,
+        "readback": "369"
+      }
+    },
+    {
+      "surface": "issue87-L3",
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "defaultPrevented": true,
+      "focused": true,
+      "value": "한",
+      "isTrusted": false,
+      "putOrPreviewDelta": 0,
+      "tokenMatched": true,
+      "tokenLength": 4,
+      "deliberatePostCompositionAction": {
+        "kind": "keyboard-confirm",
+        "putDelta": 1,
+        "readbackDelta": 1,
+        "readbackValue": "1"
+      }
+    },
+    {
+      "surface": "issue88-leave",
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "defaultPrevented": true,
+      "focused": true,
+      "isTrusted": false,
+      "putOrPreviewDelta": 0,
+      "retainedDraft": "104857605",
+      "retainedFocus": true,
+      "deliberatePostCompositionAction": {
+        "kind": "discard-category-leave",
+        "destinationObserved": "true"
+      }
+    }
+  ],
+  "leaveRouteObservations": [
+    {
+      "route": "category",
+      "exactDraft": "10485768",
+      "retainedDraft": "10485768",
+      "retainedFocus": true,
+      "putDelta": 0,
+      "followup": "discard",
+      "destinationObserved": "true"
+    },
+    {
+      "route": "header-close",
+      "exactDraft": "104857612",
+      "retainedDraft": "104857612",
+      "retainedFocus": true,
+      "putDelta": 0,
+      "followup": "discard",
+      "destinationObserved": true
+    },
+    {
+      "route": "escape",
+      "exactDraft": "10485766",
+      "retainedDraft": "10485766",
+      "retainedFocus": true,
+      "putDelta": 0,
+      "followup": "discard",
+      "destinationObserved": true
+    },
+    {
+      "route": "outside-click",
+      "exactDraft": "104857613",
+      "retainedDraft": "104857613",
+      "retainedFocus": true,
+      "putDelta": 0,
+      "followup": "discard",
+      "destinationObserved": true
+    }
+  ],
+  "combinedSmoke": {
+    "issue87Retention": [
+      {
+        "surface": "issue87-L3",
+        "width": 1280,
+        "height": 720,
+        "theme": "light",
+        "zoom": 100,
+        "defaultPrevented": true,
+        "focused": true,
+        "value": "한",
+        "isTrusted": false,
+        "putOrPreviewDelta": 0,
+        "tokenMatched": true,
+        "tokenLength": 4,
+        "deliberatePostCompositionAction": {
+          "kind": "keyboard-confirm",
+          "putDelta": 1,
+          "readbackDelta": 1,
+          "readbackValue": "1"
+        }
+      },
+      {
+        "surface": "issue87-L3",
+        "width": 1280,
+        "height": 720,
+        "theme": "dark",
+        "zoom": 200,
+        "defaultPrevented": true,
+        "focused": true,
+        "value": "한",
+        "isTrusted": false,
+        "putOrPreviewDelta": 0,
+        "tokenMatched": true,
+        "tokenLength": 4,
+        "deliberatePostCompositionAction": {
+          "kind": "keyboard-confirm",
+          "putDelta": 1,
+          "readbackDelta": 1,
+          "readbackValue": "1"
+        }
+      },
+      {
+        "surface": "issue87-L3",
+        "width": 1440,
+        "height": 900,
+        "theme": "dark",
+        "zoom": 100,
+        "defaultPrevented": true,
+        "focused": true,
+        "value": "한",
+        "isTrusted": false,
+        "putOrPreviewDelta": 0,
+        "tokenMatched": true,
+        "tokenLength": 4,
+        "deliberatePostCompositionAction": {
+          "kind": "keyboard-confirm",
+          "putDelta": 1,
+          "readbackDelta": 1,
+          "readbackValue": "1"
+        }
+      },
+      {
+        "surface": "issue87-L3",
+        "width": 1920,
+        "height": 1080,
+        "theme": "light",
+        "zoom": 200,
+        "defaultPrevented": true,
+        "focused": true,
+        "value": "한",
+        "isTrusted": false,
+        "putOrPreviewDelta": 0,
+        "tokenMatched": true,
+        "tokenLength": 4,
+        "deliberatePostCompositionAction": {
+          "kind": "keyboard-confirm",
+          "putDelta": 1,
+          "readbackDelta": 1,
+          "readbackValue": "1"
+        }
+      }
+    ],
+    "issue88Leave": [
+      {
+        "route": "category",
+        "exactDraft": "10485768",
+        "retainedDraft": "10485768",
+        "retainedFocus": true,
+        "putDelta": 0,
+        "followup": "discard",
+        "destinationObserved": "true"
+      },
+      {
+        "route": "header-close",
+        "exactDraft": "104857612",
+        "retainedDraft": "104857612",
+        "retainedFocus": true,
+        "putDelta": 0,
+        "followup": "discard",
+        "destinationObserved": true
+      },
+      {
+        "route": "escape",
+        "exactDraft": "10485766",
+        "retainedDraft": "10485766",
+        "retainedFocus": true,
+        "putDelta": 0,
+        "followup": "discard",
+        "destinationObserved": true
+      },
+      {
+        "route": "outside-click",
+        "exactDraft": "104857613",
+        "retainedDraft": "104857613",
+        "retainedFocus": true,
+        "putDelta": 0,
+        "followup": "discard",
+        "destinationObserved": true
+      }
+    ],
+    "acceptedReadback": {
+      "acceptedPutDelta": 1,
+      "acceptedGetDelta": 3,
+      "retryPutDelta": 0,
+      "retryGetDelta": 1,
+      "draftDuringReadback": "open",
+      "sameMountedDuringFailure": true,
+      "sameMountedAfterRetry": true,
+      "readbackValue": "open"
+    }
+  },
+  "nativeImeLimitations": "Native Windows IME candidate window, physical keyboard commit path, password-manager UI, and OS dialogs were not performed. This is nonblocking synthetic composition evidence only."
+}

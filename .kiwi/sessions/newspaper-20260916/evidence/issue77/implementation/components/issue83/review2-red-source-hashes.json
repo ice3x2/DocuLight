@@ -1,0 +1,29 @@
+﻿{
+    "sources":  [
+                    {
+                        "sha256":  "025adb790fb9ad609c6cfb9b52129942e759b64fd21f257f487e8235a06fff8d",
+                        "source":  "packages/web/test/issue83-managed-workspaces.test.tsx"
+                    },
+                    {
+                        "sha256":  "7666ba43eaa77d20d8aa665c8a32e1167e8c185d0fbb31be9af5cf6772632bd9",
+                        "source":  "packages/web/src/App.tsx"
+                    },
+                    {
+                        "sha256":  "7238042699e754a16eeabd21cd72bc7deb59bf7b7fdeb0f5f9ac633d13bcf6b9",
+                        "source":  "packages/web/src/acl/AclAuditPanel.tsx"
+                    },
+                    {
+                        "sha256":  "ada3d2eeaed88497b9f6fea243eb1b54ff06db83e543ba867e1a3db886cec8f4",
+                        "source":  "packages/web/src/acl/BulkRevokePanel.tsx"
+                    },
+                    {
+                        "sha256":  "c6bf77f894edf44d2ed1a317c5ff898b7fa7d33e65d520a6f9bcddf309c30c53",
+                        "source":  "packages/web/src/acl/SimulationPanel.tsx"
+                    },
+                    {
+                        "sha256":  "3b14f69adf45c5967dbe5009744bb6f02d0aef32b7197f1572a2851bfdcd7863",
+                        "source":  "packages/web/src/api/client.ts"
+                    }
+                ],
+    "phase":  "RED"
+}

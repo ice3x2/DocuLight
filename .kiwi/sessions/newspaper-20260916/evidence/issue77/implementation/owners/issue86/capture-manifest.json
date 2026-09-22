@@ -1,0 +1,1601 @@
+{
+  "requirement": "IR-SHELL-012",
+  "runner": "owned isolated persistent Chromium and temporary seeded product server",
+  "roles": [
+    "managed-superuser",
+    "zero-workspace-superuser",
+    "workspace-manager",
+    "ordinary-user"
+  ],
+  "matrix": {
+    "viewports": [
+      "1280x720",
+      "1440x900",
+      "1920x1080"
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "zoom": [
+      100,
+      200
+    ],
+    "normalCaptures": 12,
+    "forcedColorsCaptures": 2
+  },
+  "contrastContract": {
+    "targets": [
+      "ordinary text",
+      "long Korean audit row",
+      "large text",
+      "workspace group heading",
+      "focused boundary",
+      "non-focused boundary"
+    ],
+    "thresholds": {
+      "ordinaryText": 4.5,
+      "longKoreanAuditRow": 4.5,
+      "largeText": 3,
+      "groupHeading": "4.5 unless computed as large, then 3",
+      "focusBoundary": 3,
+      "nonFocusBoundary": 3
+    },
+    "measuredInEveryCapture": true,
+    "forcedColorsIncluded": true
+  },
+  "zoomContract": {
+    "mechanism": "chrome.tabs.setZoom/getZoom",
+    "transitions": [
+      100,
+      200
+    ],
+    "resetZoom": 1
+  },
+  "requests": [
+    {
+      "role": "managed-superuser",
+      "method": "GET",
+      "path": "/api/audit-log",
+      "search": ""
+    },
+    {
+      "role": "managed-superuser",
+      "method": "GET",
+      "path": "/api/reconciliation-queue",
+      "search": ""
+    },
+    {
+      "role": "zero-workspace-superuser",
+      "method": "GET",
+      "path": "/api/audit-log",
+      "search": ""
+    },
+    {
+      "role": "zero-workspace-superuser",
+      "method": "GET",
+      "path": "/api/reconciliation-queue",
+      "search": ""
+    },
+    {
+      "role": "zero-workspace-superuser",
+      "method": "GET",
+      "path": "/api/audit-log",
+      "search": ""
+    },
+    {
+      "role": "zero-workspace-superuser",
+      "method": "GET",
+      "path": "/api/reconciliation-queue",
+      "search": ""
+    },
+    {
+      "role": "zero-workspace-superuser",
+      "method": "GET",
+      "path": "/api/audit-log",
+      "search": ""
+    },
+    {
+      "role": "zero-workspace-superuser",
+      "method": "GET",
+      "path": "/api/reconciliation-queue",
+      "search": ""
+    },
+    {
+      "role": "zero-workspace-superuser",
+      "method": "GET",
+      "path": "/api/audit-log",
+      "search": ""
+    },
+    {
+      "role": "zero-workspace-superuser",
+      "method": "GET",
+      "path": "/api/reconciliation-queue",
+      "search": ""
+    },
+    {
+      "role": "zero-workspace-superuser",
+      "method": "GET",
+      "path": "/api/audit-log",
+      "search": ""
+    },
+    {
+      "role": "zero-workspace-superuser",
+      "method": "GET",
+      "path": "/api/reconciliation-queue",
+      "search": ""
+    },
+    {
+      "role": "zero-workspace-superuser-return",
+      "method": "GET",
+      "path": "/api/audit-log",
+      "search": ""
+    },
+    {
+      "role": "zero-workspace-superuser-return",
+      "method": "GET",
+      "path": "/api/reconciliation-queue",
+      "search": ""
+    },
+    {
+      "role": "workspace-manager",
+      "method": "GET",
+      "path": "/api/audit-log",
+      "search": ""
+    },
+    {
+      "role": "workspace-manager",
+      "method": "GET",
+      "path": "/api/reconciliation-queue",
+      "search": ""
+    },
+    {
+      "role": "workspace-manager",
+      "method": "GET",
+      "path": "/api/audit-log",
+      "search": ""
+    },
+    {
+      "role": "workspace-manager",
+      "method": "GET",
+      "path": "/api/reconciliation-queue",
+      "search": ""
+    },
+    {
+      "role": "workspace-manager-after-ordinary",
+      "method": "GET",
+      "path": "/api/audit-log",
+      "search": ""
+    },
+    {
+      "role": "workspace-manager-after-ordinary",
+      "method": "GET",
+      "path": "/api/reconciliation-queue",
+      "search": ""
+    },
+    {
+      "role": "workspace-manager-after-ordinary",
+      "method": "GET",
+      "path": "/api/audit-log",
+      "search": ""
+    },
+    {
+      "role": "workspace-manager-after-ordinary",
+      "method": "GET",
+      "path": "/api/reconciliation-queue",
+      "search": ""
+    }
+  ],
+  "ordinaryIsolation": {
+    "beforeOrdinaryLogin": {
+      "auditRows": 2,
+      "queueItems": 0
+    },
+    "afterOrdinaryLogin": {
+      "auditRows": 2,
+      "queueItems": 0
+    },
+    "auditIncrement": 0,
+    "queueIncrement": 0,
+    "privilegedRequestsDuringOrdinary": []
+  },
+  "authorityTransition": {
+    "mode": "same mounted App, same open settings modal, React Query session cache update",
+    "coverage": [
+      "managed superuser adminWorkspaceCount 1 -> 0 keeps and reloads focused audit-log",
+      "superuser -> ordinary removes selected audit-log and focuses live neutral continuation",
+      "superuser -> workspace-manager removes selected instance settings and focuses live neutral continuation"
+    ],
+    "integrationTest": "packages/web/test/issue86-audit-entry.test.tsx",
+    "integrationSourceSha256": "68fc3457a0de20b94a21c79dfe91d726c73fd45ef3b20c257694ec2a2d9d6d6f",
+    "logoutOrNewModalUsedByTransitionTests": false
+  },
+  "closureEvidence": [
+    {
+      "path": "docs/spec/08.app-shell.srs.md",
+      "sha256": "40fede451b42f83a82a7c4cbfed064d3fb88dd2a0b85237ad3fab48ce40c6021",
+      "normalization": "LF"
+    },
+    {
+      "path": ".kiwi/sessions/newspaper-20260916/evidence/issue86/final-independent-review.md",
+      "sha256": "8f7078d32637e8a61c44587030c47d26693bcd14fc64b17ac7278ece3fec2aed",
+      "normalization": "LF"
+    }
+  ],
+  "roleSnapshots": [
+    {
+      "role": "managed-superuser",
+      "positiveWorkspace": true,
+      "auditVisible": true,
+      "aclAuditVisible": true
+    },
+    {
+      "role": "ordinary-user",
+      "auditVisible": false,
+      "aclAuditVisible": false,
+      "initialFocus": "에디터"
+    },
+    {
+      "role": "workspace-manager",
+      "auditVisible": true,
+      "aclAuditVisible": true,
+      "instanceSettingsVisible": false,
+      "initialFocus": "에디터"
+    }
+  ],
+  "keyboard": {
+    "keys": [
+      "ArrowDown",
+      "Home",
+      "End",
+      "Tab"
+    ],
+    "tabFocus": {
+      "inside": true,
+      "tag": "BUTTON",
+      "label": "▸2026-09-21 22:44:59reconcile.createsystem:reconciler1건"
+    }
+  },
+  "captures": [
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "none",
+      "observedZoom": 1,
+      "metrics": {
+        "cssViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "forced": false,
+        "pageOverflowX": false,
+        "navigationScrollable": true,
+        "contentScrollable": true,
+        "closeReachable": true,
+        "groupHeadingVisible": true,
+        "lastResultPresent": true,
+        "focusVisible": true,
+        "contrast": {
+          "badgeText": 12.297720709885532,
+          "focusIndicator": 6.604593108697848,
+          "targets": {
+            "ordinaryText": {
+              "target": "[data-audit-filter] > label",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(245, 244, 239)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 14.004951701436438,
+              "minimum": 4.5
+            },
+            "longKoreanAuditRow": {
+              "target": "[data-audit-row] dd containing long Korean seed",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(245, 244, 239)",
+              "fontSize": 14,
+              "fontWeight": 400,
+              "large": false,
+              "ratio": 14.004951701436438,
+              "minimum": 4.5
+            },
+            "largeText": {
+              "target": "[data-settings-header] h2",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "fontSize": 18,
+              "fontWeight": 700,
+              "large": false,
+              "ratio": 14.639805378106399,
+              "minimum": 4.5
+            },
+            "groupHeading": {
+              "target": "[data-settings-navigation] h2:워크스페이스 관리",
+              "present": true,
+              "foreground": "rgb(94, 95, 88)",
+              "background": "rgb(222, 221, 214)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 4.739015597956627,
+              "minimum": 4.5
+            },
+            "focusBoundary": {
+              "target": "focused [data-audit-disclosure]",
+              "present": true,
+              "color": "rgb(54, 91, 112)",
+              "background": "rgb(245, 244, 239)",
+              "ratio": 6.604593108697848,
+              "minimum": 3
+            },
+            "nonFocusBoundary": {
+              "target": "[data-audit-filter] > select",
+              "present": true,
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "ratio": 14.639805378106399,
+              "minimum": 3
+            }
+          }
+        }
+      },
+      "name": "audit-light-1280x720-100-none.png",
+      "sha256": "461221f157a1261ee8ae74d3f1f0a434c8f074522173dce11fba9c71b4b66e15"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "none",
+      "observedZoom": 2,
+      "metrics": {
+        "cssViewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "forced": false,
+        "pageOverflowX": false,
+        "navigationScrollable": true,
+        "contentScrollable": true,
+        "closeReachable": true,
+        "groupHeadingVisible": true,
+        "lastResultPresent": true,
+        "focusVisible": true,
+        "contrast": {
+          "badgeText": 12.297720709885532,
+          "focusIndicator": 6.604593108697848,
+          "targets": {
+            "ordinaryText": {
+              "target": "[data-audit-filter] > label",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(245, 244, 239)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 14.004951701436438,
+              "minimum": 4.5
+            },
+            "longKoreanAuditRow": {
+              "target": "[data-audit-row] dd containing long Korean seed",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(245, 244, 239)",
+              "fontSize": 14,
+              "fontWeight": 400,
+              "large": false,
+              "ratio": 14.004951701436438,
+              "minimum": 4.5
+            },
+            "largeText": {
+              "target": "[data-settings-header] h2",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "fontSize": 18,
+              "fontWeight": 700,
+              "large": false,
+              "ratio": 14.639805378106399,
+              "minimum": 4.5
+            },
+            "groupHeading": {
+              "target": "[data-settings-navigation] h2:워크스페이스 관리",
+              "present": true,
+              "foreground": "rgb(94, 95, 88)",
+              "background": "rgb(222, 221, 214)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 4.739015597956627,
+              "minimum": 4.5
+            },
+            "focusBoundary": {
+              "target": "focused [data-audit-disclosure]",
+              "present": true,
+              "color": "rgb(54, 91, 112)",
+              "background": "rgb(245, 244, 239)",
+              "ratio": 6.604593108697848,
+              "minimum": 3
+            },
+            "nonFocusBoundary": {
+              "target": "[data-audit-filter] > select",
+              "present": true,
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "ratio": 14.639805378106399,
+              "minimum": 3
+            }
+          }
+        }
+      },
+      "name": "audit-light-1280x720-200-none.png",
+      "sha256": "053c26fd10b993e20170e42772d28783607b9f0ebe8941a71b27f9d6ebdaaa05"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "forcedColors": "none",
+      "observedZoom": 1,
+      "metrics": {
+        "cssViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "forced": false,
+        "pageOverflowX": false,
+        "navigationScrollable": true,
+        "contentScrollable": true,
+        "closeReachable": true,
+        "groupHeadingVisible": true,
+        "lastResultPresent": true,
+        "focusVisible": true,
+        "contrast": {
+          "badgeText": 7.933264433752992,
+          "focusIndicator": 7.751150489687093,
+          "targets": {
+            "ordinaryText": {
+              "target": "[data-audit-filter] > label",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(41, 44, 39)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 11.430133007600727,
+              "minimum": 4.5
+            },
+            "longKoreanAuditRow": {
+              "target": "[data-audit-row] dd containing long Korean seed",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(41, 44, 39)",
+              "fontSize": 14,
+              "fontWeight": 400,
+              "large": false,
+              "ratio": 11.430133007600727,
+              "minimum": 4.5
+            },
+            "largeText": {
+              "target": "[data-settings-header] h2",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "fontSize": 18,
+              "fontWeight": 700,
+              "large": false,
+              "ratio": 10.129573328016168,
+              "minimum": 4.5
+            },
+            "groupHeading": {
+              "target": "[data-settings-navigation] h2:워크스페이스 관리",
+              "present": true,
+              "foreground": "rgb(181, 184, 174)",
+              "background": "rgb(26, 29, 25)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 8.455943086464643,
+              "minimum": 4.5
+            },
+            "focusBoundary": {
+              "target": "focused [data-audit-disclosure]",
+              "present": true,
+              "color": "rgb(168, 196, 211)",
+              "background": "rgb(41, 44, 39)",
+              "ratio": 7.751150489687093,
+              "minimum": 3
+            },
+            "nonFocusBoundary": {
+              "target": "[data-audit-filter] > select",
+              "present": true,
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "ratio": 10.129573328016168,
+              "minimum": 3
+            }
+          }
+        }
+      },
+      "name": "audit-dark-1280x720-100-none.png",
+      "sha256": "1cfe87cb01295afe1207efdeef2040c75b6d6b79ded5105ee8929a8f5e9d41a3"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "forcedColors": "none",
+      "observedZoom": 2,
+      "metrics": {
+        "cssViewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "forced": false,
+        "pageOverflowX": false,
+        "navigationScrollable": true,
+        "contentScrollable": true,
+        "closeReachable": true,
+        "groupHeadingVisible": true,
+        "lastResultPresent": true,
+        "focusVisible": true,
+        "contrast": {
+          "badgeText": 7.933264433752992,
+          "focusIndicator": 7.751150489687093,
+          "targets": {
+            "ordinaryText": {
+              "target": "[data-audit-filter] > label",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(41, 44, 39)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 11.430133007600727,
+              "minimum": 4.5
+            },
+            "longKoreanAuditRow": {
+              "target": "[data-audit-row] dd containing long Korean seed",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(41, 44, 39)",
+              "fontSize": 14,
+              "fontWeight": 400,
+              "large": false,
+              "ratio": 11.430133007600727,
+              "minimum": 4.5
+            },
+            "largeText": {
+              "target": "[data-settings-header] h2",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "fontSize": 18,
+              "fontWeight": 700,
+              "large": false,
+              "ratio": 10.129573328016168,
+              "minimum": 4.5
+            },
+            "groupHeading": {
+              "target": "[data-settings-navigation] h2:워크스페이스 관리",
+              "present": true,
+              "foreground": "rgb(181, 184, 174)",
+              "background": "rgb(26, 29, 25)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 8.455943086464643,
+              "minimum": 4.5
+            },
+            "focusBoundary": {
+              "target": "focused [data-audit-disclosure]",
+              "present": true,
+              "color": "rgb(168, 196, 211)",
+              "background": "rgb(41, 44, 39)",
+              "ratio": 7.751150489687093,
+              "minimum": 3
+            },
+            "nonFocusBoundary": {
+              "target": "[data-audit-filter] > select",
+              "present": true,
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "ratio": 10.129573328016168,
+              "minimum": 3
+            }
+          }
+        }
+      },
+      "name": "audit-dark-1280x720-200-none.png",
+      "sha256": "59b4756b0c0c9fe2d6ac9fa66bb113ec907045d80247d2457853a3140ad58330"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "none",
+      "observedZoom": 1,
+      "metrics": {
+        "cssViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "forced": false,
+        "pageOverflowX": false,
+        "navigationScrollable": true,
+        "contentScrollable": true,
+        "closeReachable": true,
+        "groupHeadingVisible": true,
+        "lastResultPresent": true,
+        "focusVisible": true,
+        "contrast": {
+          "badgeText": 12.297720709885532,
+          "focusIndicator": 6.604593108697848,
+          "targets": {
+            "ordinaryText": {
+              "target": "[data-audit-filter] > label",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(245, 244, 239)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 14.004951701436438,
+              "minimum": 4.5
+            },
+            "longKoreanAuditRow": {
+              "target": "[data-audit-row] dd containing long Korean seed",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(245, 244, 239)",
+              "fontSize": 14,
+              "fontWeight": 400,
+              "large": false,
+              "ratio": 14.004951701436438,
+              "minimum": 4.5
+            },
+            "largeText": {
+              "target": "[data-settings-header] h2",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "fontSize": 18,
+              "fontWeight": 700,
+              "large": false,
+              "ratio": 14.639805378106399,
+              "minimum": 4.5
+            },
+            "groupHeading": {
+              "target": "[data-settings-navigation] h2:워크스페이스 관리",
+              "present": true,
+              "foreground": "rgb(94, 95, 88)",
+              "background": "rgb(222, 221, 214)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 4.739015597956627,
+              "minimum": 4.5
+            },
+            "focusBoundary": {
+              "target": "focused [data-audit-disclosure]",
+              "present": true,
+              "color": "rgb(54, 91, 112)",
+              "background": "rgb(245, 244, 239)",
+              "ratio": 6.604593108697848,
+              "minimum": 3
+            },
+            "nonFocusBoundary": {
+              "target": "[data-audit-filter] > select",
+              "present": true,
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "ratio": 14.639805378106399,
+              "minimum": 3
+            }
+          }
+        }
+      },
+      "name": "audit-light-1440x900-100-none.png",
+      "sha256": "73daf8ff08de762e52c262b2422739cb14691a6851d51af6f2fdd0e8c06cc001"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "none",
+      "observedZoom": 2,
+      "metrics": {
+        "cssViewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "forced": false,
+        "pageOverflowX": false,
+        "navigationScrollable": true,
+        "contentScrollable": true,
+        "closeReachable": true,
+        "groupHeadingVisible": true,
+        "lastResultPresent": true,
+        "focusVisible": true,
+        "contrast": {
+          "badgeText": 12.297720709885532,
+          "focusIndicator": 6.604593108697848,
+          "targets": {
+            "ordinaryText": {
+              "target": "[data-audit-filter] > label",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(245, 244, 239)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 14.004951701436438,
+              "minimum": 4.5
+            },
+            "longKoreanAuditRow": {
+              "target": "[data-audit-row] dd containing long Korean seed",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(245, 244, 239)",
+              "fontSize": 14,
+              "fontWeight": 400,
+              "large": false,
+              "ratio": 14.004951701436438,
+              "minimum": 4.5
+            },
+            "largeText": {
+              "target": "[data-settings-header] h2",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "fontSize": 18,
+              "fontWeight": 700,
+              "large": false,
+              "ratio": 14.639805378106399,
+              "minimum": 4.5
+            },
+            "groupHeading": {
+              "target": "[data-settings-navigation] h2:워크스페이스 관리",
+              "present": true,
+              "foreground": "rgb(94, 95, 88)",
+              "background": "rgb(222, 221, 214)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 4.739015597956627,
+              "minimum": 4.5
+            },
+            "focusBoundary": {
+              "target": "focused [data-audit-disclosure]",
+              "present": true,
+              "color": "rgb(54, 91, 112)",
+              "background": "rgb(245, 244, 239)",
+              "ratio": 6.604593108697848,
+              "minimum": 3
+            },
+            "nonFocusBoundary": {
+              "target": "[data-audit-filter] > select",
+              "present": true,
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "ratio": 14.639805378106399,
+              "minimum": 3
+            }
+          }
+        }
+      },
+      "name": "audit-light-1440x900-200-none.png",
+      "sha256": "c021b1a531e91fd68c033902c5c48ad38706168c624d97a043a3c93ed67036ab"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "forcedColors": "none",
+      "observedZoom": 1,
+      "metrics": {
+        "cssViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "forced": false,
+        "pageOverflowX": false,
+        "navigationScrollable": true,
+        "contentScrollable": true,
+        "closeReachable": true,
+        "groupHeadingVisible": true,
+        "lastResultPresent": true,
+        "focusVisible": true,
+        "contrast": {
+          "badgeText": 7.933264433752992,
+          "focusIndicator": 7.751150489687093,
+          "targets": {
+            "ordinaryText": {
+              "target": "[data-audit-filter] > label",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(41, 44, 39)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 11.430133007600727,
+              "minimum": 4.5
+            },
+            "longKoreanAuditRow": {
+              "target": "[data-audit-row] dd containing long Korean seed",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(41, 44, 39)",
+              "fontSize": 14,
+              "fontWeight": 400,
+              "large": false,
+              "ratio": 11.430133007600727,
+              "minimum": 4.5
+            },
+            "largeText": {
+              "target": "[data-settings-header] h2",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "fontSize": 18,
+              "fontWeight": 700,
+              "large": false,
+              "ratio": 10.129573328016168,
+              "minimum": 4.5
+            },
+            "groupHeading": {
+              "target": "[data-settings-navigation] h2:워크스페이스 관리",
+              "present": true,
+              "foreground": "rgb(181, 184, 174)",
+              "background": "rgb(26, 29, 25)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 8.455943086464643,
+              "minimum": 4.5
+            },
+            "focusBoundary": {
+              "target": "focused [data-audit-disclosure]",
+              "present": true,
+              "color": "rgb(168, 196, 211)",
+              "background": "rgb(41, 44, 39)",
+              "ratio": 7.751150489687093,
+              "minimum": 3
+            },
+            "nonFocusBoundary": {
+              "target": "[data-audit-filter] > select",
+              "present": true,
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "ratio": 10.129573328016168,
+              "minimum": 3
+            }
+          }
+        }
+      },
+      "name": "audit-dark-1440x900-100-none.png",
+      "sha256": "06a756ea834d5eabc424bace15276c375e4e9349a3c75908daf95aa19dd72ebb"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "forcedColors": "none",
+      "observedZoom": 2,
+      "metrics": {
+        "cssViewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "forced": false,
+        "pageOverflowX": false,
+        "navigationScrollable": true,
+        "contentScrollable": true,
+        "closeReachable": true,
+        "groupHeadingVisible": true,
+        "lastResultPresent": true,
+        "focusVisible": true,
+        "contrast": {
+          "badgeText": 7.933264433752992,
+          "focusIndicator": 7.751150489687093,
+          "targets": {
+            "ordinaryText": {
+              "target": "[data-audit-filter] > label",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(41, 44, 39)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 11.430133007600727,
+              "minimum": 4.5
+            },
+            "longKoreanAuditRow": {
+              "target": "[data-audit-row] dd containing long Korean seed",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(41, 44, 39)",
+              "fontSize": 14,
+              "fontWeight": 400,
+              "large": false,
+              "ratio": 11.430133007600727,
+              "minimum": 4.5
+            },
+            "largeText": {
+              "target": "[data-settings-header] h2",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "fontSize": 18,
+              "fontWeight": 700,
+              "large": false,
+              "ratio": 10.129573328016168,
+              "minimum": 4.5
+            },
+            "groupHeading": {
+              "target": "[data-settings-navigation] h2:워크스페이스 관리",
+              "present": true,
+              "foreground": "rgb(181, 184, 174)",
+              "background": "rgb(26, 29, 25)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 8.455943086464643,
+              "minimum": 4.5
+            },
+            "focusBoundary": {
+              "target": "focused [data-audit-disclosure]",
+              "present": true,
+              "color": "rgb(168, 196, 211)",
+              "background": "rgb(41, 44, 39)",
+              "ratio": 7.751150489687093,
+              "minimum": 3
+            },
+            "nonFocusBoundary": {
+              "target": "[data-audit-filter] > select",
+              "present": true,
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "ratio": 10.129573328016168,
+              "minimum": 3
+            }
+          }
+        }
+      },
+      "name": "audit-dark-1440x900-200-none.png",
+      "sha256": "bedca9a277a924d6c26aa5978f2589135c40f43b42231d73a294f3c1a61fdcbd"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "none",
+      "observedZoom": 1,
+      "metrics": {
+        "cssViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "forced": false,
+        "pageOverflowX": false,
+        "navigationScrollable": true,
+        "contentScrollable": true,
+        "closeReachable": true,
+        "groupHeadingVisible": true,
+        "lastResultPresent": true,
+        "focusVisible": true,
+        "contrast": {
+          "badgeText": 12.297720709885532,
+          "focusIndicator": 6.604593108697848,
+          "targets": {
+            "ordinaryText": {
+              "target": "[data-audit-filter] > label",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(245, 244, 239)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 14.004951701436438,
+              "minimum": 4.5
+            },
+            "longKoreanAuditRow": {
+              "target": "[data-audit-row] dd containing long Korean seed",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(245, 244, 239)",
+              "fontSize": 14,
+              "fontWeight": 400,
+              "large": false,
+              "ratio": 14.004951701436438,
+              "minimum": 4.5
+            },
+            "largeText": {
+              "target": "[data-settings-header] h2",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "fontSize": 18,
+              "fontWeight": 700,
+              "large": false,
+              "ratio": 14.639805378106399,
+              "minimum": 4.5
+            },
+            "groupHeading": {
+              "target": "[data-settings-navigation] h2:워크스페이스 관리",
+              "present": true,
+              "foreground": "rgb(94, 95, 88)",
+              "background": "rgb(222, 221, 214)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 4.739015597956627,
+              "minimum": 4.5
+            },
+            "focusBoundary": {
+              "target": "focused [data-audit-disclosure]",
+              "present": true,
+              "color": "rgb(54, 91, 112)",
+              "background": "rgb(245, 244, 239)",
+              "ratio": 6.604593108697848,
+              "minimum": 3
+            },
+            "nonFocusBoundary": {
+              "target": "[data-audit-filter] > select",
+              "present": true,
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "ratio": 14.639805378106399,
+              "minimum": 3
+            }
+          }
+        }
+      },
+      "name": "audit-light-1920x1080-100-none.png",
+      "sha256": "fc4b4fdfec96b494f0dbef1fa67ef29f3da332e9114872e16f34885e0ffb8b54"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "none",
+      "observedZoom": 2,
+      "metrics": {
+        "cssViewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "forced": false,
+        "pageOverflowX": false,
+        "navigationScrollable": true,
+        "contentScrollable": true,
+        "closeReachable": true,
+        "groupHeadingVisible": true,
+        "lastResultPresent": true,
+        "focusVisible": true,
+        "contrast": {
+          "badgeText": 12.297720709885532,
+          "focusIndicator": 6.604593108697848,
+          "targets": {
+            "ordinaryText": {
+              "target": "[data-audit-filter] > label",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(245, 244, 239)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 14.004951701436438,
+              "minimum": 4.5
+            },
+            "longKoreanAuditRow": {
+              "target": "[data-audit-row] dd containing long Korean seed",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(245, 244, 239)",
+              "fontSize": 14,
+              "fontWeight": 400,
+              "large": false,
+              "ratio": 14.004951701436438,
+              "minimum": 4.5
+            },
+            "largeText": {
+              "target": "[data-settings-header] h2",
+              "present": true,
+              "foreground": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "fontSize": 18,
+              "fontWeight": 700,
+              "large": false,
+              "ratio": 14.639805378106399,
+              "minimum": 4.5
+            },
+            "groupHeading": {
+              "target": "[data-settings-navigation] h2:워크스페이스 관리",
+              "present": true,
+              "foreground": "rgb(94, 95, 88)",
+              "background": "rgb(222, 221, 214)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 4.739015597956627,
+              "minimum": 4.5
+            },
+            "focusBoundary": {
+              "target": "focused [data-audit-disclosure]",
+              "present": true,
+              "color": "rgb(54, 91, 112)",
+              "background": "rgb(245, 244, 239)",
+              "ratio": 6.604593108697848,
+              "minimum": 3
+            },
+            "nonFocusBoundary": {
+              "target": "[data-audit-filter] > select",
+              "present": true,
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "ratio": 14.639805378106399,
+              "minimum": 3
+            }
+          }
+        }
+      },
+      "name": "audit-light-1920x1080-200-none.png",
+      "sha256": "d9e2b612f84d11fbc5f1a38dba3584dec3d012aa89b012a5aa717c1a5657cd2b"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "forcedColors": "none",
+      "observedZoom": 1,
+      "metrics": {
+        "cssViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "forced": false,
+        "pageOverflowX": false,
+        "navigationScrollable": true,
+        "contentScrollable": true,
+        "closeReachable": true,
+        "groupHeadingVisible": true,
+        "lastResultPresent": true,
+        "focusVisible": true,
+        "contrast": {
+          "badgeText": 7.933264433752992,
+          "focusIndicator": 7.751150489687093,
+          "targets": {
+            "ordinaryText": {
+              "target": "[data-audit-filter] > label",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(41, 44, 39)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 11.430133007600727,
+              "minimum": 4.5
+            },
+            "longKoreanAuditRow": {
+              "target": "[data-audit-row] dd containing long Korean seed",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(41, 44, 39)",
+              "fontSize": 14,
+              "fontWeight": 400,
+              "large": false,
+              "ratio": 11.430133007600727,
+              "minimum": 4.5
+            },
+            "largeText": {
+              "target": "[data-settings-header] h2",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "fontSize": 18,
+              "fontWeight": 700,
+              "large": false,
+              "ratio": 10.129573328016168,
+              "minimum": 4.5
+            },
+            "groupHeading": {
+              "target": "[data-settings-navigation] h2:워크스페이스 관리",
+              "present": true,
+              "foreground": "rgb(181, 184, 174)",
+              "background": "rgb(26, 29, 25)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 8.455943086464643,
+              "minimum": 4.5
+            },
+            "focusBoundary": {
+              "target": "focused [data-audit-disclosure]",
+              "present": true,
+              "color": "rgb(168, 196, 211)",
+              "background": "rgb(41, 44, 39)",
+              "ratio": 7.751150489687093,
+              "minimum": 3
+            },
+            "nonFocusBoundary": {
+              "target": "[data-audit-filter] > select",
+              "present": true,
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "ratio": 10.129573328016168,
+              "minimum": 3
+            }
+          }
+        }
+      },
+      "name": "audit-dark-1920x1080-100-none.png",
+      "sha256": "fad92789ee120e665a4eab3c531ccfc6d6daafc270ca9d3b71a77e0609c9d02f"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "forcedColors": "none",
+      "observedZoom": 2,
+      "metrics": {
+        "cssViewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "forced": false,
+        "pageOverflowX": false,
+        "navigationScrollable": true,
+        "contentScrollable": true,
+        "closeReachable": true,
+        "groupHeadingVisible": true,
+        "lastResultPresent": true,
+        "focusVisible": true,
+        "contrast": {
+          "badgeText": 7.933264433752992,
+          "focusIndicator": 7.751150489687093,
+          "targets": {
+            "ordinaryText": {
+              "target": "[data-audit-filter] > label",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(41, 44, 39)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 11.430133007600727,
+              "minimum": 4.5
+            },
+            "longKoreanAuditRow": {
+              "target": "[data-audit-row] dd containing long Korean seed",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(41, 44, 39)",
+              "fontSize": 14,
+              "fontWeight": 400,
+              "large": false,
+              "ratio": 11.430133007600727,
+              "minimum": 4.5
+            },
+            "largeText": {
+              "target": "[data-settings-header] h2",
+              "present": true,
+              "foreground": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "fontSize": 18,
+              "fontWeight": 700,
+              "large": false,
+              "ratio": 10.129573328016168,
+              "minimum": 4.5
+            },
+            "groupHeading": {
+              "target": "[data-settings-navigation] h2:워크스페이스 관리",
+              "present": true,
+              "foreground": "rgb(181, 184, 174)",
+              "background": "rgb(26, 29, 25)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 8.455943086464643,
+              "minimum": 4.5
+            },
+            "focusBoundary": {
+              "target": "focused [data-audit-disclosure]",
+              "present": true,
+              "color": "rgb(168, 196, 211)",
+              "background": "rgb(41, 44, 39)",
+              "ratio": 7.751150489687093,
+              "minimum": 3
+            },
+            "nonFocusBoundary": {
+              "target": "[data-audit-filter] > select",
+              "present": true,
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "ratio": 10.129573328016168,
+              "minimum": 3
+            }
+          }
+        }
+      },
+      "name": "audit-dark-1920x1080-200-none.png",
+      "sha256": "b2b691e19f7c1ebd83925108195ee3b58a08afa38def7c2edfb1d0df4172c542"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "active",
+      "observedZoom": 1,
+      "metrics": {
+        "cssViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "forced": true,
+        "pageOverflowX": false,
+        "navigationScrollable": true,
+        "contentScrollable": true,
+        "closeReachable": true,
+        "groupHeadingVisible": true,
+        "lastResultPresent": true,
+        "focusVisible": true,
+        "contrast": {
+          "badgeText": 21,
+          "focusIndicator": 15.134013837043632,
+          "targets": {
+            "ordinaryText": {
+              "target": "[data-audit-filter] > label",
+              "present": true,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 21,
+              "minimum": 4.5
+            },
+            "longKoreanAuditRow": {
+              "target": "[data-audit-row] dd containing long Korean seed",
+              "present": true,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "fontSize": 14,
+              "fontWeight": 400,
+              "large": false,
+              "ratio": 21,
+              "minimum": 4.5
+            },
+            "largeText": {
+              "target": "[data-settings-header] h2",
+              "present": true,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "fontSize": 18,
+              "fontWeight": 700,
+              "large": false,
+              "ratio": 21,
+              "minimum": 4.5
+            },
+            "groupHeading": {
+              "target": "[data-settings-navigation] h2:워크스페이스 관리",
+              "present": true,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 21,
+              "minimum": 4.5
+            },
+            "focusBoundary": {
+              "target": "focused [data-audit-disclosure]",
+              "present": true,
+              "color": "rgb(55, 0, 110)",
+              "background": "rgb(255, 255, 255)",
+              "ratio": 15.134013837043632,
+              "minimum": 3
+            },
+            "nonFocusBoundary": {
+              "target": "[data-audit-filter] > select",
+              "present": true,
+              "color": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "ratio": 21,
+              "minimum": 3
+            }
+          }
+        }
+      },
+      "name": "audit-light-1280x720-100-active.png",
+      "sha256": "8b5d6c209e0c243b9288425de4b5cea5727f31b9c92ac1ca075bdd939672233a"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "active",
+      "observedZoom": 2,
+      "metrics": {
+        "cssViewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "forced": true,
+        "pageOverflowX": false,
+        "navigationScrollable": true,
+        "contentScrollable": true,
+        "closeReachable": true,
+        "groupHeadingVisible": true,
+        "lastResultPresent": true,
+        "focusVisible": true,
+        "contrast": {
+          "badgeText": 21,
+          "focusIndicator": 15.134013837043632,
+          "targets": {
+            "ordinaryText": {
+              "target": "[data-audit-filter] > label",
+              "present": true,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 21,
+              "minimum": 4.5
+            },
+            "longKoreanAuditRow": {
+              "target": "[data-audit-row] dd containing long Korean seed",
+              "present": true,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "fontSize": 14,
+              "fontWeight": 400,
+              "large": false,
+              "ratio": 21,
+              "minimum": 4.5
+            },
+            "largeText": {
+              "target": "[data-settings-header] h2",
+              "present": true,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "fontSize": 18,
+              "fontWeight": 700,
+              "large": false,
+              "ratio": 21,
+              "minimum": 4.5
+            },
+            "groupHeading": {
+              "target": "[data-settings-navigation] h2:워크스페이스 관리",
+              "present": true,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "fontSize": 13,
+              "fontWeight": 600,
+              "large": false,
+              "ratio": 21,
+              "minimum": 4.5
+            },
+            "focusBoundary": {
+              "target": "focused [data-audit-disclosure]",
+              "present": true,
+              "color": "rgb(55, 0, 110)",
+              "background": "rgb(255, 255, 255)",
+              "ratio": 15.134013837043632,
+              "minimum": 3
+            },
+            "nonFocusBoundary": {
+              "target": "[data-audit-filter] > select",
+              "present": true,
+              "color": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "ratio": 21,
+              "minimum": 3
+            }
+          }
+        }
+      },
+      "name": "audit-light-1280x720-200-active.png",
+      "sha256": "43fd6a07a59ace76a305ed75ee771cd013c19b67985d8485035e1b2ef0f056dd"
+    }
+  ],
+  "badgeStateCaptures": [
+    {
+      "state": "loading",
+      "text": "…",
+      "ariaLabel": "미해소 항목 불러오는 중",
+      "name": "audit-badge-loading.png",
+      "sha256": "d0bbf02acee5215278da696c0f69633c6220833eb5fc7571a6485a5eb738e0e7"
+    },
+    {
+      "state": "error",
+      "text": "!",
+      "ariaLabel": "미해소 항목을 불러오지 못함",
+      "name": "audit-badge-error.png",
+      "sha256": "b0c38df490d8c905fff88cfd6d99a87c5dcda9a18be41c5e9bb3eecc93292988"
+    },
+    {
+      "state": "zero",
+      "text": "0",
+      "ariaLabel": "미해소 항목 0개",
+      "name": "audit-badge-zero.png",
+      "sha256": "dd6fa635f3aaf15df5101a06155b17f3484dd64f3fc171bbdb7f698f0e43bf99"
+    }
+  ],
+  "artifactSet": {
+    "expectedArtifacts": [
+      "audit-badge-error.png",
+      "audit-badge-loading.png",
+      "audit-badge-zero.png",
+      "audit-dark-1280x720-100-none.png",
+      "audit-dark-1280x720-200-none.png",
+      "audit-dark-1440x900-100-none.png",
+      "audit-dark-1440x900-200-none.png",
+      "audit-dark-1920x1080-100-none.png",
+      "audit-dark-1920x1080-200-none.png",
+      "audit-light-1280x720-100-active.png",
+      "audit-light-1280x720-100-none.png",
+      "audit-light-1280x720-200-active.png",
+      "audit-light-1280x720-200-none.png",
+      "audit-light-1440x900-100-none.png",
+      "audit-light-1440x900-200-none.png",
+      "audit-light-1920x1080-100-none.png",
+      "audit-light-1920x1080-200-none.png"
+    ],
+    "observedArtifacts": [
+      "audit-badge-error.png",
+      "audit-badge-loading.png",
+      "audit-badge-zero.png",
+      "audit-dark-1280x720-100-none.png",
+      "audit-dark-1280x720-200-none.png",
+      "audit-dark-1440x900-100-none.png",
+      "audit-dark-1440x900-200-none.png",
+      "audit-dark-1920x1080-100-none.png",
+      "audit-dark-1920x1080-200-none.png",
+      "audit-light-1280x720-100-active.png",
+      "audit-light-1280x720-100-none.png",
+      "audit-light-1280x720-200-active.png",
+      "audit-light-1280x720-200-none.png",
+      "audit-light-1440x900-100-none.png",
+      "audit-light-1440x900-200-none.png",
+      "audit-light-1920x1080-100-none.png",
+      "audit-light-1920x1080-200-none.png"
+    ],
+    "exact": true,
+    "manifestWrittenLast": true
+  },
+  "ime": "N/A: no new text input"
+}

@@ -1,0 +1,182 @@
+timestamp=2026-09-18T03:17:43.1051869+09:00
+head=36b5f9800d40186d6d4556152a8f684ed2a01958
+contract.roster.sha256=65f52e47c4b6415b1d176a38177f2b952f02932a873165732cc92f8758c102a5
+css.exists=False
+product.diff.begin
+product.diff.end
+
+command=node_modules/.bin/vitest.cmd --root packages/web run test/roster.test.tsx
+exit_code=1
+
+RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+test/roster.test.tsx (15 tests | 4 failed)
+  FAIL FR-CONFIRM-006 AC-5: L3 연결 전에는 일반 그룹 삭제 콜백도 실행하지 않는다
+    AssertionError: expected disabled=true, received false
+  FAIL DR-PRINCIPAL-002: 그룹 후보는 사용자 ID 콜백으로 전달하지 않는다
+    AssertionError: onAddMember was called with ["g1", "group-candidate"]
+  FAIL Issue #68 — 공급 순서와 ID를 보존한 표·목록·시스템 설명을 렌더링한다
+    AssertionError: data-group-id values were [null, null]
+  FAIL Issue #68 — 그룹이나 멤버 추가 콜백이 없을 때 각각의 공급 상태를 정직하게 설명한다
+    TestingLibraryElementError: Unable to find "표시할 그룹 항목이 없습니다."
+
+Test Files  1 failed (1)
+Tests  4 failed | 11 passed (15)
+
+Final accepted contract RED:
+timestamp=2026-09-18T03:54:34.4533225+09:00
+head=36b5f9800d40186d6d4556152a8f684ed2a01958
+contract.roster.sha256=65f52e47c4b6415b1d176a38177f2b952f02932a873165732cc92f8758c102a5
+contract.fixture.sha256=792f3e1baf605ce2d3241967d42117605ecf49b5f1d2d7950600ea5c9c689d3e
+contract.browser.sha256=941faafa7cb71ab0715359e5678dc3685e41a2450c06a8e716fdb8d7be29dcbe
+contract.package.sha256=12a62ab57930fd19717ca523aaf7b7f72a263ea18d695ebe5bf561fb69bfd2e9
+css.exists=False
+product.diff.begin
+product.diff.end
+exit_code=1
+Test Files  1 failed (1)
+Tests  4 failed | 11 passed (15)
+
+Final keyboard-overflow contract RED:
+timestamp=2026-09-18T03:50:57.3957456+09:00
+head=36b5f9800d40186d6d4556152a8f684ed2a01958
+contract.roster.sha256=65f52e47c4b6415b1d176a38177f2b952f02932a873165732cc92f8758c102a5
+contract.fixture.sha256=792f3e1baf605ce2d3241967d42117605ecf49b5f1d2d7950600ea5c9c689d3e
+contract.browser.sha256=e2d04f7beea4f3284d599127164969a7dccd107fb34a6bcdcd5b2a818ff374df
+contract.package.sha256=12a62ab57930fd19717ca523aaf7b7f72a263ea18d695ebe5bf561fb69bfd2e9
+css.exists=False
+product.diff.begin
+product.diff.end
+exit_code=1
+Test Files  1 failed (1)
+Tests  4 failed | 11 passed (15)
+
+Final conditional-overflow contract RED:
+timestamp=2026-09-18T03:49:36.8114933+09:00
+head=36b5f9800d40186d6d4556152a8f684ed2a01958
+contract.roster.sha256=65f52e47c4b6415b1d176a38177f2b952f02932a873165732cc92f8758c102a5
+contract.fixture.sha256=792f3e1baf605ce2d3241967d42117605ecf49b5f1d2d7950600ea5c9c689d3e
+contract.browser.sha256=1e7ad64c773167fbcc0008244e58c2c82d8cdc2b3836d88ee828684822f5ca77
+contract.package.sha256=12a62ab57930fd19717ca523aaf7b7f72a263ea18d695ebe5bf561fb69bfd2e9
+css.exists=False
+product.diff.begin
+product.diff.end
+exit_code=1
+Test Files  1 failed (1)
+Tests  4 failed | 11 passed (15)
+
+Final review-loop contract RED:
+timestamp=2026-09-18T03:48:50.1805307+09:00
+head=36b5f9800d40186d6d4556152a8f684ed2a01958
+contract.roster.sha256=65f52e47c4b6415b1d176a38177f2b952f02932a873165732cc92f8758c102a5
+contract.fixture.sha256=792f3e1baf605ce2d3241967d42117605ecf49b5f1d2d7950600ea5c9c689d3e
+contract.browser.sha256=ac915a29c3aea5eb40c4221f9bc0f20b96bcacc45cda39de9758b361fedde018
+contract.package.sha256=12a62ab57930fd19717ca523aaf7b7f72a263ea18d695ebe5bf561fb69bfd2e9
+css.exists=False
+product.diff.begin
+product.diff.end
+exit_code=1
+Test Files  1 failed (1)
+Tests  4 failed | 11 passed (15)
+
+Final isolated-context contract RED:
+timestamp=2026-09-18T03:41:04.7992075+09:00
+head=36b5f9800d40186d6d4556152a8f684ed2a01958
+contract.roster.sha256=65f52e47c4b6415b1d176a38177f2b952f02932a873165732cc92f8758c102a5
+contract.fixture.sha256=792f3e1baf605ce2d3241967d42117605ecf49b5f1d2d7950600ea5c9c689d3e
+contract.browser.sha256=251cd609dc15a8d238a183163275c5688ebd868f87f4a99096d6ee4d1c1bbd23
+contract.package.sha256=12a62ab57930fd19717ca523aaf7b7f72a263ea18d695ebe5bf561fb69bfd2e9
+css.exists=False
+product.diff.begin
+product.diff.end
+exit_code=1
+Test Files  1 failed (1)
+Tests  4 failed | 11 passed (15)
+
+Final hover-selection contract RED:
+timestamp=2026-09-18T03:39:02.4405408+09:00
+head=36b5f9800d40186d6d4556152a8f684ed2a01958
+contract.roster.sha256=65f52e47c4b6415b1d176a38177f2b952f02932a873165732cc92f8758c102a5
+contract.fixture.sha256=792f3e1baf605ce2d3241967d42117605ecf49b5f1d2d7950600ea5c9c689d3e
+contract.browser.sha256=8ea9062c9068eef0740fd72a66d64068e64dda5249b88e4ce4b951be3a444a1a
+contract.package.sha256=12a62ab57930fd19717ca523aaf7b7f72a263ea18d695ebe5bf561fb69bfd2e9
+css.exists=False
+product.diff.begin
+product.diff.end
+exit_code=1
+Test Files  1 failed (1)
+Tests  4 failed | 11 passed (15)
+
+Final contract restart after scoping the selected-tab observation to the settings dialog:
+timestamp=2026-09-18T03:25:31.7685940+09:00
+head=36b5f9800d40186d6d4556152a8f684ed2a01958
+contract.roster.sha256=65f52e47c4b6415b1d176a38177f2b952f02932a873165732cc92f8758c102a5
+contract.browser.sha256=358070789f09ac2c078a61aa7fe83c847b21d4cc46524a6d855789e8698f68e2
+css.exists=False
+product.diff.begin
+product.diff.end
+command=node_modules/.bin/vitest.cmd --root packages/web run test/roster.test.tsx
+exit_code=1
+Test Files  1 failed (1)
+Tests  4 failed | 11 passed (15)
+
+timestamp=2026-09-18T03:20:58+09:00
+command=node packages/web/test/issue68-group-roster-browser-check.cjs
+exit_code=1
+contract.packages/web/test/roster.test.tsx.sha256=65f52e47c4b6415b1d176a38177f2b952f02932a873165732cc92f8758c102a5
+contract.packages/web/test/issue68-group-roster-fixture.html.sha256=2fb9a3cb8643dfbff49eeb2b770aa7f3dd602925ffeb98ace60d81176e2bec81
+contract.packages/web/test/issue68-group-roster-fixture.tsx.sha256=57302e6f4be563898e9885d4cdcdfe3e48393b2c90daf99e6121607e8b278623
+contract.packages/web/test/issue68-group-roster-browser-check.cjs.sha256=c15ac0d3974882701e12cac9ff16b3bfcf82ae07d444a71274335e77f2a59f58
+contract.packages/web/package.json.sha256=12a62ab57930fd19717ca523aaf7b7f72a263ea18d695ebe5bf561fb69bfd2e9
+product.diff.begin
+product.diff.end
+css.exists=False
+
+locator.waitFor: Timeout 30000ms exceeded.
+  waiting for getByRole('dialog', { name: '설정' }).locator('[data-group-roster]') to be visible
+  at inspect (packages/web/test/issue68-group-roster-browser-check.cjs:103:16)
+
+Final feedback-loop contract RED:
+timestamp=2026-09-18T03:35:11.3002191+09:00
+head=36b5f9800d40186d6d4556152a8f684ed2a01958
+contract.packages/web/test/roster.test.tsx.sha256=65f52e47c4b6415b1d176a38177f2b952f02932a873165732cc92f8758c102a5
+contract.packages/web/test/issue68-group-roster-fixture.html.sha256=2fb9a3cb8643dfbff49eeb2b770aa7f3dd602925ffeb98ace60d81176e2bec81
+contract.packages/web/test/issue68-group-roster-fixture.tsx.sha256=792f3e1baf605ce2d3241967d42117605ecf49b5f1d2d7950600ea5c9c689d3e
+contract.packages/web/test/issue68-group-roster-browser-check.cjs.sha256=97de16f6e5276d14b5c5ed797550f55854e72cf775439f3a06613db97f18af6a
+contract.packages/web/package.json.sha256=12a62ab57930fd19717ca523aaf7b7f72a263ea18d695ebe5bf561fb69bfd2e9
+css.exists=False
+product.diff.begin
+product.diff.end
+unit.exit=1
+Test Files  1 failed (1)
+Tests  4 failed | 11 passed (15)
+browser.exit=1
+locator.waitFor: Timeout 5000ms exceeded waiting for the GroupRoster product root.
+
+Final corrected hover-visibility contract RED:
+timestamp=2026-09-18T03:37:16.0814785+09:00
+head=36b5f9800d40186d6d4556152a8f684ed2a01958
+contract.roster.sha256=65f52e47c4b6415b1d176a38177f2b952f02932a873165732cc92f8758c102a5
+contract.fixture.sha256=792f3e1baf605ce2d3241967d42117605ecf49b5f1d2d7950600ea5c9c689d3e
+contract.browser.sha256=0ac1f7cd0150e67be79e235467646902eddeb493e90531fcf4d1f145deb48278
+contract.package.sha256=12a62ab57930fd19717ca523aaf7b7f72a263ea18d695ebe5bf561fb69bfd2e9
+css.exists=False
+product.diff.begin
+product.diff.end
+exit_code=1
+Test Files  1 failed (1)
+Tests  4 failed | 11 passed (15)
+
+The browser contract above was superseded before implementation completion because cmdk starts with the first item selected; ArrowDown therefore selects the second item. The implementation was removed in full and the corrected contract exercises ArrowDown followed by Home.
+
+timestamp=2026-09-18T03:23:19.0716303+09:00
+head=36b5f9800d40186d6d4556152a8f684ed2a01958
+contract.roster.sha256=65f52e47c4b6415b1d176a38177f2b952f02932a873165732cc92f8758c102a5
+contract.browser.sha256=2d9074ad1e3faae3e364fd993a8d9982afdfb1bc462c8ae684270aa7e1eee97e
+css.exists=False
+product.diff.begin
+product.diff.end
+command=node_modules/.bin/vitest.cmd --root packages/web run test/roster.test.tsx
+exit_code=1
+Test Files  1 failed (1)
+Tests  4 failed | 11 passed (15)

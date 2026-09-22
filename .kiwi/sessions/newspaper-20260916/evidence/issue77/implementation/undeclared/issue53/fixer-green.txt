@@ -1,0 +1,28 @@
+Issue #53 review-fix GREEN — 2026-09-17
+
+Targeted tests:
+  npm test -- --run test/link-panel.test.tsx test/tag-panel.test.tsx test/shell.test.tsx
+  PASS — 3 files, 36 tests.
+
+Full web regression:
+  npm test -- --run
+  PASS — 66 files, 721 tests. The existing happy-dom anchor navigation diagnostic was printed, with exit code 0 and no failed test.
+
+Static/build checks:
+  npm run typecheck — PASS
+  npm run build — PASS (existing chunk-size advisory only)
+
+Issue #53 browser evidence:
+  node test/newspaper-right-panel-check.cjs
+  PASS — 12 viewport/theme/zoom environments. The checker uses actual AppShell, LinkPanel and TagPanel product components. It checks computed semantic link/focus/count colors, two-column tag grid, Enter and Space activation, shared empty states, error -> retry -> success focus restoration, and isolated persistent Chromium chrome.tabs.setZoom(2).
+
+Actual App wiring:
+  packages/web/test/right-panel-wiring.test.tsx is included in the 721-test full run. It verifies real App query error precedence, stale-data suppression and the real refetch callback. This is RTL integration coverage, not Playwright coverage.
+
+Browser regressions:
+  npm run test:browser:shell — PASS
+  node test/newspaper-search-layout-check.cjs — PASS (12 environments)
+  npm run test:browser:theme — PASS (0 failed assertions)
+
+Evidence boundary:
+  The Playwright fixture does not mount App and does not prove server ACL behavior. Existing service tests remain the evidence for ACL/filter/order/count contracts. IR-SHELL-009 AC-3 was returned to unchecked and VE-9 records this partial scope pending independent rereview.

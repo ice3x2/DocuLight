@@ -1,88 +1,88 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-09-21T20:24:37.472Z",
+  "generatedAt": "2026-09-22T02:29:57.131Z",
   "source": "speckiwi",
   "specFingerprint": {
     "algorithm": "sha256",
-    "value": "f6ff6c39b64d3d7787b45a2bbe8547d8296ce9772d0b5988781c782959c1459c",
+    "value": "4e2c689d8b5ca647fe17b6f73f9d070c5de4e85d55477a363cc5a70e34a83574",
     "files": [
       {
         "path": "docs/spec/00.index.md",
-        "sha256": "bcba0d97c75dd7d0cd5f9fcd224ba6629c1a54f4c857628902f14689be28eeb4",
+        "sha256": "8e7657433a0563f9e52d1f57568a0bb0b3720b0665585b3b74120c3c881d28d8",
         "size": 7698,
-        "mtimeMs": 1790022276919.0496
+        "mtimeMs": 1790044197090.3123
       },
       {
         "path": "docs/spec/02.product-architecture.srs.md",
         "sha256": "ff2cdf78386fbe5bf960a555fa1efc255eea84e2489ab09c66781493c7c40678",
         "size": 95329,
-        "mtimeMs": 1790017459157.2205
+        "mtimeMs": 1790022462715.1838
       },
       {
         "path": "docs/spec/07.editor.srs.md",
-        "sha256": "890724b543800b7fd08be9de45957def4c123a6d29b055a052e7803186f05a9a",
-        "size": 108845,
-        "mtimeMs": 1790017459164.219
+        "sha256": "32c059968fe1e36f81d3f1d17d731769d464646be1f673219e672f8371122040",
+        "size": 110106,
+        "mtimeMs": 1790044195644.0762
       },
       {
         "path": "docs/spec/08.app-shell.srs.md",
-        "sha256": "22b3fd536e06de60671c1bc777fb725cd37d017cac69575f0c289e1c95c2848b",
-        "size": 276961,
-        "mtimeMs": 1790017459165.2207
+        "sha256": "b58941513e84adbc86c66abcdde0ba313bd89d082687bb6f2b02c2167800f8ee",
+        "size": 280580,
+        "mtimeMs": 1790044195021.1921
       },
       {
         "path": "docs/spec/09.auth.srs.md",
         "sha256": "a2dbdeb24eda9e62f93d08b579821363e0173cfd92820923583eb5f381681cae",
         "size": 167325,
-        "mtimeMs": 1790017459167.2207
+        "mtimeMs": 1790022462724.1802
       },
       {
         "path": "docs/spec/10.access-control.srs.md",
         "sha256": "5e9f3846c29ad10cf64590508a806f85566d4dfadc0dbd1e3bbc35a548a710b5",
         "size": 171185,
-        "mtimeMs": 1790021449517.0476
+        "mtimeMs": 1790022462725.6921
       },
       {
         "path": "docs/spec/11.confirmation-grades.srs.md",
         "sha256": "c720e29ab97295c291cbae0add3c3c769ffab20bed723229d3aeff1469457244",
         "size": 156620,
-        "mtimeMs": 1790017459169.726
+        "mtimeMs": 1790022462726.7222
       },
       {
         "path": "docs/spec/12.audit-log.srs.md",
         "sha256": "3d0bfd4ee54e5e81c330fba4b5d4b6a1d21f9397cb59c4783806d54edfb4bdc7",
         "size": 203331,
-        "mtimeMs": 1790017459170.7324
+        "mtimeMs": 1790022462728.2373
       },
       {
         "path": "docs/spec/13.workspace.srs.md",
         "sha256": "dc5571e3b8f3d809f2f431ba8f6eabf030b639e3932cb70e5a4f3ef62768eed5",
         "size": 118873,
-        "mtimeMs": 1790017459172.733
+        "mtimeMs": 1790022462729.2444
       },
       {
         "path": "docs/spec/14.storage.srs.md",
-        "sha256": "c37d71e7fd0e953f768f01d2757ed09ddd714f1d74fb8c8a1a8feca0032882c7",
-        "size": 146147,
-        "mtimeMs": 1790017459172.733
+        "sha256": "485051cb1cc6b7765145027b2fcf938b44bdde5dd6eb3ecc96508dae2e459c61",
+        "size": 147160,
+        "mtimeMs": 1790044197050.6416
       },
       {
         "path": "docs/spec/15.attachments.srs.md",
         "sha256": "42f736ca93c12f9e9844f1e8e52056f8333d4ce7fe097f93c0c80f4b0b3a6e54",
         "size": 75068,
-        "mtimeMs": 1790017459173.732
+        "mtimeMs": 1790022462730.783
       },
       {
         "path": "docs/spec/16.principal.srs.md",
-        "sha256": "209cbaae5377ee6e3e081054607848f9c8276372c24a34c170d195b1fea3ff1d",
-        "size": 140037,
-        "mtimeMs": 1790022276881.865
+        "sha256": "673f68f34357bd9e04c6222550cb8bc30ea9fda23b1bc69e0c7c1414d454e9b2",
+        "size": 141026,
+        "mtimeMs": 1790044196289.24
       },
       {
         "path": "docs/spec/90.appendix.md",
         "sha256": "0874cdd7af91ea44b3e403d7d4824be0aea4f6f1095ebcd89eae563abe05c5d7",
         "size": 990,
-        "mtimeMs": 1790017459175.733
+        "mtimeMs": 1790022462732.3586
       }
     ]
   },
@@ -161,14 +161,7 @@
     }
   },
   "lock": {
-    "active": true,
-    "metadata": {
-      "schemaVersion": "1.0.0",
-      "owner": "DESKTOP-LCF0D3R:130816",
-      "operation": "sync_index_rollups",
-      "requestId": "a0b7edcc-91d9-4aff-a667-aa6955655c76",
-      "acquiredAt": "2026-09-21T20:24:37.415Z",
-      "expiresAt": "2026-09-21T20:25:37.415Z"
-    }
+    "active": false,
+    "metadata": null
   }
 }

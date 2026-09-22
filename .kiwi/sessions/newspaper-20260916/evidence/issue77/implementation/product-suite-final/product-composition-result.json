@@ -1,0 +1,105 @@
+{
+  "pass": true,
+  "product": "built App + owned server/database/storage",
+  "exactBytes": 62,
+  "persistedHash": "a33a2e602965018e96502493fb394ca51c417d6aaf0230b984c7176c219255ee",
+  "liveComposition": {
+    "events": [
+      {
+        "type": "compositionstart",
+        "isTrusted": false,
+        "isComposing": null,
+        "data": "한"
+      },
+      {
+        "type": "compositionupdate",
+        "isTrusted": false,
+        "isComposing": null,
+        "data": "한글"
+      },
+      {
+        "type": "beforeinput",
+        "isTrusted": true,
+        "isComposing": false,
+        "data": "한글"
+      },
+      {
+        "type": "input",
+        "isTrusted": true,
+        "isComposing": false,
+        "data": "한글"
+      },
+      {
+        "type": "compositionend",
+        "isTrusted": false,
+        "isComposing": null,
+        "data": null
+      },
+      {
+        "type": "beforeinput",
+        "isTrusted": true,
+        "isComposing": false,
+        "data": "!"
+      },
+      {
+        "type": "input",
+        "isTrusted": true,
+        "isComposing": false,
+        "data": "!"
+      },
+      {
+        "type": "beforeinput",
+        "isTrusted": true,
+        "isComposing": false,
+        "data": "다음 줄"
+      },
+      {
+        "type": "input",
+        "isTrusted": true,
+        "isComposing": false,
+        "data": "다음 줄"
+      }
+    ],
+    "composingEnter": {
+      "before": "조합 회귀시작 본문한글",
+      "after": "조합 회귀시작 본문한글",
+      "defaultPrevented": false,
+      "dispatched": true,
+      "isTrusted": false
+    }
+  },
+  "sourceComposition": {
+    "composingEnter": {
+      "before": "# 조합 회귀\n\n시작 본문한글!\n다음 줄 소스조합",
+      "after": "# 조합 회귀\n\n시작 본문한글!\n다음 줄 소스조합",
+      "defaultPrevented": false,
+      "dispatched": true,
+      "isTrusted": false
+    }
+  },
+  "zoom": {
+    "sequence": [
+      1,
+      2,
+      1
+    ],
+    "separateReadback": true,
+    "viewportAfterResize": {
+      "width": 1280,
+      "height": 720,
+      "dpr": 1.0000000149011612
+    }
+  },
+  "selectionBefore": [
+    2,
+    7,
+    "backward"
+  ],
+  "selectionAfter": [
+    2,
+    7,
+    "backward"
+  ],
+  "putCount": 1,
+  "nativeWindowsIme": "not exercised; no native claim"
+}

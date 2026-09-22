@@ -1,0 +1,15 @@
+Issue #69 GREEN evidence
+Current test SHA-256: 2725386722b76984beed722e33b30617a2b56ba6e73cfc969a912bef95f80e19
+Focused: 6 files, 95 tests passed
+Full web: 79 files, 978 tests passed
+Relevant server ACL: 4 files, 78 tests passed
+Root typecheck: editor/server/web passed
+Playwright: prior final isolated matrix remains applicable; the subsequent change only adds machine-readable outcome attributes and does not change browser behavior
+Browser JSON SHA-256: a845431ae5b7c2daba60f38cb3e538e81b509a5c6252ccec0d67f68509358c0b
+Matrix: 1280x720, 1440x900, 1920x1080 x light/dark x genuine 100/200; forced colors x genuine 100/200
+Measured interactions: selected 2-subject plan, all three tabs, simulation overflow region, disabled restore, L3 token 1, partial result 1 completed/1 unconfirmed
+Focus: inspect did not call focus; same input element remained active through 100->200->100 and same-mount resize
+Limitations: native Windows IME candidate UI and password-manager/autofill UI remain nonblocking untested; DOM input/focus only, no OS automation
+SpecKiwi summary: exit 0; errors 0; stability blockers 0
+SpecKiwi validate --fail-on-warning: exit 1 only for pre-existing SRS-W072
+SpecKiwi links check: exit 0; pre-existing IR-AUDIT-004 invalid #32 reference remains

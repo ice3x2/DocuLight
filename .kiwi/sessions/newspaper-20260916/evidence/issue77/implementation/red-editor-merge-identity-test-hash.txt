@@ -1,0 +1,9 @@
+
+
+Algorithm : SHA256
+Hash      : 5674DBA2538E567892E71EB5FF6FF13815910689E4ACE33DFEA6C5E42AA34C03
+Path      : C:\Work\git\DocuLight2.0-wt-issue77-final\packages\web\test\newspaper-editor-layout-check.cjs
+
+
+
+

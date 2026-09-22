@@ -1,0 +1,16 @@
+{
+  "runner": "Playwright-owned fresh isolated Chromium",
+  "profile": "ephemeral browser context",
+  "viewport": "1440x900",
+  "installScreenBeforeCommit": true,
+  "commitStatus": 200,
+  "completionHeldUntilStart": true,
+  "consumedTokenRejected": true,
+  "firstAdminLogin": true,
+  "endpoints": [
+    "POST /api/install/verify-token",
+    "POST /api/install/commit",
+    "POST /api/install/verify-token"
+  ],
+  "secretsRecorded": false
+}

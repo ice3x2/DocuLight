@@ -1,0 +1,13 @@
+Command: npx vitest run test/shell.test.tsx test/document-tabs.test.tsx
+Exit code: 1
+
+FAIL test/document-tabs.test.tsx > IR-SHELL-003 > IR-SHELL-009 AC-1: 긴 전체 경로는 제목으로 축약되지 않고 키보드로 스크롤할 수 있다
+AssertionError: expected null to be '0'
+  test/document-tabs.test.tsx:151:49
+
+FAIL test/shell.test.tsx > IR-SHELL-002 · CON-ARCH-004 > IR-SHELL-009 AC-1: 설정 진입점은 좌측 사이드바의 독립된 마지막 행이다
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "설정" inside 좌측 사이드바
+  test/shell.test.tsx:34:38
+
+Test Files  2 failed (2)
+Tests       2 failed | 29 passed (31)

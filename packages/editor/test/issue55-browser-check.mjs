@@ -46,4 +46,18 @@ await runBrowserChecks(async ({ page, check, beginMeasuring }) => {
   const quote = page.locator('.cm-atomic-blockquote').first();
   await quote.scrollIntoViewIfNeeded();
   check('quote uses a two-pixel action rail', (await quote.evaluate((el) => getComputedStyle(el).borderLeftWidth)) === '2px');
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.waitForFunction(() => globalThis.__issue55Reveal?.('끝 문단') === true);
+  const revealMarker = page.locator('.cm-initialRevealMatch');
+  await revealMarker.waitFor();
+  const reducedReveal = await revealMarker.evaluate((marker) => {
+    const style = getComputedStyle(marker);
+    return { text: marker.textContent, animationName: style.animationName, animationDuration: style.animationDuration };
+  });
+  check(
+    'real initial reveal lifecycle is visible and disables animation for reduced motion',
+    reducedReveal.text === '끝 문단' && (reducedReveal.animationName === 'none' || Number.parseFloat(reducedReveal.animationDuration) === 0),
+    JSON.stringify(reducedReveal),
+  );
 });

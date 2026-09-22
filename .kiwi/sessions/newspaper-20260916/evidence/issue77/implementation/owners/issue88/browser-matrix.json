@@ -1,0 +1,506 @@
+{
+  "runner": "isolated Playwright-owned persistent Chromium with extension chrome.tabs.setZoom/getZoom",
+  "actualAppShell": true,
+  "environments": [
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "left": 360,
+        "right": 920,
+        "top": 258,
+        "bottom": 462,
+        "width": 1280,
+        "height": 720,
+        "dpr": 1,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 636.234375,
+            "right": 731.15625,
+            "top": 401,
+            "bottom": 437
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 739.15625,
+            "right": 895,
+            "top": 401,
+            "bottom": 437
+          }
+        ],
+        "focusOutlineWidth": "3px"
+      },
+      "screenshot": "leave-light-1280x720-100.png"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "left": 40,
+        "right": 600,
+        "top": 78,
+        "bottom": 282,
+        "width": 640,
+        "height": 360,
+        "dpr": 2,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 316.234375,
+            "right": 411.15625,
+            "top": 221,
+            "bottom": 257
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 419.15625,
+            "right": 575,
+            "top": 221,
+            "bottom": 257
+          }
+        ],
+        "focusOutlineWidth": "3px"
+      },
+      "screenshot": "leave-light-1280x720-200.png"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "left": 360,
+        "right": 920,
+        "top": 258,
+        "bottom": 462,
+        "width": 1280,
+        "height": 720,
+        "dpr": 1,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 636.234375,
+            "right": 731.15625,
+            "top": 401,
+            "bottom": 437
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 739.15625,
+            "right": 895,
+            "top": 401,
+            "bottom": 437
+          }
+        ],
+        "focusOutlineWidth": "3px"
+      },
+      "screenshot": "leave-dark-1280x720-100.png"
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "left": 40,
+        "right": 600,
+        "top": 78,
+        "bottom": 282,
+        "width": 640,
+        "height": 360,
+        "dpr": 2,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 316.234375,
+            "right": 411.15625,
+            "top": 221,
+            "bottom": 257
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 419.15625,
+            "right": 575,
+            "top": 221,
+            "bottom": 257
+          }
+        ],
+        "focusOutlineWidth": "3px"
+      },
+      "screenshot": "leave-dark-1280x720-200.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "left": 440,
+        "right": 1000,
+        "top": 348,
+        "bottom": 552,
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 716.234375,
+            "right": 811.15625,
+            "top": 491,
+            "bottom": 527
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 819.15625,
+            "right": 975,
+            "top": 491,
+            "bottom": 527
+          }
+        ],
+        "focusOutlineWidth": "3px"
+      },
+      "screenshot": "leave-light-1440x900-100.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "left": 80,
+        "right": 640,
+        "top": 123,
+        "bottom": 327,
+        "width": 720,
+        "height": 450,
+        "dpr": 2,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 356.234375,
+            "right": 451.15625,
+            "top": 266,
+            "bottom": 302
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 459.15625,
+            "right": 615,
+            "top": 266,
+            "bottom": 302
+          }
+        ],
+        "focusOutlineWidth": "3px"
+      },
+      "screenshot": "leave-light-1440x900-200.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "left": 440,
+        "right": 1000,
+        "top": 348,
+        "bottom": 552,
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 716.234375,
+            "right": 811.15625,
+            "top": 491,
+            "bottom": 527
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 819.15625,
+            "right": 975,
+            "top": 491,
+            "bottom": 527
+          }
+        ],
+        "focusOutlineWidth": "3px"
+      },
+      "screenshot": "leave-dark-1440x900-100.png"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "left": 80,
+        "right": 640,
+        "top": 123,
+        "bottom": 327,
+        "width": 720,
+        "height": 450,
+        "dpr": 2,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 356.234375,
+            "right": 451.15625,
+            "top": 266,
+            "bottom": 302
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 459.15625,
+            "right": 615,
+            "top": 266,
+            "bottom": 302
+          }
+        ],
+        "focusOutlineWidth": "3px"
+      },
+      "screenshot": "leave-dark-1440x900-200.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "left": 680,
+        "right": 1240,
+        "top": 438,
+        "bottom": 642,
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 956.234375,
+            "right": 1051.15625,
+            "top": 581,
+            "bottom": 617
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 1059.15625,
+            "right": 1215,
+            "top": 581,
+            "bottom": 617
+          }
+        ],
+        "focusOutlineWidth": "3px"
+      },
+      "screenshot": "leave-light-1920x1080-100.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "left": 200,
+        "right": 760,
+        "top": 168,
+        "bottom": 372,
+        "width": 960,
+        "height": 540,
+        "dpr": 2,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 476.234375,
+            "right": 571.15625,
+            "top": 311,
+            "bottom": 347
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 579.15625,
+            "right": 735,
+            "top": 311,
+            "bottom": 347
+          }
+        ],
+        "focusOutlineWidth": "3px"
+      },
+      "screenshot": "leave-light-1920x1080-200.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "left": 680,
+        "right": 1240,
+        "top": 438,
+        "bottom": 642,
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 956.234375,
+            "right": 1051.15625,
+            "top": 581,
+            "bottom": 617
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 1059.15625,
+            "right": 1215,
+            "top": 581,
+            "bottom": 617
+          }
+        ],
+        "focusOutlineWidth": "3px"
+      },
+      "screenshot": "leave-dark-1920x1080-100.png"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "left": 200,
+        "right": 760,
+        "top": 168,
+        "bottom": 372,
+        "width": 960,
+        "height": 540,
+        "dpr": 2,
+        "scrollWidth": 558,
+        "clientWidth": 558,
+        "buttons": [
+          {
+            "text": "계속 편집",
+            "left": 476.234375,
+            "right": 571.15625,
+            "top": 311,
+            "bottom": 347
+          },
+          {
+            "text": "변경 버리고 나가기",
+            "left": 579.15625,
+            "right": 735,
+            "top": 311,
+            "bottom": 347
+          }
+        ],
+        "focusOutlineWidth": "3px"
+      },
+      "screenshot": "leave-dark-1920x1080-200.png"
+    }
+  ],
+  "forcedColors": [
+    {
+      "zoom": 100,
+      "observedZoom": 1,
+      "state": {
+        "active": true,
+        "outline": "solid",
+        "actions": [
+          {
+            "left": 636.234375,
+            "right": 731.15625,
+            "top": 401,
+            "bottom": 437
+          },
+          {
+            "left": 739.15625,
+            "right": 895,
+            "top": 401,
+            "bottom": 437
+          }
+        ],
+        "width": 1280,
+        "height": 720
+      },
+      "screenshot": "leave-forced-colors-100.png"
+    },
+    {
+      "zoom": 200,
+      "observedZoom": 2,
+      "state": {
+        "active": true,
+        "outline": "solid",
+        "actions": [
+          {
+            "left": 316.234375,
+            "right": 411.15625,
+            "top": 221,
+            "bottom": 257
+          },
+          {
+            "left": 419.15625,
+            "right": 575,
+            "top": 221,
+            "bottom": 257
+          }
+        ],
+        "width": 640,
+        "height": 360
+      },
+      "screenshot": "leave-forced-colors-200.png"
+    }
+  ],
+  "storage": {
+    "local": {},
+    "session": {}
+  },
+  "putCount": 0,
+  "headerCloseDiscardPersisted": true,
+  "headerCloseRestoredGearFocus": true,
+  "followUpOutsideBlocked": true,
+  "keyboardRadixActivation": true,
+  "categoryDiscardRestoredTabFocus": true,
+  "persistedValueAfterReopen": "104857600",
+  "persistedFromActualGet": "104857600",
+  "lastFormFieldReachable": true,
+  "longKoreanWarningCount": true,
+  "keyboardFocusTrap": true,
+  "forcedActionGeometry": true
+}

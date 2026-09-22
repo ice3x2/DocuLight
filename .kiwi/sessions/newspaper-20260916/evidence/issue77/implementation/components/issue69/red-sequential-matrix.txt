@@ -1,0 +1,6 @@
+﻿Issue #69 sequential failure matrix RED
+Test SHA-256: 2725386722b76984beed722e33b30617a2b56ba6e73cfc969a912bef95f80e19
+Expanded matrix cases: failure indices 0, 1, 2
+Command: cd packages/web && npx vitest run test/issue69-acl-audit.test.tsx --reporter=verbose
+Exit: 1
+Raw output: red-sequential-matrix-raw.txt

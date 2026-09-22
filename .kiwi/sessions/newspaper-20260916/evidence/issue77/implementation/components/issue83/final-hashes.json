@@ -1,0 +1,106 @@
+﻿[
+    {
+        "path":  ".gitattributes",
+        "sha256":  "391f1063092394e86780fa2fd85ca561d370da536f26ec6fca42dcb475b9958c"
+    },
+    {
+        "path":  "docs/spec/00.index.md",
+        "sha256":  "ad9b816fbe361155323f323c30af80f2862f9fecba0b781bd1273cd23399440a"
+    },
+    {
+        "path":  "docs/spec/13.workspace.srs.md",
+        "sha256":  "dc5571e3b8f3d809f2f431ba8f6eabf030b639e3932cb70e5a4f3ef62768eed5"
+    },
+    {
+        "path":  "kiwi/.status.json",
+        "sha256":  "d067fabe33ce2ddbc6c58193f16708e4cf4addc11ba427e338bcc2ae61617dd3"
+    },
+    {
+        "path":  "packages/server/src/http/routes/workspace-api.ts",
+        "sha256":  "6fdedde2fc7f2ffddd5f519088c14929055123c5ac06395783c216ada0cd3941"
+    },
+    {
+        "path":  "packages/server/test/http/workspace-api.test.ts",
+        "sha256":  "4bb29abfaeee97ff5f97974d35144d4915cdc2a1189acd74261765865d948a85"
+    },
+    {
+        "path":  "packages/web/src/api/client.ts",
+        "sha256":  "e70272377e54cd5511a81c8a29de457d388529ffbf7dd3684e0fb9c2b530a87e"
+    },
+    {
+        "path":  "packages/web/src/api/queries.ts",
+        "sha256":  "9c829a0ab825f076bc28fbd0f9ca948c6cfae6e33c975aa94d40d62a98c8b30e"
+    },
+    {
+        "path":  "packages/web/src/App.tsx",
+        "sha256":  "cced6879be494591dd2e07166bac07d0e5b2c8ef2f41a5a1daa78c13b0d83971"
+    },
+    {
+        "path":  "packages/web/src/acl/AclAuditPanel.tsx",
+        "sha256":  "c13253689e6b5e5fb243c31a8c3b951acd657c48a0ed5cb1a6aaef88e87914cd"
+    },
+    {
+        "path":  "packages/web/src/acl/BulkRevokePanel.tsx",
+        "sha256":  "5c6385a0890c9688fa1c70b4ea7794b0149c6119f11649947721780edab343d2"
+    },
+    {
+        "path":  "packages/web/src/acl/SimulationPanel.tsx",
+        "sha256":  "3dea00d0601effe991b52c868c7a61cd73a54d23c57eee3e48103fe3a9790375"
+    },
+    {
+        "path":  "packages/web/src/principal/PrincipalPicker.tsx",
+        "sha256":  "5f1b2a77ff0f75ce7a3188d139d21beb4e5d22be90a0f619c4c149e3a444ad99"
+    },
+    {
+        "path":  "packages/web/test/issue83-managed-workspaces.test.tsx",
+        "sha256":  "29efcf297976ddcb11042fa62bb7605e329f5a8c8951f1365846f8c188a3dfcf"
+    },
+    {
+        "path":  "packages/web/test/issue83-managed-workspaces-product-runner.mjs",
+        "sha256":  "5a5c48cb8e5bd7f78e1b66d4e83ac52adde02ded7d951b47b6eb4a3d6da1d487"
+    },
+    {
+        "path":  "packages/web/test/issue83-managed-workspaces-product-check.mjs",
+        "sha256":  "f33b83acbb7936344d6aae737c3fb33f93d7091500e725beb192bff5eb2e1802"
+    },
+    {
+        "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue83/final-independent-review.md",
+        "sha256":  "8771dae10b571a6ba2955b6236db61c685e73096a7cf217b3be7b2268ae75127"
+    },
+    {
+        "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue83/browser-matrix/capture-manifest.json",
+        "sha256":  "ebff2e255d81772b70d6445ccaa956ec5df5c3ac3dd0574024b20652bcd5bc20"
+    },
+    {
+        "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue83/post-rebase-focused73-raw.txt",
+        "sha256":  "29687646a91a907e9d7a6fd4fa608588f5339e5ed03f53dc875ea6bc80df76d0"
+    },
+    {
+        "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue83/post-rebase-server118-raw.txt",
+        "sha256":  "a5a7236448c653b36f486db98c0bda6a7eb3b884ca342bcd5458ae3374660751"
+    },
+    {
+        "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue83/post-rebase-product12-plus-2-raw.txt",
+        "sha256":  "a2581c2472ca0b1a5ee331222e432477479908d71d99ff88b77884a629f073fc"
+    },
+    {
+        "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue83/post-rebase-typecheck-raw.txt",
+        "sha256":  "1ac950828e0f8a1676d399d62534ecb8961ab620fcb08487cac2eff0600a022b"
+    },
+    {
+        "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue83/post-rebase-speckiwi-validate-raw.txt",
+        "sha256":  "8f07100716dc09c08526023dcba96700e979fcfa46a3cf59ee1416d2c77baf25"
+    },
+    {
+        "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue83/post-rebase-speckiwi-summary-raw.txt",
+        "sha256":  "9e835f8a1d96e9375cdecd3d7039dfbad951d695c5cecee14ea5678c42083ad6"
+    },
+    {
+        "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue83/post-rebase-speckiwi-links-raw.txt",
+        "sha256":  "6acaaeca77c36ccce351ef88e3dcfca71e54004ec21fba9834bb99c304a94345"
+    },
+    {
+        "path":  ".kiwi/sessions/newspaper-20260916/evidence/issue83/post-rebase-speckiwi-requirement-raw.txt",
+        "sha256":  "d02174b9960932ea8ee66971468a5e2cf376e9d02968b5eb39ff12e79377c742"
+    }
+]

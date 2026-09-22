@@ -1,0 +1,7 @@
+REQUIREMENTS=IR-SHELL-002,DR-SHELL-001,IR-SHELL-006,FR-CONFIRM-024,IR-SHELL-013
+RAW_TEST_SHA256=c447cb4ccaa92e8ee359888ead9c991d3a81059acfd41deadc53e294616f8a3b
+COMMAND=npm test --workspace @doculight/web -- --run test/issue71-closure-audit-contract.test.ts
+EXIT_CODE=1
+RESULT=RED
+FAILURES=5/5
+OBSERVED=No InputEvent composition path; combined outcomes were literal true flags; denied PUT body was {}; runner omitted shell.css/closure-contract/changed issue88 test and raw command evidence; focus rule was the genuine 2px authored value rather than the measured-safe 2.5px value.

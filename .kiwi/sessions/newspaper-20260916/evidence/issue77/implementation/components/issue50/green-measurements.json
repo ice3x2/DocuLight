@@ -1,0 +1,1008 @@
+{
+  "matrix": [
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "scroll": {
+        "clientWidth": 1280,
+        "scrollWidth": 1280
+      },
+      "widths": {
+        "left": 280,
+        "center": 680,
+        "right": 320
+      },
+      "rows": {
+        "strip": {
+          "x": 280,
+          "y": 0,
+          "width": 680,
+          "height": 49,
+          "top": 0,
+          "right": 960,
+          "bottom": 49,
+          "left": 280
+        },
+        "header": {
+          "x": 280,
+          "y": 49,
+          "width": 680,
+          "height": 53,
+          "top": 49,
+          "right": 960,
+          "bottom": 102,
+          "left": 280
+        }
+      },
+      "breadcrumb": {
+        "rect": {
+          "x": 288,
+          "y": 55,
+          "width": 504.78125,
+          "height": 40,
+          "top": 55,
+          "right": 792.78125,
+          "bottom": 95,
+          "left": 288
+        },
+        "text": "신문지 워크스페이스 / 매우 긴 한글 부서 이름과 프로젝트 경로 / 분기별 기록과 검토 자료 / 긴 문서 탭 1.md",
+        "overflowY": "auto",
+        "lineHeight": "20px"
+      },
+      "protected": {
+        "settings": {
+          "x": 0,
+          "y": 668,
+          "width": 279,
+          "height": 52,
+          "top": 668,
+          "right": 279,
+          "bottom": 720,
+          "left": 0
+        },
+        "status": {
+          "x": 800.78125,
+          "y": 53,
+          "width": 107.21875,
+          "height": 44,
+          "top": 53,
+          "right": 908,
+          "bottom": 97,
+          "left": 800.78125
+        },
+        "menu": {
+          "x": 916,
+          "y": 57,
+          "width": 36,
+          "height": 36,
+          "top": 57,
+          "right": 952,
+          "bottom": 93,
+          "left": 916
+        }
+      },
+      "surfaces": {
+        "left": "rgb(222, 221, 214)",
+        "right": "rgb(233, 231, 226)",
+        "activeTab": "rgb(245, 244, 239)",
+        "inactiveTab": "rgb(233, 231, 226)"
+      }
+    },
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "scroll": {
+        "clientWidth": 1440,
+        "scrollWidth": 1440
+      },
+      "widths": {
+        "left": 280,
+        "center": 840,
+        "right": 320
+      },
+      "rows": {
+        "strip": {
+          "x": 280,
+          "y": 0,
+          "width": 840,
+          "height": 49,
+          "top": 0,
+          "right": 1120,
+          "bottom": 49,
+          "left": 280
+        },
+        "header": {
+          "x": 280,
+          "y": 49,
+          "width": 840,
+          "height": 53,
+          "top": 49,
+          "right": 1120,
+          "bottom": 102,
+          "left": 280
+        }
+      },
+      "breadcrumb": {
+        "rect": {
+          "x": 288,
+          "y": 55,
+          "width": 636.75,
+          "height": 40,
+          "top": 55,
+          "right": 924.75,
+          "bottom": 95,
+          "left": 288
+        },
+        "text": "신문지 워크스페이스 / 매우 긴 한글 부서 이름과 프로젝트 경로 / 분기별 기록과 검토 자료 / 긴 문서 탭 1.md",
+        "overflowY": "auto",
+        "lineHeight": "20px"
+      },
+      "protected": {
+        "settings": {
+          "x": 0,
+          "y": 848,
+          "width": 279,
+          "height": 52,
+          "top": 848,
+          "right": 279,
+          "bottom": 900,
+          "left": 0
+        },
+        "status": {
+          "x": 932.75,
+          "y": 53,
+          "width": 135.25,
+          "height": 44,
+          "top": 53,
+          "right": 1068,
+          "bottom": 97,
+          "left": 932.75
+        },
+        "menu": {
+          "x": 1076,
+          "y": 57,
+          "width": 36,
+          "height": 36,
+          "top": 57,
+          "right": 1112,
+          "bottom": 93,
+          "left": 1076
+        }
+      },
+      "surfaces": {
+        "left": "rgb(222, 221, 214)",
+        "right": "rgb(233, 231, 226)",
+        "activeTab": "rgb(245, 244, 239)",
+        "inactiveTab": "rgb(233, 231, 226)"
+      }
+    },
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "scroll": {
+        "clientWidth": 1920,
+        "scrollWidth": 1920
+      },
+      "widths": {
+        "left": 280,
+        "center": 1320,
+        "right": 320
+      },
+      "rows": {
+        "strip": {
+          "x": 280,
+          "y": 0,
+          "width": 1320,
+          "height": 49,
+          "top": 0,
+          "right": 1600,
+          "bottom": 49,
+          "left": 280
+        },
+        "header": {
+          "x": 280,
+          "y": 49,
+          "width": 1320,
+          "height": 52,
+          "top": 49,
+          "right": 1600,
+          "bottom": 101,
+          "left": 280
+        }
+      },
+      "breadcrumb": {
+        "rect": {
+          "x": 288,
+          "y": 64.5,
+          "width": 1105.9375,
+          "height": 20,
+          "top": 64.5,
+          "right": 1393.9375,
+          "bottom": 84.5,
+          "left": 288
+        },
+        "text": "신문지 워크스페이스 / 매우 긴 한글 부서 이름과 프로젝트 경로 / 분기별 기록과 검토 자료 / 긴 문서 탭 1.md",
+        "overflowY": "auto",
+        "lineHeight": "20px"
+      },
+      "protected": {
+        "settings": {
+          "x": 0,
+          "y": 1028,
+          "width": 279,
+          "height": 52,
+          "top": 1028,
+          "right": 279,
+          "bottom": 1080,
+          "left": 0
+        },
+        "status": {
+          "x": 1401.9375,
+          "y": 63.5,
+          "width": 146.0625,
+          "height": 22,
+          "top": 63.5,
+          "right": 1548,
+          "bottom": 85.5,
+          "left": 1401.9375
+        },
+        "menu": {
+          "x": 1556,
+          "y": 56.5,
+          "width": 36,
+          "height": 36,
+          "top": 56.5,
+          "right": 1592,
+          "bottom": 92.5,
+          "left": 1556
+        }
+      },
+      "surfaces": {
+        "left": "rgb(222, 221, 214)",
+        "right": "rgb(233, 231, 226)",
+        "activeTab": "rgb(245, 244, 239)",
+        "inactiveTab": "rgb(233, 231, 226)"
+      }
+    },
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 840,
+        "height": 720
+      },
+      "scroll": {
+        "clientWidth": 840,
+        "scrollWidth": 840
+      },
+      "widths": {
+        "left": 230,
+        "center": 360,
+        "right": 250
+      },
+      "rows": {
+        "strip": {
+          "x": 230,
+          "y": 0,
+          "width": 360,
+          "height": 49,
+          "top": 0,
+          "right": 590,
+          "bottom": 49,
+          "left": 230
+        },
+        "header": {
+          "x": 230,
+          "y": 49,
+          "width": 360,
+          "height": 75,
+          "top": 49,
+          "right": 590,
+          "bottom": 124,
+          "left": 230
+        }
+      },
+      "breadcrumb": {
+        "rect": {
+          "x": 238,
+          "y": 56,
+          "width": 240.84375,
+          "height": 60,
+          "top": 56,
+          "right": 478.84375,
+          "bottom": 116,
+          "left": 238
+        },
+        "text": "신문지 워크스페이스 / 매우 긴 한글 부서 이름과 프로젝트 경로 / 분기별 기록과 검토 자료 / 긴 문서 탭 1.md",
+        "overflowY": "auto",
+        "lineHeight": "20px"
+      },
+      "protected": {
+        "settings": {
+          "x": 0,
+          "y": 668,
+          "width": 229,
+          "height": 52,
+          "top": 668,
+          "right": 229,
+          "bottom": 720,
+          "left": 0
+        },
+        "status": {
+          "x": 486.84375,
+          "y": 53,
+          "width": 51.15625,
+          "height": 66,
+          "top": 53,
+          "right": 538,
+          "bottom": 119,
+          "left": 486.84375
+        },
+        "menu": {
+          "x": 546,
+          "y": 68,
+          "width": 36,
+          "height": 36,
+          "top": 68,
+          "right": 582,
+          "bottom": 104,
+          "left": 546
+        }
+      },
+      "surfaces": {
+        "left": "rgb(222, 221, 214)",
+        "right": "rgb(233, 231, 226)",
+        "activeTab": "rgb(245, 244, 239)",
+        "inactiveTab": "rgb(233, 231, 226)"
+      }
+    },
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 500,
+        "height": 720
+      },
+      "scroll": {
+        "clientWidth": 500,
+        "scrollWidth": 600
+      },
+      "widths": {
+        "left": 180,
+        "center": 240,
+        "right": 180
+      },
+      "rows": {
+        "strip": {
+          "x": 180,
+          "y": 0,
+          "width": 240,
+          "height": 49,
+          "top": 0,
+          "right": 420,
+          "bottom": 49,
+          "left": 180
+        },
+        "header": {
+          "x": 180,
+          "y": 49,
+          "width": 240,
+          "height": 119,
+          "top": 49,
+          "right": 420,
+          "bottom": 168,
+          "left": 180
+        }
+      },
+      "breadcrumb": {
+        "rect": {
+          "x": 188,
+          "y": 78,
+          "width": 141.875,
+          "height": 60,
+          "top": 78,
+          "right": 329.875,
+          "bottom": 138,
+          "left": 188
+        },
+        "text": "신문지 워크스페이스 / 매우 긴 한글 부서 이름과 프로젝트 경로 / 분기별 기록과 검토 자료 / 긴 문서 탭 1.md",
+        "overflowY": "auto",
+        "lineHeight": "20px"
+      },
+      "protected": {
+        "settings": {
+          "x": 0,
+          "y": 668,
+          "width": 179,
+          "height": 52,
+          "top": 668,
+          "right": 179,
+          "bottom": 720,
+          "left": 0
+        },
+        "status": {
+          "x": 337.875,
+          "y": 53,
+          "width": 30.125,
+          "height": 110,
+          "top": 53,
+          "right": 368,
+          "bottom": 163,
+          "left": 337.875
+        },
+        "menu": {
+          "x": 376,
+          "y": 90,
+          "width": 36,
+          "height": 36,
+          "top": 90,
+          "right": 412,
+          "bottom": 126,
+          "left": 376
+        }
+      },
+      "surfaces": {
+        "left": "rgb(222, 221, 214)",
+        "right": "rgb(233, 231, 226)",
+        "activeTab": "rgb(245, 244, 239)",
+        "inactiveTab": "rgb(233, 231, 226)"
+      }
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "scroll": {
+        "clientWidth": 1280,
+        "scrollWidth": 1280
+      },
+      "widths": {
+        "left": 280,
+        "center": 680,
+        "right": 320
+      },
+      "rows": {
+        "strip": {
+          "x": 280,
+          "y": 0,
+          "width": 680,
+          "height": 49,
+          "top": 0,
+          "right": 960,
+          "bottom": 49,
+          "left": 280
+        },
+        "header": {
+          "x": 280,
+          "y": 49,
+          "width": 680,
+          "height": 53,
+          "top": 49,
+          "right": 960,
+          "bottom": 102,
+          "left": 280
+        }
+      },
+      "breadcrumb": {
+        "rect": {
+          "x": 288,
+          "y": 55,
+          "width": 504.78125,
+          "height": 40,
+          "top": 55,
+          "right": 792.78125,
+          "bottom": 95,
+          "left": 288
+        },
+        "text": "신문지 워크스페이스 / 매우 긴 한글 부서 이름과 프로젝트 경로 / 분기별 기록과 검토 자료 / 긴 문서 탭 1.md",
+        "overflowY": "auto",
+        "lineHeight": "20px"
+      },
+      "protected": {
+        "settings": {
+          "x": 0,
+          "y": 668,
+          "width": 279,
+          "height": 52,
+          "top": 668,
+          "right": 279,
+          "bottom": 720,
+          "left": 0
+        },
+        "status": {
+          "x": 800.78125,
+          "y": 53,
+          "width": 107.21875,
+          "height": 44,
+          "top": 53,
+          "right": 908,
+          "bottom": 97,
+          "left": 800.78125
+        },
+        "menu": {
+          "x": 916,
+          "y": 57,
+          "width": 36,
+          "height": 36,
+          "top": 57,
+          "right": 952,
+          "bottom": 93,
+          "left": 916
+        }
+      },
+      "surfaces": {
+        "left": "rgb(26, 29, 25)",
+        "right": "rgb(32, 34, 31)",
+        "activeTab": "rgb(41, 44, 39)",
+        "inactiveTab": "rgb(32, 34, 31)"
+      }
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "scroll": {
+        "clientWidth": 1440,
+        "scrollWidth": 1440
+      },
+      "widths": {
+        "left": 280,
+        "center": 840,
+        "right": 320
+      },
+      "rows": {
+        "strip": {
+          "x": 280,
+          "y": 0,
+          "width": 840,
+          "height": 49,
+          "top": 0,
+          "right": 1120,
+          "bottom": 49,
+          "left": 280
+        },
+        "header": {
+          "x": 280,
+          "y": 49,
+          "width": 840,
+          "height": 53,
+          "top": 49,
+          "right": 1120,
+          "bottom": 102,
+          "left": 280
+        }
+      },
+      "breadcrumb": {
+        "rect": {
+          "x": 288,
+          "y": 55,
+          "width": 636.75,
+          "height": 40,
+          "top": 55,
+          "right": 924.75,
+          "bottom": 95,
+          "left": 288
+        },
+        "text": "신문지 워크스페이스 / 매우 긴 한글 부서 이름과 프로젝트 경로 / 분기별 기록과 검토 자료 / 긴 문서 탭 1.md",
+        "overflowY": "auto",
+        "lineHeight": "20px"
+      },
+      "protected": {
+        "settings": {
+          "x": 0,
+          "y": 848,
+          "width": 279,
+          "height": 52,
+          "top": 848,
+          "right": 279,
+          "bottom": 900,
+          "left": 0
+        },
+        "status": {
+          "x": 932.75,
+          "y": 53,
+          "width": 135.25,
+          "height": 44,
+          "top": 53,
+          "right": 1068,
+          "bottom": 97,
+          "left": 932.75
+        },
+        "menu": {
+          "x": 1076,
+          "y": 57,
+          "width": 36,
+          "height": 36,
+          "top": 57,
+          "right": 1112,
+          "bottom": 93,
+          "left": 1076
+        }
+      },
+      "surfaces": {
+        "left": "rgb(26, 29, 25)",
+        "right": "rgb(32, 34, 31)",
+        "activeTab": "rgb(41, 44, 39)",
+        "inactiveTab": "rgb(32, 34, 31)"
+      }
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "scroll": {
+        "clientWidth": 1920,
+        "scrollWidth": 1920
+      },
+      "widths": {
+        "left": 280,
+        "center": 1320,
+        "right": 320
+      },
+      "rows": {
+        "strip": {
+          "x": 280,
+          "y": 0,
+          "width": 1320,
+          "height": 49,
+          "top": 0,
+          "right": 1600,
+          "bottom": 49,
+          "left": 280
+        },
+        "header": {
+          "x": 280,
+          "y": 49,
+          "width": 1320,
+          "height": 52,
+          "top": 49,
+          "right": 1600,
+          "bottom": 101,
+          "left": 280
+        }
+      },
+      "breadcrumb": {
+        "rect": {
+          "x": 288,
+          "y": 64.5,
+          "width": 1105.9375,
+          "height": 20,
+          "top": 64.5,
+          "right": 1393.9375,
+          "bottom": 84.5,
+          "left": 288
+        },
+        "text": "신문지 워크스페이스 / 매우 긴 한글 부서 이름과 프로젝트 경로 / 분기별 기록과 검토 자료 / 긴 문서 탭 1.md",
+        "overflowY": "auto",
+        "lineHeight": "20px"
+      },
+      "protected": {
+        "settings": {
+          "x": 0,
+          "y": 1028,
+          "width": 279,
+          "height": 52,
+          "top": 1028,
+          "right": 279,
+          "bottom": 1080,
+          "left": 0
+        },
+        "status": {
+          "x": 1401.9375,
+          "y": 63.5,
+          "width": 146.0625,
+          "height": 22,
+          "top": 63.5,
+          "right": 1548,
+          "bottom": 85.5,
+          "left": 1401.9375
+        },
+        "menu": {
+          "x": 1556,
+          "y": 56.5,
+          "width": 36,
+          "height": 36,
+          "top": 56.5,
+          "right": 1592,
+          "bottom": 92.5,
+          "left": 1556
+        }
+      },
+      "surfaces": {
+        "left": "rgb(26, 29, 25)",
+        "right": "rgb(32, 34, 31)",
+        "activeTab": "rgb(41, 44, 39)",
+        "inactiveTab": "rgb(32, 34, 31)"
+      }
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 840,
+        "height": 720
+      },
+      "scroll": {
+        "clientWidth": 840,
+        "scrollWidth": 840
+      },
+      "widths": {
+        "left": 230,
+        "center": 360,
+        "right": 250
+      },
+      "rows": {
+        "strip": {
+          "x": 230,
+          "y": 0,
+          "width": 360,
+          "height": 49,
+          "top": 0,
+          "right": 590,
+          "bottom": 49,
+          "left": 230
+        },
+        "header": {
+          "x": 230,
+          "y": 49,
+          "width": 360,
+          "height": 75,
+          "top": 49,
+          "right": 590,
+          "bottom": 124,
+          "left": 230
+        }
+      },
+      "breadcrumb": {
+        "rect": {
+          "x": 238,
+          "y": 56,
+          "width": 240.84375,
+          "height": 60,
+          "top": 56,
+          "right": 478.84375,
+          "bottom": 116,
+          "left": 238
+        },
+        "text": "신문지 워크스페이스 / 매우 긴 한글 부서 이름과 프로젝트 경로 / 분기별 기록과 검토 자료 / 긴 문서 탭 1.md",
+        "overflowY": "auto",
+        "lineHeight": "20px"
+      },
+      "protected": {
+        "settings": {
+          "x": 0,
+          "y": 668,
+          "width": 229,
+          "height": 52,
+          "top": 668,
+          "right": 229,
+          "bottom": 720,
+          "left": 0
+        },
+        "status": {
+          "x": 486.84375,
+          "y": 53,
+          "width": 51.15625,
+          "height": 66,
+          "top": 53,
+          "right": 538,
+          "bottom": 119,
+          "left": 486.84375
+        },
+        "menu": {
+          "x": 546,
+          "y": 68,
+          "width": 36,
+          "height": 36,
+          "top": 68,
+          "right": 582,
+          "bottom": 104,
+          "left": 546
+        }
+      },
+      "surfaces": {
+        "left": "rgb(26, 29, 25)",
+        "right": "rgb(32, 34, 31)",
+        "activeTab": "rgb(41, 44, 39)",
+        "inactiveTab": "rgb(32, 34, 31)"
+      }
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 500,
+        "height": 720
+      },
+      "scroll": {
+        "clientWidth": 500,
+        "scrollWidth": 600
+      },
+      "widths": {
+        "left": 180,
+        "center": 240,
+        "right": 180
+      },
+      "rows": {
+        "strip": {
+          "x": 180,
+          "y": 0,
+          "width": 240,
+          "height": 49,
+          "top": 0,
+          "right": 420,
+          "bottom": 49,
+          "left": 180
+        },
+        "header": {
+          "x": 180,
+          "y": 49,
+          "width": 240,
+          "height": 119,
+          "top": 49,
+          "right": 420,
+          "bottom": 168,
+          "left": 180
+        }
+      },
+      "breadcrumb": {
+        "rect": {
+          "x": 188,
+          "y": 78,
+          "width": 141.875,
+          "height": 60,
+          "top": 78,
+          "right": 329.875,
+          "bottom": 138,
+          "left": 188
+        },
+        "text": "신문지 워크스페이스 / 매우 긴 한글 부서 이름과 프로젝트 경로 / 분기별 기록과 검토 자료 / 긴 문서 탭 1.md",
+        "overflowY": "auto",
+        "lineHeight": "20px"
+      },
+      "protected": {
+        "settings": {
+          "x": 0,
+          "y": 668,
+          "width": 179,
+          "height": 52,
+          "top": 668,
+          "right": 179,
+          "bottom": 720,
+          "left": 0
+        },
+        "status": {
+          "x": 337.875,
+          "y": 53,
+          "width": 30.125,
+          "height": 110,
+          "top": 53,
+          "right": 368,
+          "bottom": 163,
+          "left": 337.875
+        },
+        "menu": {
+          "x": 376,
+          "y": 90,
+          "width": 36,
+          "height": 36,
+          "top": 90,
+          "right": 412,
+          "bottom": 126,
+          "left": 376
+        }
+      },
+      "surfaces": {
+        "left": "rgb(26, 29, 25)",
+        "right": "rgb(32, 34, 31)",
+        "activeTab": "rgb(41, 44, 39)",
+        "inactiveTab": "rgb(32, 34, 31)"
+      }
+    }
+  ],
+  "zoom": {
+    "method": "isolated persistent Chromium + extension chrome.tabs.setZoom(2)",
+    "zoom": 2,
+    "result": {
+      "viewport": {
+        "width": 394,
+        "height": 406
+      },
+      "scroll": {
+        "clientWidth": 394,
+        "scrollWidth": 600
+      },
+      "widths": {
+        "left": 180,
+        "center": 240,
+        "right": 180
+      },
+      "rows": {
+        "strip": {
+          "x": 180,
+          "y": 0,
+          "width": 240,
+          "height": 56.5,
+          "top": 0,
+          "right": 420,
+          "bottom": 56.5,
+          "left": 180
+        },
+        "header": {
+          "x": 180,
+          "y": 56.5,
+          "width": 240,
+          "height": 119,
+          "top": 56.5,
+          "right": 420,
+          "bottom": 175.5,
+          "left": 180
+        }
+      },
+      "breadcrumb": {
+        "rect": {
+          "x": 188,
+          "y": 85.5,
+          "width": 142.140625,
+          "height": 60,
+          "top": 85.5,
+          "right": 330.140625,
+          "bottom": 145.5,
+          "left": 188
+        },
+        "text": "신문지 워크스페이스 / 매우 긴 한글 부서 이름과 프로젝트 경로 / 분기별 기록과 검토 자료 / 긴 문서 탭 1.md",
+        "overflowY": "auto",
+        "lineHeight": "20px"
+      },
+      "protected": {
+        "settings": {
+          "x": 0,
+          "y": 347,
+          "width": 179,
+          "height": 52,
+          "top": 347,
+          "right": 179,
+          "bottom": 399,
+          "left": 0
+        },
+        "status": {
+          "x": 338.140625,
+          "y": 60.5,
+          "width": 29.859375,
+          "height": 110,
+          "top": 60.5,
+          "right": 368,
+          "bottom": 170.5,
+          "left": 338.140625
+        },
+        "menu": {
+          "x": 376,
+          "y": 97.5,
+          "width": 36,
+          "height": 36,
+          "top": 97.5,
+          "right": 412,
+          "bottom": 133.5,
+          "left": 376
+        }
+      },
+      "surfaces": {
+        "left": "rgb(222, 221, 214)",
+        "right": "rgb(233, 231, 226)",
+        "activeTab": "rgb(245, 244, 239)",
+        "inactiveTab": "rgb(233, 231, 226)"
+      }
+    }
+  }
+}

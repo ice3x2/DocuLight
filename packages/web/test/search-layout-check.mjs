@@ -47,7 +47,7 @@ await runBrowserChecks(async ({ page, check, beginMeasuring, note }) => {
 
     // 검색 탭을 열고 질의를 친다.
     await page.getByRole('tab', { name: '검색' }).click();
-    const 입력 = page.getByPlaceholder(/문서 제목|검색/).first();
+    const 입력 = page.getByPlaceholder('이름 · 본문 · 태그 · 첨부 이름');
     // 제어 입력이라 값을 밀어 넣으면 React 가 그 변경을 보지 못할 수 있다.
     await 입력.click();
     await 입력.type(표식, { delay: 10 });

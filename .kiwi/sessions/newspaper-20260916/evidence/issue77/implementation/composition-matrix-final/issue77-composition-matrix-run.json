@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "command": "node packages/web/test/issue77-composition-matrix-runner.mjs (through repository npm CLI)",
+  "workspace": "C:\\Work\\git\\DocuLight2.0-wt-issue77-final",
+  "server": "same-process owned disposable server/database/storage",
+  "fixture": "..\\..\\..\\Users\\beom\\AppData\\Local\\Temp\\doculight-issue77-composition-matrix-run-FxBa0O",
+  "sourceIdentity": "83ae0fc9808e1edc5e049e17e1d9b5657aef29aa+diff-fcca9535dabd99e3e47c45cea73d6151d1ad3a5972adf518df2a51fbf695cd64",
+  "startedAt": "2026-09-22T01:25:06.638Z",
+  "endedAt": "2026-09-22T01:25:40.541Z",
+  "exitCode": 0,
+  "artifacts": [
+    "issue77-composition-matrix.raw.txt",
+    "issue77-composition-matrix-result.json"
+  ],
+  "outputRoot": "C:\\Users\\beom\\AppData\\Local\\Temp\\doculight-issue77-composition-matrix-output-1790040306112"
+}

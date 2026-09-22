@@ -1,0 +1,97 @@
+{
+  "schema": "doculight.issue77.closeout-acceptance.v1",
+  "generatedAt": "2026-09-22T02:36:19.143Z",
+  "baseRevision": "83ae0fc9808e1edc5e049e17e1d9b5657aef29aa",
+  "reviewedManifestSha256": "e66dc9783b3e7a5ed33aed520361d4aeedb843f32c201862d2e6326f20a13e72",
+  "acceptedPreReviewLedgerSha256": "a8efd0cc089b0f6fae9849b99133b4545e75f42da832bd7422c2808fc07be8d4",
+  "acceptedPreReviewIdSetSha256": "a8149904f4dbd98d10f7b6eb8e171af5d88898e024b74790900ee17cccd73497",
+  "acceptedRows": 406,
+  "retainedNotApplicableRows": 21,
+  "requirements": {
+    "IR-SHELL-002": [
+      "AC-1",
+      "AC-2",
+      "AC-3",
+      "AC-4",
+      "AC-5",
+      "AC-6",
+      "AC-7",
+      "AC-8"
+    ],
+    "IR-SHELL-006": [
+      "AC-1",
+      "AC-2",
+      "AC-3",
+      "AC-4",
+      "AC-5",
+      "AC-6",
+      "AC-7",
+      "AC-8",
+      "AC-9",
+      "AC-10"
+    ],
+    "IR-SHELL-008": [
+      "AC-1",
+      "AC-2",
+      "AC-3",
+      "AC-4",
+      "AC-5",
+      "AC-6"
+    ],
+    "IR-EDITOR-002": [
+      "AC-1",
+      "AC-2",
+      "AC-3",
+      "AC-4",
+      "AC-5"
+    ],
+    "IR-PRINCIPAL-001": [
+      "AC-1",
+      "AC-2",
+      "AC-3",
+      "AC-4",
+      "AC-5"
+    ],
+    "FR-STORAGE-010": [
+      "AC-1",
+      "AC-2",
+      "AC-3",
+      "AC-4",
+      "AC-5",
+      "AC-6",
+      "AC-7"
+    ]
+  },
+  "files": {
+    ".kiwi/sessions/newspaper-20260916/evidence/issue77/implementation/axis-a-final-review.md": "18e706c4ce58f28e3c153fb957aff7cf7e1696ccfb9db14da64c012ff415bf25",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue77/implementation/axis-b-final-review.md": "ac68b5f9d3e53d7aab970a403d38b1a0332237f4877ac1af738afc7e240dd71b",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue77/implementation/coverage/leaf-matrix.jsonl": "566eb494ddc743f06a3bb018796ffb90f52b10f48977f834984bf4498a62e0cb",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue77/implementation/full-unit-final-raw.txt": "898be504d2077083ffba198ea6b81a8f74698ccc50ac9b952e14fd009b215911",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue77/implementation/typecheck-final-raw.txt": "e0d34b24f8107bad542e437b1187b2a23d70cbae33860736b3062ee48a0f26cb",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue77/implementation/build-final-raw.txt": "89a93ce82a64492314ac9c3b0e9300a3ba4513a2b448635ef68248dc206c9b2e",
+    "docs/spec/07.editor.srs.md": "32c059968fe1e36f81d3f1d17d731769d464646be1f673219e672f8371122040",
+    "docs/spec/08.app-shell.srs.md": "b58941513e84adbc86c66abcdde0ba313bd89d082687bb6f2b02c2167800f8ee",
+    "docs/spec/14.storage.srs.md": "485051cb1cc6b7765145027b2fcf938b44bdde5dd6eb3ecc96508dae2e459c61",
+    "docs/spec/16.principal.srs.md": "673f68f34357bd9e04c6222550cb8bc30ea9fda23b1bc69e0c7c1414d454e9b2",
+    "packages/web/src/tree/DocumentTree.tsx": "e6ffc69f53667f195b19bec93c1e0265d58db9322bee3fc402bd3c286bc54b6d",
+    "package-lock.json": "63dbd37d72e838dc5f0e5ba437864d2a4cc4770b93ff00e91b574db594117167",
+    "docs/spec/00.index.md": "8e7657433a0563f9e52d1f57568a0bb0b3720b0665585b3b74120c3c881d28d8"
+  },
+  "excludedRequirement": {
+    "id": "SEC-STORAGE-007",
+    "status": "in_progress",
+    "unchecked": [
+      "AC-3"
+    ],
+    "reason": "AC-3 remains phase-2 and was not independently accepted as complete"
+  },
+  "acceptedLedgerSha256": "566eb494ddc743f06a3bb018796ffb90f52b10f48977f834984bf4498a62e0cb",
+  "srsStatus": {
+    "IR-SHELL-002": "verified",
+    "IR-SHELL-006": "verified",
+    "IR-SHELL-008": "verified",
+    "IR-EDITOR-002": "verified",
+    "IR-PRINCIPAL-001": "verified",
+    "FR-STORAGE-010": "verified"
+  }
+}

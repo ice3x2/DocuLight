@@ -1,0 +1,2258 @@
+{
+  "api": {
+    "status": 200,
+    "body": {
+      "counts": {
+        "pending": 99,
+        "running": 1,
+        "failed": 1
+      },
+      "total": 101,
+      "limit": 100,
+      "items": [
+        {
+          "nodeId": "72b84045-9629-444d-855a-c0c43b1a9f81",
+          "status": "failed",
+          "requestedAt": "2026-09-18T00:00:00.000Z",
+          "errorCode": "parse_failed",
+          "name": "색인 작업 000.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "9c64591f-7c4f-4835-8f12-910f07dab21e",
+          "status": "running",
+          "requestedAt": "2026-09-18T00:00:01.000Z",
+          "name": "색인 작업 001.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "54d0d1d8-4c05-4e65-959c-24520f26e530",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:02.000Z",
+          "name": "실제 처리 중인 긴 한글 문서 실제 처리 중인 긴 한글 문서 실제 처리 중인 긴 한글 문서 .pdf",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "16cebb7e-87a5-41a1-9996-8c60384716a8",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:03.000Z",
+          "name": "색인 작업 003.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "a2c53bec-3d33-4d21-81e4-1e9e86020b0e",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:04.000Z",
+          "name": "색인 작업 004.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "633e2577-6f17-4acd-af33-6e6952f763ad",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:05.000Z",
+          "name": "색인 작업 005.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "16ced1f1-da5b-40e0-985a-3b7a045e7c9f",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:06.000Z",
+          "name": "색인 작업 006.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "d7f6a287-7600-474a-a91b-116758206242",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:07.000Z",
+          "name": "색인 작업 007.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "0341b186-59c2-4a26-8b5c-45a099f99cbe",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:08.000Z",
+          "name": "색인 작업 008.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "dce8caa6-135a-47e4-804e-35b46c90e5d9",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:09.000Z",
+          "name": "색인 작업 009.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "b85787eb-1d4e-47f2-9ce0-13921fb1eb89",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:10.000Z",
+          "name": "색인 작업 010.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "ee18433c-f1d7-44f1-8ace-13be29885265",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:11.000Z",
+          "name": "색인 작업 011.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "c1fa2604-fa11-4b7c-afd6-96e956f84aad",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:12.000Z",
+          "name": "색인 작업 012.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "8968c660-e281-42c8-ba64-391082fd0a5a",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:13.000Z",
+          "name": "색인 작업 013.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "15572fc8-f36c-4327-8fbc-a696baf82b0f",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:14.000Z",
+          "name": "색인 작업 014.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "3a208d9d-1726-4a44-bf9d-e5581f52519c",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:15.000Z",
+          "name": "색인 작업 015.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "89a2b1de-714d-43fe-bb67-cb5a4f6768d7",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:16.000Z",
+          "name": "색인 작업 016.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "f525c8af-04c4-48a8-8c22-e79026b73720",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:17.000Z",
+          "name": "색인 작업 017.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "129655f3-a5ee-493e-8eca-b8d091fdb241",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:18.000Z",
+          "name": "색인 작업 018.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "74ce59db-fd63-4905-8b3d-2e2d5c2aef1c",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:19.000Z",
+          "name": "색인 작업 019.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "7d5dd6a7-9df2-44ca-860f-e8761a8eee72",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:20.000Z",
+          "name": "색인 작업 020.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "84d2c35d-4811-4e41-b48c-0bd6db6aa2e2",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:21.000Z",
+          "name": "색인 작업 021.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "35a64b0e-f7d3-4411-a9c0-d12b84ab9f7e",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:22.000Z",
+          "name": "색인 작업 022.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "9919fdc9-7e97-4e46-86a4-a8a85f83027e",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:23.000Z",
+          "name": "색인 작업 023.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "800ab7f1-6685-4e7a-83c3-d0c3872c8b1f",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:24.000Z",
+          "name": "색인 작업 024.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "7b7073ca-3c30-476f-8220-4298713a508f",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:25.000Z",
+          "name": "색인 작업 025.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "8f838f46-eff7-4686-8467-a05cd1463216",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:26.000Z",
+          "name": "색인 작업 026.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "b7e1ea78-8611-4f91-80d2-56dbface1185",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:27.000Z",
+          "name": "색인 작업 027.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "9927c43e-7f74-422a-8865-2b17c8ccb564",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:28.000Z",
+          "name": "색인 작업 028.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "ff38a60a-adde-4bc6-88e0-f6afdc079528",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:29.000Z",
+          "name": "색인 작업 029.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "138ac266-19d5-40d6-aea9-6a10a6fe8adb",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:30.000Z",
+          "name": "색인 작업 030.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "70d9fb67-2a79-444a-817a-22b7198dcd5b",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:31.000Z",
+          "name": "색인 작업 031.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "6c90d1ab-cad6-4834-aa14-5f516461cf96",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:32.000Z",
+          "name": "색인 작업 032.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "d0aef1db-d43d-4d86-859e-6c501194dd87",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:33.000Z",
+          "name": "색인 작업 033.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "28291dae-e6c8-4904-9796-7ba71a2a359a",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:34.000Z",
+          "name": "색인 작업 034.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "f31262a7-0a4d-4c53-b935-ea46caac3193",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:35.000Z",
+          "name": "색인 작업 035.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "c4c26745-01d6-4918-8565-9a7710dcb954",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:36.000Z",
+          "name": "색인 작업 036.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "43391e3f-53d1-49c8-835c-afa2ce6092cc",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:37.000Z",
+          "name": "색인 작업 037.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "d9c1094b-0662-4b96-86a9-22232409dd98",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:38.000Z",
+          "name": "색인 작업 038.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "ce646160-f1dc-4796-858b-aa636d898c69",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:39.000Z",
+          "name": "색인 작업 039.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "d4205e10-bbf1-42d2-8164-ea9ff15ca178",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:40.000Z",
+          "name": "색인 작업 040.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "c64b20b7-202f-4bd3-8d5b-8b979a06ff30",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:41.000Z",
+          "name": "색인 작업 041.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "a1808152-43da-41e7-9d81-e7613a163c0e",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:42.000Z",
+          "name": "색인 작업 042.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "0c21f0ce-1a26-4f5d-a971-b35fb7056045",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:43.000Z",
+          "name": "색인 작업 043.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "39fa376f-8664-4eae-9fc3-eb7a3f8b1f37",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:44.000Z",
+          "name": "색인 작업 044.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "8c38170d-2a7f-4cdc-b32f-6b3c70538d69",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:45.000Z",
+          "name": "색인 작업 045.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "43e12d02-a021-461b-a6f4-1cbaec5ea8b4",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:46.000Z",
+          "name": "색인 작업 046.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "c4cc0277-93a4-492d-936c-d6555f012865",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:47.000Z",
+          "name": "색인 작업 047.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "8fa53ff1-63d5-4578-9dff-db04f5aea1ac",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:48.000Z",
+          "name": "색인 작업 048.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "6acb888e-241f-4d29-9c1f-7f2d00c79aaf",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:49.000Z",
+          "name": "색인 작업 049.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "5023864b-75c0-414e-a9e7-1f0651b52bb3",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:50.000Z",
+          "name": "색인 작업 050.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "ea73fc8e-e7b9-49b1-a97c-3ae9f78b1b66",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:51.000Z",
+          "name": "색인 작업 051.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "11f3132e-69df-493f-b40c-2af21b2c9c94",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:52.000Z",
+          "name": "색인 작업 052.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "bbdb7088-9c47-47b1-aac9-6e73ee2b5387",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:53.000Z",
+          "name": "색인 작업 053.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "578683b1-0e7e-45a1-b7b8-4c4b709da1b5",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:54.000Z",
+          "name": "색인 작업 054.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "60dd8045-2e36-4486-be5e-6ca9810e5efd",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:55.000Z",
+          "name": "색인 작업 055.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "4c6eee2f-c27d-42af-a1e9-9f2e1f61a85b",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:56.000Z",
+          "name": "색인 작업 056.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "1019507e-6c12-4682-8a89-fddb9287e690",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:57.000Z",
+          "name": "색인 작업 057.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "16f88c81-ec23-42af-9eb9-c2b1abc5a974",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:58.000Z",
+          "name": "색인 작업 058.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "0c502392-050d-4737-b15d-8ead2ae4c6d7",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:00:59.000Z",
+          "name": "색인 작업 059.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "02def530-a847-4822-897a-46b351d87365",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:00.000Z",
+          "name": "색인 작업 060.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "b1a002d5-fd4e-4111-b46a-53871c4e4a21",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:01.000Z",
+          "name": "색인 작업 061.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "84613aa7-ad86-40ec-91e2-fd106af78755",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:02.000Z",
+          "name": "색인 작업 062.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "7e14ec61-0ec3-4333-8f4e-b6f2b684525d",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:03.000Z",
+          "name": "색인 작업 063.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "cb6a8cac-1fb4-401a-9aeb-635f7d92828f",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:04.000Z",
+          "name": "색인 작업 064.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "f9841501-645b-4070-816c-3f1709d82972",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:05.000Z",
+          "name": "색인 작업 065.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "57c369a3-12c6-4327-80c9-e577ec16ba47",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:06.000Z",
+          "name": "색인 작업 066.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "ad8a00e9-36e2-4b3f-b76f-423e644a1c9b",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:07.000Z",
+          "name": "색인 작업 067.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "ac5646b2-e689-4ebf-a750-f099a166dde5",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:08.000Z",
+          "name": "색인 작업 068.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "26a86c1f-b21d-422c-9511-7c13c827c422",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:09.000Z",
+          "name": "색인 작업 069.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "0d949b8e-224b-4829-aa89-d2162fabef6f",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:10.000Z",
+          "name": "색인 작업 070.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "9be7e967-6578-454a-98d1-3a6685cab629",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:11.000Z",
+          "name": "색인 작업 071.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "8477917f-4a75-44fd-9dd3-bee73b466ea6",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:12.000Z",
+          "name": "색인 작업 072.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "044fec91-8f72-40fb-af8f-2ca41ca66967",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:13.000Z",
+          "name": "색인 작업 073.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "315281ec-bfe9-4715-965c-73a3df1739f9",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:14.000Z",
+          "name": "색인 작업 074.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "fe80e455-4107-44db-a378-86288f69ac3b",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:15.000Z",
+          "name": "색인 작업 075.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "f5128b44-ef2d-4c4a-8a11-6da5975a05e7",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:16.000Z",
+          "name": "색인 작업 076.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "4d4ffdf4-5c81-4ce3-94c7-08d5c6de9638",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:17.000Z",
+          "name": "색인 작업 077.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "678d4abd-f7a1-4d2c-b584-3558cc0efe7f",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:18.000Z",
+          "name": "색인 작업 078.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "b38962cc-74ac-4416-8f9b-278ca343a749",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:19.000Z",
+          "name": "색인 작업 079.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "b765d1d1-254f-42dc-9bd1-7d34714fa3c6",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:20.000Z",
+          "name": "색인 작업 080.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "5cfbeb8e-0c10-4dbf-9589-095b1ffbd559",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:21.000Z",
+          "name": "색인 작업 081.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "ceba5b56-4ad4-4ef1-8552-1be53a364955",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:22.000Z",
+          "name": "색인 작업 082.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "3b109057-d62e-4971-84b4-40d9a47045e6",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:23.000Z",
+          "name": "색인 작업 083.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "43e6ba47-2f23-4a45-9360-fd2f74fe7285",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:24.000Z",
+          "name": "색인 작업 084.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "0212b99f-1c06-4367-a04e-2e0eaece57ce",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:25.000Z",
+          "name": "색인 작업 085.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "3916c10c-27e2-4357-9328-1ab80b4e6595",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:26.000Z",
+          "name": "색인 작업 086.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "7e60240e-bec2-4edf-8a65-624f91897aed",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:27.000Z",
+          "name": "색인 작업 087.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "f9d25d46-35bb-460f-9911-457f982a1b3a",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:28.000Z",
+          "name": "색인 작업 088.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "f5afc7d7-b079-430f-ac44-446d06732e41",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:29.000Z",
+          "name": "색인 작업 089.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "9592005d-b6e1-442f-a5f1-155b81af91a4",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:30.000Z",
+          "name": "색인 작업 090.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "618308d6-4d86-4116-8dd0-040883367caa",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:31.000Z",
+          "name": "색인 작업 091.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "76f8b4ed-0487-4475-a8e4-529fe78ff3fb",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:32.000Z",
+          "name": "색인 작업 092.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "b217dd5e-bb5a-4858-8901-1ddd2e736713",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:33.000Z",
+          "name": "색인 작업 093.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "0f777f04-531e-4ef1-9dc2-10776ba1e6dd",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:34.000Z",
+          "name": "색인 작업 094.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "973d1b1b-3212-45ce-a86b-301ef217e971",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:35.000Z",
+          "name": "색인 작업 095.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "2c0db5c2-f528-4766-941c-8b0346d9792b",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:36.000Z",
+          "name": "색인 작업 096.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "b9d84136-1236-4d17-b946-057a7b91128b",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:37.000Z",
+          "name": "색인 작업 097.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "3ed907db-10c7-4125-8682-4996c39f2c24",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:38.000Z",
+          "name": "색인 작업 098.md",
+          "workspaceName": "색인 운영실"
+        },
+        {
+          "nodeId": "b80c250c-1b9f-4349-88ca-b4bd74ca9464",
+          "status": "pending",
+          "requestedAt": "2026-09-18T00:01:39.000Z",
+          "name": "화면에 보이는 아주 긴 한글 문서 이름 화면에 보이는 아주 긴 한글 문서 이름 화면에 보이는 아주 긴 한글 문서 이름 화면에 보이는 아주 긴 한글 문서 이름 .md",
+          "workspaceName": "색인 운영실"
+        }
+      ]
+    }
+  },
+  "normal": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "theme": "light",
+      "zoom": 1,
+      "measured": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "documentOverflow": false,
+        "menuReachable": true,
+        "bodyReachable": true,
+        "tableReachable": true,
+        "scrollIsolation": {
+          "before": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterMenu": {
+            "menu": 145,
+            "body": 0,
+            "table": 0
+          },
+          "afterBody": {
+            "menu": 0,
+            "body": 5887,
+            "table": 0
+          },
+          "afterTable": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          }
+        },
+        "focus": {
+          "outline": "solid",
+          "width": "2px",
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(245, 244, 239)",
+          "ratio": 6.604593108697848
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "bg": "rgb(245, 244, 239)",
+          "ratio": 14.004951701436438
+        },
+        "boundary": {
+          "color": "rgb(122, 123, 113)",
+          "bg": "rgb(250, 249, 245)",
+          "ratio": 4.068785011047702
+        },
+        "rows": 100
+      }
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "theme": "light",
+      "zoom": 2,
+      "measured": {
+        "viewport": {
+          "width": 640,
+          "height": 360
+        },
+        "documentOverflow": false,
+        "menuReachable": true,
+        "bodyReachable": true,
+        "tableReachable": true,
+        "scrollIsolation": {
+          "before": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterMenu": {
+            "menu": 469,
+            "body": 0,
+            "table": 0
+          },
+          "afterBody": {
+            "menu": 0,
+            "body": 8424.5,
+            "table": 0
+          },
+          "afterTable": {
+            "menu": 0,
+            "body": 0,
+            "table": 354
+          }
+        },
+        "focus": {
+          "outline": "solid",
+          "width": "2px",
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(245, 244, 239)",
+          "ratio": 6.604593108697848
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "bg": "rgb(245, 244, 239)",
+          "ratio": 14.004951701436438
+        },
+        "boundary": {
+          "color": "rgb(122, 123, 113)",
+          "bg": "rgb(250, 249, 245)",
+          "ratio": 4.068785011047702
+        },
+        "rows": 100
+      }
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "theme": "dark",
+      "zoom": 1,
+      "measured": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "documentOverflow": false,
+        "menuReachable": true,
+        "bodyReachable": true,
+        "tableReachable": true,
+        "scrollIsolation": {
+          "before": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterMenu": {
+            "menu": 145,
+            "body": 0,
+            "table": 0
+          },
+          "afterBody": {
+            "menu": 0,
+            "body": 5887,
+            "table": 0
+          },
+          "afterTable": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          }
+        },
+        "focus": {
+          "outline": "solid",
+          "width": "2px",
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(41, 44, 39)",
+          "ratio": 7.751150489687093
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "bg": "rgb(41, 44, 39)",
+          "ratio": 11.430133007600727
+        },
+        "boundary": {
+          "color": "rgb(135, 145, 127)",
+          "bg": "rgb(48, 53, 46)",
+          "ratio": 3.8144537109684373
+        },
+        "rows": 100
+      }
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "theme": "dark",
+      "zoom": 2,
+      "measured": {
+        "viewport": {
+          "width": 640,
+          "height": 360
+        },
+        "documentOverflow": false,
+        "menuReachable": true,
+        "bodyReachable": true,
+        "tableReachable": true,
+        "scrollIsolation": {
+          "before": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterMenu": {
+            "menu": 469,
+            "body": 0,
+            "table": 0
+          },
+          "afterBody": {
+            "menu": 0,
+            "body": 8424.5,
+            "table": 0
+          },
+          "afterTable": {
+            "menu": 0,
+            "body": 0,
+            "table": 354
+          }
+        },
+        "focus": {
+          "outline": "solid",
+          "width": "2px",
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(41, 44, 39)",
+          "ratio": 7.751150489687093
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "bg": "rgb(41, 44, 39)",
+          "ratio": 11.430133007600727
+        },
+        "boundary": {
+          "color": "rgb(135, 145, 127)",
+          "bg": "rgb(48, 53, 46)",
+          "ratio": 3.8144537109684373
+        },
+        "rows": 100
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "zoom": 1,
+      "measured": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "documentOverflow": false,
+        "menuReachable": true,
+        "bodyReachable": true,
+        "tableReachable": true,
+        "scrollIsolation": {
+          "before": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterMenu": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterBody": {
+            "menu": 0,
+            "body": 5725,
+            "table": 0
+          },
+          "afterTable": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          }
+        },
+        "focus": {
+          "outline": "solid",
+          "width": "2px",
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(245, 244, 239)",
+          "ratio": 6.604593108697848
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "bg": "rgb(245, 244, 239)",
+          "ratio": 14.004951701436438
+        },
+        "boundary": {
+          "color": "rgb(122, 123, 113)",
+          "bg": "rgb(250, 249, 245)",
+          "ratio": 4.068785011047702
+        },
+        "rows": 100
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "zoom": 2,
+      "measured": {
+        "viewport": {
+          "width": 720,
+          "height": 450
+        },
+        "documentOverflow": false,
+        "menuReachable": true,
+        "bodyReachable": true,
+        "tableReachable": true,
+        "scrollIsolation": {
+          "before": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterMenu": {
+            "menu": 388,
+            "body": 0,
+            "table": 0
+          },
+          "afterBody": {
+            "menu": 0,
+            "body": 8343.5,
+            "table": 0
+          },
+          "afterTable": {
+            "menu": 0,
+            "body": 0,
+            "table": 302.5
+          }
+        },
+        "focus": {
+          "outline": "solid",
+          "width": "2px",
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(245, 244, 239)",
+          "ratio": 6.604593108697848
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "bg": "rgb(245, 244, 239)",
+          "ratio": 14.004951701436438
+        },
+        "boundary": {
+          "color": "rgb(122, 123, 113)",
+          "bg": "rgb(250, 249, 245)",
+          "ratio": 4.068785011047702
+        },
+        "rows": 100
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "dark",
+      "zoom": 1,
+      "measured": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "documentOverflow": false,
+        "menuReachable": true,
+        "bodyReachable": true,
+        "tableReachable": true,
+        "scrollIsolation": {
+          "before": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterMenu": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterBody": {
+            "menu": 0,
+            "body": 5725,
+            "table": 0
+          },
+          "afterTable": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          }
+        },
+        "focus": {
+          "outline": "solid",
+          "width": "2px",
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(41, 44, 39)",
+          "ratio": 7.751150489687093
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "bg": "rgb(41, 44, 39)",
+          "ratio": 11.430133007600727
+        },
+        "boundary": {
+          "color": "rgb(135, 145, 127)",
+          "bg": "rgb(48, 53, 46)",
+          "ratio": 3.8144537109684373
+        },
+        "rows": 100
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "dark",
+      "zoom": 2,
+      "measured": {
+        "viewport": {
+          "width": 720,
+          "height": 450
+        },
+        "documentOverflow": false,
+        "menuReachable": true,
+        "bodyReachable": true,
+        "tableReachable": true,
+        "scrollIsolation": {
+          "before": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterMenu": {
+            "menu": 388,
+            "body": 0,
+            "table": 0
+          },
+          "afterBody": {
+            "menu": 0,
+            "body": 8343.5,
+            "table": 0
+          },
+          "afterTable": {
+            "menu": 0,
+            "body": 0,
+            "table": 302.5
+          }
+        },
+        "focus": {
+          "outline": "solid",
+          "width": "2px",
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(41, 44, 39)",
+          "ratio": 7.751150489687093
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "bg": "rgb(41, 44, 39)",
+          "ratio": 11.430133007600727
+        },
+        "boundary": {
+          "color": "rgb(135, 145, 127)",
+          "bg": "rgb(48, 53, 46)",
+          "ratio": 3.8144537109684373
+        },
+        "rows": 100
+      }
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "theme": "light",
+      "zoom": 1,
+      "measured": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "documentOverflow": false,
+        "menuReachable": true,
+        "bodyReachable": true,
+        "tableReachable": true,
+        "scrollIsolation": {
+          "before": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterMenu": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterBody": {
+            "menu": 0,
+            "body": 5715,
+            "table": 0
+          },
+          "afterTable": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          }
+        },
+        "focus": {
+          "outline": "solid",
+          "width": "2px",
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(245, 244, 239)",
+          "ratio": 6.604593108697848
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "bg": "rgb(245, 244, 239)",
+          "ratio": 14.004951701436438
+        },
+        "boundary": {
+          "color": "rgb(122, 123, 113)",
+          "bg": "rgb(250, 249, 245)",
+          "ratio": 4.068785011047702
+        },
+        "rows": 100
+      }
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "theme": "light",
+      "zoom": 2,
+      "measured": {
+        "viewport": {
+          "width": 960,
+          "height": 540
+        },
+        "documentOverflow": false,
+        "menuReachable": true,
+        "bodyReachable": true,
+        "tableReachable": true,
+        "scrollIsolation": {
+          "before": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterMenu": {
+            "menu": 307,
+            "body": 0,
+            "table": 0
+          },
+          "afterBody": {
+            "menu": 0,
+            "body": 8256.5,
+            "table": 0
+          },
+          "afterTable": {
+            "menu": 0,
+            "body": 0,
+            "table": 137
+          }
+        },
+        "focus": {
+          "outline": "solid",
+          "width": "2px",
+          "color": "rgb(54, 91, 112)",
+          "bg": "rgb(245, 244, 239)",
+          "ratio": 6.604593108697848
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "bg": "rgb(245, 244, 239)",
+          "ratio": 14.004951701436438
+        },
+        "boundary": {
+          "color": "rgb(122, 123, 113)",
+          "bg": "rgb(250, 249, 245)",
+          "ratio": 4.068785011047702
+        },
+        "rows": 100
+      }
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "theme": "dark",
+      "zoom": 1,
+      "measured": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "documentOverflow": false,
+        "menuReachable": true,
+        "bodyReachable": true,
+        "tableReachable": true,
+        "scrollIsolation": {
+          "before": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterMenu": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterBody": {
+            "menu": 0,
+            "body": 5715,
+            "table": 0
+          },
+          "afterTable": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          }
+        },
+        "focus": {
+          "outline": "solid",
+          "width": "2px",
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(41, 44, 39)",
+          "ratio": 7.751150489687093
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "bg": "rgb(41, 44, 39)",
+          "ratio": 11.430133007600727
+        },
+        "boundary": {
+          "color": "rgb(135, 145, 127)",
+          "bg": "rgb(48, 53, 46)",
+          "ratio": 3.8144537109684373
+        },
+        "rows": 100
+      }
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "theme": "dark",
+      "zoom": 2,
+      "measured": {
+        "viewport": {
+          "width": 960,
+          "height": 540
+        },
+        "documentOverflow": false,
+        "menuReachable": true,
+        "bodyReachable": true,
+        "tableReachable": true,
+        "scrollIsolation": {
+          "before": {
+            "menu": 0,
+            "body": 0,
+            "table": 0
+          },
+          "afterMenu": {
+            "menu": 307,
+            "body": 0,
+            "table": 0
+          },
+          "afterBody": {
+            "menu": 0,
+            "body": 8256.5,
+            "table": 0
+          },
+          "afterTable": {
+            "menu": 0,
+            "body": 0,
+            "table": 137
+          }
+        },
+        "focus": {
+          "outline": "solid",
+          "width": "2px",
+          "color": "rgb(168, 196, 211)",
+          "bg": "rgb(41, 44, 39)",
+          "ratio": 7.751150489687093
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "bg": "rgb(41, 44, 39)",
+          "ratio": 11.430133007600727
+        },
+        "boundary": {
+          "color": "rgb(135, 145, 127)",
+          "bg": "rgb(48, 53, 46)",
+          "ratio": 3.8144537109684373
+        },
+        "rows": 100
+      }
+    }
+  ],
+  "forced": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "zoom": 1,
+      "m": {
+        "outline": "solid",
+        "width": "2px",
+        "color": "rgb(233, 231, 223)",
+        "bg": "rgb(48, 53, 46)",
+        "visible": true,
+        "ratio": 10.129573328016168
+      }
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "zoom": 2,
+      "m": {
+        "outline": "solid",
+        "width": "2px",
+        "color": "rgb(233, 231, 223)",
+        "bg": "rgb(48, 53, 46)",
+        "visible": true,
+        "ratio": 10.129573328016168
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "zoom": 1,
+      "m": {
+        "outline": "solid",
+        "width": "2px",
+        "color": "rgb(233, 231, 223)",
+        "bg": "rgb(48, 53, 46)",
+        "visible": true,
+        "ratio": 10.129573328016168
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "zoom": 2,
+      "m": {
+        "outline": "solid",
+        "width": "2px",
+        "color": "rgb(233, 231, 223)",
+        "bg": "rgb(48, 53, 46)",
+        "visible": true,
+        "ratio": 10.129573328016168
+      }
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "zoom": 1,
+      "m": {
+        "outline": "solid",
+        "width": "2px",
+        "color": "rgb(233, 231, 223)",
+        "bg": "rgb(48, 53, 46)",
+        "visible": true,
+        "ratio": 10.129573328016168
+      }
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "zoom": 2,
+      "m": {
+        "outline": "solid",
+        "width": "2px",
+        "color": "rgb(233, 231, 223)",
+        "bg": "rgb(48, 53, 46)",
+        "visible": true,
+        "ratio": 10.129573328016168
+      }
+    }
+  ],
+  "loadingState": {
+    "disabled": true,
+    "status": "색인 상태를 불러오는 중입니다."
+  },
+  "emptyState": {
+    "text": "색인 대기열\n\n텍스트 검색 색인의 처리 상태입니다.\n\n새로고침\n대기 0\n처리 중 0\n실패 0\n\n현재 대기 중인 색인 작업이 없습니다.",
+    "refreshDisabled": false
+  },
+  "identityLoss": {
+    "queueTabCount": 0,
+    "oldRowCount": 0
+  },
+  "workerStates": [
+    {
+      "phase": "running",
+      "counts": "대기 98\n처리 중 2\n실패 1"
+    },
+    {
+      "phase": "removed",
+      "rows": 101,
+      "api": {
+        "counts": {
+          "pending": 98,
+          "running": 1,
+          "failed": 1
+        },
+        "total": 100,
+        "limit": 100,
+        "items": [
+          {
+            "nodeId": "72b84045-9629-444d-855a-c0c43b1a9f81",
+            "status": "failed",
+            "requestedAt": "2026-09-18T00:00:00.000Z",
+            "errorCode": "parse_failed",
+            "name": "색인 작업 000.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "9c64591f-7c4f-4835-8f12-910f07dab21e",
+            "status": "running",
+            "requestedAt": "2026-09-18T00:00:01.000Z",
+            "name": "색인 작업 001.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "16cebb7e-87a5-41a1-9996-8c60384716a8",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:03.000Z",
+            "name": "색인 작업 003.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "a2c53bec-3d33-4d21-81e4-1e9e86020b0e",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:04.000Z",
+            "name": "색인 작업 004.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "633e2577-6f17-4acd-af33-6e6952f763ad",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:05.000Z",
+            "name": "색인 작업 005.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "16ced1f1-da5b-40e0-985a-3b7a045e7c9f",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:06.000Z",
+            "name": "색인 작업 006.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "d7f6a287-7600-474a-a91b-116758206242",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:07.000Z",
+            "name": "색인 작업 007.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "0341b186-59c2-4a26-8b5c-45a099f99cbe",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:08.000Z",
+            "name": "색인 작업 008.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "dce8caa6-135a-47e4-804e-35b46c90e5d9",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:09.000Z",
+            "name": "색인 작업 009.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "b85787eb-1d4e-47f2-9ce0-13921fb1eb89",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:10.000Z",
+            "name": "색인 작업 010.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "ee18433c-f1d7-44f1-8ace-13be29885265",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:11.000Z",
+            "name": "색인 작업 011.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "c1fa2604-fa11-4b7c-afd6-96e956f84aad",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:12.000Z",
+            "name": "색인 작업 012.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "8968c660-e281-42c8-ba64-391082fd0a5a",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:13.000Z",
+            "name": "색인 작업 013.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "15572fc8-f36c-4327-8fbc-a696baf82b0f",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:14.000Z",
+            "name": "색인 작업 014.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "3a208d9d-1726-4a44-bf9d-e5581f52519c",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:15.000Z",
+            "name": "색인 작업 015.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "89a2b1de-714d-43fe-bb67-cb5a4f6768d7",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:16.000Z",
+            "name": "색인 작업 016.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "f525c8af-04c4-48a8-8c22-e79026b73720",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:17.000Z",
+            "name": "색인 작업 017.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "129655f3-a5ee-493e-8eca-b8d091fdb241",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:18.000Z",
+            "name": "색인 작업 018.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "74ce59db-fd63-4905-8b3d-2e2d5c2aef1c",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:19.000Z",
+            "name": "색인 작업 019.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "7d5dd6a7-9df2-44ca-860f-e8761a8eee72",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:20.000Z",
+            "name": "색인 작업 020.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "84d2c35d-4811-4e41-b48c-0bd6db6aa2e2",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:21.000Z",
+            "name": "색인 작업 021.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "35a64b0e-f7d3-4411-a9c0-d12b84ab9f7e",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:22.000Z",
+            "name": "색인 작업 022.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "9919fdc9-7e97-4e46-86a4-a8a85f83027e",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:23.000Z",
+            "name": "색인 작업 023.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "800ab7f1-6685-4e7a-83c3-d0c3872c8b1f",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:24.000Z",
+            "name": "색인 작업 024.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "7b7073ca-3c30-476f-8220-4298713a508f",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:25.000Z",
+            "name": "색인 작업 025.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "8f838f46-eff7-4686-8467-a05cd1463216",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:26.000Z",
+            "name": "색인 작업 026.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "b7e1ea78-8611-4f91-80d2-56dbface1185",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:27.000Z",
+            "name": "색인 작업 027.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "9927c43e-7f74-422a-8865-2b17c8ccb564",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:28.000Z",
+            "name": "색인 작업 028.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "ff38a60a-adde-4bc6-88e0-f6afdc079528",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:29.000Z",
+            "name": "색인 작업 029.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "138ac266-19d5-40d6-aea9-6a10a6fe8adb",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:30.000Z",
+            "name": "색인 작업 030.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "70d9fb67-2a79-444a-817a-22b7198dcd5b",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:31.000Z",
+            "name": "색인 작업 031.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "6c90d1ab-cad6-4834-aa14-5f516461cf96",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:32.000Z",
+            "name": "색인 작업 032.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "d0aef1db-d43d-4d86-859e-6c501194dd87",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:33.000Z",
+            "name": "색인 작업 033.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "28291dae-e6c8-4904-9796-7ba71a2a359a",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:34.000Z",
+            "name": "색인 작업 034.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "f31262a7-0a4d-4c53-b935-ea46caac3193",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:35.000Z",
+            "name": "색인 작업 035.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "c4c26745-01d6-4918-8565-9a7710dcb954",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:36.000Z",
+            "name": "색인 작업 036.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "43391e3f-53d1-49c8-835c-afa2ce6092cc",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:37.000Z",
+            "name": "색인 작업 037.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "d9c1094b-0662-4b96-86a9-22232409dd98",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:38.000Z",
+            "name": "색인 작업 038.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "ce646160-f1dc-4796-858b-aa636d898c69",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:39.000Z",
+            "name": "색인 작업 039.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "d4205e10-bbf1-42d2-8164-ea9ff15ca178",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:40.000Z",
+            "name": "색인 작업 040.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "c64b20b7-202f-4bd3-8d5b-8b979a06ff30",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:41.000Z",
+            "name": "색인 작업 041.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "a1808152-43da-41e7-9d81-e7613a163c0e",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:42.000Z",
+            "name": "색인 작업 042.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "0c21f0ce-1a26-4f5d-a971-b35fb7056045",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:43.000Z",
+            "name": "색인 작업 043.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "39fa376f-8664-4eae-9fc3-eb7a3f8b1f37",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:44.000Z",
+            "name": "색인 작업 044.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "8c38170d-2a7f-4cdc-b32f-6b3c70538d69",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:45.000Z",
+            "name": "색인 작업 045.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "43e12d02-a021-461b-a6f4-1cbaec5ea8b4",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:46.000Z",
+            "name": "색인 작업 046.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "c4cc0277-93a4-492d-936c-d6555f012865",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:47.000Z",
+            "name": "색인 작업 047.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "8fa53ff1-63d5-4578-9dff-db04f5aea1ac",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:48.000Z",
+            "name": "색인 작업 048.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "6acb888e-241f-4d29-9c1f-7f2d00c79aaf",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:49.000Z",
+            "name": "색인 작업 049.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "5023864b-75c0-414e-a9e7-1f0651b52bb3",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:50.000Z",
+            "name": "색인 작업 050.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "ea73fc8e-e7b9-49b1-a97c-3ae9f78b1b66",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:51.000Z",
+            "name": "색인 작업 051.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "11f3132e-69df-493f-b40c-2af21b2c9c94",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:52.000Z",
+            "name": "색인 작업 052.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "bbdb7088-9c47-47b1-aac9-6e73ee2b5387",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:53.000Z",
+            "name": "색인 작업 053.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "578683b1-0e7e-45a1-b7b8-4c4b709da1b5",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:54.000Z",
+            "name": "색인 작업 054.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "60dd8045-2e36-4486-be5e-6ca9810e5efd",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:55.000Z",
+            "name": "색인 작업 055.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "4c6eee2f-c27d-42af-a1e9-9f2e1f61a85b",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:56.000Z",
+            "name": "색인 작업 056.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "1019507e-6c12-4682-8a89-fddb9287e690",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:57.000Z",
+            "name": "색인 작업 057.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "16f88c81-ec23-42af-9eb9-c2b1abc5a974",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:58.000Z",
+            "name": "색인 작업 058.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "0c502392-050d-4737-b15d-8ead2ae4c6d7",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:00:59.000Z",
+            "name": "색인 작업 059.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "02def530-a847-4822-897a-46b351d87365",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:00.000Z",
+            "name": "색인 작업 060.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "b1a002d5-fd4e-4111-b46a-53871c4e4a21",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:01.000Z",
+            "name": "색인 작업 061.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "84613aa7-ad86-40ec-91e2-fd106af78755",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:02.000Z",
+            "name": "색인 작업 062.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "7e14ec61-0ec3-4333-8f4e-b6f2b684525d",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:03.000Z",
+            "name": "색인 작업 063.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "cb6a8cac-1fb4-401a-9aeb-635f7d92828f",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:04.000Z",
+            "name": "색인 작업 064.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "f9841501-645b-4070-816c-3f1709d82972",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:05.000Z",
+            "name": "색인 작업 065.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "57c369a3-12c6-4327-80c9-e577ec16ba47",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:06.000Z",
+            "name": "색인 작업 066.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "ad8a00e9-36e2-4b3f-b76f-423e644a1c9b",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:07.000Z",
+            "name": "색인 작업 067.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "ac5646b2-e689-4ebf-a750-f099a166dde5",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:08.000Z",
+            "name": "색인 작업 068.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "26a86c1f-b21d-422c-9511-7c13c827c422",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:09.000Z",
+            "name": "색인 작업 069.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "0d949b8e-224b-4829-aa89-d2162fabef6f",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:10.000Z",
+            "name": "색인 작업 070.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "9be7e967-6578-454a-98d1-3a6685cab629",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:11.000Z",
+            "name": "색인 작업 071.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "8477917f-4a75-44fd-9dd3-bee73b466ea6",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:12.000Z",
+            "name": "색인 작업 072.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "044fec91-8f72-40fb-af8f-2ca41ca66967",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:13.000Z",
+            "name": "색인 작업 073.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "315281ec-bfe9-4715-965c-73a3df1739f9",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:14.000Z",
+            "name": "색인 작업 074.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "fe80e455-4107-44db-a378-86288f69ac3b",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:15.000Z",
+            "name": "색인 작업 075.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "f5128b44-ef2d-4c4a-8a11-6da5975a05e7",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:16.000Z",
+            "name": "색인 작업 076.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "4d4ffdf4-5c81-4ce3-94c7-08d5c6de9638",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:17.000Z",
+            "name": "색인 작업 077.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "678d4abd-f7a1-4d2c-b584-3558cc0efe7f",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:18.000Z",
+            "name": "색인 작업 078.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "b38962cc-74ac-4416-8f9b-278ca343a749",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:19.000Z",
+            "name": "색인 작업 079.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "b765d1d1-254f-42dc-9bd1-7d34714fa3c6",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:20.000Z",
+            "name": "색인 작업 080.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "5cfbeb8e-0c10-4dbf-9589-095b1ffbd559",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:21.000Z",
+            "name": "색인 작업 081.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "ceba5b56-4ad4-4ef1-8552-1be53a364955",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:22.000Z",
+            "name": "색인 작업 082.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "3b109057-d62e-4971-84b4-40d9a47045e6",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:23.000Z",
+            "name": "색인 작업 083.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "43e6ba47-2f23-4a45-9360-fd2f74fe7285",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:24.000Z",
+            "name": "색인 작업 084.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "0212b99f-1c06-4367-a04e-2e0eaece57ce",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:25.000Z",
+            "name": "색인 작업 085.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "3916c10c-27e2-4357-9328-1ab80b4e6595",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:26.000Z",
+            "name": "색인 작업 086.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "7e60240e-bec2-4edf-8a65-624f91897aed",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:27.000Z",
+            "name": "색인 작업 087.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "f9d25d46-35bb-460f-9911-457f982a1b3a",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:28.000Z",
+            "name": "색인 작업 088.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "f5afc7d7-b079-430f-ac44-446d06732e41",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:29.000Z",
+            "name": "색인 작업 089.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "9592005d-b6e1-442f-a5f1-155b81af91a4",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:30.000Z",
+            "name": "색인 작업 090.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "618308d6-4d86-4116-8dd0-040883367caa",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:31.000Z",
+            "name": "색인 작업 091.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "76f8b4ed-0487-4475-a8e4-529fe78ff3fb",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:32.000Z",
+            "name": "색인 작업 092.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "b217dd5e-bb5a-4858-8901-1ddd2e736713",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:33.000Z",
+            "name": "색인 작업 093.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "0f777f04-531e-4ef1-9dc2-10776ba1e6dd",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:34.000Z",
+            "name": "색인 작업 094.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "973d1b1b-3212-45ce-a86b-301ef217e971",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:35.000Z",
+            "name": "색인 작업 095.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "2c0db5c2-f528-4766-941c-8b0346d9792b",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:36.000Z",
+            "name": "색인 작업 096.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "b9d84136-1236-4d17-b946-057a7b91128b",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:37.000Z",
+            "name": "색인 작업 097.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "3ed907db-10c7-4125-8682-4996c39f2c24",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:38.000Z",
+            "name": "색인 작업 098.md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "b80c250c-1b9f-4349-88ca-b4bd74ca9464",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:39.000Z",
+            "name": "화면에 보이는 아주 긴 한글 문서 이름 화면에 보이는 아주 긴 한글 문서 이름 화면에 보이는 아주 긴 한글 문서 이름 화면에 보이는 아주 긴 한글 문서 이름 .md",
+            "workspaceName": "색인 운영실"
+          },
+          {
+            "nodeId": "eb1d3456-0822-4e0b-ab27-b34afb3a4988",
+            "status": "pending",
+            "requestedAt": "2026-09-18T00:01:40.000Z",
+            "name": "색인 작업 100.md",
+            "workspaceName": "색인 운영실"
+          }
+        ]
+      }
+    }
+  ],
+  "finalZoom": 1,
+  "requests": [
+    "GET",
+    "GET",
+    "GET",
+    "GET",
+    "GET",
+    "GET",
+    "GET",
+    "GET",
+    "GET",
+    "GET"
+  ],
+  "composition": {
+    "applicable": false,
+    "reason": "read-only panel has no text input"
+  }
+}

@@ -1,0 +1,10 @@
+Playwright fixture matrix, final lifecycle-safe checker:
+- run 1: npm run test:browser:pre-auth --workspace @doculight/web — exit 0
+- run 2: npm run test:browser:pre-auth --workspace @doculight/web — exit 0
+- result each run: PASS newspaper pre-auth layout, state, keyboard, synthetic composition, and actual zoom checks
+
+Self-contained disposable product runner from a direct package command:
+- run 1: npm run test:browser:pre-auth-product --workspace @doculight/web — exit 0; 13/13
+- run 2: npm run test:browser:pre-auth-product --workspace @doculight/web — exit 0; 13/13
+
+The product runner builds server/web, creates its own OS-temp data directory, launches an owned product server on an ephemeral port, installs an ephemeral superuser without logging secrets, launches Playwright-owned Chromium, closes the server/runtime, deletes temporary files before directories, and removes the temporary root. It does not depend on WEB_URL or credential environment variables supplied by the caller.

@@ -1,0 +1,4070 @@
+{
+  "requirement": "IR-PRINCIPAL-005",
+  "runner": "temporary seeded product server and persistent Chromium",
+  "roles": [
+    {
+      "role": "workspace-manager",
+      "status": 200
+    },
+    {
+      "role": "node-editor",
+      "status": 404
+    },
+    {
+      "role": "ordinary",
+      "status": 404
+    },
+    {
+      "role": "unauthenticated",
+      "status": 401
+    }
+  ],
+  "matrix": {
+    "repeats": 3,
+    "normalPerRun": 12,
+    "forcedColorsPerRun": 2,
+    "normalTotal": 36,
+    "forcedColorsTotal": 6,
+    "zoomMechanism": "chrome.tabs.setZoom/getZoom",
+    "convergence": "two consecutive matching browser zoom, CSS viewport, effective DPR, resolution media and visual viewport samples before assertions and screenshot"
+  },
+  "warnings": {
+    "selected": true,
+    "l3": true,
+    "authoritativeIdentityMatched": true
+  },
+  "execution": {
+    "keyboardConfirmed": true,
+    "postCount": 1,
+    "response": {
+      "status": 200,
+      "body": {
+        "scope": "instance",
+        "rows": [
+          {
+            "workspaceId": "f7355e35945674fbdffc0da2418d2a88",
+            "workspaceName": "Issue84 권한 검증 워크스페이스",
+            "path": null,
+            "entryId": "6b0f003e-deb1-4fde-a45f-eeffa8075aef",
+            "level": "view",
+            "grantedBy": "1fb78261-f6ee-4b25-8e7e-67155f155428",
+            "grantedAt": "2026-09-22 00:19:32"
+          }
+        ]
+      }
+    },
+    "outcome": {
+      "subjectId": "7627ae76-745c-4807-8219-ad0e74c9b68d",
+      "state": "completed",
+      "actualRows": 1
+    },
+    "audit": {
+      "operation": "acl.revoke",
+      "subject": "긴 슈퍼유저 가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가-33055e64-5417-4863-86f9-dc4ad6b224b9",
+      "rows": 1
+    },
+    "preservedUpperGateAccess": {
+      "session": {
+        "superuser": true,
+        "workspaceCount": 2,
+        "adminWorkspaceCount": 2
+      },
+      "workspaceVisible": true,
+      "managed": {
+        "scope": "instance",
+        "workspaces": [
+          {
+            "id": "9d162fd880ab808ed09839c780fe72bd",
+            "name": "workspace"
+          },
+          {
+            "id": "f7355e35945674fbdffc0da2418d2a88",
+            "name": "Issue84 권한 검증 워크스페이스"
+          }
+        ]
+      }
+    },
+    "principalBefore": {
+      "account": {
+        "id": "7627ae76-745c-4807-8219-ad0e74c9b68d",
+        "name": "긴 슈퍼유저 가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가-33055e64-5417-4863-86f9-dc4ad6b224b9",
+        "status": "active"
+      },
+      "memberships": [
+        "system-superuser"
+      ]
+    },
+    "principalAfter": {
+      "account": {
+        "id": "7627ae76-745c-4807-8219-ad0e74c9b68d",
+        "name": "긴 슈퍼유저 가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가-33055e64-5417-4863-86f9-dc4ad6b224b9",
+        "status": "active"
+      },
+      "memberships": [
+        "system-superuser"
+      ]
+    }
+  },
+  "keyboardFocus": {
+    "l3Contained": true,
+    "cancelReturnedToExactInvoker": true
+  },
+  "ime": {
+    "syntheticCompositionEvents": [
+      "compositionstart",
+      "compositionupdate",
+      "composing Enter keyCode 229",
+      "compositionend"
+    ],
+    "selectionOrExecutionDuringComposition": false,
+    "nativeKoreanCandidateUi": "not claimed; automated synthetic composition only"
+  },
+  "contrastContract": {
+    "bodyAndWarningText": 4.5,
+    "largeText": 3,
+    "buttonText": 4.5,
+    "controlAndFocusBoundaries": 3,
+    "measuredEveryCapture": true
+  },
+  "resetConvergence": {
+    "browserZoom": 1,
+    "innerWidth": 1280,
+    "innerHeight": 720,
+    "devicePixelRatio": 1.0000000149011612,
+    "visualViewportWidth": 1280,
+    "visualViewportHeight": 720,
+    "visualViewportScale": 1,
+    "resolutionMatches": true
+  },
+  "sourceHashes": {
+    "srs": "07741a3574a2e60c019d0331393a8b3f77b4fd14ffb34a70b822e886f0304370",
+    "independentReviewLf": "abfa6dd5769bb83203eab08e62ac83626c7d200c6453b5a4aaf5f0015ce554f7",
+    "integration": "3ffbfb68b87fa0f5e33c25abec613b0b593b047d06f5598e81aa16e75ea63257",
+    "checker": "04a1379dfb0e38e0d434be5a0eaddb9ef024a255b2e3986f0348d0e8e34487e8",
+    "runner": "d4e2294eff495dc9e80584dbf09b91d42776863b0410b1ab984dbebea041da9b",
+    "product": "d0e4b3c2b96437dc19caf615b9249097fd12f8a7fe6dd3a35a080431defab825",
+    "convergenceHelper": "129535e711b984fb7ef2eb1ef307dd6ae0808ef9aa7da31a126237b21e43e601",
+    "convergenceTest": "aa05976d0ddcf4fbf892273f4fcbbf9fda1961c2bfe6196165358691d939f0a6"
+  },
+  "secretScan": {
+    "checkedRuntimeSecrets": 5,
+    "matches": 0
+  },
+  "observations": [
+    {
+      "repeat": 1,
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1280,
+        "innerHeight": 720,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1280,
+        "visualViewportHeight": 720,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1280,
+          "height": 720,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run1-issue84-light-1280x720-100-none.png",
+      "sha256": "ef4a8438a502933a808a97bd57cedb2a1e5e83a21c2246bd480cec2d2a060225"
+    },
+    {
+      "repeat": 1,
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 640,
+        "innerHeight": 360,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 640,
+        "visualViewportHeight": 360,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 640,
+          "height": 360,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run1-issue84-light-1280x720-200-none.png",
+      "sha256": "ec91605ab2775ad675d5a15ce2a52571229ed3c96b40e2550a587814c8fd8c84"
+    },
+    {
+      "repeat": 1,
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1280,
+        "innerHeight": 720,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1280,
+        "visualViewportHeight": 720,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1280,
+          "height": 720,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run1-issue84-dark-1280x720-100-none.png",
+      "sha256": "3d8854de4dcdd7773a8c976d99f1caa3cf07ad6b7d6b3ae2ca51eb9ab254cf80"
+    },
+    {
+      "repeat": 1,
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 640,
+        "innerHeight": 360,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 640,
+        "visualViewportHeight": 360,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 640,
+          "height": 360,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run1-issue84-dark-1280x720-200-none.png",
+      "sha256": "380783f16ed5a2c033783fc0c72f485f3bf0e3b9449d8e3864162ff6d2e0bfe4"
+    },
+    {
+      "repeat": 1,
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1440,
+        "innerHeight": 900,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1440,
+        "visualViewportHeight": 900,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1440,
+          "height": 900,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run1-issue84-light-1440x900-100-none.png",
+      "sha256": "dad85bb1f1e3ad46b48e66e7d4298b49dbb3863fdf03dfca5beb4dd5f8c7db27"
+    },
+    {
+      "repeat": 1,
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 720,
+        "height": 450,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 720,
+        "innerHeight": 450,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 720,
+        "visualViewportHeight": 450,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 720,
+          "height": 450,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run1-issue84-light-1440x900-200-none.png",
+      "sha256": "6b65e3027b4557e23e1d3c9d3c4dccc5bf012be94c97b6ead5880ff167553605"
+    },
+    {
+      "repeat": 1,
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1440,
+        "innerHeight": 900,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1440,
+        "visualViewportHeight": 900,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1440,
+          "height": 900,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run1-issue84-dark-1440x900-100-none.png",
+      "sha256": "ec193984d6d1c81a2e1a5610f75b03f72646836840995d891973fce29e6e57d2"
+    },
+    {
+      "repeat": 1,
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 720,
+        "height": 450,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 720,
+        "innerHeight": 450,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 720,
+        "visualViewportHeight": 450,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 720,
+          "height": 450,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run1-issue84-dark-1440x900-200-none.png",
+      "sha256": "ddac21e65da636bfe2fc25a07f13f228f1abfaed318c31774df18cb626abe0fc"
+    },
+    {
+      "repeat": 1,
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1920,
+        "innerHeight": 1080,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1920,
+        "visualViewportHeight": 1080,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1920,
+          "height": 1080,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run1-issue84-light-1920x1080-100-none.png",
+      "sha256": "18ade164507ee12d707b962e0daa0f323d8b48be672526a6f6e1ccea1bb6e563"
+    },
+    {
+      "repeat": 1,
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 960,
+        "height": 540,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 960,
+        "innerHeight": 540,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 960,
+        "visualViewportHeight": 540,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 960,
+          "height": 540,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run1-issue84-light-1920x1080-200-none.png",
+      "sha256": "00a0e2cbd1216f2d84dc258f7bb69f13f108d8f33a3fa9e8248feeae34b42976"
+    },
+    {
+      "repeat": 1,
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1920,
+        "innerHeight": 1080,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1920,
+        "visualViewportHeight": 1080,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1920,
+          "height": 1080,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run1-issue84-dark-1920x1080-100-none.png",
+      "sha256": "7ed79511626ba0f2a2a3b9bc40e6899b64cfe7340f601968e164bc7e5408b22c"
+    },
+    {
+      "repeat": 1,
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 960,
+        "height": 540,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 960,
+        "innerHeight": 540,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 960,
+        "visualViewportHeight": 540,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 960,
+          "height": 540,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run1-issue84-dark-1920x1080-200-none.png",
+      "sha256": "57ee6a34b6e9cfc363301d506ce96ae2761f3a5ef7b34c784983bea4167cf5ed"
+    },
+    {
+      "repeat": 1,
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "active",
+      "expectedCssViewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1280,
+        "innerHeight": 720,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1280,
+        "visualViewportHeight": 720,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1280,
+          "height": 720,
+          "scale": 1
+        },
+        "forced": true,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(55, 0, 110)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.36548400551004,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run1-issue84-light-1280x720-100-active.png",
+      "sha256": "db279b89efc64b9ca3fead7250debc29b504d5aedae1474a1552fa30465382da"
+    },
+    {
+      "repeat": 1,
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "active",
+      "expectedCssViewport": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 640,
+        "innerHeight": 360,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 640,
+        "visualViewportHeight": 360,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 640,
+          "height": 360,
+          "scale": 1
+        },
+        "forced": true,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(55, 0, 110)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.36548400551004,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run1-issue84-light-1280x720-200-active.png",
+      "sha256": "ce2d27b79eae7cb660ac38ae22cf85e2c9e9d0996e1f88ff1bf408fe02921fc7"
+    },
+    {
+      "repeat": 2,
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1280,
+        "innerHeight": 720,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1280,
+        "visualViewportHeight": 720,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1280,
+          "height": 720,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run2-issue84-light-1280x720-100-none.png",
+      "sha256": "1fe87073706906de277741d6224ab9c0b791c0acd52650fac6558839671ba936"
+    },
+    {
+      "repeat": 2,
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 640,
+        "innerHeight": 360,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 640,
+        "visualViewportHeight": 360,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 640,
+          "height": 360,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run2-issue84-light-1280x720-200-none.png",
+      "sha256": "3e9427b026dccf596d9a2e3056933573e24803d7193d5f691ae31936937fddf7"
+    },
+    {
+      "repeat": 2,
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1280,
+        "innerHeight": 720,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1280,
+        "visualViewportHeight": 720,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1280,
+          "height": 720,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run2-issue84-dark-1280x720-100-none.png",
+      "sha256": "841b3852143af75b7c98c27493247726ceedd3d220db758c148397948a90b234"
+    },
+    {
+      "repeat": 2,
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 640,
+        "innerHeight": 360,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 640,
+        "visualViewportHeight": 360,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 640,
+          "height": 360,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run2-issue84-dark-1280x720-200-none.png",
+      "sha256": "03f4ef74378181ba0035f4ac0a2aaf829662c73cc709e257c0c040f6e780eda7"
+    },
+    {
+      "repeat": 2,
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1440,
+        "innerHeight": 900,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1440,
+        "visualViewportHeight": 900,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1440,
+          "height": 900,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run2-issue84-light-1440x900-100-none.png",
+      "sha256": "f35d6ff6eeef796c784563a579cc48ee1eccbb3f087b13cd8d56adf8171b1d4d"
+    },
+    {
+      "repeat": 2,
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 720,
+        "height": 450,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 720,
+        "innerHeight": 450,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 720,
+        "visualViewportHeight": 450,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 720,
+          "height": 450,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run2-issue84-light-1440x900-200-none.png",
+      "sha256": "6b65e3027b4557e23e1d3c9d3c4dccc5bf012be94c97b6ead5880ff167553605"
+    },
+    {
+      "repeat": 2,
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1440,
+        "innerHeight": 900,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1440,
+        "visualViewportHeight": 900,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1440,
+          "height": 900,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run2-issue84-dark-1440x900-100-none.png",
+      "sha256": "7c5a3bce02b28cc91501f85746647112e7f4411d1ac70130824107daffb9b76b"
+    },
+    {
+      "repeat": 2,
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 720,
+        "height": 450,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 720,
+        "innerHeight": 450,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 720,
+        "visualViewportHeight": 450,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 720,
+          "height": 450,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run2-issue84-dark-1440x900-200-none.png",
+      "sha256": "ddac21e65da636bfe2fc25a07f13f228f1abfaed318c31774df18cb626abe0fc"
+    },
+    {
+      "repeat": 2,
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1920,
+        "innerHeight": 1080,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1920,
+        "visualViewportHeight": 1080,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1920,
+          "height": 1080,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run2-issue84-light-1920x1080-100-none.png",
+      "sha256": "0784e96953f68ce9045ba6c077b9ea84e003470ea5c0decd43caf54271c046bc"
+    },
+    {
+      "repeat": 2,
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 960,
+        "height": 540,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 960,
+        "innerHeight": 540,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 960,
+        "visualViewportHeight": 540,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 960,
+          "height": 540,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run2-issue84-light-1920x1080-200-none.png",
+      "sha256": "844b463b5899a75ee07ca1976edddfc901e6dcad1f8e1ede89e8f3f2ed0752b3"
+    },
+    {
+      "repeat": 2,
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1920,
+        "innerHeight": 1080,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1920,
+        "visualViewportHeight": 1080,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1920,
+          "height": 1080,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run2-issue84-dark-1920x1080-100-none.png",
+      "sha256": "8f68cc3c0c187cfd8d7a0b6f5f6f4aaacb03f304968754c7cc5d2ea3214bc498"
+    },
+    {
+      "repeat": 2,
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 960,
+        "height": 540,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 960,
+        "innerHeight": 540,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 960,
+        "visualViewportHeight": 540,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 960,
+          "height": 540,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run2-issue84-dark-1920x1080-200-none.png",
+      "sha256": "57ee6a34b6e9cfc363301d506ce96ae2761f3a5ef7b34c784983bea4167cf5ed"
+    },
+    {
+      "repeat": 2,
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "active",
+      "expectedCssViewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1280,
+        "innerHeight": 720,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1280,
+        "visualViewportHeight": 720,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1280,
+          "height": 720,
+          "scale": 1
+        },
+        "forced": true,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(55, 0, 110)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.36548400551004,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run2-issue84-light-1280x720-100-active.png",
+      "sha256": "84ad8c6d4e0c46129e361c590d54000a35097d1fc43a309b75ab7d6e7614843a"
+    },
+    {
+      "repeat": 2,
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "active",
+      "expectedCssViewport": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 640,
+        "innerHeight": 360,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 640,
+        "visualViewportHeight": 360,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 640,
+          "height": 360,
+          "scale": 1
+        },
+        "forced": true,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(55, 0, 110)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.36548400551004,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run2-issue84-light-1280x720-200-active.png",
+      "sha256": "ce2d27b79eae7cb660ac38ae22cf85e2c9e9d0996e1f88ff1bf408fe02921fc7"
+    },
+    {
+      "repeat": 3,
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1280,
+        "innerHeight": 720,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1280,
+        "visualViewportHeight": 720,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1280,
+          "height": 720,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run3-issue84-light-1280x720-100-none.png",
+      "sha256": "1fe87073706906de277741d6224ab9c0b791c0acd52650fac6558839671ba936"
+    },
+    {
+      "repeat": 3,
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 640,
+        "innerHeight": 360,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 640,
+        "visualViewportHeight": 360,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 640,
+          "height": 360,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run3-issue84-light-1280x720-200-none.png",
+      "sha256": "3e9427b026dccf596d9a2e3056933573e24803d7193d5f691ae31936937fddf7"
+    },
+    {
+      "repeat": 3,
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1280,
+        "innerHeight": 720,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1280,
+        "visualViewportHeight": 720,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1280,
+          "height": 720,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run3-issue84-dark-1280x720-100-none.png",
+      "sha256": "841b3852143af75b7c98c27493247726ceedd3d220db758c148397948a90b234"
+    },
+    {
+      "repeat": 3,
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 640,
+        "innerHeight": 360,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 640,
+        "visualViewportHeight": 360,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 640,
+          "height": 360,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run3-issue84-dark-1280x720-200-none.png",
+      "sha256": "03f4ef74378181ba0035f4ac0a2aaf829662c73cc709e257c0c040f6e780eda7"
+    },
+    {
+      "repeat": 3,
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1440,
+        "innerHeight": 900,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1440,
+        "visualViewportHeight": 900,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1440,
+          "height": 900,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run3-issue84-light-1440x900-100-none.png",
+      "sha256": "71b6712e8d2e2a9f95fe8af58d07ac0674b4b8c568ad72fda3a7bc87c5cf130f"
+    },
+    {
+      "repeat": 3,
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 720,
+        "height": 450,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 720,
+        "innerHeight": 450,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 720,
+        "visualViewportHeight": 450,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 720,
+          "height": 450,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run3-issue84-light-1440x900-200-none.png",
+      "sha256": "bf7b41d31453e4150ec096b861a3cf86e3d0dfe08e69508811b318cfaa4d8874"
+    },
+    {
+      "repeat": 3,
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1440,
+        "innerHeight": 900,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1440,
+        "visualViewportHeight": 900,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1440,
+          "height": 900,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run3-issue84-dark-1440x900-100-none.png",
+      "sha256": "feb68ba66005a801dce2975c9de6737e2f9e7a6dbf5d8f9b2125377f55215a16"
+    },
+    {
+      "repeat": 3,
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 720,
+        "height": 450,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 720,
+        "innerHeight": 450,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 720,
+        "visualViewportHeight": 450,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 720,
+          "height": 450,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run3-issue84-dark-1440x900-200-none.png",
+      "sha256": "ddac21e65da636bfe2fc25a07f13f228f1abfaed318c31774df18cb626abe0fc"
+    },
+    {
+      "repeat": 3,
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1920,
+        "innerHeight": 1080,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1920,
+        "visualViewportHeight": 1080,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1920,
+          "height": 1080,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run3-issue84-light-1920x1080-100-none.png",
+      "sha256": "ac2b228b4be771589fb649f9ac085fbcca2cb00d4d7390710f40908b9d5ffb2f"
+    },
+    {
+      "repeat": 3,
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 960,
+        "height": 540,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 960,
+        "innerHeight": 540,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 960,
+        "visualViewportHeight": 540,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 960,
+          "height": 540,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(101, 102, 95)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 5.5078338853570425,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(122, 123, 113)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 4.068785011047702,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(54, 91, 112)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 6.903983660507881,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run3-issue84-light-1920x1080-200-none.png",
+      "sha256": "844b463b5899a75ee07ca1976edddfc901e6dcad1f8e1ede89e8f3f2ed0752b3"
+    },
+    {
+      "repeat": 3,
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1920,
+        "innerHeight": 1080,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1920,
+        "visualViewportHeight": 1080,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1920,
+          "height": 1080,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run3-issue84-dark-1920x1080-100-none.png",
+      "sha256": "7ed79511626ba0f2a2a3b9bc40e6899b64cfe7340f601968e164bc7e5408b22c"
+    },
+    {
+      "repeat": 3,
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "forcedColors": "none",
+      "expectedCssViewport": {
+        "width": 960,
+        "height": 540,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 960,
+        "innerHeight": 540,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 960,
+        "visualViewportHeight": 540,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 960,
+          "height": 540,
+          "scale": 1
+        },
+        "forced": false,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(181, 184, 174)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.230496730470239,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(233, 231, 223)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 10.129573328016168,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(135, 145, 127)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 3.8144537109684373,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(168, 196, 211)",
+            "background": "rgb(48, 53, 46)",
+            "ratio": 6.869198040789459,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run3-issue84-dark-1920x1080-200-none.png",
+      "sha256": "57ee6a34b6e9cfc363301d506ce96ae2761f3a5ef7b34c784983bea4167cf5ed"
+    },
+    {
+      "repeat": 3,
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "forcedColors": "active",
+      "expectedCssViewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "convergence": {
+        "browserZoom": 1,
+        "innerWidth": 1280,
+        "innerHeight": 720,
+        "devicePixelRatio": 1.0000000149011612,
+        "visualViewportWidth": 1280,
+        "visualViewportHeight": 720,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1.0000000149011612
+        },
+        "visualViewport": {
+          "width": 1280,
+          "height": 720,
+          "scale": 1
+        },
+        "forced": true,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(55, 0, 110)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.36548400551004,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run3-issue84-light-1280x720-100-active.png",
+      "sha256": "abb12fe5f075b02d9bcdaf47627fa2f174f6bc22aa3ce5bbbc5a97719855a3aa"
+    },
+    {
+      "repeat": 3,
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "forcedColors": "active",
+      "expectedCssViewport": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2
+      },
+      "convergence": {
+        "browserZoom": 2,
+        "innerWidth": 640,
+        "innerHeight": 360,
+        "devicePixelRatio": 2.0000000298023224,
+        "visualViewportWidth": 640,
+        "visualViewportHeight": 360,
+        "visualViewportScale": 1,
+        "resolutionMatches": true
+      },
+      "metrics": {
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "visualViewport": {
+          "width": 640,
+          "height": 360,
+          "scale": 1
+        },
+        "forced": true,
+        "overflowX": false,
+        "warningWrapped": true,
+        "focusedInsideGate": true,
+        "contrast": {
+          "bodyText": {
+            "target": "L3 description",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 4.5
+          },
+          "warningText": {
+            "target": "authoritative bypass warning",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 4.5
+          },
+          "buttonText": {
+            "target": "cancel button text",
+            "present": true,
+            "foreground": "rgb(36, 37, 33)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.639805378106399,
+            "minimum": 4.5
+          },
+          "largeTitle": {
+            "target": "L3 title",
+            "present": true,
+            "foreground": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 3
+          },
+          "controlBoundary": {
+            "target": "token input border",
+            "present": true,
+            "color": "rgb(0, 0, 0)",
+            "background": "rgb(255, 255, 255)",
+            "ratio": 21,
+            "minimum": 3
+          },
+          "focusBoundary": {
+            "target": "focused cancel outline",
+            "present": true,
+            "color": "rgb(55, 0, 110)",
+            "background": "rgb(250, 249, 245)",
+            "ratio": 14.36548400551004,
+            "minimum": 3
+          }
+        }
+      },
+      "name": "run3-issue84-light-1280x720-200-active.png",
+      "sha256": "ce2d27b79eae7cb660ac38ae22cf85e2c9e9d0996e1f88ff1bf408fe02921fc7"
+    }
+  ],
+  "artifactSet": {
+    "expectedImages": 42,
+    "expectedArtifacts": [
+      "run1-issue84-dark-1280x720-100-none.png",
+      "run1-issue84-dark-1280x720-200-none.png",
+      "run1-issue84-dark-1440x900-100-none.png",
+      "run1-issue84-dark-1440x900-200-none.png",
+      "run1-issue84-dark-1920x1080-100-none.png",
+      "run1-issue84-dark-1920x1080-200-none.png",
+      "run1-issue84-light-1280x720-100-active.png",
+      "run1-issue84-light-1280x720-100-none.png",
+      "run1-issue84-light-1280x720-200-active.png",
+      "run1-issue84-light-1280x720-200-none.png",
+      "run1-issue84-light-1440x900-100-none.png",
+      "run1-issue84-light-1440x900-200-none.png",
+      "run1-issue84-light-1920x1080-100-none.png",
+      "run1-issue84-light-1920x1080-200-none.png",
+      "run2-issue84-dark-1280x720-100-none.png",
+      "run2-issue84-dark-1280x720-200-none.png",
+      "run2-issue84-dark-1440x900-100-none.png",
+      "run2-issue84-dark-1440x900-200-none.png",
+      "run2-issue84-dark-1920x1080-100-none.png",
+      "run2-issue84-dark-1920x1080-200-none.png",
+      "run2-issue84-light-1280x720-100-active.png",
+      "run2-issue84-light-1280x720-100-none.png",
+      "run2-issue84-light-1280x720-200-active.png",
+      "run2-issue84-light-1280x720-200-none.png",
+      "run2-issue84-light-1440x900-100-none.png",
+      "run2-issue84-light-1440x900-200-none.png",
+      "run2-issue84-light-1920x1080-100-none.png",
+      "run2-issue84-light-1920x1080-200-none.png",
+      "run3-issue84-dark-1280x720-100-none.png",
+      "run3-issue84-dark-1280x720-200-none.png",
+      "run3-issue84-dark-1440x900-100-none.png",
+      "run3-issue84-dark-1440x900-200-none.png",
+      "run3-issue84-dark-1920x1080-100-none.png",
+      "run3-issue84-dark-1920x1080-200-none.png",
+      "run3-issue84-light-1280x720-100-active.png",
+      "run3-issue84-light-1280x720-100-none.png",
+      "run3-issue84-light-1280x720-200-active.png",
+      "run3-issue84-light-1280x720-200-none.png",
+      "run3-issue84-light-1440x900-100-none.png",
+      "run3-issue84-light-1440x900-200-none.png",
+      "run3-issue84-light-1920x1080-100-none.png",
+      "run3-issue84-light-1920x1080-200-none.png"
+    ],
+    "observedArtifacts": [
+      "run1-issue84-dark-1280x720-100-none.png",
+      "run1-issue84-dark-1280x720-200-none.png",
+      "run1-issue84-dark-1440x900-100-none.png",
+      "run1-issue84-dark-1440x900-200-none.png",
+      "run1-issue84-dark-1920x1080-100-none.png",
+      "run1-issue84-dark-1920x1080-200-none.png",
+      "run1-issue84-light-1280x720-100-active.png",
+      "run1-issue84-light-1280x720-100-none.png",
+      "run1-issue84-light-1280x720-200-active.png",
+      "run1-issue84-light-1280x720-200-none.png",
+      "run1-issue84-light-1440x900-100-none.png",
+      "run1-issue84-light-1440x900-200-none.png",
+      "run1-issue84-light-1920x1080-100-none.png",
+      "run1-issue84-light-1920x1080-200-none.png",
+      "run2-issue84-dark-1280x720-100-none.png",
+      "run2-issue84-dark-1280x720-200-none.png",
+      "run2-issue84-dark-1440x900-100-none.png",
+      "run2-issue84-dark-1440x900-200-none.png",
+      "run2-issue84-dark-1920x1080-100-none.png",
+      "run2-issue84-dark-1920x1080-200-none.png",
+      "run2-issue84-light-1280x720-100-active.png",
+      "run2-issue84-light-1280x720-100-none.png",
+      "run2-issue84-light-1280x720-200-active.png",
+      "run2-issue84-light-1280x720-200-none.png",
+      "run2-issue84-light-1440x900-100-none.png",
+      "run2-issue84-light-1440x900-200-none.png",
+      "run2-issue84-light-1920x1080-100-none.png",
+      "run2-issue84-light-1920x1080-200-none.png",
+      "run3-issue84-dark-1280x720-100-none.png",
+      "run3-issue84-dark-1280x720-200-none.png",
+      "run3-issue84-dark-1440x900-100-none.png",
+      "run3-issue84-dark-1440x900-200-none.png",
+      "run3-issue84-dark-1920x1080-100-none.png",
+      "run3-issue84-dark-1920x1080-200-none.png",
+      "run3-issue84-light-1280x720-100-active.png",
+      "run3-issue84-light-1280x720-100-none.png",
+      "run3-issue84-light-1280x720-200-active.png",
+      "run3-issue84-light-1280x720-200-none.png",
+      "run3-issue84-light-1440x900-100-none.png",
+      "run3-issue84-light-1440x900-200-none.png",
+      "run3-issue84-light-1920x1080-100-none.png",
+      "run3-issue84-light-1920x1080-200-none.png"
+    ],
+    "exact": true,
+    "manifestWrittenLast": true
+  }
+}

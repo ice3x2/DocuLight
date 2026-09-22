@@ -1,0 +1,2758 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-09-22T01:25:40.197Z",
+  "source": {
+    "revision": "83ae0fc9808e1edc5e049e17e1d9b5657aef29aa+diff-fcca9535dabd99e3e47c45cea73d6151d1ad3a5972adf518df2a51fbf695cd64",
+    "browser": "151.0.7922.34"
+  },
+  "method": {
+    "playwrightOwnedPersistentChromium": true,
+    "cdpInput": false,
+    "osAutomation": false,
+    "nativeLimitation": "Native Windows IME candidate-window and physical keyboard behavior were not exercised."
+  },
+  "cells": [
+    {
+      "mode": "live-preview",
+      "theme": "light",
+      "zoom": 1,
+      "productEntry": "built App + owned server/database/storage",
+      "mountedIdentity": {
+        "before": "cell-0",
+        "after": "cell-0"
+      },
+      "preState": {
+        "value": "조합 행렬시작 본문",
+        "selection": {
+          "text": "#",
+          "anchorInside": true,
+          "focusInside": true
+        }
+      },
+      "events": [
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글0오타",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글0정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": "한글0정정",
+          "inputType": "insertCompositionText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글0정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글0정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글0정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속0",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속0",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        }
+      ],
+      "composingEnter": {
+        "dispatched": false,
+        "defaultPrevented": true,
+        "isTrusted": false,
+        "before": "조합 행렬시작 본문",
+        "after": "조합 행렬시작 본문",
+        "unintendedMutation": false
+      },
+      "cancellationCorrection": {
+        "cancelledValueUnchanged": true,
+        "correctedText": "한글0정정"
+      },
+      "verdict": "PASS",
+      "findings": [],
+      "exactResult": {
+        "expectedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0",
+        "persistedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0",
+        "bytes": 53,
+        "selectionAfterTransitions": {
+          "text": "#",
+          "anchorInside": true,
+          "focusInside": true
+        },
+        "selectionPreserved": true
+      },
+      "undo": {
+        "removed": true,
+        "restored": true
+      },
+      "autosave": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0",
+        "writesBeforeCtrlS": [
+          {
+            "at": "2026-09-22T01:25:11.271Z",
+            "body": {
+              "body": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0",
+              "baseHash": "4730408c0f4205bfa77dddef038ba0ef97946f898d85bb84cf6d34bdf6c7f3c0",
+              "session": "e8067047-5d20-4b9c-a70b-23fcd9a71478"
+            }
+          }
+        ],
+        "documentedBehavior": "normal debounce readback captured before Ctrl+S"
+      },
+      "ctrlSReadback": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0",
+        "hash": "ebf5097826139899127cd3d15d81b7ff015c16b60a9d0cbee5f4a164cf0b2827"
+      },
+      "themeTransition": {
+        "before": "light",
+        "systemDark": "dark",
+        "systemLight": "light",
+        "restoredPreference": "light"
+      },
+      "zoomTransition": {
+        "sequence": [
+          1,
+          2,
+          1
+        ],
+        "independentRead100": 1,
+        "independentRead200": 2,
+        "independentReadReset": 1,
+        "finalRequested": 1,
+        "zoom200Viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        }
+      },
+      "resizeTransition": {
+        "sameMounted": true,
+        "resized": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "restored": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      "nativeLimitation": "Native Windows IME/candidate-window input was not exercised; synthetic DOM composition only."
+    },
+    {
+      "mode": "live-preview",
+      "theme": "light",
+      "zoom": 2,
+      "productEntry": "built App + owned server/database/storage",
+      "mountedIdentity": {
+        "before": "cell-1",
+        "after": "cell-1"
+      },
+      "preState": {
+        "value": "조합 행렬시작 본문한글0정정!후속0",
+        "selection": {
+          "text": "#",
+          "anchorInside": true,
+          "focusInside": true
+        }
+      },
+      "events": [
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글1오타",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글1정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": "한글1정정",
+          "inputType": "insertCompositionText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글1정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글1정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글1정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속1",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속1",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        }
+      ],
+      "composingEnter": {
+        "dispatched": false,
+        "defaultPrevented": true,
+        "isTrusted": false,
+        "before": "조합 행렬시작 본문한글0정정!후속0",
+        "after": "조합 행렬시작 본문한글0정정!후속0",
+        "unintendedMutation": false
+      },
+      "cancellationCorrection": {
+        "cancelledValueUnchanged": true,
+        "correctedText": "한글1정정"
+      },
+      "verdict": "PASS",
+      "findings": [],
+      "exactResult": {
+        "expectedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1",
+        "persistedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1",
+        "bytes": 76,
+        "selectionAfterTransitions": {
+          "text": "#",
+          "anchorInside": true,
+          "focusInside": true
+        },
+        "selectionPreserved": true
+      },
+      "undo": {
+        "removed": true,
+        "restored": true
+      },
+      "autosave": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1",
+        "writesBeforeCtrlS": [
+          {
+            "at": "2026-09-22T01:25:15.154Z",
+            "body": {
+              "body": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1",
+              "baseHash": "ebf5097826139899127cd3d15d81b7ff015c16b60a9d0cbee5f4a164cf0b2827",
+              "session": "fb48ae74-10c0-4411-bca8-f8c1000d7efb"
+            }
+          }
+        ],
+        "documentedBehavior": "normal debounce readback captured before Ctrl+S"
+      },
+      "ctrlSReadback": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1",
+        "hash": "4c3a821265732680213f94b6ac9714882a4344d078a70524d83ae41e8e01b79c"
+      },
+      "themeTransition": {
+        "before": "light",
+        "systemDark": "dark",
+        "systemLight": "light",
+        "restoredPreference": "light"
+      },
+      "zoomTransition": {
+        "sequence": [
+          1,
+          2,
+          1
+        ],
+        "independentRead100": 1,
+        "independentRead200": 2,
+        "independentReadReset": 1,
+        "finalRequested": 2,
+        "zoom200Viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        }
+      },
+      "resizeTransition": {
+        "sameMounted": true,
+        "resized": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "restored": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      "nativeLimitation": "Native Windows IME/candidate-window input was not exercised; synthetic DOM composition only."
+    },
+    {
+      "mode": "live-preview",
+      "theme": "dark",
+      "zoom": 1,
+      "productEntry": "built App + owned server/database/storage",
+      "mountedIdentity": {
+        "before": "cell-2",
+        "after": "cell-2"
+      },
+      "preState": {
+        "value": "조합 행렬시작 본문한글0정정!후속0한글1정정!후속1",
+        "selection": {
+          "text": "#",
+          "anchorInside": true,
+          "focusInside": true
+        }
+      },
+      "events": [
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글2오타",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글2정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": "한글2정정",
+          "inputType": "insertCompositionText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글2정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글2정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글2정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속2",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속2",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        }
+      ],
+      "composingEnter": {
+        "dispatched": false,
+        "defaultPrevented": true,
+        "isTrusted": false,
+        "before": "조합 행렬시작 본문한글0정정!후속0한글1정정!후속1",
+        "after": "조합 행렬시작 본문한글0정정!후속0한글1정정!후속1",
+        "unintendedMutation": false
+      },
+      "cancellationCorrection": {
+        "cancelledValueUnchanged": true,
+        "correctedText": "한글2정정"
+      },
+      "verdict": "PASS",
+      "findings": [],
+      "exactResult": {
+        "expectedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2",
+        "persistedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2",
+        "bytes": 99,
+        "selectionAfterTransitions": {
+          "text": "#",
+          "anchorInside": true,
+          "focusInside": true
+        },
+        "selectionPreserved": true
+      },
+      "undo": {
+        "removed": true,
+        "restored": true
+      },
+      "autosave": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2",
+        "writesBeforeCtrlS": [
+          {
+            "at": "2026-09-22T01:25:18.970Z",
+            "body": {
+              "body": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2",
+              "baseHash": "4c3a821265732680213f94b6ac9714882a4344d078a70524d83ae41e8e01b79c",
+              "session": "c607bf7d-fd26-4197-b04e-a2ccadffabee"
+            }
+          }
+        ],
+        "documentedBehavior": "normal debounce readback captured before Ctrl+S"
+      },
+      "ctrlSReadback": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2",
+        "hash": "63b80e94903a4195ca38a4ac81bfe972d0487976c945013aece678fb6ca041f2"
+      },
+      "themeTransition": {
+        "before": "dark",
+        "systemDark": "dark",
+        "systemLight": "light",
+        "restoredPreference": "dark"
+      },
+      "zoomTransition": {
+        "sequence": [
+          1,
+          2,
+          1
+        ],
+        "independentRead100": 1,
+        "independentRead200": 2,
+        "independentReadReset": 1,
+        "finalRequested": 1,
+        "zoom200Viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        }
+      },
+      "resizeTransition": {
+        "sameMounted": true,
+        "resized": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "restored": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      "nativeLimitation": "Native Windows IME/candidate-window input was not exercised; synthetic DOM composition only."
+    },
+    {
+      "mode": "live-preview",
+      "theme": "dark",
+      "zoom": 2,
+      "productEntry": "built App + owned server/database/storage",
+      "mountedIdentity": {
+        "before": "cell-3",
+        "after": "cell-3"
+      },
+      "preState": {
+        "value": "조합 행렬시작 본문한글0정정!후속0한글1정정!후속1한글2정정!후속2",
+        "selection": {
+          "text": "#",
+          "anchorInside": true,
+          "focusInside": true
+        }
+      },
+      "events": [
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글3오타",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글3정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": "한글3정정",
+          "inputType": "insertCompositionText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글3정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글3정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글3정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속3",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속3",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": true
+        }
+      ],
+      "composingEnter": {
+        "dispatched": false,
+        "defaultPrevented": true,
+        "isTrusted": false,
+        "before": "조합 행렬시작 본문한글0정정!후속0한글1정정!후속1한글2정정!후속2",
+        "after": "조합 행렬시작 본문한글0정정!후속0한글1정정!후속1한글2정정!후속2",
+        "unintendedMutation": false
+      },
+      "cancellationCorrection": {
+        "cancelledValueUnchanged": true,
+        "correctedText": "한글3정정"
+      },
+      "verdict": "PASS",
+      "findings": [],
+      "exactResult": {
+        "expectedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3",
+        "persistedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3",
+        "bytes": 122,
+        "selectionAfterTransitions": {
+          "text": "#",
+          "anchorInside": true,
+          "focusInside": true
+        },
+        "selectionPreserved": true
+      },
+      "undo": {
+        "removed": true,
+        "restored": true
+      },
+      "autosave": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3",
+        "writesBeforeCtrlS": [
+          {
+            "at": "2026-09-22T01:25:22.795Z",
+            "body": {
+              "body": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3",
+              "baseHash": "63b80e94903a4195ca38a4ac81bfe972d0487976c945013aece678fb6ca041f2",
+              "session": "de15df46-e28d-4e5a-9134-1a39842a3ea4"
+            }
+          }
+        ],
+        "documentedBehavior": "normal debounce readback captured before Ctrl+S"
+      },
+      "ctrlSReadback": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3",
+        "hash": "e7c749250830b102b5d8e76de8b674b2f0b6210dfd1d0d668867ea3f6a78b97c"
+      },
+      "themeTransition": {
+        "before": "dark",
+        "systemDark": "dark",
+        "systemLight": "light",
+        "restoredPreference": "dark"
+      },
+      "zoomTransition": {
+        "sequence": [
+          1,
+          2,
+          1
+        ],
+        "independentRead100": 1,
+        "independentRead200": 2,
+        "independentReadReset": 1,
+        "finalRequested": 2,
+        "zoom200Viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        }
+      },
+      "resizeTransition": {
+        "sameMounted": true,
+        "resized": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "restored": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      "nativeLimitation": "Native Windows IME/candidate-window input was not exercised; synthetic DOM composition only."
+    },
+    {
+      "mode": "source",
+      "theme": "light",
+      "zoom": 1,
+      "productEntry": "built App + owned server/database/storage",
+      "mountedIdentity": {
+        "before": "cell-4",
+        "after": "cell-4"
+      },
+      "preState": {
+        "value": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3",
+        "selection": {
+          "start": 2,
+          "end": 7,
+          "direction": "backward"
+        }
+      },
+      "events": [
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글4오타",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글4정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": "한글4정정",
+          "inputType": "insertCompositionText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글4정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글4정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글4정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "insertLineBreak",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "insertLineBreak",
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속4",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속4",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyUndo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyUndo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyRedo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyRedo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        }
+      ],
+      "composingEnter": {
+        "dispatched": true,
+        "defaultPrevented": false,
+        "isTrusted": false,
+        "before": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3",
+        "after": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3",
+        "unintendedMutation": false
+      },
+      "cancellationCorrection": {
+        "cancelledValueUnchanged": true,
+        "correctedText": "한글4정정"
+      },
+      "verdict": "PASS",
+      "findings": [],
+      "exactResult": {
+        "expectedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4",
+        "persistedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4",
+        "bytes": 144,
+        "selectionAfterTransitions": {
+          "start": 2,
+          "end": 7,
+          "direction": "backward"
+        },
+        "selectionPreserved": true
+      },
+      "undo": {
+        "removed": true,
+        "restored": true
+      },
+      "autosave": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4",
+        "writesBeforeCtrlS": [
+          {
+            "at": "2026-09-22T01:25:26.526Z",
+            "body": {
+              "body": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4",
+              "baseHash": "e7c749250830b102b5d8e76de8b674b2f0b6210dfd1d0d668867ea3f6a78b97c",
+              "session": "09f26fe2-5f9b-4206-a5c8-25572cfd74fd"
+            }
+          }
+        ],
+        "documentedBehavior": "normal debounce readback captured before Ctrl+S"
+      },
+      "ctrlSReadback": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4",
+        "hash": "1ffda3ae00ccdf33fdb56c3119bfe561cec6f6da90d4b388bc9d8fee207808e1"
+      },
+      "themeTransition": {
+        "before": "light",
+        "systemDark": "dark",
+        "systemLight": "light",
+        "restoredPreference": "light"
+      },
+      "zoomTransition": {
+        "sequence": [
+          1,
+          2,
+          1
+        ],
+        "independentRead100": 1,
+        "independentRead200": 2,
+        "independentReadReset": 1,
+        "finalRequested": 1,
+        "zoom200Viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        }
+      },
+      "resizeTransition": {
+        "sameMounted": true,
+        "resized": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "restored": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      "nativeLimitation": "Native Windows IME/candidate-window input was not exercised; synthetic DOM composition only."
+    },
+    {
+      "mode": "source",
+      "theme": "light",
+      "zoom": 2,
+      "productEntry": "built App + owned server/database/storage",
+      "mountedIdentity": {
+        "before": "cell-5",
+        "after": "cell-5"
+      },
+      "preState": {
+        "value": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4",
+        "selection": {
+          "start": 2,
+          "end": 7,
+          "direction": "backward"
+        }
+      },
+      "events": [
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글5오타",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글5정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": "한글5정정",
+          "inputType": "insertCompositionText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글5정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글5정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글5정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "insertLineBreak",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "insertLineBreak",
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속5",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속5",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyUndo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyUndo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyRedo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyRedo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        }
+      ],
+      "composingEnter": {
+        "dispatched": true,
+        "defaultPrevented": false,
+        "isTrusted": false,
+        "before": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4",
+        "after": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4",
+        "unintendedMutation": false
+      },
+      "cancellationCorrection": {
+        "cancelledValueUnchanged": true,
+        "correctedText": "한글5정정"
+      },
+      "verdict": "PASS",
+      "findings": [],
+      "exactResult": {
+        "expectedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5",
+        "persistedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5",
+        "bytes": 166,
+        "selectionAfterTransitions": {
+          "start": 2,
+          "end": 7,
+          "direction": "backward"
+        },
+        "selectionPreserved": true
+      },
+      "undo": {
+        "removed": true,
+        "restored": true
+      },
+      "autosave": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5",
+        "writesBeforeCtrlS": [
+          {
+            "at": "2026-09-22T01:25:30.352Z",
+            "body": {
+              "body": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5",
+              "baseHash": "1ffda3ae00ccdf33fdb56c3119bfe561cec6f6da90d4b388bc9d8fee207808e1",
+              "session": "3813fb26-9376-47d3-a6f2-f207a074b80c"
+            }
+          }
+        ],
+        "documentedBehavior": "normal debounce readback captured before Ctrl+S"
+      },
+      "ctrlSReadback": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5",
+        "hash": "62fa4809597d90c96a72a23ebad641651825ef3e7aa8548178bb52d71fb41122"
+      },
+      "themeTransition": {
+        "before": "light",
+        "systemDark": "dark",
+        "systemLight": "light",
+        "restoredPreference": "light"
+      },
+      "zoomTransition": {
+        "sequence": [
+          1,
+          2,
+          1
+        ],
+        "independentRead100": 1,
+        "independentRead200": 2,
+        "independentReadReset": 1,
+        "finalRequested": 2,
+        "zoom200Viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        }
+      },
+      "resizeTransition": {
+        "sameMounted": true,
+        "resized": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "restored": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      "nativeLimitation": "Native Windows IME/candidate-window input was not exercised; synthetic DOM composition only."
+    },
+    {
+      "mode": "source",
+      "theme": "dark",
+      "zoom": 1,
+      "productEntry": "built App + owned server/database/storage",
+      "mountedIdentity": {
+        "before": "cell-6",
+        "after": "cell-6"
+      },
+      "preState": {
+        "value": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5",
+        "selection": {
+          "start": 2,
+          "end": 7,
+          "direction": "backward"
+        }
+      },
+      "events": [
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글6오타",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글6정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": "한글6정정",
+          "inputType": "insertCompositionText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글6정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글6정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글6정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "insertLineBreak",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "insertLineBreak",
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속6",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속6",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyUndo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyUndo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyRedo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyRedo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        }
+      ],
+      "composingEnter": {
+        "dispatched": true,
+        "defaultPrevented": false,
+        "isTrusted": false,
+        "before": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5",
+        "after": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5",
+        "unintendedMutation": false
+      },
+      "cancellationCorrection": {
+        "cancelledValueUnchanged": true,
+        "correctedText": "한글6정정"
+      },
+      "verdict": "PASS",
+      "findings": [],
+      "exactResult": {
+        "expectedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5한글6정정!\n후속6",
+        "persistedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5한글6정정!\n후속6",
+        "bytes": 188,
+        "selectionAfterTransitions": {
+          "start": 2,
+          "end": 7,
+          "direction": "backward"
+        },
+        "selectionPreserved": true
+      },
+      "undo": {
+        "removed": true,
+        "restored": true
+      },
+      "autosave": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5한글6정정!\n후속6",
+        "writesBeforeCtrlS": [
+          {
+            "at": "2026-09-22T01:25:34.039Z",
+            "body": {
+              "body": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5한글6정정!\n후속6",
+              "baseHash": "62fa4809597d90c96a72a23ebad641651825ef3e7aa8548178bb52d71fb41122",
+              "session": "0eccea82-7b8c-4eb6-85e1-ee1705c9b7e1"
+            }
+          }
+        ],
+        "documentedBehavior": "normal debounce readback captured before Ctrl+S"
+      },
+      "ctrlSReadback": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5한글6정정!\n후속6",
+        "hash": "9058309c8b52051b1a0450f40849d9c6e28e40d1481b31f9a3111d434b2f02a4"
+      },
+      "themeTransition": {
+        "before": "dark",
+        "systemDark": "dark",
+        "systemLight": "light",
+        "restoredPreference": "dark"
+      },
+      "zoomTransition": {
+        "sequence": [
+          1,
+          2,
+          1
+        ],
+        "independentRead100": 1,
+        "independentRead200": 2,
+        "independentReadReset": 1,
+        "finalRequested": 1,
+        "zoom200Viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        }
+      },
+      "resizeTransition": {
+        "sameMounted": true,
+        "resized": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "restored": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      "nativeLimitation": "Native Windows IME/candidate-window input was not exercised; synthetic DOM composition only."
+    },
+    {
+      "mode": "source",
+      "theme": "dark",
+      "zoom": 2,
+      "productEntry": "built App + owned server/database/storage",
+      "mountedIdentity": {
+        "before": "cell-7",
+        "after": "cell-7"
+      },
+      "preState": {
+        "value": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5한글6정정!\n후속6",
+        "selection": {
+          "start": 2,
+          "end": 7,
+          "direction": "backward"
+        }
+      },
+      "events": [
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글7오타",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionstart",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "ㅎ",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionupdate",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글7정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": "한글7정정",
+          "inputType": "insertCompositionText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": false,
+          "isComposing": true,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글7정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "한글7정정",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "compositionend",
+          "constructor": "CompositionEvent",
+          "isTrusted": false,
+          "isComposing": null,
+          "data": "한글7정정",
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "!",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "insertLineBreak",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "insertLineBreak",
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속7",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": "후속7",
+          "inputType": "insertText",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyUndo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyUndo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "beforeinput",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyRedo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "input",
+          "constructor": "InputEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": "historyRedo",
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        },
+        {
+          "type": "keydown",
+          "constructor": "KeyboardEvent",
+          "isTrusted": true,
+          "isComposing": false,
+          "data": null,
+          "inputType": null,
+          "defaultPrevented": false
+        }
+      ],
+      "composingEnter": {
+        "dispatched": true,
+        "defaultPrevented": false,
+        "isTrusted": false,
+        "before": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5한글6정정!\n후속6",
+        "after": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5한글6정정!\n후속6",
+        "unintendedMutation": false
+      },
+      "cancellationCorrection": {
+        "cancelledValueUnchanged": true,
+        "correctedText": "한글7정정"
+      },
+      "verdict": "PASS",
+      "findings": [],
+      "exactResult": {
+        "expectedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5한글6정정!\n후속6한글7정정!\n후속7",
+        "persistedBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5한글6정정!\n후속6한글7정정!\n후속7",
+        "bytes": 210,
+        "selectionAfterTransitions": {
+          "start": 2,
+          "end": 7,
+          "direction": "backward"
+        },
+        "selectionPreserved": true
+      },
+      "undo": {
+        "removed": true,
+        "restored": true
+      },
+      "autosave": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5한글6정정!\n후속6한글7정정!\n후속7",
+        "writesBeforeCtrlS": [
+          {
+            "at": "2026-09-22T01:25:37.832Z",
+            "body": {
+              "body": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5한글6정정!\n후속6한글7정정!\n후속7",
+              "baseHash": "9058309c8b52051b1a0450f40849d9c6e28e40d1481b31f9a3111d434b2f02a4",
+              "session": "c751077f-3f55-4c33-8749-45dbd3d2b516"
+            }
+          }
+        ],
+        "documentedBehavior": "normal debounce readback captured before Ctrl+S"
+      },
+      "ctrlSReadback": {
+        "readbackMatched": true,
+        "exactBody": "# 조합 행렬\n\n시작 본문\n한글0정정!\n후속0\n한글1정정!\n후속1\n한글2정정!\n후속2\n한글3정정!\n후속3한글4정정!\n후속4한글5정정!\n후속5한글6정정!\n후속6한글7정정!\n후속7",
+        "hash": "e61a2713ef5d83ed563c463e4bd1d9fc4130bba907658430d4ef6711cfc00003"
+      },
+      "themeTransition": {
+        "before": "dark",
+        "systemDark": "dark",
+        "systemLight": "light",
+        "restoredPreference": "dark"
+      },
+      "zoomTransition": {
+        "sequence": [
+          1,
+          2,
+          1
+        ],
+        "independentRead100": 1,
+        "independentRead200": 2,
+        "independentReadReset": 1,
+        "finalRequested": 2,
+        "zoom200Viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2.0000000298023224
+        }
+      },
+      "resizeTransition": {
+        "sameMounted": true,
+        "resized": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2.0000000298023224
+        },
+        "restored": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      "nativeLimitation": "Native Windows IME/candidate-window input was not exercised; synthetic DOM composition only."
+    }
+  ],
+  "consumers": {
+    "form": {
+      "verdict": "PASS",
+      "surface": "actual PasswordChangeForm in built App settings",
+      "composingEnter": {
+        "dispatched": false,
+        "defaultPrevented": true
+      },
+      "requests": 0
+    },
+    "principalPicker": {
+      "verdict": "PASS",
+      "surface": "actual ShareModal PrincipalPicker",
+      "composingEnter": {
+        "dispatched": false,
+        "defaultPrevented": true
+      }
+    },
+    "l2": {
+      "verdict": "PASS",
+      "surface": "actual ShareModal suspended-principal L2 ConfirmGate",
+      "composingEnter": {
+        "dispatched": false,
+        "defaultPrevented": true
+      },
+      "mutations": 0
+    },
+    "l3": {
+      "verdict": "PASS",
+      "surface": "actual directory ShareModal break-inheritance L3 ConfirmGate",
+      "composingEnter": {
+        "dispatched": false,
+        "defaultPrevented": true
+      },
+      "mutations": 0
+    }
+  },
+  "overallVerdict": "PASS"
+}

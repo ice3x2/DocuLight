@@ -1,0 +1,3381 @@
+{
+  "claim": "production AppShell/settings role fixture and production UserRoster/SignupApproval component bundle; not login/API integration evidence",
+  "environments": 12,
+  "regular": [
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "identity": "light-1280x720-100",
+      "owner": "fresh Playwright isolated context",
+      "gates": [
+        {
+          "role": "ordinary",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "workspace-manager",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "superuser",
+          "users": 1,
+          "approval": 1
+        }
+      ],
+      "principal": {
+        "metrics": {
+          "viewport": {
+            "width": 1280,
+            "height": 720,
+            "dpr": 1
+          },
+          "dialog": {
+            "x": 40,
+            "y": 36,
+            "width": 1200,
+            "height": 648,
+            "top": 36,
+            "right": 1240,
+            "bottom": 684,
+            "left": 40
+          },
+          "row": {
+            "x": 326,
+            "y": 284,
+            "width": 888,
+            "height": 56.5,
+            "top": 284,
+            "right": 1214,
+            "bottom": 340.5,
+            "left": 326
+          },
+          "action": {
+            "x": 782,
+            "y": 351,
+            "width": 76,
+            "height": 36,
+            "top": 351,
+            "right": 858,
+            "bottom": 387,
+            "left": 782
+          },
+          "tab": {
+            "x": 421.09375,
+            "y": 178,
+            "width": 89.078125,
+            "height": 38,
+            "top": 178,
+            "right": 510.171875,
+            "bottom": 216,
+            "left": 421.09375
+          },
+          "styles": {
+            "action": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            },
+            "tab": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(223, 231, 233)",
+              "border": "rgb(36, 37, 33)"
+            },
+            "dialog": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            }
+          },
+          "typography": {
+            "title": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            },
+            "caption": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            }
+          },
+          "horizontalOverflow": false,
+          "lastActionVisible": true,
+          "indicator": "rgb(54, 91, 112)",
+          "forcedColors": false
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(54, 91, 112)",
+          "background": "rgb(250, 249, 245)"
+        },
+        "tabFocus": {
+          "width": "2px",
+          "offset": "2px"
+        },
+        "typography": {
+          "title": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          },
+          "caption": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          }
+        },
+        "registrationGeometry": {
+          "width": 560,
+          "availableWidth": 890
+        },
+        "hover": {
+          "registration": {
+            "before": {
+              "background": "rgb(54, 91, 112)",
+              "border": "rgb(54, 91, 112)"
+            },
+            "after": {
+              "background": "rgb(44, 75, 93)",
+              "border": "rgb(44, 75, 93)"
+            }
+          },
+          "tab": {
+            "before": {
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(101, 102, 95)"
+            },
+            "after": {
+              "background": "rgb(223, 231, 233)",
+              "color": "rgb(36, 37, 33)"
+            }
+          },
+          "action": {
+            "before": {
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            },
+            "after": {
+              "background": "rgb(223, 231, 233)",
+              "border": "rgb(54, 91, 112)"
+            }
+          }
+        },
+        "contrastRatios": {
+          "rosterText": 14.639805378106399,
+          "registerText": 14.639805378106399,
+          "focusRing": 6.903983660507881,
+          "tabText": 12.297720709885532,
+          "tabIndicator": 5.799480297020246,
+          "badges": [
+            5.771709931622609,
+            5.3906976635615775,
+            12.297720709885532,
+            5.581204879537816
+          ]
+        },
+        "callbackIds": {
+          "approve": [
+            "pending-id"
+          ],
+          "reject": [
+            "pending-id"
+          ],
+          "reopen": [
+            "rejected-id"
+          ]
+        },
+        "compositionSequence": [
+          "compositionstart",
+          "compositionupdate",
+          "compositionend"
+        ],
+        "compositionCallbacks": 0,
+        "registration": {
+          "count": 1,
+          "exactRawValues": true,
+          "passwordSerialized": false
+        },
+        "keyboard": {
+          "tabToPassword": true,
+          "tabToRegister": true,
+          "shiftTabReturn": true,
+          "tabActivation": true,
+          "copiedSelectedReadonlyText": true
+        },
+        "pasteStyleInput": true,
+        "autofillStyleDomInput": true
+      },
+      "missingRegistration": {
+        "disabled": true,
+        "explanation": true
+      },
+      "emptyModes": {
+        "open": true,
+        "approval": true,
+        "invite-only": true,
+        "unknown": true
+      }
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 100,
+      "identity": "dark-1280x720-100",
+      "owner": "fresh Playwright isolated context",
+      "gates": [
+        {
+          "role": "ordinary",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "workspace-manager",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "superuser",
+          "users": 1,
+          "approval": 1
+        }
+      ],
+      "principal": {
+        "metrics": {
+          "viewport": {
+            "width": 1280,
+            "height": 720,
+            "dpr": 1
+          },
+          "dialog": {
+            "x": 40,
+            "y": 36,
+            "width": 1200,
+            "height": 648,
+            "top": 36,
+            "right": 1240,
+            "bottom": 684,
+            "left": 40
+          },
+          "row": {
+            "x": 326,
+            "y": 284,
+            "width": 888,
+            "height": 56.5,
+            "top": 284,
+            "right": 1214,
+            "bottom": 340.5,
+            "left": 326
+          },
+          "action": {
+            "x": 782,
+            "y": 351,
+            "width": 76,
+            "height": 36,
+            "top": 351,
+            "right": 858,
+            "bottom": 387,
+            "left": 782
+          },
+          "tab": {
+            "x": 421.09375,
+            "y": 178,
+            "width": 89.078125,
+            "height": 38,
+            "top": 178,
+            "right": 510.171875,
+            "bottom": 216,
+            "left": 421.09375
+          },
+          "styles": {
+            "action": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            },
+            "tab": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(52, 70, 80)",
+              "border": "rgb(233, 231, 223)"
+            },
+            "dialog": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            }
+          },
+          "typography": {
+            "title": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            },
+            "caption": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            }
+          },
+          "horizontalOverflow": false,
+          "lastActionVisible": true,
+          "indicator": "rgb(168, 196, 211)",
+          "forcedColors": false
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(168, 196, 211)",
+          "background": "rgb(48, 53, 46)"
+        },
+        "tabFocus": {
+          "width": "2px",
+          "offset": "2px"
+        },
+        "typography": {
+          "title": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          },
+          "caption": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          }
+        },
+        "registrationGeometry": {
+          "width": 560,
+          "availableWidth": 890
+        },
+        "hover": {
+          "registration": {
+            "before": {
+              "background": "rgb(168, 196, 211)",
+              "border": "rgb(168, 196, 211)"
+            },
+            "after": {
+              "background": "rgb(187, 209, 220)",
+              "border": "rgb(187, 209, 220)"
+            }
+          },
+          "tab": {
+            "before": {
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(181, 184, 174)"
+            },
+            "after": {
+              "background": "rgb(52, 70, 80)",
+              "color": "rgb(233, 231, 223)"
+            }
+          },
+          "action": {
+            "before": {
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            },
+            "after": {
+              "background": "rgb(52, 70, 80)",
+              "border": "rgb(168, 196, 211)"
+            }
+          }
+        },
+        "contrastRatios": {
+          "rosterText": 10.129573328016168,
+          "registerText": 10.129573328016168,
+          "focusRing": 6.869198040789459,
+          "tabText": 7.933264433752992,
+          "tabIndicator": 5.379808481634575,
+          "badges": [
+            6.782586946244532,
+            6.729801101777331,
+            7.933264433752992,
+            6.6308015761608985
+          ]
+        },
+        "callbackIds": {
+          "approve": [
+            "pending-id"
+          ],
+          "reject": [
+            "pending-id"
+          ],
+          "reopen": [
+            "rejected-id"
+          ]
+        },
+        "compositionSequence": [
+          "compositionstart",
+          "compositionupdate",
+          "compositionend"
+        ],
+        "compositionCallbacks": 0,
+        "registration": {
+          "count": 1,
+          "exactRawValues": true,
+          "passwordSerialized": false
+        },
+        "keyboard": {
+          "tabToPassword": true,
+          "tabToRegister": true,
+          "shiftTabReturn": true,
+          "tabActivation": true,
+          "copiedSelectedReadonlyText": true
+        },
+        "pasteStyleInput": true,
+        "autofillStyleDomInput": true
+      },
+      "missingRegistration": {
+        "disabled": true,
+        "explanation": true
+      },
+      "emptyModes": {
+        "open": true,
+        "approval": true,
+        "invite-only": true,
+        "unknown": true
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 100,
+      "identity": "light-1440x900-100",
+      "owner": "fresh Playwright isolated context",
+      "gates": [
+        {
+          "role": "ordinary",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "workspace-manager",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "superuser",
+          "users": 1,
+          "approval": 1
+        }
+      ],
+      "principal": {
+        "metrics": {
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "dpr": 1
+          },
+          "dialog": {
+            "x": 120,
+            "y": 45,
+            "width": 1200,
+            "height": 810,
+            "top": 45,
+            "right": 1320,
+            "bottom": 855,
+            "left": 120
+          },
+          "row": {
+            "x": 406,
+            "y": 293,
+            "width": 888,
+            "height": 56.5,
+            "top": 293,
+            "right": 1294,
+            "bottom": 349.5,
+            "left": 406
+          },
+          "action": {
+            "x": 862,
+            "y": 360,
+            "width": 76,
+            "height": 36,
+            "top": 360,
+            "right": 938,
+            "bottom": 396,
+            "left": 862
+          },
+          "tab": {
+            "x": 501.09375,
+            "y": 187,
+            "width": 89.078125,
+            "height": 38,
+            "top": 187,
+            "right": 590.171875,
+            "bottom": 225,
+            "left": 501.09375
+          },
+          "styles": {
+            "action": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            },
+            "tab": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(223, 231, 233)",
+              "border": "rgb(36, 37, 33)"
+            },
+            "dialog": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            }
+          },
+          "typography": {
+            "title": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            },
+            "caption": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            }
+          },
+          "horizontalOverflow": false,
+          "lastActionVisible": true,
+          "indicator": "rgb(54, 91, 112)",
+          "forcedColors": false
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(54, 91, 112)",
+          "background": "rgb(250, 249, 245)"
+        },
+        "tabFocus": {
+          "width": "2px",
+          "offset": "2px"
+        },
+        "typography": {
+          "title": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          },
+          "caption": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          }
+        },
+        "registrationGeometry": {
+          "width": 560,
+          "availableWidth": 890
+        },
+        "hover": {
+          "registration": {
+            "before": {
+              "background": "rgb(54, 91, 112)",
+              "border": "rgb(54, 91, 112)"
+            },
+            "after": {
+              "background": "rgb(44, 75, 93)",
+              "border": "rgb(44, 75, 93)"
+            }
+          },
+          "tab": {
+            "before": {
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(101, 102, 95)"
+            },
+            "after": {
+              "background": "rgb(223, 231, 233)",
+              "color": "rgb(36, 37, 33)"
+            }
+          },
+          "action": {
+            "before": {
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            },
+            "after": {
+              "background": "rgb(223, 231, 233)",
+              "border": "rgb(54, 91, 112)"
+            }
+          }
+        },
+        "contrastRatios": {
+          "rosterText": 14.639805378106399,
+          "registerText": 14.639805378106399,
+          "focusRing": 6.903983660507881,
+          "tabText": 12.297720709885532,
+          "tabIndicator": 5.799480297020246,
+          "badges": [
+            5.771709931622609,
+            5.3906976635615775,
+            12.297720709885532,
+            5.581204879537816
+          ]
+        },
+        "callbackIds": {
+          "approve": [
+            "pending-id"
+          ],
+          "reject": [
+            "pending-id"
+          ],
+          "reopen": [
+            "rejected-id"
+          ]
+        },
+        "compositionSequence": [
+          "compositionstart",
+          "compositionupdate",
+          "compositionend"
+        ],
+        "compositionCallbacks": 0,
+        "registration": {
+          "count": 1,
+          "exactRawValues": true,
+          "passwordSerialized": false
+        },
+        "keyboard": {
+          "tabToPassword": true,
+          "tabToRegister": true,
+          "shiftTabReturn": true,
+          "tabActivation": true,
+          "copiedSelectedReadonlyText": true
+        },
+        "pasteStyleInput": true,
+        "autofillStyleDomInput": true
+      },
+      "missingRegistration": {
+        "disabled": true,
+        "explanation": true
+      },
+      "emptyModes": {
+        "open": true,
+        "approval": true,
+        "invite-only": true,
+        "unknown": true
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 100,
+      "identity": "dark-1440x900-100",
+      "owner": "fresh Playwright isolated context",
+      "gates": [
+        {
+          "role": "ordinary",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "workspace-manager",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "superuser",
+          "users": 1,
+          "approval": 1
+        }
+      ],
+      "principal": {
+        "metrics": {
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "dpr": 1
+          },
+          "dialog": {
+            "x": 120,
+            "y": 45,
+            "width": 1200,
+            "height": 810,
+            "top": 45,
+            "right": 1320,
+            "bottom": 855,
+            "left": 120
+          },
+          "row": {
+            "x": 406,
+            "y": 293,
+            "width": 888,
+            "height": 56.5,
+            "top": 293,
+            "right": 1294,
+            "bottom": 349.5,
+            "left": 406
+          },
+          "action": {
+            "x": 862,
+            "y": 360,
+            "width": 76,
+            "height": 36,
+            "top": 360,
+            "right": 938,
+            "bottom": 396,
+            "left": 862
+          },
+          "tab": {
+            "x": 501.09375,
+            "y": 187,
+            "width": 89.078125,
+            "height": 38,
+            "top": 187,
+            "right": 590.171875,
+            "bottom": 225,
+            "left": 501.09375
+          },
+          "styles": {
+            "action": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            },
+            "tab": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(52, 70, 80)",
+              "border": "rgb(233, 231, 223)"
+            },
+            "dialog": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            }
+          },
+          "typography": {
+            "title": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            },
+            "caption": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            }
+          },
+          "horizontalOverflow": false,
+          "lastActionVisible": true,
+          "indicator": "rgb(168, 196, 211)",
+          "forcedColors": false
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(168, 196, 211)",
+          "background": "rgb(48, 53, 46)"
+        },
+        "tabFocus": {
+          "width": "2px",
+          "offset": "2px"
+        },
+        "typography": {
+          "title": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          },
+          "caption": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          }
+        },
+        "registrationGeometry": {
+          "width": 560,
+          "availableWidth": 890
+        },
+        "hover": {
+          "registration": {
+            "before": {
+              "background": "rgb(168, 196, 211)",
+              "border": "rgb(168, 196, 211)"
+            },
+            "after": {
+              "background": "rgb(187, 209, 220)",
+              "border": "rgb(187, 209, 220)"
+            }
+          },
+          "tab": {
+            "before": {
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(181, 184, 174)"
+            },
+            "after": {
+              "background": "rgb(52, 70, 80)",
+              "color": "rgb(233, 231, 223)"
+            }
+          },
+          "action": {
+            "before": {
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            },
+            "after": {
+              "background": "rgb(52, 70, 80)",
+              "border": "rgb(168, 196, 211)"
+            }
+          }
+        },
+        "contrastRatios": {
+          "rosterText": 10.129573328016168,
+          "registerText": 10.129573328016168,
+          "focusRing": 6.869198040789459,
+          "tabText": 7.933264433752992,
+          "tabIndicator": 5.379808481634575,
+          "badges": [
+            6.782586946244532,
+            6.729801101777331,
+            7.933264433752992,
+            6.6308015761608985
+          ]
+        },
+        "callbackIds": {
+          "approve": [
+            "pending-id"
+          ],
+          "reject": [
+            "pending-id"
+          ],
+          "reopen": [
+            "rejected-id"
+          ]
+        },
+        "compositionSequence": [
+          "compositionstart",
+          "compositionupdate",
+          "compositionend"
+        ],
+        "compositionCallbacks": 0,
+        "registration": {
+          "count": 1,
+          "exactRawValues": true,
+          "passwordSerialized": false
+        },
+        "keyboard": {
+          "tabToPassword": true,
+          "tabToRegister": true,
+          "shiftTabReturn": true,
+          "tabActivation": true,
+          "copiedSelectedReadonlyText": true
+        },
+        "pasteStyleInput": true,
+        "autofillStyleDomInput": true
+      },
+      "missingRegistration": {
+        "disabled": true,
+        "explanation": true
+      },
+      "emptyModes": {
+        "open": true,
+        "approval": true,
+        "invite-only": true,
+        "unknown": true
+      }
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 100,
+      "identity": "light-1920x1080-100",
+      "owner": "fresh Playwright isolated context",
+      "gates": [
+        {
+          "role": "ordinary",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "workspace-manager",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "superuser",
+          "users": 1,
+          "approval": 1
+        }
+      ],
+      "principal": {
+        "metrics": {
+          "viewport": {
+            "width": 1920,
+            "height": 1080,
+            "dpr": 1
+          },
+          "dialog": {
+            "x": 360,
+            "y": 130,
+            "width": 1200,
+            "height": 820,
+            "top": 130,
+            "right": 1560,
+            "bottom": 950,
+            "left": 360
+          },
+          "row": {
+            "x": 646,
+            "y": 378,
+            "width": 888,
+            "height": 56.5,
+            "top": 378,
+            "right": 1534,
+            "bottom": 434.5,
+            "left": 646
+          },
+          "action": {
+            "x": 1102,
+            "y": 445,
+            "width": 76,
+            "height": 36,
+            "top": 445,
+            "right": 1178,
+            "bottom": 481,
+            "left": 1102
+          },
+          "tab": {
+            "x": 741.09375,
+            "y": 272,
+            "width": 89.078125,
+            "height": 38,
+            "top": 272,
+            "right": 830.171875,
+            "bottom": 310,
+            "left": 741.09375
+          },
+          "styles": {
+            "action": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            },
+            "tab": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(223, 231, 233)",
+              "border": "rgb(36, 37, 33)"
+            },
+            "dialog": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            }
+          },
+          "typography": {
+            "title": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            },
+            "caption": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            }
+          },
+          "horizontalOverflow": false,
+          "lastActionVisible": true,
+          "indicator": "rgb(54, 91, 112)",
+          "forcedColors": false
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(54, 91, 112)",
+          "background": "rgb(250, 249, 245)"
+        },
+        "tabFocus": {
+          "width": "2px",
+          "offset": "2px"
+        },
+        "typography": {
+          "title": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          },
+          "caption": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          }
+        },
+        "registrationGeometry": {
+          "width": 560,
+          "availableWidth": 890
+        },
+        "hover": {
+          "registration": {
+            "before": {
+              "background": "rgb(54, 91, 112)",
+              "border": "rgb(54, 91, 112)"
+            },
+            "after": {
+              "background": "rgb(44, 75, 93)",
+              "border": "rgb(44, 75, 93)"
+            }
+          },
+          "tab": {
+            "before": {
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(101, 102, 95)"
+            },
+            "after": {
+              "background": "rgb(223, 231, 233)",
+              "color": "rgb(36, 37, 33)"
+            }
+          },
+          "action": {
+            "before": {
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            },
+            "after": {
+              "background": "rgb(223, 231, 233)",
+              "border": "rgb(54, 91, 112)"
+            }
+          }
+        },
+        "contrastRatios": {
+          "rosterText": 14.639805378106399,
+          "registerText": 14.639805378106399,
+          "focusRing": 6.903983660507881,
+          "tabText": 12.297720709885532,
+          "tabIndicator": 5.799480297020246,
+          "badges": [
+            5.771709931622609,
+            5.3906976635615775,
+            12.297720709885532,
+            5.581204879537816
+          ]
+        },
+        "callbackIds": {
+          "approve": [
+            "pending-id"
+          ],
+          "reject": [
+            "pending-id"
+          ],
+          "reopen": [
+            "rejected-id"
+          ]
+        },
+        "compositionSequence": [
+          "compositionstart",
+          "compositionupdate",
+          "compositionend"
+        ],
+        "compositionCallbacks": 0,
+        "registration": {
+          "count": 1,
+          "exactRawValues": true,
+          "passwordSerialized": false
+        },
+        "keyboard": {
+          "tabToPassword": true,
+          "tabToRegister": true,
+          "shiftTabReturn": true,
+          "tabActivation": true,
+          "copiedSelectedReadonlyText": true
+        },
+        "pasteStyleInput": true,
+        "autofillStyleDomInput": true
+      },
+      "missingRegistration": {
+        "disabled": true,
+        "explanation": true
+      },
+      "emptyModes": {
+        "open": true,
+        "approval": true,
+        "invite-only": true,
+        "unknown": true
+      }
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 100,
+      "identity": "dark-1920x1080-100",
+      "owner": "fresh Playwright isolated context",
+      "gates": [
+        {
+          "role": "ordinary",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "workspace-manager",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "superuser",
+          "users": 1,
+          "approval": 1
+        }
+      ],
+      "principal": {
+        "metrics": {
+          "viewport": {
+            "width": 1920,
+            "height": 1080,
+            "dpr": 1
+          },
+          "dialog": {
+            "x": 360,
+            "y": 130,
+            "width": 1200,
+            "height": 820,
+            "top": 130,
+            "right": 1560,
+            "bottom": 950,
+            "left": 360
+          },
+          "row": {
+            "x": 646,
+            "y": 378,
+            "width": 888,
+            "height": 56.5,
+            "top": 378,
+            "right": 1534,
+            "bottom": 434.5,
+            "left": 646
+          },
+          "action": {
+            "x": 1102,
+            "y": 445,
+            "width": 76,
+            "height": 36,
+            "top": 445,
+            "right": 1178,
+            "bottom": 481,
+            "left": 1102
+          },
+          "tab": {
+            "x": 741.09375,
+            "y": 272,
+            "width": 89.078125,
+            "height": 38,
+            "top": 272,
+            "right": 830.171875,
+            "bottom": 310,
+            "left": 741.09375
+          },
+          "styles": {
+            "action": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            },
+            "tab": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(52, 70, 80)",
+              "border": "rgb(233, 231, 223)"
+            },
+            "dialog": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            }
+          },
+          "typography": {
+            "title": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            },
+            "caption": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            }
+          },
+          "horizontalOverflow": false,
+          "lastActionVisible": true,
+          "indicator": "rgb(168, 196, 211)",
+          "forcedColors": false
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(168, 196, 211)",
+          "background": "rgb(48, 53, 46)"
+        },
+        "tabFocus": {
+          "width": "2px",
+          "offset": "2px"
+        },
+        "typography": {
+          "title": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          },
+          "caption": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          }
+        },
+        "registrationGeometry": {
+          "width": 560,
+          "availableWidth": 890
+        },
+        "hover": {
+          "registration": {
+            "before": {
+              "background": "rgb(168, 196, 211)",
+              "border": "rgb(168, 196, 211)"
+            },
+            "after": {
+              "background": "rgb(187, 209, 220)",
+              "border": "rgb(187, 209, 220)"
+            }
+          },
+          "tab": {
+            "before": {
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(181, 184, 174)"
+            },
+            "after": {
+              "background": "rgb(52, 70, 80)",
+              "color": "rgb(233, 231, 223)"
+            }
+          },
+          "action": {
+            "before": {
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            },
+            "after": {
+              "background": "rgb(52, 70, 80)",
+              "border": "rgb(168, 196, 211)"
+            }
+          }
+        },
+        "contrastRatios": {
+          "rosterText": 10.129573328016168,
+          "registerText": 10.129573328016168,
+          "focusRing": 6.869198040789459,
+          "tabText": 7.933264433752992,
+          "tabIndicator": 5.379808481634575,
+          "badges": [
+            6.782586946244532,
+            6.729801101777331,
+            7.933264433752992,
+            6.6308015761608985
+          ]
+        },
+        "callbackIds": {
+          "approve": [
+            "pending-id"
+          ],
+          "reject": [
+            "pending-id"
+          ],
+          "reopen": [
+            "rejected-id"
+          ]
+        },
+        "compositionSequence": [
+          "compositionstart",
+          "compositionupdate",
+          "compositionend"
+        ],
+        "compositionCallbacks": 0,
+        "registration": {
+          "count": 1,
+          "exactRawValues": true,
+          "passwordSerialized": false
+        },
+        "keyboard": {
+          "tabToPassword": true,
+          "tabToRegister": true,
+          "shiftTabReturn": true,
+          "tabActivation": true,
+          "copiedSelectedReadonlyText": true
+        },
+        "pasteStyleInput": true,
+        "autofillStyleDomInput": true
+      },
+      "missingRegistration": {
+        "disabled": true,
+        "explanation": true
+      },
+      "emptyModes": {
+        "open": true,
+        "approval": true,
+        "invite-only": true,
+        "unknown": true
+      }
+    }
+  ],
+  "zoomed": [
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "identity": "light-1280x720-200",
+      "owner": "fresh Playwright persistent Chromium with disposable profile and extension",
+      "gates": [
+        {
+          "role": "ordinary",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "workspace-manager",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "superuser",
+          "users": 1,
+          "approval": 1
+        }
+      ],
+      "principal": {
+        "metrics": {
+          "viewport": {
+            "width": 640,
+            "height": 360,
+            "dpr": 2
+          },
+          "dialog": {
+            "x": 19.203125,
+            "y": 18,
+            "width": 601.59375,
+            "height": 324,
+            "top": 18,
+            "right": 620.796875,
+            "bottom": 342,
+            "left": 19.203125
+          },
+          "row": {
+            "x": 229.0703125,
+            "y": 258,
+            "width": 366.2265625,
+            "height": 56.5,
+            "top": 258,
+            "right": 595.296875,
+            "bottom": 314.5,
+            "left": 229.0703125
+          },
+          "action": {
+            "x": 424.1796875,
+            "y": 325,
+            "width": 76,
+            "height": 36,
+            "top": 325,
+            "right": 500.1796875,
+            "bottom": 361,
+            "left": 424.1796875
+          },
+          "tab": {
+            "x": 324.15625,
+            "y": 152,
+            "width": 89.0703125,
+            "height": 38,
+            "top": 152,
+            "right": 413.2265625,
+            "bottom": 190,
+            "left": 324.15625
+          },
+          "styles": {
+            "action": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            },
+            "tab": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(223, 231, 233)",
+              "border": "rgb(36, 37, 33)"
+            },
+            "dialog": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            }
+          },
+          "typography": {
+            "title": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            },
+            "caption": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            }
+          },
+          "horizontalOverflow": false,
+          "lastActionVisible": true,
+          "indicator": "rgb(54, 91, 112)",
+          "forcedColors": false
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(54, 91, 112)",
+          "background": "rgb(250, 249, 245)"
+        },
+        "tabFocus": {
+          "width": "2px",
+          "offset": "2px"
+        },
+        "typography": {
+          "title": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          },
+          "caption": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          }
+        },
+        "registrationGeometry": {
+          "width": 368.2265625,
+          "availableWidth": 368.2265625
+        },
+        "hover": {
+          "registration": {
+            "before": {
+              "background": "rgb(54, 91, 112)",
+              "border": "rgb(54, 91, 112)"
+            },
+            "after": {
+              "background": "rgb(44, 75, 93)",
+              "border": "rgb(44, 75, 93)"
+            }
+          },
+          "tab": {
+            "before": {
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(101, 102, 95)"
+            },
+            "after": {
+              "background": "rgb(223, 231, 233)",
+              "color": "rgb(36, 37, 33)"
+            }
+          },
+          "action": {
+            "before": {
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            },
+            "after": {
+              "background": "rgb(223, 231, 233)",
+              "border": "rgb(54, 91, 112)"
+            }
+          }
+        },
+        "contrastRatios": {
+          "rosterText": 14.639805378106399,
+          "registerText": 14.639805378106399,
+          "focusRing": 6.903983660507881,
+          "tabText": 12.297720709885532,
+          "tabIndicator": 5.799480297020246,
+          "badges": [
+            5.771709931622609,
+            5.3906976635615775,
+            12.297720709885532,
+            5.581204879537816
+          ]
+        },
+        "callbackIds": {
+          "approve": [
+            "pending-id"
+          ],
+          "reject": [
+            "pending-id"
+          ],
+          "reopen": [
+            "rejected-id"
+          ]
+        },
+        "compositionSequence": [
+          "compositionstart",
+          "compositionupdate",
+          "compositionend"
+        ],
+        "compositionCallbacks": 0,
+        "registration": {
+          "count": 1,
+          "exactRawValues": true,
+          "passwordSerialized": false
+        },
+        "keyboard": {
+          "tabToPassword": true,
+          "tabToRegister": true,
+          "shiftTabReturn": true,
+          "tabActivation": true,
+          "copiedSelectedReadonlyText": true
+        },
+        "pasteStyleInput": true,
+        "autofillStyleDomInput": true
+      },
+      "missingRegistration": {
+        "disabled": true,
+        "explanation": true
+      },
+      "emptyModes": {
+        "open": true,
+        "approval": true,
+        "invite-only": true,
+        "unknown": true
+      },
+      "before": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "persistence": {
+        "noReload": true,
+        "viewportResize": true,
+        "roster": {
+          "category": true,
+          "values": true,
+          "focus": true
+        },
+        "approval": {
+          "category": true,
+          "selectedTab": true,
+          "focus": true
+        },
+        "zoomReads": [
+          2,
+          1,
+          2,
+          1
+        ],
+        "passwordSerialized": false
+      },
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "zoomCalls": {
+        "setter": [
+          1,
+          2,
+          1
+        ],
+        "readOnlyGetZoom": [
+          1,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "theme": "dark",
+      "zoom": 200,
+      "identity": "dark-1280x720-200",
+      "owner": "fresh Playwright persistent Chromium with disposable profile and extension",
+      "gates": [
+        {
+          "role": "ordinary",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "workspace-manager",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "superuser",
+          "users": 1,
+          "approval": 1
+        }
+      ],
+      "principal": {
+        "metrics": {
+          "viewport": {
+            "width": 640,
+            "height": 360,
+            "dpr": 2
+          },
+          "dialog": {
+            "x": 19.203125,
+            "y": 18,
+            "width": 601.59375,
+            "height": 324,
+            "top": 18,
+            "right": 620.796875,
+            "bottom": 342,
+            "left": 19.203125
+          },
+          "row": {
+            "x": 229.0703125,
+            "y": 258,
+            "width": 366.2265625,
+            "height": 56.5,
+            "top": 258,
+            "right": 595.296875,
+            "bottom": 314.5,
+            "left": 229.0703125
+          },
+          "action": {
+            "x": 424.1796875,
+            "y": 325,
+            "width": 76,
+            "height": 36,
+            "top": 325,
+            "right": 500.1796875,
+            "bottom": 361,
+            "left": 424.1796875
+          },
+          "tab": {
+            "x": 324.15625,
+            "y": 152,
+            "width": 89.0703125,
+            "height": 38,
+            "top": 152,
+            "right": 413.2265625,
+            "bottom": 190,
+            "left": 324.15625
+          },
+          "styles": {
+            "action": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            },
+            "tab": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(52, 70, 80)",
+              "border": "rgb(233, 231, 223)"
+            },
+            "dialog": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            }
+          },
+          "typography": {
+            "title": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            },
+            "caption": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            }
+          },
+          "horizontalOverflow": false,
+          "lastActionVisible": true,
+          "indicator": "rgb(168, 196, 211)",
+          "forcedColors": false
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(168, 196, 211)",
+          "background": "rgb(48, 53, 46)"
+        },
+        "tabFocus": {
+          "width": "2px",
+          "offset": "2px"
+        },
+        "typography": {
+          "title": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          },
+          "caption": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          }
+        },
+        "registrationGeometry": {
+          "width": 368.2265625,
+          "availableWidth": 368.2265625
+        },
+        "hover": {
+          "registration": {
+            "before": {
+              "background": "rgb(168, 196, 211)",
+              "border": "rgb(168, 196, 211)"
+            },
+            "after": {
+              "background": "rgb(187, 209, 220)",
+              "border": "rgb(187, 209, 220)"
+            }
+          },
+          "tab": {
+            "before": {
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(181, 184, 174)"
+            },
+            "after": {
+              "background": "rgb(52, 70, 80)",
+              "color": "rgb(233, 231, 223)"
+            }
+          },
+          "action": {
+            "before": {
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            },
+            "after": {
+              "background": "rgb(52, 70, 80)",
+              "border": "rgb(168, 196, 211)"
+            }
+          }
+        },
+        "contrastRatios": {
+          "rosterText": 10.129573328016168,
+          "registerText": 10.129573328016168,
+          "focusRing": 6.869198040789459,
+          "tabText": 7.933264433752992,
+          "tabIndicator": 5.379808481634575,
+          "badges": [
+            6.782586946244532,
+            6.729801101777331,
+            7.933264433752992,
+            6.6308015761608985
+          ]
+        },
+        "callbackIds": {
+          "approve": [
+            "pending-id"
+          ],
+          "reject": [
+            "pending-id"
+          ],
+          "reopen": [
+            "rejected-id"
+          ]
+        },
+        "compositionSequence": [
+          "compositionstart",
+          "compositionupdate",
+          "compositionend"
+        ],
+        "compositionCallbacks": 0,
+        "registration": {
+          "count": 1,
+          "exactRawValues": true,
+          "passwordSerialized": false
+        },
+        "keyboard": {
+          "tabToPassword": true,
+          "tabToRegister": true,
+          "shiftTabReturn": true,
+          "tabActivation": true,
+          "copiedSelectedReadonlyText": true
+        },
+        "pasteStyleInput": true,
+        "autofillStyleDomInput": true
+      },
+      "missingRegistration": {
+        "disabled": true,
+        "explanation": true
+      },
+      "emptyModes": {
+        "open": true,
+        "approval": true,
+        "invite-only": true,
+        "unknown": true
+      },
+      "before": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "persistence": {
+        "noReload": true,
+        "viewportResize": true,
+        "roster": {
+          "category": true,
+          "values": true,
+          "focus": true
+        },
+        "approval": {
+          "category": true,
+          "selectedTab": true,
+          "focus": true
+        },
+        "zoomReads": [
+          2,
+          1,
+          2,
+          1
+        ],
+        "passwordSerialized": false
+      },
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "zoomCalls": {
+        "setter": [
+          1,
+          2,
+          1
+        ],
+        "readOnlyGetZoom": [
+          1,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "zoom": 200,
+      "identity": "light-1440x900-200",
+      "owner": "fresh Playwright persistent Chromium with disposable profile and extension",
+      "gates": [
+        {
+          "role": "ordinary",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "workspace-manager",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "superuser",
+          "users": 1,
+          "approval": 1
+        }
+      ],
+      "principal": {
+        "metrics": {
+          "viewport": {
+            "width": 720,
+            "height": 450,
+            "dpr": 2
+          },
+          "dialog": {
+            "x": 21.6015625,
+            "y": 22.5,
+            "width": 676.796875,
+            "height": 405,
+            "top": 22.5,
+            "right": 698.3984375,
+            "bottom": 427.5,
+            "left": 21.6015625
+          },
+          "row": {
+            "x": 255.53125,
+            "y": 262.5,
+            "width": 417.3671875,
+            "height": 56.5,
+            "top": 262.5,
+            "right": 672.8984375,
+            "bottom": 319,
+            "left": 255.53125
+          },
+          "action": {
+            "x": 476.2109375,
+            "y": 329.5,
+            "width": 76,
+            "height": 36,
+            "top": 329.5,
+            "right": 552.2109375,
+            "bottom": 365.5,
+            "left": 476.2109375
+          },
+          "tab": {
+            "x": 350.6171875,
+            "y": 156.5,
+            "width": 89.0703125,
+            "height": 38,
+            "top": 156.5,
+            "right": 439.6875,
+            "bottom": 194.5,
+            "left": 350.6171875
+          },
+          "styles": {
+            "action": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            },
+            "tab": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(223, 231, 233)",
+              "border": "rgb(36, 37, 33)"
+            },
+            "dialog": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            }
+          },
+          "typography": {
+            "title": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            },
+            "caption": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            }
+          },
+          "horizontalOverflow": false,
+          "lastActionVisible": true,
+          "indicator": "rgb(54, 91, 112)",
+          "forcedColors": false
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(54, 91, 112)",
+          "background": "rgb(250, 249, 245)"
+        },
+        "tabFocus": {
+          "width": "2px",
+          "offset": "2px"
+        },
+        "typography": {
+          "title": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          },
+          "caption": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          }
+        },
+        "registrationGeometry": {
+          "width": 419.3671875,
+          "availableWidth": 419.3671875
+        },
+        "hover": {
+          "registration": {
+            "before": {
+              "background": "rgb(54, 91, 112)",
+              "border": "rgb(54, 91, 112)"
+            },
+            "after": {
+              "background": "rgb(44, 75, 93)",
+              "border": "rgb(44, 75, 93)"
+            }
+          },
+          "tab": {
+            "before": {
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(101, 102, 95)"
+            },
+            "after": {
+              "background": "rgb(223, 231, 233)",
+              "color": "rgb(36, 37, 33)"
+            }
+          },
+          "action": {
+            "before": {
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            },
+            "after": {
+              "background": "rgb(223, 231, 233)",
+              "border": "rgb(54, 91, 112)"
+            }
+          }
+        },
+        "contrastRatios": {
+          "rosterText": 14.639805378106399,
+          "registerText": 14.639805378106399,
+          "focusRing": 6.903983660507881,
+          "tabText": 12.297720709885532,
+          "tabIndicator": 5.799480297020246,
+          "badges": [
+            5.771709931622609,
+            5.3906976635615775,
+            12.297720709885532,
+            5.581204879537816
+          ]
+        },
+        "callbackIds": {
+          "approve": [
+            "pending-id"
+          ],
+          "reject": [
+            "pending-id"
+          ],
+          "reopen": [
+            "rejected-id"
+          ]
+        },
+        "compositionSequence": [
+          "compositionstart",
+          "compositionupdate",
+          "compositionend"
+        ],
+        "compositionCallbacks": 0,
+        "registration": {
+          "count": 1,
+          "exactRawValues": true,
+          "passwordSerialized": false
+        },
+        "keyboard": {
+          "tabToPassword": true,
+          "tabToRegister": true,
+          "shiftTabReturn": true,
+          "tabActivation": true,
+          "copiedSelectedReadonlyText": true
+        },
+        "pasteStyleInput": true,
+        "autofillStyleDomInput": true
+      },
+      "missingRegistration": {
+        "disabled": true,
+        "explanation": true
+      },
+      "emptyModes": {
+        "open": true,
+        "approval": true,
+        "invite-only": true,
+        "unknown": true
+      },
+      "before": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1
+      },
+      "persistence": {
+        "noReload": true,
+        "viewportResize": true,
+        "roster": {
+          "category": true,
+          "values": true,
+          "focus": true
+        },
+        "approval": {
+          "category": true,
+          "selectedTab": true,
+          "focus": true
+        },
+        "zoomReads": [
+          2,
+          1,
+          2,
+          1
+        ],
+        "passwordSerialized": false
+      },
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "zoomCalls": {
+        "setter": [
+          1,
+          2,
+          1
+        ],
+        "readOnlyGetZoom": [
+          1,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "zoom": 200,
+      "identity": "dark-1440x900-200",
+      "owner": "fresh Playwright persistent Chromium with disposable profile and extension",
+      "gates": [
+        {
+          "role": "ordinary",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "workspace-manager",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "superuser",
+          "users": 1,
+          "approval": 1
+        }
+      ],
+      "principal": {
+        "metrics": {
+          "viewport": {
+            "width": 720,
+            "height": 450,
+            "dpr": 2
+          },
+          "dialog": {
+            "x": 21.6015625,
+            "y": 22.5,
+            "width": 676.796875,
+            "height": 405,
+            "top": 22.5,
+            "right": 698.3984375,
+            "bottom": 427.5,
+            "left": 21.6015625
+          },
+          "row": {
+            "x": 255.53125,
+            "y": 262.5,
+            "width": 417.3671875,
+            "height": 56.5,
+            "top": 262.5,
+            "right": 672.8984375,
+            "bottom": 319,
+            "left": 255.53125
+          },
+          "action": {
+            "x": 476.2109375,
+            "y": 329.5,
+            "width": 76,
+            "height": 36,
+            "top": 329.5,
+            "right": 552.2109375,
+            "bottom": 365.5,
+            "left": 476.2109375
+          },
+          "tab": {
+            "x": 350.6171875,
+            "y": 156.5,
+            "width": 89.0703125,
+            "height": 38,
+            "top": 156.5,
+            "right": 439.6875,
+            "bottom": 194.5,
+            "left": 350.6171875
+          },
+          "styles": {
+            "action": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            },
+            "tab": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(52, 70, 80)",
+              "border": "rgb(233, 231, 223)"
+            },
+            "dialog": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            }
+          },
+          "typography": {
+            "title": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            },
+            "caption": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            }
+          },
+          "horizontalOverflow": false,
+          "lastActionVisible": true,
+          "indicator": "rgb(168, 196, 211)",
+          "forcedColors": false
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(168, 196, 211)",
+          "background": "rgb(48, 53, 46)"
+        },
+        "tabFocus": {
+          "width": "2px",
+          "offset": "2px"
+        },
+        "typography": {
+          "title": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          },
+          "caption": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          }
+        },
+        "registrationGeometry": {
+          "width": 419.3671875,
+          "availableWidth": 419.3671875
+        },
+        "hover": {
+          "registration": {
+            "before": {
+              "background": "rgb(168, 196, 211)",
+              "border": "rgb(168, 196, 211)"
+            },
+            "after": {
+              "background": "rgb(187, 209, 220)",
+              "border": "rgb(187, 209, 220)"
+            }
+          },
+          "tab": {
+            "before": {
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(181, 184, 174)"
+            },
+            "after": {
+              "background": "rgb(52, 70, 80)",
+              "color": "rgb(233, 231, 223)"
+            }
+          },
+          "action": {
+            "before": {
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            },
+            "after": {
+              "background": "rgb(52, 70, 80)",
+              "border": "rgb(168, 196, 211)"
+            }
+          }
+        },
+        "contrastRatios": {
+          "rosterText": 10.129573328016168,
+          "registerText": 10.129573328016168,
+          "focusRing": 6.869198040789459,
+          "tabText": 7.933264433752992,
+          "tabIndicator": 5.379808481634575,
+          "badges": [
+            6.782586946244532,
+            6.729801101777331,
+            7.933264433752992,
+            6.6308015761608985
+          ]
+        },
+        "callbackIds": {
+          "approve": [
+            "pending-id"
+          ],
+          "reject": [
+            "pending-id"
+          ],
+          "reopen": [
+            "rejected-id"
+          ]
+        },
+        "compositionSequence": [
+          "compositionstart",
+          "compositionupdate",
+          "compositionend"
+        ],
+        "compositionCallbacks": 0,
+        "registration": {
+          "count": 1,
+          "exactRawValues": true,
+          "passwordSerialized": false
+        },
+        "keyboard": {
+          "tabToPassword": true,
+          "tabToRegister": true,
+          "shiftTabReturn": true,
+          "tabActivation": true,
+          "copiedSelectedReadonlyText": true
+        },
+        "pasteStyleInput": true,
+        "autofillStyleDomInput": true
+      },
+      "missingRegistration": {
+        "disabled": true,
+        "explanation": true
+      },
+      "emptyModes": {
+        "open": true,
+        "approval": true,
+        "invite-only": true,
+        "unknown": true
+      },
+      "before": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1
+      },
+      "persistence": {
+        "noReload": true,
+        "viewportResize": true,
+        "roster": {
+          "category": true,
+          "values": true,
+          "focus": true
+        },
+        "approval": {
+          "category": true,
+          "selectedTab": true,
+          "focus": true
+        },
+        "zoomReads": [
+          2,
+          1,
+          2,
+          1
+        ],
+        "passwordSerialized": false
+      },
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "zoomCalls": {
+        "setter": [
+          1,
+          2,
+          1
+        ],
+        "readOnlyGetZoom": [
+          1,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "light",
+      "zoom": 200,
+      "identity": "light-1920x1080-200",
+      "owner": "fresh Playwright persistent Chromium with disposable profile and extension",
+      "gates": [
+        {
+          "role": "ordinary",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "workspace-manager",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "superuser",
+          "users": 1,
+          "approval": 1
+        }
+      ],
+      "principal": {
+        "metrics": {
+          "viewport": {
+            "width": 960,
+            "height": 540,
+            "dpr": 2
+          },
+          "dialog": {
+            "x": 28.80078125,
+            "y": 27,
+            "width": 902.3984375,
+            "height": 486,
+            "top": 27,
+            "right": 931.19921875,
+            "bottom": 513,
+            "left": 28.80078125
+          },
+          "row": {
+            "x": 314.80078125,
+            "y": 213,
+            "width": 582.8984375,
+            "height": 56.5,
+            "top": 213,
+            "right": 897.69921875,
+            "bottom": 269.5,
+            "left": 314.80078125
+          },
+          "action": {
+            "x": 618.24609375,
+            "y": 280,
+            "width": 76,
+            "height": 36,
+            "top": 280,
+            "right": 694.24609375,
+            "bottom": 316,
+            "left": 618.24609375
+          },
+          "tab": {
+            "x": 409.88671875,
+            "y": 107,
+            "width": 89.0703125,
+            "height": 38,
+            "top": 107,
+            "right": 498.95703125,
+            "bottom": 145,
+            "left": 409.88671875
+          },
+          "styles": {
+            "action": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            },
+            "tab": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(223, 231, 233)",
+              "border": "rgb(36, 37, 33)"
+            },
+            "dialog": {
+              "color": "rgb(36, 37, 33)",
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            }
+          },
+          "typography": {
+            "title": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            },
+            "caption": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            }
+          },
+          "horizontalOverflow": false,
+          "lastActionVisible": true,
+          "indicator": "rgb(54, 91, 112)",
+          "forcedColors": false
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(54, 91, 112)",
+          "background": "rgb(250, 249, 245)"
+        },
+        "tabFocus": {
+          "width": "2px",
+          "offset": "2px"
+        },
+        "typography": {
+          "title": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          },
+          "caption": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          }
+        },
+        "registrationGeometry": {
+          "width": 560,
+          "availableWidth": 584.8984375
+        },
+        "hover": {
+          "registration": {
+            "before": {
+              "background": "rgb(54, 91, 112)",
+              "border": "rgb(54, 91, 112)"
+            },
+            "after": {
+              "background": "rgb(44, 75, 93)",
+              "border": "rgb(44, 75, 93)"
+            }
+          },
+          "tab": {
+            "before": {
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(101, 102, 95)"
+            },
+            "after": {
+              "background": "rgb(223, 231, 233)",
+              "color": "rgb(36, 37, 33)"
+            }
+          },
+          "action": {
+            "before": {
+              "background": "rgb(250, 249, 245)",
+              "border": "rgb(122, 123, 113)"
+            },
+            "after": {
+              "background": "rgb(223, 231, 233)",
+              "border": "rgb(54, 91, 112)"
+            }
+          }
+        },
+        "contrastRatios": {
+          "rosterText": 14.639805378106399,
+          "registerText": 14.639805378106399,
+          "focusRing": 6.903983660507881,
+          "tabText": 12.297720709885532,
+          "tabIndicator": 5.799480297020246,
+          "badges": [
+            5.771709931622609,
+            5.3906976635615775,
+            12.297720709885532,
+            5.581204879537816
+          ]
+        },
+        "callbackIds": {
+          "approve": [
+            "pending-id"
+          ],
+          "reject": [
+            "pending-id"
+          ],
+          "reopen": [
+            "rejected-id"
+          ]
+        },
+        "compositionSequence": [
+          "compositionstart",
+          "compositionupdate",
+          "compositionend"
+        ],
+        "compositionCallbacks": 0,
+        "registration": {
+          "count": 1,
+          "exactRawValues": true,
+          "passwordSerialized": false
+        },
+        "keyboard": {
+          "tabToPassword": true,
+          "tabToRegister": true,
+          "shiftTabReturn": true,
+          "tabActivation": true,
+          "copiedSelectedReadonlyText": true
+        },
+        "pasteStyleInput": true,
+        "autofillStyleDomInput": true
+      },
+      "missingRegistration": {
+        "disabled": true,
+        "explanation": true
+      },
+      "emptyModes": {
+        "open": true,
+        "approval": true,
+        "invite-only": true,
+        "unknown": true
+      },
+      "before": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1
+      },
+      "persistence": {
+        "noReload": true,
+        "viewportResize": true,
+        "roster": {
+          "category": true,
+          "values": true,
+          "focus": true
+        },
+        "approval": {
+          "category": true,
+          "selectedTab": true,
+          "focus": true
+        },
+        "zoomReads": [
+          2,
+          1,
+          2,
+          1
+        ],
+        "passwordSerialized": false
+      },
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "zoomCalls": {
+        "setter": [
+          1,
+          2,
+          1
+        ],
+        "readOnlyGetZoom": [
+          1,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "theme": "dark",
+      "zoom": 200,
+      "identity": "dark-1920x1080-200",
+      "owner": "fresh Playwright persistent Chromium with disposable profile and extension",
+      "gates": [
+        {
+          "role": "ordinary",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "workspace-manager",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "superuser",
+          "users": 1,
+          "approval": 1
+        }
+      ],
+      "principal": {
+        "metrics": {
+          "viewport": {
+            "width": 960,
+            "height": 540,
+            "dpr": 2
+          },
+          "dialog": {
+            "x": 28.80078125,
+            "y": 27,
+            "width": 902.3984375,
+            "height": 486,
+            "top": 27,
+            "right": 931.19921875,
+            "bottom": 513,
+            "left": 28.80078125
+          },
+          "row": {
+            "x": 314.80078125,
+            "y": 213,
+            "width": 582.8984375,
+            "height": 56.5,
+            "top": 213,
+            "right": 897.69921875,
+            "bottom": 269.5,
+            "left": 314.80078125
+          },
+          "action": {
+            "x": 618.24609375,
+            "y": 280,
+            "width": 76,
+            "height": 36,
+            "top": 280,
+            "right": 694.24609375,
+            "bottom": 316,
+            "left": 618.24609375
+          },
+          "tab": {
+            "x": 409.88671875,
+            "y": 107,
+            "width": 89.0703125,
+            "height": 38,
+            "top": 107,
+            "right": 498.95703125,
+            "bottom": 145,
+            "left": 409.88671875
+          },
+          "styles": {
+            "action": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            },
+            "tab": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(52, 70, 80)",
+              "border": "rgb(233, 231, 223)"
+            },
+            "dialog": {
+              "color": "rgb(233, 231, 223)",
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            }
+          },
+          "typography": {
+            "title": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            },
+            "caption": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            }
+          },
+          "horizontalOverflow": false,
+          "lastActionVisible": true,
+          "indicator": "rgb(168, 196, 211)",
+          "forcedColors": false
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(168, 196, 211)",
+          "background": "rgb(48, 53, 46)"
+        },
+        "tabFocus": {
+          "width": "2px",
+          "offset": "2px"
+        },
+        "typography": {
+          "title": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          },
+          "caption": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          }
+        },
+        "registrationGeometry": {
+          "width": 560,
+          "availableWidth": 584.8984375
+        },
+        "hover": {
+          "registration": {
+            "before": {
+              "background": "rgb(168, 196, 211)",
+              "border": "rgb(168, 196, 211)"
+            },
+            "after": {
+              "background": "rgb(187, 209, 220)",
+              "border": "rgb(187, 209, 220)"
+            }
+          },
+          "tab": {
+            "before": {
+              "background": "rgba(0, 0, 0, 0)",
+              "color": "rgb(181, 184, 174)"
+            },
+            "after": {
+              "background": "rgb(52, 70, 80)",
+              "color": "rgb(233, 231, 223)"
+            }
+          },
+          "action": {
+            "before": {
+              "background": "rgb(48, 53, 46)",
+              "border": "rgb(135, 145, 127)"
+            },
+            "after": {
+              "background": "rgb(52, 70, 80)",
+              "border": "rgb(168, 196, 211)"
+            }
+          }
+        },
+        "contrastRatios": {
+          "rosterText": 10.129573328016168,
+          "registerText": 10.129573328016168,
+          "focusRing": 6.869198040789459,
+          "tabText": 7.933264433752992,
+          "tabIndicator": 5.379808481634575,
+          "badges": [
+            6.782586946244532,
+            6.729801101777331,
+            7.933264433752992,
+            6.6308015761608985
+          ]
+        },
+        "callbackIds": {
+          "approve": [
+            "pending-id"
+          ],
+          "reject": [
+            "pending-id"
+          ],
+          "reopen": [
+            "rejected-id"
+          ]
+        },
+        "compositionSequence": [
+          "compositionstart",
+          "compositionupdate",
+          "compositionend"
+        ],
+        "compositionCallbacks": 0,
+        "registration": {
+          "count": 1,
+          "exactRawValues": true,
+          "passwordSerialized": false
+        },
+        "keyboard": {
+          "tabToPassword": true,
+          "tabToRegister": true,
+          "shiftTabReturn": true,
+          "tabActivation": true,
+          "copiedSelectedReadonlyText": true
+        },
+        "pasteStyleInput": true,
+        "autofillStyleDomInput": true
+      },
+      "missingRegistration": {
+        "disabled": true,
+        "explanation": true
+      },
+      "emptyModes": {
+        "open": true,
+        "approval": true,
+        "invite-only": true,
+        "unknown": true
+      },
+      "before": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1
+      },
+      "persistence": {
+        "noReload": true,
+        "viewportResize": true,
+        "roster": {
+          "category": true,
+          "values": true,
+          "focus": true
+        },
+        "approval": {
+          "category": true,
+          "selectedTab": true,
+          "focus": true
+        },
+        "zoomReads": [
+          2,
+          1,
+          2,
+          1
+        ],
+        "passwordSerialized": false
+      },
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "zoomCalls": {
+        "setter": [
+          1,
+          2,
+          1
+        ],
+        "readOnlyGetZoom": [
+          1,
+          2,
+          1
+        ]
+      }
+    }
+  ],
+  "forcedColors": {
+    "at100": {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 100,
+      "identity": "forced-100",
+      "owner": "fresh Playwright forced-colors context",
+      "gates": [
+        {
+          "role": "ordinary",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "workspace-manager",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "superuser",
+          "users": 1,
+          "approval": 1
+        }
+      ],
+      "principal": {
+        "metrics": {
+          "viewport": {
+            "width": 1280,
+            "height": 720,
+            "dpr": 1
+          },
+          "dialog": {
+            "x": 40,
+            "y": 36,
+            "width": 1200,
+            "height": 648,
+            "top": 36,
+            "right": 1240,
+            "bottom": 684,
+            "left": 40
+          },
+          "row": {
+            "x": 326,
+            "y": 284,
+            "width": 888,
+            "height": 56.5,
+            "top": 284,
+            "right": 1214,
+            "bottom": 340.5,
+            "left": 326
+          },
+          "action": {
+            "x": 782,
+            "y": 351,
+            "width": 76,
+            "height": 36,
+            "top": 351,
+            "right": 858,
+            "bottom": 387,
+            "left": 782
+          },
+          "tab": {
+            "x": 421.09375,
+            "y": 178,
+            "width": 89.078125,
+            "height": 38,
+            "top": 178,
+            "right": 510.171875,
+            "bottom": 216,
+            "left": 421.09375
+          },
+          "styles": {
+            "action": {
+              "color": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "border": "rgb(55, 0, 110)"
+            },
+            "tab": {
+              "color": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "border": "rgb(55, 0, 110)"
+            },
+            "dialog": {
+              "color": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "border": "rgb(0, 0, 0)"
+            }
+          },
+          "typography": {
+            "title": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            },
+            "caption": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            }
+          },
+          "horizontalOverflow": false,
+          "lastActionVisible": true,
+          "indicator": "rgb(55, 0, 110)",
+          "forcedColors": true
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(55, 0, 110)",
+          "background": "rgb(250, 249, 245)"
+        },
+        "tabFocus": {
+          "width": "2px",
+          "offset": "2px"
+        },
+        "typography": {
+          "title": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          },
+          "caption": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          }
+        },
+        "registrationGeometry": {
+          "width": 560,
+          "availableWidth": 890
+        },
+        "hover": {
+          "registration": {
+            "before": {
+              "background": "rgb(255, 255, 255)",
+              "border": "rgb(0, 0, 0)"
+            },
+            "after": {
+              "background": "rgb(255, 255, 255)",
+              "border": "rgb(55, 0, 110)"
+            }
+          },
+          "tab": {
+            "before": {
+              "background": "rgba(255, 255, 255, 0)",
+              "color": "rgb(0, 0, 0)"
+            },
+            "after": {
+              "background": "rgb(255, 255, 255)",
+              "color": "rgb(0, 0, 0)"
+            }
+          },
+          "action": {
+            "before": {
+              "background": "rgb(255, 255, 255)",
+              "border": "rgb(0, 0, 0)"
+            },
+            "after": {
+              "background": "rgb(255, 255, 255)",
+              "border": "rgb(55, 0, 110)"
+            }
+          }
+        },
+        "contrastRatios": {
+          "rosterText": 21,
+          "registerText": 21,
+          "focusRing": 14.36548400551004,
+          "tabText": 21,
+          "tabIndicator": 15.134013837043632,
+          "badges": [
+            21,
+            21,
+            21,
+            21
+          ]
+        },
+        "callbackIds": {
+          "approve": [
+            "pending-id"
+          ],
+          "reject": [
+            "pending-id"
+          ],
+          "reopen": [
+            "rejected-id"
+          ]
+        },
+        "compositionSequence": [
+          "compositionstart",
+          "compositionupdate",
+          "compositionend"
+        ],
+        "compositionCallbacks": 0,
+        "registration": {
+          "count": 1,
+          "exactRawValues": true,
+          "passwordSerialized": false
+        },
+        "keyboard": {
+          "tabToPassword": true,
+          "tabToRegister": true,
+          "shiftTabReturn": true,
+          "tabActivation": true,
+          "copiedSelectedReadonlyText": true
+        },
+        "pasteStyleInput": true,
+        "autofillStyleDomInput": true
+      },
+      "missingRegistration": {
+        "disabled": true,
+        "explanation": true
+      },
+      "emptyModes": {
+        "open": true,
+        "approval": true,
+        "invite-only": true,
+        "unknown": true
+      }
+    },
+    "at200": {
+      "width": 1280,
+      "height": 720,
+      "theme": "light",
+      "zoom": 200,
+      "identity": "forced-200",
+      "owner": "fresh Playwright forced-colors persistent profile",
+      "gates": [
+        {
+          "role": "ordinary",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "workspace-manager",
+          "users": 0,
+          "approval": 0
+        },
+        {
+          "role": "superuser",
+          "users": 1,
+          "approval": 1
+        }
+      ],
+      "principal": {
+        "metrics": {
+          "viewport": {
+            "width": 640,
+            "height": 360,
+            "dpr": 2
+          },
+          "dialog": {
+            "x": 19.203125,
+            "y": 18,
+            "width": 601.59375,
+            "height": 324,
+            "top": 18,
+            "right": 620.796875,
+            "bottom": 342,
+            "left": 19.203125
+          },
+          "row": {
+            "x": 229.0703125,
+            "y": 258,
+            "width": 366.2265625,
+            "height": 56.5,
+            "top": 258,
+            "right": 595.296875,
+            "bottom": 314.5,
+            "left": 229.0703125
+          },
+          "action": {
+            "x": 424.1796875,
+            "y": 325,
+            "width": 76,
+            "height": 36,
+            "top": 325,
+            "right": 500.1796875,
+            "bottom": 361,
+            "left": 424.1796875
+          },
+          "tab": {
+            "x": 324.15625,
+            "y": 152,
+            "width": 89.0703125,
+            "height": 38,
+            "top": 152,
+            "right": 413.2265625,
+            "bottom": 190,
+            "left": 324.15625
+          },
+          "styles": {
+            "action": {
+              "color": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "border": "rgb(0, 0, 0)"
+            },
+            "tab": {
+              "color": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "border": "rgb(55, 0, 110)"
+            },
+            "dialog": {
+              "color": "rgb(0, 0, 0)",
+              "background": "rgb(255, 255, 255)",
+              "border": "rgb(0, 0, 0)"
+            }
+          },
+          "typography": {
+            "title": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            },
+            "caption": {
+              "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "600",
+              "lineHeight": "26px"
+            }
+          },
+          "horizontalOverflow": false,
+          "lastActionVisible": true,
+          "indicator": "rgb(55, 0, 110)",
+          "forcedColors": true
+        },
+        "focus": {
+          "width": "2px",
+          "offset": "2px",
+          "color": "rgb(55, 0, 110)",
+          "background": "rgb(250, 249, 245)"
+        },
+        "tabFocus": {
+          "width": "2px",
+          "offset": "2px"
+        },
+        "typography": {
+          "title": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          },
+          "caption": {
+            "fontFamily": "\"Malgun Gothic\", system-ui, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "lineHeight": "26px"
+          }
+        },
+        "registrationGeometry": {
+          "width": 368.2265625,
+          "availableWidth": 368.2265625
+        },
+        "hover": {
+          "registration": {
+            "before": {
+              "background": "rgb(255, 255, 255)",
+              "border": "rgb(0, 0, 0)"
+            },
+            "after": {
+              "background": "rgb(255, 255, 255)",
+              "border": "rgb(55, 0, 110)"
+            }
+          },
+          "tab": {
+            "before": {
+              "background": "rgba(255, 255, 255, 0)",
+              "color": "rgb(0, 0, 0)"
+            },
+            "after": {
+              "background": "rgb(255, 255, 255)",
+              "color": "rgb(0, 0, 0)"
+            }
+          },
+          "action": {
+            "before": {
+              "background": "rgb(255, 255, 255)",
+              "border": "rgb(0, 0, 0)"
+            },
+            "after": {
+              "background": "rgb(255, 255, 255)",
+              "border": "rgb(55, 0, 110)"
+            }
+          }
+        },
+        "contrastRatios": {
+          "rosterText": 21,
+          "registerText": 21,
+          "focusRing": 14.36548400551004,
+          "tabText": 21,
+          "tabIndicator": 15.134013837043632,
+          "badges": [
+            21,
+            21,
+            21,
+            21
+          ]
+        },
+        "callbackIds": {
+          "approve": [
+            "pending-id"
+          ],
+          "reject": [
+            "pending-id"
+          ],
+          "reopen": [
+            "rejected-id"
+          ]
+        },
+        "compositionSequence": [
+          "compositionstart",
+          "compositionupdate",
+          "compositionend"
+        ],
+        "compositionCallbacks": 0,
+        "registration": {
+          "count": 1,
+          "exactRawValues": true,
+          "passwordSerialized": false
+        },
+        "keyboard": {
+          "tabToPassword": true,
+          "tabToRegister": true,
+          "shiftTabReturn": true,
+          "tabActivation": true,
+          "copiedSelectedReadonlyText": true
+        },
+        "pasteStyleInput": true,
+        "autofillStyleDomInput": true
+      },
+      "missingRegistration": {
+        "disabled": true,
+        "explanation": true
+      },
+      "emptyModes": {
+        "open": true,
+        "approval": true,
+        "invite-only": true,
+        "unknown": true
+      },
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1
+    }
+  },
+  "limitations": [
+    "native Windows IME candidate UI untested",
+    "password-manager/autofill native UI untested",
+    "synthetic composition and DOM input only",
+    "query/loading/error/Promise outcomes owned by #80 IR-PRINCIPAL-002"
+  ],
+  "rawPasswordsSerialized": false
+}

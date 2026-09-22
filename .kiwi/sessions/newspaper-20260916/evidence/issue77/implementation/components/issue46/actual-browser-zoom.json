@@ -1,0 +1,35 @@
+{
+  "method": "Full Chromium extension chrome.tabs.setZoom in isolated temporary profile with off-screen browser window",
+  "browserZoom": 2,
+  "baseline": {
+    "innerWidth": 1440,
+    "innerHeight": 814,
+    "outerWidth": 1441,
+    "outerHeight": 901,
+    "devicePixelRatio": 1.25,
+    "theme": "dark",
+    "scheme": "dark",
+    "htmlZoom": "1",
+    "bodyZoom": "1",
+    "portal": "rgb(48, 53, 46)",
+    "document": "rgb(41, 44, 39)",
+    "editorMounts": 1
+  },
+  "zoomed": {
+    "innerWidth": 720,
+    "innerHeight": 407,
+    "outerWidth": 1441,
+    "outerHeight": 901,
+    "devicePixelRatio": 2.5,
+    "theme": "dark",
+    "scheme": "dark",
+    "htmlZoom": "1",
+    "bodyZoom": "1",
+    "portal": "rgb(48, 53, 46)",
+    "document": "rgb(41, 44, 39)",
+    "editorMounts": 1
+  },
+  "widthRatio": 2,
+  "heightRatio": 2,
+  "pass": true
+}

@@ -1,0 +1,568 @@
+{
+  "stress": {
+    "identityPreserved": true,
+    "paletteChanged": true,
+    "pendingThemeRace": true,
+    "identicalDiagrams": true,
+    "resizeTabState": true,
+    "pureDiffs": true,
+    "sourceRoundtrip": true,
+    "reentry": true
+  },
+  "regular": [
+    {
+      "w": 1280,
+      "h": 720,
+      "theme": "light",
+      "zoom": 1,
+      "m": {
+        "codeOverflow": "auto",
+        "codeLine": "22px",
+        "tableLabel": "표",
+        "tableTab": -1,
+        "tableOverflow": false,
+        "tableEnd": true,
+        "diagramLabel": "다이어그램",
+        "diagramTab": 0,
+        "diagramOverflow": true,
+        "diagramEnd": true,
+        "quoteRail": "2px",
+        "math": true,
+        "diffCues": [
+          "− 삭제",
+          "+ 추가",
+          "+ 추가",
+          "− 삭제"
+        ],
+        "diffColors": [
+          [
+            "rgb(150, 63, 56)",
+            "rgb(243, 229, 225)"
+          ],
+          [
+            "rgb(62, 96, 73)",
+            "rgb(228, 234, 226)"
+          ],
+          [
+            "rgb(62, 96, 73)",
+            "rgb(228, 234, 226)"
+          ],
+          [
+            "rgb(150, 63, 56)",
+            "rgb(243, 229, 225)"
+          ]
+        ],
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "w": 1280,
+      "h": 720,
+      "theme": "dark",
+      "zoom": 1,
+      "m": {
+        "codeOverflow": "auto",
+        "codeLine": "22px",
+        "tableLabel": "표",
+        "tableTab": -1,
+        "tableOverflow": false,
+        "tableEnd": true,
+        "diagramLabel": "다이어그램",
+        "diagramTab": 0,
+        "diagramOverflow": true,
+        "diagramEnd": true,
+        "quoteRail": "2px",
+        "math": true,
+        "diffCues": [
+          "− 삭제",
+          "+ 추가",
+          "+ 추가",
+          "− 삭제"
+        ],
+        "diffColors": [
+          [
+            "rgb(240, 171, 163)",
+            "rgb(72, 44, 41)"
+          ],
+          [
+            "rgb(168, 207, 176)",
+            "rgb(41, 61, 46)"
+          ],
+          [
+            "rgb(168, 207, 176)",
+            "rgb(41, 61, 46)"
+          ],
+          [
+            "rgb(240, 171, 163)",
+            "rgb(72, 44, 41)"
+          ]
+        ],
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "theme": "light",
+      "zoom": 1,
+      "m": {
+        "codeOverflow": "auto",
+        "codeLine": "22px",
+        "tableLabel": "표",
+        "tableTab": -1,
+        "tableOverflow": false,
+        "tableEnd": true,
+        "diagramLabel": "다이어그램",
+        "diagramTab": 0,
+        "diagramOverflow": true,
+        "diagramEnd": true,
+        "quoteRail": "2px",
+        "math": true,
+        "diffCues": [
+          "− 삭제",
+          "+ 추가",
+          "+ 추가",
+          "− 삭제"
+        ],
+        "diffColors": [
+          [
+            "rgb(150, 63, 56)",
+            "rgb(243, 229, 225)"
+          ],
+          [
+            "rgb(62, 96, 73)",
+            "rgb(228, 234, 226)"
+          ],
+          [
+            "rgb(62, 96, 73)",
+            "rgb(228, 234, 226)"
+          ],
+          [
+            "rgb(150, 63, 56)",
+            "rgb(243, 229, 225)"
+          ]
+        ],
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "theme": "dark",
+      "zoom": 1,
+      "m": {
+        "codeOverflow": "auto",
+        "codeLine": "22px",
+        "tableLabel": "표",
+        "tableTab": -1,
+        "tableOverflow": false,
+        "tableEnd": true,
+        "diagramLabel": "다이어그램",
+        "diagramTab": 0,
+        "diagramOverflow": true,
+        "diagramEnd": true,
+        "quoteRail": "2px",
+        "math": true,
+        "diffCues": [
+          "− 삭제",
+          "+ 추가",
+          "+ 추가",
+          "− 삭제"
+        ],
+        "diffColors": [
+          [
+            "rgb(240, 171, 163)",
+            "rgb(72, 44, 41)"
+          ],
+          [
+            "rgb(168, 207, 176)",
+            "rgb(41, 61, 46)"
+          ],
+          [
+            "rgb(168, 207, 176)",
+            "rgb(41, 61, 46)"
+          ],
+          [
+            "rgb(240, 171, 163)",
+            "rgb(72, 44, 41)"
+          ]
+        ],
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "w": 1920,
+      "h": 1080,
+      "theme": "light",
+      "zoom": 1,
+      "m": {
+        "codeOverflow": "auto",
+        "codeLine": "22px",
+        "tableLabel": "표",
+        "tableTab": -1,
+        "tableOverflow": false,
+        "tableEnd": true,
+        "diagramLabel": "다이어그램",
+        "diagramTab": 0,
+        "diagramOverflow": true,
+        "diagramEnd": true,
+        "quoteRail": "2px",
+        "math": true,
+        "diffCues": [
+          "− 삭제",
+          "+ 추가",
+          "+ 추가",
+          "− 삭제"
+        ],
+        "diffColors": [
+          [
+            "rgb(150, 63, 56)",
+            "rgb(243, 229, 225)"
+          ],
+          [
+            "rgb(62, 96, 73)",
+            "rgb(228, 234, 226)"
+          ],
+          [
+            "rgb(62, 96, 73)",
+            "rgb(228, 234, 226)"
+          ],
+          [
+            "rgb(150, 63, 56)",
+            "rgb(243, 229, 225)"
+          ]
+        ],
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "w": 1920,
+      "h": 1080,
+      "theme": "dark",
+      "zoom": 1,
+      "m": {
+        "codeOverflow": "auto",
+        "codeLine": "22px",
+        "tableLabel": "표",
+        "tableTab": -1,
+        "tableOverflow": false,
+        "tableEnd": true,
+        "diagramLabel": "다이어그램",
+        "diagramTab": 0,
+        "diagramOverflow": true,
+        "diagramEnd": true,
+        "quoteRail": "2px",
+        "math": true,
+        "diffCues": [
+          "− 삭제",
+          "+ 추가",
+          "+ 추가",
+          "− 삭제"
+        ],
+        "diffColors": [
+          [
+            "rgb(240, 171, 163)",
+            "rgb(72, 44, 41)"
+          ],
+          [
+            "rgb(168, 207, 176)",
+            "rgb(41, 61, 46)"
+          ],
+          [
+            "rgb(168, 207, 176)",
+            "rgb(41, 61, 46)"
+          ],
+          [
+            "rgb(240, 171, 163)",
+            "rgb(72, 44, 41)"
+          ]
+        ],
+        "bodyOverflow": 0
+      }
+    }
+  ],
+  "zoom": [
+    {
+      "w": 1280,
+      "h": 720,
+      "theme": "light",
+      "zoom": 2,
+      "before": 1280,
+      "after": 640,
+      "m": {
+        "codeOverflow": "auto",
+        "codeLine": "22px",
+        "tableLabel": "표",
+        "tableTab": 0,
+        "tableOverflow": true,
+        "tableEnd": true,
+        "diagramLabel": "다이어그램",
+        "diagramTab": 0,
+        "diagramOverflow": true,
+        "diagramEnd": true,
+        "quoteRail": "2px",
+        "math": true,
+        "diffCues": [
+          "− 삭제",
+          "+ 추가",
+          "+ 추가",
+          "− 삭제"
+        ],
+        "diffColors": [
+          [
+            "rgb(150, 63, 56)",
+            "rgb(243, 229, 225)"
+          ],
+          [
+            "rgb(62, 96, 73)",
+            "rgb(228, 234, 226)"
+          ],
+          [
+            "rgb(62, 96, 73)",
+            "rgb(228, 234, 226)"
+          ],
+          [
+            "rgb(150, 63, 56)",
+            "rgb(243, 229, 225)"
+          ]
+        ],
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "w": 1280,
+      "h": 720,
+      "theme": "dark",
+      "zoom": 2,
+      "before": 1280,
+      "after": 640,
+      "m": {
+        "codeOverflow": "auto",
+        "codeLine": "22px",
+        "tableLabel": "표",
+        "tableTab": 0,
+        "tableOverflow": true,
+        "tableEnd": true,
+        "diagramLabel": "다이어그램",
+        "diagramTab": 0,
+        "diagramOverflow": true,
+        "diagramEnd": true,
+        "quoteRail": "2px",
+        "math": true,
+        "diffCues": [
+          "− 삭제",
+          "+ 추가",
+          "+ 추가",
+          "− 삭제"
+        ],
+        "diffColors": [
+          [
+            "rgb(240, 171, 163)",
+            "rgb(72, 44, 41)"
+          ],
+          [
+            "rgb(168, 207, 176)",
+            "rgb(41, 61, 46)"
+          ],
+          [
+            "rgb(168, 207, 176)",
+            "rgb(41, 61, 46)"
+          ],
+          [
+            "rgb(240, 171, 163)",
+            "rgb(72, 44, 41)"
+          ]
+        ],
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "theme": "light",
+      "zoom": 2,
+      "before": 1440,
+      "after": 720,
+      "m": {
+        "codeOverflow": "auto",
+        "codeLine": "22px",
+        "tableLabel": "표",
+        "tableTab": 0,
+        "tableOverflow": true,
+        "tableEnd": true,
+        "diagramLabel": "다이어그램",
+        "diagramTab": 0,
+        "diagramOverflow": true,
+        "diagramEnd": true,
+        "quoteRail": "2px",
+        "math": true,
+        "diffCues": [
+          "− 삭제",
+          "+ 추가",
+          "+ 추가",
+          "− 삭제"
+        ],
+        "diffColors": [
+          [
+            "rgb(150, 63, 56)",
+            "rgb(243, 229, 225)"
+          ],
+          [
+            "rgb(62, 96, 73)",
+            "rgb(228, 234, 226)"
+          ],
+          [
+            "rgb(62, 96, 73)",
+            "rgb(228, 234, 226)"
+          ],
+          [
+            "rgb(150, 63, 56)",
+            "rgb(243, 229, 225)"
+          ]
+        ],
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "theme": "dark",
+      "zoom": 2,
+      "before": 1440,
+      "after": 720,
+      "m": {
+        "codeOverflow": "auto",
+        "codeLine": "22px",
+        "tableLabel": "표",
+        "tableTab": 0,
+        "tableOverflow": true,
+        "tableEnd": true,
+        "diagramLabel": "다이어그램",
+        "diagramTab": 0,
+        "diagramOverflow": true,
+        "diagramEnd": true,
+        "quoteRail": "2px",
+        "math": true,
+        "diffCues": [
+          "− 삭제",
+          "+ 추가",
+          "+ 추가",
+          "− 삭제"
+        ],
+        "diffColors": [
+          [
+            "rgb(240, 171, 163)",
+            "rgb(72, 44, 41)"
+          ],
+          [
+            "rgb(168, 207, 176)",
+            "rgb(41, 61, 46)"
+          ],
+          [
+            "rgb(168, 207, 176)",
+            "rgb(41, 61, 46)"
+          ],
+          [
+            "rgb(240, 171, 163)",
+            "rgb(72, 44, 41)"
+          ]
+        ],
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "w": 1920,
+      "h": 1080,
+      "theme": "light",
+      "zoom": 2,
+      "before": 1920,
+      "after": 960,
+      "m": {
+        "codeOverflow": "auto",
+        "codeLine": "22px",
+        "tableLabel": "표",
+        "tableTab": -1,
+        "tableOverflow": false,
+        "tableEnd": true,
+        "diagramLabel": "다이어그램",
+        "diagramTab": 0,
+        "diagramOverflow": true,
+        "diagramEnd": true,
+        "quoteRail": "2px",
+        "math": true,
+        "diffCues": [
+          "− 삭제",
+          "+ 추가",
+          "+ 추가",
+          "− 삭제"
+        ],
+        "diffColors": [
+          [
+            "rgb(150, 63, 56)",
+            "rgb(243, 229, 225)"
+          ],
+          [
+            "rgb(62, 96, 73)",
+            "rgb(228, 234, 226)"
+          ],
+          [
+            "rgb(62, 96, 73)",
+            "rgb(228, 234, 226)"
+          ],
+          [
+            "rgb(150, 63, 56)",
+            "rgb(243, 229, 225)"
+          ]
+        ],
+        "bodyOverflow": 0
+      }
+    },
+    {
+      "w": 1920,
+      "h": 1080,
+      "theme": "dark",
+      "zoom": 2,
+      "before": 1920,
+      "after": 960,
+      "m": {
+        "codeOverflow": "auto",
+        "codeLine": "22px",
+        "tableLabel": "표",
+        "tableTab": -1,
+        "tableOverflow": false,
+        "tableEnd": true,
+        "diagramLabel": "다이어그램",
+        "diagramTab": 0,
+        "diagramOverflow": true,
+        "diagramEnd": true,
+        "quoteRail": "2px",
+        "math": true,
+        "diffCues": [
+          "− 삭제",
+          "+ 추가",
+          "+ 추가",
+          "− 삭제"
+        ],
+        "diffColors": [
+          [
+            "rgb(240, 171, 163)",
+            "rgb(72, 44, 41)"
+          ],
+          [
+            "rgb(168, 207, 176)",
+            "rgb(41, 61, 46)"
+          ],
+          [
+            "rgb(168, 207, 176)",
+            "rgb(41, 61, 46)"
+          ],
+          [
+            "rgb(240, 171, 163)",
+            "rgb(72, 44, 41)"
+          ]
+        ],
+        "bodyOverflow": 0
+      }
+    }
+  ]
+}

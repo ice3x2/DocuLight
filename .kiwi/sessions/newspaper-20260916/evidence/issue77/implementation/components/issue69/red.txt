@@ -1,0 +1,28 @@
+﻿Issue #69 RED evidence manifest
+
+The earlier prose-only RED summary is superseded because it did not preserve raw output and its evolving test count was ambiguous. It is not used as proof.
+
+Evolution 1 — clean HEAD product replay
+- HEAD: 3925aec8a1675158c10c87dfa19c6892e21bcd76
+- HEAD tree: 2f39f1a7911322ecfa9ddceeaa3ce25419f2063e
+- Test SHA-256 at execution: 42fa3e80246db44e6b736bf5e6cda1c2b22c177d0977087ae9a1fb90cf7a7a48
+- Product diff against HEAD before execution: absent (git diff --exit-code returned 0)
+- Result: 19 expanded tests; 18 failed, 1 passed; exit 1
+- Metadata: red-review.txt
+- Raw output: red-review-raw.txt
+
+Evolution 2 — App refresh adapter
+- Test SHA-256 at execution: a29c2405bbf6f8c63e7a05570b82e8bad2267289131250596bc9ad9e26a3012a
+- Result: 20 tests; 1 failed, 19 passed; exit 1
+- Failure: revokeSubjectAndRefresh was not a function
+- Metadata: red-app-refresh.txt
+- Raw output: red-app-refresh-raw.txt
+
+
+Evolution 3 — three-subject sequential failure matrix
+- Test SHA-256 at execution and current GREEN: 2725386722b76984beed722e33b30617a2b56ba6e73cfc969a912bef95f80e19
+- Parameterized failure indices: 0, 1, 2
+- Result: 23 tests; 3 failed, 20 passed; exit 1
+- All three failures: outcome rows lacked machine-readable subject/state identity
+- Metadata: red-sequential-matrix.txt
+- Raw output: red-sequential-matrix-raw.txt

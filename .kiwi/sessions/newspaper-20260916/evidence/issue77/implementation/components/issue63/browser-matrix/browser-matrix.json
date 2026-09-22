@@ -1,0 +1,2110 @@
+{
+  "environments": 12,
+  "forcedColors": {
+    "owner": "fresh Playwright isolated Chromium",
+    "forcedColors": true,
+    "secretArtifactCount": 0
+  },
+  "matrix": [
+    {
+      "environment": {
+        "owner": "fresh Playwright isolated Chromium",
+        "theme": "light",
+        "requestedViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "zoom": 1,
+        "preZoomViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        }
+      },
+      "list": {
+        "stage": "list",
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "rowCount": 14,
+        "minRow": 57,
+        "firstNameWraps": true,
+        "listOverflow": "auto",
+        "dialogRight": 1240,
+        "tableRight": 1085,
+        "expiredText": "자동화 토큰 2읽기+쓰기2020-01-01 (만료됨)사용 안 함자동화 토큰 2 폐기",
+        "normalColor": "rgb(36, 37, 33)",
+        "expiredColor": "rgb(101, 102, 95)",
+        "normalBackground": "rgb(245, 244, 239)",
+        "expiredBackground": "rgb(245, 244, 239)",
+        "normalContrast": 14.004951701436438,
+        "expiredContrast": 5.268987227065019,
+        "revokedNoAction": true
+      },
+      "stages": {
+        "listFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(240, 240, 240)",
+          "contrast": 5.819444792615142,
+          "bounds": {
+            "left": 325,
+            "top": 236,
+            "right": 428.390625,
+            "bottom": 272,
+            "width": 103.390625,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "formFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 6.631902642194784,
+          "bounds": {
+            "left": 325,
+            "top": 212,
+            "right": 893,
+            "bottom": 258,
+            "width": 568,
+            "height": 46
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "formCancelFocusToNew": true,
+        "keyboardTabShiftTab": true,
+        "nativeRadioAndSelectKeys": true,
+        "compositionSubmitBlocked": true,
+        "issueFailureRetry": true,
+        "revealFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 6.631902642194784,
+          "bounds": {
+            "left": 325,
+            "top": 212,
+            "right": 891,
+            "bottom": 314,
+            "width": 566,
+            "height": 102
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "readonlySelectionAndKeyboardCopy": true,
+        "revealEscapeAndOutsideBlocked": true,
+        "inlineBackEnteredDiscard": true,
+        "discardEscapeAndOutsideBlocked": true,
+        "manualCopyExplicitCloseReconfirm": true,
+        "continueFocusToCopyArea": true,
+        "clipboardFailures": {
+          "unavailable": true,
+          "throw": true,
+          "reject": true
+        },
+        "clipboardDelayedSuccessWithDeferredNavigation": true,
+        "clipboardDelayedRejectWithDeferredNavigation": true,
+        "authInvalidationDuringClipboard": [
+          "logout",
+          "differentOwner",
+          "sameIdGeneration"
+        ],
+        "discardFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(240, 240, 240)",
+          "contrast": 5.819444792615142,
+          "bounds": {
+            "left": 325,
+            "top": 450,
+            "right": 398.03125,
+            "bottom": 486,
+            "width": 73.03125,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "queryFailureRetry": true,
+        "keyboardRevoke": true,
+        "l2Focus": {
+          "active": true,
+          "outlineWidth": 3,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(250, 249, 245)",
+          "contrast": 6.2951238421201055,
+          "bounds": {
+            "left": 763,
+            "top": 412,
+            "right": 825,
+            "bottom": 448,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "l2FailureRetry": true
+      },
+      "requestCounts": {
+        "issue": 7,
+        "revoke": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright isolated Chromium",
+        "theme": "light",
+        "requestedViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "zoom": 1,
+        "preZoomViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        }
+      },
+      "list": {
+        "stage": "list",
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "rowCount": 14,
+        "minRow": 57,
+        "firstNameWraps": true,
+        "listOverflow": "auto",
+        "dialogRight": 1320,
+        "tableRight": 1165,
+        "expiredText": "자동화 토큰 2읽기+쓰기2020-01-01 (만료됨)사용 안 함자동화 토큰 2 폐기",
+        "normalColor": "rgb(36, 37, 33)",
+        "expiredColor": "rgb(101, 102, 95)",
+        "normalBackground": "rgb(245, 244, 239)",
+        "expiredBackground": "rgb(245, 244, 239)",
+        "normalContrast": 14.004951701436438,
+        "expiredContrast": 5.268987227065019,
+        "revokedNoAction": true
+      },
+      "stages": {
+        "listFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(240, 240, 240)",
+          "contrast": 5.819444792615142,
+          "bounds": {
+            "left": 405,
+            "top": 245,
+            "right": 508.390625,
+            "bottom": 281,
+            "width": 103.390625,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "formFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 6.631902642194784,
+          "bounds": {
+            "left": 405,
+            "top": 221,
+            "right": 973,
+            "bottom": 267,
+            "width": 568,
+            "height": 46
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "formCancelFocusToNew": true,
+        "keyboardTabShiftTab": true,
+        "nativeRadioAndSelectKeys": true,
+        "compositionSubmitBlocked": true,
+        "issueFailureRetry": true,
+        "revealFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 6.631902642194784,
+          "bounds": {
+            "left": 405,
+            "top": 221,
+            "right": 971,
+            "bottom": 323,
+            "width": 566,
+            "height": 102
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "readonlySelectionAndKeyboardCopy": true,
+        "revealEscapeAndOutsideBlocked": true,
+        "inlineBackEnteredDiscard": true,
+        "discardEscapeAndOutsideBlocked": true,
+        "manualCopyExplicitCloseReconfirm": true,
+        "continueFocusToCopyArea": true,
+        "clipboardFailures": {
+          "unavailable": true,
+          "throw": true,
+          "reject": true
+        },
+        "clipboardDelayedSuccessWithDeferredNavigation": true,
+        "clipboardDelayedRejectWithDeferredNavigation": true,
+        "authInvalidationDuringClipboard": [
+          "logout",
+          "differentOwner",
+          "sameIdGeneration"
+        ],
+        "discardFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(240, 240, 240)",
+          "contrast": 5.819444792615142,
+          "bounds": {
+            "left": 405,
+            "top": 459,
+            "right": 478.03125,
+            "bottom": 495,
+            "width": 73.03125,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "queryFailureRetry": true,
+        "keyboardRevoke": true,
+        "l2Focus": {
+          "active": true,
+          "outlineWidth": 3,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(250, 249, 245)",
+          "contrast": 6.2951238421201055,
+          "bounds": {
+            "left": 843,
+            "top": 502,
+            "right": 905,
+            "bottom": 538,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "l2FailureRetry": true
+      },
+      "requestCounts": {
+        "issue": 7,
+        "revoke": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright isolated Chromium",
+        "theme": "light",
+        "requestedViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "zoom": 1,
+        "preZoomViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        }
+      },
+      "list": {
+        "stage": "list",
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "rowCount": 14,
+        "minRow": 57,
+        "firstNameWraps": true,
+        "listOverflow": "auto",
+        "dialogRight": 1560,
+        "tableRight": 1405,
+        "expiredText": "자동화 토큰 2읽기+쓰기2020-01-01 (만료됨)사용 안 함자동화 토큰 2 폐기",
+        "normalColor": "rgb(36, 37, 33)",
+        "expiredColor": "rgb(101, 102, 95)",
+        "normalBackground": "rgb(245, 244, 239)",
+        "expiredBackground": "rgb(245, 244, 239)",
+        "normalContrast": 14.004951701436438,
+        "expiredContrast": 5.268987227065019,
+        "revokedNoAction": true
+      },
+      "stages": {
+        "listFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(240, 240, 240)",
+          "contrast": 5.819444792615142,
+          "bounds": {
+            "left": 645,
+            "top": 330,
+            "right": 748.390625,
+            "bottom": 366,
+            "width": 103.390625,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "formFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 6.631902642194784,
+          "bounds": {
+            "left": 645,
+            "top": 306,
+            "right": 1213,
+            "bottom": 352,
+            "width": 568,
+            "height": 46
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "formCancelFocusToNew": true,
+        "keyboardTabShiftTab": true,
+        "nativeRadioAndSelectKeys": true,
+        "compositionSubmitBlocked": true,
+        "issueFailureRetry": true,
+        "revealFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 6.631902642194784,
+          "bounds": {
+            "left": 645,
+            "top": 306,
+            "right": 1211,
+            "bottom": 408,
+            "width": 566,
+            "height": 102
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "readonlySelectionAndKeyboardCopy": true,
+        "revealEscapeAndOutsideBlocked": true,
+        "inlineBackEnteredDiscard": true,
+        "discardEscapeAndOutsideBlocked": true,
+        "manualCopyExplicitCloseReconfirm": true,
+        "continueFocusToCopyArea": true,
+        "clipboardFailures": {
+          "unavailable": true,
+          "throw": true,
+          "reject": true
+        },
+        "clipboardDelayedSuccessWithDeferredNavigation": true,
+        "clipboardDelayedRejectWithDeferredNavigation": true,
+        "authInvalidationDuringClipboard": [
+          "logout",
+          "differentOwner",
+          "sameIdGeneration"
+        ],
+        "discardFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(240, 240, 240)",
+          "contrast": 5.819444792615142,
+          "bounds": {
+            "left": 645,
+            "top": 544,
+            "right": 718.03125,
+            "bottom": 580,
+            "width": 73.03125,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "queryFailureRetry": true,
+        "keyboardRevoke": true,
+        "l2Focus": {
+          "active": true,
+          "outlineWidth": 3,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(250, 249, 245)",
+          "contrast": 6.2951238421201055,
+          "bounds": {
+            "left": 1083,
+            "top": 592,
+            "right": 1145,
+            "bottom": 628,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "l2FailureRetry": true
+      },
+      "requestCounts": {
+        "issue": 7,
+        "revoke": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright isolated Chromium",
+        "theme": "dark",
+        "requestedViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "zoom": 1,
+        "preZoomViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        }
+      },
+      "list": {
+        "stage": "list",
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "rowCount": 14,
+        "minRow": 57,
+        "firstNameWraps": true,
+        "listOverflow": "auto",
+        "dialogRight": 1240,
+        "tableRight": 1085,
+        "expiredText": "자동화 토큰 2읽기+쓰기2020-01-01 (만료됨)사용 안 함자동화 토큰 2 폐기",
+        "normalColor": "rgb(233, 231, 223)",
+        "expiredColor": "rgb(181, 184, 174)",
+        "normalBackground": "rgb(41, 44, 39)",
+        "expiredBackground": "rgb(41, 44, 39)",
+        "normalContrast": 11.430133007600727,
+        "expiredContrast": 7.030444819993569,
+        "revokedNoAction": true
+      },
+      "stages": {
+        "listFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(107, 107, 107)",
+          "contrast": 3.079911527953663,
+          "bounds": {
+            "left": 325,
+            "top": 236,
+            "right": 428.390625,
+            "bottom": 272,
+            "width": 103.390625,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "formFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(59, 59, 59)",
+          "contrast": 6.473850322738297,
+          "bounds": {
+            "left": 325,
+            "top": 212,
+            "right": 893,
+            "bottom": 258,
+            "width": 568,
+            "height": 46
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "formCancelFocusToNew": true,
+        "keyboardTabShiftTab": true,
+        "nativeRadioAndSelectKeys": true,
+        "compositionSubmitBlocked": true,
+        "issueFailureRetry": true,
+        "revealFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(59, 59, 59)",
+          "contrast": 6.473850322738297,
+          "bounds": {
+            "left": 325,
+            "top": 212,
+            "right": 891,
+            "bottom": 314,
+            "width": 566,
+            "height": 102
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "readonlySelectionAndKeyboardCopy": true,
+        "revealEscapeAndOutsideBlocked": true,
+        "inlineBackEnteredDiscard": true,
+        "discardEscapeAndOutsideBlocked": true,
+        "manualCopyExplicitCloseReconfirm": true,
+        "continueFocusToCopyArea": true,
+        "clipboardFailures": {
+          "unavailable": true,
+          "throw": true,
+          "reject": true
+        },
+        "clipboardDelayedSuccessWithDeferredNavigation": true,
+        "clipboardDelayedRejectWithDeferredNavigation": true,
+        "authInvalidationDuringClipboard": [
+          "logout",
+          "differentOwner",
+          "sameIdGeneration"
+        ],
+        "discardFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(107, 107, 107)",
+          "contrast": 3.079911527953663,
+          "bounds": {
+            "left": 325,
+            "top": 450,
+            "right": 398.03125,
+            "bottom": 486,
+            "width": 73.03125,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "queryFailureRetry": true,
+        "keyboardRevoke": true,
+        "l2Focus": {
+          "active": true,
+          "outlineWidth": 3,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(48, 53, 46)",
+          "contrast": 7.248424050705157,
+          "bounds": {
+            "left": 763,
+            "top": 412,
+            "right": 825,
+            "bottom": 448,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "l2FailureRetry": true
+      },
+      "requestCounts": {
+        "issue": 7,
+        "revoke": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright isolated Chromium",
+        "theme": "dark",
+        "requestedViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "zoom": 1,
+        "preZoomViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        }
+      },
+      "list": {
+        "stage": "list",
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "rowCount": 14,
+        "minRow": 57,
+        "firstNameWraps": true,
+        "listOverflow": "auto",
+        "dialogRight": 1320,
+        "tableRight": 1165,
+        "expiredText": "자동화 토큰 2읽기+쓰기2020-01-01 (만료됨)사용 안 함자동화 토큰 2 폐기",
+        "normalColor": "rgb(233, 231, 223)",
+        "expiredColor": "rgb(181, 184, 174)",
+        "normalBackground": "rgb(41, 44, 39)",
+        "expiredBackground": "rgb(41, 44, 39)",
+        "normalContrast": 11.430133007600727,
+        "expiredContrast": 7.030444819993569,
+        "revokedNoAction": true
+      },
+      "stages": {
+        "listFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(107, 107, 107)",
+          "contrast": 3.079911527953663,
+          "bounds": {
+            "left": 405,
+            "top": 245,
+            "right": 508.390625,
+            "bottom": 281,
+            "width": 103.390625,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "formFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(59, 59, 59)",
+          "contrast": 6.473850322738297,
+          "bounds": {
+            "left": 405,
+            "top": 221,
+            "right": 973,
+            "bottom": 267,
+            "width": 568,
+            "height": 46
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "formCancelFocusToNew": true,
+        "keyboardTabShiftTab": true,
+        "nativeRadioAndSelectKeys": true,
+        "compositionSubmitBlocked": true,
+        "issueFailureRetry": true,
+        "revealFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(59, 59, 59)",
+          "contrast": 6.473850322738297,
+          "bounds": {
+            "left": 405,
+            "top": 221,
+            "right": 971,
+            "bottom": 323,
+            "width": 566,
+            "height": 102
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "readonlySelectionAndKeyboardCopy": true,
+        "revealEscapeAndOutsideBlocked": true,
+        "inlineBackEnteredDiscard": true,
+        "discardEscapeAndOutsideBlocked": true,
+        "manualCopyExplicitCloseReconfirm": true,
+        "continueFocusToCopyArea": true,
+        "clipboardFailures": {
+          "unavailable": true,
+          "throw": true,
+          "reject": true
+        },
+        "clipboardDelayedSuccessWithDeferredNavigation": true,
+        "clipboardDelayedRejectWithDeferredNavigation": true,
+        "authInvalidationDuringClipboard": [
+          "logout",
+          "differentOwner",
+          "sameIdGeneration"
+        ],
+        "discardFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(107, 107, 107)",
+          "contrast": 3.079911527953663,
+          "bounds": {
+            "left": 405,
+            "top": 459,
+            "right": 478.03125,
+            "bottom": 495,
+            "width": 73.03125,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "queryFailureRetry": true,
+        "keyboardRevoke": true,
+        "l2Focus": {
+          "active": true,
+          "outlineWidth": 3,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(48, 53, 46)",
+          "contrast": 7.248424050705157,
+          "bounds": {
+            "left": 843,
+            "top": 502,
+            "right": 905,
+            "bottom": 538,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "l2FailureRetry": true
+      },
+      "requestCounts": {
+        "issue": 7,
+        "revoke": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright isolated Chromium",
+        "theme": "dark",
+        "requestedViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "zoom": 1,
+        "preZoomViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        }
+      },
+      "list": {
+        "stage": "list",
+        "viewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "rowCount": 14,
+        "minRow": 57,
+        "firstNameWraps": true,
+        "listOverflow": "auto",
+        "dialogRight": 1560,
+        "tableRight": 1405,
+        "expiredText": "자동화 토큰 2읽기+쓰기2020-01-01 (만료됨)사용 안 함자동화 토큰 2 폐기",
+        "normalColor": "rgb(233, 231, 223)",
+        "expiredColor": "rgb(181, 184, 174)",
+        "normalBackground": "rgb(41, 44, 39)",
+        "expiredBackground": "rgb(41, 44, 39)",
+        "normalContrast": 11.430133007600727,
+        "expiredContrast": 7.030444819993569,
+        "revokedNoAction": true
+      },
+      "stages": {
+        "listFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(107, 107, 107)",
+          "contrast": 3.079911527953663,
+          "bounds": {
+            "left": 645,
+            "top": 330,
+            "right": 748.390625,
+            "bottom": 366,
+            "width": 103.390625,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "formFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(59, 59, 59)",
+          "contrast": 6.473850322738297,
+          "bounds": {
+            "left": 645,
+            "top": 306,
+            "right": 1213,
+            "bottom": 352,
+            "width": 568,
+            "height": 46
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "formCancelFocusToNew": true,
+        "keyboardTabShiftTab": true,
+        "nativeRadioAndSelectKeys": true,
+        "compositionSubmitBlocked": true,
+        "issueFailureRetry": true,
+        "revealFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(59, 59, 59)",
+          "contrast": 6.473850322738297,
+          "bounds": {
+            "left": 645,
+            "top": 306,
+            "right": 1211,
+            "bottom": 408,
+            "width": 566,
+            "height": 102
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "readonlySelectionAndKeyboardCopy": true,
+        "revealEscapeAndOutsideBlocked": true,
+        "inlineBackEnteredDiscard": true,
+        "discardEscapeAndOutsideBlocked": true,
+        "manualCopyExplicitCloseReconfirm": true,
+        "continueFocusToCopyArea": true,
+        "clipboardFailures": {
+          "unavailable": true,
+          "throw": true,
+          "reject": true
+        },
+        "clipboardDelayedSuccessWithDeferredNavigation": true,
+        "clipboardDelayedRejectWithDeferredNavigation": true,
+        "authInvalidationDuringClipboard": [
+          "logout",
+          "differentOwner",
+          "sameIdGeneration"
+        ],
+        "discardFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(107, 107, 107)",
+          "contrast": 3.079911527953663,
+          "bounds": {
+            "left": 645,
+            "top": 544,
+            "right": 718.03125,
+            "bottom": 580,
+            "width": 73.03125,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "queryFailureRetry": true,
+        "keyboardRevoke": true,
+        "l2Focus": {
+          "active": true,
+          "outlineWidth": 3,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(48, 53, 46)",
+          "contrast": 7.248424050705157,
+          "bounds": {
+            "left": 1083,
+            "top": 592,
+            "right": 1145,
+            "bottom": 628,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        },
+        "l2FailureRetry": true
+      },
+      "requestCounts": {
+        "issue": 7,
+        "revoke": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright persistent isolated Chromium",
+        "theme": "light",
+        "requestedViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "zoom": 2,
+        "preZoomViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        }
+      },
+      "list": {
+        "stage": "list",
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "rowCount": 14,
+        "minRow": 57,
+        "firstNameWraps": true,
+        "listOverflow": "auto",
+        "dialogRight": 620.796875,
+        "tableRight": 596.296875,
+        "expiredText": "자동화 토큰 2읽기+쓰기2020-01-01 (만료됨)사용 안 함자동화 토큰 2 폐기",
+        "normalColor": "rgb(36, 37, 33)",
+        "expiredColor": "rgb(101, 102, 95)",
+        "normalBackground": "rgb(245, 244, 239)",
+        "expiredBackground": "rgb(245, 244, 239)",
+        "normalContrast": 14.004951701436438,
+        "expiredContrast": 5.268987227065019,
+        "revokedNoAction": true
+      },
+      "stages": {
+        "listFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(240, 240, 240)",
+          "contrast": 5.819444792615142,
+          "bounds": {
+            "left": 228.0703125,
+            "top": 210,
+            "right": 325.0625,
+            "bottom": 246,
+            "width": 96.9921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "formFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 6.631902642194784,
+          "bounds": {
+            "left": 228.0703125,
+            "top": 186,
+            "right": 604.296875,
+            "bottom": 232,
+            "width": 376.2265625,
+            "height": 46
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "formCancelFocusToNew": true,
+        "keyboardTabShiftTab": true,
+        "nativeRadioAndSelectKeys": true,
+        "compositionSubmitBlocked": true,
+        "issueFailureRetry": true,
+        "revealFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 6.631902642194784,
+          "bounds": {
+            "left": 228.0703125,
+            "top": 94,
+            "right": 602.296875,
+            "bottom": 196,
+            "width": 374.2265625,
+            "height": 102
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "readonlySelectionAndKeyboardCopy": true,
+        "revealEscapeAndOutsideBlocked": true,
+        "inlineBackEnteredDiscard": true,
+        "discardEscapeAndOutsideBlocked": true,
+        "manualCopyExplicitCloseReconfirm": true,
+        "continueFocusToCopyArea": true,
+        "clipboardFailures": {
+          "unavailable": true,
+          "throw": true,
+          "reject": true
+        },
+        "clipboardDelayedSuccessWithDeferredNavigation": true,
+        "clipboardDelayedRejectWithDeferredNavigation": true,
+        "authInvalidationDuringClipboard": [
+          "logout",
+          "differentOwner",
+          "sameIdGeneration"
+        ],
+        "discardFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(240, 240, 240)",
+          "contrast": 5.819444792615142,
+          "bounds": {
+            "left": 228.0703125,
+            "top": 289,
+            "right": 296.8359375,
+            "bottom": 325,
+            "width": 68.765625,
+            "height": 36
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "queryFailureRetry": true,
+        "keyboardRevoke": true,
+        "l2Focus": {
+          "active": true,
+          "outlineWidth": 3,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(250, 249, 245)",
+          "contrast": 6.2951238421201055,
+          "bounds": {
+            "left": 443,
+            "top": 232,
+            "right": 505,
+            "bottom": 268,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "l2FailureRetry": true
+      },
+      "requestCounts": {
+        "issue": 7,
+        "revoke": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright persistent isolated Chromium",
+        "theme": "light",
+        "requestedViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "zoom": 2,
+        "preZoomViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        }
+      },
+      "list": {
+        "stage": "list",
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "rowCount": 14,
+        "minRow": 57,
+        "firstNameWraps": true,
+        "listOverflow": "auto",
+        "dialogRight": 698.3984375,
+        "tableRight": 673.8984375,
+        "expiredText": "자동화 토큰 2읽기+쓰기2020-01-01 (만료됨)사용 안 함자동화 토큰 2 폐기",
+        "normalColor": "rgb(36, 37, 33)",
+        "expiredColor": "rgb(101, 102, 95)",
+        "normalBackground": "rgb(245, 244, 239)",
+        "expiredBackground": "rgb(245, 244, 239)",
+        "normalContrast": 14.004951701436438,
+        "expiredContrast": 5.268987227065019,
+        "revokedNoAction": true
+      },
+      "stages": {
+        "listFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(240, 240, 240)",
+          "contrast": 5.819444792615142,
+          "bounds": {
+            "left": 254.53125,
+            "top": 214.5,
+            "right": 351.5234375,
+            "bottom": 250.5,
+            "width": 96.9921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "formFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 6.631902642194784,
+          "bounds": {
+            "left": 254.53125,
+            "top": 190.5,
+            "right": 681.8984375,
+            "bottom": 236.5,
+            "width": 427.3671875,
+            "height": 46
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "formCancelFocusToNew": true,
+        "keyboardTabShiftTab": true,
+        "nativeRadioAndSelectKeys": true,
+        "compositionSubmitBlocked": true,
+        "issueFailureRetry": true,
+        "revealFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 6.631902642194784,
+          "bounds": {
+            "left": 254.53125,
+            "top": 176.5,
+            "right": 679.8984375,
+            "bottom": 278.5,
+            "width": 425.3671875,
+            "height": 102
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "readonlySelectionAndKeyboardCopy": true,
+        "revealEscapeAndOutsideBlocked": true,
+        "inlineBackEnteredDiscard": true,
+        "discardEscapeAndOutsideBlocked": true,
+        "manualCopyExplicitCloseReconfirm": true,
+        "continueFocusToCopyArea": true,
+        "clipboardFailures": {
+          "unavailable": true,
+          "throw": true,
+          "reject": true
+        },
+        "clipboardDelayedSuccessWithDeferredNavigation": true,
+        "clipboardDelayedRejectWithDeferredNavigation": true,
+        "authInvalidationDuringClipboard": [
+          "logout",
+          "differentOwner",
+          "sameIdGeneration"
+        ],
+        "discardFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(240, 240, 240)",
+          "contrast": 5.819444792615142,
+          "bounds": {
+            "left": 254.53125,
+            "top": 374.5,
+            "right": 323.296875,
+            "bottom": 410.5,
+            "width": 68.765625,
+            "height": 36
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "queryFailureRetry": true,
+        "keyboardRevoke": true,
+        "l2Focus": {
+          "active": true,
+          "outlineWidth": 3,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(250, 249, 245)",
+          "contrast": 6.2951238421201055,
+          "bounds": {
+            "left": 483,
+            "top": 277,
+            "right": 545,
+            "bottom": 313,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "l2FailureRetry": true
+      },
+      "requestCounts": {
+        "issue": 7,
+        "revoke": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright persistent isolated Chromium",
+        "theme": "light",
+        "requestedViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "zoom": 2,
+        "preZoomViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        }
+      },
+      "list": {
+        "stage": "list",
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "rowCount": 14,
+        "minRow": 57,
+        "firstNameWraps": true,
+        "listOverflow": "auto",
+        "dialogRight": 931.19921875,
+        "tableRight": 898.69921875,
+        "expiredText": "자동화 토큰 2읽기+쓰기2020-01-01 (만료됨)사용 안 함자동화 토큰 2 폐기",
+        "normalColor": "rgb(36, 37, 33)",
+        "expiredColor": "rgb(101, 102, 95)",
+        "normalBackground": "rgb(245, 244, 239)",
+        "expiredBackground": "rgb(245, 244, 239)",
+        "normalContrast": 14.004951701436438,
+        "expiredContrast": 5.268987227065019,
+        "revokedNoAction": true
+      },
+      "stages": {
+        "listFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(240, 240, 240)",
+          "contrast": 5.819444792615142,
+          "bounds": {
+            "left": 313.80078125,
+            "top": 227,
+            "right": 410.79296875,
+            "bottom": 263,
+            "width": 96.9921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "formFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 6.631902642194784,
+          "bounds": {
+            "left": 313.80078125,
+            "top": 203,
+            "right": 881.80078125,
+            "bottom": 249,
+            "width": 568,
+            "height": 46
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "formCancelFocusToNew": true,
+        "keyboardTabShiftTab": true,
+        "nativeRadioAndSelectKeys": true,
+        "compositionSubmitBlocked": true,
+        "issueFailureRetry": true,
+        "revealFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 6.631902642194784,
+          "bounds": {
+            "left": 313.80078125,
+            "top": 203,
+            "right": 879.80078125,
+            "bottom": 305,
+            "width": 566,
+            "height": 102
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "readonlySelectionAndKeyboardCopy": true,
+        "revealEscapeAndOutsideBlocked": true,
+        "inlineBackEnteredDiscard": true,
+        "discardEscapeAndOutsideBlocked": true,
+        "manualCopyExplicitCloseReconfirm": true,
+        "continueFocusToCopyArea": true,
+        "clipboardFailures": {
+          "unavailable": true,
+          "throw": true,
+          "reject": true
+        },
+        "clipboardDelayedSuccessWithDeferredNavigation": true,
+        "clipboardDelayedRejectWithDeferredNavigation": true,
+        "authInvalidationDuringClipboard": [
+          "logout",
+          "differentOwner",
+          "sameIdGeneration"
+        ],
+        "discardFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(240, 240, 240)",
+          "contrast": 5.819444792615142,
+          "bounds": {
+            "left": 313.80078125,
+            "top": 441,
+            "right": 382.56640625,
+            "bottom": 477,
+            "width": 68.765625,
+            "height": 36
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "queryFailureRetry": true,
+        "keyboardRevoke": true,
+        "l2Focus": {
+          "active": true,
+          "outlineWidth": 3,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(0, 94, 168)",
+          "background": "rgb(250, 249, 245)",
+          "contrast": 6.2951238421201055,
+          "bounds": {
+            "left": 603,
+            "top": 322,
+            "right": 665,
+            "bottom": 358,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "l2FailureRetry": true
+      },
+      "requestCounts": {
+        "issue": 7,
+        "revoke": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright persistent isolated Chromium",
+        "theme": "dark",
+        "requestedViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "zoom": 2,
+        "preZoomViewport": {
+          "width": 1280,
+          "height": 720,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        }
+      },
+      "list": {
+        "stage": "list",
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 2
+        },
+        "rowCount": 14,
+        "minRow": 57,
+        "firstNameWraps": true,
+        "listOverflow": "auto",
+        "dialogRight": 620.796875,
+        "tableRight": 596.296875,
+        "expiredText": "자동화 토큰 2읽기+쓰기2020-01-01 (만료됨)사용 안 함자동화 토큰 2 폐기",
+        "normalColor": "rgb(233, 231, 223)",
+        "expiredColor": "rgb(181, 184, 174)",
+        "normalBackground": "rgb(41, 44, 39)",
+        "expiredBackground": "rgb(41, 44, 39)",
+        "normalContrast": 11.430133007600727,
+        "expiredContrast": 7.030444819993569,
+        "revokedNoAction": true
+      },
+      "stages": {
+        "listFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(107, 107, 107)",
+          "contrast": 3.079911527953663,
+          "bounds": {
+            "left": 228.0703125,
+            "top": 210,
+            "right": 325.0625,
+            "bottom": 246,
+            "width": 96.9921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "formFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(59, 59, 59)",
+          "contrast": 6.473850322738297,
+          "bounds": {
+            "left": 228.0703125,
+            "top": 186,
+            "right": 604.296875,
+            "bottom": 232,
+            "width": 376.2265625,
+            "height": 46
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "formCancelFocusToNew": true,
+        "keyboardTabShiftTab": true,
+        "nativeRadioAndSelectKeys": true,
+        "compositionSubmitBlocked": true,
+        "issueFailureRetry": true,
+        "revealFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(59, 59, 59)",
+          "contrast": 6.473850322738297,
+          "bounds": {
+            "left": 228.0703125,
+            "top": 94,
+            "right": 602.296875,
+            "bottom": 196,
+            "width": 374.2265625,
+            "height": 102
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "readonlySelectionAndKeyboardCopy": true,
+        "revealEscapeAndOutsideBlocked": true,
+        "inlineBackEnteredDiscard": true,
+        "discardEscapeAndOutsideBlocked": true,
+        "manualCopyExplicitCloseReconfirm": true,
+        "continueFocusToCopyArea": true,
+        "clipboardFailures": {
+          "unavailable": true,
+          "throw": true,
+          "reject": true
+        },
+        "clipboardDelayedSuccessWithDeferredNavigation": true,
+        "clipboardDelayedRejectWithDeferredNavigation": true,
+        "authInvalidationDuringClipboard": [
+          "logout",
+          "differentOwner",
+          "sameIdGeneration"
+        ],
+        "discardFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(107, 107, 107)",
+          "contrast": 3.079911527953663,
+          "bounds": {
+            "left": 228.0703125,
+            "top": 289,
+            "right": 296.8359375,
+            "bottom": 325,
+            "width": 68.765625,
+            "height": 36
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "queryFailureRetry": true,
+        "keyboardRevoke": true,
+        "l2Focus": {
+          "active": true,
+          "outlineWidth": 3,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(48, 53, 46)",
+          "contrast": 7.248424050705157,
+          "bounds": {
+            "left": 443,
+            "top": 232,
+            "right": 505,
+            "bottom": 268,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 640,
+            "height": 360
+          }
+        },
+        "l2FailureRetry": true
+      },
+      "requestCounts": {
+        "issue": 7,
+        "revoke": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright persistent isolated Chromium",
+        "theme": "dark",
+        "requestedViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "zoom": 2,
+        "preZoomViewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        }
+      },
+      "list": {
+        "stage": "list",
+        "viewport": {
+          "width": 720,
+          "height": 450,
+          "dpr": 2
+        },
+        "rowCount": 14,
+        "minRow": 57,
+        "firstNameWraps": true,
+        "listOverflow": "auto",
+        "dialogRight": 698.3984375,
+        "tableRight": 673.8984375,
+        "expiredText": "자동화 토큰 2읽기+쓰기2020-01-01 (만료됨)사용 안 함자동화 토큰 2 폐기",
+        "normalColor": "rgb(233, 231, 223)",
+        "expiredColor": "rgb(181, 184, 174)",
+        "normalBackground": "rgb(41, 44, 39)",
+        "expiredBackground": "rgb(41, 44, 39)",
+        "normalContrast": 11.430133007600727,
+        "expiredContrast": 7.030444819993569,
+        "revokedNoAction": true
+      },
+      "stages": {
+        "listFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(107, 107, 107)",
+          "contrast": 3.079911527953663,
+          "bounds": {
+            "left": 254.53125,
+            "top": 214.5,
+            "right": 351.5234375,
+            "bottom": 250.5,
+            "width": 96.9921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "formFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(59, 59, 59)",
+          "contrast": 6.473850322738297,
+          "bounds": {
+            "left": 254.53125,
+            "top": 190.5,
+            "right": 681.8984375,
+            "bottom": 236.5,
+            "width": 427.3671875,
+            "height": 46
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "formCancelFocusToNew": true,
+        "keyboardTabShiftTab": true,
+        "nativeRadioAndSelectKeys": true,
+        "compositionSubmitBlocked": true,
+        "issueFailureRetry": true,
+        "revealFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(59, 59, 59)",
+          "contrast": 6.473850322738297,
+          "bounds": {
+            "left": 254.53125,
+            "top": 176.5,
+            "right": 679.8984375,
+            "bottom": 278.5,
+            "width": 425.3671875,
+            "height": 102
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "readonlySelectionAndKeyboardCopy": true,
+        "revealEscapeAndOutsideBlocked": true,
+        "inlineBackEnteredDiscard": true,
+        "discardEscapeAndOutsideBlocked": true,
+        "manualCopyExplicitCloseReconfirm": true,
+        "continueFocusToCopyArea": true,
+        "clipboardFailures": {
+          "unavailable": true,
+          "throw": true,
+          "reject": true
+        },
+        "clipboardDelayedSuccessWithDeferredNavigation": true,
+        "clipboardDelayedRejectWithDeferredNavigation": true,
+        "authInvalidationDuringClipboard": [
+          "logout",
+          "differentOwner",
+          "sameIdGeneration"
+        ],
+        "discardFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(107, 107, 107)",
+          "contrast": 3.079911527953663,
+          "bounds": {
+            "left": 254.53125,
+            "top": 374.5,
+            "right": 323.296875,
+            "bottom": 410.5,
+            "width": 68.765625,
+            "height": 36
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "queryFailureRetry": true,
+        "keyboardRevoke": true,
+        "l2Focus": {
+          "active": true,
+          "outlineWidth": 3,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(48, 53, 46)",
+          "contrast": 7.248424050705157,
+          "bounds": {
+            "left": 483,
+            "top": 277,
+            "right": 545,
+            "bottom": 313,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 720,
+            "height": 450
+          }
+        },
+        "l2FailureRetry": true
+      },
+      "requestCounts": {
+        "issue": 7,
+        "revoke": 2
+      }
+    },
+    {
+      "environment": {
+        "owner": "fresh Playwright persistent isolated Chromium",
+        "theme": "dark",
+        "requestedViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "zoom": 2,
+        "preZoomViewport": {
+          "width": 1920,
+          "height": 1080,
+          "dpr": 1
+        },
+        "postZoomViewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        }
+      },
+      "list": {
+        "stage": "list",
+        "viewport": {
+          "width": 960,
+          "height": 540,
+          "dpr": 2
+        },
+        "rowCount": 14,
+        "minRow": 57,
+        "firstNameWraps": true,
+        "listOverflow": "auto",
+        "dialogRight": 931.19921875,
+        "tableRight": 898.69921875,
+        "expiredText": "자동화 토큰 2읽기+쓰기2020-01-01 (만료됨)사용 안 함자동화 토큰 2 폐기",
+        "normalColor": "rgb(233, 231, 223)",
+        "expiredColor": "rgb(181, 184, 174)",
+        "normalBackground": "rgb(41, 44, 39)",
+        "expiredBackground": "rgb(41, 44, 39)",
+        "normalContrast": 11.430133007600727,
+        "expiredContrast": 7.030444819993569,
+        "revokedNoAction": true
+      },
+      "stages": {
+        "listFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(107, 107, 107)",
+          "contrast": 3.079911527953663,
+          "bounds": {
+            "left": 313.80078125,
+            "top": 227,
+            "right": 410.79296875,
+            "bottom": 263,
+            "width": 96.9921875,
+            "height": 36
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "formFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(59, 59, 59)",
+          "contrast": 6.473850322738297,
+          "bounds": {
+            "left": 313.80078125,
+            "top": 203,
+            "right": 881.80078125,
+            "bottom": 249,
+            "width": 568,
+            "height": 46
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "formCancelFocusToNew": true,
+        "keyboardTabShiftTab": true,
+        "nativeRadioAndSelectKeys": true,
+        "compositionSubmitBlocked": true,
+        "issueFailureRetry": true,
+        "revealFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(59, 59, 59)",
+          "contrast": 6.473850322738297,
+          "bounds": {
+            "left": 313.80078125,
+            "top": 203,
+            "right": 879.80078125,
+            "bottom": 305,
+            "width": 566,
+            "height": 102
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "readonlySelectionAndKeyboardCopy": true,
+        "revealEscapeAndOutsideBlocked": true,
+        "inlineBackEnteredDiscard": true,
+        "discardEscapeAndOutsideBlocked": true,
+        "manualCopyExplicitCloseReconfirm": true,
+        "continueFocusToCopyArea": true,
+        "clipboardFailures": {
+          "unavailable": true,
+          "throw": true,
+          "reject": true
+        },
+        "clipboardDelayedSuccessWithDeferredNavigation": true,
+        "clipboardDelayedRejectWithDeferredNavigation": true,
+        "authInvalidationDuringClipboard": [
+          "logout",
+          "differentOwner",
+          "sameIdGeneration"
+        ],
+        "discardFocus": {
+          "active": true,
+          "outlineWidth": 2,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(107, 107, 107)",
+          "contrast": 3.079911527953663,
+          "bounds": {
+            "left": 313.80078125,
+            "top": 441,
+            "right": 382.56640625,
+            "bottom": 477,
+            "width": 68.765625,
+            "height": 36
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "queryFailureRetry": true,
+        "keyboardRevoke": true,
+        "l2Focus": {
+          "active": true,
+          "outlineWidth": 3,
+          "outlineOffset": 2,
+          "outlineColor": "rgb(142, 203, 255)",
+          "background": "rgb(48, 53, 46)",
+          "contrast": 7.248424050705157,
+          "bounds": {
+            "left": 603,
+            "top": 322,
+            "right": 665,
+            "bottom": 358,
+            "width": 62,
+            "height": 36
+          },
+          "viewport": {
+            "width": 960,
+            "height": 540
+          }
+        },
+        "l2FailureRetry": true
+      },
+      "requestCounts": {
+        "issue": 7,
+        "revoke": 2
+      }
+    }
+  ]
+}

@@ -11,12 +11,30 @@ const many = Array.from({ length: 45 }, (_, i) => leaf(`many-${i}`, `긴 목록 
 const deep: TreeNodeView = { id: 'deep-a', name: '아주긴한글이름과공백없는경로가끝없이이어지는최상위디렉토리', kind: 'directory', visibility: 'full', level: 'edit', parentLevel: 'edit', children: [{ id: 'deep-b', name: '두번째깊이디렉토리', kind: 'directory', visibility: 'full', level: 'edit', parentLevel: 'edit', children: [{ id: 'deep-c', name: '세번째깊이디렉토리', kind: 'directory', visibility: 'full', level: 'edit', parentLevel: 'edit', children: [leaf('deep-file', '마지막긴문서이름.md')] }] }] };
 const readonly = leaf('readonly', '읽기 전용 문서.md', 'view');
 const workspaces: WorkspaceTreeView[] = [{ workspace: { id: 'ws', name: '신문 편집국' }, visibility: 'full', roots: [deep, { id: 'upload-dir', name: '업로드 디렉토리', kind: 'directory', visibility: 'full', level: 'edit', parentLevel: 'edit', children: many }, readonly] }];
+const largeWorkspaces: WorkspaceTreeView[] = Array.from({ length: 1_000 }, (_, index) => ({
+  workspace: { id: `large-workspace-${index}`, name: `workspace ${String(index + 1).padStart(4, '0')}` },
+  visibility: 'full',
+  roots: [],
+}));
+const largeDescendants: WorkspaceTreeView[] = [{
+  workspace: { id: 'large-descendant-workspace', name: '대규모 하위 트리' },
+  visibility: 'full',
+  roots: Array.from({ length: 1_000 }, (_, index) => leaf(
+    `large-descendant-${index}`,
+    `document ${String(index + 1).padStart(4, '0')}.md`,
+  )),
+}];
 const seed: Favorite[] = [leaf('deep-file', '마지막긴문서이름.md'), { id: 'upload-dir', name: '업로드 디렉토리', kind: 'directory', visibility: 'full', level: 'edit', parentLevel: 'edit', children: [] }].map((node) => ({ nodeId: node.id, name: node.name, kind: node.kind, workspaceName: '신문 편집국' }));
 
 function Fixture() {
   const [favorites, setFavorites] = useState(seed);
   const [, setUnrelatedRender] = useState(0);
   const state = new URLSearchParams(window.location.search).get('state');
+  const fixtureWorkspaces = state === 'large-workspaces'
+    ? largeWorkspaces
+    : state === 'large-descendants'
+      ? largeDescendants
+      : workspaces;
   const treeState = state === 'tree-loading'
     ? { state: 'loading' as const }
     : state === 'tree-error'
@@ -27,7 +45,11 @@ function Fixture() {
     : state === 'favorites-error'
       ? { state: 'error' as const, message: '즐겨찾기를 불러오지 못했습니다.', onRetry: () => { document.body.dataset.retried = 'favorites'; } }
       : { state: 'ready' as const };
-  return <AppShell viewer={{ superuser: false, workspaceCount: 1, adminWorkspaceCount: 0 }} workspaces={workspaces} favorites={favorites} treeState={treeState} favoritesState={favoritesState} onUnfavorite={(id) => {
+  return <AppShell viewer={{ superuser: false, workspaceCount: fixtureWorkspaces.length, adminWorkspaceCount: 0 }} workspaces={fixtureWorkspaces} favorites={favorites} treeState={treeState} favoritesState={favoritesState} onOpen={(node) => {
+    document.body.dataset.openedNodeId = node.id;
+  }} onUpload={(request) => {
+    document.body.dataset.uploadedWorkspaceId = request.workspaceId;
+  }} onUnfavorite={(id) => {
     setUnrelatedRender((value) => value + 1);
     window.setTimeout(() => setFavorites((rows) => rows.filter((row) => row.nodeId !== id)), 100);
   }} onRename={(_, name) => {
@@ -42,6 +64,6 @@ function Fixture() {
       document.body.dataset.createCalls = String(Number(document.body.dataset.createCalls ?? '0') + 1);
       return new Promise<undefined>((resolve) => window.setTimeout(resolve, 250));
     }
-  }} onUpload={() => {}} />;
+  }} />;
 }
 createRoot(document.getElementById('root')!).render(<Fixture />);

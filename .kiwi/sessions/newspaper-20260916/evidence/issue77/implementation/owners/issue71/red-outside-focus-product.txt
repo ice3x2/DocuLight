@@ -1,0 +1,7 @@
+REQUIREMENT=IR-SHELL-013
+RAW_TEST_SHA256=27dc55aae0978ebd937e56abbf41cde52f8aca4afd48c47a45117b23fa1a404a
+COMMAND=npm run test:browser:issue71-product --workspace @doculight/web
+EXIT_CODE=1
+RESULT=RED
+FAILURE=outside-click: false !== true at issue71-instance-settings-product-check.mjs leave-route retained-focus assertion
+INTERPRETATION=Outside-click reused stale pointer focus ownership. Continue Editing retained the exact draft but restored a prior invoker instead of the active edited field.

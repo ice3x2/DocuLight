@@ -1,0 +1,678 @@
+{
+  "regular": [
+    {
+      "theme": "light",
+      "w": 1280,
+      "h": 720,
+      "z": 1,
+      "m": {
+        "panel": {
+          "x": 960,
+          "y": 0,
+          "width": 320,
+          "height": 720,
+          "top": 0,
+          "right": 1280,
+          "bottom": 720,
+          "left": 960
+        },
+        "tab": {
+          "x": 961,
+          "y": 0,
+          "width": 319,
+          "height": 24,
+          "top": 0,
+          "right": 1280,
+          "bottom": 24,
+          "left": 961
+        },
+        "list": {
+          "x": 961,
+          "y": 24,
+          "width": 319,
+          "height": 696,
+          "top": 24,
+          "right": 1280,
+          "bottom": 720,
+          "left": 961
+        },
+        "overflow": "auto",
+        "visualTokens": {
+          "outline": "solid",
+          "outlineColor": "rgb(54, 91, 112)",
+          "titleColor": "rgb(54, 91, 112)",
+          "action": "rgb(54, 91, 112)",
+          "focus": "rgb(54, 91, 112)",
+          "inside": true
+        },
+        "countToken": {
+          "actual": "rgb(223, 231, 233)",
+          "expected": "rgb(223, 231, 233)"
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "w": 1440,
+      "h": 900,
+      "z": 1,
+      "m": {
+        "panel": {
+          "x": 1120,
+          "y": 0,
+          "width": 320,
+          "height": 900,
+          "top": 0,
+          "right": 1440,
+          "bottom": 900,
+          "left": 1120
+        },
+        "tab": {
+          "x": 1121,
+          "y": 0,
+          "width": 319,
+          "height": 24,
+          "top": 0,
+          "right": 1440,
+          "bottom": 24,
+          "left": 1121
+        },
+        "list": {
+          "x": 1121,
+          "y": 24,
+          "width": 319,
+          "height": 876,
+          "top": 24,
+          "right": 1440,
+          "bottom": 900,
+          "left": 1121
+        },
+        "overflow": "auto",
+        "visualTokens": {
+          "outline": "solid",
+          "outlineColor": "rgb(54, 91, 112)",
+          "titleColor": "rgb(54, 91, 112)",
+          "action": "rgb(54, 91, 112)",
+          "focus": "rgb(54, 91, 112)",
+          "inside": true
+        },
+        "countToken": {
+          "actual": "rgb(223, 231, 233)",
+          "expected": "rgb(223, 231, 233)"
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "w": 1920,
+      "h": 1080,
+      "z": 1,
+      "m": {
+        "panel": {
+          "x": 1600,
+          "y": 0,
+          "width": 320,
+          "height": 1080,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "left": 1600
+        },
+        "tab": {
+          "x": 1601,
+          "y": 0,
+          "width": 319,
+          "height": 24,
+          "top": 0,
+          "right": 1920,
+          "bottom": 24,
+          "left": 1601
+        },
+        "list": {
+          "x": 1601,
+          "y": 24,
+          "width": 319,
+          "height": 1056,
+          "top": 24,
+          "right": 1920,
+          "bottom": 1080,
+          "left": 1601
+        },
+        "overflow": "auto",
+        "visualTokens": {
+          "outline": "solid",
+          "outlineColor": "rgb(54, 91, 112)",
+          "titleColor": "rgb(54, 91, 112)",
+          "action": "rgb(54, 91, 112)",
+          "focus": "rgb(54, 91, 112)",
+          "inside": true
+        },
+        "countToken": {
+          "actual": "rgb(223, 231, 233)",
+          "expected": "rgb(223, 231, 233)"
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "w": 1280,
+      "h": 720,
+      "z": 1,
+      "m": {
+        "panel": {
+          "x": 960,
+          "y": 0,
+          "width": 320,
+          "height": 720,
+          "top": 0,
+          "right": 1280,
+          "bottom": 720,
+          "left": 960
+        },
+        "tab": {
+          "x": 961,
+          "y": 0,
+          "width": 319,
+          "height": 24,
+          "top": 0,
+          "right": 1280,
+          "bottom": 24,
+          "left": 961
+        },
+        "list": {
+          "x": 961,
+          "y": 24,
+          "width": 319,
+          "height": 696,
+          "top": 24,
+          "right": 1280,
+          "bottom": 720,
+          "left": 961
+        },
+        "overflow": "auto",
+        "visualTokens": {
+          "outline": "solid",
+          "outlineColor": "rgb(168, 196, 211)",
+          "titleColor": "rgb(168, 196, 211)",
+          "action": "rgb(168, 196, 211)",
+          "focus": "rgb(168, 196, 211)",
+          "inside": true
+        },
+        "countToken": {
+          "actual": "rgb(52, 70, 80)",
+          "expected": "rgb(52, 70, 80)"
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "w": 1440,
+      "h": 900,
+      "z": 1,
+      "m": {
+        "panel": {
+          "x": 1120,
+          "y": 0,
+          "width": 320,
+          "height": 900,
+          "top": 0,
+          "right": 1440,
+          "bottom": 900,
+          "left": 1120
+        },
+        "tab": {
+          "x": 1121,
+          "y": 0,
+          "width": 319,
+          "height": 24,
+          "top": 0,
+          "right": 1440,
+          "bottom": 24,
+          "left": 1121
+        },
+        "list": {
+          "x": 1121,
+          "y": 24,
+          "width": 319,
+          "height": 876,
+          "top": 24,
+          "right": 1440,
+          "bottom": 900,
+          "left": 1121
+        },
+        "overflow": "auto",
+        "visualTokens": {
+          "outline": "solid",
+          "outlineColor": "rgb(168, 196, 211)",
+          "titleColor": "rgb(168, 196, 211)",
+          "action": "rgb(168, 196, 211)",
+          "focus": "rgb(168, 196, 211)",
+          "inside": true
+        },
+        "countToken": {
+          "actual": "rgb(52, 70, 80)",
+          "expected": "rgb(52, 70, 80)"
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "w": 1920,
+      "h": 1080,
+      "z": 1,
+      "m": {
+        "panel": {
+          "x": 1600,
+          "y": 0,
+          "width": 320,
+          "height": 1080,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "left": 1600
+        },
+        "tab": {
+          "x": 1601,
+          "y": 0,
+          "width": 319,
+          "height": 24,
+          "top": 0,
+          "right": 1920,
+          "bottom": 24,
+          "left": 1601
+        },
+        "list": {
+          "x": 1601,
+          "y": 24,
+          "width": 319,
+          "height": 1056,
+          "top": 24,
+          "right": 1920,
+          "bottom": 1080,
+          "left": 1601
+        },
+        "overflow": "auto",
+        "visualTokens": {
+          "outline": "solid",
+          "outlineColor": "rgb(168, 196, 211)",
+          "titleColor": "rgb(168, 196, 211)",
+          "action": "rgb(168, 196, 211)",
+          "focus": "rgb(168, 196, 211)",
+          "inside": true
+        },
+        "countToken": {
+          "actual": "rgb(52, 70, 80)",
+          "expected": "rgb(52, 70, 80)"
+        }
+      }
+    }
+  ],
+  "zoom": [
+    {
+      "theme": "light",
+      "w": 1280,
+      "h": 720,
+      "z": 2,
+      "before": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1.0000000149011612
+      },
+      "after": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2.0000000298023224
+      },
+      "m": {
+        "panel": {
+          "x": 448.3312683105469,
+          "y": 0,
+          "width": 191.66250610351562,
+          "height": 360,
+          "top": 0,
+          "right": 639.9937744140625,
+          "bottom": 360,
+          "left": 448.3312683105469
+        },
+        "tab": {
+          "x": 449.1312561035156,
+          "y": 0,
+          "width": 190.8625030517578,
+          "height": 25.600000381469727,
+          "top": 0,
+          "right": 639.9937591552734,
+          "bottom": 25.600000381469727,
+          "left": 449.1312561035156
+        },
+        "list": {
+          "x": 449.1312561035156,
+          "y": 25.600000381469727,
+          "width": 190.8625030517578,
+          "height": 334.3999938964844,
+          "top": 25.600000381469727,
+          "right": 639.9937591552734,
+          "bottom": 359.9999942779541,
+          "left": 449.1312561035156
+        },
+        "overflow": "auto",
+        "visualTokens": {
+          "outline": "solid",
+          "outlineColor": "rgb(54, 91, 112)",
+          "titleColor": "rgb(54, 91, 112)",
+          "action": "rgb(54, 91, 112)",
+          "focus": "rgb(54, 91, 112)",
+          "inside": true
+        },
+        "countToken": {
+          "actual": "rgb(223, 231, 233)",
+          "expected": "rgb(223, 231, 233)"
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "w": 1280,
+      "h": 720,
+      "z": 2,
+      "before": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1.0000000149011612
+      },
+      "after": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2.0000000298023224
+      },
+      "m": {
+        "panel": {
+          "x": 448.3312683105469,
+          "y": 0,
+          "width": 191.66250610351562,
+          "height": 360,
+          "top": 0,
+          "right": 639.9937744140625,
+          "bottom": 360,
+          "left": 448.3312683105469
+        },
+        "tab": {
+          "x": 449.1312561035156,
+          "y": 0,
+          "width": 190.8625030517578,
+          "height": 25.600000381469727,
+          "top": 0,
+          "right": 639.9937591552734,
+          "bottom": 25.600000381469727,
+          "left": 449.1312561035156
+        },
+        "list": {
+          "x": 449.1312561035156,
+          "y": 25.600000381469727,
+          "width": 190.8625030517578,
+          "height": 334.3999938964844,
+          "top": 25.600000381469727,
+          "right": 639.9937591552734,
+          "bottom": 359.9999942779541,
+          "left": 449.1312561035156
+        },
+        "overflow": "auto",
+        "visualTokens": {
+          "outline": "solid",
+          "outlineColor": "rgb(168, 196, 211)",
+          "titleColor": "rgb(168, 196, 211)",
+          "action": "rgb(168, 196, 211)",
+          "focus": "rgb(168, 196, 211)",
+          "inside": true
+        },
+        "countToken": {
+          "actual": "rgb(52, 70, 80)",
+          "expected": "rgb(52, 70, 80)"
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "w": 1440,
+      "h": 900,
+      "z": 2,
+      "before": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1.0000000149011612
+      },
+      "after": {
+        "width": 720,
+        "height": 450,
+        "dpr": 2.0000000298023224
+      },
+      "m": {
+        "panel": {
+          "x": 505,
+          "y": 0,
+          "width": 215,
+          "height": 450,
+          "top": 0,
+          "right": 720,
+          "bottom": 450,
+          "left": 505
+        },
+        "tab": {
+          "x": 505.8000183105469,
+          "y": 0,
+          "width": 214.1999969482422,
+          "height": 25.600000381469727,
+          "top": 0,
+          "right": 720.0000152587891,
+          "bottom": 25.600000381469727,
+          "left": 505.8000183105469
+        },
+        "list": {
+          "x": 505.8000183105469,
+          "y": 25.600000381469727,
+          "width": 214.1999969482422,
+          "height": 424.3999938964844,
+          "top": 25.600000381469727,
+          "right": 720.0000152587891,
+          "bottom": 449.9999942779541,
+          "left": 505.8000183105469
+        },
+        "overflow": "auto",
+        "visualTokens": {
+          "outline": "solid",
+          "outlineColor": "rgb(54, 91, 112)",
+          "titleColor": "rgb(54, 91, 112)",
+          "action": "rgb(54, 91, 112)",
+          "focus": "rgb(54, 91, 112)",
+          "inside": true
+        },
+        "countToken": {
+          "actual": "rgb(223, 231, 233)",
+          "expected": "rgb(223, 231, 233)"
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "w": 1440,
+      "h": 900,
+      "z": 2,
+      "before": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1.0000000149011612
+      },
+      "after": {
+        "width": 720,
+        "height": 450,
+        "dpr": 2.0000000298023224
+      },
+      "m": {
+        "panel": {
+          "x": 505,
+          "y": 0,
+          "width": 215,
+          "height": 450,
+          "top": 0,
+          "right": 720,
+          "bottom": 450,
+          "left": 505
+        },
+        "tab": {
+          "x": 505.8000183105469,
+          "y": 0,
+          "width": 214.1999969482422,
+          "height": 25.600000381469727,
+          "top": 0,
+          "right": 720.0000152587891,
+          "bottom": 25.600000381469727,
+          "left": 505.8000183105469
+        },
+        "list": {
+          "x": 505.8000183105469,
+          "y": 25.600000381469727,
+          "width": 214.1999969482422,
+          "height": 424.3999938964844,
+          "top": 25.600000381469727,
+          "right": 720.0000152587891,
+          "bottom": 449.9999942779541,
+          "left": 505.8000183105469
+        },
+        "overflow": "auto",
+        "visualTokens": {
+          "outline": "solid",
+          "outlineColor": "rgb(168, 196, 211)",
+          "titleColor": "rgb(168, 196, 211)",
+          "action": "rgb(168, 196, 211)",
+          "focus": "rgb(168, 196, 211)",
+          "inside": true
+        },
+        "countToken": {
+          "actual": "rgb(52, 70, 80)",
+          "expected": "rgb(52, 70, 80)"
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "w": 1920,
+      "h": 1080,
+      "z": 2,
+      "before": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1.0000000149011612
+      },
+      "after": {
+        "width": 960,
+        "height": 540,
+        "dpr": 2.0000000298023224
+      },
+      "m": {
+        "panel": {
+          "x": 675,
+          "y": 0,
+          "width": 285,
+          "height": 540,
+          "top": 0,
+          "right": 960,
+          "bottom": 540,
+          "left": 675
+        },
+        "tab": {
+          "x": 675.7999877929688,
+          "y": 0,
+          "width": 284.20001220703125,
+          "height": 25.600000381469727,
+          "top": 0,
+          "right": 960,
+          "bottom": 25.600000381469727,
+          "left": 675.7999877929688
+        },
+        "list": {
+          "x": 675.7999877929688,
+          "y": 25.600000381469727,
+          "width": 284.20001220703125,
+          "height": 514.4000244140625,
+          "top": 25.600000381469727,
+          "right": 960,
+          "bottom": 540.0000247955322,
+          "left": 675.7999877929688
+        },
+        "overflow": "auto",
+        "visualTokens": {
+          "outline": "solid",
+          "outlineColor": "rgb(54, 91, 112)",
+          "titleColor": "rgb(54, 91, 112)",
+          "action": "rgb(54, 91, 112)",
+          "focus": "rgb(54, 91, 112)",
+          "inside": true
+        },
+        "countToken": {
+          "actual": "rgb(223, 231, 233)",
+          "expected": "rgb(223, 231, 233)"
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "w": 1920,
+      "h": 1080,
+      "z": 2,
+      "before": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1.0000000149011612
+      },
+      "after": {
+        "width": 960,
+        "height": 540,
+        "dpr": 2.0000000298023224
+      },
+      "m": {
+        "panel": {
+          "x": 675,
+          "y": 0,
+          "width": 285,
+          "height": 540,
+          "top": 0,
+          "right": 960,
+          "bottom": 540,
+          "left": 675
+        },
+        "tab": {
+          "x": 675.7999877929688,
+          "y": 0,
+          "width": 284.20001220703125,
+          "height": 25.600000381469727,
+          "top": 0,
+          "right": 960,
+          "bottom": 25.600000381469727,
+          "left": 675.7999877929688
+        },
+        "list": {
+          "x": 675.7999877929688,
+          "y": 25.600000381469727,
+          "width": 284.20001220703125,
+          "height": 514.4000244140625,
+          "top": 25.600000381469727,
+          "right": 960,
+          "bottom": 540.0000247955322,
+          "left": 675.7999877929688
+        },
+        "overflow": "auto",
+        "visualTokens": {
+          "outline": "solid",
+          "outlineColor": "rgb(168, 196, 211)",
+          "titleColor": "rgb(168, 196, 211)",
+          "action": "rgb(168, 196, 211)",
+          "focus": "rgb(168, 196, 211)",
+          "inside": true
+        },
+        "countToken": {
+          "actual": "rgb(52, 70, 80)",
+          "expected": "rgb(52, 70, 80)"
+        }
+      }
+    }
+  ]
+}

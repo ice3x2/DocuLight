@@ -70,6 +70,7 @@
     "test:browser:issue88-product": "node test/issue88-settings-leave-product-runner.mjs",
     "test:browser:issue89-product": "node test/issue89-admin-grant-product-runner.mjs",
     "test:browser:issue86-product": "node test/issue86-audit-entry-product-runner.mjs",
+    "test:browser:issue77-product": "node test/issue77-product-runner.mjs",
     "test:browser:issue83-product": "node test/issue83-managed-workspaces-product-runner.mjs"
     ,"test:browser:issue84-product": "node test/issue84-revocation-bypass-product-runner.mjs",
     "test:browser:issue85-product": "node test/issue85-inheritance-product-runner.mjs"

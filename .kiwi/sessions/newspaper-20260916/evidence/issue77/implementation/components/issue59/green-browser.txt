@@ -1,0 +1,6 @@
+Command: npm run test:browser:pre-auth --workspace @doculight/web
+Exit code: 0
+
+PASS newspaper pre-auth layout, state, keyboard, synthetic composition, and actual zoom checks
+
+The generated pre-auth-latest/green-pre-auth-measurements.json records 30 normal and 30 actual-200% state measurements across requested 1280x720, 1440x900, and 1920x1080 environments in light and dark themes. Actual zoom is driven by a temporary extension in a Playwright-owned persistent Chromium context; getZoom is 2 and the pre-zoom CSS viewport is within the Windows window-coordinate rounding tolerance of 2px on each axis. Computed contrast assertions cover text, controls, notices, and focus boundaries. Focus-ring width, offset, and four-edge bounds plus Tab/Shift+Tab traversal are asserted. Synthetic composition covers the ordinary Enter order plus commit/cancel without an ending Enter and verifies committed/cancelled request lengths for loss or duplication. Native Windows IME and a real password manager remain unverified limitations under the revised Playwright-only decision.

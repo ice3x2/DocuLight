@@ -1,0 +1,20 @@
+COMMAND=C:\Program Files\nodejs\node.exe C:\Users\beom\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js test --workspace @doculight/web -- --run test/issue71-closure-audit-contract.test.ts
+EXIT_CODE=0
+--- STDOUT ---
+
+> @doculight/web@0.1.0 test
+> vitest run --run test/issue71-closure-audit-contract.test.ts
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0-wt-issue77-final/packages/web
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  08:02:49
+   Duration  589ms (transform 39ms, setup 25ms, import 29ms, tests 5ms, environment 359ms)
+
+
+--- STDERR ---
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.

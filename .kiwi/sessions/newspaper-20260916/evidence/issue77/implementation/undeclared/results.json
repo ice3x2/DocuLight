@@ -1,0 +1,62 @@
+[
+    {
+        "file":  "newspaper-shared-ui-check.mjs",
+        "exit":  0,
+        "raw":  "newspaper_shared_ui_check_mjs.raw.txt"
+    },
+    {
+        "file":  "newspaper-shared-controls-check.mjs",
+        "exit":  0,
+        "raw":  "newspaper_shared_controls_check_mjs.raw.txt"
+    },
+    {
+        "file":  "newspaper-field-component-check.mjs",
+        "exit":  0,
+        "raw":  "newspaper_field_component_check_mjs.raw.txt"
+    },
+    {
+        "file":  "newspaper-overlays-check.mjs",
+        "exit":  0,
+        "raw":  "newspaper_overlays_check_mjs.raw.txt"
+    },
+    {
+        "file":  "newspaper-data-display-check.mjs",
+        "exit":  0,
+        "raw":  "newspaper_data_display_check_mjs.raw.txt"
+    },
+    {
+        "file":  "newspaper-right-panel-check.cjs",
+        "exit":  0,
+        "raw":  "newspaper_right_panel_check_cjs.raw.txt"
+    },
+    {
+        "file":  "newspaper-search-layout-check.cjs",
+        "exit":  1,
+        "raw":  "newspaper_search_layout_check_cjs.raw.txt"
+    },
+    {
+        "file":  "newspaper-tree-naming-state-check.cjs",
+        "exit":  1,
+        "raw":  "newspaper_tree_naming_state_check_cjs.raw.txt"
+    },
+    {
+        "file":  "newspaper-tree-review-replay-check.cjs",
+        "exit":  0,
+        "raw":  "newspaper_tree_review_replay_check_cjs.raw.txt"
+    },
+    {
+        "file":  "newspaper-editor-layout-check.cjs",
+        "exit":  0,
+        "raw":  "newspaper_editor_layout_check_cjs.raw.txt"
+    },
+    {
+        "file":  "newspaper-version-history-check.cjs",
+        "exit":  0,
+        "raw":  "newspaper_version_history_check_cjs.raw.txt"
+    },
+    {
+        "file":  "newspaper-conflict-check.cjs",
+        "exit":  0,
+        "raw":  "newspaper_conflict_check_cjs.raw.txt"
+    }
+]

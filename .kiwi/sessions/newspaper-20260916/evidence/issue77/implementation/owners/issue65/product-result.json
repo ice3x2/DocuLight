@@ -1,0 +1,29 @@
+{
+  "created": {
+    "directoryId": "15028182-e02c-49d1-9135-f070a6698003",
+    "fileId": "99d71f7a-0d28-4353-abed-797b634f2820",
+    "uiFileId": "64dbc9be-2eea-4479-95e9-15824723da89"
+  },
+  "statuses": {
+    "warnings": 200,
+    "grant": 204,
+    "containerGrant": 204,
+    "revoke": 204,
+    "managerShare": 200,
+    "concealedOutsiderShare": 404
+  },
+  "observed": {
+    "grant": 3,
+    "revoke": 2,
+    "list": 8,
+    "warnings": 3
+  },
+  "productUi": {
+    "openedShare": true,
+    "principalPicked": true,
+    "grant": true,
+    "authoritativeToastRevoke": true
+  },
+  "ownedBrowserCount": 1,
+  "isolatedContextCount": 3
+}

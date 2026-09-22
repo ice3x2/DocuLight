@@ -98,6 +98,10 @@ try {
   for (let index = 0; index < 1_200; index += 1) {
     runtime.stores.audit.append({ operation: 'issue71.composition-impact', actor: installation.superuserId, beforeValue: `${index}`, afterValue: `${index + 1}` });
   }
+  runtime.stores.metadata.run(
+    'UPDATE audit_log SET occurred_at = ? WHERE operation = ?',
+    ['2000-01-01 00:00:00', 'issue71.composition-impact'],
+  );
   await runChild(path.join(webRoot, 'test/issue71-instance-settings-product-check.mjs'), {
     ...process.env,
     WEB_URL: origin,

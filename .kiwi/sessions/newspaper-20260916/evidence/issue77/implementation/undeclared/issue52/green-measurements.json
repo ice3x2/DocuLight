@@ -1,0 +1,456 @@
+{
+  "regular": [
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "zoom": 1,
+      "measurement": {
+        "input": {
+          "x": 8,
+          "y": 56,
+          "width": 207,
+          "height": 36,
+          "top": 56,
+          "right": 215,
+          "bottom": 92,
+          "left": 8
+        },
+        "filter": {
+          "x": 223,
+          "y": 56,
+          "width": 48,
+          "height": 36,
+          "top": 56,
+          "right": 271,
+          "bottom": 92,
+          "left": 223
+        },
+        "top": 56,
+        "overflow": "auto",
+        "horizontal": 0
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "zoom": 1,
+      "measurement": {
+        "input": {
+          "x": 8,
+          "y": 56,
+          "width": 207,
+          "height": 36,
+          "top": 56,
+          "right": 215,
+          "bottom": 92,
+          "left": 8
+        },
+        "filter": {
+          "x": 223,
+          "y": 56,
+          "width": 48,
+          "height": 36,
+          "top": 56,
+          "right": 271,
+          "bottom": 92,
+          "left": 223
+        },
+        "top": 56,
+        "overflow": "auto",
+        "horizontal": 0
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 1,
+      "measurement": {
+        "input": {
+          "x": 8,
+          "y": 56,
+          "width": 207,
+          "height": 36,
+          "top": 56,
+          "right": 215,
+          "bottom": 92,
+          "left": 8
+        },
+        "filter": {
+          "x": 223,
+          "y": 56,
+          "width": 48,
+          "height": 36,
+          "top": 56,
+          "right": 271,
+          "bottom": 92,
+          "left": 223
+        },
+        "top": 56,
+        "overflow": "auto",
+        "horizontal": 0
+      },
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "zoom": 1,
+      "measurement": {
+        "input": {
+          "x": 8,
+          "y": 56,
+          "width": 207,
+          "height": 36,
+          "top": 56,
+          "right": 215,
+          "bottom": 92,
+          "left": 8
+        },
+        "filter": {
+          "x": 223,
+          "y": 56,
+          "width": 48,
+          "height": 36,
+          "top": 56,
+          "right": 271,
+          "bottom": 92,
+          "left": 223
+        },
+        "top": 56,
+        "overflow": "auto",
+        "horizontal": 0
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "zoom": 1,
+      "measurement": {
+        "input": {
+          "x": 8,
+          "y": 56,
+          "width": 207,
+          "height": 36,
+          "top": 56,
+          "right": 215,
+          "bottom": 92,
+          "left": 8
+        },
+        "filter": {
+          "x": 223,
+          "y": 56,
+          "width": 48,
+          "height": 36,
+          "top": 56,
+          "right": 271,
+          "bottom": 92,
+          "left": 223
+        },
+        "top": 56,
+        "overflow": "auto",
+        "horizontal": 0
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 1,
+      "measurement": {
+        "input": {
+          "x": 8,
+          "y": 56,
+          "width": 207,
+          "height": 36,
+          "top": 56,
+          "right": 215,
+          "bottom": 92,
+          "left": 8
+        },
+        "filter": {
+          "x": 223,
+          "y": 56,
+          "width": 48,
+          "height": 36,
+          "top": 56,
+          "right": 271,
+          "bottom": 92,
+          "left": 223
+        },
+        "top": 56,
+        "overflow": "auto",
+        "horizontal": 0
+      },
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      }
+    }
+  ],
+  "actualZoom": [
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "zoom": 2,
+      "before": {
+        "width": 1280,
+        "height": 720
+      },
+      "after": {
+        "width": 640,
+        "height": 360
+      },
+      "measurement": {
+        "input": {
+          "x": 8,
+          "y": 57.60000228881836,
+          "width": 115.53125,
+          "height": 36,
+          "top": 57.60000228881836,
+          "right": 123.53125,
+          "bottom": 93.60000228881836,
+          "left": 8
+        },
+        "filter": {
+          "x": 131.53125,
+          "y": 57.60000228881836,
+          "width": 48,
+          "height": 36,
+          "top": 57.60000228881836,
+          "right": 179.53125,
+          "bottom": 93.60000228881836,
+          "left": 131.53125
+        },
+        "top": 57.60000228881836,
+        "overflow": "auto",
+        "horizontal": 0
+      },
+      "method": "isolated persistent Chromium + chrome.tabs.setZoom(2)"
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "zoom": 2,
+      "before": {
+        "width": 1280,
+        "height": 720
+      },
+      "after": {
+        "width": 640,
+        "height": 360
+      },
+      "measurement": {
+        "input": {
+          "x": 8,
+          "y": 57.60000228881836,
+          "width": 115.53125,
+          "height": 36,
+          "top": 57.60000228881836,
+          "right": 123.53125,
+          "bottom": 93.60000228881836,
+          "left": 8
+        },
+        "filter": {
+          "x": 131.53125,
+          "y": 57.60000228881836,
+          "width": 48,
+          "height": 36,
+          "top": 57.60000228881836,
+          "right": 179.53125,
+          "bottom": 93.60000228881836,
+          "left": 131.53125
+        },
+        "top": 57.60000228881836,
+        "overflow": "auto",
+        "horizontal": 0
+      },
+      "method": "isolated persistent Chromium + chrome.tabs.setZoom(2)"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "zoom": 2,
+      "before": {
+        "width": 1440,
+        "height": 900
+      },
+      "after": {
+        "width": 720,
+        "height": 450
+      },
+      "measurement": {
+        "input": {
+          "x": 8,
+          "y": 57.60000228881836,
+          "width": 132.1999969482422,
+          "height": 36,
+          "top": 57.60000228881836,
+          "right": 140.1999969482422,
+          "bottom": 93.60000228881836,
+          "left": 8
+        },
+        "filter": {
+          "x": 148.1999969482422,
+          "y": 57.60000228881836,
+          "width": 48,
+          "height": 36,
+          "top": 57.60000228881836,
+          "right": 196.1999969482422,
+          "bottom": 93.60000228881836,
+          "left": 148.1999969482422
+        },
+        "top": 57.60000228881836,
+        "overflow": "auto",
+        "horizontal": 0
+      },
+      "method": "isolated persistent Chromium + chrome.tabs.setZoom(2)"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "zoom": 2,
+      "before": {
+        "width": 1440,
+        "height": 900
+      },
+      "after": {
+        "width": 720,
+        "height": 450
+      },
+      "measurement": {
+        "input": {
+          "x": 8,
+          "y": 57.60000228881836,
+          "width": 132.1999969482422,
+          "height": 36,
+          "top": 57.60000228881836,
+          "right": 140.1999969482422,
+          "bottom": 93.60000228881836,
+          "left": 8
+        },
+        "filter": {
+          "x": 148.1999969482422,
+          "y": 57.60000228881836,
+          "width": 48,
+          "height": 36,
+          "top": 57.60000228881836,
+          "right": 196.1999969482422,
+          "bottom": 93.60000228881836,
+          "left": 148.1999969482422
+        },
+        "top": 57.60000228881836,
+        "overflow": "auto",
+        "horizontal": 0
+      },
+      "method": "isolated persistent Chromium + chrome.tabs.setZoom(2)"
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 2,
+      "before": {
+        "width": 1920,
+        "height": 1080
+      },
+      "after": {
+        "width": 960,
+        "height": 540
+      },
+      "measurement": {
+        "input": {
+          "x": 8,
+          "y": 57.60000228881836,
+          "width": 182.1999969482422,
+          "height": 36,
+          "top": 57.60000228881836,
+          "right": 190.1999969482422,
+          "bottom": 93.60000228881836,
+          "left": 8
+        },
+        "filter": {
+          "x": 198.1999969482422,
+          "y": 57.60000228881836,
+          "width": 48,
+          "height": 36,
+          "top": 57.60000228881836,
+          "right": 246.1999969482422,
+          "bottom": 93.60000228881836,
+          "left": 198.1999969482422
+        },
+        "top": 57.60000228881836,
+        "overflow": "auto",
+        "horizontal": 0
+      },
+      "method": "isolated persistent Chromium + chrome.tabs.setZoom(2)"
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 2,
+      "before": {
+        "width": 1920,
+        "height": 1080
+      },
+      "after": {
+        "width": 960,
+        "height": 540
+      },
+      "measurement": {
+        "input": {
+          "x": 8,
+          "y": 57.60000228881836,
+          "width": 182.1999969482422,
+          "height": 36,
+          "top": 57.60000228881836,
+          "right": 190.1999969482422,
+          "bottom": 93.60000228881836,
+          "left": 8
+        },
+        "filter": {
+          "x": 198.1999969482422,
+          "y": 57.60000228881836,
+          "width": 48,
+          "height": 36,
+          "top": 57.60000228881836,
+          "right": 246.1999969482422,
+          "bottom": 93.60000228881836,
+          "left": 198.1999969482422
+        },
+        "top": 57.60000228881836,
+        "overflow": "auto",
+        "horizontal": 0
+      },
+      "method": "isolated persistent Chromium + chrome.tabs.setZoom(2)"
+    }
+  ]
+}

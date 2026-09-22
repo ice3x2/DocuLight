@@ -1,0 +1,13 @@
+PASS  기준 4 R25 권한이 없으면 그 노드가 화면에 아예 없다  — 둘째의 트리 항목 0개 — 셋 다 없다: true
+PASS  기준 4 R25 같은 자리를 첫째는 본다 — 두 화면이 실제로 다르다  — 첫째의 트리 항목 4개 · 둘째 0개
+PASS  기준 4 첫째가 화면 경로로 권한을 준다  — share 응답 204
+PASS  기준 4 준 자리가 둘째의 화면에 나타난다  — 둘째의 트리 항목 2개
+PASS  기준 4 R25 주지 않은 자리는 여전히 없다 — 준 것만 보인다  — 비밀 문서 노출 false
+PASS  기준 4 R14 상속받은 자식 본문을 서버가 허용한다  — document status 200
+PASS  기준 4 R14 상속받은 자식을 서버 트리가 포함한다  — tree [{"workspace":{"id":"f4227cffea839fcd2b5004b42e0e0280","name":"workspace","createdAt":"2026-09-21 23:59:12"},"visibility":"pass-through","roots":[{"id":"65c7e82e-0f11-4feb-b051-d9a93571e15a","name":"acl-공유함-1790035169657","kind":"directory","visibility":"full","level":"view","parentLevel":null,"children":[{"id":"df5bd290-23aa-4888-aec3-cd6384576e10","name":"acl-자식-1790035169657.md","kind":"file","visibility":"full","level":"view","parentLevel":"view","overwriteIrreversible":false,"children":[]}]}]}]
+PASS  기준 4 R14 부모에 준 권한이 그 아래 문서까지 상속된다  — 펼친 뒤 항목 3개 · 자식 노출 true
+PASS  기준 4 첫째가 같은 화면에서 권한을 거둔다  — 회수 응답 204
+PASS  기준 4 거둔 자리가 둘째의 화면에서 사라진다  — 둘째의 트리 항목 0개
+
+10/10 통과
+(둘째 계정은 지우지 않는다 — 계정 삭제 경로가 아직 화면에 없다. 이름에 시각이 들어 있어 회차마다 다른 계정이 선다)

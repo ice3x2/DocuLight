@@ -1,0 +1,30 @@
+[
+  {
+    "check": "issue77-product-check.mjs",
+    "startedAt": "2026-09-21T22:41:28.701Z",
+    "endedAt": "2026-09-21T22:41:31.629Z",
+    "exitCode": 0,
+    "raw": "issue77-product-check.raw.txt"
+  },
+  {
+    "check": "version-history-product-check.mjs",
+    "startedAt": "2026-09-21T22:41:31.629Z",
+    "endedAt": "2026-09-21T22:41:35.767Z",
+    "exitCode": 0,
+    "raw": "version-history-product-check.raw.txt"
+  },
+  {
+    "check": "new-version-product-check.mjs",
+    "startedAt": "2026-09-21T22:41:35.767Z",
+    "endedAt": "2026-09-21T22:42:03.627Z",
+    "exitCode": 0,
+    "raw": "new-version-product-check.raw.txt"
+  },
+  {
+    "check": "conflict-rescue-product-check.mjs",
+    "startedAt": "2026-09-21T22:42:03.627Z",
+    "endedAt": "2026-09-21T22:42:07.662Z",
+    "exitCode": 0,
+    "raw": "conflict-rescue-product-check.raw.txt"
+  }
+]

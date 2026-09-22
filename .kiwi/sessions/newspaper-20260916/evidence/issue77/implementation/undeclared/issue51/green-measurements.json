@@ -1,0 +1,114 @@
+{
+  "results": [
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "tree": {
+        "x": 0,
+        "y": 77,
+        "width": 300,
+        "height": 541,
+        "top": 77,
+        "right": 300,
+        "bottom": 618,
+        "left": 0
+      }
+    },
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "tree": {
+        "x": 0,
+        "y": 77,
+        "width": 300,
+        "height": 721,
+        "top": 77,
+        "right": 300,
+        "bottom": 798,
+        "left": 0
+      }
+    },
+    {
+      "theme": "light",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "tree": {
+        "x": 0,
+        "y": 77,
+        "width": 300,
+        "height": 901,
+        "top": 77,
+        "right": 300,
+        "bottom": 978,
+        "left": 0
+      }
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "tree": {
+        "x": 0,
+        "y": 77,
+        "width": 300,
+        "height": 541,
+        "top": 77,
+        "right": 300,
+        "bottom": 618,
+        "left": 0
+      }
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "tree": {
+        "x": 0,
+        "y": 77,
+        "width": 300,
+        "height": 721,
+        "top": 77,
+        "right": 300,
+        "bottom": 798,
+        "left": 0
+      }
+    },
+    {
+      "theme": "dark",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "tree": {
+        "x": 0,
+        "y": 77,
+        "width": 300,
+        "height": 901,
+        "top": 77,
+        "right": 300,
+        "bottom": 978,
+        "left": 0
+      }
+    }
+  ],
+  "actualZoom": {
+    "method": "isolated persistent Chromium + extension chrome.tabs.setZoom(2)",
+    "zoom": 2,
+    "viewport": {
+      "width": 394,
+      "height": 406
+    }
+  }
+}

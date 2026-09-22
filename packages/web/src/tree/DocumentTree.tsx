@@ -1,5 +1,5 @@
 import * as ContextMenu from '@radix-ui/react-context-menu';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
   Tree,
   type NodeApi,
@@ -444,8 +444,10 @@ export function DocumentTree({
   const tree = useRef<TreeApi<Row> | null>(null);
   const viewport = useRef<HTMLDivElement>(null);
   const lastFocusedNodeId = useRef<string | undefined>(undefined);
+  const resizeFocusNodeId = useRef<string | undefined>(undefined);
   const restoringTreeRegion = useRef(false);
   const [treeHeight, setTreeHeight] = useState(1);
+  const [resizeRevision, setResizeRevision] = useState(0);
   const namingHelpId = 'document-tree-naming-help';
   const [emptyNamingError, setEmptyNamingError] = useState(false);
 
@@ -498,10 +500,79 @@ export function DocumentTree({
     const treeElement = element.querySelector('[role="tree"]');
     treeElement?.setAttribute('data-row-height', String(ROW_HEIGHT));
     treeElement?.setAttribute('data-indent', String(TREE_INDENT));
-    const observer = new ResizeObserver(([entry]) => setTreeHeight(Math.max(1, Math.floor(entry?.contentRect.height ?? element.clientHeight))));
+    let observedWindowWidth = window.innerWidth;
+    let observedWindowHeight = window.innerHeight;
+    const captureFocusedNode = () => {
+      if (!element.contains(document.activeElement)) return;
+      const activeRowId = document.activeElement
+        ?.closest<HTMLElement>('[role="treeitem"]')
+        ?.querySelector<HTMLElement>('[data-tree-row][data-node-id]')
+        ?.dataset.nodeId;
+      resizeFocusNodeId.current = activeRowId ?? tree.current?.focusedNode?.id;
+    };
+    const restoreResizeFocusAfterBlur = (event: Event) => {
+      const nodeId = resizeFocusNodeId.current;
+      if (nodeId === undefined || (event as FocusEvent).relatedTarget !== null) return;
+      queueMicrotask(() => {
+        const api = tree.current;
+        if (api?.get(nodeId) !== null) api?.focus(nodeId);
+      });
+    };
+    const clearResizeFocusOutsideTree = (event: Event) => {
+      if (event.target instanceof Node && !element.contains(event.target)) resizeFocusNodeId.current = undefined;
+    };
+    const restoreAfterVirtualRowsChange = () => {
+      const nodeId = resizeFocusNodeId.current;
+      if (nodeId === undefined) return;
+      const activeId = document.activeElement
+        ?.closest<HTMLElement>('[role="treeitem"]')
+        ?.querySelector<HTMLElement>('[data-tree-row][data-node-id]')
+        ?.dataset.nodeId;
+      if (activeId === nodeId) return;
+      element.querySelector<HTMLElement>(`[data-tree-row][data-node-id="${CSS.escape(nodeId)}"]`)
+        ?.closest<HTMLElement>('[role="treeitem"]')
+        ?.focus({ preventScroll: true });
+    };
+    window.addEventListener('resize', captureFocusedNode);
+    window.visualViewport?.addEventListener('resize', captureFocusedNode);
+    treeElement?.addEventListener('focusout', restoreResizeFocusAfterBlur);
+    document.addEventListener('focusin', clearResizeFocusOutsideTree);
+    const rowObserver = new MutationObserver(restoreAfterVirtualRowsChange);
+    rowObserver.observe(element, { childList: true, subtree: true });
+    const observer = new ResizeObserver(([entry]) => {
+      const nextHeight = Math.max(1, Math.floor(entry?.contentRect.height ?? element.clientHeight));
+      const viewportChanged = window.innerWidth !== observedWindowWidth || window.innerHeight !== observedWindowHeight;
+      observedWindowWidth = window.innerWidth;
+      observedWindowHeight = window.innerHeight;
+      if (viewportChanged && resizeFocusNodeId.current !== undefined) {
+        setResizeRevision((value) => value + 1);
+      }
+      setTreeHeight(nextHeight);
+    });
     observer.observe(element);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', captureFocusedNode);
+      window.visualViewport?.removeEventListener('resize', captureFocusedNode);
+      treeElement?.removeEventListener('focusout', restoreResizeFocusAfterBlur);
+      document.removeEventListener('focusin', clearResizeFocusOutsideTree);
+      rowObserver.disconnect();
+    };
   }, []);
+
+  useLayoutEffect(() => {
+    const nodeId = resizeFocusNodeId.current;
+    const api = tree.current;
+    if (nodeId !== undefined && api !== null && api !== undefined && api.get(nodeId) !== null) {
+      api.focus(nodeId);
+      const scrolling = api.scrollTo(nodeId);
+      if (scrolling !== undefined) {
+        void scrolling.then(() => {
+          if (api.get(nodeId) !== null) api.focus(nodeId, { scroll: false });
+        });
+      }
+    }
+  }, [treeHeight, resizeRevision]);
 
   const rows = useMemo<Row[]>(() => {
     const base: Row[] = workspaces.map((entry) => ({
@@ -581,6 +652,7 @@ export function DocumentTree({
       <div
         ref={viewport}
         data-tree-viewport=""
+        data-resize-revision={resizeRevision}
         onFocusCapture={(event) => {
           const target = event.target as HTMLElement;
           if (restoringTreeRegion.current && target.getAttribute('role') === 'tree') {
@@ -609,7 +681,7 @@ export function DocumentTree({
           // 환경은 높이를 못 재므로 넉넉히 잡아 전부 그리게 둔다 — 0 으로
           // 접히면 목록이 통째로 사라지고, 그것은 「비어 있다」와 구별되지
           // 않는다.
-          overscanCount={rows.length + 64}
+          overscanCount={8}
           disableDrag
           disableDrop
           renderRow={(props: RowRendererProps<Row>) =>

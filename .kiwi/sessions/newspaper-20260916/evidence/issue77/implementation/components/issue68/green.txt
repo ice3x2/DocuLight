@@ -1,0 +1,41 @@
+timestamp=2026-09-18T03:57:00.5582446+09:00
+head=36b5f9800d40186d6d4556152a8f684ed2a01958
+contract.packages/web/test/roster.test.tsx.sha256=65f52e47c4b6415b1d176a38177f2b952f02932a873165732cc92f8758c102a5
+contract.packages/web/test/issue68-group-roster-fixture.html.sha256=2fb9a3cb8643dfbff49eeb2b770aa7f3dd602925ffeb98ace60d81176e2bec81
+contract.packages/web/test/issue68-group-roster-fixture.tsx.sha256=792f3e1baf605ce2d3241967d42117605ecf49b5f1d2d7950600ea5c9c689d3e
+contract.packages/web/test/issue68-group-roster-browser-check.cjs.sha256=941faafa7cb71ab0715359e5678dc3685e41a2450c06a8e716fdb8d7be29dcbe
+contract.packages/web/package.json.sha256=12a62ab57930fd19717ca523aaf7b7f72a263ea18d695ebe5bf561fb69bfd2e9
+browser.evidence.sha256=6628bef0c34d06e041ad3351b8d062c4df80020f128dedf60d607961171ca5d1
+product.GroupRoster.sha256=2c6bf9ac172a86ed02fa6258e6c74ae5c44be13fdff32d7bbc82c4980bcd9900
+product.GroupRoster.css.sha256=5a89cce191f785d7dd33303f5ce66d60ce9d128c9c4f14726faadc2495deebe9
+
+command=node_modules/.bin/vitest.cmd --root packages/web run test/roster.test.tsx
+exit_code=0
+Test Files  1 passed (1)
+Tests  15 passed (15)
+
+command=node packages/web/test/issue68-group-roster-browser-check.cjs
+exit_code=0
+PASS issue68 GroupRoster: 12 environments + forced colors 100/200
+browser.summary={"environments":12,"regular":6,"zoomed":6,"forced100":true,"forced200":true,"allRoleGates":true,"detailedStateThemes":["light","dark","forced"],"hoverAppearance":true,"tabShiftTab":true,"homeEnd":true,"loadingEmptyErrorRetry":true,"emptyGroups":true,"missingCallbacks":true,"firstLastGroupScope":true,"zoomSelectedId":"user-target","zoomCallbacksPreserved":true,"prePostViewportDprRecorded":true,"conditionalKeyboardOverflow":true,"rightmostDeleteExplanationVisible":true,"screenshots":28}
+
+command=npm run typecheck --workspace @doculight/web
+exit_code=0
+
+command=npm test --workspace @doculight/web -- --run
+exit_code=0
+Test Files  78 passed (78)
+Tests  954 passed (954)
+
+command=git diff --check
+exit_code=0
+
+command=credential-pattern scan over issue68 evidence/harness/GroupRoster
+scan_result=PASS
+rg_no_match_exit_code=1
+matches=0
+
+source.onRemove.occurrences=1
+source.onClick.occurrences=0
+
+Evidence boundary: production AppShell/settings category and GroupRoster component bundle with simulated PrincipalPicker read responses. This does not claim backend group query, membership mutation, group deletion, exact L3 impact, or post-response focus integration. Native Windows IME/candidate UI remains nonblocking untested; synthetic composition events were exercised without OS/native input.

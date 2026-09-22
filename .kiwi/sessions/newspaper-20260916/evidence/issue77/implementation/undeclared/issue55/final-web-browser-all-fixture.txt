@@ -1,0 +1,74 @@
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test:browser:complex
+> node test/newspaper-complex-content-check.cjs
+
+PASS issue55 actual product components theme stress, 12 environments, and genuine chrome.tabs.setZoom(2)
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test:browser:auth
+> node test/auth-round-trip-check.mjs
+
+PASS  AC-1: 인증되지 않으면 로그인 화면이 선다  — name · password 입력이 실재한다
+PASS  틀린 자격은 안내와 함께 거절된다  — 안내: 이름 또는 비밀번호가 올바르지 않습니다
+PASS  R57: 화면에서 자격을 입력해 로그인된다  — 트리가 서고 로그인 폼이 사라진다
+PASS  R145: 로그아웃하면 그 브라우저의 인증 상태가 풀린다  — 설정 모달의 로그아웃이 실제로 세션을 끊는다
+PASS  R145 의 뒤끝 — 새로 열어도 로그인 화면이다  — 쿠키가 실제로 지워졌다
+PASS  R144: 비밀번호를 바꾸면 그 세션이 끊긴다  — 바꾼 뒤 로그인 화면으로 돌아간다
+PASS  R144 의 뒤끝 — 새 비밀번호로 다시 로그인된다  — 바뀐 값이 실제 검증 경로를 지난다
+PASS  가입 모드를 승인제로 바꿀 수 있다  — 상태 204
+PASS  R7: 가입 화면에서 신청하면 승인을 기다리라고 알린다  — 안내: 가입을 신청했습니다. 슈퍼유저의 승인을 기다려 주십시오.
+PASS  R60: 승인 전 계정은 로그인이 차단된다  — 대기 상태로는 들어오지 못한다
+PASS  SEC-AUTH-004: 승인한 계정이 실제로 로그인된다  — 가입 승인 화면의 조작이 서버까지 닿는다
+
+11/11 통과
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test:browser:focus
+> node test/focus-retention-check.mjs
+
+PASS  AC-1 저장이 끝난 뒤에도 포커스가 편집기에 남는다  — 활성 요소: cm-content cm-lineWrapping
+PASS  AC-2 저장 직후에 이어 친 글자가 문서에 들어간다  — 본문에 보이는 것: 시험 문서첫 줄가나다라
+PASS  AC-2 이어 친 글자가 저장까지 간다  — 서버가 들고 있는 본문 길이 17
+PASS  AC-3 저장이 커서를 옮기지 않는다  — 커서가 있는 줄: 가나다라
+PASS  AC-4 충돌해도 포커스가 편집기에 남는다  — 충돌 상태에서 포커스 유지
+
+5/5 통과
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test:browser:ime
+> node test/ime-composition-check.mjs
+
+PASS  수용 기준 7 조합한 글자가 정확히 한 번 들어간다  — 「한글입력」 1회
+PASS  수용 기준 7 조합 중간의 낱자모가 남지 않는다  — 없음
+PASS  수용 기준 7 조합한 글자가 저장까지 간다  — 서버 본문 길이 15
+
+3/3 통과
+(조합은 CDP `Input.imeSetComposition` 으로 재현했다 — OS 입력기 없이 그 단계를 그대로 낸다)
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test:browser:search
+> node test/search-layout-check.mjs
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for getByPlaceholder(/문서 제목|검색/).first()[22m
+
+    at C:\Work\git\DocuLight2.0\packages\web\test\search-layout-check.mjs:52:14
+    at async runBrowserChecks (C:\Work\git\DocuLight2.0\packages\editor\test\_browser-harness.mjs:140:5)
+    at async file:///C:/Work/git/DocuLight2.0/packages/web/test/search-layout-check.mjs:32:1 {
+  log: [ '  - waiting for getByPlaceholder(/문서 제목|검색/).first()' ],
+  name: 'TimeoutError'
+}
+npm error Lifecycle script `test:browser:search` failed with error:
+npm error code 2
+npm error path C:\Work\git\DocuLight2.0\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c node test/search-layout-check.mjs

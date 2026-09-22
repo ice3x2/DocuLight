@@ -1,0 +1,54 @@
+command: npm test -- --run test/newspaper-pre-auth.test.tsx
+cwd: C:\Work\git\DocuLight2.0\packages\web
+exit_code: 1
+captured_at: 2026-09-17T13:39:33+09:00
+
+RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+test/newspaper-pre-auth.test.tsx (17 tests | 10 failed)
+
+FAIL  IR-SHELL-009 AC-4 — 로그인·가입 신문지 전체 화면 > 제품명, 제목과 브라우저 기하 검증용 인증 열을 제공한다
+AssertionError: expected null not to be null
+  at test/newspaper-pre-auth.test.tsx:25:62
+
+FAIL  IR-SHELL-009 AC-4 — 로그인·가입 신문지 전체 화면 > 화면마다 안정적인 필드 계약과 분리된 폼 identity를 제공한다
+AssertionError: expected null to be 'login-name'
+  at test/newspaper-pre-auth.test.tsx:72:42
+
+FAIL  IR-SHELL-006 AC-5..7 — 인증 폼 상태와 제출 > 콜백이 없으면 성공을 꾸미지 않고 제출을 막는다
+AssertionError: expected false to be true
+  at test/newspaper-pre-auth.test.tsx:106:89
+
+FAIL  IR-SHELL-006 AC-5..7 — 인증 폼 상태와 제출 > pending 동안 한 번만 보내고 편집 뒤 돌아온 예전 결과는 표시하지 않는다
+AssertionError: expected 2 calls to deeply equal 1 call
+  at test/newspaper-pre-auth.test.tsx:133:19
+
+FAIL  IR-SHELL-006 AC-5..7 — 인증 폼 상태와 제출 > 안전한 거절문은 그대로 보이고 입력 수정 시 사라진다
+AssertionError: expected null to be 'inline-notice'
+  at test/newspaper-pre-auth.test.tsx:161:45
+
+FAIL  IR-SHELL-006 AC-5..7 — 인증 폼 상태와 제출 > throw/reject는 내부 문구를 숨기고 재시도를 연다
+TestingLibraryElementError: Unable to find role="alert"
+  at test/newspaper-pre-auth.test.tsx:185:32
+
+FAIL  IR-SHELL-006 AC-5..7 — 인증 폼 상태와 제출 > 동기 throw도 내부 문구를 숨기고 guard를 해제한다
+TestingLibraryElementError: Unable to find role="alert"
+  at test/newspaper-pre-auth.test.tsx:211:26
+
+FAIL  IR-SHELL-006 AC-5..7 — 인증 폼 상태와 제출 > React 상태가 아닌 제출 시점의 native input 값을 그대로 보낸다
+AssertionError: expected [{ name: '', password: '' }] to deeply equal submitted native values
+  at test/newspaper-pre-auth.test.tsx:262:19
+
+FAIL  IR-SHELL-006 AC-5..7 — 인증 폼 상태와 제출 > 조합 중 Enter와 조합 종료 Enter는 막고 다음 Enter만 제출한다
+AssertionError: expected false to be true
+  at test/newspaper-pre-auth.test.tsx:281:45
+
+FAIL  IR-SHELL-006 AC-5..7 — 인증 폼 상태와 제출 > 가입 성공은 모드를 단정하지 않는 지속 상태를 표시한다
+Expected: 가입 신청을 접수했습니다. 승인이 필요한 경우 슈퍼유저의 승인 후 로그인할 수 있습니다.
+Received: 가입을 신청했습니다. 슈퍼유저의 승인을 기다려 주십시오.
+  at test/newspaper-pre-auth.test.tsx:326:61
+
+Test Files  1 failed (1)
+Tests  10 failed | 7 passed (17)
+Errors  1 error
+Duration  4.82s

@@ -1,0 +1,3702 @@
+{
+  "harness": "component bundle using actual RelocationDialog and RelocationPreview; not product App integration evidence",
+  "environments": 12,
+  "regular": [
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "zoom": 100,
+      "owner": "fresh Playwright isolated Chromium context",
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "dialog": {
+        "x": 360,
+        "y": 123,
+        "width": 560,
+        "height": 474,
+        "top": 123,
+        "right": 920,
+        "bottom": 597,
+        "left": 360
+      },
+      "body": {
+        "x": 361,
+        "y": 212,
+        "width": 558,
+        "height": 312,
+        "top": 212,
+        "right": 919,
+        "bottom": 524,
+        "left": 361
+      },
+      "actions": {
+        "x": 361,
+        "y": 524,
+        "width": 558,
+        "height": 72,
+        "top": 524,
+        "right": 919,
+        "bottom": 596,
+        "left": 361
+      },
+      "select": {
+        "x": 385,
+        "y": 312,
+        "width": 510,
+        "height": 36,
+        "top": 312,
+        "right": 895,
+        "bottom": 348,
+        "left": 385
+      },
+      "selection": {
+        "value": "one",
+        "selectedOption": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "readout": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료"
+      },
+      "path": {
+        "text": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "rect": {
+          "x": 385,
+          "y": 356,
+          "width": 510,
+          "height": 36,
+          "top": 356,
+          "right": 895,
+          "bottom": 392,
+          "left": 385
+        },
+        "scrollWidth": 510,
+        "clientWidth": 510,
+        "wraps": true
+      },
+      "styles": {
+        "dialog": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(122, 123, 113)",
+          "backgroundColor": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "select": {
+          "fontSize": "14px",
+          "lineHeight": "normal",
+          "outlineColor": "rgb(54, 91, 112)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "borderColor": "rgb(54, 91, 112)",
+          "backgroundColor": "rgb(223, 231, 233)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "title": {
+          "fontSize": "18px",
+          "lineHeight": "26px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(36, 37, 33)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "help": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "outlineColor": "rgb(101, 102, 95)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(101, 102, 95)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(101, 102, 95)"
+        },
+        "primary": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(250, 249, 245)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(54, 91, 112)",
+          "backgroundColor": "rgb(54, 91, 112)",
+          "color": "rgb(250, 249, 245)"
+        },
+        "cancel": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(122, 123, 113)",
+          "backgroundColor": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "close": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgba(0, 0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(36, 37, 33)"
+        }
+      },
+      "horizontalOverflow": false,
+      "forcedColors": false,
+      "rosterNames": 0,
+      "readonlyCount": 0,
+      "invalidCount": 0,
+      "nativeSelect": true,
+      "shortSelection": {
+        "value": "d17",
+        "selectedOption": "부서 18/업무 자료/보관 위치 18",
+        "readout": "부서 18/업무 자료/보관 위치 18"
+      },
+      "contrastRatios": {
+        "titleText": 14.639805378106399,
+        "helpText": 5.5078338853570425,
+        "selectText": 12.297720709885532,
+        "primaryText": 6.903983660507881,
+        "cancelText": 14.639805378106399,
+        "closeText": 14.639805378106399,
+        "selectBoundary": 5.799480297020246,
+        "selectFocus": 6.903983660507881
+      },
+      "controls": {
+        "primary": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(54, 91, 112)",
+            "backgroundColor": "rgb(54, 91, 112)",
+            "color": "rgb(250, 249, 245)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(54, 91, 112)",
+              "outlineColor": "rgb(250, 249, 245)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(44, 75, 93)",
+              "backgroundColor": "rgb(44, 75, 93)",
+              "outlineColor": "rgb(250, 249, 245)",
+              "outlineWidth": "3px"
+            }
+          }
+        },
+        "cancel": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(122, 123, 113)",
+            "backgroundColor": "rgb(250, 249, 245)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(122, 123, 113)",
+              "backgroundColor": "rgb(250, 249, 245)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(223, 231, 233)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "3px"
+            }
+          }
+        },
+        "close": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgba(0, 0, 0, 0)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(223, 231, 233)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "3px"
+            }
+          }
+        }
+      },
+      "keyboard": {
+        "initialClose": true,
+        "tabToSelect": true,
+        "shiftTabWrap": true,
+        "escapeCancel": true
+      },
+      "hover": {
+        "beforeHover": "rgb(122, 123, 113)",
+        "afterHover": "rgb(54, 91, 112)"
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "zoom": 100,
+      "owner": "fresh Playwright isolated Chromium context",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1
+      },
+      "dialog": {
+        "x": 440,
+        "y": 213,
+        "width": 560,
+        "height": 474,
+        "top": 213,
+        "right": 1000,
+        "bottom": 687,
+        "left": 440
+      },
+      "body": {
+        "x": 441,
+        "y": 302,
+        "width": 558,
+        "height": 312,
+        "top": 302,
+        "right": 999,
+        "bottom": 614,
+        "left": 441
+      },
+      "actions": {
+        "x": 441,
+        "y": 614,
+        "width": 558,
+        "height": 72,
+        "top": 614,
+        "right": 999,
+        "bottom": 686,
+        "left": 441
+      },
+      "select": {
+        "x": 465,
+        "y": 402,
+        "width": 510,
+        "height": 36,
+        "top": 402,
+        "right": 975,
+        "bottom": 438,
+        "left": 465
+      },
+      "selection": {
+        "value": "one",
+        "selectedOption": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "readout": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료"
+      },
+      "path": {
+        "text": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "rect": {
+          "x": 465,
+          "y": 446,
+          "width": 510,
+          "height": 36,
+          "top": 446,
+          "right": 975,
+          "bottom": 482,
+          "left": 465
+        },
+        "scrollWidth": 510,
+        "clientWidth": 510,
+        "wraps": true
+      },
+      "styles": {
+        "dialog": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(122, 123, 113)",
+          "backgroundColor": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "select": {
+          "fontSize": "14px",
+          "lineHeight": "normal",
+          "outlineColor": "rgb(54, 91, 112)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "borderColor": "rgb(54, 91, 112)",
+          "backgroundColor": "rgb(223, 231, 233)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "title": {
+          "fontSize": "18px",
+          "lineHeight": "26px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(36, 37, 33)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "help": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "outlineColor": "rgb(101, 102, 95)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(101, 102, 95)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(101, 102, 95)"
+        },
+        "primary": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(250, 249, 245)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(54, 91, 112)",
+          "backgroundColor": "rgb(54, 91, 112)",
+          "color": "rgb(250, 249, 245)"
+        },
+        "cancel": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(122, 123, 113)",
+          "backgroundColor": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "close": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgba(0, 0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(36, 37, 33)"
+        }
+      },
+      "horizontalOverflow": false,
+      "forcedColors": false,
+      "rosterNames": 0,
+      "readonlyCount": 0,
+      "invalidCount": 0,
+      "nativeSelect": true,
+      "shortSelection": {
+        "value": "d17",
+        "selectedOption": "부서 18/업무 자료/보관 위치 18",
+        "readout": "부서 18/업무 자료/보관 위치 18"
+      },
+      "contrastRatios": {
+        "titleText": 14.639805378106399,
+        "helpText": 5.5078338853570425,
+        "selectText": 12.297720709885532,
+        "primaryText": 6.903983660507881,
+        "cancelText": 14.639805378106399,
+        "closeText": 14.639805378106399,
+        "selectBoundary": 5.799480297020246,
+        "selectFocus": 6.903983660507881
+      },
+      "controls": {
+        "primary": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(54, 91, 112)",
+            "backgroundColor": "rgb(54, 91, 112)",
+            "color": "rgb(250, 249, 245)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(54, 91, 112)",
+              "outlineColor": "rgb(250, 249, 245)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(44, 75, 93)",
+              "backgroundColor": "rgb(44, 75, 93)",
+              "outlineColor": "rgb(250, 249, 245)",
+              "outlineWidth": "3px"
+            }
+          }
+        },
+        "cancel": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(122, 123, 113)",
+            "backgroundColor": "rgb(250, 249, 245)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(122, 123, 113)",
+              "backgroundColor": "rgb(250, 249, 245)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(223, 231, 233)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "3px"
+            }
+          }
+        },
+        "close": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgba(0, 0, 0, 0)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(223, 231, 233)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "3px"
+            }
+          }
+        }
+      },
+      "keyboard": {
+        "initialClose": true,
+        "tabToSelect": true,
+        "shiftTabWrap": true,
+        "escapeCancel": true
+      },
+      "hover": {
+        "beforeHover": "rgb(122, 123, 113)",
+        "afterHover": "rgb(54, 91, 112)"
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 100,
+      "owner": "fresh Playwright isolated Chromium context",
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1
+      },
+      "dialog": {
+        "x": 680,
+        "y": 303,
+        "width": 560,
+        "height": 474,
+        "top": 303,
+        "right": 1240,
+        "bottom": 777,
+        "left": 680
+      },
+      "body": {
+        "x": 681,
+        "y": 392,
+        "width": 558,
+        "height": 312,
+        "top": 392,
+        "right": 1239,
+        "bottom": 704,
+        "left": 681
+      },
+      "actions": {
+        "x": 681,
+        "y": 704,
+        "width": 558,
+        "height": 72,
+        "top": 704,
+        "right": 1239,
+        "bottom": 776,
+        "left": 681
+      },
+      "select": {
+        "x": 705,
+        "y": 492,
+        "width": 510,
+        "height": 36,
+        "top": 492,
+        "right": 1215,
+        "bottom": 528,
+        "left": 705
+      },
+      "selection": {
+        "value": "one",
+        "selectedOption": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "readout": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료"
+      },
+      "path": {
+        "text": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "rect": {
+          "x": 705,
+          "y": 536,
+          "width": 510,
+          "height": 36,
+          "top": 536,
+          "right": 1215,
+          "bottom": 572,
+          "left": 705
+        },
+        "scrollWidth": 510,
+        "clientWidth": 510,
+        "wraps": true
+      },
+      "styles": {
+        "dialog": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(122, 123, 113)",
+          "backgroundColor": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "select": {
+          "fontSize": "14px",
+          "lineHeight": "normal",
+          "outlineColor": "rgb(54, 91, 112)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "borderColor": "rgb(54, 91, 112)",
+          "backgroundColor": "rgb(223, 231, 233)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "title": {
+          "fontSize": "18px",
+          "lineHeight": "26px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(36, 37, 33)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "help": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "outlineColor": "rgb(101, 102, 95)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(101, 102, 95)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(101, 102, 95)"
+        },
+        "primary": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(250, 249, 245)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(54, 91, 112)",
+          "backgroundColor": "rgb(54, 91, 112)",
+          "color": "rgb(250, 249, 245)"
+        },
+        "cancel": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(122, 123, 113)",
+          "backgroundColor": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "close": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgba(0, 0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(36, 37, 33)"
+        }
+      },
+      "horizontalOverflow": false,
+      "forcedColors": false,
+      "rosterNames": 0,
+      "readonlyCount": 0,
+      "invalidCount": 0,
+      "nativeSelect": true,
+      "shortSelection": {
+        "value": "d17",
+        "selectedOption": "부서 18/업무 자료/보관 위치 18",
+        "readout": "부서 18/업무 자료/보관 위치 18"
+      },
+      "contrastRatios": {
+        "titleText": 14.639805378106399,
+        "helpText": 5.5078338853570425,
+        "selectText": 12.297720709885532,
+        "primaryText": 6.903983660507881,
+        "cancelText": 14.639805378106399,
+        "closeText": 14.639805378106399,
+        "selectBoundary": 5.799480297020246,
+        "selectFocus": 6.903983660507881
+      },
+      "controls": {
+        "primary": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(54, 91, 112)",
+            "backgroundColor": "rgb(54, 91, 112)",
+            "color": "rgb(250, 249, 245)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(54, 91, 112)",
+              "outlineColor": "rgb(250, 249, 245)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(44, 75, 93)",
+              "backgroundColor": "rgb(44, 75, 93)",
+              "outlineColor": "rgb(250, 249, 245)",
+              "outlineWidth": "3px"
+            }
+          }
+        },
+        "cancel": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(122, 123, 113)",
+            "backgroundColor": "rgb(250, 249, 245)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(122, 123, 113)",
+              "backgroundColor": "rgb(250, 249, 245)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(223, 231, 233)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "3px"
+            }
+          }
+        },
+        "close": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgba(0, 0, 0, 0)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(223, 231, 233)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "3px"
+            }
+          }
+        }
+      },
+      "keyboard": {
+        "initialClose": true,
+        "tabToSelect": true,
+        "shiftTabWrap": true,
+        "escapeCancel": true
+      },
+      "hover": {
+        "beforeHover": "rgb(122, 123, 113)",
+        "afterHover": "rgb(54, 91, 112)"
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "zoom": 100,
+      "owner": "fresh Playwright isolated Chromium context",
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "dialog": {
+        "x": 360,
+        "y": 123,
+        "width": 560,
+        "height": 474,
+        "top": 123,
+        "right": 920,
+        "bottom": 597,
+        "left": 360
+      },
+      "body": {
+        "x": 361,
+        "y": 212,
+        "width": 558,
+        "height": 312,
+        "top": 212,
+        "right": 919,
+        "bottom": 524,
+        "left": 361
+      },
+      "actions": {
+        "x": 361,
+        "y": 524,
+        "width": 558,
+        "height": 72,
+        "top": 524,
+        "right": 919,
+        "bottom": 596,
+        "left": 361
+      },
+      "select": {
+        "x": 385,
+        "y": 312,
+        "width": 510,
+        "height": 36,
+        "top": 312,
+        "right": 895,
+        "bottom": 348,
+        "left": 385
+      },
+      "selection": {
+        "value": "one",
+        "selectedOption": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "readout": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료"
+      },
+      "path": {
+        "text": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "rect": {
+          "x": 385,
+          "y": 356,
+          "width": 510,
+          "height": 36,
+          "top": 356,
+          "right": 895,
+          "bottom": 392,
+          "left": 385
+        },
+        "scrollWidth": 510,
+        "clientWidth": 510,
+        "wraps": true
+      },
+      "styles": {
+        "dialog": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(135, 145, 127)",
+          "backgroundColor": "rgb(48, 53, 46)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "select": {
+          "fontSize": "14px",
+          "lineHeight": "normal",
+          "outlineColor": "rgb(168, 196, 211)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "borderColor": "rgb(168, 196, 211)",
+          "backgroundColor": "rgb(52, 70, 80)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "title": {
+          "fontSize": "18px",
+          "lineHeight": "26px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(233, 231, 223)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "help": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "outlineColor": "rgb(181, 184, 174)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(181, 184, 174)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(181, 184, 174)"
+        },
+        "primary": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(25, 35, 31)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(168, 196, 211)",
+          "backgroundColor": "rgb(168, 196, 211)",
+          "color": "rgb(25, 35, 31)"
+        },
+        "cancel": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(135, 145, 127)",
+          "backgroundColor": "rgb(48, 53, 46)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "close": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgba(0, 0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 231, 223)"
+        }
+      },
+      "horizontalOverflow": false,
+      "forcedColors": false,
+      "rosterNames": 0,
+      "readonlyCount": 0,
+      "invalidCount": 0,
+      "nativeSelect": true,
+      "shortSelection": {
+        "value": "d17",
+        "selectedOption": "부서 18/업무 자료/보관 위치 18",
+        "readout": "부서 18/업무 자료/보관 위치 18"
+      },
+      "contrastRatios": {
+        "titleText": 10.129573328016168,
+        "helpText": 6.230496730470239,
+        "selectText": 7.933264433752992,
+        "primaryText": 8.836937582913613,
+        "cancelText": 10.129573328016168,
+        "closeText": 10.129573328016168,
+        "selectBoundary": 5.379808481634575,
+        "selectFocus": 6.869198040789459
+      },
+      "controls": {
+        "primary": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(168, 196, 211)",
+            "backgroundColor": "rgb(168, 196, 211)",
+            "color": "rgb(25, 35, 31)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(168, 196, 211)",
+              "outlineColor": "rgb(25, 35, 31)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(187, 209, 220)",
+              "backgroundColor": "rgb(187, 209, 220)",
+              "outlineColor": "rgb(25, 35, 31)",
+              "outlineWidth": "3px"
+            }
+          }
+        },
+        "cancel": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(135, 145, 127)",
+            "backgroundColor": "rgb(48, 53, 46)",
+            "color": "rgb(233, 231, 223)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(135, 145, 127)",
+              "backgroundColor": "rgb(48, 53, 46)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(52, 70, 80)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "3px"
+            }
+          }
+        },
+        "close": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgba(0, 0, 0, 0)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(233, 231, 223)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(52, 70, 80)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "3px"
+            }
+          }
+        }
+      },
+      "keyboard": {
+        "initialClose": true,
+        "tabToSelect": true,
+        "shiftTabWrap": true,
+        "escapeCancel": true
+      },
+      "hover": {
+        "beforeHover": "rgb(135, 145, 127)",
+        "afterHover": "rgb(168, 196, 211)"
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "zoom": 100,
+      "owner": "fresh Playwright isolated Chromium context",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1
+      },
+      "dialog": {
+        "x": 440,
+        "y": 213,
+        "width": 560,
+        "height": 474,
+        "top": 213,
+        "right": 1000,
+        "bottom": 687,
+        "left": 440
+      },
+      "body": {
+        "x": 441,
+        "y": 302,
+        "width": 558,
+        "height": 312,
+        "top": 302,
+        "right": 999,
+        "bottom": 614,
+        "left": 441
+      },
+      "actions": {
+        "x": 441,
+        "y": 614,
+        "width": 558,
+        "height": 72,
+        "top": 614,
+        "right": 999,
+        "bottom": 686,
+        "left": 441
+      },
+      "select": {
+        "x": 465,
+        "y": 402,
+        "width": 510,
+        "height": 36,
+        "top": 402,
+        "right": 975,
+        "bottom": 438,
+        "left": 465
+      },
+      "selection": {
+        "value": "one",
+        "selectedOption": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "readout": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료"
+      },
+      "path": {
+        "text": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "rect": {
+          "x": 465,
+          "y": 446,
+          "width": 510,
+          "height": 36,
+          "top": 446,
+          "right": 975,
+          "bottom": 482,
+          "left": 465
+        },
+        "scrollWidth": 510,
+        "clientWidth": 510,
+        "wraps": true
+      },
+      "styles": {
+        "dialog": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(135, 145, 127)",
+          "backgroundColor": "rgb(48, 53, 46)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "select": {
+          "fontSize": "14px",
+          "lineHeight": "normal",
+          "outlineColor": "rgb(168, 196, 211)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "borderColor": "rgb(168, 196, 211)",
+          "backgroundColor": "rgb(52, 70, 80)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "title": {
+          "fontSize": "18px",
+          "lineHeight": "26px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(233, 231, 223)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "help": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "outlineColor": "rgb(181, 184, 174)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(181, 184, 174)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(181, 184, 174)"
+        },
+        "primary": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(25, 35, 31)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(168, 196, 211)",
+          "backgroundColor": "rgb(168, 196, 211)",
+          "color": "rgb(25, 35, 31)"
+        },
+        "cancel": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(135, 145, 127)",
+          "backgroundColor": "rgb(48, 53, 46)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "close": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgba(0, 0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 231, 223)"
+        }
+      },
+      "horizontalOverflow": false,
+      "forcedColors": false,
+      "rosterNames": 0,
+      "readonlyCount": 0,
+      "invalidCount": 0,
+      "nativeSelect": true,
+      "shortSelection": {
+        "value": "d17",
+        "selectedOption": "부서 18/업무 자료/보관 위치 18",
+        "readout": "부서 18/업무 자료/보관 위치 18"
+      },
+      "contrastRatios": {
+        "titleText": 10.129573328016168,
+        "helpText": 6.230496730470239,
+        "selectText": 7.933264433752992,
+        "primaryText": 8.836937582913613,
+        "cancelText": 10.129573328016168,
+        "closeText": 10.129573328016168,
+        "selectBoundary": 5.379808481634575,
+        "selectFocus": 6.869198040789459
+      },
+      "controls": {
+        "primary": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(168, 196, 211)",
+            "backgroundColor": "rgb(168, 196, 211)",
+            "color": "rgb(25, 35, 31)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(168, 196, 211)",
+              "outlineColor": "rgb(25, 35, 31)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(187, 209, 220)",
+              "backgroundColor": "rgb(187, 209, 220)",
+              "outlineColor": "rgb(25, 35, 31)",
+              "outlineWidth": "3px"
+            }
+          }
+        },
+        "cancel": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(135, 145, 127)",
+            "backgroundColor": "rgb(48, 53, 46)",
+            "color": "rgb(233, 231, 223)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(135, 145, 127)",
+              "backgroundColor": "rgb(48, 53, 46)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(52, 70, 80)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "3px"
+            }
+          }
+        },
+        "close": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgba(0, 0, 0, 0)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(233, 231, 223)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(52, 70, 80)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "3px"
+            }
+          }
+        }
+      },
+      "keyboard": {
+        "initialClose": true,
+        "tabToSelect": true,
+        "shiftTabWrap": true,
+        "escapeCancel": true
+      },
+      "hover": {
+        "beforeHover": "rgb(135, 145, 127)",
+        "afterHover": "rgb(168, 196, 211)"
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 100,
+      "owner": "fresh Playwright isolated Chromium context",
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1
+      },
+      "dialog": {
+        "x": 680,
+        "y": 303,
+        "width": 560,
+        "height": 474,
+        "top": 303,
+        "right": 1240,
+        "bottom": 777,
+        "left": 680
+      },
+      "body": {
+        "x": 681,
+        "y": 392,
+        "width": 558,
+        "height": 312,
+        "top": 392,
+        "right": 1239,
+        "bottom": 704,
+        "left": 681
+      },
+      "actions": {
+        "x": 681,
+        "y": 704,
+        "width": 558,
+        "height": 72,
+        "top": 704,
+        "right": 1239,
+        "bottom": 776,
+        "left": 681
+      },
+      "select": {
+        "x": 705,
+        "y": 492,
+        "width": 510,
+        "height": 36,
+        "top": 492,
+        "right": 1215,
+        "bottom": 528,
+        "left": 705
+      },
+      "selection": {
+        "value": "one",
+        "selectedOption": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "readout": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료"
+      },
+      "path": {
+        "text": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "rect": {
+          "x": 705,
+          "y": 536,
+          "width": 510,
+          "height": 36,
+          "top": 536,
+          "right": 1215,
+          "bottom": 572,
+          "left": 705
+        },
+        "scrollWidth": 510,
+        "clientWidth": 510,
+        "wraps": true
+      },
+      "styles": {
+        "dialog": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(135, 145, 127)",
+          "backgroundColor": "rgb(48, 53, 46)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "select": {
+          "fontSize": "14px",
+          "lineHeight": "normal",
+          "outlineColor": "rgb(168, 196, 211)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "borderColor": "rgb(168, 196, 211)",
+          "backgroundColor": "rgb(52, 70, 80)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "title": {
+          "fontSize": "18px",
+          "lineHeight": "26px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(233, 231, 223)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "help": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "outlineColor": "rgb(181, 184, 174)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(181, 184, 174)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(181, 184, 174)"
+        },
+        "primary": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(25, 35, 31)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(168, 196, 211)",
+          "backgroundColor": "rgb(168, 196, 211)",
+          "color": "rgb(25, 35, 31)"
+        },
+        "cancel": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(135, 145, 127)",
+          "backgroundColor": "rgb(48, 53, 46)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "close": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgba(0, 0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 231, 223)"
+        }
+      },
+      "horizontalOverflow": false,
+      "forcedColors": false,
+      "rosterNames": 0,
+      "readonlyCount": 0,
+      "invalidCount": 0,
+      "nativeSelect": true,
+      "shortSelection": {
+        "value": "d17",
+        "selectedOption": "부서 18/업무 자료/보관 위치 18",
+        "readout": "부서 18/업무 자료/보관 위치 18"
+      },
+      "contrastRatios": {
+        "titleText": 10.129573328016168,
+        "helpText": 6.230496730470239,
+        "selectText": 7.933264433752992,
+        "primaryText": 8.836937582913613,
+        "cancelText": 10.129573328016168,
+        "closeText": 10.129573328016168,
+        "selectBoundary": 5.379808481634575,
+        "selectFocus": 6.869198040789459
+      },
+      "controls": {
+        "primary": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(168, 196, 211)",
+            "backgroundColor": "rgb(168, 196, 211)",
+            "color": "rgb(25, 35, 31)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(168, 196, 211)",
+              "outlineColor": "rgb(25, 35, 31)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(187, 209, 220)",
+              "backgroundColor": "rgb(187, 209, 220)",
+              "outlineColor": "rgb(25, 35, 31)",
+              "outlineWidth": "3px"
+            }
+          }
+        },
+        "cancel": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(135, 145, 127)",
+            "backgroundColor": "rgb(48, 53, 46)",
+            "color": "rgb(233, 231, 223)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(135, 145, 127)",
+              "backgroundColor": "rgb(48, 53, 46)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(52, 70, 80)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "3px"
+            }
+          }
+        },
+        "close": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgba(0, 0, 0, 0)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(233, 231, 223)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(52, 70, 80)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "3px"
+            }
+          }
+        }
+      },
+      "keyboard": {
+        "initialClose": true,
+        "tabToSelect": true,
+        "shiftTabWrap": true,
+        "escapeCancel": true
+      },
+      "hover": {
+        "beforeHover": "rgb(135, 145, 127)",
+        "afterHover": "rgb(168, 196, 211)"
+      }
+    }
+  ],
+  "zoomed": [
+    {
+      "theme": "light",
+      "width": 1280,
+      "height": 720,
+      "zoom": 200,
+      "owner": "fresh Playwright persistent Chromium with disposable profile and extension",
+      "viewport": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2.0000000298023224
+      },
+      "dialog": {
+        "x": 40,
+        "y": 24,
+        "width": 560,
+        "height": 312,
+        "top": 24,
+        "right": 600,
+        "bottom": 336,
+        "left": 40
+      },
+      "body": {
+        "x": 40.79999923706055,
+        "y": 112.80000305175781,
+        "width": 558.4000244140625,
+        "height": 150.40000915527344,
+        "top": 112.80000305175781,
+        "right": 599.200023651123,
+        "bottom": 263.20001220703125,
+        "left": 40.79999923706055
+      },
+      "actions": {
+        "x": 40.79999923706055,
+        "y": 263.20001220703125,
+        "width": 558.4000244140625,
+        "height": 72,
+        "top": 263.20001220703125,
+        "right": 599.200023651123,
+        "bottom": 335.20001220703125,
+        "left": 40.79999923706055
+      },
+      "select": {
+        "x": 64.80000305175781,
+        "y": 212.8000030517578,
+        "width": 502.8000183105469,
+        "height": 36,
+        "top": 212.8000030517578,
+        "right": 567.6000213623047,
+        "bottom": 248.8000030517578,
+        "left": 64.80000305175781
+      },
+      "selection": {
+        "value": "one",
+        "selectedOption": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "readout": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료"
+      },
+      "path": {
+        "text": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "rect": {
+          "x": 64.80000305175781,
+          "y": 256.8000183105469,
+          "width": 502.8000183105469,
+          "height": 36,
+          "top": 256.8000183105469,
+          "right": 567.6000213623047,
+          "bottom": 292.8000183105469,
+          "left": 64.80000305175781
+        },
+        "scrollWidth": 503,
+        "clientWidth": 503,
+        "wraps": true
+      },
+      "styles": {
+        "dialog": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(122, 123, 113)",
+          "backgroundColor": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "select": {
+          "fontSize": "14px",
+          "lineHeight": "normal",
+          "outlineColor": "rgb(54, 91, 112)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "borderColor": "rgb(54, 91, 112)",
+          "backgroundColor": "rgb(223, 231, 233)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "title": {
+          "fontSize": "18px",
+          "lineHeight": "26px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(36, 37, 33)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "help": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "outlineColor": "rgb(101, 102, 95)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(101, 102, 95)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(101, 102, 95)"
+        },
+        "primary": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(250, 249, 245)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(54, 91, 112)",
+          "backgroundColor": "rgb(54, 91, 112)",
+          "color": "rgb(250, 249, 245)"
+        },
+        "cancel": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(122, 123, 113)",
+          "backgroundColor": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "close": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgba(0, 0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(36, 37, 33)"
+        }
+      },
+      "horizontalOverflow": false,
+      "forcedColors": false,
+      "rosterNames": 0,
+      "readonlyCount": 0,
+      "invalidCount": 0,
+      "nativeSelect": true,
+      "shortSelection": {
+        "value": "d17",
+        "selectedOption": "부서 18/업무 자료/보관 위치 18",
+        "readout": "부서 18/업무 자료/보관 위치 18"
+      },
+      "contrastRatios": {
+        "titleText": 14.639805378106399,
+        "helpText": 5.5078338853570425,
+        "selectText": 12.297720709885532,
+        "primaryText": 6.903983660507881,
+        "cancelText": 14.639805378106399,
+        "closeText": 14.639805378106399,
+        "selectBoundary": 5.799480297020246,
+        "selectFocus": 6.903983660507881
+      },
+      "controls": {
+        "primary": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(54, 91, 112)",
+            "backgroundColor": "rgb(54, 91, 112)",
+            "color": "rgb(250, 249, 245)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(54, 91, 112)",
+              "outlineColor": "rgb(250, 249, 245)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(44, 75, 93)",
+              "backgroundColor": "rgb(44, 75, 93)",
+              "outlineColor": "rgb(250, 249, 245)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        },
+        "cancel": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(122, 123, 113)",
+            "backgroundColor": "rgb(250, 249, 245)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(122, 123, 113)",
+              "backgroundColor": "rgb(250, 249, 245)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(223, 231, 233)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        },
+        "close": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgba(0, 0, 0, 0)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(223, 231, 233)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        }
+      },
+      "keyboard": {
+        "initialClose": true,
+        "tabToSelect": true,
+        "shiftTabWrap": true,
+        "escapeCancel": true
+      },
+      "hover": {
+        "beforeHover": "rgb(122, 123, 113)",
+        "afterHover": "rgb(54, 91, 112)"
+      },
+      "beforeZoom": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1.0000000149011612
+      },
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "zoomCalls": {
+        "setter": [
+          1,
+          2,
+          1
+        ],
+        "readOnlyGetZoom": [
+          1,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "zoom": 200,
+      "owner": "fresh Playwright persistent Chromium with disposable profile and extension",
+      "viewport": {
+        "width": 720,
+        "height": 450,
+        "dpr": 2.0000000298023224
+      },
+      "dialog": {
+        "x": 80,
+        "y": 24,
+        "width": 560,
+        "height": 402,
+        "top": 24,
+        "right": 640,
+        "bottom": 426,
+        "left": 80
+      },
+      "body": {
+        "x": 80.80000305175781,
+        "y": 112.80000305175781,
+        "width": 558.4000244140625,
+        "height": 240.40000915527344,
+        "top": 112.80000305175781,
+        "right": 639.2000274658203,
+        "bottom": 353.20001220703125,
+        "left": 80.80000305175781
+      },
+      "actions": {
+        "x": 80.80000305175781,
+        "y": 353.20001220703125,
+        "width": 558.4000244140625,
+        "height": 72,
+        "top": 353.20001220703125,
+        "right": 639.2000274658203,
+        "bottom": 425.20001220703125,
+        "left": 80.80000305175781
+      },
+      "select": {
+        "x": 104.80000305175781,
+        "y": 212.8000030517578,
+        "width": 502.8000183105469,
+        "height": 36,
+        "top": 212.8000030517578,
+        "right": 607.6000213623047,
+        "bottom": 248.8000030517578,
+        "left": 104.80000305175781
+      },
+      "selection": {
+        "value": "one",
+        "selectedOption": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "readout": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료"
+      },
+      "path": {
+        "text": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "rect": {
+          "x": 104.80000305175781,
+          "y": 256.8000183105469,
+          "width": 502.8000183105469,
+          "height": 36,
+          "top": 256.8000183105469,
+          "right": 607.6000213623047,
+          "bottom": 292.8000183105469,
+          "left": 104.80000305175781
+        },
+        "scrollWidth": 503,
+        "clientWidth": 503,
+        "wraps": true
+      },
+      "styles": {
+        "dialog": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(122, 123, 113)",
+          "backgroundColor": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "select": {
+          "fontSize": "14px",
+          "lineHeight": "normal",
+          "outlineColor": "rgb(54, 91, 112)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "borderColor": "rgb(54, 91, 112)",
+          "backgroundColor": "rgb(223, 231, 233)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "title": {
+          "fontSize": "18px",
+          "lineHeight": "26px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(36, 37, 33)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "help": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "outlineColor": "rgb(101, 102, 95)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(101, 102, 95)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(101, 102, 95)"
+        },
+        "primary": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(250, 249, 245)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(54, 91, 112)",
+          "backgroundColor": "rgb(54, 91, 112)",
+          "color": "rgb(250, 249, 245)"
+        },
+        "cancel": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(122, 123, 113)",
+          "backgroundColor": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "close": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgba(0, 0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(36, 37, 33)"
+        }
+      },
+      "horizontalOverflow": false,
+      "forcedColors": false,
+      "rosterNames": 0,
+      "readonlyCount": 0,
+      "invalidCount": 0,
+      "nativeSelect": true,
+      "shortSelection": {
+        "value": "d17",
+        "selectedOption": "부서 18/업무 자료/보관 위치 18",
+        "readout": "부서 18/업무 자료/보관 위치 18"
+      },
+      "contrastRatios": {
+        "titleText": 14.639805378106399,
+        "helpText": 5.5078338853570425,
+        "selectText": 12.297720709885532,
+        "primaryText": 6.903983660507881,
+        "cancelText": 14.639805378106399,
+        "closeText": 14.639805378106399,
+        "selectBoundary": 5.799480297020246,
+        "selectFocus": 6.903983660507881
+      },
+      "controls": {
+        "primary": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(54, 91, 112)",
+            "backgroundColor": "rgb(54, 91, 112)",
+            "color": "rgb(250, 249, 245)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(54, 91, 112)",
+              "outlineColor": "rgb(250, 249, 245)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(44, 75, 93)",
+              "backgroundColor": "rgb(44, 75, 93)",
+              "outlineColor": "rgb(250, 249, 245)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        },
+        "cancel": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(122, 123, 113)",
+            "backgroundColor": "rgb(250, 249, 245)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(122, 123, 113)",
+              "backgroundColor": "rgb(250, 249, 245)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(223, 231, 233)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        },
+        "close": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgba(0, 0, 0, 0)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(223, 231, 233)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        }
+      },
+      "keyboard": {
+        "initialClose": true,
+        "tabToSelect": true,
+        "shiftTabWrap": true,
+        "escapeCancel": true
+      },
+      "hover": {
+        "beforeHover": "rgb(122, 123, 113)",
+        "afterHover": "rgb(54, 91, 112)"
+      },
+      "beforeZoom": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1.0000000149011612
+      },
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "zoomCalls": {
+        "setter": [
+          1,
+          2,
+          1
+        ],
+        "readOnlyGetZoom": [
+          1,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 200,
+      "owner": "fresh Playwright persistent Chromium with disposable profile and extension",
+      "viewport": {
+        "width": 960,
+        "height": 540,
+        "dpr": 2.0000000298023224
+      },
+      "dialog": {
+        "x": 200,
+        "y": 33.400001525878906,
+        "width": 560,
+        "height": 473.20001220703125,
+        "top": 33.400001525878906,
+        "right": 760,
+        "bottom": 506.60001373291016,
+        "left": 200
+      },
+      "body": {
+        "x": 200.8000030517578,
+        "y": 122.20000457763672,
+        "width": 558.4000244140625,
+        "height": 311.6000061035156,
+        "top": 122.20000457763672,
+        "right": 759.2000274658203,
+        "bottom": 433.80001068115234,
+        "left": 200.8000030517578
+      },
+      "actions": {
+        "x": 200.8000030517578,
+        "y": 433.8000183105469,
+        "width": 558.4000244140625,
+        "height": 72,
+        "top": 433.8000183105469,
+        "right": 759.2000274658203,
+        "bottom": 505.8000183105469,
+        "left": 200.8000030517578
+      },
+      "select": {
+        "x": 224.8000030517578,
+        "y": 222.1999969482422,
+        "width": 510.3999938964844,
+        "height": 36,
+        "top": 222.1999969482422,
+        "right": 735.1999969482422,
+        "bottom": 258.1999969482422,
+        "left": 224.8000030517578
+      },
+      "selection": {
+        "value": "one",
+        "selectedOption": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "readout": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료"
+      },
+      "path": {
+        "text": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "rect": {
+          "x": 224.8000030517578,
+          "y": 266.20001220703125,
+          "width": 510.3999938964844,
+          "height": 36,
+          "top": 266.20001220703125,
+          "right": 735.1999969482422,
+          "bottom": 302.20001220703125,
+          "left": 224.8000030517578
+        },
+        "scrollWidth": 510,
+        "clientWidth": 510,
+        "wraps": true
+      },
+      "styles": {
+        "dialog": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(122, 123, 113)",
+          "backgroundColor": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "select": {
+          "fontSize": "14px",
+          "lineHeight": "normal",
+          "outlineColor": "rgb(54, 91, 112)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "borderColor": "rgb(54, 91, 112)",
+          "backgroundColor": "rgb(223, 231, 233)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "title": {
+          "fontSize": "18px",
+          "lineHeight": "26px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(36, 37, 33)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "help": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "outlineColor": "rgb(101, 102, 95)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(101, 102, 95)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(101, 102, 95)"
+        },
+        "primary": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(250, 249, 245)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(54, 91, 112)",
+          "backgroundColor": "rgb(54, 91, 112)",
+          "color": "rgb(250, 249, 245)"
+        },
+        "cancel": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(122, 123, 113)",
+          "backgroundColor": "rgb(250, 249, 245)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "close": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(36, 37, 33)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgba(0, 0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(36, 37, 33)"
+        }
+      },
+      "horizontalOverflow": false,
+      "forcedColors": false,
+      "rosterNames": 0,
+      "readonlyCount": 0,
+      "invalidCount": 0,
+      "nativeSelect": true,
+      "shortSelection": {
+        "value": "d17",
+        "selectedOption": "부서 18/업무 자료/보관 위치 18",
+        "readout": "부서 18/업무 자료/보관 위치 18"
+      },
+      "contrastRatios": {
+        "titleText": 14.639805378106399,
+        "helpText": 5.5078338853570425,
+        "selectText": 12.297720709885532,
+        "primaryText": 6.903983660507881,
+        "cancelText": 14.639805378106399,
+        "closeText": 14.639805378106399,
+        "selectBoundary": 5.799480297020246,
+        "selectFocus": 6.903983660507881
+      },
+      "controls": {
+        "primary": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(54, 91, 112)",
+            "backgroundColor": "rgb(54, 91, 112)",
+            "color": "rgb(250, 249, 245)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(54, 91, 112)",
+              "outlineColor": "rgb(250, 249, 245)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(44, 75, 93)",
+              "backgroundColor": "rgb(44, 75, 93)",
+              "outlineColor": "rgb(250, 249, 245)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        },
+        "cancel": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(122, 123, 113)",
+            "backgroundColor": "rgb(250, 249, 245)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(122, 123, 113)",
+              "backgroundColor": "rgb(250, 249, 245)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(223, 231, 233)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        },
+        "close": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(54, 91, 112)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgba(0, 0, 0, 0)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(54, 91, 112)",
+              "backgroundColor": "rgb(223, 231, 233)",
+              "outlineColor": "rgb(36, 37, 33)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        }
+      },
+      "keyboard": {
+        "initialClose": true,
+        "tabToSelect": true,
+        "shiftTabWrap": true,
+        "escapeCancel": true
+      },
+      "hover": {
+        "beforeHover": "rgb(122, 123, 113)",
+        "afterHover": "rgb(54, 91, 112)"
+      },
+      "beforeZoom": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1.0000000149011612
+      },
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "zoomCalls": {
+        "setter": [
+          1,
+          2,
+          1
+        ],
+        "readOnlyGetZoom": [
+          1,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "height": 720,
+      "zoom": 200,
+      "owner": "fresh Playwright persistent Chromium with disposable profile and extension",
+      "viewport": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2.0000000298023224
+      },
+      "dialog": {
+        "x": 40,
+        "y": 24,
+        "width": 560,
+        "height": 312,
+        "top": 24,
+        "right": 600,
+        "bottom": 336,
+        "left": 40
+      },
+      "body": {
+        "x": 40.79999923706055,
+        "y": 112.80000305175781,
+        "width": 558.4000244140625,
+        "height": 150.40000915527344,
+        "top": 112.80000305175781,
+        "right": 599.200023651123,
+        "bottom": 263.20001220703125,
+        "left": 40.79999923706055
+      },
+      "actions": {
+        "x": 40.79999923706055,
+        "y": 263.20001220703125,
+        "width": 558.4000244140625,
+        "height": 72,
+        "top": 263.20001220703125,
+        "right": 599.200023651123,
+        "bottom": 335.20001220703125,
+        "left": 40.79999923706055
+      },
+      "select": {
+        "x": 64.80000305175781,
+        "y": 212.8000030517578,
+        "width": 502.8000183105469,
+        "height": 36,
+        "top": 212.8000030517578,
+        "right": 567.6000213623047,
+        "bottom": 248.8000030517578,
+        "left": 64.80000305175781
+      },
+      "selection": {
+        "value": "one",
+        "selectedOption": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "readout": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료"
+      },
+      "path": {
+        "text": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "rect": {
+          "x": 64.80000305175781,
+          "y": 256.8000183105469,
+          "width": 502.8000183105469,
+          "height": 36,
+          "top": 256.8000183105469,
+          "right": 567.6000213623047,
+          "bottom": 292.8000183105469,
+          "left": 64.80000305175781
+        },
+        "scrollWidth": 503,
+        "clientWidth": 503,
+        "wraps": true
+      },
+      "styles": {
+        "dialog": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(135, 145, 127)",
+          "backgroundColor": "rgb(48, 53, 46)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "select": {
+          "fontSize": "14px",
+          "lineHeight": "normal",
+          "outlineColor": "rgb(168, 196, 211)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "borderColor": "rgb(168, 196, 211)",
+          "backgroundColor": "rgb(52, 70, 80)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "title": {
+          "fontSize": "18px",
+          "lineHeight": "26px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(233, 231, 223)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "help": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "outlineColor": "rgb(181, 184, 174)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(181, 184, 174)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(181, 184, 174)"
+        },
+        "primary": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(25, 35, 31)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(168, 196, 211)",
+          "backgroundColor": "rgb(168, 196, 211)",
+          "color": "rgb(25, 35, 31)"
+        },
+        "cancel": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(135, 145, 127)",
+          "backgroundColor": "rgb(48, 53, 46)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "close": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgba(0, 0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 231, 223)"
+        }
+      },
+      "horizontalOverflow": false,
+      "forcedColors": false,
+      "rosterNames": 0,
+      "readonlyCount": 0,
+      "invalidCount": 0,
+      "nativeSelect": true,
+      "shortSelection": {
+        "value": "d17",
+        "selectedOption": "부서 18/업무 자료/보관 위치 18",
+        "readout": "부서 18/업무 자료/보관 위치 18"
+      },
+      "contrastRatios": {
+        "titleText": 10.129573328016168,
+        "helpText": 6.230496730470239,
+        "selectText": 7.933264433752992,
+        "primaryText": 8.836937582913613,
+        "cancelText": 10.129573328016168,
+        "closeText": 10.129573328016168,
+        "selectBoundary": 5.379808481634575,
+        "selectFocus": 6.869198040789459
+      },
+      "controls": {
+        "primary": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(168, 196, 211)",
+            "backgroundColor": "rgb(168, 196, 211)",
+            "color": "rgb(25, 35, 31)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(168, 196, 211)",
+              "outlineColor": "rgb(25, 35, 31)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(187, 209, 220)",
+              "backgroundColor": "rgb(187, 209, 220)",
+              "outlineColor": "rgb(25, 35, 31)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        },
+        "cancel": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(135, 145, 127)",
+            "backgroundColor": "rgb(48, 53, 46)",
+            "color": "rgb(233, 231, 223)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(135, 145, 127)",
+              "backgroundColor": "rgb(48, 53, 46)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(52, 70, 80)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        },
+        "close": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgba(0, 0, 0, 0)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(233, 231, 223)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(52, 70, 80)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        }
+      },
+      "keyboard": {
+        "initialClose": true,
+        "tabToSelect": true,
+        "shiftTabWrap": true,
+        "escapeCancel": true
+      },
+      "hover": {
+        "beforeHover": "rgb(135, 145, 127)",
+        "afterHover": "rgb(168, 196, 211)"
+      },
+      "beforeZoom": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1.0000000149011612
+      },
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "zoomCalls": {
+        "setter": [
+          1,
+          2,
+          1
+        ],
+        "readOnlyGetZoom": [
+          1,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "zoom": 200,
+      "owner": "fresh Playwright persistent Chromium with disposable profile and extension",
+      "viewport": {
+        "width": 720,
+        "height": 450,
+        "dpr": 2.0000000298023224
+      },
+      "dialog": {
+        "x": 80,
+        "y": 24,
+        "width": 560,
+        "height": 402,
+        "top": 24,
+        "right": 640,
+        "bottom": 426,
+        "left": 80
+      },
+      "body": {
+        "x": 80.80000305175781,
+        "y": 112.80000305175781,
+        "width": 558.4000244140625,
+        "height": 240.40000915527344,
+        "top": 112.80000305175781,
+        "right": 639.2000274658203,
+        "bottom": 353.20001220703125,
+        "left": 80.80000305175781
+      },
+      "actions": {
+        "x": 80.80000305175781,
+        "y": 353.20001220703125,
+        "width": 558.4000244140625,
+        "height": 72,
+        "top": 353.20001220703125,
+        "right": 639.2000274658203,
+        "bottom": 425.20001220703125,
+        "left": 80.80000305175781
+      },
+      "select": {
+        "x": 104.80000305175781,
+        "y": 212.8000030517578,
+        "width": 502.8000183105469,
+        "height": 36,
+        "top": 212.8000030517578,
+        "right": 607.6000213623047,
+        "bottom": 248.8000030517578,
+        "left": 104.80000305175781
+      },
+      "selection": {
+        "value": "one",
+        "selectedOption": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "readout": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료"
+      },
+      "path": {
+        "text": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "rect": {
+          "x": 104.80000305175781,
+          "y": 256.8000183105469,
+          "width": 502.8000183105469,
+          "height": 36,
+          "top": 256.8000183105469,
+          "right": 607.6000213623047,
+          "bottom": 292.8000183105469,
+          "left": 104.80000305175781
+        },
+        "scrollWidth": 503,
+        "clientWidth": 503,
+        "wraps": true
+      },
+      "styles": {
+        "dialog": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(135, 145, 127)",
+          "backgroundColor": "rgb(48, 53, 46)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "select": {
+          "fontSize": "14px",
+          "lineHeight": "normal",
+          "outlineColor": "rgb(168, 196, 211)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "borderColor": "rgb(168, 196, 211)",
+          "backgroundColor": "rgb(52, 70, 80)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "title": {
+          "fontSize": "18px",
+          "lineHeight": "26px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(233, 231, 223)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "help": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "outlineColor": "rgb(181, 184, 174)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(181, 184, 174)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(181, 184, 174)"
+        },
+        "primary": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(25, 35, 31)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(168, 196, 211)",
+          "backgroundColor": "rgb(168, 196, 211)",
+          "color": "rgb(25, 35, 31)"
+        },
+        "cancel": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(135, 145, 127)",
+          "backgroundColor": "rgb(48, 53, 46)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "close": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgba(0, 0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 231, 223)"
+        }
+      },
+      "horizontalOverflow": false,
+      "forcedColors": false,
+      "rosterNames": 0,
+      "readonlyCount": 0,
+      "invalidCount": 0,
+      "nativeSelect": true,
+      "shortSelection": {
+        "value": "d17",
+        "selectedOption": "부서 18/업무 자료/보관 위치 18",
+        "readout": "부서 18/업무 자료/보관 위치 18"
+      },
+      "contrastRatios": {
+        "titleText": 10.129573328016168,
+        "helpText": 6.230496730470239,
+        "selectText": 7.933264433752992,
+        "primaryText": 8.836937582913613,
+        "cancelText": 10.129573328016168,
+        "closeText": 10.129573328016168,
+        "selectBoundary": 5.379808481634575,
+        "selectFocus": 6.869198040789459
+      },
+      "controls": {
+        "primary": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(168, 196, 211)",
+            "backgroundColor": "rgb(168, 196, 211)",
+            "color": "rgb(25, 35, 31)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(168, 196, 211)",
+              "outlineColor": "rgb(25, 35, 31)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(187, 209, 220)",
+              "backgroundColor": "rgb(187, 209, 220)",
+              "outlineColor": "rgb(25, 35, 31)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        },
+        "cancel": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(135, 145, 127)",
+            "backgroundColor": "rgb(48, 53, 46)",
+            "color": "rgb(233, 231, 223)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(135, 145, 127)",
+              "backgroundColor": "rgb(48, 53, 46)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(52, 70, 80)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        },
+        "close": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgba(0, 0, 0, 0)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(233, 231, 223)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(52, 70, 80)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        }
+      },
+      "keyboard": {
+        "initialClose": true,
+        "tabToSelect": true,
+        "shiftTabWrap": true,
+        "escapeCancel": true
+      },
+      "hover": {
+        "beforeHover": "rgb(135, 145, 127)",
+        "afterHover": "rgb(168, 196, 211)"
+      },
+      "beforeZoom": {
+        "width": 1440,
+        "height": 900,
+        "dpr": 1.0000000149011612
+      },
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "zoomCalls": {
+        "setter": [
+          1,
+          2,
+          1
+        ],
+        "readOnlyGetZoom": [
+          1,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "height": 1080,
+      "zoom": 200,
+      "owner": "fresh Playwright persistent Chromium with disposable profile and extension",
+      "viewport": {
+        "width": 960,
+        "height": 540,
+        "dpr": 2.0000000298023224
+      },
+      "dialog": {
+        "x": 200,
+        "y": 33.400001525878906,
+        "width": 560,
+        "height": 473.20001220703125,
+        "top": 33.400001525878906,
+        "right": 760,
+        "bottom": 506.60001373291016,
+        "left": 200
+      },
+      "body": {
+        "x": 200.8000030517578,
+        "y": 122.20000457763672,
+        "width": 558.4000244140625,
+        "height": 311.6000061035156,
+        "top": 122.20000457763672,
+        "right": 759.2000274658203,
+        "bottom": 433.80001068115234,
+        "left": 200.8000030517578
+      },
+      "actions": {
+        "x": 200.8000030517578,
+        "y": 433.8000183105469,
+        "width": 558.4000244140625,
+        "height": 72,
+        "top": 433.8000183105469,
+        "right": 759.2000274658203,
+        "bottom": 505.8000183105469,
+        "left": 200.8000030517578
+      },
+      "select": {
+        "x": 224.8000030517578,
+        "y": 222.1999969482422,
+        "width": 510.3999938964844,
+        "height": 36,
+        "top": 222.1999969482422,
+        "right": 735.1999969482422,
+        "bottom": 258.1999969482422,
+        "left": 224.8000030517578
+      },
+      "selection": {
+        "value": "one",
+        "selectedOption": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "readout": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료"
+      },
+      "path": {
+        "text": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "rect": {
+          "x": 224.8000030517578,
+          "y": 266.20001220703125,
+          "width": 510.3999938964844,
+          "height": 36,
+          "top": 266.20001220703125,
+          "right": 735.1999969482422,
+          "bottom": 302.20001220703125,
+          "left": 224.8000030517578
+        },
+        "scrollWidth": 510,
+        "clientWidth": 510,
+        "wraps": true
+      },
+      "styles": {
+        "dialog": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(135, 145, 127)",
+          "backgroundColor": "rgb(48, 53, 46)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "select": {
+          "fontSize": "14px",
+          "lineHeight": "normal",
+          "outlineColor": "rgb(168, 196, 211)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "borderColor": "rgb(168, 196, 211)",
+          "backgroundColor": "rgb(52, 70, 80)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "title": {
+          "fontSize": "18px",
+          "lineHeight": "26px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(233, 231, 223)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "help": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "outlineColor": "rgb(181, 184, 174)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(181, 184, 174)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(181, 184, 174)"
+        },
+        "primary": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(25, 35, 31)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(168, 196, 211)",
+          "backgroundColor": "rgb(168, 196, 211)",
+          "color": "rgb(25, 35, 31)"
+        },
+        "cancel": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(135, 145, 127)",
+          "backgroundColor": "rgb(48, 53, 46)",
+          "color": "rgb(233, 231, 223)"
+        },
+        "close": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(233, 231, 223)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgba(0, 0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 231, 223)"
+        }
+      },
+      "horizontalOverflow": false,
+      "forcedColors": false,
+      "rosterNames": 0,
+      "readonlyCount": 0,
+      "invalidCount": 0,
+      "nativeSelect": true,
+      "shortSelection": {
+        "value": "d17",
+        "selectedOption": "부서 18/업무 자료/보관 위치 18",
+        "readout": "부서 18/업무 자료/보관 위치 18"
+      },
+      "contrastRatios": {
+        "titleText": 10.129573328016168,
+        "helpText": 6.230496730470239,
+        "selectText": 7.933264433752992,
+        "primaryText": 8.836937582913613,
+        "cancelText": 10.129573328016168,
+        "closeText": 10.129573328016168,
+        "selectBoundary": 5.379808481634575,
+        "selectFocus": 6.869198040789459
+      },
+      "controls": {
+        "primary": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(168, 196, 211)",
+            "backgroundColor": "rgb(168, 196, 211)",
+            "color": "rgb(25, 35, 31)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(168, 196, 211)",
+              "outlineColor": "rgb(25, 35, 31)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(187, 209, 220)",
+              "backgroundColor": "rgb(187, 209, 220)",
+              "outlineColor": "rgb(25, 35, 31)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        },
+        "cancel": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(135, 145, 127)",
+            "backgroundColor": "rgb(48, 53, 46)",
+            "color": "rgb(233, 231, 223)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(135, 145, 127)",
+              "backgroundColor": "rgb(48, 53, 46)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(52, 70, 80)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        },
+        "close": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(168, 196, 211)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgba(0, 0, 0, 0)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(233, 231, 223)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgba(0, 0, 0, 0)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(168, 196, 211)",
+              "backgroundColor": "rgb(52, 70, 80)",
+              "outlineColor": "rgb(233, 231, 223)",
+              "outlineWidth": "2.8px"
+            }
+          }
+        }
+      },
+      "keyboard": {
+        "initialClose": true,
+        "tabToSelect": true,
+        "shiftTabWrap": true,
+        "escapeCancel": true
+      },
+      "hover": {
+        "beforeHover": "rgb(135, 145, 127)",
+        "afterHover": "rgb(168, 196, 211)"
+      },
+      "beforeZoom": {
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1.0000000149011612
+      },
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "zoomCalls": {
+        "setter": [
+          1,
+          2,
+          1
+        ],
+        "readOnlyGetZoom": [
+          1,
+          2,
+          1
+        ]
+      }
+    }
+  ],
+  "forcedColors": {
+    "at100": {
+      "theme": "forced",
+      "width": 1280,
+      "height": 720,
+      "zoom": 100,
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "dpr": 1
+      },
+      "dialog": {
+        "x": 360,
+        "y": 123,
+        "width": 560,
+        "height": 474,
+        "top": 123,
+        "right": 920,
+        "bottom": 597,
+        "left": 360
+      },
+      "body": {
+        "x": 361,
+        "y": 212,
+        "width": 558,
+        "height": 312,
+        "top": 212,
+        "right": 919,
+        "bottom": 524,
+        "left": 361
+      },
+      "actions": {
+        "x": 361,
+        "y": 524,
+        "width": 558,
+        "height": 72,
+        "top": 524,
+        "right": 919,
+        "bottom": 596,
+        "left": 361
+      },
+      "select": {
+        "x": 385,
+        "y": 312,
+        "width": 510,
+        "height": 36,
+        "top": 312,
+        "right": 895,
+        "bottom": 348,
+        "left": 385
+      },
+      "selection": {
+        "value": "one",
+        "selectedOption": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "readout": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료"
+      },
+      "path": {
+        "text": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "rect": {
+          "x": 385,
+          "y": 356,
+          "width": 510,
+          "height": 36,
+          "top": 356,
+          "right": 895,
+          "bottom": 392,
+          "left": 385
+        },
+        "scrollWidth": 510,
+        "clientWidth": 510,
+        "wraps": true
+      },
+      "styles": {
+        "dialog": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(0, 0, 0)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgb(0, 0, 0)"
+        },
+        "select": {
+          "fontSize": "14px",
+          "lineHeight": "normal",
+          "outlineColor": "rgb(55, 0, 110)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "borderColor": "rgb(54, 91, 112)",
+          "backgroundColor": "rgb(223, 231, 233)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "title": {
+          "fontSize": "18px",
+          "lineHeight": "26px",
+          "outlineColor": "rgb(0, 0, 0)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "color": "rgb(0, 0, 0)"
+        },
+        "help": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "outlineColor": "rgb(0, 0, 0)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "color": "rgb(0, 0, 0)"
+        },
+        "primary": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(0, 0, 0)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgb(0, 0, 0)"
+        },
+        "cancel": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(0, 0, 0)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgb(0, 0, 0)"
+        },
+        "close": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(0, 0, 0)",
+          "outlineWidth": "3px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "color": "rgb(0, 0, 0)"
+        }
+      },
+      "horizontalOverflow": false,
+      "forcedColors": true,
+      "rosterNames": 0,
+      "readonlyCount": 0,
+      "invalidCount": 0,
+      "nativeSelect": true,
+      "shortSelection": {
+        "value": "d17",
+        "selectedOption": "부서 18/업무 자료/보관 위치 18",
+        "readout": "부서 18/업무 자료/보관 위치 18"
+      },
+      "contrastRatios": {
+        "titleText": 21,
+        "helpText": 21,
+        "selectText": 12.297720709885532,
+        "primaryText": 21,
+        "cancelText": 21,
+        "closeText": 21,
+        "selectBoundary": 5.799480297020246,
+        "selectFocus": 15.134013837043632
+      },
+      "controls": {
+        "primary": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(55, 0, 110)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(54, 91, 112)",
+            "backgroundColor": "rgb(54, 91, 112)",
+            "color": "rgb(250, 249, 245)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(0, 0, 0)",
+              "backgroundColor": "rgb(255, 255, 255)",
+              "outlineColor": "rgb(0, 0, 0)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(55, 0, 110)",
+              "backgroundColor": "rgb(255, 255, 255)",
+              "outlineColor": "rgb(55, 0, 110)",
+              "outlineWidth": "1px"
+            }
+          }
+        },
+        "cancel": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(55, 0, 110)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(122, 123, 113)",
+            "backgroundColor": "rgb(250, 249, 245)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(0, 0, 0)",
+              "backgroundColor": "rgb(255, 255, 255)",
+              "outlineColor": "rgb(0, 0, 0)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(55, 0, 110)",
+              "backgroundColor": "rgb(255, 255, 255)",
+              "outlineColor": "rgb(55, 0, 110)",
+              "outlineWidth": "1px"
+            }
+          }
+        },
+        "close": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(55, 0, 110)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgba(0, 0, 0, 0)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(0, 0, 0)",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "outlineColor": "rgb(0, 0, 0)",
+              "outlineWidth": "3px"
+            },
+            "after": {
+              "borderColor": "rgb(55, 0, 110)",
+              "backgroundColor": "rgb(255, 255, 255)",
+              "outlineColor": "rgb(55, 0, 110)",
+              "outlineWidth": "1px"
+            }
+          }
+        }
+      },
+      "keyboard": {
+        "initialClose": true,
+        "tabToSelect": true,
+        "shiftTabWrap": true,
+        "escapeCancel": true
+      },
+      "hover": {
+        "beforeHover": "rgb(0, 0, 0)",
+        "afterHover": "rgb(55, 0, 110)"
+      }
+    },
+    "at200": {
+      "theme": "forced",
+      "width": 1280,
+      "height": 720,
+      "zoom": 200,
+      "viewport": {
+        "width": 640,
+        "height": 360,
+        "dpr": 2.0000000298023224
+      },
+      "dialog": {
+        "x": 40,
+        "y": 24,
+        "width": 560,
+        "height": 312,
+        "top": 24,
+        "right": 600,
+        "bottom": 336,
+        "left": 40
+      },
+      "body": {
+        "x": 40.79999923706055,
+        "y": 112.80000305175781,
+        "width": 558.4000244140625,
+        "height": 150.40000915527344,
+        "top": 112.80000305175781,
+        "right": 599.200023651123,
+        "bottom": 263.20001220703125,
+        "left": 40.79999923706055
+      },
+      "actions": {
+        "x": 40.79999923706055,
+        "y": 263.20001220703125,
+        "width": 558.4000244140625,
+        "height": 72,
+        "top": 263.20001220703125,
+        "right": 599.200023651123,
+        "bottom": 335.20001220703125,
+        "left": 40.79999923706055
+      },
+      "select": {
+        "x": 64.80000305175781,
+        "y": 212.8000030517578,
+        "width": 502.8000183105469,
+        "height": 36,
+        "top": 212.8000030517578,
+        "right": 567.6000213623047,
+        "bottom": 248.8000030517578,
+        "left": 64.80000305175781
+      },
+      "selection": {
+        "value": "one",
+        "selectedOption": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "readout": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료"
+      },
+      "path": {
+        "text": "본사 문서함/제품 전략과 장기 계획/2026년 하반기 매우 긴 한글 프로젝트 이름/검토 완료 자료",
+        "rect": {
+          "x": 64.80000305175781,
+          "y": 256.8000183105469,
+          "width": 502.8000183105469,
+          "height": 36,
+          "top": 256.8000183105469,
+          "right": 567.6000213623047,
+          "bottom": 292.8000183105469,
+          "left": 64.80000305175781
+        },
+        "scrollWidth": 503,
+        "clientWidth": 503,
+        "wraps": true
+      },
+      "styles": {
+        "dialog": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(0, 0, 0)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgb(0, 0, 0)"
+        },
+        "select": {
+          "fontSize": "14px",
+          "lineHeight": "normal",
+          "outlineColor": "rgb(55, 0, 110)",
+          "outlineWidth": "2px",
+          "outlineOffset": "2px",
+          "borderColor": "rgb(54, 91, 112)",
+          "backgroundColor": "rgb(223, 231, 233)",
+          "color": "rgb(36, 37, 33)"
+        },
+        "title": {
+          "fontSize": "18px",
+          "lineHeight": "26px",
+          "outlineColor": "rgb(0, 0, 0)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "color": "rgb(0, 0, 0)"
+        },
+        "help": {
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "outlineColor": "rgb(0, 0, 0)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "color": "rgb(0, 0, 0)"
+        },
+        "primary": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(0, 0, 0)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgb(0, 0, 0)"
+        },
+        "cancel": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(0, 0, 0)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgb(0, 0, 0)"
+        },
+        "close": {
+          "fontSize": "14px",
+          "lineHeight": "22px",
+          "outlineColor": "rgb(0, 0, 0)",
+          "outlineWidth": "2.8px",
+          "outlineOffset": "0px",
+          "borderColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "color": "rgb(0, 0, 0)"
+        }
+      },
+      "horizontalOverflow": false,
+      "forcedColors": true,
+      "rosterNames": 0,
+      "readonlyCount": 0,
+      "invalidCount": 0,
+      "nativeSelect": true,
+      "shortSelection": {
+        "value": "d17",
+        "selectedOption": "부서 18/업무 자료/보관 위치 18",
+        "readout": "부서 18/업무 자료/보관 위치 18"
+      },
+      "contrastRatios": {
+        "titleText": 21,
+        "helpText": 21,
+        "selectText": 12.297720709885532,
+        "primaryText": 21,
+        "cancelText": 21,
+        "closeText": 21,
+        "selectBoundary": 5.799480297020246,
+        "selectFocus": 15.134013837043632
+      },
+      "controls": {
+        "primary": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(55, 0, 110)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(54, 91, 112)",
+            "backgroundColor": "rgb(54, 91, 112)",
+            "color": "rgb(250, 249, 245)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(0, 0, 0)",
+              "backgroundColor": "rgb(255, 255, 255)",
+              "outlineColor": "rgb(0, 0, 0)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(55, 0, 110)",
+              "backgroundColor": "rgb(255, 255, 255)",
+              "outlineColor": "rgb(55, 0, 110)",
+              "outlineWidth": "0.8px"
+            }
+          }
+        },
+        "cancel": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(55, 0, 110)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgb(122, 123, 113)",
+            "backgroundColor": "rgb(250, 249, 245)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(0, 0, 0)",
+              "backgroundColor": "rgb(255, 255, 255)",
+              "outlineColor": "rgb(0, 0, 0)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(55, 0, 110)",
+              "backgroundColor": "rgb(255, 255, 255)",
+              "outlineColor": "rgb(55, 0, 110)",
+              "outlineWidth": "0.8px"
+            }
+          }
+        },
+        "close": {
+          "focus": {
+            "identity": true,
+            "outlineColor": "rgb(55, 0, 110)",
+            "outlineWidth": "2px",
+            "outlineOffset": "2px",
+            "borderColor": "rgba(0, 0, 0, 0)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(36, 37, 33)"
+          },
+          "hover": {
+            "before": {
+              "borderColor": "rgb(0, 0, 0)",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "outlineColor": "rgb(0, 0, 0)",
+              "outlineWidth": "2.8px"
+            },
+            "after": {
+              "borderColor": "rgb(55, 0, 110)",
+              "backgroundColor": "rgb(255, 255, 255)",
+              "outlineColor": "rgb(55, 0, 110)",
+              "outlineWidth": "0.8px"
+            }
+          }
+        }
+      },
+      "keyboard": {
+        "initialClose": true,
+        "tabToSelect": true,
+        "shiftTabWrap": true,
+        "escapeCancel": true
+      },
+      "hover": {
+        "beforeHover": "rgb(0, 0, 0)",
+        "afterHover": "rgb(55, 0, 110)"
+      },
+      "independentlyReadZoom": 2,
+      "independentlyReadResetZoom": 1,
+      "zoomCalls": {
+        "setter": [
+          2,
+          1
+        ],
+        "readOnlyGetZoom": [
+          2,
+          1
+        ]
+      }
+    }
+  },
+  "states": {
+    "equal": true,
+    "decrease": true,
+    "copy": true,
+    "empty": {
+      "disabledClickAndKeyboardConfirmCount": 0,
+      "disabledReceivesFocus": false
+    },
+    "missingPreview": true,
+    "suppliedL2": {
+      "openTopmost": {
+        "parent": 500,
+        "alert": 800
+      },
+      "escapeClosedAlertOnly": true,
+      "parentCancelCount": 0,
+      "writeCount": 0,
+      "focusReturn": {
+        "tag": "BUTTON",
+        "name": "이동",
+        "insideParent": true
+      }
+    },
+    "integrationStates": "loading/error/query/result async lifecycle not exposed by existing props; owned by #79 IR-SHELL-011"
+  },
+  "nativeWindowsImeCandidateUi": "nonblocking untested; no text input added; no OS input used"
+}

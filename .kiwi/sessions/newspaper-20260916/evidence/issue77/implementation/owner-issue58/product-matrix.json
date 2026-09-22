@@ -1,0 +1,830 @@
+[
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "theme": "light",
+    "zoom": 1,
+    "shell": {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "root": {
+        "clientWidth": 1280,
+        "scrollWidth": 1280
+      },
+      "left": {
+        "x": 0,
+        "y": 0,
+        "width": 280,
+        "height": 720,
+        "top": 0,
+        "right": 280,
+        "bottom": 720,
+        "left": 0
+      },
+      "main": {
+        "x": 280,
+        "y": 0,
+        "width": 680,
+        "height": 720,
+        "top": 0,
+        "right": 960,
+        "bottom": 720,
+        "left": 280
+      },
+      "right": {
+        "x": 960,
+        "y": 0,
+        "width": 320,
+        "height": 720,
+        "top": 0,
+        "right": 1280,
+        "bottom": 720,
+        "left": 960
+      },
+      "image": {
+        "x": 619.5,
+        "y": 141,
+        "width": 1,
+        "height": 1,
+        "top": 141,
+        "right": 620.5,
+        "bottom": 142,
+        "left": 619.5
+      }
+    },
+    "presentation": {
+      "dialogColor": "rgb(36, 37, 33)",
+      "dialogBackground": "rgb(250, 249, 245)",
+      "warningColor": "rgb(121, 87, 31)",
+      "warningBackground": "rgb(240, 232, 215)",
+      "hoverBackground": "rgb(44, 75, 93)"
+    },
+    "focusPresentation": {
+      "outline": "rgb(54, 91, 112)",
+      "surrounding": "rgb(250, 249, 245)"
+    }
+  },
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "theme": "light",
+    "zoom": 2,
+    "shell": {
+      "viewport": {
+        "width": 640,
+        "height": 360
+      },
+      "root": {
+        "clientWidth": 640,
+        "scrollWidth": 640
+      },
+      "left": {
+        "x": 0,
+        "y": 0,
+        "width": 188.328125,
+        "height": 360,
+        "top": 0,
+        "right": 188.328125,
+        "bottom": 360,
+        "left": 0
+      },
+      "main": {
+        "x": 188.328125,
+        "y": 0,
+        "width": 260,
+        "height": 360,
+        "top": 0,
+        "right": 448.328125,
+        "bottom": 360,
+        "left": 188.328125
+      },
+      "right": {
+        "x": 448.328125,
+        "y": 0,
+        "width": 191.6640625,
+        "height": 360,
+        "top": 0,
+        "right": 639.9921875,
+        "bottom": 360,
+        "left": 448.328125
+      },
+      "image": {
+        "x": 317.828125,
+        "y": 192.5,
+        "width": 1,
+        "height": 1,
+        "top": 192.5,
+        "right": 318.828125,
+        "bottom": 193.5,
+        "left": 317.828125
+      }
+    },
+    "presentation": {
+      "dialogColor": "rgb(36, 37, 33)",
+      "dialogBackground": "rgb(250, 249, 245)",
+      "warningColor": "rgb(121, 87, 31)",
+      "warningBackground": "rgb(240, 232, 215)",
+      "hoverBackground": "rgb(44, 75, 93)"
+    },
+    "focusPresentation": {
+      "outline": "rgb(54, 91, 112)",
+      "surrounding": "rgb(250, 249, 245)"
+    }
+  },
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "theme": "dark",
+    "zoom": 1,
+    "shell": {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "root": {
+        "clientWidth": 1280,
+        "scrollWidth": 1280
+      },
+      "left": {
+        "x": 0,
+        "y": 0,
+        "width": 280,
+        "height": 720,
+        "top": 0,
+        "right": 280,
+        "bottom": 720,
+        "left": 0
+      },
+      "main": {
+        "x": 280,
+        "y": 0,
+        "width": 680,
+        "height": 720,
+        "top": 0,
+        "right": 960,
+        "bottom": 720,
+        "left": 280
+      },
+      "right": {
+        "x": 960,
+        "y": 0,
+        "width": 320,
+        "height": 720,
+        "top": 0,
+        "right": 1280,
+        "bottom": 720,
+        "left": 960
+      },
+      "image": {
+        "x": 619.5,
+        "y": 141,
+        "width": 1,
+        "height": 1,
+        "top": 141,
+        "right": 620.5,
+        "bottom": 142,
+        "left": 619.5
+      }
+    },
+    "presentation": {
+      "dialogColor": "rgb(233, 231, 223)",
+      "dialogBackground": "rgb(48, 53, 46)",
+      "warningColor": "rgb(226, 192, 132)",
+      "warningBackground": "rgb(66, 55, 32)",
+      "hoverBackground": "rgb(187, 209, 220)"
+    },
+    "focusPresentation": {
+      "outline": "rgb(168, 196, 211)",
+      "surrounding": "rgb(48, 53, 46)"
+    }
+  },
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "theme": "dark",
+    "zoom": 2,
+    "shell": {
+      "viewport": {
+        "width": 640,
+        "height": 360
+      },
+      "root": {
+        "clientWidth": 640,
+        "scrollWidth": 640
+      },
+      "left": {
+        "x": 0,
+        "y": 0,
+        "width": 188.328125,
+        "height": 360,
+        "top": 0,
+        "right": 188.328125,
+        "bottom": 360,
+        "left": 0
+      },
+      "main": {
+        "x": 188.328125,
+        "y": 0,
+        "width": 260,
+        "height": 360,
+        "top": 0,
+        "right": 448.328125,
+        "bottom": 360,
+        "left": 188.328125
+      },
+      "right": {
+        "x": 448.328125,
+        "y": 0,
+        "width": 191.6640625,
+        "height": 360,
+        "top": 0,
+        "right": 639.9921875,
+        "bottom": 360,
+        "left": 448.328125
+      },
+      "image": {
+        "x": 317.828125,
+        "y": 192.5,
+        "width": 1,
+        "height": 1,
+        "top": 192.5,
+        "right": 318.828125,
+        "bottom": 193.5,
+        "left": 317.828125
+      }
+    },
+    "presentation": {
+      "dialogColor": "rgb(233, 231, 223)",
+      "dialogBackground": "rgb(48, 53, 46)",
+      "warningColor": "rgb(226, 192, 132)",
+      "warningBackground": "rgb(66, 55, 32)",
+      "hoverBackground": "rgb(187, 209, 220)"
+    },
+    "focusPresentation": {
+      "outline": "rgb(168, 196, 211)",
+      "surrounding": "rgb(48, 53, 46)"
+    }
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "theme": "light",
+    "zoom": 1,
+    "shell": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "root": {
+        "clientWidth": 1440,
+        "scrollWidth": 1440
+      },
+      "left": {
+        "x": 0,
+        "y": 0,
+        "width": 280,
+        "height": 900,
+        "top": 0,
+        "right": 280,
+        "bottom": 900,
+        "left": 0
+      },
+      "main": {
+        "x": 280,
+        "y": 0,
+        "width": 840,
+        "height": 900,
+        "top": 0,
+        "right": 1120,
+        "bottom": 900,
+        "left": 280
+      },
+      "right": {
+        "x": 1120,
+        "y": 0,
+        "width": 320,
+        "height": 900,
+        "top": 0,
+        "right": 1440,
+        "bottom": 900,
+        "left": 1120
+      },
+      "image": {
+        "x": 699.5,
+        "y": 141,
+        "width": 1,
+        "height": 1,
+        "top": 141,
+        "right": 700.5,
+        "bottom": 142,
+        "left": 699.5
+      }
+    },
+    "presentation": {
+      "dialogColor": "rgb(36, 37, 33)",
+      "dialogBackground": "rgb(250, 249, 245)",
+      "warningColor": "rgb(121, 87, 31)",
+      "warningBackground": "rgb(240, 232, 215)",
+      "hoverBackground": "rgb(44, 75, 93)"
+    },
+    "focusPresentation": {
+      "outline": "rgb(54, 91, 112)",
+      "surrounding": "rgb(250, 249, 245)"
+    }
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "theme": "light",
+    "zoom": 2,
+    "shell": {
+      "viewport": {
+        "width": 720,
+        "height": 450
+      },
+      "root": {
+        "clientWidth": 720,
+        "scrollWidth": 720
+      },
+      "left": {
+        "x": 0,
+        "y": 0,
+        "width": 204.9921875,
+        "height": 450,
+        "top": 0,
+        "right": 204.9921875,
+        "bottom": 450,
+        "left": 0
+      },
+      "main": {
+        "x": 204.9921875,
+        "y": 0,
+        "width": 300,
+        "height": 450,
+        "top": 0,
+        "right": 504.9921875,
+        "bottom": 450,
+        "left": 204.9921875
+      },
+      "right": {
+        "x": 504.9921875,
+        "y": 0,
+        "width": 215,
+        "height": 450,
+        "top": 0,
+        "right": 719.9921875,
+        "bottom": 450,
+        "left": 504.9921875
+      },
+      "image": {
+        "x": 354.4921875,
+        "y": 192.5,
+        "width": 1,
+        "height": 1,
+        "top": 192.5,
+        "right": 355.4921875,
+        "bottom": 193.5,
+        "left": 354.4921875
+      }
+    },
+    "presentation": {
+      "dialogColor": "rgb(36, 37, 33)",
+      "dialogBackground": "rgb(250, 249, 245)",
+      "warningColor": "rgb(121, 87, 31)",
+      "warningBackground": "rgb(240, 232, 215)",
+      "hoverBackground": "rgb(44, 75, 93)"
+    },
+    "focusPresentation": {
+      "outline": "rgb(54, 91, 112)",
+      "surrounding": "rgb(250, 249, 245)"
+    }
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "theme": "dark",
+    "zoom": 1,
+    "shell": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "root": {
+        "clientWidth": 1440,
+        "scrollWidth": 1440
+      },
+      "left": {
+        "x": 0,
+        "y": 0,
+        "width": 280,
+        "height": 900,
+        "top": 0,
+        "right": 280,
+        "bottom": 900,
+        "left": 0
+      },
+      "main": {
+        "x": 280,
+        "y": 0,
+        "width": 840,
+        "height": 900,
+        "top": 0,
+        "right": 1120,
+        "bottom": 900,
+        "left": 280
+      },
+      "right": {
+        "x": 1120,
+        "y": 0,
+        "width": 320,
+        "height": 900,
+        "top": 0,
+        "right": 1440,
+        "bottom": 900,
+        "left": 1120
+      },
+      "image": {
+        "x": 699.5,
+        "y": 141,
+        "width": 1,
+        "height": 1,
+        "top": 141,
+        "right": 700.5,
+        "bottom": 142,
+        "left": 699.5
+      }
+    },
+    "presentation": {
+      "dialogColor": "rgb(233, 231, 223)",
+      "dialogBackground": "rgb(48, 53, 46)",
+      "warningColor": "rgb(226, 192, 132)",
+      "warningBackground": "rgb(66, 55, 32)",
+      "hoverBackground": "rgb(187, 209, 220)"
+    },
+    "focusPresentation": {
+      "outline": "rgb(168, 196, 211)",
+      "surrounding": "rgb(48, 53, 46)"
+    }
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "theme": "dark",
+    "zoom": 2,
+    "shell": {
+      "viewport": {
+        "width": 720,
+        "height": 450
+      },
+      "root": {
+        "clientWidth": 720,
+        "scrollWidth": 720
+      },
+      "left": {
+        "x": 0,
+        "y": 0,
+        "width": 204.9921875,
+        "height": 450,
+        "top": 0,
+        "right": 204.9921875,
+        "bottom": 450,
+        "left": 0
+      },
+      "main": {
+        "x": 204.9921875,
+        "y": 0,
+        "width": 300,
+        "height": 450,
+        "top": 0,
+        "right": 504.9921875,
+        "bottom": 450,
+        "left": 204.9921875
+      },
+      "right": {
+        "x": 504.9921875,
+        "y": 0,
+        "width": 215,
+        "height": 450,
+        "top": 0,
+        "right": 719.9921875,
+        "bottom": 450,
+        "left": 504.9921875
+      },
+      "image": {
+        "x": 354.4921875,
+        "y": 192.5,
+        "width": 1,
+        "height": 1,
+        "top": 192.5,
+        "right": 355.4921875,
+        "bottom": 193.5,
+        "left": 354.4921875
+      }
+    },
+    "presentation": {
+      "dialogColor": "rgb(233, 231, 223)",
+      "dialogBackground": "rgb(48, 53, 46)",
+      "warningColor": "rgb(226, 192, 132)",
+      "warningBackground": "rgb(66, 55, 32)",
+      "hoverBackground": "rgb(187, 209, 220)"
+    },
+    "focusPresentation": {
+      "outline": "rgb(168, 196, 211)",
+      "surrounding": "rgb(48, 53, 46)"
+    }
+  },
+  {
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "theme": "light",
+    "zoom": 1,
+    "shell": {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "root": {
+        "clientWidth": 1920,
+        "scrollWidth": 1920
+      },
+      "left": {
+        "x": 0,
+        "y": 0,
+        "width": 280,
+        "height": 1080,
+        "top": 0,
+        "right": 280,
+        "bottom": 1080,
+        "left": 0
+      },
+      "main": {
+        "x": 280,
+        "y": 0,
+        "width": 1320,
+        "height": 1080,
+        "top": 0,
+        "right": 1600,
+        "bottom": 1080,
+        "left": 280
+      },
+      "right": {
+        "x": 1600,
+        "y": 0,
+        "width": 320,
+        "height": 1080,
+        "top": 0,
+        "right": 1920,
+        "bottom": 1080,
+        "left": 1600
+      },
+      "image": {
+        "x": 939.5,
+        "y": 141,
+        "width": 1,
+        "height": 1,
+        "top": 141,
+        "right": 940.5,
+        "bottom": 142,
+        "left": 939.5
+      }
+    },
+    "presentation": {
+      "dialogColor": "rgb(36, 37, 33)",
+      "dialogBackground": "rgb(250, 249, 245)",
+      "warningColor": "rgb(121, 87, 31)",
+      "warningBackground": "rgb(240, 232, 215)",
+      "hoverBackground": "rgb(44, 75, 93)"
+    },
+    "focusPresentation": {
+      "outline": "rgb(54, 91, 112)",
+      "surrounding": "rgb(250, 249, 245)"
+    }
+  },
+  {
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "theme": "light",
+    "zoom": 2,
+    "shell": {
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "root": {
+        "clientWidth": 960,
+        "scrollWidth": 960
+      },
+      "left": {
+        "x": 0,
+        "y": 0,
+        "width": 254.9921875,
+        "height": 540,
+        "top": 0,
+        "right": 254.9921875,
+        "bottom": 540,
+        "left": 0
+      },
+      "main": {
+        "x": 254.9921875,
+        "y": 0,
+        "width": 420,
+        "height": 540,
+        "top": 0,
+        "right": 674.9921875,
+        "bottom": 540,
+        "left": 254.9921875
+      },
+      "right": {
+        "x": 674.9921875,
+        "y": 0,
+        "width": 285,
+        "height": 540,
+        "top": 0,
+        "right": 959.9921875,
+        "bottom": 540,
+        "left": 674.9921875
+      },
+      "image": {
+        "x": 464.4921875,
+        "y": 143.5,
+        "width": 1,
+        "height": 1,
+        "top": 143.5,
+        "right": 465.4921875,
+        "bottom": 144.5,
+        "left": 464.4921875
+      }
+    },
+    "presentation": {
+      "dialogColor": "rgb(36, 37, 33)",
+      "dialogBackground": "rgb(250, 249, 245)",
+      "warningColor": "rgb(121, 87, 31)",
+      "warningBackground": "rgb(240, 232, 215)",
+      "hoverBackground": "rgb(44, 75, 93)"
+    },
+    "focusPresentation": {
+      "outline": "rgb(54, 91, 112)",
+      "surrounding": "rgb(250, 249, 245)"
+    }
+  },
+  {
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "theme": "dark",
+    "zoom": 1,
+    "shell": {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "root": {
+        "clientWidth": 1920,
+        "scrollWidth": 1920
+      },
+      "left": {
+        "x": 0,
+        "y": 0,
+        "width": 280,
+        "height": 1080,
+        "top": 0,
+        "right": 280,
+        "bottom": 1080,
+        "left": 0
+      },
+      "main": {
+        "x": 280,
+        "y": 0,
+        "width": 1320,
+        "height": 1080,
+        "top": 0,
+        "right": 1600,
+        "bottom": 1080,
+        "left": 280
+      },
+      "right": {
+        "x": 1600,
+        "y": 0,
+        "width": 320,
+        "height": 1080,
+        "top": 0,
+        "right": 1920,
+        "bottom": 1080,
+        "left": 1600
+      },
+      "image": {
+        "x": 939.5,
+        "y": 141,
+        "width": 1,
+        "height": 1,
+        "top": 141,
+        "right": 940.5,
+        "bottom": 142,
+        "left": 939.5
+      }
+    },
+    "presentation": {
+      "dialogColor": "rgb(233, 231, 223)",
+      "dialogBackground": "rgb(48, 53, 46)",
+      "warningColor": "rgb(226, 192, 132)",
+      "warningBackground": "rgb(66, 55, 32)",
+      "hoverBackground": "rgb(187, 209, 220)"
+    },
+    "focusPresentation": {
+      "outline": "rgb(168, 196, 211)",
+      "surrounding": "rgb(48, 53, 46)"
+    }
+  },
+  {
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "theme": "dark",
+    "zoom": 2,
+    "shell": {
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "root": {
+        "clientWidth": 960,
+        "scrollWidth": 960
+      },
+      "left": {
+        "x": 0,
+        "y": 0,
+        "width": 254.9921875,
+        "height": 540,
+        "top": 0,
+        "right": 254.9921875,
+        "bottom": 540,
+        "left": 0
+      },
+      "main": {
+        "x": 254.9921875,
+        "y": 0,
+        "width": 420,
+        "height": 540,
+        "top": 0,
+        "right": 674.9921875,
+        "bottom": 540,
+        "left": 254.9921875
+      },
+      "right": {
+        "x": 674.9921875,
+        "y": 0,
+        "width": 285,
+        "height": 540,
+        "top": 0,
+        "right": 959.9921875,
+        "bottom": 540,
+        "left": 674.9921875
+      },
+      "image": {
+        "x": 464.4921875,
+        "y": 143.5,
+        "width": 1,
+        "height": 1,
+        "top": 143.5,
+        "right": 465.4921875,
+        "bottom": 144.5,
+        "left": 464.4921875
+      }
+    },
+    "presentation": {
+      "dialogColor": "rgb(233, 231, 223)",
+      "dialogBackground": "rgb(48, 53, 46)",
+      "warningColor": "rgb(226, 192, 132)",
+      "warningBackground": "rgb(66, 55, 32)",
+      "hoverBackground": "rgb(187, 209, 220)"
+    },
+    "focusPresentation": {
+      "outline": "rgb(168, 196, 211)",
+      "surrounding": "rgb(48, 53, 46)"
+    }
+  }
+]

@@ -1,7 +1,8 @@
-import { useMemo, useState, type CSSProperties } from 'react';
+import { useMemo, useRef, useState, type CSSProperties } from 'react';
 
 import {
   AtomicCodeMirrorEditor,
+  type AtomicCodeMirrorEditorHandle,
   codeBlocks,
   mathBlocks,
   mermaidBlocks,
@@ -133,9 +134,19 @@ const WIDTHS = [
   { label: '가득', value: 'none' },
 ];
 
+declare global {
+  var __issue55Reveal: (query: string) => boolean;
+}
+
 export default function App() {
   const [readOnly, setReadOnly] = useState(false);
   const [measure, setMeasure] = useState('70ch');
+  const editorHandleRef = useRef<AtomicCodeMirrorEditorHandle | null>(null);
+  globalThis.__issue55Reveal = (query: string) => {
+    if (editorHandleRef.current === null) return false;
+    editorHandleRef.current.revealText(query);
+    return true;
+  };
 
   // 참조가 바뀌면 에디터가 remount 된다 — 반드시 안정적으로 유지한다.
   //
@@ -197,6 +208,7 @@ export default function App() {
           markdownSource={SAMPLE}
           readOnly={readOnly}
           extensions={extensions}
+          editorHandleRef={editorHandleRef}
         />
       </main>
     </div>

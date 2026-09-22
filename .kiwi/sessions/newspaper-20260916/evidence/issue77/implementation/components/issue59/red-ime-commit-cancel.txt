@@ -1,0 +1,11 @@
+Command: npm test --workspace @doculight/web -- --run test/newspaper-pre-auth.test.tsx
+Exit code: 1
+
+FAIL candidate commit 뒤의 첫 deliberate Enter를 허용한다
+FAIL cancel 뒤의 첫 deliberate Enter를 허용한다
+AssertionError: expected true to be false
+
+Test Files  1 failed (1)
+Tests       2 failed | 18 passed (20)
+
+The raw RED shows that candidate-click/Space commit and Escape cancel left an unbounded suppression flag that consumed a later deliberate Enter.

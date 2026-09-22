@@ -1,0 +1,44 @@
+[
+  {
+    "check": "issue77-product-check.mjs",
+    "startedAt": "2026-09-21T23:59:12.843Z",
+    "endedAt": "2026-09-21T23:59:15.725Z",
+    "exitCode": 0,
+    "raw": "issue77-product-check.raw.txt"
+  },
+  {
+    "check": "focus-retention-check.mjs",
+    "startedAt": "2026-09-21T23:59:15.725Z",
+    "endedAt": "2026-09-21T23:59:21.711Z",
+    "exitCode": 0,
+    "raw": "focus-retention-check.raw.txt"
+  },
+  {
+    "check": "conflict-rescue-product-check.mjs",
+    "startedAt": "2026-09-21T23:59:21.711Z",
+    "endedAt": "2026-09-21T23:59:25.877Z",
+    "exitCode": 0,
+    "raw": "conflict-rescue-product-check.raw.txt"
+  },
+  {
+    "check": "search-layout-check.mjs",
+    "startedAt": "2026-09-21T23:59:25.877Z",
+    "endedAt": "2026-09-21T23:59:28.810Z",
+    "exitCode": 0,
+    "raw": "search-layout-check.raw.txt"
+  },
+  {
+    "check": "acl-two-account-check.mjs",
+    "startedAt": "2026-09-21T23:59:28.810Z",
+    "endedAt": "2026-09-21T23:59:33.089Z",
+    "exitCode": 0,
+    "raw": "acl-two-account-check.raw.txt"
+  },
+  {
+    "check": "input-gestures-check.mjs",
+    "startedAt": "2026-09-21T23:59:33.089Z",
+    "endedAt": "2026-09-21T23:59:36.691Z",
+    "exitCode": 0,
+    "raw": "input-gestures-check.raw.txt"
+  }
+]

@@ -1,0 +1,10 @@
+Command: node test/issue58-file-surface-check.cjs
+Working directory: packages/web
+Result: PASS issue58 matrix 12/12
+Exit code: 0
+
+Every environment used a Playwright-launched persistent Chromium context with a unique temporary user-data directory. The six 200% environments loaded the repository zoom extension and asserted chrome.tabs.getZoom() === 2. The checker also ran a separate forced-colors context and recorded forced-colors.json/forced-colors.png.
+
+For every viewport/theme/zoom environment, the checker measured wide, tall and tiny image bounds, intrinsic no-upscale behavior, object-fit containment, document overflow, download-link wrapping/hit area, dialog/input geometry, zero callback at binary selection, cancel-first L2 focus, outside-interaction blocking, Escape cancellation and initiating-action focus restoration. It captured surface-*.png and matrix-*.png. The 1280/light/100% case additionally verified a real native download event, Unicode suggested filename, exact SHA-256 bytes and one affirmative callback.
+
+The actual-browser state probe also verified cached completion does not remain busy, pending loading is visible, missing and forbidden responses use identical safe errors, and retry reissues the same resource request and reaches loaded state. In all 12 environments, both L2 actions are scrolled into view, bounded inside the alert and viewport, and activated through cancel/reopen/affirmative paths; `matrix-actions-*.png` records the reachable action row.

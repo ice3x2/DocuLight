@@ -1,0 +1,1457 @@
+{
+  "runner": "Playwright-owned isolated persistent Chromium/profile with temporary extension chrome.tabs.setZoom/getZoom",
+  "posts": [
+    {
+      "name": "긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스",
+      "administratorId": "eeab6b99-2116-4c6c-bedb-64de984e4519",
+      "defaultGroupLevel": "edit"
+    }
+  ],
+  "createdWorkspaceId": "c8cd722fc672cfdc8934e5fac05816dc",
+  "environments": [
+    {
+      "requestedViewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "cssViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "devicePixelRatio": 1,
+        "horizontalOverflow": false,
+        "dialog": {
+          "x": 360,
+          "y": 115,
+          "width": 560,
+          "height": 490,
+          "top": 115,
+          "right": 920,
+          "bottom": 605,
+          "left": 360
+        },
+        "controls": [
+          36,
+          36
+        ],
+        "bodyFocused": false,
+        "popupWithinViewport": true,
+        "popupScrollable": true,
+        "scrollReachability": {
+          "top": 0,
+          "max": 0,
+          "reachable": true
+        },
+        "form": {
+          "x": 325,
+          "y": 89,
+          "width": 560,
+          "height": 564,
+          "top": 89,
+          "right": 885,
+          "bottom": 653,
+          "left": 325
+        },
+        "states": {
+          "surface": {
+            "background": "rgb(250, 249, 245)",
+            "border": "rgb(122, 123, 113)"
+          },
+          "summary": {
+            "color": "rgb(36, 37, 33)"
+          },
+          "warning": {
+            "color": "rgb(36, 37, 33)"
+          },
+          "focused": {
+            "outlineColor": "rgb(0, 94, 168)",
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          "execute": {
+            "color": "rgb(250, 249, 245)",
+            "background": "rgb(150, 63, 56)",
+            "border": "rgb(150, 63, 56)"
+          }
+        },
+        "typography": {
+          "heading": {
+            "fontSize": "20px",
+            "lineHeight": "28px"
+          },
+          "label": {
+            "fontSize": "13px",
+            "lineHeight": "20px"
+          },
+          "input": {
+            "fontSize": "14px",
+            "lineHeight": "22px",
+            "paddingLeft": "12px"
+          },
+          "formGap": "20px",
+          "actionGap": "8px"
+        }
+      },
+      "screenshot": "create-light-1280x720-100.png"
+    },
+    {
+      "requestedViewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "cssViewport": {
+          "width": 640,
+          "height": 360
+        },
+        "devicePixelRatio": 2,
+        "horizontalOverflow": false,
+        "dialog": {
+          "x": 40,
+          "y": 24,
+          "width": 560,
+          "height": 312,
+          "top": 24,
+          "right": 600,
+          "bottom": 336,
+          "left": 40
+        },
+        "controls": [
+          36,
+          36
+        ],
+        "bodyFocused": false,
+        "popupWithinViewport": true,
+        "popupScrollable": true,
+        "scrollReachability": {
+          "top": 200,
+          "max": 200,
+          "reachable": true
+        },
+        "form": {
+          "x": 228.0703125,
+          "y": 63,
+          "width": 368.2265625,
+          "height": 598,
+          "top": 63,
+          "right": 596.296875,
+          "bottom": 661,
+          "left": 228.0703125
+        },
+        "states": {
+          "surface": {
+            "background": "rgb(250, 249, 245)",
+            "border": "rgb(122, 123, 113)"
+          },
+          "summary": {
+            "color": "rgb(36, 37, 33)"
+          },
+          "warning": {
+            "color": "rgb(36, 37, 33)"
+          },
+          "focused": {
+            "outlineColor": "rgb(0, 94, 168)",
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          "execute": {
+            "color": "rgb(250, 249, 245)",
+            "background": "rgb(150, 63, 56)",
+            "border": "rgb(150, 63, 56)"
+          }
+        },
+        "typography": {
+          "heading": {
+            "fontSize": "20px",
+            "lineHeight": "28px"
+          },
+          "label": {
+            "fontSize": "13px",
+            "lineHeight": "20px"
+          },
+          "input": {
+            "fontSize": "14px",
+            "lineHeight": "22px",
+            "paddingLeft": "12px"
+          },
+          "formGap": "20px",
+          "actionGap": "8px"
+        }
+      },
+      "screenshot": "create-light-1280x720-200.png"
+    },
+    {
+      "requestedViewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "cssViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "devicePixelRatio": 1,
+        "horizontalOverflow": false,
+        "dialog": {
+          "x": 360,
+          "y": 115,
+          "width": 560,
+          "height": 490,
+          "top": 115,
+          "right": 920,
+          "bottom": 605,
+          "left": 360
+        },
+        "controls": [
+          36,
+          36
+        ],
+        "bodyFocused": false,
+        "popupWithinViewport": true,
+        "popupScrollable": true,
+        "scrollReachability": {
+          "top": 0,
+          "max": 0,
+          "reachable": true
+        },
+        "form": {
+          "x": 325,
+          "y": 89,
+          "width": 560,
+          "height": 564,
+          "top": 89,
+          "right": 885,
+          "bottom": 653,
+          "left": 325
+        },
+        "states": {
+          "surface": {
+            "background": "rgb(48, 53, 46)",
+            "border": "rgb(135, 145, 127)"
+          },
+          "summary": {
+            "color": "rgb(233, 231, 223)"
+          },
+          "warning": {
+            "color": "rgb(233, 231, 223)"
+          },
+          "focused": {
+            "outlineColor": "rgb(142, 203, 255)",
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          "execute": {
+            "color": "rgb(48, 53, 46)",
+            "background": "rgb(240, 171, 163)",
+            "border": "rgb(240, 171, 163)"
+          }
+        },
+        "typography": {
+          "heading": {
+            "fontSize": "20px",
+            "lineHeight": "28px"
+          },
+          "label": {
+            "fontSize": "13px",
+            "lineHeight": "20px"
+          },
+          "input": {
+            "fontSize": "14px",
+            "lineHeight": "22px",
+            "paddingLeft": "12px"
+          },
+          "formGap": "20px",
+          "actionGap": "8px"
+        }
+      },
+      "screenshot": "create-dark-1280x720-100.png"
+    },
+    {
+      "requestedViewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "cssViewport": {
+          "width": 640,
+          "height": 360
+        },
+        "devicePixelRatio": 2,
+        "horizontalOverflow": false,
+        "dialog": {
+          "x": 40,
+          "y": 24,
+          "width": 560,
+          "height": 312,
+          "top": 24,
+          "right": 600,
+          "bottom": 336,
+          "left": 40
+        },
+        "controls": [
+          36,
+          36
+        ],
+        "bodyFocused": false,
+        "popupWithinViewport": true,
+        "popupScrollable": true,
+        "scrollReachability": {
+          "top": 200,
+          "max": 200,
+          "reachable": true
+        },
+        "form": {
+          "x": 228.0703125,
+          "y": 63,
+          "width": 368.2265625,
+          "height": 598,
+          "top": 63,
+          "right": 596.296875,
+          "bottom": 661,
+          "left": 228.0703125
+        },
+        "states": {
+          "surface": {
+            "background": "rgb(48, 53, 46)",
+            "border": "rgb(135, 145, 127)"
+          },
+          "summary": {
+            "color": "rgb(233, 231, 223)"
+          },
+          "warning": {
+            "color": "rgb(233, 231, 223)"
+          },
+          "focused": {
+            "outlineColor": "rgb(142, 203, 255)",
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          "execute": {
+            "color": "rgb(48, 53, 46)",
+            "background": "rgb(240, 171, 163)",
+            "border": "rgb(240, 171, 163)"
+          }
+        },
+        "typography": {
+          "heading": {
+            "fontSize": "20px",
+            "lineHeight": "28px"
+          },
+          "label": {
+            "fontSize": "13px",
+            "lineHeight": "20px"
+          },
+          "input": {
+            "fontSize": "14px",
+            "lineHeight": "22px",
+            "paddingLeft": "12px"
+          },
+          "formGap": "20px",
+          "actionGap": "8px"
+        }
+      },
+      "screenshot": "create-dark-1280x720-200.png"
+    },
+    {
+      "requestedViewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "cssViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "devicePixelRatio": 1,
+        "horizontalOverflow": false,
+        "dialog": {
+          "x": 440,
+          "y": 205,
+          "width": 560,
+          "height": 490,
+          "top": 205,
+          "right": 1000,
+          "bottom": 695,
+          "left": 440
+        },
+        "controls": [
+          36,
+          36
+        ],
+        "bodyFocused": false,
+        "popupWithinViewport": true,
+        "popupScrollable": true,
+        "scrollReachability": {
+          "top": 0,
+          "max": 0,
+          "reachable": true
+        },
+        "form": {
+          "x": 405,
+          "y": 145,
+          "width": 560,
+          "height": 564,
+          "top": 145,
+          "right": 965,
+          "bottom": 709,
+          "left": 405
+        },
+        "states": {
+          "surface": {
+            "background": "rgb(250, 249, 245)",
+            "border": "rgb(122, 123, 113)"
+          },
+          "summary": {
+            "color": "rgb(36, 37, 33)"
+          },
+          "warning": {
+            "color": "rgb(36, 37, 33)"
+          },
+          "focused": {
+            "outlineColor": "rgb(0, 94, 168)",
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          "execute": {
+            "color": "rgb(250, 249, 245)",
+            "background": "rgb(150, 63, 56)",
+            "border": "rgb(150, 63, 56)"
+          }
+        },
+        "typography": {
+          "heading": {
+            "fontSize": "20px",
+            "lineHeight": "28px"
+          },
+          "label": {
+            "fontSize": "13px",
+            "lineHeight": "20px"
+          },
+          "input": {
+            "fontSize": "14px",
+            "lineHeight": "22px",
+            "paddingLeft": "12px"
+          },
+          "formGap": "20px",
+          "actionGap": "8px"
+        }
+      },
+      "screenshot": "create-light-1440x900-100.png"
+    },
+    {
+      "requestedViewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "cssViewport": {
+          "width": 720,
+          "height": 450
+        },
+        "devicePixelRatio": 2,
+        "horizontalOverflow": false,
+        "dialog": {
+          "x": 80,
+          "y": 24,
+          "width": 560,
+          "height": 402,
+          "top": 24,
+          "right": 640,
+          "bottom": 426,
+          "left": 80
+        },
+        "controls": [
+          36,
+          36
+        ],
+        "bodyFocused": false,
+        "popupWithinViewport": true,
+        "popupScrollable": true,
+        "scrollReachability": {
+          "top": 110,
+          "max": 110,
+          "reachable": true
+        },
+        "form": {
+          "x": 254.53125,
+          "y": 114.5,
+          "width": 419.3671875,
+          "height": 590,
+          "top": 114.5,
+          "right": 673.8984375,
+          "bottom": 704.5,
+          "left": 254.53125
+        },
+        "states": {
+          "surface": {
+            "background": "rgb(250, 249, 245)",
+            "border": "rgb(122, 123, 113)"
+          },
+          "summary": {
+            "color": "rgb(36, 37, 33)"
+          },
+          "warning": {
+            "color": "rgb(36, 37, 33)"
+          },
+          "focused": {
+            "outlineColor": "rgb(0, 94, 168)",
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          "execute": {
+            "color": "rgb(250, 249, 245)",
+            "background": "rgb(150, 63, 56)",
+            "border": "rgb(150, 63, 56)"
+          }
+        },
+        "typography": {
+          "heading": {
+            "fontSize": "20px",
+            "lineHeight": "28px"
+          },
+          "label": {
+            "fontSize": "13px",
+            "lineHeight": "20px"
+          },
+          "input": {
+            "fontSize": "14px",
+            "lineHeight": "22px",
+            "paddingLeft": "12px"
+          },
+          "formGap": "20px",
+          "actionGap": "8px"
+        }
+      },
+      "screenshot": "create-light-1440x900-200.png"
+    },
+    {
+      "requestedViewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "cssViewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "devicePixelRatio": 1,
+        "horizontalOverflow": false,
+        "dialog": {
+          "x": 440,
+          "y": 205,
+          "width": 560,
+          "height": 490,
+          "top": 205,
+          "right": 1000,
+          "bottom": 695,
+          "left": 440
+        },
+        "controls": [
+          36,
+          36
+        ],
+        "bodyFocused": false,
+        "popupWithinViewport": true,
+        "popupScrollable": true,
+        "scrollReachability": {
+          "top": 0,
+          "max": 0,
+          "reachable": true
+        },
+        "form": {
+          "x": 405,
+          "y": 145,
+          "width": 560,
+          "height": 564,
+          "top": 145,
+          "right": 965,
+          "bottom": 709,
+          "left": 405
+        },
+        "states": {
+          "surface": {
+            "background": "rgb(48, 53, 46)",
+            "border": "rgb(135, 145, 127)"
+          },
+          "summary": {
+            "color": "rgb(233, 231, 223)"
+          },
+          "warning": {
+            "color": "rgb(233, 231, 223)"
+          },
+          "focused": {
+            "outlineColor": "rgb(142, 203, 255)",
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          "execute": {
+            "color": "rgb(48, 53, 46)",
+            "background": "rgb(240, 171, 163)",
+            "border": "rgb(240, 171, 163)"
+          }
+        },
+        "typography": {
+          "heading": {
+            "fontSize": "20px",
+            "lineHeight": "28px"
+          },
+          "label": {
+            "fontSize": "13px",
+            "lineHeight": "20px"
+          },
+          "input": {
+            "fontSize": "14px",
+            "lineHeight": "22px",
+            "paddingLeft": "12px"
+          },
+          "formGap": "20px",
+          "actionGap": "8px"
+        }
+      },
+      "screenshot": "create-dark-1440x900-100.png"
+    },
+    {
+      "requestedViewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "cssViewport": {
+          "width": 720,
+          "height": 450
+        },
+        "devicePixelRatio": 2,
+        "horizontalOverflow": false,
+        "dialog": {
+          "x": 80,
+          "y": 24,
+          "width": 560,
+          "height": 402,
+          "top": 24,
+          "right": 640,
+          "bottom": 426,
+          "left": 80
+        },
+        "controls": [
+          36,
+          36
+        ],
+        "bodyFocused": false,
+        "popupWithinViewport": true,
+        "popupScrollable": true,
+        "scrollReachability": {
+          "top": 110,
+          "max": 110,
+          "reachable": true
+        },
+        "form": {
+          "x": 254.53125,
+          "y": 114.5,
+          "width": 419.3671875,
+          "height": 590,
+          "top": 114.5,
+          "right": 673.8984375,
+          "bottom": 704.5,
+          "left": 254.53125
+        },
+        "states": {
+          "surface": {
+            "background": "rgb(48, 53, 46)",
+            "border": "rgb(135, 145, 127)"
+          },
+          "summary": {
+            "color": "rgb(233, 231, 223)"
+          },
+          "warning": {
+            "color": "rgb(233, 231, 223)"
+          },
+          "focused": {
+            "outlineColor": "rgb(142, 203, 255)",
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          "execute": {
+            "color": "rgb(48, 53, 46)",
+            "background": "rgb(240, 171, 163)",
+            "border": "rgb(240, 171, 163)"
+          }
+        },
+        "typography": {
+          "heading": {
+            "fontSize": "20px",
+            "lineHeight": "28px"
+          },
+          "label": {
+            "fontSize": "13px",
+            "lineHeight": "20px"
+          },
+          "input": {
+            "fontSize": "14px",
+            "lineHeight": "22px",
+            "paddingLeft": "12px"
+          },
+          "formGap": "20px",
+          "actionGap": "8px"
+        }
+      },
+      "screenshot": "create-dark-1440x900-200.png"
+    },
+    {
+      "requestedViewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "theme": "light",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "cssViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "devicePixelRatio": 1,
+        "horizontalOverflow": false,
+        "dialog": {
+          "x": 680,
+          "y": 295,
+          "width": 560,
+          "height": 490,
+          "top": 295,
+          "right": 1240,
+          "bottom": 785,
+          "left": 680
+        },
+        "controls": [
+          36,
+          36
+        ],
+        "bodyFocused": false,
+        "popupWithinViewport": true,
+        "popupScrollable": true,
+        "scrollReachability": {
+          "top": 0,
+          "max": 0,
+          "reachable": true
+        },
+        "form": {
+          "x": 645,
+          "y": 230,
+          "width": 560,
+          "height": 564,
+          "top": 230,
+          "right": 1205,
+          "bottom": 794,
+          "left": 645
+        },
+        "states": {
+          "surface": {
+            "background": "rgb(250, 249, 245)",
+            "border": "rgb(122, 123, 113)"
+          },
+          "summary": {
+            "color": "rgb(36, 37, 33)"
+          },
+          "warning": {
+            "color": "rgb(36, 37, 33)"
+          },
+          "focused": {
+            "outlineColor": "rgb(0, 94, 168)",
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          "execute": {
+            "color": "rgb(250, 249, 245)",
+            "background": "rgb(150, 63, 56)",
+            "border": "rgb(150, 63, 56)"
+          }
+        },
+        "typography": {
+          "heading": {
+            "fontSize": "20px",
+            "lineHeight": "28px"
+          },
+          "label": {
+            "fontSize": "13px",
+            "lineHeight": "20px"
+          },
+          "input": {
+            "fontSize": "14px",
+            "lineHeight": "22px",
+            "paddingLeft": "12px"
+          },
+          "formGap": "20px",
+          "actionGap": "8px"
+        }
+      },
+      "screenshot": "create-light-1920x1080-100.png"
+    },
+    {
+      "requestedViewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "theme": "light",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "cssViewport": {
+          "width": 960,
+          "height": 540
+        },
+        "devicePixelRatio": 2,
+        "horizontalOverflow": false,
+        "dialog": {
+          "x": 200,
+          "y": 25,
+          "width": 560,
+          "height": 490,
+          "top": 25,
+          "right": 760,
+          "bottom": 515,
+          "left": 200
+        },
+        "controls": [
+          36,
+          36
+        ],
+        "bodyFocused": false,
+        "popupWithinViewport": true,
+        "popupScrollable": true,
+        "scrollReachability": {
+          "top": 0,
+          "max": 0,
+          "reachable": true
+        },
+        "form": {
+          "x": 313.80078125,
+          "y": 127,
+          "width": 560,
+          "height": 564,
+          "top": 127,
+          "right": 873.80078125,
+          "bottom": 691,
+          "left": 313.80078125
+        },
+        "states": {
+          "surface": {
+            "background": "rgb(250, 249, 245)",
+            "border": "rgb(122, 123, 113)"
+          },
+          "summary": {
+            "color": "rgb(36, 37, 33)"
+          },
+          "warning": {
+            "color": "rgb(36, 37, 33)"
+          },
+          "focused": {
+            "outlineColor": "rgb(0, 94, 168)",
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          "execute": {
+            "color": "rgb(250, 249, 245)",
+            "background": "rgb(150, 63, 56)",
+            "border": "rgb(150, 63, 56)"
+          }
+        },
+        "typography": {
+          "heading": {
+            "fontSize": "20px",
+            "lineHeight": "28px"
+          },
+          "label": {
+            "fontSize": "13px",
+            "lineHeight": "20px"
+          },
+          "input": {
+            "fontSize": "14px",
+            "lineHeight": "22px",
+            "paddingLeft": "12px"
+          },
+          "formGap": "20px",
+          "actionGap": "8px"
+        }
+      },
+      "screenshot": "create-light-1920x1080-200.png"
+    },
+    {
+      "requestedViewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "theme": "dark",
+      "zoom": 100,
+      "observedZoom": 1,
+      "geometry": {
+        "cssViewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "devicePixelRatio": 1,
+        "horizontalOverflow": false,
+        "dialog": {
+          "x": 680,
+          "y": 295,
+          "width": 560,
+          "height": 490,
+          "top": 295,
+          "right": 1240,
+          "bottom": 785,
+          "left": 680
+        },
+        "controls": [
+          36,
+          36
+        ],
+        "bodyFocused": false,
+        "popupWithinViewport": true,
+        "popupScrollable": true,
+        "scrollReachability": {
+          "top": 0,
+          "max": 0,
+          "reachable": true
+        },
+        "form": {
+          "x": 645,
+          "y": 230,
+          "width": 560,
+          "height": 564,
+          "top": 230,
+          "right": 1205,
+          "bottom": 794,
+          "left": 645
+        },
+        "states": {
+          "surface": {
+            "background": "rgb(48, 53, 46)",
+            "border": "rgb(135, 145, 127)"
+          },
+          "summary": {
+            "color": "rgb(233, 231, 223)"
+          },
+          "warning": {
+            "color": "rgb(233, 231, 223)"
+          },
+          "focused": {
+            "outlineColor": "rgb(142, 203, 255)",
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          "execute": {
+            "color": "rgb(48, 53, 46)",
+            "background": "rgb(240, 171, 163)",
+            "border": "rgb(240, 171, 163)"
+          }
+        },
+        "typography": {
+          "heading": {
+            "fontSize": "20px",
+            "lineHeight": "28px"
+          },
+          "label": {
+            "fontSize": "13px",
+            "lineHeight": "20px"
+          },
+          "input": {
+            "fontSize": "14px",
+            "lineHeight": "22px",
+            "paddingLeft": "12px"
+          },
+          "formGap": "20px",
+          "actionGap": "8px"
+        }
+      },
+      "screenshot": "create-dark-1920x1080-100.png"
+    },
+    {
+      "requestedViewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "theme": "dark",
+      "zoom": 200,
+      "observedZoom": 2,
+      "geometry": {
+        "cssViewport": {
+          "width": 960,
+          "height": 540
+        },
+        "devicePixelRatio": 2,
+        "horizontalOverflow": false,
+        "dialog": {
+          "x": 200,
+          "y": 25,
+          "width": 560,
+          "height": 490,
+          "top": 25,
+          "right": 760,
+          "bottom": 515,
+          "left": 200
+        },
+        "controls": [
+          36,
+          36
+        ],
+        "bodyFocused": false,
+        "popupWithinViewport": true,
+        "popupScrollable": true,
+        "scrollReachability": {
+          "top": 0,
+          "max": 0,
+          "reachable": true
+        },
+        "form": {
+          "x": 313.80078125,
+          "y": 127,
+          "width": 560,
+          "height": 564,
+          "top": 127,
+          "right": 873.80078125,
+          "bottom": 691,
+          "left": 313.80078125
+        },
+        "states": {
+          "surface": {
+            "background": "rgb(48, 53, 46)",
+            "border": "rgb(135, 145, 127)"
+          },
+          "summary": {
+            "color": "rgb(233, 231, 223)"
+          },
+          "warning": {
+            "color": "rgb(233, 231, 223)"
+          },
+          "focused": {
+            "outlineColor": "rgb(142, 203, 255)",
+            "outlineStyle": "solid",
+            "outlineWidth": "3px"
+          },
+          "execute": {
+            "color": "rgb(48, 53, 46)",
+            "background": "rgb(240, 171, 163)",
+            "border": "rgb(240, 171, 163)"
+          }
+        },
+        "typography": {
+          "heading": {
+            "fontSize": "20px",
+            "lineHeight": "28px"
+          },
+          "label": {
+            "fontSize": "13px",
+            "lineHeight": "20px"
+          },
+          "input": {
+            "fontSize": "14px",
+            "lineHeight": "22px",
+            "paddingLeft": "12px"
+          },
+          "formGap": "20px",
+          "actionGap": "8px"
+        }
+      },
+      "screenshot": "create-dark-1920x1080-200.png"
+    }
+  ],
+  "forcedColors": [
+    {
+      "zoom": 100,
+      "observedZoom": 1,
+      "active": true,
+      "computed": {
+        "color": "rgb(0, 0, 0)",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "borderColor": "rgb(0, 0, 0)",
+        "keyboardFocusInside": true,
+        "focusOutline": "solid"
+      },
+      "screenshot": "create-forced-colors-100.png"
+    },
+    {
+      "zoom": 200,
+      "observedZoom": 2,
+      "active": true,
+      "computed": {
+        "color": "rgb(0, 0, 0)",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "borderColor": "rgb(0, 0, 0)",
+        "keyboardFocusInside": true,
+        "focusOutline": "solid"
+      },
+      "screenshot": "create-forced-colors-200.png"
+    }
+  ],
+  "zoomReset": 1,
+  "transition": {
+    "selectedBefore": "9e902ee72b3fce7fe44979aff74bac35",
+    "scrollBefore": 66,
+    "cancelRestored": true,
+    "refreshFailure": {
+      "acceptedMessage": "워크스페이스를 만들었습니다. 목록을 새로 불러오지 못했습니다.\n\n목록 다시 불러오기",
+      "fallbackFocus": true,
+      "postCount": 1
+    }
+  },
+  "measuredStates": {
+    "independentScroll": {
+      "navigationOverflow": "auto",
+      "contentOverflow": "auto",
+      "navMoved": true,
+      "contentStayed": true
+    },
+    "pickerContainment": {
+      "rootWithinField": true,
+      "listWithinField": true,
+      "root": {
+        "x": 325,
+        "y": 346,
+        "width": 560,
+        "height": 238,
+        "top": 346,
+        "right": 885,
+        "bottom": 584,
+        "left": 325
+      },
+      "field": {
+        "x": 325,
+        "y": 322,
+        "width": 560,
+        "height": 284,
+        "top": 322,
+        "right": 885,
+        "bottom": 606,
+        "left": 325
+      },
+      "listbox": {
+        "x": 325,
+        "y": 382,
+        "width": 560,
+        "height": 202,
+        "top": 382,
+        "right": 885,
+        "bottom": 584,
+        "left": 325
+      }
+    },
+    "controlContrast": [
+      {
+        "theme": "light",
+        "border": "rgb(122, 123, 113)",
+        "controlBackground": "rgb(250, 249, 245)",
+        "outside": "rgb(233, 231, 226)",
+        "outline": "rgb(54, 91, 112)",
+        "outlineStyle": "solid",
+        "outlineWidth": "2px",
+        "normalBoundaryRatio": 3.4686205727623958,
+        "focusRingRatio": 5.885614426378035
+      },
+      {
+        "theme": "dark",
+        "border": "rgb(135, 145, 127)",
+        "controlBackground": "rgb(48, 53, 46)",
+        "outside": "rgb(32, 34, 31)",
+        "outline": "rgb(168, 196, 211)",
+        "outlineStyle": "solid",
+        "outlineWidth": "2px",
+        "normalBoundaryRatio": 4.875375244638311,
+        "focusRingRatio": 8.779741639617455
+      }
+    ],
+    "pickerSelectedContrast": [
+      {
+        "theme": "light",
+        "color": "rgb(36, 37, 33)",
+        "background": "rgb(223, 231, 233)",
+        "outline": "rgb(54, 91, 112)",
+        "textRatio": 12.297720709885532
+      },
+      {
+        "theme": "dark",
+        "color": "rgb(233, 231, 223)",
+        "background": "rgb(52, 70, 80)",
+        "outline": "rgb(168, 196, 211)",
+        "textRatio": 7.933264433752992
+      }
+    ],
+    "livePickerStates": [
+      {
+        "zoom": 1,
+        "width": 1280,
+        "height": 720,
+        "measured": {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "field": {
+            "x": 325,
+            "y": 255,
+            "width": 560,
+            "height": 284,
+            "top": 255,
+            "right": 885,
+            "bottom": 539,
+            "left": 325
+          },
+          "popup": {
+            "x": 325,
+            "y": 315,
+            "width": 560,
+            "height": 202,
+            "top": 315,
+            "right": 885,
+            "bottom": 517,
+            "left": 325
+          },
+          "contained": true,
+          "scroll": {
+            "top": 800,
+            "max": 800,
+            "reachable": true
+          },
+          "selected": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(223, 231, 233)",
+            "ratio": 12.297720709885532
+          }
+        }
+      },
+      {
+        "zoom": 2,
+        "width": 1440,
+        "height": 900,
+        "measured": {
+          "viewport": {
+            "width": 720,
+            "height": 450
+          },
+          "field": {
+            "x": 254.53125,
+            "y": 120.5,
+            "width": 419.3671875,
+            "height": 284,
+            "top": 120.5,
+            "right": 673.8984375,
+            "bottom": 404.5,
+            "left": 254.53125
+          },
+          "popup": {
+            "x": 254.53125,
+            "y": 180.5,
+            "width": 419.3671875,
+            "height": 202,
+            "top": 180.5,
+            "right": 673.8984375,
+            "bottom": 382.5,
+            "left": 254.53125
+          },
+          "contained": true,
+          "scroll": {
+            "top": 800,
+            "max": 800,
+            "reachable": true
+          },
+          "selected": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(223, 231, 233)",
+            "ratio": 12.297720709885532
+          }
+        }
+      },
+      {
+        "zoom": 1,
+        "width": 1280,
+        "height": 720,
+        "measured": {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "field": {
+            "x": 325,
+            "y": 255,
+            "width": 560,
+            "height": 284,
+            "top": 255,
+            "right": 885,
+            "bottom": 539,
+            "left": 325
+          },
+          "popup": {
+            "x": 325,
+            "y": 315,
+            "width": 560,
+            "height": 202,
+            "top": 315,
+            "right": 885,
+            "bottom": 517,
+            "left": 325
+          },
+          "contained": true,
+          "scroll": {
+            "top": 800,
+            "max": 800,
+            "reachable": true
+          },
+          "selected": {
+            "color": "rgb(36, 37, 33)",
+            "background": "rgb(223, 231, 233)",
+            "ratio": 12.297720709885532
+          }
+        }
+      }
+    ],
+    "hoverBefore": "rgba(0, 0, 0, 0)",
+    "hoverAfter": "rgb(250, 249, 245)",
+    "invalidState": [
+      {
+        "theme": "light",
+        "invalid": "true",
+        "border": "rgb(150, 63, 56)",
+        "outside": "rgb(233, 231, 226)",
+        "boundaryRatio": 5.544460010356182
+      },
+      {
+        "theme": "dark",
+        "invalid": "true",
+        "border": "rgb(240, 171, 163)",
+        "outside": "rgb(32, 34, 31)",
+        "boundaryRatio": 8.441972772345068
+      }
+    ],
+    "loadingState": {
+      "text": "권한 부여 내용을 확인하는 중입니다",
+      "color": "rgb(36, 37, 33)",
+      "disabled": true,
+      "disabledButton": {
+        "color": "rgba(16, 16, 16, 0.3)",
+        "background": "rgba(239, 239, 239, 0.3)",
+        "border": "rgba(118, 118, 118, 0.3)"
+      }
+    },
+    "disabledStateContrast": [
+      {
+        "theme": "light",
+        "disabled": true,
+        "opacity": 0.65,
+        "color": "rgba(16, 16, 16, 0.3)",
+        "background": "rgba(239, 239, 239, 0.3)",
+        "outside": "rgb(233, 231, 226)",
+        "visibleBackground": "rgb(237, 236, 234)",
+        "visibleText": "rgb(93, 93, 92)",
+        "identificationRatio": 5.583424942042699
+      },
+      {
+        "theme": "dark",
+        "disabled": true,
+        "opacity": 0.65,
+        "color": "rgba(16, 16, 16, 0.3)",
+        "background": "rgba(239, 239, 239, 0.3)",
+        "outside": "rgb(32, 34, 31)",
+        "visibleBackground": "rgb(167, 167, 166)",
+        "visibleText": "rgb(69, 69, 69)",
+        "identificationRatio": 3.9818832661181367
+      }
+    ],
+    "errorState": {
+      "text": "확인 정보를 불러오지 못했습니다. 생성 요청은 보내지 않았습니다.",
+      "color": "rgb(36, 37, 33)"
+    },
+    "contrast": {
+      "label": {
+        "foreground": "rgb(36, 37, 33)",
+        "background": "rgb(233, 231, 226)",
+        "ratio": 12.480366983720703
+      },
+      "error": {
+        "foreground": "rgb(36, 37, 33)",
+        "background": "rgb(233, 231, 226)",
+        "ratio": 12.480366983720703
+      }
+    },
+    "pendingNavigation": {
+      "backEnabled": true,
+      "cancelEnabled": true
+    },
+    "escapeCancel": {
+      "createFocus": true,
+      "draft": "긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스 긴 한글 워크스페이스 ",
+      "selection": [
+        2,
+        5
+      ],
+      "administratorPreserved": true
+    },
+    "frozenSummaryColors": {
+      "foreground": "rgb(36, 37, 33)",
+      "background": "rgb(250, 249, 245)",
+      "ratio": 14.639805378106399
+    },
+    "postPending": {
+      "cancelDisabled": true,
+      "executeDisabled": true
+    },
+    "editorInvariants": {
+      "opened": {
+        "sameIdentity": true,
+        "nodeId": "ae9b6691-1731-415f-bcfd-b9b6adaa457d",
+        "draft": "# issue73 editor draft\n",
+        "saveCount": 1
+      },
+      "cancelled": {
+        "sameIdentity": true,
+        "nodeId": "ae9b6691-1731-415f-bcfd-b9b6adaa457d",
+        "draft": "# issue73 editor draft\n",
+        "saveCount": 1
+      },
+      "completed": {
+        "sameIdentity": true,
+        "nodeId": "ae9b6691-1731-415f-bcfd-b9b6adaa457d",
+        "draft": "# issue73 editor draft\n",
+        "saveCount": 1
+      }
+    }
+  },
+  "roles": {
+    "nonSuperuserUiHidden": true,
+    "directPostRejected": 403,
+    "selectedAdministratorAccess": true,
+    "defaultGroupEditAccess": true
+  },
+  "ime": {
+    "playwrightCompositionStartUpdateEndInputPreservation": true,
+    "pickerSelectionSuppressedDuringComposition": true,
+    "nativeWindowsIme": "unverified: OS automation is prohibited for this issue"
+  },
+  "coverageLimits": {
+    "nativeIme": "unverified because OS automation is prohibited",
+    "droppedResponseBoundary": "component contract only; browser routing cannot prove whether an aborted response crossed the server commit boundary",
+    "liveAuthorityLoss": "not mutated during the accepted creation; non-superuser HTTP and hidden-UI paths are measured separately",
+    "readonlySummary": "frozen L2 summary exposes aria-readonly semantics and its text contrast is measured"
+  }
+}

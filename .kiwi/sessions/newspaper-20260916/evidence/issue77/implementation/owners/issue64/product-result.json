@@ -1,0 +1,71 @@
+{
+  "ownedBrowsers": 1,
+  "contexts": 3,
+  "pages": 3,
+  "roles": {
+    "superuser": true,
+    "mixedManager": true,
+    "noWorkspace": true
+  },
+  "lenses": {
+    "requests": [
+      {
+        "scope": "mine",
+        "workspaceId": null
+      },
+      {
+        "scope": "all",
+        "workspaceId": null
+      },
+      {
+        "scope": "all",
+        "workspaceId": "839a0b661ce618a86a264bbbb6b12d32"
+      },
+      {
+        "scope": "mine",
+        "workspaceId": null
+      },
+      {
+        "scope": "all",
+        "workspaceId": null
+      },
+      {
+        "scope": "all",
+        "workspaceId": "839a0b661ce618a86a264bbbb6b12d32"
+      },
+      {
+        "scope": "all",
+        "workspaceId": null
+      }
+    ],
+    "mineCount": 2,
+    "allCount": 5,
+    "managedCount": 4
+  },
+  "observed": {
+    "list": 5,
+    "restore": 1,
+    "purge": 1
+  },
+  "preservation": {
+    "bytes": true,
+    "nodeId": true,
+    "acl": true,
+    "versions": true,
+    "collisionSuffixNoOverwrite": true
+  },
+  "purgeResources": {
+    "document": 404,
+    "versions": 404,
+    "acl": 404,
+    "attachment": 404,
+    "restore": 404
+  },
+  "permissionLoss": {
+    "nextQueryExcluded": true,
+    "forbiddenRestore": 404,
+    "forbiddenPurge": 403,
+    "itemIntact": true
+  },
+  "l2NoDeleteBeforeAccept": true
+}

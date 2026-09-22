@@ -1,0 +1,25 @@
+﻿{
+    "command":  "npm run test:browser:pre-auth-product --workspace @doculight/web",
+    "runs":  [
+                 {
+                     "file":  "green-product-direct-run1.raw.txt",
+                     "startedAt":  "2026-09-17T05:20:50.2979160Z",
+                     "finishedAt":  "2026-09-17T05:20:57.3780069Z",
+                     "exitCode":  0,
+                     "passed":  true,
+                     "secretPatternFound":  false,
+                     "sha256":  "76c1f8dab871e76650c07a2a57603b0bc162b3221e1776fa3cab76b4c3bfe694"
+                 },
+                 {
+                     "file":  "green-product-direct-run2.raw.txt",
+                     "startedAt":  "2026-09-17T05:21:04.0078963Z",
+                     "finishedAt":  "2026-09-17T05:21:10.6375658Z",
+                     "exitCode":  0,
+                     "passed":  true,
+                     "secretPatternFound":  false,
+                     "sha256":  "7163b078cd990a1c48939ca6e501ac4763a9c5b0b24137fafabbe3858ab2f1d7"
+                 }
+             ],
+    "remainingOwnedTempDirectories":  0,
+    "fixedPortListeners":  0
+}

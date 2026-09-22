@@ -1,0 +1,741 @@
+{
+  "forbidden": 404,
+  "normal": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "theme": "light",
+      "zoom": 1,
+      "measured": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "documentHorizontalOverflow": false,
+        "cardContained": true,
+        "scroll": {
+          "top": 153,
+          "max": 153,
+          "reachable": true
+        },
+        "independentScroll": {
+          "menuMax": 145,
+          "menuReachable": true,
+          "bodyStableDuringMenuScroll": true
+        },
+        "rowMinHeight": "64px",
+        "rowPaddingTop": "16px",
+        "focus": {
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(54, 91, 112)",
+          "background": "rgb(245, 244, 239)",
+          "ratio": 6.604593108697848
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(250, 249, 245)",
+          "ratio": 14.639805378106399
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "theme": "light",
+      "zoom": 2,
+      "measured": {
+        "viewport": {
+          "width": 640,
+          "height": 360
+        },
+        "documentHorizontalOverflow": false,
+        "cardContained": true,
+        "scroll": {
+          "top": 593.5,
+          "max": 593,
+          "reachable": true
+        },
+        "independentScroll": {
+          "menuMax": 469,
+          "menuReachable": true,
+          "bodyStableDuringMenuScroll": true
+        },
+        "rowMinHeight": "64px",
+        "rowPaddingTop": "16px",
+        "focus": {
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(54, 91, 112)",
+          "background": "rgb(245, 244, 239)",
+          "ratio": 6.604593108697848
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(250, 249, 245)",
+          "ratio": 14.639805378106399
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "theme": "dark",
+      "zoom": 1,
+      "measured": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "documentHorizontalOverflow": false,
+        "cardContained": true,
+        "scroll": {
+          "top": 153,
+          "max": 153,
+          "reachable": true
+        },
+        "independentScroll": {
+          "menuMax": 145,
+          "menuReachable": true,
+          "bodyStableDuringMenuScroll": true
+        },
+        "rowMinHeight": "64px",
+        "rowPaddingTop": "16px",
+        "focus": {
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(168, 196, 211)",
+          "background": "rgb(41, 44, 39)",
+          "ratio": 7.751150489687093
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(48, 53, 46)",
+          "ratio": 10.129573328016168
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "theme": "dark",
+      "zoom": 2,
+      "measured": {
+        "viewport": {
+          "width": 640,
+          "height": 360
+        },
+        "documentHorizontalOverflow": false,
+        "cardContained": true,
+        "scroll": {
+          "top": 593.5,
+          "max": 593,
+          "reachable": true
+        },
+        "independentScroll": {
+          "menuMax": 469,
+          "menuReachable": true,
+          "bodyStableDuringMenuScroll": true
+        },
+        "rowMinHeight": "64px",
+        "rowPaddingTop": "16px",
+        "focus": {
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(168, 196, 211)",
+          "background": "rgb(41, 44, 39)",
+          "ratio": 7.751150489687093
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(48, 53, 46)",
+          "ratio": 10.129573328016168
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "zoom": 1,
+      "measured": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "documentHorizontalOverflow": false,
+        "cardContained": true,
+        "scroll": {
+          "top": 0,
+          "max": 0,
+          "reachable": true
+        },
+        "independentScroll": {
+          "menuMax": 0,
+          "menuReachable": true,
+          "bodyStableDuringMenuScroll": true
+        },
+        "rowMinHeight": "64px",
+        "rowPaddingTop": "16px",
+        "focus": {
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(54, 91, 112)",
+          "background": "rgb(245, 244, 239)",
+          "ratio": 6.604593108697848
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(250, 249, 245)",
+          "ratio": 14.639805378106399
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "light",
+      "zoom": 2,
+      "measured": {
+        "viewport": {
+          "width": 720,
+          "height": 450
+        },
+        "documentHorizontalOverflow": false,
+        "cardContained": true,
+        "scroll": {
+          "top": 512.5,
+          "max": 512,
+          "reachable": true
+        },
+        "independentScroll": {
+          "menuMax": 388,
+          "menuReachable": true,
+          "bodyStableDuringMenuScroll": true
+        },
+        "rowMinHeight": "64px",
+        "rowPaddingTop": "16px",
+        "focus": {
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(54, 91, 112)",
+          "background": "rgb(245, 244, 239)",
+          "ratio": 6.604593108697848
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(250, 249, 245)",
+          "ratio": 14.639805378106399
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "dark",
+      "zoom": 1,
+      "measured": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "documentHorizontalOverflow": false,
+        "cardContained": true,
+        "scroll": {
+          "top": 0,
+          "max": 0,
+          "reachable": true
+        },
+        "independentScroll": {
+          "menuMax": 0,
+          "menuReachable": true,
+          "bodyStableDuringMenuScroll": true
+        },
+        "rowMinHeight": "64px",
+        "rowPaddingTop": "16px",
+        "focus": {
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(168, 196, 211)",
+          "background": "rgb(41, 44, 39)",
+          "ratio": 7.751150489687093
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(48, 53, 46)",
+          "ratio": 10.129573328016168
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "theme": "dark",
+      "zoom": 2,
+      "measured": {
+        "viewport": {
+          "width": 720,
+          "height": 450
+        },
+        "documentHorizontalOverflow": false,
+        "cardContained": true,
+        "scroll": {
+          "top": 512.5,
+          "max": 512,
+          "reachable": true
+        },
+        "independentScroll": {
+          "menuMax": 388,
+          "menuReachable": true,
+          "bodyStableDuringMenuScroll": true
+        },
+        "rowMinHeight": "64px",
+        "rowPaddingTop": "16px",
+        "focus": {
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(168, 196, 211)",
+          "background": "rgb(41, 44, 39)",
+          "ratio": 7.751150489687093
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(48, 53, 46)",
+          "ratio": 10.129573328016168
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "theme": "light",
+      "zoom": 1,
+      "measured": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "documentHorizontalOverflow": false,
+        "cardContained": true,
+        "scroll": {
+          "top": 0,
+          "max": 0,
+          "reachable": true
+        },
+        "independentScroll": {
+          "menuMax": 0,
+          "menuReachable": true,
+          "bodyStableDuringMenuScroll": true
+        },
+        "rowMinHeight": "64px",
+        "rowPaddingTop": "16px",
+        "focus": {
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(54, 91, 112)",
+          "background": "rgb(245, 244, 239)",
+          "ratio": 6.604593108697848
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(250, 249, 245)",
+          "ratio": 14.639805378106399
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "theme": "light",
+      "zoom": 2,
+      "measured": {
+        "viewport": {
+          "width": 960,
+          "height": 540
+        },
+        "documentHorizontalOverflow": false,
+        "cardContained": true,
+        "scroll": {
+          "top": 337.5,
+          "max": 337,
+          "reachable": true
+        },
+        "independentScroll": {
+          "menuMax": 307,
+          "menuReachable": true,
+          "bodyStableDuringMenuScroll": true
+        },
+        "rowMinHeight": "64px",
+        "rowPaddingTop": "16px",
+        "focus": {
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(54, 91, 112)",
+          "background": "rgb(245, 244, 239)",
+          "ratio": 6.604593108697848
+        },
+        "text": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(250, 249, 245)",
+          "ratio": 14.639805378106399
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "theme": "dark",
+      "zoom": 1,
+      "measured": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "documentHorizontalOverflow": false,
+        "cardContained": true,
+        "scroll": {
+          "top": 0,
+          "max": 0,
+          "reachable": true
+        },
+        "independentScroll": {
+          "menuMax": 0,
+          "menuReachable": true,
+          "bodyStableDuringMenuScroll": true
+        },
+        "rowMinHeight": "64px",
+        "rowPaddingTop": "16px",
+        "focus": {
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(168, 196, 211)",
+          "background": "rgb(41, 44, 39)",
+          "ratio": 7.751150489687093
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(48, 53, 46)",
+          "ratio": 10.129573328016168
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "theme": "dark",
+      "zoom": 2,
+      "measured": {
+        "viewport": {
+          "width": 960,
+          "height": 540
+        },
+        "documentHorizontalOverflow": false,
+        "cardContained": true,
+        "scroll": {
+          "top": 337.5,
+          "max": 337,
+          "reachable": true
+        },
+        "independentScroll": {
+          "menuMax": 307,
+          "menuReachable": true,
+          "bodyStableDuringMenuScroll": true
+        },
+        "rowMinHeight": "64px",
+        "rowPaddingTop": "16px",
+        "focus": {
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(168, 196, 211)",
+          "background": "rgb(41, 44, 39)",
+          "ratio": 7.751150489687093
+        },
+        "text": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(48, 53, 46)",
+          "ratio": 10.129573328016168
+        }
+      }
+    }
+  ],
+  "forced": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "zoom": 1,
+      "measured": {
+        "outlineStyle": "solid",
+        "outlineWidth": "2px",
+        "outlineColor": "rgb(55, 0, 110)",
+        "visible": true,
+        "control": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 21
+        },
+        "predicate": {
+          "visible": true,
+          "color": "rgb(0, 0, 0)",
+          "background": "rgba(255, 255, 255, 0)",
+          "ratio": 21
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "zoom": 2,
+      "measured": {
+        "outlineStyle": "solid",
+        "outlineWidth": "2px",
+        "outlineColor": "rgb(55, 0, 110)",
+        "visible": true,
+        "control": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 21
+        },
+        "predicate": {
+          "visible": true,
+          "color": "rgb(0, 0, 0)",
+          "background": "rgba(255, 255, 255, 0)",
+          "ratio": 21
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "zoom": 1,
+      "measured": {
+        "outlineStyle": "solid",
+        "outlineWidth": "2px",
+        "outlineColor": "rgb(55, 0, 110)",
+        "visible": true,
+        "control": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 21
+        },
+        "predicate": {
+          "visible": true,
+          "color": "rgb(0, 0, 0)",
+          "background": "rgba(255, 255, 255, 0)",
+          "ratio": 21
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "zoom": 2,
+      "measured": {
+        "outlineStyle": "solid",
+        "outlineWidth": "2px",
+        "outlineColor": "rgb(55, 0, 110)",
+        "visible": true,
+        "control": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 21
+        },
+        "predicate": {
+          "visible": true,
+          "color": "rgb(0, 0, 0)",
+          "background": "rgba(255, 255, 255, 0)",
+          "ratio": 21
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "zoom": 1,
+      "measured": {
+        "outlineStyle": "solid",
+        "outlineWidth": "2px",
+        "outlineColor": "rgb(55, 0, 110)",
+        "visible": true,
+        "control": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 21
+        },
+        "predicate": {
+          "visible": true,
+          "color": "rgb(0, 0, 0)",
+          "background": "rgba(255, 255, 255, 0)",
+          "ratio": 21
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "zoom": 2,
+      "measured": {
+        "outlineStyle": "solid",
+        "outlineWidth": "2px",
+        "outlineColor": "rgb(55, 0, 110)",
+        "visible": true,
+        "control": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 21
+        },
+        "predicate": {
+          "visible": true,
+          "color": "rgb(0, 0, 0)",
+          "background": "rgba(255, 255, 255, 0)",
+          "ratio": 21
+        }
+      }
+    }
+  ],
+  "finalZoom": 1,
+  "states": {
+    "pending": [
+      {
+        "theme": "light",
+        "measured": {
+          "disabled": true,
+          "opacity": 1,
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(250, 249, 245)",
+          "ratio": 14.639805378106399
+        }
+      },
+      {
+        "theme": "dark",
+        "measured": {
+          "disabled": true,
+          "opacity": 1,
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(48, 53, 46)",
+          "ratio": 10.129573328016168
+        }
+      }
+    ],
+    "hover": [
+      {
+        "theme": "light",
+        "measured": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(250, 249, 245)",
+          "ratio": 14.639805378106399
+        }
+      },
+      {
+        "theme": "dark",
+        "measured": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(48, 53, 46)",
+          "ratio": 10.129573328016168
+        }
+      }
+    ],
+    "error": [
+      {
+        "theme": "light",
+        "measured": {
+          "color": "rgb(36, 37, 33)",
+          "background": "rgb(245, 244, 239)",
+          "ratio": 14.004951701436438
+        }
+      },
+      {
+        "theme": "dark",
+        "measured": {
+          "color": "rgb(233, 231, 223)",
+          "background": "rgb(41, 44, 39)",
+          "ratio": 11.430133007600727
+        }
+      }
+    ],
+    "readonlySummary": {
+      "editable": false,
+      "color": "rgb(233, 231, 223)",
+      "background": "rgb(48, 53, 46)",
+      "ratio": 10.129573328016168
+    },
+    "refreshFailureRetry": true
+  },
+  "stage3": {
+    "popup": {
+      "contained": true,
+      "scrollTop": 42,
+      "scrollMax": 42,
+      "reachable": true
+    },
+    "outcomeStates": [
+      "accepted",
+      "unconfirmed",
+      "not-run"
+    ],
+    "deleteAttempts": 2,
+    "runtimeResizeAndZoom": true,
+    "auditOperation": "principal.member-remove"
+  },
+  "handoff": {
+    "exactSelection": 1,
+    "aclEntry": true,
+    "returnFocus": true,
+    "cancelReturn": true,
+    "partialReturn": true,
+    "acceptedReturn": true,
+    "acceptedAudit": "acl.revoke"
+  },
+  "authorityLoss": {
+    "staleCardCount": 0
+  },
+  "mutation": {
+    "status": "suspended",
+    "floor": {
+      "status": 409,
+      "body": {
+        "rule": "last-active-superuser"
+      }
+    },
+    "auditOperation": "principal.status"
+  },
+  "composition": {
+    "applicable": false,
+    "reason": "The frozen offboarding flow has no editable text control; keyboard activation and Escape dismissal were measured instead."
+  }
+}

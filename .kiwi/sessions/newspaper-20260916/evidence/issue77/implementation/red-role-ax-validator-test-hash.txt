@@ -1,0 +1,9 @@
+
+
+Algorithm : SHA256
+Hash      : 4120396EF0CA219E84CB69784C5D480DF8E42850611ECC0DD402DCC54BA7D496
+Path      : C:\Work\git\DocuLight2.0-wt-issue77-final\packages\web\test\issue77-role-category-validator.mjs
+
+
+
+

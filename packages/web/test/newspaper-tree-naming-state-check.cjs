@@ -13,7 +13,8 @@ const start = () => spawn(process.execPath, [path.join(root, 'node_modules/vite/
 const wait = async () => { for (let index = 0; index < 80; index += 1) { try { if ((await fetch(base)).ok) return; } catch {} await new Promise((resolve) => setTimeout(resolve, 100)); } throw new Error('server timeout'); };
 
 async function openNaming(page, item) {
-  const row = page.getByRole('treeitem').nth(2);
+  const rowId = item === '새 문서' ? 'upload-dir' : 'deep-a';
+  const row = page.locator(`[data-tree-row][data-node-id="${rowId}"]`).locator('xpath=ancestor::*[@role="treeitem"]');
   await row.waitFor({ state: 'visible' });
   if (item === '새 문서') await row.getByRole('button', { name: /펼치기/ }).click();
   await row.click({ button: 'right' });

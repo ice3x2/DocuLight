@@ -1,0 +1,30 @@
+Issue #50 GREEN evidence
+
+Independent review correction:
+- `red-sidebar-keyboard-raw.txt`: raw RED at 500x720 after Radix End moved focus; last tab rect `115.703125..185.03125` exceeded tablist `0..179`.
+- `green-sidebar-keyboard-raw.txt`: raw GREEN after adding focus reveal to all sidebar tab triggers.
+- `red-surface-retro-raw.txt`: raw repaired-chronology RED after semantic shell surface declarations were manually removed.
+- `red-sidebar-overflow-retro-raw.txt`: raw repaired-chronology RED after sidebar `overflow-x:auto` was manually removed.
+- `green-final-playwright-raw.txt`: raw final Playwright GREEN before the final evidence-only rerun; `green-sidebar-keyboard-raw.txt` is the latest final Playwright GREEN.
+
+- npx vitest run test/shell.test.tsx test/document-tabs.test.tsx
+  - 2 files passed, 31 tests passed
+- npm run test:browser:shell
+  - PASS newspaper shell layout and interaction checks
+  - Light and dark at 1280x720, 1440x900, 1920x1080, 840x720 and 500x720
+  - Genuine 200% browser zoom through isolated persistent Chromium and chrome.tabs.setZoom(2)
+- npx vitest run (packages/web)
+  - 63 files passed, 693 tests passed
+- npx vitest run (packages/editor)
+  - 21 files passed, 253 passed, 1 skipped
+- npm run typecheck (repository root)
+  - editor, server and web passed
+- npm run build --workspace @doculight/web
+  - production build passed (2980 modules transformed)
+- npx vitest run test/newspaper-shared-controls.test.tsx test/newspaper-fields.test.tsx test/newspaper-data-display.test.tsx test/newspaper-overlays.test.tsx
+  - 3 discovered files passed, 13 tests passed
+- npm run test:browser:theme
+  - PASS, 0 failed assertions
+
+Unavailable environment-dependent check:
+- npm run test:browser:styles exited 2 before launching a browser because DOCULIGHT_E2E_USER and DOCULIGHT_E2E_PASS were not supplied and the authenticated API fixture was not running. No credentials were printed or inferred.

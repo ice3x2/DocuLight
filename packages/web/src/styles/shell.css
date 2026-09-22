@@ -680,7 +680,7 @@
 [data-audit-header] { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
 [data-audit-header] > h2 { margin: 0; font: 600 18px/26px var(--font-sans); }
 [data-audit-header] > h2:focus,
-[data-audit-header] > h2:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+[data-audit-header] > h2:focus-visible { outline: 2.5px solid var(--focus-ring); outline-offset: 2.5px; }
 [data-audit-switch], [data-audit-state] button { min-height: 36px; padding: 6px 12px; }
 [data-audit-filter] { display: grid; gap: 4px; margin-bottom: 16px; }
 [data-audit-filter] > label { font-size: 13px; line-height: 20px; font-weight: 600; }
@@ -704,7 +704,7 @@
 [data-audit-detail] [data-testid='audit-row'] b { font-size: 13px; line-height: 20px; }
 [data-reconciliation-list] > li { min-height: 40px; padding: 8px 12px; overflow-wrap: anywhere; }
 [data-audit-panel] :is(button, select):focus,
-[data-audit-panel] :is(button, select):focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+[data-audit-panel] :is(button, select):focus-visible { outline: 2.5px solid var(--focus-ring); outline-offset: 2.5px; }
 
 @media (max-width: 720px) {
   [data-audit-disclosure] { grid-template-columns: auto minmax(0, 1fr) auto; }
@@ -920,8 +920,8 @@
 
 [data-search='results'] {
   min-width: 0;
-  padding: 4px;
-  scroll-padding-block: 4px;
+  padding: 5px;
+  scroll-padding-block: 5px;
 }
 
 [data-search='results'] [cmdk-list] {
@@ -940,7 +940,7 @@
   box-sizing: border-box;
   border-bottom: 1px solid var(--border-subtle);
   outline: none;
-  scroll-margin-block: 4px;
+  scroll-margin-block: 5px;
   overflow-wrap: anywhere;
 }
 

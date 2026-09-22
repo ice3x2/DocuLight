@@ -270,6 +270,7 @@ try {
   await page.keyboard.press('Tab');
   assert.equal(await allRows.nth(1).evaluate((node) => document.activeElement === node), true);
   await page.keyboard.press('Enter');
+  await allRows.nth(1).evaluate((node) => new Promise((resolve, reject) => { const deadline = performance.now() + 2_000; const frame = () => { if (node.getAttribute('aria-current') === 'true') return resolve(true); if (performance.now() >= deadline) return reject(new Error('workspace selection timeout')); requestAnimationFrame(frame); }; requestAnimationFrame(frame); }));
   assert.equal(await allRows.nth(1).getAttribute('aria-current'), 'true');
   const focusStyle = await allRows.nth(1).evaluate((node) => {
     const style = getComputedStyle(node);

@@ -1,0 +1,114 @@
+[
+    {
+        "name":  "test:browser:shell",
+        "exit":  0,
+        "started":  "2026-09-22T08:16:50.4948089+09:00",
+        "ended":  "2026-09-22T08:17:04.1281933+09:00",
+        "raw":  "test_browser_shell.raw.txt"
+    },
+    {
+        "name":  "test:browser:settings",
+        "exit":  1,
+        "started":  "2026-09-22T08:17:04.1307079+09:00",
+        "ended":  "2026-09-22T08:22:33.4217450+09:00",
+        "raw":  "test_browser_settings.raw.txt"
+    },
+    {
+        "name":  "test:browser:tokens",
+        "exit":  0,
+        "started":  "2026-09-22T08:22:33.4217450+09:00",
+        "ended":  "2026-09-22T08:23:29.5146558+09:00",
+        "raw":  "test_browser_tokens.raw.txt"
+    },
+    {
+        "name":  "test:browser:trash64",
+        "exit":  0,
+        "started":  "2026-09-22T08:23:29.5146558+09:00",
+        "ended":  "2026-09-22T08:25:04.0580685+09:00",
+        "raw":  "test_browser_trash64.raw.txt"
+    },
+    {
+        "name":  "test:browser:share65",
+        "exit":  0,
+        "started":  "2026-09-22T08:25:04.0580685+09:00",
+        "ended":  "2026-09-22T08:25:35.3685998+09:00",
+        "raw":  "test_browser_share65.raw.txt"
+    },
+    {
+        "name":  "test:browser:relocation66",
+        "exit":  1,
+        "started":  "2026-09-22T08:25:35.3685998+09:00",
+        "ended":  "2026-09-22T08:25:54.8118813+09:00",
+        "raw":  "test_browser_relocation66.raw.txt"
+    },
+    {
+        "name":  "test:browser:principal67",
+        "exit":  0,
+        "started":  "2026-09-22T08:25:54.8118813+09:00",
+        "ended":  "2026-09-22T08:26:58.3393928+09:00",
+        "raw":  "test_browser_principal67.raw.txt"
+    },
+    {
+        "name":  "test:browser:pre-auth",
+        "exit":  1,
+        "started":  "2026-09-22T08:26:58.3393928+09:00",
+        "ended":  "2026-09-22T08:27:28.7487694+09:00",
+        "raw":  "test_browser_pre-auth.raw.txt"
+    },
+    {
+        "name":  "test:browser:install-newspaper",
+        "exit":  1,
+        "started":  "2026-09-22T08:27:28.7487694+09:00",
+        "ended":  "2026-09-22T08:27:55.4791347+09:00",
+        "raw":  "test_browser_install-newspaper.raw.txt"
+    },
+    {
+        "name":  "test:browser:complex",
+        "exit":  0,
+        "started":  "2026-09-22T08:27:55.4806382+09:00",
+        "ended":  "2026-09-22T08:28:14.9299197+09:00",
+        "raw":  "test_browser_complex.raw.txt"
+    },
+    {
+        "name":  "test:browser:theme",
+        "exit":  0,
+        "started":  "2026-09-22T08:28:14.9299197+09:00",
+        "ended":  "2026-09-22T08:28:18.3771126+09:00",
+        "raw":  "test_browser_theme.raw.txt"
+    },
+    {
+        "name":  "test:browser:issue68",
+        "exit":  1,
+        "started":  "2026-09-22T08:28:18.3771126+09:00",
+        "ended":  "2026-09-22T08:28:52.5722735+09:00",
+        "raw":  "test_browser_issue68.raw.txt"
+    },
+    {
+        "name":  "test:browser:issue69",
+        "exit":  1,
+        "started":  "2026-09-22T08:28:52.5722735+09:00",
+        "ended":  "2026-09-22T08:29:26.0326339+09:00",
+        "raw":  "test_browser_issue69.raw.txt"
+    },
+    {
+        "name":  "test:browser:settings-product",
+        "exit":  1,
+        "started":  "2026-09-22T08:29:26.0326339+09:00",
+        "ended":  "2026-09-22T08:29:42.4610842+09:00",
+        "raw":  "test_browser_settings-product.raw.txt"
+    },
+    {
+        "name":  "test:browser:pre-auth-product",
+        "exit":  0,
+        "started":  "2026-09-22T08:29:42.4610842+09:00",
+        "ended":  "2026-09-22T08:29:50.0202576+09:00",
+        "raw":  "test_browser_pre-auth-product.raw.txt"
+    },
+    {
+        "name":  "test:browser:install-product",
+        "exit":  0,
+        "started":  "2026-09-22T08:29:50.0202576+09:00",
+        "ended":  "2026-09-22T08:29:54.7590059+09:00",
+        "raw":  "test_browser_install-product.raw.txt"
+    }
+]

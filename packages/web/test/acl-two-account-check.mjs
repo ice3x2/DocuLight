@@ -172,11 +172,26 @@ await runBrowserChecks(async ({ page, check, note }) => {
       `비밀 문서 노출 ${트리에있다(부여뒤, `acl-비밀-${시각}`)}`,
     );
 
+    const 상속본문응답 = await 둘째.evaluate(async (nodeId) => (await fetch(`/api/documents/${nodeId}`)).status, 준비.자식.id);
+    check('기준 4 R14 상속받은 자식 본문을 서버가 허용한다', 상속본문응답 === 200, `document status ${상속본문응답}`);
+    const 상속트리응답 = await 둘째.evaluate(async (nodeId) => {
+      const tree = await (await fetch('/api/tree')).json();
+      const flatten = (rows) => rows.flatMap((row) => [row, ...flatten(row.children ?? [])]);
+      return { found: tree.some((workspace) => flatten(workspace.roots ?? []).some((node) => node.id === nodeId)), tree };
+    }, 준비.자식.id);
+    check('기준 4 R14 상속받은 자식을 서버 트리가 포함한다', 상속트리응답.found, `tree ${JSON.stringify(상속트리응답.tree)}`);
+    await 둘째.reload({ waitUntil: 'networkidle' });
+
     // 상속은 **그 아래**에서 성립한다. 디렉토리는 접힌 채 서므로 펼쳐야
     // 자식이 화면에 온다 — 접힌 상태로 세면 「상속이 안 됐다」와
     // 「아직 안 그렸다」가 갈리지 않는다.
-    const 펼치기 = 둘째.getByRole('button', { name: new RegExp(`acl-공유함-${시각}.*펼치기`) });
-    if ((await 펼치기.count()) > 0) await 펼치기.first().click();
+    const 공유함행 = 둘째.locator(`[data-tree-row][data-node-id="${준비.폴더.id}"]`);
+    const 공유함항목 = 공유함행.locator('xpath=ancestor::*[@role="treeitem"]');
+    if (await 공유함항목.getAttribute('aria-expanded') !== 'true') {
+      await 공유함행.getByRole('button').first().evaluate((node) => node.click());
+      await 둘째.waitForFunction((id)=>document.querySelector(`[data-tree-row][data-node-id="${id}"]`)?.closest('[role="treeitem"]')?.getAttribute('aria-expanded')==='true',준비.폴더.id);
+    }
+    await 둘째.locator(`[data-tree-row][data-node-id="${준비.자식.id}"]`).waitFor({ state: 'attached' });
     const 펼친뒤 = await 둘째.evaluate(트리이름들);
     check(
       '기준 4 R14 부모에 준 권한이 그 아래 문서까지 상속된다',

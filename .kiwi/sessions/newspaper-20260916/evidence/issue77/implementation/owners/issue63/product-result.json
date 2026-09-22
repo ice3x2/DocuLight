@@ -1,0 +1,40 @@
+{
+  "pass": true,
+  "browserProcessesObserved": 1,
+  "contextsObserved": 2,
+  "browserOwnership": "one fresh Playwright-owned Chromium process with two isolated contexts",
+  "accountsExercised": 2,
+  "observedRequests": {
+    "issueRequests": 1,
+    "revokeRequests": 2,
+    "listRequests": 4,
+    "listSecretFields": 0
+  },
+  "injectedFailures": {
+    "metadataRefresh": true,
+    "revokeFirstAttempt": true
+  },
+  "clipboardExact": true,
+  "domSecretAfterClose": false,
+  "plaintextPersistenceBoundary": {
+    "authorizedPlaintextFields": 1,
+    "url": false,
+    "history": false,
+    "localStorage": false,
+    "sessionStorage": false,
+    "liveRegions": false,
+    "attributes": false,
+    "enumerableGlobals": false,
+    "console": false,
+    "listQueryResponses": 0
+  },
+  "targetPatAuthentication": {
+    "beforeRevoke": 200,
+    "afterRevoke": 401
+  },
+  "preservation": {
+    "primaryOtherTokenStatus": 200,
+    "secondUserTokenStatus": 200,
+    "secondUserListExcludedTarget": true
+  }
+}

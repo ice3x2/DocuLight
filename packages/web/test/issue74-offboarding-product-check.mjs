@@ -69,6 +69,7 @@ try {
   const surface = dialog.locator('[data-offboarding-surface]');
   const heading = surface.getByRole('heading', { name: `${targetName} 오프보딩` });
   await heading.waitFor();
+  await heading.evaluate((node) => new Promise((resolve, reject) => { const deadline = performance.now() + 2_000; const frame = () => { if (document.activeElement === node) return resolve(true); if (performance.now() >= deadline) return reject(new Error('offboarding focus timeout')); requestAnimationFrame(frame); }; requestAnimationFrame(frame); }));
   assert.equal(await heading.evaluate((node) => node === document.activeElement), true);
   assert.equal(await surface.getByTestId('offboarding-step').count(), 4);
   assert.deepEqual(await surface.getByTestId('offboarding-step').evaluateAll((rows) => rows.map((row) => row.dataset.step)), ['suspend', 'tokens', 'memberships', 'acl']);

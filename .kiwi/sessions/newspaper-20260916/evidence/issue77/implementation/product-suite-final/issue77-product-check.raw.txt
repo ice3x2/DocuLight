@@ -1,0 +1,1 @@
+PASS issue77 built-product live/source composition, save readback, selection, resize, and true zoom

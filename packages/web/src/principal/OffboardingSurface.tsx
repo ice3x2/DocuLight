@@ -37,7 +37,7 @@ export function OffboardingSurface({ principalId, principalName, onBack, onAcl, 
       throw error;
     }
   };
-  useLayoutEffect(() => { heading.current?.focus(); }, [principalId]);
+  useLayoutEffect(() => { heading.current?.focus(); }, [principalId, read.state]);
   useEffect(() => { void load().catch(() => undefined); return () => { generation.current += 1; }; }, [principalId]);
   const loadMemberships = async (userId: string) => (await fetchGroupRoster())
     .filter((group) => !group.system && group.members.some((member) => member.id === userId))

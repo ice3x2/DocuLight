@@ -1,0 +1,22 @@
+PASS  saved 탭의 일반 교체는 확인을 열지 않는다  — no confirmation
+PASS  saved 일반 교체는 기존 탭 정체성을 유지한다  — tabs 1
+PASS  Ctrl+click은 별도 탭을 열고 선택한다  — tabs 2
+PASS  theme/layout 변경이 실제 편집기 선택을 보존한다  — 소/소
+PASS  theme/layout 뒤 undo/redo가 계속 동작한다  — undo=false redo=true
+PASS  saving 탭의 일반 교체도 확인을 열지 않는다  — no confirmation
+PASS  generic transport 실패도 이유를 노출하지 않는 rejected 안내다  — 저장하지 못했습니다. 편집 내용은 그대로 남아 있습니다. 본문을 내려받아 보관할 수 있습니다.내려받기
+PASS  반복 rejected 저장에도 초안과 단일 안내가 유지된다  — alerts 1
+PASS  rejected 교체 확인은 바깥 클릭으로 닫히지 않는다  — dialog remains
+PASS  rejected 교체 Escape는 교체 없이 초안을 보존한다  — dialog closed, draft remains
+PASS  권한 회수 요청이 성공한다  — DELETE status 204
+PASS  실제 권한 상실 저장이 generic rejected 안내로 이어진다  — 저장하지 못했습니다. 편집 내용은 그대로 남아 있습니다. 본문을 내려받아 보관할 수 있습니다.내려받기
+PASS  실제 다운로드가 거부 뒤 최신 로컬 본문 바이트를 보존한다  — expected 38 bytes, got 38
+PASS  실제 다운로드 파일명은 현재 문서 이름이다  — rescue-1790035162549.md
+PASS  다운로드 뒤 rejected 상태와 편집 본문이 유지된다  — alert/editor remain
+PASS  실제 rejected 교체 확인은 머무르기에 초기 초점을 둔다  — cancel initially focused
+PASS  실제 ACL rejected 교체 확인도 바깥 클릭으로 닫히지 않는다  — dialog remains
+PASS  실제 rejected 교체 취소가 원문과 거부 상태를 보존한다  — draft/rejection remain
+PASS  rejected 교체 취소가 호출 항목 또는 안정된 문서 헤더로 초점을 돌린다  — invoker/fallback focus restored
+PASS  명시적 accept 뒤에만 선택한 대상이 열린다  — http://127.0.0.1:62105/d/2018c9dc-4937-4f27-99b1-944e1edaacee
+
+20/20 통과
