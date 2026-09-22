@@ -1,0 +1,14 @@
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test
+> vitest run --run test/issue63-token-lifecycle.test.tsx test/token-wiring.test.tsx test/token-panel.test.tsx
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+
+ Test Files  3 passed (3)
+      Tests  37 passed (37)
+   Start at  19:34:37
+   Duration  10.92s (transform 3.81s, setup 68ms, import 7.92s, tests 11.78s, environment 2.03s)

@@ -1,0 +1,24 @@
+{
+  "schema": "doculight.issue77.canonical-staged-validation.v2",
+  "byteAuthority": "git-index-blob",
+  "projection": "staged-payload-without-manifest-or-receipt",
+  "payloadTree": "129a961498a05b1b5494522c4cbd7aa56cf15d77",
+  "payloadTreeExcludes": [
+    ".kiwi/sessions/newspaper-20260916/evidence/issue77/implementation/final-manifest.json",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue77/implementation/canonical-staged-verification.json"
+  ],
+  "manifestArtifacts": 1702,
+  "manifestSources": 42,
+  "validatedEntries": 1754,
+  "leafRows": 427,
+  "inventory": 77,
+  "acceptedReviewHashes": {
+    ".kiwi/sessions/newspaper-20260916/evidence/issue77/implementation/axis-a-final-review.md": "18e706c4ce58f28e3c153fb957aff7cf7e1696ccfb9db14da64c012ff415bf25",
+    ".kiwi/sessions/newspaper-20260916/evidence/issue77/implementation/axis-b-final-review.md": "ac68b5f9d3e53d7aab970a403d38b1a0332237f4877ac1af738afc7e240dd71b"
+  },
+  "secretMatches": 0,
+  "missing": 0,
+  "hashMismatches": 0,
+  "errors": 0,
+  "sample": []
+}

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
@@ -11,7 +12,16 @@ const coverage = process.env.DOCULIGHT_ISSUE77_OUTPUT_DIR
   ? path.resolve(process.env.DOCULIGHT_ISSUE77_OUTPUT_DIR)
   : path.join(root, '.kiwi/sessions/newspaper-20260916/evidence/issue77/implementation/coverage');
 const implementation = path.join(root, '.kiwi/sessions/newspaper-20260916/evidence/issue77/implementation');
-const sha256 = (file) => createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+const canonicalHashCache = new Map();
+const sha256 = (file) => {
+  const relativePath = path.relative(root, path.resolve(file)).replaceAll('\\', '/');
+  if (canonicalHashCache.has(relativePath)) return canonicalHashCache.get(relativePath);
+  const staged = spawnSync('git', ['show', `:${relativePath}`], { cwd: root, encoding: null, maxBuffer: 64 * 1024 * 1024 });
+  const bytes = staged.status === 0 ? staged.stdout : fs.readFileSync(file);
+  const value = createHash('sha256').update(bytes).digest('hex');
+  canonicalHashCache.set(relativePath, value);
+  return value;
+};
 
 function srsAcceptanceCriteria() {
   const found = new Map();
@@ -65,6 +75,8 @@ test('the independently accepted fixed row set is promoted with the matching rev
     assert.equal(sha256(path.join(implementation, row.reviewerEvidence)), row.reviewerEvidenceSha256);
     assert.equal(row.acceptedPreReviewLedgerSha256, 'a8efd0cc089b0f6fae9849b99133b4545e75f42da832bd7422c2808fc07be8d4');
     assert.equal(row.acceptedPreReviewIdSetSha256, 'a8149904f4dbd98d10f7b6eb8e171af5d88898e024b74790900ee17cccd73497');
+    assert.equal(row.evidenceByteAuthority, 'git-index-canonical');
+    assert.match(row.canonicalPreReviewLedgerSha256, /^[a-f0-9]{64}$/);
   }
 });
 

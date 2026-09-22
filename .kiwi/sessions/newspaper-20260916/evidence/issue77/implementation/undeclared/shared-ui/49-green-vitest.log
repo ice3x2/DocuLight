@@ -1,0 +1,6 @@
+COMMAND: cd packages/web && npx vitest run test/newspaper-data-display.test.tsx
+EXIT_CODE: 0
+
+Test Files  1 passed (1)
+Tests       3 passed (3)
+Duration    716ms

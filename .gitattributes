@@ -32,5 +32,9 @@
 .kiwi/sessions/newspaper-20260916/evidence/issue83/final-independent-review.sha256 -text
 .kiwi/sessions/newspaper-20260916/evidence/issue82/independent-review.md -text
 
+# Issue #77 closure evidence carries byte-level SHA-256 links across raw logs,
+# JSON ledgers, screenshots, and independent reviews. Preserve exact bytes.
+.kiwi/sessions/newspaper-20260916/evidence/issue77/** -text
+
 # 배치 파일은 반대다 — cmd 는 CRLF 를 기대한다.
 *.bat text eol=crlf

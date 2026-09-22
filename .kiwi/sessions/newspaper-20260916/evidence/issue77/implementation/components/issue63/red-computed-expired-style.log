@@ -1,0 +1,272 @@
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test
+> vitest run --run test/token-panel.test.tsx -t " 만료된 행은 산 행보다 흐리다\
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+stderr | test/token-panel.test.tsx
+Warning: KaTeX doesn't work in quirks mode. Make sure your website has a suitable doctype.
+
+ ❯ test/token-panel.test.tsx (23 tests | 13 failed) 3887ms
+     × 만료된 행은 산 행보다 흐리다 — §2.3 은 배지와 함께 「행 흐리게」를 요구한다 157ms
+     × 이름·스코프 2택·만료 기간을 담고 그 값이 그대로 나간다 203ms
+     × 스코프 기본값은 `읽기 전용` 이고 그 값이 그대로 나간다 186ms
+     × 폼을 다시 열면 앞 회차에 고른 `읽기+쓰기` 가 남지 않는다 156ms
+     × 만료 기간은 정해진 넷이고 기본값이 90일이다 186ms
+     × 이름이 비면 발급하지 않는다 — 이름 없는 토큰은 목록에서 서로 구별되지 않는다 174ms
+     × 발급 직후 평문이 화면에 뜬다 185ms
+     × ESC 로 닫히지 않는다 — 설정 모달까지 함께 닫히지도 않는다 173ms
+     × 바깥을 눌러도 닫히지 않는다 187ms
+     × `닫기` 는 재확인을 받는다 — 복사하지 않았다면 여기서 되돌린다 186ms
+     × 재확인을 지나 닫으면 평문이 사라지고 재발급 안내가 목록 위에 선다 187ms
+     × `복사하고 닫기` 는 클립보드에 넣고 재확인 없이 닫는다 156ms
+     × 클립보드가 거절하면 닫지 않고 실패를 알린다 — 닫는 길은 `닫기` 로 남는다 186ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/token-panel.test.tsx > 04 §2.3 — 목록 > 만료된 행은 산 행보다 흐리다 — §2.3 은 배지와 함께 「행 흐리게」를 요구한다
+AssertionError: expected null to be 'true' // Object.is equality
+
+- Expected:
+"true"
+
++ Received:
+null
+
+ ❯ test/token-panel.test.tsx:115:55
+    113|     // **계산된 값으로 잰다.** 표식만 붙고 실제로는 아무것도 흐려지지 않는
+    114|     // 상태가 통과하지 않게 한다.
+    115|     expect(행('구형 데스크탑').getAttribute('data-expired')).toBe('true');
+       |                                                       ^
+    116|     expect(행('노트북 CLI').getAttribute('data-expired')).toBeNull();
+    117|     expect(셀스타일('구형 데스크탑').color).not.toBe(셀스타일('노트북 CLI').color);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-007 AC-1 · SEC-AUTH-008 AC-1 — 발급 폼 > 이름·스코프 2택·만료 기간을 담고 그 값이 그대로 나간다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/token-panel.test.tsx:168:34
+    166|     const form = panel.querySelector('form')!;
+    167|
+    168|     await user.type(within(form).getByLabelText('이름'), 'CI 스크립트');
+       |                                  ^
+    169|     await user.click(within(form).getByRole('radio', { name: '읽기 전용' }…
+    170|     await user.selectOptions(within(form).getByLabelText('만료 기간'), '18…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-007 AC-1 · SEC-AUTH-008 AC-1 — 발급 폼 > 스코프 기본값은 `읽기 전용` 이고 그 값이 그대로 나간다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByRole ../../node_modules/@testing-library/dom/dist/queries/role.js:34:35
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:74:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/token-panel.test.tsx:200:31
+    198|     const form = panel.querySelector('form')!;
+    199|
+    200|     const 읽기전용 = within(form).getByRole('radio', { name: '읽기 전용' }) as…
+       |                               ^
+    201|     const 읽기쓰기 = within(form).getByRole('radio', { name: '읽기+쓰기' }) as…
+    202|     expect(읽기전용.checked, '넓은 쪽이 기본으로 선택돼 있다').toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-007 AC-1 · SEC-AUTH-008 AC-1 — 발급 폼 > 폼을 다시 열면 앞 회차에 고른 `읽기+쓰기` 가 남지 않는다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByRole ../../node_modules/@testing-library/dom/dist/queries/role.js:34:35
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:74:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/token-panel.test.tsx:225:36
+    223|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    224|     const first = panel.querySelector('form')!;
+    225|     await user.click(within(first).getByRole('radio', { name: '읽기+쓰기' …
+       |                                    ^
+    226|     await user.click(within(first).getByRole('button', { name: '취소' })…
+    227|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-007 AC-1 · SEC-AUTH-008 AC-1 — 발급 폼 > 만료 기간은 정해진 넷이고 기본값이 90일이다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/token-panel.test.tsx:251:33
+    249|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    250|     const form = panel.querySelector('form')!;
+    251|     const select = within(form).getByLabelText('만료 기간') as HTMLSelectE…
+       |                                 ^
+    252|
+    253|     expect([...select.options].map((option) => Number(option.value))).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/13]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-007 AC-1 · SEC-AUTH-008 AC-1 — 발급 폼 > 이름이 비면 발급하지 않는다 — 이름 없는 토큰은 목록에서 서로 구별되지 않는다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByRole ../../node_modules/@testing-library/dom/dist/queries/role.js:34:35
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:74:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/token-panel.test.tsx:265:35
+    263|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    264|     const form = panel.querySelector('form')!;
+    265|     await user.click(within(form).getByRole('button', { name: '발급' }));
+       |                                   ^
+    266|
+    267|     expect(onIssueToken).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/13]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출 > 발급 직후 평문이 화면에 뜬다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ 발급한다 test/token-panel.test.tsx:279:34
+    277|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    278|     const form = panel.querySelector('form')!;
+    279|     await user.type(within(form).getByLabelText('이름'), '노트북 CLI');
+       |                                  ^
+    280|     await user.click(within(form).getByRole('button', { name: '발급' }));
+    281|     const plaintext = await screen.findByTestId('token-plaintext');
+ ❯ test/token-panel.test.tsx:294:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/13]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출 > ESC 로 닫히지 않는다 — 설정 모달까지 함께 닫히지도 않는다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ 발급한다 test/token-panel.test.tsx:279:34
+    277|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    278|     const form = panel.querySelector('form')!;
+    279|     await user.type(within(form).getByLabelText('이름'), '노트북 CLI');
+       |                                  ^
+    280|     await user.click(within(form).getByRole('button', { name: '발급' }));
+    281|     const plaintext = await screen.findByTestId('token-plaintext');
+ ❯ test/token-panel.test.tsx:314:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/13]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출 > 바깥을 눌러도 닫히지 않는다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ 발급한다 test/token-panel.test.tsx:279:34
+    277|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    278|     const form = panel.querySelector('form')!;
+    279|     await user.type(within(form).getByLabelText('이름'), '노트북 CLI');
+       |                                  ^
+    280|     await user.click(within(form).getByRole('button', { name: '발급' }));
+    281|     const plaintext = await screen.findByTestId('token-plaintext');
+ ❯ test/token-panel.test.tsx:328:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/13]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출 > `닫기` 는 재확인을 받는다 — 복사하지 않았다면 여기서 되돌린다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ 발급한다 test/token-panel.test.tsx:279:34
+    277|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    278|     const form = panel.querySelector('form')!;
+    279|     await user.type(within(form).getByLabelText('이름'), '노트북 CLI');
+       |                                  ^
+    280|     await user.click(within(form).getByRole('button', { name: '발급' }));
+    281|     const plaintext = await screen.findByTestId('token-plaintext');
+ ❯ test/token-panel.test.tsx:342:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/13]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출 > 재확인을 지나 닫으면 평문이 사라지고 재발급 안내가 목록 위에 선다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ 발급한다 test/token-panel.test.tsx:279:34
+    277|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    278|     const form = panel.querySelector('form')!;
+    279|     await user.type(within(form).getByLabelText('이름'), '노트북 CLI');
+       |                                  ^
+    280|     await user.click(within(form).getByRole('button', { name: '발급' }));
+    281|     const plaintext = await screen.findByTestId('token-plaintext');
+ ❯ test/token-panel.test.tsx:355:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/13]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출 > `복사하고 닫기` 는 클립보드에 넣고 재확인 없이 닫는다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ 발급한다 test/token-panel.test.tsx:279:34
+    277|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    278|     const form = panel.querySelector('form')!;
+    279|     await user.type(within(form).getByLabelText('이름'), '노트북 CLI');
+       |                                  ^
+    280|     await user.click(within(form).getByRole('button', { name: '발급' }));
+    281|     const plaintext = await screen.findByTestId('token-plaintext');
+ ❯ test/token-panel.test.tsx:372:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/13]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출 > 클립보드가 거절하면 닫지 않고 실패를 알린다 — 닫는 길은 `닫기` 로 남는다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ 발급한다 test/token-panel.test.tsx:279:34
+    277|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    278|     const form = panel.querySelector('form')!;
+    279|     await user.type(within(form).getByLabelText('이름'), '노트북 CLI');
+       |                                  ^
+    280|     await user.click(within(form).getByRole('button', { name: '발급' }));
+    281|     const plaintext = await screen.findByTestId('token-plaintext');
+ ❯ test/token-panel.test.tsx:395:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/13]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  13 failed | 10 passed (23)
+   Start at  19:26:49
+   Duration  6.53s (transform 1.08s, setup 35ms, import 1.95s, tests 3.89s, environment 461ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Work\git\DocuLight2.0\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --run test/token-panel.test.tsx -t ^^^"\^^^"^^^" 만료된 행은 산 행보다 흐리다\

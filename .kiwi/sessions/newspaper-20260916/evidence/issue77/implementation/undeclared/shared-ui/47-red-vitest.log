@@ -1,0 +1,14 @@
+COMMAND: cd packages/web && npx vitest run test/newspaper-shared-controls.test.tsx
+EXIT_CODE: 1
+
+RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+test/newspaper-shared-controls.test.tsx (2 tests | 2 failed)
+  x preserves native checkbox and radio names, state, and refs
+    Element type is invalid; Checkbox and Radio exports are undefined.
+  x communicates loading and prevents repeated activation while keeping its label
+    Received true for a non-boolean DOM attribute loading.
+    Expected aria-busy="true"; received null.
+
+Test Files  1 failed (1)
+Tests       2 failed (2)

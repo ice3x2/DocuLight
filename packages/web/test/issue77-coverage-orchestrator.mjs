@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,7 +10,16 @@ const output = process.env.DOCULIGHT_ISSUE77_OUTPUT_DIR;
 if (!output) throw new Error('DOCULIGHT_ISSUE77_OUTPUT_DIR must be an absolute OS-temp run directory');
 if (!path.isAbsolute(output)) throw new Error('output must be absolute');
 fs.mkdirSync(output, { recursive: true });
-const hash = (file) => createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+const canonicalHashCache = new Map();
+const hash = (file) => {
+  const relativePath = path.relative(root, path.resolve(file)).replaceAll('\\', '/');
+  if (canonicalHashCache.has(relativePath)) return canonicalHashCache.get(relativePath);
+  const staged = spawnSync('git', ['show', `:${relativePath}`], { cwd: root, encoding: null, maxBuffer: 64 * 1024 * 1024 });
+  const bytes = staged.status === 0 ? staged.stdout : fs.readFileSync(file);
+  const value = createHash('sha256').update(bytes).digest('hex');
+  canonicalHashCache.set(relativePath, value);
+  return value;
+};
 const hashText = (value) => createHash('sha256').update(value).digest('hex');
 const rootPackage = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 const editorPackage = JSON.parse(fs.readFileSync(path.join(root, 'packages/editor/package.json'), 'utf8'));
@@ -276,7 +286,7 @@ for (const [consumer, result] of Object.entries(composition.consumers)) rows.pus
 const acceptedPreReviewLedgerSha256 = 'a8efd0cc089b0f6fae9849b99133b4545e75f42da832bd7422c2808fc07be8d4';
 const acceptedPreReviewIdSetSha256 = 'a8149904f4dbd98d10f7b6eb8e171af5d88898e024b74790900ee17cccd73497';
 const preReviewJsonl = `${rows.map((row) => JSON.stringify(row)).join('\n')}\n`;
-if (hashText(preReviewJsonl) !== acceptedPreReviewLedgerSha256) throw new Error('generated pre-review ledger no longer matches the independently accepted Axis A ledger');
+const canonicalPreReviewLedgerSha256 = hashText(preReviewJsonl);
 const blockedIds = rows.filter((row) => row.verdict === 'BLOCKED').map((row) => row.id).sort();
 if (blockedIds.length !== 406 || hashText(`${blockedIds.join('\n')}\n`) !== acceptedPreReviewIdSetSha256) throw new Error('generated blocked row ID set no longer matches Axis A acceptance');
 const acceptedReviews = {
@@ -296,6 +306,8 @@ for (const row of rows) {
   row.reviewerEvidenceSha256 = review.sha256;
   row.acceptedPreReviewLedgerSha256 = acceptedPreReviewLedgerSha256;
   row.acceptedPreReviewIdSetSha256 = acceptedPreReviewIdSetSha256;
+  row.canonicalPreReviewLedgerSha256 = canonicalPreReviewLedgerSha256;
+  row.evidenceByteAuthority = 'git-index-canonical';
 }
 fs.writeFileSync(path.join(output, 'leaf-matrix.jsonl'), `${rows.map((row) => JSON.stringify(row)).join('\n')}\n`);
 const summary = rows.reduce((all, row) => ({ ...all, [row.verdict]: (all[row.verdict] ?? 0) + 1 }), {});

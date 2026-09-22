@@ -1,0 +1,10 @@
+COMMAND: cd packages/web && node test/newspaper-overlays-check.mjs
+EXIT_CODE: 1
+
+FAIL dialog stays within 560px with 24px viewport margin and overlay radius: width=1280, left/right=0, padding=0px, radius=0px, position=static
+PASS dialog Escape restores trigger focus
+FAIL menu is constrained to available height and internally scrolls: height=660, max-height=none, overflow-y=visible
+FAIL risk confirmation opens centered with cancel focused: cancel focused, width=1280, left=0, top=506.42, radius=0px
+Runner then timed out attempting an outside body click because Radix correctly blocked background pointer events. The check was corrected to dispatch the outside attempt on the overlay itself; no product code was changed for this correction.
+
+Runner cleanup: Chromium and the Vite server were closed in finally.

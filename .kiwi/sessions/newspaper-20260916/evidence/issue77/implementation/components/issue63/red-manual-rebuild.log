@@ -1,0 +1,1030 @@
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/maven/npm-registry/npm/:always-auth). This will stop working in the next major version of npm.
+npm warn Unknown user config "always-auth" (//docs.hancomins.io/:always-auth). This will stop working in the next major version of npm.
+
+> @doculight/web@0.1.0 test
+> vitest run --run test/issue63-token-lifecycle.test.tsx test/token-wiring.test.tsx test/token-panel.test.tsx
+
+
+ RUN  v4.1.11 C:/Work/git/DocuLight2.0/packages/web
+
+stderr | test/issue63-token-lifecycle.test.tsx
+Warning: KaTeX doesn't work in quirks mode. Make sure your website has a suitable doctype.
+
+ ❯ test/issue63-token-lifecycle.test.tsx (10 tests | 10 failed) 634ms
+     × distinguishes loading, error with retry, and a successful empty list 31ms
+     × awaits revoke, prevents duplicates, retains a failed target, and separates refresh failure 8ms
+     × keeps the form inline, validates after submit, and guards one pending issuance 5ms
+     × moves focus through form, reveal, discard, and back to the list 4ms
+     × ignores a late issue result after the authenticated owner generation changes 9ms
+     × ignores a late issue result after the same owner starts a new authentication generation 4ms
+     × ignores a late revoke outcome after the authenticated owner generation changes 5ms
+     × ignores a late revoke outcome after the same owner starts a new authentication generation 5ms
+     × intercepts category and settings-close intent while revealing, then performs the exact accepted intent once 325ms
+     × blocks Escape and outside dismissal while revealing without opening discard confirmation 234ms
+stderr | test/token-wiring.test.tsx
+Warning: KaTeX doesn't work in quirks mode. Make sure your website has a suitable doctype.
+
+ ❯ test/token-wiring.test.tsx (4 tests | 2 failed) 1583ms
+     × 발급 폼이 서버로 나가고 서버가 준 평문이 그대로 노출된다 284ms
+     × 폐기 뒤 메타데이터 재조회가 끝날 때까지 캐시된 행과 조작을 숨긴다 407ms
+stderr | test/token-panel.test.tsx
+Warning: KaTeX doesn't work in quirks mode. Make sure your website has a suitable doctype.
+
+ ❯ test/token-panel.test.tsx (23 tests | 13 failed) 4382ms
+     × 만료된 행은 산 행보다 흐리다 — §2.3 은 배지와 함께 「행 흐리게」를 요구한다 148ms
+     × 이름·스코프 2택·만료 기간을 담고 그 값이 그대로 나간다 234ms
+     × 스코프 기본값은 `읽기 전용` 이고 그 값이 그대로 나간다 203ms
+     × 폼을 다시 열면 앞 회차에 고른 `읽기+쓰기` 가 남지 않는다 203ms
+     × 만료 기간은 정해진 넷이고 기본값이 90일이다 233ms
+     × 이름이 비면 발급하지 않는다 — 이름 없는 토큰은 목록에서 서로 구별되지 않는다 187ms
+     × 발급 직후 평문이 화면에 뜬다 217ms
+     × ESC 로 닫히지 않는다 — 설정 모달까지 함께 닫히지도 않는다 220ms
+     × 바깥을 눌러도 닫히지 않는다 202ms
+     × `닫기` 는 재확인을 받는다 — 복사하지 않았다면 여기서 되돌린다 175ms
+     × 재확인을 지나 닫으면 평문이 사라지고 재발급 안내가 목록 위에 선다 201ms
+     × `복사하고 닫기` 는 클립보드에 넣고 재확인 없이 닫는다 189ms
+     × 클립보드가 거절하면 닫지 않고 실패를 알린다 — 닫는 길은 `닫기` 로 남는다 217ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 25 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/issue63-token-lifecycle.test.tsx > issue #63 B3/B4 — typed query and revoke outcomes > distinguishes loading, error with retry, and a successful empty list
+ FAIL  test/issue63-token-lifecycle.test.tsx > issue #63 B3/B4 — typed query and revoke outcomes > awaits revoke, prevents duplicates, retains a failed target, and separates refresh failure
+ FAIL  test/issue63-token-lifecycle.test.tsx > issue #63 B1/B2 — inline secret lifecycle and parent departures > keeps the form inline, validates after submit, and guards one pending issuance
+ FAIL  test/issue63-token-lifecycle.test.tsx > issue #63 B1/B2 — inline secret lifecycle and parent departures > moves focus through form, reveal, discard, and back to the list
+ FAIL  test/issue63-token-lifecycle.test.tsx > issue #63 B1/B2 — inline secret lifecycle and parent departures > ignores a late issue result after the authenticated owner generation changes
+ FAIL  test/issue63-token-lifecycle.test.tsx > issue #63 B1/B2 — inline secret lifecycle and parent departures > ignores a late issue result after the same owner starts a new authentication generation
+ FAIL  test/issue63-token-lifecycle.test.tsx > issue #63 B1/B2 — inline secret lifecycle and parent departures > ignores a late revoke outcome after the authenticated owner generation changes
+ FAIL  test/issue63-token-lifecycle.test.tsx > issue #63 B1/B2 — inline secret lifecycle and parent departures > ignores a late revoke outcome after the same owner starts a new authentication generation
+TypeError: Cannot read properties of undefined (reading 'map')
+ ❯ TokenPanel src/settings/TokenPanel.tsx:149:17
+    147|         </thead>
+    148|         <tbody>
+    149|           {rows.map((row) => (
+       |                 ^
+    150|             // 만료분은 배지와 함께 **행 자체를 흐리게** 그린다 (`04` §2.3).
+    151|             // 지우지 않고 남기므로, 흐려지지 않으면 산 토큰과 같은 무게로
+ ❯ Object.react_stack_bottom_frame ../../node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/25]⎯
+
+ FAIL  test/issue63-token-lifecycle.test.tsx > issue #63 B1/B2 — inline secret lifecycle and parent departures > intercepts category and settings-close intent while revealing, then performs the exact accepted intent once
+TestingLibraryElementError: Unable to find a label with the text of: 이름
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-describedby[39m=[32m"radix-_r_n_"[39m
+  [33maria-hidden[39m=[32m"true"[39m
+  [33maria-labelledby[39m=[32m"_r_k_"[39m
+  [33mclass[39m=[32m"dl-dialog-content"[39m
+  [33mdata-aria-hidden[39m=[32m"true"[39m
+  [33mdata-overlay-owner-id[39m=[32m"_r_o_"[39m
+  [33mdata-overlay-owner-kind[39m=[32m"dialog"[39m
+  [33mdata-settings-dialog[39m=[32m"true"[39m
+  [33mdata-slot[39m=[32m"dialog-content"[39m
+  [33mdata-state[39m=[32m"open"[39m
+  [33mid[39m=[32m"radix-_r_l_"[39m
+  [33mrole[39m=[32m"dialog"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<header[39m
+    [33mdata-settings-header[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"dl-overlay-title"[39m
+        [33mdata-slot[39m=[32m"dialog-title"[39m
+        [33mid[39m=[32m"_r_k_"[39m
+      [36m>[39m
+        [0m설정[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"dl-overlay-description"[39m
+        [33mdata-slot[39m=[32m"dialog-description"[39m
+        [33mid[39m=[32m"radix-_r_n_"[39m
+      [36m>[39m
+        [0m왼쪽에서 설정 항목을 선택하세요.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"설정 닫기"[39m
+      [33mclass[39m=[32m"dl-button dl-button-ghost dl-control-icon"[39m
+      [33mdata-size[39m=[32m"icon"[39m
+      [33mdata-slot[39m=[32m"button"[39m
+      [33mdata-variant[39m=[32m"ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m×[0m
+    [36m</button>[39m
+  [36m</header>[39m
+  [36m<div[39m
+    [33mdata-orientation[39m=[32m"vertical"[39m
+    [33mdata-settings-layout[39m=[32m"true"[39m
+    [33mdir[39m=[32m"ltr"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33maria-label[39m=[32m"설정 카테고리"[39m
+      [33maria-orientation[39m=[32m"vertical"[39m
+      [33mdata-orientation[39m=[32m"vertical"[39m
+      [33mdata-settings-navigation[39m=[32m"true"[39m
+      [33mrole[39m=[32m"tablist"[39m
+      [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+      [33mtabindex[39m=[32m"0"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0m개인[0m
+      [36m</h2>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_t_-content-editor"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_t_-trigger-editor"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m에디터[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_t_-content-appearance"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_t_-trigger-appearance"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m외모(테마)[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_t_-content-tokens"[39m
+        [33maria-selected[39m=[32m"true"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_t_-trigger-tokens"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"0"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m액세스 토큰[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_t_-content-account"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_t_-trigger-account"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m계정[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_t_-content-trash"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_t_-trigger-trash"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m휴지통[0m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mdata-settings-content[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_t_-trigger-editor"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_t_-content-editor"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_t_-trigger-appearance"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_t_-content-appearance"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_t_-trigger-tokens"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_t_-content-tokens"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mdata-testid[39m=[32m"token-scope-notice"[39m
+        [36m>[39m
+          [0mMCP 클라이언트와 API 는 이 토큰으로 인증합니다. 토큰의 실제 권한은 스코프와 현재 유효 권한의 교집합입니다.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m새 액세스 토큰[0m
+        [36m</button>[39m
+        [36m<table>[39m
+          [36m<thead>[39m
+            [36m<tr>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0m이름[0m
+              [36m</th>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0m스코프[0m
+              [36m</th>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0m만료일[0m
+              [36m</th>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0m마지막 사용[0m
+              [36m</th>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0m조작[0m
+              [36m</th>[39m
+            [36m</tr>[39m
+          [36m</thead>[39m
+          [36m<tbody />[39m
+        [36m</table>[39m
+        [36m<p[39m
+          [33mdata-testid[39m=[32m"token-account-notice"[39m
+        [36m>[39m
+          [0m계정이 활성 상태가 아니게 되면 이 계정의 토큰은 전부 즉시 무효가 됩니다. 이 화면에서는 조작할 수 없습니다.[0m
+        [36m</p>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_t_-trigger-account"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_t_-content-account"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_t_-trigger-trash"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_t_-content-trash"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue63-token-lifecycle.test.tsx:195:38
+    193|     await user.click(within(settings).getByRole('tab', { name: '액세스 토큰…
+    194|     await user.click(within(settings).getByRole('button', { name: '새 액…
+    195|     await user.type(within(settings).getByLabelText('이름'), 'CLI');
+       |                                      ^
+    196|     await user.click(within(settings).getByRole('button', { name: '발급'…
+    197|     expect(await within(settings).findByDisplayValue('dl_pat_inline_on…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/25]⎯
+
+ FAIL  test/issue63-token-lifecycle.test.tsx > issue #63 B1/B2 — inline secret lifecycle and parent departures > blocks Escape and outside dismissal while revealing without opening discard confirmation
+TestingLibraryElementError: Unable to find a label with the text of: 이름
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-describedby[39m=[32m"radix-_r_1h_"[39m
+  [33maria-hidden[39m=[32m"true"[39m
+  [33maria-labelledby[39m=[32m"_r_1e_"[39m
+  [33mclass[39m=[32m"dl-dialog-content"[39m
+  [33mdata-aria-hidden[39m=[32m"true"[39m
+  [33mdata-overlay-owner-id[39m=[32m"_r_1i_"[39m
+  [33mdata-overlay-owner-kind[39m=[32m"dialog"[39m
+  [33mdata-settings-dialog[39m=[32m"true"[39m
+  [33mdata-slot[39m=[32m"dialog-content"[39m
+  [33mdata-state[39m=[32m"open"[39m
+  [33mid[39m=[32m"radix-_r_1f_"[39m
+  [33mrole[39m=[32m"dialog"[39m
+  [33mstyle[39m=[32m"pointer-events: none;"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<header[39m
+    [33mdata-settings-header[39m=[32m"true"[39m
+  [36m>[39m
+    [36m<div>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"dl-overlay-title"[39m
+        [33mdata-slot[39m=[32m"dialog-title"[39m
+        [33mid[39m=[32m"_r_1e_"[39m
+      [36m>[39m
+        [0m설정[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"dl-overlay-description"[39m
+        [33mdata-slot[39m=[32m"dialog-description"[39m
+        [33mid[39m=[32m"radix-_r_1h_"[39m
+      [36m>[39m
+        [0m왼쪽에서 설정 항목을 선택하세요.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"설정 닫기"[39m
+      [33mclass[39m=[32m"dl-button dl-button-ghost dl-control-icon"[39m
+      [33mdata-size[39m=[32m"icon"[39m
+      [33mdata-slot[39m=[32m"button"[39m
+      [33mdata-variant[39m=[32m"ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m×[0m
+    [36m</button>[39m
+  [36m</header>[39m
+  [36m<div[39m
+    [33mdata-orientation[39m=[32m"vertical"[39m
+    [33mdata-settings-layout[39m=[32m"true"[39m
+    [33mdir[39m=[32m"ltr"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33maria-label[39m=[32m"설정 카테고리"[39m
+      [33maria-orientation[39m=[32m"vertical"[39m
+      [33mdata-orientation[39m=[32m"vertical"[39m
+      [33mdata-settings-navigation[39m=[32m"true"[39m
+      [33mrole[39m=[32m"tablist"[39m
+      [33mstyle[39m=[32m"outline-color: none; outline-style: none; outline-width: initial;"[39m
+      [33mtabindex[39m=[32m"0"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0m개인[0m
+      [36m</h2>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_1n_-content-editor"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_1n_-trigger-editor"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m에디터[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_1n_-content-appearance"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_1n_-trigger-appearance"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m외모(테마)[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_1n_-content-tokens"[39m
+        [33maria-selected[39m=[32m"true"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_1n_-trigger-tokens"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"0"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m액세스 토큰[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_1n_-content-account"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_1n_-trigger-account"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m계정[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-controls[39m=[32m"radix-_r_1n_-content-trash"[39m
+        [33maria-selected[39m=[32m"false"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-radix-collection-item[39m=[32m""[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mid[39m=[32m"radix-_r_1n_-trigger-trash"[39m
+        [33mrole[39m=[32m"tab"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0m휴지통[0m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mdata-settings-content[39m=[32m"true"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_1n_-trigger-editor"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_1n_-content-editor"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_1n_-trigger-appearance"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_1n_-content-appearance"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_1n_-trigger-tokens"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"active"[39m
+        [33mid[39m=[32m"radix-_r_1n_-content-tokens"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mdata-testid[39m=[32m"token-scope-notice"[39m
+        [36m>[39m
+          [0mMCP 클라이언트와 API 는 이 토큰으로 인증합니다. 토큰의 실제 권한은 스코프와 현재 유효 권한의 교집합입니다.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m새 액세스 토큰[0m
+        [36m</button>[39m
+        [36m<table>[39m
+          [36m<thead>[39m
+            [36m<tr>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0m이름[0m
+              [36m</th>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0m스코프[0m
+              [36m</th>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0m만료일[0m
+              [36m</th>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0m마지막 사용[0m
+              [36m</th>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0m조작[0m
+              [36m</th>[39m
+            [36m</tr>[39m
+          [36m</thead>[39m
+          [36m<tbody />[39m
+        [36m</table>[39m
+        [36m<p[39m
+          [33mdata-testid[39m=[32m"token-account-notice"[39m
+        [36m>[39m
+          [0m계정이 활성 상태가 아니게 되면 이 계정의 토큰은 전부 즉시 무효가 됩니다. 이 화면에서는 조작할 수 없습니다.[0m
+        [36m</p>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_1n_-trigger-account"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_1n_-content-account"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"radix-_r_1n_-trigger-trash"[39m
+        [33mdata-orientation[39m=[32m"vertical"[39m
+        [33mdata-state[39m=[32m"inactive"[39m
+        [33mhidden[39m=[32m""[39m
+        [33mid[39m=[32m"radix-_r_1n_-content-trash"[39m
+        [33mrole[39m=[32m"tabpanel"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/issue63-token-lifecycle.test.tsx:229:38
+    227|     await user.click(within(settings).getByRole('tab', { name: '액세스 토큰…
+    228|     await user.click(within(settings).getByRole('button', { name: '새 액…
+    229|     await user.type(within(settings).getByLabelText('이름'), 'CLI');
+       |                                      ^
+    230|     await user.click(within(settings).getByRole('button', { name: '발급'…
+    231|     expect(await within(settings).findByDisplayValue('dl_pat_escape_gu…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/25]⎯
+
+ FAIL  test/token-panel.test.tsx > 04 §2.3 — 목록 > 만료된 행은 산 행보다 흐리다 — §2.3 은 배지와 함께 「행 흐리게」를 요구한다
+AssertionError: expected null to be 'true' // Object.is equality
+
+- Expected:
+"true"
+
++ Received:
+null
+
+ ❯ test/token-panel.test.tsx:101:55
+     99|     // **계산된 값으로 잰다.** 표식만 붙고 실제로는 아무것도 흐려지지 않는
+    100|     // 상태가 통과하지 않게 한다.
+    101|     expect(행('구형 데스크탑').getAttribute('data-expired')).toBe('true');
+       |                                                       ^
+    102|     expect(행('노트북 CLI').getAttribute('data-expired')).toBeNull();
+    103|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/25]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-007 AC-1 · SEC-AUTH-008 AC-1 — 발급 폼 > 이름·스코프 2택·만료 기간을 담고 그 값이 그대로 나간다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/token-panel.test.tsx:152:34
+    150|     const form = panel.querySelector('form')!;
+    151|
+    152|     await user.type(within(form).getByLabelText('이름'), 'CI 스크립트');
+       |                                  ^
+    153|     await user.click(within(form).getByRole('radio', { name: '읽기 전용' }…
+    154|     await user.selectOptions(within(form).getByLabelText('만료 기간'), '18…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/25]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-007 AC-1 · SEC-AUTH-008 AC-1 — 발급 폼 > 스코프 기본값은 `읽기 전용` 이고 그 값이 그대로 나간다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByRole ../../node_modules/@testing-library/dom/dist/queries/role.js:34:35
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:74:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/token-panel.test.tsx:184:31
+    182|     const form = panel.querySelector('form')!;
+    183|
+    184|     const 읽기전용 = within(form).getByRole('radio', { name: '읽기 전용' }) as…
+       |                               ^
+    185|     const 읽기쓰기 = within(form).getByRole('radio', { name: '읽기+쓰기' }) as…
+    186|     expect(읽기전용.checked, '넓은 쪽이 기본으로 선택돼 있다').toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/25]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-007 AC-1 · SEC-AUTH-008 AC-1 — 발급 폼 > 폼을 다시 열면 앞 회차에 고른 `읽기+쓰기` 가 남지 않는다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByRole ../../node_modules/@testing-library/dom/dist/queries/role.js:34:35
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:74:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/token-panel.test.tsx:209:36
+    207|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    208|     const first = panel.querySelector('form')!;
+    209|     await user.click(within(first).getByRole('radio', { name: '읽기+쓰기' …
+       |                                    ^
+    210|     await user.click(within(first).getByRole('button', { name: '취소' })…
+    211|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/25]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-007 AC-1 · SEC-AUTH-008 AC-1 — 발급 폼 > 만료 기간은 정해진 넷이고 기본값이 90일이다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/token-panel.test.tsx:235:33
+    233|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    234|     const form = panel.querySelector('form')!;
+    235|     const select = within(form).getByLabelText('만료 기간') as HTMLSelectE…
+       |                                 ^
+    236|
+    237|     expect([...select.options].map((option) => Number(option.value))).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/25]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-007 AC-1 · SEC-AUTH-008 AC-1 — 발급 폼 > 이름이 비면 발급하지 않는다 — 이름 없는 토큰은 목록에서 서로 구별되지 않는다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByRole ../../node_modules/@testing-library/dom/dist/queries/role.js:34:35
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:74:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/token-panel.test.tsx:249:35
+    247|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    248|     const form = panel.querySelector('form')!;
+    249|     await user.click(within(form).getByRole('button', { name: '발급' }));
+       |                                   ^
+    250|
+    251|     expect(onIssueToken).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/25]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출 > 발급 직후 평문이 화면에 뜬다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ 발급한다 test/token-panel.test.tsx:263:34
+    261|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    262|     const form = panel.querySelector('form')!;
+    263|     await user.type(within(form).getByLabelText('이름'), '노트북 CLI');
+       |                                  ^
+    264|     await user.click(within(form).getByRole('button', { name: '발급' }));
+    265|     const plaintext = await screen.findByTestId('token-plaintext');
+ ❯ test/token-panel.test.tsx:278:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/25]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출 > ESC 로 닫히지 않는다 — 설정 모달까지 함께 닫히지도 않는다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ 발급한다 test/token-panel.test.tsx:263:34
+    261|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    262|     const form = panel.querySelector('form')!;
+    263|     await user.type(within(form).getByLabelText('이름'), '노트북 CLI');
+       |                                  ^
+    264|     await user.click(within(form).getByRole('button', { name: '발급' }));
+    265|     const plaintext = await screen.findByTestId('token-plaintext');
+ ❯ test/token-panel.test.tsx:298:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/25]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출 > 바깥을 눌러도 닫히지 않는다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ 발급한다 test/token-panel.test.tsx:263:34
+    261|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    262|     const form = panel.querySelector('form')!;
+    263|     await user.type(within(form).getByLabelText('이름'), '노트북 CLI');
+       |                                  ^
+    264|     await user.click(within(form).getByRole('button', { name: '발급' }));
+    265|     const plaintext = await screen.findByTestId('token-plaintext');
+ ❯ test/token-panel.test.tsx:312:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/25]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출 > `닫기` 는 재확인을 받는다 — 복사하지 않았다면 여기서 되돌린다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ 발급한다 test/token-panel.test.tsx:263:34
+    261|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    262|     const form = panel.querySelector('form')!;
+    263|     await user.type(within(form).getByLabelText('이름'), '노트북 CLI');
+       |                                  ^
+    264|     await user.click(within(form).getByRole('button', { name: '발급' }));
+    265|     const plaintext = await screen.findByTestId('token-plaintext');
+ ❯ test/token-panel.test.tsx:326:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/25]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출 > 재확인을 지나 닫으면 평문이 사라지고 재발급 안내가 목록 위에 선다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ 발급한다 test/token-panel.test.tsx:263:34
+    261|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    262|     const form = panel.querySelector('form')!;
+    263|     await user.type(within(form).getByLabelText('이름'), '노트북 CLI');
+       |                                  ^
+    264|     await user.click(within(form).getByRole('button', { name: '발급' }));
+    265|     const plaintext = await screen.findByTestId('token-plaintext');
+ ❯ test/token-panel.test.tsx:339:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/25]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출 > `복사하고 닫기` 는 클립보드에 넣고 재확인 없이 닫는다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ 발급한다 test/token-panel.test.tsx:263:34
+    261|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    262|     const form = panel.querySelector('form')!;
+    263|     await user.type(within(form).getByLabelText('이름'), '노트북 CLI');
+       |                                  ^
+    264|     await user.click(within(form).getByRole('button', { name: '발급' }));
+    265|     const plaintext = await screen.findByTestId('token-plaintext');
+ ❯ test/token-panel.test.tsx:356:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/25]⎯
+
+ FAIL  test/token-panel.test.tsx > SEC-AUTH-006 AC-2 · EC12 — 평문 1회 노출 > 클립보드가 거절하면 닫지 않고 실패를 알린다 — 닫는 길은 `닫기` 로 남는다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ 발급한다 test/token-panel.test.tsx:263:34
+    261|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    262|     const form = panel.querySelector('form')!;
+    263|     await user.type(within(form).getByLabelText('이름'), '노트북 CLI');
+       |                                  ^
+    264|     await user.click(within(form).getByRole('button', { name: '발급' }));
+    265|     const plaintext = await screen.findByTestId('token-plaintext');
+ ❯ test/token-panel.test.tsx:379:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/25]⎯
+
+ FAIL  test/token-wiring.test.tsx > SEC-AUTH-007 — 화면이 서버의 토큰을 그린다 > 발급 폼이 서버로 나가고 서버가 준 평문이 그대로 노출된다
+TypeError: Expected container to be an Element, a Document or a DocumentFragment but got null.
+ ❯ checkContainerType ../../node_modules/@testing-library/dom/dist/helpers.js:61:11
+ ❯ queryAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:48:35
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:100:15
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/token-wiring.test.tsx:103:34
+    101|     await user.click(within(panel).getByRole('button', { name: '새 액세스 …
+    102|     const form = panel.querySelector('form')!;
+    103|     await user.type(within(form).getByLabelText('이름'), 'CI 스크립트');
+       |                                  ^
+    104|     await user.click(within(form).getByRole('radio', { name: '읽기 전용' }…
+    105|     await user.click(within(form).getByRole('button', { name: '발급' }));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/25]⎯
+
+ FAIL  test/token-wiring.test.tsx > SEC-AUTH-007 — 화면이 서버의 토큰을 그린다 > 폐기 뒤 메타데이터 재조회가 끝날 때까지 캐시된 행과 조작을 숨긴다
+TestingLibraryElementError: Unable to find an accessible element with the role "status"
+
+Here are the accessible roles:
+
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mdata-testid[39m=[32m"token-scope-notice"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "새 액세스 토큰":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------table:
+
+  Name "":
+  [36m<table />[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "이름 스코프 만료일 마지막 사용 조작":
+  [36m<tr />[39m
+
+  Name "노트북 CLI 읽기+쓰기 2099-11-10 사용 안 함 노트북 CLI 폐기":
+  [36m<tr[39m
+    [33mstyle[39m=[32m"opacity: 1;"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "이름":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "스코프":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "만료일":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "마지막 사용":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "조작":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "노트북 CLI":
+  [36m<td />[39m
+
+  Name "읽기+쓰기":
+  [36m<td />[39m
+
+  Name "2099-11-10":
+  [36m<td />[39m
+
+  Name "사용 안 함":
+  [36m<td />[39m
+
+  Name "노트북 CLI 폐기":
+  [36m<td />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "노트북 CLI 폐기":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mdata-testid[39m=[32m"token-account-notice"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-labelledby[39m=[32m"radix-_r_2v_-trigger-tokens"[39m
+  [33mdata-orientation[39m=[32m"vertical"[39m
+  [33mdata-state[39m=[32m"active"[39m
+  [33mid[39m=[32m"radix-_r_2v_-content-tokens"[39m
+  [33mrole[39m=[32m"tabpanel"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<p[39m
+    [33mdata-testid[39m=[32m"token-scope-notice"[39m
+  [36m>[39m
+    [0mMCP 클라이언트와 API 는 이 토큰으로 인증합니다. 토큰의 실제 권한은 스코프와 현재 유효 권한의 교집합입니다.[0m
+  [36m</p>[39m
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [0m새 액세스 토큰[0m
+  [36m</button>[39m
+  [36m<table>[39m
+    [36m<thead>[39m
+      [36m<tr>[39m
+        [36m<th[39m
+          [33mscope[39m=[32m"col"[39m
+        [36m>[39m
+          [0m이름[0m
+        [36m</th>[39m
+        [36m<th[39m
+          [33mscope[39m=[32m"col"[39m
+        [36m>[39m
+          [0m스코프[0m
+        [36m</th>[39m
+        [36m<th[39m
+          [33mscope[39m=[32m"col"[39m
+        [36m>[39m
+          [0m만료일[0m
+        [36m</th>[39m
+        [36m<th[39m
+          [33mscope[39m=[32m"col"[39m
+        [36m>[39m
+          [0m마지막 사용[0m
+        [36m</th>[39m
+        [36m<th[39m
+          [33mscope[39m=[32m"col"[39m
+        [36m>[39m
+          [0m조작[0m
+        [36m</th>[39m
+      [36m</tr>[39m
+    [36m</thead>[39m
+    [36m<tbody>[39m
+      [36m<tr[39m
+        [33mstyle[39m=[32m"opacity: 1;"[39m
+      [36m>[39m
+        [36m<td>[39m
+          [0m노트북 CLI[0m
+        [36m</td>[39m
+        [36m<td>[39m
+          [0m읽기+쓰기[0m
+        [36m</td>[39m
+        [36m<td>[39m
+          [0m2099-11-10[0m
+        [36m</td>[39m
+        [36m<td>[39m
+          [0m사용 안 함[0m
+        [36m</td>[39m
+        [36m<td>[39m
+          [36m<button[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m노트북 CLI[0m
+            [0m 폐기[0m
+          [36m</button>[39m
+        [36m</td>[39m
+      [36m</tr>[39m
+    [36m</tbody>[39m
+  [36m</table>[39m
+  [36m<p[39m
+    [33mdata-testid[39m=[32m"token-account-notice"[39m
+  [36m>[39m
+    [0m계정이 활성 상태가 아니게 되면 이 계정의 토큰은 전부 즉시 무효가 됩니다. 이 화면에서는 조작할 수 없습니다.[0m
+  [36m</p>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ test/token-wiring.test.tsx:145:26
+    143|     await user.click(within(await screen.findByRole('alertdialog')).ge…
+    144|     await waitFor(() => expect(listRequests).toBe(2));
+    145|     expect(within(panel).getByRole('status').textContent).toContain('불…
+       |                          ^
+    146|     expect(within(panel).queryByRole('button', { name: '노트북 CLI 폐기' })…
+    147|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/25]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  25 failed | 12 passed (37)
+   Start at  19:25:44
+   Duration  7.85s (transform 3.47s, setup 78ms, import 7.76s, tests 6.60s, environment 1.84s)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Work\git\DocuLight2.0\packages\web
+npm error workspace @doculight/web@0.1.0
+npm error location C:\Work\git\DocuLight2.0\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --run test/issue63-token-lifecycle.test.tsx test/token-wiring.test.tsx test/token-panel.test.tsx

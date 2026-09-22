@@ -1,0 +1,1456 @@
+{
+  "generatedAt": "2026-09-22T03:13:30.264Z",
+  "declaredCount": 77,
+  "entries": [
+    {
+      "workspace": "root",
+      "name": "test:browser:all",
+      "command": "npm run test:browser:all --workspace @doculight/editor && npm run test:browser:all --workspace @doculight/web",
+      "verdict": "N-A",
+      "reason": "aggregate command is not an independent evidence leaf; every fresh declared leaf is linked below and separately inventoried",
+      "evidenceClass": "aggregate",
+      "equivalence": [
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "product-suite-final/product-suite-results.json",
+          "evidenceSha256": "91911d186e077ca859321a04bdcb718a73896985e46277659fc126d621960b2d"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/issue78-green/product-browser-observation.json",
+          "evidenceSha256": "1bf8b0cbe6ba8ac9ca8fcf9d76460705c1e4ab064f19f94a1610d96d82292a12"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "product/product-composition-result.json",
+          "evidenceSha256": "71d5433bcee46f07df6682f9ae7d4cffda7cf115e1b7e565bf29a8e0730e756b"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue64/product-result.json",
+          "evidenceSha256": "03e96a87ed38c1945d526b735695cf315d48cf3de9b49dc244402a47fee11fbc"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owner-issue58/product-matrix.json",
+          "evidenceSha256": "15a53fad3dc1ac80cbdc8d2d81341696b8821d098dab43c09b8f827ab0ae6e31"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "undeclared/issue54/green-measurements.json",
+          "evidenceSha256": "46355f733bd829b154ff3dffe9c72754a83d12e15075c3e479297c402e2f2682"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue50/green-measurements.json",
+          "evidenceSha256": "3f8103d5bd29a78343bc064e427d54e559d371440a45b52cb62729e6d68e3bd0"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue63/browser-matrix/browser-matrix.json",
+          "evidenceSha256": "891e53f7f6fb2cd6b017a38a208e598315ad312752ef8dd561a9f290546a43e5"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue64/browser-matrix/browser-matrix.json",
+          "evidenceSha256": "b85f7835015ae1d1b10335f5565b83d560ba8373e6c4f9ad9a6ddba20c23f045"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue65/browser-matrix/browser-matrix.json",
+          "evidenceSha256": "a0ee13e706f71ef4a67a296b8a13235bad3864e936fa8605b0c8aff9ed2dd6a8"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue66/browser.json",
+          "evidenceSha256": "cbc250a622ef9d657bd5166f585a519a1f1edc4e7b53f90f9b9312332810ab97"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue67/browser.json",
+          "evidenceSha256": "486bc5cf532f08e4841fdca9ade4f63d64e1adaecf697fe3f56aaf79dc4178f0"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue55/green-complex-measurements.json",
+          "evidenceSha256": "91d572368f763a9614e1759b37a2cacd2a5d5c275620a889e84b8f608a3d68c6"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/test_browser_theme.raw.txt",
+          "evidenceSha256": "cefa6d82cbca5506d857e42ec2c76faa8eaf406e01d09b3a1880acb7696a66d3"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/test_browser_pre-auth-product.raw.txt",
+          "evidenceSha256": "011a7926ad787103c1e84e4a6a3112ccc9e164f89fb7d31b8d32964f66258b60"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/test_browser_install-product.raw.txt",
+          "evidenceSha256": "12ca51fe8fa61398bdd345545e1a39bb0fd02dd4ec9d1d5726e375c74dfa1649"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue71/capture-manifest.json",
+          "evidenceSha256": "0c83191c0c64dd444f0761e93493874f1f9458710c02f73ee5a2d26604b6ffb3"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue63/product-result.json",
+          "evidenceSha256": "6e38f869294e65ff18a29da90f3eb367da5c80e530135884c6ff1b4dfe5be397"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue65/product-result.json",
+          "evidenceSha256": "b211820e0b35d7dc7819d09c933078f2cf1f17158eb4847d5c35e95a3529cd17"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue72/browser-matrix.json",
+          "evidenceSha256": "40d75cb9ec3d8ed16673a8ed131f7810d8bf2174943d866cb1e80ec5919f084d"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue73/browser-matrix.json",
+          "evidenceSha256": "6afc64799f7aae48a0f007691dd5870dab85139611ec39802c04a96d334df90f"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue74/measurements.json",
+          "evidenceSha256": "a8ce0f69030ab70fc59a68d0291b672bb827821d9ab1ec5941a038bff0dc6e55"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue75/measurements.json",
+          "evidenceSha256": "47605a536208fd1e097c0282915cfdad134a6144d6cab21de91427f238959c4f"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/test_browser_issue76-product.raw.txt",
+          "evidenceSha256": "f8fc22f107b698075aeaf691f246e51314f62245eb27cd2f9fb15ba586d0733e"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/test_browser_issue87-product.raw.txt",
+          "evidenceSha256": "4818eb61ad7ab74896a24599451a1a60b3c7e72959fe3ec1857a4bc78ee3be91"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue88/capture-manifest.json",
+          "evidenceSha256": "2f37c0a3df5a6094e3da82290b71b3c3899012e65d148a143c175572e66d90ef"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue86/capture-manifest.json",
+          "evidenceSha256": "4140897b7503d34754686bbac5ee7ac77bdb77adb82fd4cfda80b22f44f1c56e"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue89/browser-matrix.json",
+          "evidenceSha256": "dd43fc3ce9e965a9c82bb1343a1b4e8582014e6d038fb611925ee6fa3c27d17d"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/test_browser_relocation79-product.raw.txt",
+          "evidenceSha256": "57aff2fb93e40afce60ededbefab9aa0962d341f764a15bef1a905af309c3fa2"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/test_browser_issue80-product.raw.txt",
+          "evidenceSha256": "c765fae825bfe2c94ea8608867ce7fef4c54438e97d6d598627578578c745844"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/test_browser_issue81-product.raw.txt",
+          "evidenceSha256": "22fe5de03a93c7054bc38e33e383dc7b9bfdf609435be222a63e1bfe151b2e15"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/issue82-evidence/capture-manifest.json",
+          "evidenceSha256": "ec718cd07197928d46f9a80975476f47d9ea227e5a6214d768daa504276e4ed7"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/test_browser_issue83-product.raw.txt",
+          "evidenceSha256": "48a9f01a675219f9a55151397ea5a8e78dc73996352be1d36e3643939acf5481"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/issue84-green/capture-manifest.json",
+          "evidenceSha256": "337cf4d4e3b5e840572e8d39b398b81fd71e713cd4e9f7bbe125a960b317ef3c"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/test_browser_issue85-product.raw.txt",
+          "evidenceSha256": "d6fc71c49a57ee643cbf8d239e94f226780a6a4c8bf23be12f0a1fc007b1e910"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "editor-browser-all.raw.txt",
+          "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+        }
+      ]
+    },
+    {
+      "workspace": "root",
+      "name": "test:browser:issue87-product",
+      "command": "npm run test:browser:issue87-product --workspace @doculight/web",
+      "verdict": "N-A",
+      "reason": "root wrapper is an exact npm workspace alias of the freshly executed web workspace command",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "@doculight/web:test:browser:issue87-product",
+          "relationship": "exact root-to-web workspace command alias",
+          "evidence": "owners/test_browser_issue87-product.raw.txt",
+          "evidenceSha256": "4818eb61ad7ab74896a24599451a1a60b3c7e72959fe3ec1857a4bc78ee3be91"
+        }
+      ]
+    },
+    {
+      "workspace": "root",
+      "name": "test:browser:issue80-product",
+      "command": "npm run test:browser:issue80-product --workspace @doculight/web",
+      "verdict": "N-A",
+      "reason": "root wrapper is an exact npm workspace alias of the freshly executed web workspace command",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "@doculight/web:test:browser:issue80-product",
+          "relationship": "exact root-to-web workspace command alias",
+          "evidence": "later-product/test_browser_issue80-product.raw.txt",
+          "evidenceSha256": "c765fae825bfe2c94ea8608867ce7fef4c54438e97d6d598627578578c745844"
+        }
+      ]
+    },
+    {
+      "workspace": "root",
+      "name": "test:browser:issue81-product",
+      "command": "npm run test:browser:issue81-product --workspace @doculight/web",
+      "verdict": "N-A",
+      "reason": "root wrapper is an exact npm workspace alias of the freshly executed web workspace command",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "@doculight/web:test:browser:issue81-product",
+          "relationship": "exact root-to-web workspace command alias",
+          "evidence": "later-product/test_browser_issue81-product.raw.txt",
+          "evidenceSha256": "22fe5de03a93c7054bc38e33e383dc7b9bfdf609435be222a63e1bfe151b2e15"
+        }
+      ]
+    },
+    {
+      "workspace": "root",
+      "name": "test:browser:issue82-product",
+      "command": "npm run test:browser:issue82-product --workspace @doculight/web",
+      "verdict": "N-A",
+      "reason": "root wrapper is an exact npm workspace alias of the freshly executed web workspace command",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "@doculight/web:test:browser:issue82-product",
+          "relationship": "exact root-to-web workspace command alias",
+          "evidence": "later-product/issue82-evidence/capture-manifest.json",
+          "evidenceSha256": "ec718cd07197928d46f9a80975476f47d9ea227e5a6214d768daa504276e4ed7"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/editor",
+      "name": "test:browser",
+      "command": "node test/browser-check.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "editor-browser-all.raw.txt",
+      "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+    },
+    {
+      "workspace": "@doculight/editor",
+      "name": "test:browser:headed",
+      "command": "node test/browser-check.mjs --headed",
+      "verdict": "N-A",
+      "reason": "interactive headed alias has the identical script body; the owned headless execution is the authoritative noninteractive evidence",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "test:browser",
+          "relationship": "identical script command without the interactive --headed flag",
+          "evidence": "editor-browser-all.raw.txt",
+          "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/editor",
+      "name": "test:browser:table",
+      "command": "node test/table-reveal-check.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "editor-browser-all.raw.txt",
+      "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+    },
+    {
+      "workspace": "@doculight/editor",
+      "name": "test:browser:table:headed",
+      "command": "node test/table-reveal-check.mjs --headed",
+      "verdict": "N-A",
+      "reason": "interactive headed alias has the identical script body; the owned headless execution is the authoritative noninteractive evidence",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "test:browser:table",
+          "relationship": "identical script command without the interactive --headed flag",
+          "evidence": "editor-browser-all.raw.txt",
+          "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/editor",
+      "name": "test:browser:drift",
+      "command": "node test/heightmap-drift-check.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "editor-browser-all.raw.txt",
+      "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+    },
+    {
+      "workspace": "@doculight/editor",
+      "name": "test:browser:drift:headed",
+      "command": "node test/heightmap-drift-check.mjs --headed",
+      "verdict": "N-A",
+      "reason": "interactive headed alias has the identical script body; the owned headless execution is the authoritative noninteractive evidence",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "test:browser:drift",
+          "relationship": "identical script command without the interactive --headed flag",
+          "evidence": "editor-browser-all.raw.txt",
+          "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/editor",
+      "name": "test:browser:tag",
+      "command": "node test/tag-chip-check.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "editor-browser-all.raw.txt",
+      "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+    },
+    {
+      "workspace": "@doculight/editor",
+      "name": "test:browser:tag:headed",
+      "command": "node test/tag-chip-check.mjs --headed",
+      "verdict": "N-A",
+      "reason": "interactive headed alias has the identical script body; the owned headless execution is the authoritative noninteractive evidence",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "test:browser:tag",
+          "relationship": "identical script command without the interactive --headed flag",
+          "evidence": "editor-browser-all.raw.txt",
+          "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/editor",
+      "name": "test:browser:math",
+      "command": "node test/math-render-check.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "editor-browser-all.raw.txt",
+      "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+    },
+    {
+      "workspace": "@doculight/editor",
+      "name": "test:browser:math:headed",
+      "command": "node test/math-render-check.mjs --headed",
+      "verdict": "N-A",
+      "reason": "interactive headed alias has the identical script body; the owned headless execution is the authoritative noninteractive evidence",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "test:browser:math",
+          "relationship": "identical script command without the interactive --headed flag",
+          "evidence": "editor-browser-all.raw.txt",
+          "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/editor",
+      "name": "test:browser:inline",
+      "command": "node test/inline-preview-check.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "editor-browser-all.raw.txt",
+      "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+    },
+    {
+      "workspace": "@doculight/editor",
+      "name": "test:browser:issue55",
+      "command": "node test/issue55-browser-check.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "editor-browser-all.raw.txt",
+      "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+    },
+    {
+      "workspace": "@doculight/editor",
+      "name": "test:browser:inline:headed",
+      "command": "node test/inline-preview-check.mjs --headed",
+      "verdict": "N-A",
+      "reason": "interactive headed alias has the identical script body; the owned headless execution is the authoritative noninteractive evidence",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "test:browser:inline",
+          "relationship": "identical script command without the interactive --headed flag",
+          "evidence": "editor-browser-all.raw.txt",
+          "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/editor",
+      "name": "test:browser:all",
+      "command": "npm run test:browser && npm run test:browser:table && npm run test:browser:drift && npm run test:browser:tag && npm run test:browser:math && npm run test:browser:inline && npm run test:browser:issue55",
+      "verdict": "N-A",
+      "reason": "aggregate command is not an independent evidence leaf; every fresh declared leaf is linked below and separately inventoried",
+      "evidenceClass": "aggregate",
+      "equivalence": [
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "product-suite-final/product-suite-results.json",
+          "evidenceSha256": "91911d186e077ca859321a04bdcb718a73896985e46277659fc126d621960b2d"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/issue78-green/product-browser-observation.json",
+          "evidenceSha256": "1bf8b0cbe6ba8ac9ca8fcf9d76460705c1e4ab064f19f94a1610d96d82292a12"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "product/product-composition-result.json",
+          "evidenceSha256": "71d5433bcee46f07df6682f9ae7d4cffda7cf115e1b7e565bf29a8e0730e756b"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue64/product-result.json",
+          "evidenceSha256": "03e96a87ed38c1945d526b735695cf315d48cf3de9b49dc244402a47fee11fbc"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owner-issue58/product-matrix.json",
+          "evidenceSha256": "15a53fad3dc1ac80cbdc8d2d81341696b8821d098dab43c09b8f827ab0ae6e31"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "undeclared/issue54/green-measurements.json",
+          "evidenceSha256": "46355f733bd829b154ff3dffe9c72754a83d12e15075c3e479297c402e2f2682"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue50/green-measurements.json",
+          "evidenceSha256": "3f8103d5bd29a78343bc064e427d54e559d371440a45b52cb62729e6d68e3bd0"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue63/browser-matrix/browser-matrix.json",
+          "evidenceSha256": "891e53f7f6fb2cd6b017a38a208e598315ad312752ef8dd561a9f290546a43e5"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue64/browser-matrix/browser-matrix.json",
+          "evidenceSha256": "b85f7835015ae1d1b10335f5565b83d560ba8373e6c4f9ad9a6ddba20c23f045"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue65/browser-matrix/browser-matrix.json",
+          "evidenceSha256": "a0ee13e706f71ef4a67a296b8a13235bad3864e936fa8605b0c8aff9ed2dd6a8"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue66/browser.json",
+          "evidenceSha256": "cbc250a622ef9d657bd5166f585a519a1f1edc4e7b53f90f9b9312332810ab97"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue67/browser.json",
+          "evidenceSha256": "486bc5cf532f08e4841fdca9ade4f63d64e1adaecf697fe3f56aaf79dc4178f0"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue55/green-complex-measurements.json",
+          "evidenceSha256": "91d572368f763a9614e1759b37a2cacd2a5d5c275620a889e84b8f608a3d68c6"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/test_browser_theme.raw.txt",
+          "evidenceSha256": "cefa6d82cbca5506d857e42ec2c76faa8eaf406e01d09b3a1880acb7696a66d3"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/test_browser_pre-auth-product.raw.txt",
+          "evidenceSha256": "011a7926ad787103c1e84e4a6a3112ccc9e164f89fb7d31b8d32964f66258b60"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/test_browser_install-product.raw.txt",
+          "evidenceSha256": "12ca51fe8fa61398bdd345545e1a39bb0fd02dd4ec9d1d5726e375c74dfa1649"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue71/capture-manifest.json",
+          "evidenceSha256": "0c83191c0c64dd444f0761e93493874f1f9458710c02f73ee5a2d26604b6ffb3"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue63/product-result.json",
+          "evidenceSha256": "6e38f869294e65ff18a29da90f3eb367da5c80e530135884c6ff1b4dfe5be397"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue65/product-result.json",
+          "evidenceSha256": "b211820e0b35d7dc7819d09c933078f2cf1f17158eb4847d5c35e95a3529cd17"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue72/browser-matrix.json",
+          "evidenceSha256": "40d75cb9ec3d8ed16673a8ed131f7810d8bf2174943d866cb1e80ec5919f084d"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue73/browser-matrix.json",
+          "evidenceSha256": "6afc64799f7aae48a0f007691dd5870dab85139611ec39802c04a96d334df90f"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue74/measurements.json",
+          "evidenceSha256": "a8ce0f69030ab70fc59a68d0291b672bb827821d9ab1ec5941a038bff0dc6e55"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue75/measurements.json",
+          "evidenceSha256": "47605a536208fd1e097c0282915cfdad134a6144d6cab21de91427f238959c4f"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/test_browser_issue76-product.raw.txt",
+          "evidenceSha256": "f8fc22f107b698075aeaf691f246e51314f62245eb27cd2f9fb15ba586d0733e"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/test_browser_issue87-product.raw.txt",
+          "evidenceSha256": "4818eb61ad7ab74896a24599451a1a60b3c7e72959fe3ec1857a4bc78ee3be91"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue88/capture-manifest.json",
+          "evidenceSha256": "2f37c0a3df5a6094e3da82290b71b3c3899012e65d148a143c175572e66d90ef"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue86/capture-manifest.json",
+          "evidenceSha256": "4140897b7503d34754686bbac5ee7ac77bdb77adb82fd4cfda80b22f44f1c56e"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue89/browser-matrix.json",
+          "evidenceSha256": "dd43fc3ce9e965a9c82bb1343a1b4e8582014e6d038fb611925ee6fa3c27d17d"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/test_browser_relocation79-product.raw.txt",
+          "evidenceSha256": "57aff2fb93e40afce60ededbefab9aa0962d341f764a15bef1a905af309c3fa2"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/test_browser_issue80-product.raw.txt",
+          "evidenceSha256": "c765fae825bfe2c94ea8608867ce7fef4c54438e97d6d598627578578c745844"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/test_browser_issue81-product.raw.txt",
+          "evidenceSha256": "22fe5de03a93c7054bc38e33e383dc7b9bfdf609435be222a63e1bfe151b2e15"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/issue82-evidence/capture-manifest.json",
+          "evidenceSha256": "ec718cd07197928d46f9a80975476f47d9ea227e5a6214d768daa504276e4ed7"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/test_browser_issue83-product.raw.txt",
+          "evidenceSha256": "48a9f01a675219f9a55151397ea5a8e78dc73996352be1d36e3643939acf5481"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/issue84-green/capture-manifest.json",
+          "evidenceSha256": "337cf4d4e3b5e840572e8d39b398b81fd71e713cd4e9f7bbe125a960b317ef3c"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/test_browser_issue85-product.raw.txt",
+          "evidenceSha256": "d6fc71c49a57ee643cbf8d239e94f226780a6a4c8bf23be12f0a1fc007b1e910"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "editor-browser-all.raw.txt",
+          "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:focus",
+      "command": "node test/focus-retention-check.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "product/product-composition-result.json",
+      "evidenceSha256": "71d5433bcee46f07df6682f9ae7d4cffda7cf115e1b7e565bf29a8e0730e756b"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:focus:headed",
+      "command": "node test/focus-retention-check.mjs --headed",
+      "verdict": "N-A",
+      "reason": "interactive headed alias has the identical script body; the owned headless execution is the authoritative noninteractive evidence",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "test:browser:focus",
+          "relationship": "identical script command without the interactive --headed flag",
+          "evidence": "product/product-composition-result.json",
+          "evidenceSha256": "71d5433bcee46f07df6682f9ae7d4cffda7cf115e1b7e565bf29a8e0730e756b"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:all",
+      "command": "npm run test:browser:files && npm run test:browser:complex && npm run test:browser:pre-auth && npm run test:browser:install-newspaper && npm run test:browser:auth && npm run test:browser:focus && npm run test:browser:ime && npm run test:browser:search && npm run test:browser:merge && npm run test:browser:styles && npm run test:browser:theme && npm run test:browser:acl && npm run test:browser:trash && npm run test:browser:gestures && npm run test:browser:issue80-product && npm run test:browser:issue87-product",
+      "verdict": "N-A",
+      "reason": "aggregate command is not an independent evidence leaf; every fresh declared leaf is linked below and separately inventoried",
+      "evidenceClass": "aggregate",
+      "equivalence": [
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "product-suite-final/product-suite-results.json",
+          "evidenceSha256": "91911d186e077ca859321a04bdcb718a73896985e46277659fc126d621960b2d"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/issue78-green/product-browser-observation.json",
+          "evidenceSha256": "1bf8b0cbe6ba8ac9ca8fcf9d76460705c1e4ab064f19f94a1610d96d82292a12"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "product/product-composition-result.json",
+          "evidenceSha256": "71d5433bcee46f07df6682f9ae7d4cffda7cf115e1b7e565bf29a8e0730e756b"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue64/product-result.json",
+          "evidenceSha256": "03e96a87ed38c1945d526b735695cf315d48cf3de9b49dc244402a47fee11fbc"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owner-issue58/product-matrix.json",
+          "evidenceSha256": "15a53fad3dc1ac80cbdc8d2d81341696b8821d098dab43c09b8f827ab0ae6e31"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "undeclared/issue54/green-measurements.json",
+          "evidenceSha256": "46355f733bd829b154ff3dffe9c72754a83d12e15075c3e479297c402e2f2682"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue50/green-measurements.json",
+          "evidenceSha256": "3f8103d5bd29a78343bc064e427d54e559d371440a45b52cb62729e6d68e3bd0"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue63/browser-matrix/browser-matrix.json",
+          "evidenceSha256": "891e53f7f6fb2cd6b017a38a208e598315ad312752ef8dd561a9f290546a43e5"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue64/browser-matrix/browser-matrix.json",
+          "evidenceSha256": "b85f7835015ae1d1b10335f5565b83d560ba8373e6c4f9ad9a6ddba20c23f045"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue65/browser-matrix/browser-matrix.json",
+          "evidenceSha256": "a0ee13e706f71ef4a67a296b8a13235bad3864e936fa8605b0c8aff9ed2dd6a8"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue66/browser.json",
+          "evidenceSha256": "cbc250a622ef9d657bd5166f585a519a1f1edc4e7b53f90f9b9312332810ab97"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue67/browser.json",
+          "evidenceSha256": "486bc5cf532f08e4841fdca9ade4f63d64e1adaecf697fe3f56aaf79dc4178f0"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/issue55/green-complex-measurements.json",
+          "evidenceSha256": "91d572368f763a9614e1759b37a2cacd2a5d5c275620a889e84b8f608a3d68c6"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/test_browser_theme.raw.txt",
+          "evidenceSha256": "cefa6d82cbca5506d857e42ec2c76faa8eaf406e01d09b3a1880acb7696a66d3"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/test_browser_pre-auth-product.raw.txt",
+          "evidenceSha256": "011a7926ad787103c1e84e4a6a3112ccc9e164f89fb7d31b8d32964f66258b60"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "components/test_browser_install-product.raw.txt",
+          "evidenceSha256": "12ca51fe8fa61398bdd345545e1a39bb0fd02dd4ec9d1d5726e375c74dfa1649"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue71/capture-manifest.json",
+          "evidenceSha256": "0c83191c0c64dd444f0761e93493874f1f9458710c02f73ee5a2d26604b6ffb3"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue63/product-result.json",
+          "evidenceSha256": "6e38f869294e65ff18a29da90f3eb367da5c80e530135884c6ff1b4dfe5be397"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue65/product-result.json",
+          "evidenceSha256": "b211820e0b35d7dc7819d09c933078f2cf1f17158eb4847d5c35e95a3529cd17"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue72/browser-matrix.json",
+          "evidenceSha256": "40d75cb9ec3d8ed16673a8ed131f7810d8bf2174943d866cb1e80ec5919f084d"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue73/browser-matrix.json",
+          "evidenceSha256": "6afc64799f7aae48a0f007691dd5870dab85139611ec39802c04a96d334df90f"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue74/measurements.json",
+          "evidenceSha256": "a8ce0f69030ab70fc59a68d0291b672bb827821d9ab1ec5941a038bff0dc6e55"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue75/measurements.json",
+          "evidenceSha256": "47605a536208fd1e097c0282915cfdad134a6144d6cab21de91427f238959c4f"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/test_browser_issue76-product.raw.txt",
+          "evidenceSha256": "f8fc22f107b698075aeaf691f246e51314f62245eb27cd2f9fb15ba586d0733e"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/test_browser_issue87-product.raw.txt",
+          "evidenceSha256": "4818eb61ad7ab74896a24599451a1a60b3c7e72959fe3ec1857a4bc78ee3be91"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue88/capture-manifest.json",
+          "evidenceSha256": "2f37c0a3df5a6094e3da82290b71b3c3899012e65d148a143c175572e66d90ef"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue86/capture-manifest.json",
+          "evidenceSha256": "4140897b7503d34754686bbac5ee7ac77bdb77adb82fd4cfda80b22f44f1c56e"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "owners/issue89/browser-matrix.json",
+          "evidenceSha256": "dd43fc3ce9e965a9c82bb1343a1b4e8582014e6d038fb611925ee6fa3c27d17d"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/test_browser_relocation79-product.raw.txt",
+          "evidenceSha256": "57aff2fb93e40afce60ededbefab9aa0962d341f764a15bef1a905af309c3fa2"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/test_browser_issue80-product.raw.txt",
+          "evidenceSha256": "c765fae825bfe2c94ea8608867ce7fef4c54438e97d6d598627578578c745844"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/test_browser_issue81-product.raw.txt",
+          "evidenceSha256": "22fe5de03a93c7054bc38e33e383dc7b9bfdf609435be222a63e1bfe151b2e15"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/issue82-evidence/capture-manifest.json",
+          "evidenceSha256": "ec718cd07197928d46f9a80975476f47d9ea227e5a6214d768daa504276e4ed7"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/test_browser_issue83-product.raw.txt",
+          "evidenceSha256": "48a9f01a675219f9a55151397ea5a8e78dc73996352be1d36e3643939acf5481"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/issue84-green/capture-manifest.json",
+          "evidenceSha256": "337cf4d4e3b5e840572e8d39b398b81fd71e713cd4e9f7bbe125a960b317ef3c"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "later-product/test_browser_issue85-product.raw.txt",
+          "evidenceSha256": "d6fc71c49a57ee643cbf8d239e94f226780a6a4c8bf23be12f0a1fc007b1e910"
+        },
+        {
+          "relationship": "fresh declared leaf evidence accounted by this aggregate entry",
+          "evidence": "editor-browser-all.raw.txt",
+          "evidenceSha256": "e1ada939306b354ea3c794d93c0062a871e17f4872186987f644811113f4be15"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:files",
+      "command": "node test/issue58-file-surface-check.cjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "owner-issue58/product-matrix.json",
+      "evidenceSha256": "15a53fad3dc1ac80cbdc8d2d81341696b8821d098dab43c09b8f827ab0ae6e31"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:ime",
+      "command": "node test/ime-composition-check.mjs",
+      "verdict": "N-A",
+      "reason": "legacy CDP composition is method-superseded by the binding Playwright DOM product matrix and cannot count as native IME evidence",
+      "evidenceClass": "method-superseded",
+      "equivalence": [
+        {
+          "relationship": "binding addendum-compliant eight-cell product composition replacement",
+          "evidence": "composition-matrix-final/issue77-composition-matrix-result.json",
+          "evidenceSha256": "c820c1b3c3ac9fca2c4ad17d280e04b27c0b61d919ef7ce7e4ad7b5be081645e"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:ime:headed",
+      "command": "node test/ime-composition-check.mjs --headed",
+      "verdict": "N-A",
+      "reason": "interactive legacy CDP IME alias is method-superseded together with its headless form by the binding DOM product matrix",
+      "evidenceClass": "method-superseded",
+      "equivalence": [
+        {
+          "relationship": "binding addendum-compliant eight-cell product composition replacement",
+          "evidence": "composition-matrix-final/issue77-composition-matrix-result.json",
+          "evidenceSha256": "c820c1b3c3ac9fca2c4ad17d280e04b27c0b61d919ef7ce7e4ad7b5be081645e"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:search",
+      "command": "node test/search-layout-check.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "product-suite-final/product-suite-results.json",
+      "evidenceSha256": "91911d186e077ca859321a04bdcb718a73896985e46277659fc126d621960b2d"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:search:headed",
+      "command": "node test/search-layout-check.mjs --headed",
+      "verdict": "N-A",
+      "reason": "interactive headed alias has the identical script body; the owned headless execution is the authoritative noninteractive evidence",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "test:browser:search",
+          "relationship": "identical script command without the interactive --headed flag",
+          "evidence": "product-suite-final/product-suite-results.json",
+          "evidenceSha256": "91911d186e077ca859321a04bdcb718a73896985e46277659fc126d621960b2d"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:shell",
+      "command": "node test/newspaper-shell-layout-check.cjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "components/issue50/green-measurements.json",
+      "evidenceSha256": "3f8103d5bd29a78343bc064e427d54e559d371440a45b52cb62729e6d68e3bd0"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:settings",
+      "command": "node test/newspaper-settings-check.cjs",
+      "verdict": "N-A",
+      "reason": "fresh #71 product settings behavior plus #86 authority edges and the eight-role #77 matrix jointly supersede the stale fixed-output runner",
+      "evidenceClass": "stronger-product-equivalence",
+      "equivalence": [
+        {
+          "relationship": "#71 actual settings form and policy matrix",
+          "evidence": "owners/issue71/capture-manifest.json",
+          "evidenceSha256": "0c83191c0c64dd444f0761e93493874f1f9458710c02f73ee5a2d26604b6ffb3"
+        },
+        {
+          "relationship": "#86 zero-workspace superuser and manager authority matrix",
+          "evidence": "owners/issue86/capture-manifest.json",
+          "evidenceSha256": "4140897b7503d34754686bbac5ee7ac77bdb77adb82fd4cfda80b22f44f1c56e"
+        },
+        {
+          "relationship": "#77 exact eight-role category and accessibility matrix",
+          "evidence": "role-category-final/role-category-matrix.json",
+          "evidenceSha256": "d339dc7dbdccfa5c4f03fcac901a8e4dc4c9bfcfeed54a1fd2911bea67fc9b67"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:settings-product",
+      "command": "node test/newspaper-settings-product-runner.mjs",
+      "verdict": "N-A",
+      "reason": "fresh #71 product settings behavior plus #86 authority edges and the eight-role #77 matrix jointly supersede the stale fixed-output runner",
+      "evidenceClass": "stronger-product-equivalence",
+      "equivalence": [
+        {
+          "relationship": "#71 actual settings form and policy matrix",
+          "evidence": "owners/issue71/capture-manifest.json",
+          "evidenceSha256": "0c83191c0c64dd444f0761e93493874f1f9458710c02f73ee5a2d26604b6ffb3"
+        },
+        {
+          "relationship": "#86 zero-workspace superuser and manager authority matrix",
+          "evidence": "owners/issue86/capture-manifest.json",
+          "evidenceSha256": "4140897b7503d34754686bbac5ee7ac77bdb77adb82fd4cfda80b22f44f1c56e"
+        },
+        {
+          "relationship": "#77 exact eight-role category and accessibility matrix",
+          "evidence": "role-category-final/role-category-matrix.json",
+          "evidenceSha256": "d339dc7dbdccfa5c4f03fcac901a8e4dc4c9bfcfeed54a1fd2911bea67fc9b67"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue71-product",
+      "command": "node test/issue71-instance-settings-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "owners/issue71/capture-manifest.json",
+      "evidenceSha256": "0c83191c0c64dd444f0761e93493874f1f9458710c02f73ee5a2d26604b6ffb3"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue72-product",
+      "command": "node test/issue72-workspace-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "owners/issue72/browser-matrix.json",
+      "evidenceSha256": "40d75cb9ec3d8ed16673a8ed131f7810d8bf2174943d866cb1e80ec5919f084d"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue73-product",
+      "command": "node test/issue73-workspace-create-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "owners/issue73/browser-matrix.json",
+      "evidenceSha256": "6afc64799f7aae48a0f007691dd5870dab85139611ec39802c04a96d334df90f"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:tokens",
+      "command": "node test/issue63-token-browser-check.cjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "components/issue63/browser-matrix/browser-matrix.json",
+      "evidenceSha256": "891e53f7f6fb2cd6b017a38a208e598315ad312752ef8dd561a9f290546a43e5"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:tokens-product",
+      "command": "node test/issue63-token-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "owners/issue63/product-result.json",
+      "evidenceSha256": "6e38f869294e65ff18a29da90f3eb367da5c80e530135884c6ff1b4dfe5be397"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:trash64",
+      "command": "node test/issue64-trash-browser-check.cjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "components/issue64/browser-matrix/browser-matrix.json",
+      "evidenceSha256": "b85f7835015ae1d1b10335f5565b83d560ba8373e6c4f9ad9a6ddba20c23f045"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:trash64-product",
+      "command": "node test/issue64-trash-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "owners/issue64/product-result.json",
+      "evidenceSha256": "03e96a87ed38c1945d526b735695cf315d48cf3de9b49dc244402a47fee11fbc"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:share65",
+      "command": "node test/issue65-share-browser-check.cjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "components/issue65/browser-matrix/browser-matrix.json",
+      "evidenceSha256": "a0ee13e706f71ef4a67a296b8a13235bad3864e936fa8605b0c8aff9ed2dd6a8"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:relocation66",
+      "command": "node test/issue66-relocation-browser-check.cjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "components/issue66/browser.json",
+      "evidenceSha256": "cbc250a622ef9d657bd5166f585a519a1f1edc4e7b53f90f9b9312332810ab97"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:principal67",
+      "command": "node test/issue67-principal-browser-check.cjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "components/issue67/browser.json",
+      "evidenceSha256": "486bc5cf532f08e4841fdca9ade4f63d64e1adaecf697fe3f56aaf79dc4178f0"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:share65-product",
+      "command": "node test/issue65-share-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "owners/issue65/product-result.json",
+      "evidenceSha256": "b211820e0b35d7dc7819d09c933078f2cf1f17158eb4847d5c35e95a3529cd17"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:grant78-product",
+      "command": "node test/issue78-grant-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "later-product/issue78-green/product-browser-observation.json",
+      "evidenceSha256": "1bf8b0cbe6ba8ac9ca8fcf9d76460705c1e4ab064f19f94a1610d96d82292a12"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:relocation79-product",
+      "command": "node test/issue79-relocation-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "later-product/test_browser_relocation79-product.raw.txt",
+      "evidenceSha256": "57aff2fb93e40afce60ededbefab9aa0962d341f764a15bef1a905af309c3fa2"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue80-product",
+      "command": "node test/issue80-principal-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "later-product/test_browser_issue80-product.raw.txt",
+      "evidenceSha256": "c765fae825bfe2c94ea8608867ce7fef4c54438e97d6d598627578578c745844"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue81-product",
+      "command": "node test/issue81-group-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "later-product/test_browser_issue81-product.raw.txt",
+      "evidenceSha256": "22fe5de03a93c7054bc38e33e383dc7b9bfdf609435be222a63e1bfe151b2e15"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue82-product",
+      "command": "node test/issue82-group-delete-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "later-product/issue82-evidence/capture-manifest.json",
+      "evidenceSha256": "ec718cd07197928d46f9a80975476f47d9ea227e5a6214d768daa504276e4ed7"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:pre-auth",
+      "command": "node test/newspaper-pre-auth-check.cjs",
+      "verdict": "N-A",
+      "reason": "fresh owned pre-auth product runner supersedes the stale presentation fixture while preserving the same screen contract",
+      "evidenceClass": "stronger-product-equivalence",
+      "equivalence": [
+        {
+          "relationship": "actual built-product pre-auth replacement",
+          "evidence": "components/test_browser_pre-auth-product.raw.txt",
+          "evidenceSha256": "011a7926ad787103c1e84e4a6a3112ccc9e164f89fb7d31b8d32964f66258b60"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:pre-auth-product",
+      "command": "node test/newspaper-pre-auth-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "components/test_browser_pre-auth-product.raw.txt",
+      "evidenceSha256": "011a7926ad787103c1e84e4a6a3112ccc9e164f89fb7d31b8d32964f66258b60"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:install-product",
+      "command": "node test/newspaper-install-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "components/test_browser_install-product.raw.txt",
+      "evidenceSha256": "12ca51fe8fa61398bdd345545e1a39bb0fd02dd4ec9d1d5726e375c74dfa1649"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:install-newspaper",
+      "command": "node test/newspaper-install-check.cjs",
+      "verdict": "N-A",
+      "reason": "fresh owned one-time install product runner supersedes the presentation-only install newspaper fixture",
+      "evidenceClass": "stronger-product-equivalence",
+      "equivalence": [
+        {
+          "relationship": "actual disposable uninstalled-product install replacement",
+          "evidence": "components/test_browser_install-product.raw.txt",
+          "evidenceSha256": "12ca51fe8fa61398bdd345545e1a39bb0fd02dd4ec9d1d5726e375c74dfa1649"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:merge",
+      "command": "node test/merge-view-check.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "product-suite-final/product-suite-results.json",
+      "evidenceSha256": "91911d186e077ca859321a04bdcb718a73896985e46277659fc126d621960b2d"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:merge:headed",
+      "command": "node test/merge-view-check.mjs --headed",
+      "verdict": "N-A",
+      "reason": "interactive headed alias has the identical script body; the owned headless execution is the authoritative noninteractive evidence",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "test:browser:merge",
+          "relationship": "identical script command without the interactive --headed flag",
+          "evidence": "product-suite-final/product-suite-results.json",
+          "evidenceSha256": "91911d186e077ca859321a04bdcb718a73896985e46277659fc126d621960b2d"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:styles",
+      "command": "node test/editor-styles-check.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "undeclared/issue54/green-measurements.json",
+      "evidenceSha256": "46355f733bd829b154ff3dffe9c72754a83d12e15075c3e479297c402e2f2682"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:theme",
+      "command": "node test/theme-runtime-check.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "components/test_browser_theme.raw.txt",
+      "evidenceSha256": "cefa6d82cbca5506d857e42ec2c76faa8eaf406e01d09b3a1880acb7696a66d3"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:complex",
+      "command": "node test/newspaper-complex-content-check.cjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "components/issue55/green-complex-measurements.json",
+      "evidenceSha256": "91d572368f763a9614e1759b37a2cacd2a5d5c275620a889e84b8f608a3d68c6"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:styles:headed",
+      "command": "node test/editor-styles-check.mjs --headed",
+      "verdict": "N-A",
+      "reason": "interactive headed alias has the identical script body; the owned headless execution is the authoritative noninteractive evidence",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "test:browser:styles",
+          "relationship": "identical script command without the interactive --headed flag",
+          "evidence": "undeclared/issue54/green-measurements.json",
+          "evidenceSha256": "46355f733bd829b154ff3dffe9c72754a83d12e15075c3e479297c402e2f2682"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:acl",
+      "command": "node test/acl-two-account-check.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "product-suite-final/product-suite-results.json",
+      "evidenceSha256": "91911d186e077ca859321a04bdcb718a73896985e46277659fc126d621960b2d"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:acl:headed",
+      "command": "node test/acl-two-account-check.mjs --headed",
+      "verdict": "N-A",
+      "reason": "interactive headed alias has the identical script body; the owned headless execution is the authoritative noninteractive evidence",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "test:browser:acl",
+          "relationship": "identical script command without the interactive --headed flag",
+          "evidence": "product-suite-final/product-suite-results.json",
+          "evidenceSha256": "91911d186e077ca859321a04bdcb718a73896985e46277659fc126d621960b2d"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:trash",
+      "command": "node test/trash-round-trip-check.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "owners/issue64/product-result.json",
+      "evidenceSha256": "03e96a87ed38c1945d526b735695cf315d48cf3de9b49dc244402a47fee11fbc"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:trash:headed",
+      "command": "node test/trash-round-trip-check.mjs --headed",
+      "verdict": "N-A",
+      "reason": "interactive headed alias has the identical script body; the owned headless execution is the authoritative noninteractive evidence",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "test:browser:trash",
+          "relationship": "identical script command without the interactive --headed flag",
+          "evidence": "owners/issue64/product-result.json",
+          "evidenceSha256": "03e96a87ed38c1945d526b735695cf315d48cf3de9b49dc244402a47fee11fbc"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:gestures",
+      "command": "node test/input-gestures-check.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "product-suite-final/product-suite-results.json",
+      "evidenceSha256": "91911d186e077ca859321a04bdcb718a73896985e46277659fc126d621960b2d"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:gestures:headed",
+      "command": "node test/input-gestures-check.mjs --headed",
+      "verdict": "N-A",
+      "reason": "interactive headed alias has the identical script body; the owned headless execution is the authoritative noninteractive evidence",
+      "evidenceClass": "command-alias",
+      "equivalence": [
+        {
+          "command": "test:browser:gestures",
+          "relationship": "identical script command without the interactive --headed flag",
+          "evidence": "product-suite-final/product-suite-results.json",
+          "evidenceSha256": "91911d186e077ca859321a04bdcb718a73896985e46277659fc126d621960b2d"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:auth",
+      "command": "node test/auth-round-trip-check.mjs",
+      "verdict": "N-A",
+      "reason": "owned pre-auth product evidence supersedes the legacy shared-server runner whose rate limiter makes it unsuitable for final isolation",
+      "evidenceClass": "stronger-product-equivalence",
+      "equivalence": [
+        {
+          "relationship": "owned disposable-server pre-auth and authentication product flow",
+          "evidence": "components/test_browser_pre-auth-product.raw.txt",
+          "evidenceSha256": "011a7926ad787103c1e84e4a6a3112ccc9e164f89fb7d31b8d32964f66258b60"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:auth:headed",
+      "command": "node test/auth-round-trip-check.mjs --headed",
+      "verdict": "N-A",
+      "reason": "interactive legacy shared-server auth alias is superseded together with its headless form by the owned disposable-server product flow",
+      "evidenceClass": "stronger-product-equivalence",
+      "equivalence": [
+        {
+          "relationship": "owned disposable-server authentication product replacement",
+          "evidence": "components/test_browser_pre-auth-product.raw.txt",
+          "evidenceSha256": "011a7926ad787103c1e84e4a6a3112ccc9e164f89fb7d31b8d32964f66258b60"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue68",
+      "command": "node test/issue68-group-roster-browser-check.cjs",
+      "verdict": "N-A",
+      "reason": "fresh #81 and #82 product integrations supersede the stale group-roster component locator and cover current group membership/deletion outcomes",
+      "evidenceClass": "stronger-product-equivalence",
+      "equivalence": [
+        {
+          "relationship": "#81 actual group membership product flow",
+          "evidence": "later-product/test_browser_issue81-product.raw.txt",
+          "evidenceSha256": "22fe5de03a93c7054bc38e33e383dc7b9bfdf609435be222a63e1bfe151b2e15"
+        },
+        {
+          "relationship": "#82 actual group deletion and confirmation product flow",
+          "evidence": "later-product/issue82-evidence/capture-manifest.json",
+          "evidenceSha256": "ec718cd07197928d46f9a80975476f47d9ea227e5a6214d768daa504276e4ed7"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue69",
+      "command": "node test/issue69-acl-browser-check.cjs",
+      "verdict": "N-A",
+      "reason": "fresh #83, #84, and #85 product matrices supersede the stale ACL-audit component locator across managed scope, bypass, and inheritance",
+      "evidenceClass": "stronger-product-equivalence",
+      "equivalence": [
+        {
+          "relationship": "#83 managed-workspace authority product flow",
+          "evidence": "later-product/test_browser_issue83-product.raw.txt",
+          "evidenceSha256": "48a9f01a675219f9a55151397ea5a8e78dc73996352be1d36e3643939acf5481"
+        },
+        {
+          "relationship": "#84 superuser bypass product flow",
+          "evidence": "later-product/issue84-green/capture-manifest.json",
+          "evidenceSha256": "337cf4d4e3b5e840572e8d39b398b81fd71e713cd4e9f7bbe125a960b317ef3c"
+        },
+        {
+          "relationship": "#85 inheritance preview product flow",
+          "evidence": "later-product/test_browser_issue85-product.raw.txt",
+          "evidenceSha256": "d6fc71c49a57ee643cbf8d239e94f226780a6a4c8bf23be12f0a1fc007b1e910"
+        }
+      ]
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue74-product",
+      "command": "node test/issue74-offboarding-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "owners/issue74/measurements.json",
+      "evidenceSha256": "a8ce0f69030ab70fc59a68d0291b672bb827821d9ab1ec5941a038bff0dc6e55"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue75-product",
+      "command": "node test/issue75-index-queue-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "owners/issue75/measurements.json",
+      "evidenceSha256": "47605a536208fd1e097c0282915cfdad134a6144d6cab21de91427f238959c4f"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue76-product",
+      "command": "node test/issue76-app-states-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "owners/test_browser_issue76-product.raw.txt",
+      "evidenceSha256": "f8fc22f107b698075aeaf691f246e51314f62245eb27cd2f9fb15ba586d0733e"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue87-product",
+      "command": "node test/issue87-retention-impact-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "owners/test_browser_issue87-product.raw.txt",
+      "evidenceSha256": "4818eb61ad7ab74896a24599451a1a60b3c7e72959fe3ec1857a4bc78ee3be91"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue88-product",
+      "command": "node test/issue88-settings-leave-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "owners/issue88/capture-manifest.json",
+      "evidenceSha256": "2f37c0a3df5a6094e3da82290b71b3c3899012e65d148a143c175572e66d90ef"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue89-product",
+      "command": "node test/issue89-admin-grant-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "owners/issue89/browser-matrix.json",
+      "evidenceSha256": "dd43fc3ce9e965a9c82bb1343a1b4e8582014e6d038fb611925ee6fa3c27d17d"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue86-product",
+      "command": "node test/issue86-audit-entry-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "owners/issue86/capture-manifest.json",
+      "evidenceSha256": "4140897b7503d34754686bbac5ee7ac77bdb77adb82fd4cfda80b22f44f1c56e"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue77-product",
+      "command": "node test/issue77-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "product-suite-final/product-suite-results.json",
+      "evidenceSha256": "91911d186e077ca859321a04bdcb718a73896985e46277659fc126d621960b2d"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue83-product",
+      "command": "node test/issue83-managed-workspaces-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "later-product/test_browser_issue83-product.raw.txt",
+      "evidenceSha256": "48a9f01a675219f9a55151397ea5a8e78dc73996352be1d36e3643939acf5481"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue84-product",
+      "command": "node test/issue84-revocation-bypass-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "later-product/issue84-green/capture-manifest.json",
+      "evidenceSha256": "337cf4d4e3b5e840572e8d39b398b81fd71e713cd4e9f7bbe125a960b317ef3c"
+    },
+    {
+      "workspace": "@doculight/web",
+      "name": "test:browser:issue85-product",
+      "command": "node test/issue85-inheritance-product-runner.mjs",
+      "verdict": "PASS",
+      "freshness": "fresh-final-source",
+      "evidence": "later-product/test_browser_issue85-product.raw.txt",
+      "evidenceSha256": "d6fc71c49a57ee643cbf8d239e94f226780a6a4c8bf23be12f0a1fc007b1e910"
+    }
+  ]
+}

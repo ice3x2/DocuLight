@@ -1,0 +1,17 @@
+COMMAND: cd packages/web && npx vitest run test/newspaper-overlays.test.tsx
+EXIT_CODE: 1
+
+test/newspaper-overlays.test.tsx (5 tests | 5 failed)
+  x exposes an alert dialog with associated title and description
+    AlertDialog shared exports are undefined.
+  x runs L1 immediately without rendering a confirmation surface
+    Expected onConfirm once; received zero, and an alertdialog rendered.
+  x puts initial focus on cancel and reports one cancel for Escape
+    No shared Cancel control/focus behavior exists.
+  x does not close or call cancel while an asynchronous confirm owns completion
+    No shared Confirm action or pending state exists.
+  x restores focus to a supplied logical successor after close
+    No restoreFocusRef contract exists.
+
+Test Files  1 failed (1)
+Tests       5 failed (5)
