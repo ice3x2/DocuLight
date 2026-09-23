@@ -1,0 +1,1766 @@
+{
+  "target": "phase-1",
+  "classification": "update",
+  "srs_rules_cited": [
+    {
+      "rule": "ID 재사용 금지 / 동일 요구 개정 시 ID 유지",
+      "quote": "1. A Requirement ID must be globally unique across the whole repository. 2. Do not reuse a discarded ID. 3. Keep the ID even when the wording of the same requirement is modified. 4. When a requirement is split in two, create a new ID. 5. When merging multiple requirements, keep one representative ID and handle the rest with `discarded` or `Superseded By`.",
+      "location": "SRS-MD-Rules-v2.5.0.md §11.4"
+    },
+    {
+      "rule": "병합 처리 — 대표 ID 유지 + supersedes trace link",
+      "quote": "Keep the representative requirement and leave the removed requirement in the `discarded` status. ... Add the following to the Trace Links of the representative requirement: `| Requirement | FR-AUTH-009 | supersedes | Merge of a duplicate requirement |`",
+      "location": "SRS-MD-Rules-v2.5.0.md §29.3"
+    },
+    {
+      "rule": "verified 요구의 granular edit 는 거부된다(데모션 필요)",
+      "quote": "granular edits are refused on a verified requirement, so trimming its tags would mean demoting it.",
+      "location": "SRS-MD-Rules-v2.5.0.md §17 Tags Rules, rule 5"
+    },
+    {
+      "rule": "verified 상태의 검증 불변식과 수기 편집 시 검증 오류",
+      "quote": "Validation reports the same shape after the fact for a document edited by hand: `SRS-E010` for a `verified` requirement with an unchecked criterion or no evidence, `SRS-E033` for one whose `Stability` is still `draft`.",
+      "location": "SRS-MD-Rules-v2.5.0.md §14.2"
+    },
+    {
+      "rule": "AC 삭제 금지, 기준 변경 시 Change Notes 기록",
+      "quote": "Deleting an AC in order to meet the `verified` conditions is forbidden. When the criterion has changed, record the reason in `Change Notes`.",
+      "location": "SRS-MD-Rules-v2.5.0.md §21.3, rule 6"
+    },
+    {
+      "rule": "Change Notes 기록 의무 — 의미 변경 시",
+      "quote": "Record it when the meaning of Target, Status, Acceptance Criteria, or Requirement Statement changes.",
+      "location": "SRS-MD-Rules-v2.5.0.md §26, rule 2"
+    }
+  ],
+  "plan": [
+    {
+      "order": 1,
+      "id": "R2",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "「상단 토글로 보기↔편집」 문구를 제목 줄 아이콘 3모드(보기/라이브 편집/소스 편집) 순환으로 고친다. 화면 단일성 원칙 문장은 유지.",
+      "basis": "결정 기록 '확정 사항 > 편집 모드'; 적용 범위 표 R2 행",
+      "depends_on": []
+    },
+    {
+      "order": 2,
+      "id": "R90",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "「편집 모드 안 라이브 프리뷰↔소스 하위 토글」 조항을 없애고 3모드 순환에 합쳐진다고 고친다. 소스 모드가 Phase 1 이라는 사실은 유지.",
+      "basis": "결정 기록 '확정 사항 > 편집 모드'; 적용 범위 표 R90 행",
+      "depends_on": []
+    },
+    {
+      "order": 3,
+      "id": "R91",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "①항(비활성 토글 노출)을 눈 아이콘+말풍선 「읽기 전용 문서입니다」로, ③항(md 전용 숨김 대상)을 '모드 토글'에서 '모드 아이콘'으로 고친다. ②항(저장 거부 시 본문 보존)은 그대로 둔다.",
+      "basis": "결정 기록 '편집 모드' 문단; qna_log #4; 적용 범위 표 R91 행",
+      "depends_on": []
+    },
+    {
+      "order": 4,
+      "id": "R3",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "좌측 사이드바 상단 탭(문서 트리/검색/즐겨찾기) 조항을, 같은 세 항목을 리본 버튼 1:1로 옮기고 탭 줄은 없앤다고 고친다.",
+      "basis": "결정 기록 '색' 절 리본 확정 문단; qna_log #11; 적용 범위 표 R3 행",
+      "depends_on": []
+    },
+    {
+      "order": 5,
+      "id": "R88-a",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "컨텍스트 메뉴 아홉 항목 열거를 v2 목록(새 노트/새 폴더 — 복사본 생성/다른 곳으로 복사/폴더 이동/폴더에서 검색 — URL 복사/공유/즐겨찾기 — 새 버전 올리기 — 이름 변경/삭제)으로 교체한다.",
+      "basis": "결정 기록 '파일 탐색기' 절 목록; '기존 요구와 부딪힌 여덟 건' #2; 적용 범위 표 R88-a 행",
+      "depends_on": []
+    },
+    {
+      "order": 6,
+      "id": "R24-a",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "설정 모달 카테고리 라벨 '외모'를 '외관'으로 고친다(저장 값 light/dark/system 은 불변).",
+      "basis": "qna_log #2; 적용 범위 표 R24-a 행",
+      "depends_on": []
+    },
+    {
+      "order": 7,
+      "id": "R24-b",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "문서 헤더 메뉴 목록에 세 모드 직접 선택과 편집 조작(잘라내기·붙여넣기·링크 삽입 등, 권한 부족 시 흐리게+「권한 없음」)을 추가한다.",
+      "basis": "결정 기록 '편집 모드' 문단; 적용 범위 표 FR-SHELL-002/R24-b 행",
+      "depends_on": []
+    },
+    {
+      "order": 8,
+      "id": "R102-b",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "새 버전 올리기 진입점은 트리 메뉴로 유지하되, 헤더 메뉴 확장(R24-b)으로 「헤더에 공간 없다」는 근거를 재검토했다는 점을 반영한다.",
+      "basis": "적용 범위 표 R102-b 행",
+      "depends_on": [
+        7
+      ]
+    },
+    {
+      "order": 9,
+      "id": "R152",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "기본 열람 모드 기본값을 '권한에 따라'로 바꾸고, '에디터·외모 카테고리 항목은 셋이 전량' 선언에 기본 색상·메뉴 밝기 두 항목을 더해 다섯으로 고친다.",
+      "basis": "'기존 요구와 부딪힌 여덟 건' #1; 적용 범위 표 IR-SHELL-004/R152 행",
+      "depends_on": []
+    },
+    {
+      "order": 10,
+      "id": "R25",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "no-change",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "변경 없음 — v2 본문이 그대로 인용해 유지만 확인한다.",
+      "basis": "decision-v2.md '파일 탐색기' 절 인용",
+      "depends_on": []
+    },
+    {
+      "order": 11,
+      "id": "R69",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "no-change",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "변경 없음 — pass-through 예외를 그대로 인용·유지.",
+      "basis": "decision-v2.md '파일 탐색기' 절 인용",
+      "depends_on": []
+    },
+    {
+      "order": 12,
+      "id": "R70-a",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "no-change",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "변경 없음 — 공유는 대상 편집 요구라는 규칙 그대로 유지.",
+      "basis": "decision-v2.md '시안이 앞서지 않는 것' 절 인용",
+      "depends_on": []
+    },
+    {
+      "order": 13,
+      "id": "R74",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "no-change",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "변경 없음 — 이동 필요 권한(대상 편집·목적지 편집) 그대로 유지.",
+      "basis": "decision-v2.md '시안이 앞서지 않는 것' 절 인용",
+      "depends_on": []
+    },
+    {
+      "order": 14,
+      "id": "R97-b",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "no-change",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "변경 없음 — 복사 필요 권한(원본 보기+대상 편집) 그대로 유지.",
+      "basis": "decision-v2.md '시안이 앞서지 않는 것' 절 인용",
+      "depends_on": []
+    },
+    {
+      "order": 15,
+      "id": "R105-b",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "no-change",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "변경 없음 — 조작 결과 알림(토스트) 규칙 그대로. 시안의 상태 바 표시는 시연용.",
+      "basis": "decision-v2.md '시안이 앞서지 않는 것' 절 인용",
+      "depends_on": []
+    },
+    {
+      "order": 16,
+      "id": "R110",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "no-change",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "변경 없음 — ACL 만료일 없음 규칙 유지. 시안의 「만료일」 예시는 요구를 바꾸지 않는다.",
+      "basis": "decision-v2.md '시안 요소는 예시' 절 인용",
+      "depends_on": []
+    },
+    {
+      "order": 17,
+      "id": "R126-d",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "no-change",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "변경 없음 — 적용 하위 개수는 확인 다이얼로그에만 둔다는 규칙 유지.",
+      "basis": "decision-v2.md '시안 요소는 예시' 절 인용",
+      "depends_on": []
+    },
+    {
+      "order": 18,
+      "id": "R135-a",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "no-change",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "변경 없음 — 부모 권한 가져오기는 권한 상승 경로가 아니라는 판정 유지.",
+      "basis": "decision-v2.md '시안 요소는 예시' 절 인용",
+      "depends_on": []
+    },
+    {
+      "order": 19,
+      "id": "R36",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "no-change",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "변경 없음 — 관리 권한은 워크스페이스 단위로만 부여한다는 규칙 유지. 시안의 폴더 「관리자」 역할 예시는 요구를 바꾸지 않는다.",
+      "basis": "decision-v2.md '시안 요소는 예시' 절 인용",
+      "depends_on": []
+    },
+    {
+      "order": 20,
+      "id": "R41",
+      "kind": "ledger",
+      "file": "docs/spec/00.decision-log.md",
+      "action": "no-change",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "변경 없음 — 워크스페이스 나란히 표시, 전환 UI 없음 유지. 시안의 단일 워크스페이스 트리는 예시.",
+      "basis": "decision-v2.md '시안 요소는 예시' 절 인용",
+      "depends_on": []
+    },
+    {
+      "order": 21,
+      "id": "03 §3.2.3",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "「새 탭은 언제나 보기 모드로 시작」을 「권한이 있으면 라이브 편집, 없으면 보기」로 고친다.",
+      "basis": "결정 기록 '기존 요구와 부딪힌 여덟 건' #5",
+      "depends_on": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "order": 22,
+      "id": "03 §3.3",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "헤더 [보기│편집]·[라이브 프리뷰│소스] 2단 토글을 아이콘 순환 하나로 바꾸고, ⋯ 메뉴에 세 모드 직접 선택 두 항목을 더한다.",
+      "basis": "결정 기록 '편집 모드' 문단",
+      "depends_on": [
+        1,
+        2,
+        3,
+        7
+      ]
+    },
+    {
+      "order": 23,
+      "id": "03 §3.4",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "「기본 진입 모드는 보기」 판단(§11-11)과 2상태 다이어그램을, 권한 기반 기본 모드 + 3상태 순환 다이어그램으로 고친다.",
+      "basis": "결정 기록 '기존 요구와 부딪힌 여덟 건' #5",
+      "depends_on": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "order": 24,
+      "id": "03 §3.9.2",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "「URL 은 모드를 담지 않고 항상 보기 모드로 연다」를 「모드 파라미터는 담지 않되 열리는 기본 모드는 권한에 따른다」로 고친다.",
+      "basis": "결정 기록 '기존 요구와 부딪힌 여덟 건' #5",
+      "depends_on": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "order": 25,
+      "id": "03 §7.1",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "트리 클릭으로 열 때 「본문은 보기 모드」를 권한에 따른 기본 모드로 고친다.",
+      "basis": "결정 기록 '기존 요구와 부딪힌 여덟 건' #5",
+      "depends_on": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "order": 26,
+      "id": "03 §7.4",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "백링크로 다른 워크스페이스 문서를 열 때 「보기 모드로 열림」을 권한에 따른 기본 모드로 고친다.",
+      "basis": "결정 기록 '기존 요구와 부딪힌 여덟 건' #5",
+      "depends_on": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "order": 27,
+      "id": "03 §7.11",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "딥링크로 열 때 「탭으로 열린 채 보기 모드」를 권한에 따른 기본 모드로 고친다.",
+      "basis": "결정 기록 '기존 요구와 부딪힌 여덟 건' #5",
+      "depends_on": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "order": 28,
+      "id": "03 §9.1",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "`Ctrl+E`(Cmd+E) 설명을 「보기↔편집 토글」에서 「보기→라이브 편집→소스 편집→보기 3단 순환」으로 고친다. `Ctrl+N` 서술은 유지.",
+      "basis": "결정 기록 '편집 모드' 문단",
+      "depends_on": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "order": 29,
+      "id": "03 §9.3",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "「라이브 프리뷰↔소스 하위 토글에 단축키 미배정」 행을 삭제한다 — 그 토글이 3모드 순환에 합쳐져 전제가 소멸한다.",
+      "basis": "결정 기록 '편집 모드' 문단",
+      "depends_on": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "order": 30,
+      "id": "03 §11-11",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "판단표 11행 결론 「보기 모드」를 「권한에 따라 라이브 편집/보기」로 고친다.",
+      "basis": "결정 기록 '기존 요구와 부딪힌 여덟 건' #5",
+      "depends_on": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "order": 31,
+      "id": "03 §11-25",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "판단표 25행 결론 「담지 않는다 — 항상 보기 모드로 연다」에서 '항상 보기'를 '권한에 따른 기본 모드'로 고친다. URL 에 모드 파라미터를 담지 않는다는 결론은 유지.",
+      "basis": "결정 기록 '기존 요구와 부딪힌 여덟 건' #5",
+      "depends_on": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "order": 32,
+      "id": "03 §2.2.4",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "새 노트 버튼 행의 「인라인 이름 입력」(생성 후 이름 받기) 흐름을, 이름을 먼저 받는 흐름(FR-SHELL-016 AC-7·사용자 결정 4)으로 고친다.",
+      "basis": "결정 기록 '기존 요구와 부딪힌 여덟 건' #4; '파일 탐색기' 절 '이름을 먼저 받는다' 문단",
+      "depends_on": [
+        4,
+        5
+      ]
+    },
+    {
+      "order": 33,
+      "id": "03 §2.2.5",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "메뉴 항목·순서를 v2 목록으로 바꾸고, 비활성 처리 방식을 「비활성+툴팁」에서 「흐리게+「권한 없음」 접미사」로 고친다.",
+      "basis": "결정 기록 '파일 탐색기' 절; R88-a",
+      "depends_on": [
+        4,
+        5
+      ]
+    },
+    {
+      "order": 34,
+      "id": "03 §2.2.6",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "워크스페이스 경계에서 자동 복사 전환(「복사」 뱃지)은 유지하고, 같은 워크스페이스 안 복사는 v2 수정키(Ctrl/Alt=Option) 모델을 따른다고 명시한다.",
+      "basis": "qna_log #9",
+      "depends_on": [
+        4,
+        5
+      ]
+    },
+    {
+      "order": 35,
+      "id": "03 §2.2.7",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "1단계 목적지 입력(트리 피커, 검색 입력 없음)을 v2 폴더 고르기 창(검색 입력 있는 빠른 전환 창 형태)으로 바꾼다.",
+      "basis": "결정 기록 '파일 탐색기' 절 '폴더 이동과 다른 곳으로 복사' 문단",
+      "depends_on": [
+        4,
+        5
+      ]
+    },
+    {
+      "order": 36,
+      "id": "03 §2.2.8",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "대상 선택 트리 피커를 v2 폴더 고르기 창으로 바꾸고 검색 입력을 더한다. 선택 가능 조건(편집 권한 디렉토리)은 유지.",
+      "basis": "결정 기록 '파일 탐색기' 절 '폴더 이동과 다른 곳으로 복사' 문단",
+      "depends_on": [
+        4,
+        5
+      ]
+    },
+    {
+      "order": 37,
+      "id": "03 §6.1",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "인라인 이름 편집 상태 표의 시각(치수·색)을 v2로 바꾸고, 새 항목(복사본 생성·폴더에서 검색·URL 복사)의 상태 행을 추가한다.",
+      "basis": "결정 기록 '파일 탐색기' 절",
+      "depends_on": [
+        4,
+        5
+      ]
+    },
+    {
+      "order": 38,
+      "id": "03 §2.3",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "검색 탭 와이어프레임과 `Ctrl+Shift+F` 설명을, 검색 소재가 리본 이전 뒤에도 성립하는 형태로 고친다.",
+      "basis": "existing_srs_context.json FR-SHELL-013 v2_change; qna_log #11",
+      "depends_on": [
+        4,
+        49
+      ]
+    },
+    {
+      "order": 39,
+      "id": "03 §7.10",
+      "kind": "design-doc",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "1단계 목적지 선택 UI를 v2 폴더 고르기 창으로 바꾼다. 2단계 확인 구조(R120·R105-a·R97-a)는 유지.",
+      "basis": "existing_srs_context.json '03 §7.10' v2_change",
+      "depends_on": [
+        36
+      ]
+    },
+    {
+      "order": 40,
+      "id": "04 §2.1",
+      "kind": "design-doc",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "기본 열람 모드 라디오를 「권한에 따라(기본)」·「항상 보기」 두 값으로 고치고, 낡은 「자동 저장 지연」 항목을 정리한다.",
+      "basis": "qna_log #3; existing_srs_context.json '04 §2.1' v2_change",
+      "depends_on": [
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "order": 41,
+      "id": "04 §2.2",
+      "kind": "design-doc",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "action": "prose-edit",
+      "status_now": "n/a",
+      "stability_now": "n/a",
+      "change": "외모→외관 라벨 변경과 함께, 기본 색상 프리셋 6종+직접 고르기, 메뉴 밝기(−2~+2) 두 항목의 mockup을 추가한다.",
+      "basis": "결정 기록 '사용자별 기본 색상' 절; qna_log #2",
+      "depends_on": [
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "order": 42,
+      "id": "NEW-1",
+      "kind": "requirement",
+      "file": "docs/spec/07.editor.srs.md",
+      "action": "new",
+      "status_now": "-",
+      "stability_now": "-",
+      "change": "새 요구 신설: 「문서 헤더 아이콘(눈/연필/</>) 기반 보기·라이브 편집·소스 편집 3모드 순환과 권한 기반 기본 모드」. 클릭 또는 Ctrl+E(Cmd+E)로 순환, 호버 시 현재/다음 모드 말풍선. FR-EDITOR-002·FR-EDITOR-003을 대체한다.",
+      "basis": "결정 기록 '확정 사항 > 편집 모드' 전체 문단; '기존 요구와 부딪힌 여덟 건' #5",
+      "depends_on": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "realized_id": "FR-EDITOR-011",
+      "realized_by": "supersede_requirement(FR-EDITOR-002) 의 결과 ID. FR-EDITOR-003 도 이 요구로 대체됐고, 그 요구의 나머지 두 사실(소스 모드 원문 편집 · 전환의 본문 보존)은 계획 행 밖의 FR-EDITOR-012(supersede_requirement(FR-EDITOR-003))가 잇는다"
+    },
+    {
+      "order": 43,
+      "id": "FR-EDITOR-002",
+      "kind": "requirement",
+      "file": "docs/spec/07.editor.srs.md",
+      "action": "supersede",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "Requirement 문장이 명시한 메커니즘(「상단 토글로 보기↔편집 전환」)이 제거되고 헤더 아이콘 3모드 순환으로 완전히 대체된다 — 요구의 뜻 자체가 바뀌므로 SRS 규칙 §11.4(동일 요구 개정은 ID 유지, 그러나 이는 '같은 요구'일 때만 해당)·§29.3(대체 시 대표 ID 유지 + discarded + supersedes trace link)에 따라 NEW-1으로 대체하고 FR-EDITOR-002는 discarded 처리한다.",
+      "basis": "SRS-MD-Rules-v2.5.0.md §11.4·§29.3; 결정 기록 '편집 모드' 문단; existing_srs_context.json FR-EDITOR-002",
+      "depends_on": [
+        42
+      ]
+    },
+    {
+      "order": 44,
+      "id": "FR-EDITOR-003",
+      "kind": "requirement",
+      "file": "docs/spec/07.editor.srs.md",
+      "action": "supersede",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "「편집 모드 안 라이브 프리뷰↔소스 하위 토글」이라는 메커니즘 자체가 없어지고 3모드 순환에 흡수된다 — 뜻이 바뀌므로 NEW-1으로 대체, FR-EDITOR-003은 discarded 처리(Superseded By NEW-1).",
+      "basis": "SRS-MD-Rules-v2.5.0.md §11.4·§29.3; 결정 기록 '편집 모드' 문단",
+      "depends_on": [
+        42
+      ]
+    },
+    {
+      "order": 45,
+      "id": "FR-EDITOR-004",
+      "kind": "requirement",
+      "file": "docs/spec/07.editor.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "핵심 뜻(「보기 권한만 있으면 편집 진입 불가 상태를 숨기지 않고 노출한다」)은 유지되고 노출 형태만 바뀐다: 비활성 토글 → 눈 아이콘+말풍선「읽기 전용 문서입니다」. 비활성 구분은 aria-disabled·문구·커서로 AC-7을 고친다. verified 상태이므로 replace_acceptance_criteria 전 Status 데모션이 필요할 수 있다(§17 규칙).",
+      "basis": "qna_log #4; existing_srs_context.json FR-EDITOR-004; SRS-MD-Rules-v2.5.0.md §17",
+      "depends_on": [
+        42
+      ]
+    },
+    {
+      "order": 46,
+      "id": "FR-EDITOR-006",
+      "kind": "requirement",
+      "file": "docs/spec/07.editor.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "핵심 뜻(「비-md 파일에서는 편집 진입 수단을 숨긴다」)은 유지, 숨길 대상 용어만 '모드 토글'에서 '모드 아이콘'으로 고친다. ⋯·우클릭 메뉴에서도 모드 항목이 나타나지 않는다는 AC를 추가한다.",
+      "basis": "qna_log #5; existing_srs_context.json FR-EDITOR-006",
+      "depends_on": [
+        42
+      ]
+    },
+    {
+      "order": 47,
+      "id": "IR-EDITOR-002",
+      "kind": "requirement",
+      "file": "docs/spec/07.editor.srs.md",
+      "action": "edit-in-place",
+      "status_now": "planned",
+      "stability_now": "stable",
+      "change": "타이포그래피 계약(같은 요구: 「편집기 콘텐츠에 적용되는 서체·크기·읽기폭」)은 유지, AC 값 전체를 명조체(Batang/Georgia)→나눔고딕, 12·13·14·16·21·30px 단계, 대화상자 제목 16px ExtraBold·H3 16px ExtraBold·인용 16px로 교체한다. 읽기 최대폭 720px+좌우40px를 700px(본문620px+좌우40px)로 고친다. 제목은 '신문지' 표현을 뺀다. status=planned 이므로 데모션 불필요.",
+      "basis": "결정 기록 '서체' 절; qna_log #1; existing_srs_context.json IR-EDITOR-002·tests_pinning_old_design",
+      "depends_on": []
+    },
+    {
+      "order": 48,
+      "id": "FR-EDITOR-005",
+      "kind": "requirement",
+      "file": "docs/spec/07.editor.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "저장 거부 시 본문 보존·로컬 내보내기 동작은 v2가 바꾸지 않는다. 읽기전용 아이콘에서 '저장 상태 표시가 숨는 것'만 FR-EDITOR-004 쪽에서 다룬다.",
+      "basis": "existing_srs_context.json FR-EDITOR-005 (in_decision_table:false, similarity 0.35)",
+      "depends_on": [
+        45
+      ],
+      "action_planned": "no-change",
+      "change_executed": "improvement iter1(conflict-1-1)이 대체된 FR-EDITOR-002 대신 FR-EDITOR-011 로 가는 trace 행을 더했다(srs_delta mcp_calls #259). verified 라 기존 refines FR-EDITOR-002 행은 그대로 두었다(known_residuals conflict-2-1). AC 는 바뀌지 않았다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter3",
+        "finding": "classification-3-1",
+        "reason": "분류 기록(no-change)이 실행과 어긋났다 — 주석 · trace 행만 더한 edit-in-place 였다. AC · Requirement 문장은 바뀌지 않았다. 처음 분류는 action_planned 에 남겼다."
+      }
+    },
+    {
+      "order": 49,
+      "id": "NEW-6",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "new",
+      "status_now": "-",
+      "stability_now": "-",
+      "change": "새 요구 신설: 「리본의 뷰 전환 버튼 세 가지(문서 트리·검색·즐겨찾기)가 좌측 사이드바 보기를 1:1로 바꾼다」. 탭 줄은 존재하지 않는다. 종류·순서는 FR-SHELL-001을 승계한다. FR-SHELL-001을 대체한다.",
+      "basis": "결정 기록 '색' 절 '리본은 v2의 배치로 확정' 문단; qna_log #11",
+      "depends_on": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "realized_id": "FR-SHELL-017",
+      "realized_by": "supersede_requirement(FR-SHELL-001) 의 결과 ID"
+    },
+    {
+      "order": 50,
+      "id": "FR-SHELL-001",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "supersede",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "Requirement 문장이 단언하는 대상(「좌측 사이드바 상단에 탭이 표시된다」)이 v2에서 거짓이 된다 — 탭 줄 자체가 없어지고 리본 버튼으로 대체되므로 뜻이 바뀐다. NEW-6으로 대체, FR-SHELL-001은 discarded 처리.",
+      "basis": "SRS-MD-Rules-v2.5.0.md §11.4·§29.3; qna_log #11",
+      "depends_on": [
+        49
+      ]
+    },
+    {
+      "order": 51,
+      "id": "FR-SHELL-002",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "배치 규범 문장(「문서 단위 기능은 설정 모달이 아니라 문서 헤더 메뉴에 둔다」) 자체는 생성적이라 바뀌지 않는다. Implementation Notes/Trace Links에 새로 추가되는 항목(세 모드 직접 선택, 편집 조작)만 반영한다.",
+      "basis": "existing_srs_context.json FR-SHELL-002 v2_change; R24-b·R102-b",
+      "depends_on": [
+        7,
+        8
+      ]
+    },
+    {
+      "order": 52,
+      "id": "FR-SHELL-003",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "핵심 뜻(「트리 컨텍스트 메뉴 항목 목록과 필요 권한별 활성 여부」)은 유지, 기존 9항목은 모두 남기고 v2 목록(복사본 생성/다른 곳으로 복사 분리, 폴더에서 검색, URL 복사 추가; 그룹 구분)으로 AC를 교체한다. 비활성 표시 방식을 흐리게+「권한 없음」으로 고친다. verified 이므로 데모션 검토 필요.",
+      "basis": "결정 기록 '파일 탐색기' 절; R88-a; SRS-MD-Rules-v2.5.0.md §17",
+      "depends_on": [
+        33,
+        5
+      ]
+    },
+    {
+      "order": 53,
+      "id": "FR-SHELL-016",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "evolving",
+      "change": "동작(이름 먼저 입력, `Enter` 확정·`Esc` 취소, 상단 버튼은 즉시 생성)은 그대로다 — 사용자 결정 4가 첫 시안(먼저 만들고 이름 받기)을 기각하고 기존 요구를 확정했다. 시각만 IR-SHELL-006 경로로 바뀐다.",
+      "basis": "결정 기록 '기존 요구와 부딪힌 여덟 건' #4",
+      "depends_on": [
+        52,
+        32
+      ],
+      "action_planned": "no-change",
+      "change_executed": "improvement iter1(HIGH change-consistency-1-2)이 verified 를 in_progress 로 내리고 AC-1 · AC-2 라벨(`새 노트` · `새 폴더`)과 AC-3(입력 줄 벗어남 = 취소, qna #23)을 고쳤다(eval_iter2 가 지목한 srs_delta mcp_calls #245-#250). iter2 는 FR-EDITOR-011 로 가는 trace(새 노트를 여는 모드 — qna #36)만 더했다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter2",
+        "finding": "classification-2-1",
+        "reason": "분류 기록(no-change)이 실행과 어긋났다 — 라벨 개정과 벗어남 처리로 AC 가 바뀌었다. 처음 분류는 action_planned 에 남겼다."
+      }
+    },
+    {
+      "order": 54,
+      "id": "IR-SHELL-005",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "evolving",
+      "change": "「명시 목록」 메커니즘(아직 조작에 안 닿는 항목을 사유와 함께 명시)에 새 항목 세 개(복사본 생성, 폴더에서 검색, URL 복사)를 추가하고, 실제 배선이 끝나면 목록에서 제거한다.",
+      "basis": "existing_srs_context.json IR-SHELL-005 v2_change",
+      "depends_on": [
+        52
+      ]
+    },
+    {
+      "order": 55,
+      "id": "FR-SHELL-010",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "evolving",
+      "change": "핵심 동작(태그 클릭 → 검색 보기 활성 + 질의 채움)은 유지, 「좌측 사이드바가 검색 탭으로 전환된다」는 문구를 리본 버튼으로 트리거되는 검색 보기 전환 문구로 고친다.",
+      "basis": "existing_srs_context.json FR-SHELL-010 v2_change; qna_log #11",
+      "depends_on": [
+        50
+      ]
+    },
+    {
+      "order": 56,
+      "id": "FR-SHELL-008",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "진입점(트리 컨텍스트 메뉴의 파일 노드 전용 항목)은 그대로다. 메뉴 안 위치(별도 그룹 분리)는 FR-SHELL-003 AC와 03 §2.2.5 설계서가 담당하므로 이 요구 자체는 텍스트 변경이 불필요하다.",
+      "basis": "existing_srs_context.json FR-SHELL-008 v2_change('진입점은 그대로 트리 메뉴다')",
+      "depends_on": [
+        52
+      ],
+      "action_planned": "no-change",
+      "change_executed": "improvement iter1(change-consistency-1-6)이 Rationale 에 헤더 메뉴의 공간 근거가 사라졌다는 재검토 노트를 더하고(srs_delta mcp_calls #260) 결정 기록으로 가는 trace 행을 더했다(#261). 진입점(트리 메뉴의 파일 노드 전용 항목)과 AC 는 바뀌지 않았다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter3",
+        "finding": "classification-3-1",
+        "reason": "분류 기록(no-change)이 실행과 어긋났다 — 주석 · trace 행만 더한 edit-in-place 였다. AC · Requirement 문장은 바뀌지 않았다. 처음 분류는 action_planned 에 남겼다."
+      }
+    },
+    {
+      "order": 57,
+      "id": "FR-SHELL-006",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "노드 ID 기반 URL이라는 핵심 메커니즘은 유지, 적용 대상을 문서 전용에서 폴더·일반 파일로 넓힌다. 폴더 URL을 열면 트리에서 그 폴더를 펼친 채 고른다는 AC를 추가하고, 트리 메뉴 「URL 복사」 항목(FR-SHELL-003)과 교차 참조한다.",
+      "basis": "결정 기록 '기존 요구와 부딪힌 여덟 건' #8; existing_srs_context.json FR-SHELL-006",
+      "depends_on": [
+        52
+      ]
+    },
+    {
+      "order": 58,
+      "id": "NEW-4",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "new",
+      "status_now": "-",
+      "stability_now": "-",
+      "change": "새 요구 신설: 「트리 컨텍스트 메뉴 '폴더에서 검색'이 검색 범위를 그 폴더(노트라면 그 노트가 든 폴더)로 좁힌다」. 검색 대상·필터·결과 형식의 규범(FR-SHELL-013)과 워크스페이스 표시 필터 규범(WORKSPACE scope SEC-WORKSPACE-004)은 복제하지 않고 참조만 한다.",
+      "basis": "qna_log #8; 결정 기록 '파일 탐색기' 절 '폴더에서 검색' 문단",
+      "depends_on": [
+        52
+      ],
+      "realized_id": "FR-SHELL-018",
+      "realized_by": "add_requirement 의 결과 ID"
+    },
+    {
+      "order": 59,
+      "id": "FR-SHELL-013",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "evolving",
+      "change": "검색 대상 넷·필터·결과 형식이라는 핵심 뜻은 유지. 「검색의 소재는 좌측 사이드바의 검색 탭」 문구와 AC-1을 리본 이전에 맞춰 고치고, 폴더 범위 검색(NEW-4)을 참조하는 Trace Link를 추가한다.",
+      "basis": "existing_srs_context.json FR-SHELL-013 v2_change; qna_log #8·#11",
+      "depends_on": [
+        49,
+        58
+      ]
+    },
+    {
+      "order": 60,
+      "id": "NEW-5",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "new",
+      "status_now": "-",
+      "stability_now": "-",
+      "change": "새 요구 신설: 「트리 노드 끌어서 이동·복사」. 5px 이동 또는 0.35초 누름으로 시작, 폴더에 놓으면 이동/Ctrl·Alt(Option)를 누른 채 놓으면 복사(워크스페이스 경계를 넘으면 수정키와 무관하게 항상 복사), 노트 위 드롭은 그 노트가 든 폴더가 대상, 접힌 폴더 0.6초 호버 시 펼침, 커서 옆 결과/불가 사유 표시, Esc 취소. 검증 방법(제스처·타이밍·시각 피드백)이 메뉴 기반 조작과 달라 별도 요구로 분리한다(§2.3 Single Requirement Principle).",
+      "basis": "결정 기록 '파일 탐색기' 절 '끌어서 놓기'; qna_log #9·#10; SRS-MD-Rules-v2.5.0.md §2.3",
+      "depends_on": [
+        34
+      ],
+      "realized_id": "FR-SHELL-019",
+      "realized_by": "add_requirement 의 결과 ID"
+    },
+    {
+      "order": 61,
+      "id": "FR-SHELL-015",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "evolving",
+      "change": "핵심 뜻(「이름 변경·이동·복사가 가능하다」)은 유지, 드래그앤드롭이 메뉴에 더해지는 추가 진입점임을 AC/Trace Link로 명시(NEW-5 참조). 다른 워크스페이스 복사 진입점은 '다른 곳으로 복사…'로 AC-4·AC-5를 고친다.",
+      "basis": "existing_srs_context.json FR-SHELL-015 v2_change",
+      "depends_on": [
+        60
+      ]
+    },
+    {
+      "order": 62,
+      "id": "FR-ATTACH-001",
+      "kind": "requirement",
+      "file": "docs/spec/15.attachments.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "핵심 뜻(「디렉토리 노드 위 드롭으로 업로드」)은 유지, AC-1을 확장해 노트 위 드롭도 그 노트가 든 폴더를 대상으로 삼는다고 고친다. NEW-5(트리 항목 끌기)와 동일한 대상 해석 규칙을 공유하되 정의는 한 곳(이 scope)에만 두고 SHELL 쪽은 참조만 하도록 Trace Link로 명시한다.",
+      "basis": "qna_log #10; existing_srs_context.json FR-ATTACH-001 v2_change",
+      "depends_on": [
+        60
+      ]
+    },
+    {
+      "order": 63,
+      "id": "NEW-2",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "new",
+      "status_now": "-",
+      "stability_now": "-",
+      "change": "새 요구 신설: 「개인 설정 기본 색상 — 프리셋 6종(한지·모래·쑥·쪽빛·자주·먹)과 직접 고르기, HSL 색상·채도 기반 역할별 명도·채도 파생과 대비 목표 자동 조정(정본 시안 derive() 함수)」. 커스텀 색이 대비 목표 미달일 때의 구체 처리(경고/자동보정 등)는 결정 기록이 '구현 때 해결'로만 남겨 unresolved에 적는다.",
+      "basis": "결정 기록 '사용자별 기본 색상' 절",
+      "depends_on": [],
+      "realized_id": "IR-SHELL-014",
+      "realized_by": "add_requirement 의 결과 ID"
+    },
+    {
+      "order": 64,
+      "id": "NEW-3",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "new",
+      "status_now": "-",
+      "stability_now": "-",
+      "change": "새 요구 신설: 「개인 설정 메뉴 밝기 조정, −2~+2 단계, 1단계=명도 2%, 문서 바탕은 영향받지 않는다」.",
+      "basis": "결정 기록 '사용자별 기본 색상' 절 '메뉴 밝기는 −2~+2 단계' 문단",
+      "depends_on": [],
+      "realized_id": "IR-SHELL-015",
+      "realized_by": "add_requirement 의 결과 ID"
+    },
+    {
+      "order": 65,
+      "id": "IR-SHELL-004",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "「셋이 전량」 선언·AC-7·AC-2·AC-6·Rationale('넷째의 근거는 없다')을 다섯 항목(기본 열람 모드·편집 하위 뷰·테마·기본 색상[NEW-2]·메뉴 밝기[NEW-3]) 전량으로 고친다. 기본 열람 모드 허용값을 「권한에 따라」(기본)·「항상 보기」 둘로, 편집 하위 뷰를 「편집으로 열 때의 모드: 라이브 편집(기본)·소스 편집」으로 고친다. verified 이므로 데모션 검토 필요.",
+      "basis": "qna_log #3; 결정 기록 '기존 요구와 부딪힌 여덟 건' #1; existing_srs_context.json IR-SHELL-004",
+      "depends_on": [
+        63,
+        64
+      ]
+    },
+    {
+      "order": 66,
+      "id": "IR-SHELL-007",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "루트 적용·시스템 추종이라는 핵심 메커니즘은 유지, 적용 대상 값에 기본 색상 파생 결과와 메뉴 밝기 단계를 추가하는 AC를 더한다.",
+      "basis": "existing_srs_context.json IR-SHELL-007 v2_change",
+      "depends_on": [
+        63,
+        64,
+        65
+      ]
+    },
+    {
+      "order": 67,
+      "id": "IR-SHELL-002",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "in_progress",
+      "stability_now": "evolving",
+      "change": "카테고리 라벨 '외모(테마)'를 '외관'으로 고친다. status=in_progress 이므로 데모션 불필요.",
+      "basis": "qna_log #2; R24-a",
+      "depends_on": [
+        6
+      ]
+    },
+    {
+      "order": 68,
+      "id": "IR-SHELL-006",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "in_progress",
+      "stability_now": "stable",
+      "change": "시각 계약이라는 핵심 뜻은 유지, 신문지 팔레트 색값을 v2 파생 규칙(derive()) 기반 값으로 전량 교체한다. AC-4 컨트롤 높이 36→30px·아이콘 클릭 영역 36→30px(사이드바 도구 28px)·입력 글자 14/22→13px·필드 간격 20→16px, AC-9 행 높이(트리 40→약26px, 컨텍스트 메뉴 약31px, 폴더 고르기 창 약34px)로 고친다. AC-7(포커스)·AC-8(대비 기준 원칙)은 유지하고 색값만 교체한다. 제목에서 '신문지' 표현을 뗀다.",
+      "basis": "결정 기록 '기존 요구와 부딪힌 여덟 건' #3·#7; existing_srs_context.json IR-SHELL-006; tests_pinning_old_design",
+      "depends_on": []
+    },
+    {
+      "order": 69,
+      "id": "IR-SHELL-009",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "in_progress",
+      "stability_now": "stable",
+      "change": "3단 레이아웃 구조라는 핵심 뜻은 유지, AC-1 패널 폭을 280/320px→사이드바 248px+리본 44px·오른쪽 232px로 고친다. 「문서가 패널보다 밝다」가 어둡게+메뉴 밝기 −1~+2에서 뒤집힌다는 조건부 AC를 추가한다. 인증·설치·상태 화면(AC-4·AC-5)은 색·서체만 v2 적용.",
+      "basis": "existing_srs_context.json IR-SHELL-009 v2_change; tests_pinning_old_design",
+      "depends_on": [
+        68
+      ]
+    },
+    {
+      "order": 70,
+      "id": "IR-SHELL-011",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "planned",
+      "stability_now": "stable",
+      "change": "서버 프리뷰·실행 결과를 실제 요청에 연결한다는 핵심 뜻은 유지. Implementation Notes의 「목적지 검색·계층형 picker는 범위 밖」과 「#66 presentation 유지」 조항을 뒤집어, 검색 입력이 있는 v2 폴더 고르기 창을 AC로 추가한다. status=planned 이므로 데모션 불필요.",
+      "basis": "결정 기록 '파일 탐색기' 절; existing_srs_context.json IR-SHELL-011 v2_change",
+      "depends_on": [
+        35,
+        36
+      ]
+    },
+    {
+      "order": 71,
+      "id": "FR-ACL-006",
+      "kind": "requirement",
+      "file": "docs/spec/10.access-control.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "AC 문면 변경 불필요 — 이동 다이얼로그 안에 접근 가능 인원 프리뷰를 보인다는 기존 AC를 v2 폴더 고르기 창이 구조적으로 충족하는지 구현 시 확인만 한다(RelocationDialog.tsx가 이미 RelocationPreview를 다이얼로그 내부에 포함).",
+      "basis": "결정 기록 '시안이 앞서지 않는 것' 절; code_context.json RelocationDialog.tsx 관련성",
+      "depends_on": [
+        70
+      ]
+    },
+    {
+      "order": 72,
+      "id": "SEC-ACL-012",
+      "kind": "requirement",
+      "file": "docs/spec/10.access-control.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "AC-7·VE-2(프리뷰가 다이얼로그 안에 있어야 한다) 문면 변경 불필요 — v2 폴더 고르기 창이 그 조건을 충족하는지 구현 시 확인만 한다.",
+      "basis": "결정 기록 '시안이 앞서지 않는 것' 절",
+      "depends_on": [
+        70
+      ]
+    },
+    {
+      "order": 73,
+      "id": "FR-SHELL-004",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "evolving",
+      "change": "우측 사이드바 세 탭 구성은 바뀌지 않는다. v2는 확인만 한다(목차는 Phase 2). 패널 폭만 IR-SHELL-009가 별도로 다룬다.",
+      "basis": "existing_srs_context.json FR-SHELL-004",
+      "depends_on": []
+    },
+    {
+      "order": 74,
+      "id": "FR-SHELL-005",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "상단 문서 탭 구조는 바뀌지 않는다. 새로 열리는 탭의 기본 모드가 NEW-1로 바뀔 뿐 탭 스트립 자체는 영향 없다.",
+      "basis": "existing_srs_context.json FR-SHELL-005",
+      "depends_on": []
+    },
+    {
+      "order": 75,
+      "id": "FR-SHELL-009",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "evolving",
+      "change": "태그 탭의 집계 단위(출현 문서 수)는 바뀌지 않는다. 패널 폭만 IR-SHELL-009가 다룬다.",
+      "basis": "existing_srs_context.json FR-SHELL-009",
+      "depends_on": []
+    },
+    {
+      "order": 76,
+      "id": "FR-SHELL-012",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "트리 클릭=탭 교체, Ctrl+클릭=새 탭이라는 메커니즘 자체는 바뀌지 않는다. 교체된 탭이 여는 모드만 NEW-1로 바뀐다.",
+      "basis": "existing_srs_context.json FR-SHELL-012",
+      "depends_on": [],
+      "action_planned": "no-change",
+      "change_executed": "improvement iter1(conflict-1-1)이 대체된 FR-SHELL-001 대신 FR-SHELL-017 로 가는 trace 행을 더했다(srs_delta mcp_calls #258). verified 라 기존 depends_on FR-SHELL-001 행은 그대로 두었다(known_residuals conflict-2-1). AC 는 바뀌지 않았다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter3",
+        "finding": "classification-3-1",
+        "reason": "분류 기록(no-change)이 실행과 어긋났다 — 주석 · trace 행만 더한 edit-in-place 였다. AC · Requirement 문장은 바뀌지 않았다. 처음 분류는 action_planned 에 남겼다."
+      }
+    },
+    {
+      "order": 77,
+      "id": "IR-SHELL-003",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "탭 스트립·헤더 2단 분리 구조는 유지된다. 헤더 안 모드 표현만 NEW-1로 바뀐다(§3.3 참고).",
+      "basis": "existing_srs_context.json IR-SHELL-003",
+      "depends_on": [],
+      "action_planned": "no-change",
+      "change_executed": "improvement iter2(MEDIUM change-consistency-2-1, qna #31)가 verified 를 in_progress 로 내리고 AC-2 를 좁혔다 — 저장 상태가 헤더에 서는 조건은 FR-EDITOR-004 AC-5 · AC-8 이 소유한다. AC-2 는 체크를 해제했고 AC-1 · AC-3 · AC-4 와 VE-1 은 그대로다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter2",
+        "finding": "change-consistency-2-1",
+        "reason": "2차 독립 검증이 AC-2 의 무조건 문면을 FR-EDITOR-004 AC-5 와 어긋난다고 지적했다. 처음 분류는 action_planned 에 남겼다."
+      }
+    },
+    {
+      "order": 78,
+      "id": "IR-SHELL-008",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "in_progress",
+      "stability_now": "stable",
+      "change": "결정 기록이 이 요구를 직접 언급하지 않는다. 컨트롤 높이·간격 축소(IR-SHELL-006 AC-4)가 오버레이 내부 여백·필드 배치에 파급될 가능성은 구현 시 확인 대상으로 unresolved에 남긴다.",
+      "basis": "existing_srs_context.json IR-SHELL-008 v2_change",
+      "depends_on": [
+        68
+      ],
+      "action_planned": "no-change",
+      "change_executed": "improvement iter1(LOW change-consistency-1-10 · 1-12)이 Tags newspaper → design-v2, trace 행 다섯의 notes, Implementation Notes(v2 치수 화면에서 200% 도달성 재측정 의무, qna #13)를 고쳤다(eval_iter2 가 지목한 srs_delta mcp_calls #308-#315). AC 는 바뀌지 않았다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter2",
+        "finding": "classification-2-1",
+        "reason": "분류 기록(no-change)이 실행과 어긋났다 — AC 는 그대로지만 메타데이터 · trace · 노트를 고쳤다. 처음 분류는 action_planned 에 남겼다."
+      }
+    },
+    {
+      "order": 79,
+      "id": "SEC-ACL-004",
+      "kind": "requirement",
+      "file": "docs/spec/10.access-control.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "권한 없는 노드 완전 숨김 규칙은 바뀌지 않는다. v2 본문이 그대로 인용해 유지만 확인한다.",
+      "basis": "existing_srs_context.json SEC-ACL-004",
+      "depends_on": []
+    },
+    {
+      "order": 80,
+      "id": "SEC-ACL-013",
+      "kind": "requirement",
+      "file": "docs/spec/10.access-control.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "숨은 하위가 있는 디렉토리의 이동·삭제는 관리 레벨을 요구한다는 규칙은 바뀌지 않는다.",
+      "basis": "existing_srs_context.json SEC-ACL-013",
+      "depends_on": []
+    },
+    {
+      "order": 81,
+      "id": "SEC-ACL-014",
+      "kind": "requirement",
+      "file": "docs/spec/10.access-control.srs.md",
+      "action": "no-change",
+      "status_now": "implemented",
+      "stability_now": "stable",
+      "change": "워크스페이스 경계를 넘는 이동 차단·복사만 허용 규칙은 바뀌지 않는다. AC-5(다른 워크스페이스 미제시)는 v2 폴더 고르기 창에서 재확인만 필요(IR-SHELL-011).",
+      "basis": "existing_srs_context.json SEC-ACL-014",
+      "depends_on": [
+        70
+      ]
+    },
+    {
+      "order": 82,
+      "id": "SEC-ACL-015",
+      "kind": "requirement",
+      "file": "docs/spec/10.access-control.srs.md",
+      "action": "no-change",
+      "status_now": "implemented",
+      "stability_now": "stable",
+      "change": "접근자 명단은 관리 전용·수치는 편집까지라는 규칙은 바뀌지 않는다.",
+      "basis": "existing_srs_context.json SEC-ACL-015",
+      "depends_on": []
+    },
+    {
+      "order": 83,
+      "id": "FR-ACL-001",
+      "kind": "requirement",
+      "file": "docs/spec/10.access-control.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "복사본 ACL·첨부·링크 처리 규칙은 바뀌지 않는다. v2 복사 다이얼로그가 이 결과값을 그대로 전제한다.",
+      "basis": "existing_srs_context.json FR-ACL-001",
+      "depends_on": []
+    },
+    {
+      "order": 84,
+      "id": "FR-ACL-002",
+      "kind": "requirement",
+      "file": "docs/spec/10.access-control.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "복사 프리뷰 접근자 수치가 목적지 기준이라는 판정은 바뀌지 않는다. v2 폴더 고르기 창 복사 모드가 이 계약을 그대로 따른다.",
+      "basis": "existing_srs_context.json FR-ACL-002",
+      "depends_on": [
+        70
+      ]
+    },
+    {
+      "order": 85,
+      "id": "IR-ACL-001",
+      "kind": "requirement",
+      "file": "docs/spec/10.access-control.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "접근 가능/ACL 접근자 두 지표 분리 정의는 바뀌지 않는다.",
+      "basis": "existing_srs_context.json IR-ACL-001",
+      "depends_on": []
+    },
+    {
+      "order": 86,
+      "id": "FR-CONFIRM-005",
+      "kind": "requirement",
+      "file": "docs/spec/11.confirmation-grades.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "드래그앤드롭으로 목적지가 채워져도 확인 단계는 생략되지 않는다는 규칙은 바뀌지 않는다. NEW-5도 이 규칙을 따른다.",
+      "basis": "existing_srs_context.json FR-CONFIRM-005",
+      "depends_on": [
+        60
+      ]
+    },
+    {
+      "order": 87,
+      "id": "FR-CONFIRM-006",
+      "kind": "requirement",
+      "file": "docs/spec/11.confirmation-grades.srs.md",
+      "action": "no-change",
+      "status_now": "implemented",
+      "stability_now": "stable",
+      "change": "삭제는 확인 없이 휴지통 이동 + 되돌리기 토스트라는 규칙은 바뀌지 않는다.",
+      "basis": "existing_srs_context.json FR-CONFIRM-006",
+      "depends_on": []
+    },
+    {
+      "order": 88,
+      "id": "FR-CONFIRM-016",
+      "kind": "requirement",
+      "file": "docs/spec/11.confirmation-grades.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "이동 확인 등급은 접근 가능 수치 변화로 정한다는 규칙은 바뀌지 않는다. v2 폴더 고르기 창의 이동 모드도 이 규칙을 따른다.",
+      "basis": "existing_srs_context.json FR-CONFIRM-016",
+      "depends_on": [
+        70
+      ]
+    },
+    {
+      "order": 89,
+      "id": "FR-CONFIRM-017",
+      "kind": "requirement",
+      "file": "docs/spec/11.confirmation-grades.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "복사는 대상 유형과 무관하게 항상 L2라는 규칙은 바뀌지 않는다. 끌어서 복사·복사본 생성도 포함된다.",
+      "basis": "existing_srs_context.json FR-CONFIRM-017",
+      "depends_on": [
+        60
+      ]
+    },
+    {
+      "order": 90,
+      "id": "FR-WORKSPACE-003",
+      "kind": "requirement",
+      "file": "docs/spec/13.workspace.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "evolving",
+      "change": "접근 가능한 워크스페이스를 나란히 표시하고 전환 UI를 두지 않는다는 규칙은 바뀌지 않는다. 시안의 단일 워크스페이스 트리는 예시일 뿐이다.",
+      "basis": "existing_srs_context.json FR-WORKSPACE-003",
+      "depends_on": []
+    },
+    {
+      "order": 91,
+      "id": "SEC-SHELL-003",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "디렉토리 복사는 보이는 노드만 복사하고 고정 문구를 표시한다는 규칙은 바뀌지 않는다. v2 폴더 고르기 창 복사 모드에도 같은 고정 문구를 둔다.",
+      "basis": "existing_srs_context.json SEC-SHELL-003",
+      "depends_on": [
+        70
+      ]
+    },
+    {
+      "order": 92,
+      "id": "CON-SHELL-001",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "no-change",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "관리 기능 진입점은 설정 모달 하나라는 제약은 바뀌지 않는다. 리본에 버튼이 보여도 실제 진입점은 그대로다.",
+      "basis": "existing_srs_context.json CON-SHELL-001",
+      "depends_on": [
+        49
+      ]
+    },
+    {
+      "order": 93,
+      "id": "DR-SHELL-002",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "개인 설정 단일 저장소(사용자별 DB 행)라는 문면은 바뀌지 않는다 — 결정 기록이 명시적으로 「개인 설정 키의 열거는 IR-SHELL-004가 소유하므로 DR-SHELL-002의 문면은 바뀌지 않는다」고 확인한다. AC-6 키 허용목록의 실제 구현만 기본 색상·메뉴 밝기 두 키를 추가로 받는다.",
+      "basis": "결정 기록 적용 범위 표 IR-SHELL-004 행 인용",
+      "depends_on": [
+        65
+      ],
+      "action_planned": "no-change",
+      "change_executed": "improvement iter4(change-consistency-4-3)가 Implementation Notes ⑤ 에 R152 trace 행의 「세 항목」은 2026-09-23 개정으로 다섯이며 항목 열거의 정본은 IR-SHELL-004 라는 노트를 더했다(verified 라 행 Notes 대신). 문면 · AC 는 바뀌지 않았다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter4",
+        "finding": "change-consistency-4-3",
+        "reason": "분류 기록(no-change)이 실행과 어긋났다 — 주석만 더한 edit-in-place 였다. 결정 기록 적용 범위 표의 「문면은 바뀌지 않는다」는 그대로 참이다. 처음 분류는 action_planned 에 남겼다."
+      }
+    },
+    {
+      "order": 94,
+      "id": "IR-PRINCIPAL-001",
+      "kind": "requirement",
+      "file": "docs/spec/16.principal.srs.md",
+      "action": "edit-in-place",
+      "status_now": "planned",
+      "stability_now": "n/a",
+      "change": "AC가 요구하는 상태 표시 자체는 바뀌지 않는다. '신문지 부품'이라는 명칭이 공통 컴포넌트 세트를 가리키는 이름이라 v2에서도 그대로 쓸 수 있는지는 용어 정합 확인 대상으로 unresolved에 남긴다.",
+      "basis": "existing_srs_context.json IR-PRINCIPAL-001 v2_change",
+      "depends_on": [],
+      "action_planned": "no-change",
+      "change_executed": "qna #14 가 edit-in-place 를 확정해 AC-5 의 「공통 신문지 부품」을 「공통 부품」으로 문구만 고쳤다(srs_delta.json mcp_calls[198] replace_acceptance_criteria · [199] update_status, 0 부터 센 번호). 태그 newspaper 는 그대로 두었다. [iter2 추가] improvement iter2(LOW change-consistency-2-5)가 Tags newspaper 를 design-v2 로 고쳤다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter1",
+        "finding": "classification-1-2",
+        "reason": "분류 기록(no-change)이 실행(qna #14 에 따른 AC-5 문구 수정)과 어긋나 실행에 맞춰 다시 분류했다. 처음 분류는 action_planned 에 남겼다."
+      }
+    },
+    {
+      "order": 95,
+      "id": "FR-EDITOR-007",
+      "kind": "requirement",
+      "file": "docs/spec/07.editor.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "improvement iter1(HIGH change-consistency-1-1)이 verified 를 in_progress 로 내리고 AC-11 의 「좌측 검색 탭」을 검색 보기로 고쳤다(체크 해제). trace FR-SHELL-010 · 원장 R3, Implementation Notes 재해석 노트.",
+      "basis": "eval_iter1 change-consistency-1-1",
+      "depends_on": [],
+      "action_planned": "absent",
+      "change_executed": "improvement iter1(HIGH change-consistency-1-1)이 verified 를 in_progress 로 내리고 AC-11 의 「좌측 검색 탭」을 검색 보기로 고쳤다(체크 해제). trace FR-SHELL-010 · 원장 R3, Implementation Notes 재해석 노트.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter2",
+        "finding": "classification-2-1",
+        "reason": "처음 분류(plan)에 행이 없던 요구를 실행 기록에 맞춰 더했다. action_planned=absent 는 분류 시점에 계획 행이 없었다는 뜻이다."
+      }
+    },
+    {
+      "order": 96,
+      "id": "CON-SHELL-002",
+      "kind": "requirement",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "improvement iter1(MEDIUM change-consistency-1-5)이 verified 를 in_progress 로 내리고 제목 · Requirement · AC-1 · AC-2 의 「좌측 검색 탭」을 좌측 검색 보기로 고쳤다. trace 행 넷을 고쳤다.",
+      "basis": "eval_iter1 change-consistency-1-5",
+      "depends_on": [],
+      "action_planned": "absent",
+      "change_executed": "improvement iter1(MEDIUM change-consistency-1-5)이 verified 를 in_progress 로 내리고 제목 · Requirement · AC-1 · AC-2 의 「좌측 검색 탭」을 좌측 검색 보기로 고쳤다. trace 행 넷을 고쳤다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter2",
+        "finding": "classification-2-1",
+        "reason": "처음 분류(plan)에 행이 없던 요구를 실행 기록에 맞춰 더했다. action_planned=absent 는 분류 시점에 계획 행이 없었다는 뜻이다."
+      }
+    },
+    {
+      "order": 97,
+      "id": "FR-STORAGE-003",
+      "kind": "requirement",
+      "file": "docs/spec/14.storage.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "improvement iter1(MEDIUM feasibility-1-1, qna #20)이 verified 를 in_progress 로 내리고 Requirement 에 「스냅샷은 편집 세션의 첫 저장 때 1회」를 적고 AC-6 을 세웠다.",
+      "basis": "eval_iter1 feasibility-1-1",
+      "depends_on": [],
+      "action_planned": "absent",
+      "change_executed": "improvement iter1(MEDIUM feasibility-1-1, qna #20)이 verified 를 in_progress 로 내리고 Requirement 에 「스냅샷은 편집 세션의 첫 저장 때 1회」를 적고 AC-6 을 세웠다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter2",
+        "finding": "classification-2-1",
+        "reason": "처음 분류(plan)에 행이 없던 요구를 실행 기록에 맞춰 더했다. action_planned=absent 는 분류 시점에 계획 행이 없었다는 뜻이다."
+      }
+    },
+    {
+      "order": 98,
+      "id": "FR-EDITOR-012",
+      "kind": "requirement",
+      "file": "docs/spec/07.editor.srs.md",
+      "action": "new",
+      "status_now": "n/a (신설)",
+      "stability_now": "evolving",
+      "change": "FR-EDITOR-003 의 supersede 가 FR-EDITOR-011 하나로 병합되지 못해(srs_delta refused FR-EDITOR-003) supersede_requirement 로 새로 섰다 — 옛 AC-2(소스 모드 원문 편집) · AC-3(전환의 본문 보존)을 잇는다. improvement iter2(LOW ac-2-2)가 AC-2 와 Requirement 의 근거 없는 「저장을 일으키지 않는다」를 지웠다.",
+      "basis": "srs_delta refused FR-EDITOR-003 · eval_iter2 ac-2-2",
+      "depends_on": [],
+      "action_planned": "absent",
+      "change_executed": "FR-EDITOR-003 의 supersede 가 FR-EDITOR-011 하나로 병합되지 못해(srs_delta refused FR-EDITOR-003) supersede_requirement 로 새로 섰다 — 옛 AC-2(소스 모드 원문 편집) · AC-3(전환의 본문 보존)을 잇는다. improvement iter2(LOW ac-2-2)가 AC-2 와 Requirement 의 근거 없는 「저장을 일으키지 않는다」를 지웠다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter2",
+        "finding": "classification-2-1",
+        "reason": "처음 분류(plan)에 행이 없던 요구를 실행 기록에 맞춰 더했다. action_planned=absent 는 분류 시점에 계획 행이 없었다는 뜻이다."
+      }
+    },
+    {
+      "order": 99,
+      "id": "FR-ATTACH-007",
+      "kind": "requirement",
+      "file": "docs/spec/15.attachments.srs.md",
+      "action": "edit-in-place",
+      "status_now": "planned",
+      "stability_now": "draft",
+      "change": "improvement iter2(MEDIUM change-consistency-2-4, qna #38)가 AC-3 의 「모드 토글」을 「모드 아이콘」으로 고치고 Rationale 에 용어 개정 노트를 더했다. 뜻 · Stability · Target 은 그대로다.",
+      "basis": "eval_iter2 change-consistency-2-4",
+      "depends_on": [],
+      "action_planned": "absent",
+      "change_executed": "improvement iter2(MEDIUM change-consistency-2-4, qna #38)가 AC-3 의 「모드 토글」을 「모드 아이콘」으로 고치고 Rationale 에 용어 개정 노트를 더했다. 뜻 · Stability · Target 은 그대로다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter2",
+        "finding": "classification-2-1",
+        "reason": "처음 분류(plan)에 행이 없던 요구를 실행 기록에 맞춰 더했다. action_planned=absent 는 분류 시점에 계획 행이 없었다는 뜻이다."
+      }
+    },
+    {
+      "order": 100,
+      "id": "FR-ATTACH-008",
+      "kind": "requirement",
+      "file": "docs/spec/15.attachments.srs.md",
+      "action": "edit-in-place",
+      "status_now": "planned",
+      "stability_now": "draft",
+      "change": "improvement iter2(qna #38)가 Implementation Notes 에 「모드 토글」 → 모드 아이콘 용어 개정 노트만 더했다.",
+      "basis": "eval_iter2 change-consistency-2-4",
+      "depends_on": [],
+      "action_planned": "absent",
+      "change_executed": "improvement iter2(qna #38)가 Implementation Notes 에 「모드 토글」 → 모드 아이콘 용어 개정 노트만 더했다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter2",
+        "finding": "classification-2-1",
+        "reason": "처음 분류(plan)에 행이 없던 요구를 실행 기록에 맞춰 더했다. action_planned=absent 는 분류 시점에 계획 행이 없었다는 뜻이다."
+      }
+    },
+    {
+      "order": 101,
+      "id": "FR-ATTACH-003",
+      "kind": "requirement",
+      "file": "docs/spec/15.attachments.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "improvement iter2(qna #38)가 Implementation Notes 에 용어 개정 노트만 더했다 — verified 를 유지했다(노트 추가는 AC · 문면을 바꾸지 않는다).",
+      "basis": "eval_iter2 change-consistency-2-4",
+      "depends_on": [],
+      "action_planned": "absent",
+      "change_executed": "improvement iter2(qna #38)가 Implementation Notes 에 용어 개정 노트만 더했다 — verified 를 유지했다(노트 추가는 AC · 문면을 바꾸지 않는다).",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter2",
+        "finding": "classification-2-1",
+        "reason": "처음 분류(plan)에 행이 없던 요구를 실행 기록에 맞춰 더했다. action_planned=absent 는 분류 시점에 계획 행이 없었다는 뜻이다."
+      }
+    },
+    {
+      "order": 102,
+      "id": "SEC-PRINCIPAL-003",
+      "kind": "requirement",
+      "file": "docs/spec/16.principal.srs.md",
+      "action": "edit-in-place",
+      "status_now": "implemented",
+      "stability_now": "stable",
+      "change": "improvement iter2(LOW change-consistency-2-5)가 FR-SHELL-014 trace 행 notes 의 「좌측 검색 탭」을 좌측 검색 보기로 고치고 같은 용어 개정 노트를 더했다. AC 는 바뀌지 않았다.",
+      "basis": "eval_iter2 change-consistency-2-5",
+      "depends_on": [],
+      "action_planned": "absent",
+      "change_executed": "improvement iter2(LOW change-consistency-2-5)가 FR-SHELL-014 trace 행 notes 의 「좌측 검색 탭」을 좌측 검색 보기로 고치고 같은 용어 개정 노트를 더했다. AC 는 바뀌지 않았다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter2",
+        "finding": "classification-2-1",
+        "reason": "처음 분류(plan)에 행이 없던 요구를 실행 기록에 맞춰 더했다. action_planned=absent 는 분류 시점에 계획 행이 없었다는 뜻이다."
+      }
+    },
+    {
+      "order": 103,
+      "id": "FR-STORAGE-010",
+      "kind": "requirement",
+      "file": "docs/spec/14.storage.srs.md",
+      "action": "edit-in-place",
+      "status_now": "planned",
+      "stability_now": "stable",
+      "change": "improvement iter2(LOW change-consistency-2-5)가 Tags newspaper 를 design-v2 로 고쳤다. AC 는 바뀌지 않았다.",
+      "basis": "eval_iter2 change-consistency-2-5",
+      "depends_on": [],
+      "action_planned": "absent",
+      "change_executed": "improvement iter2(LOW change-consistency-2-5)가 Tags newspaper 를 design-v2 로 고쳤다. AC 는 바뀌지 않았다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter2",
+        "finding": "classification-2-1",
+        "reason": "처음 분류(plan)에 행이 없던 요구를 실행 기록에 맞춰 더했다. action_planned=absent 는 분류 시점에 계획 행이 없었다는 뜻이다."
+      }
+    },
+    {
+      "order": 104,
+      "id": "SEC-ARCH-002",
+      "kind": "requirement",
+      "file": "docs/spec/02.product-architecture.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "improvement iter1(change-consistency-1-5)이 Implementation Notes 에 Trace Links 의 CON-SHELL-002 행이 부르는 「좌측 검색 탭」은 원장 R3 개정으로 리본 버튼이 여는 좌측 검색 보기를 가리킨다는 노트를 더했다(verified 라 행 Notes 대신). AC 는 바뀌지 않았다.",
+      "basis": "eval_iter1 change-consistency-1-5 (srs_delta mcp_calls #323)",
+      "depends_on": [],
+      "action_planned": "absent",
+      "change_executed": "improvement iter1(change-consistency-1-5)이 Implementation Notes 에 Trace Links 의 CON-SHELL-002 행이 부르는 「좌측 검색 탭」은 원장 R3 개정으로 리본 버튼이 여는 좌측 검색 보기를 가리킨다는 노트를 더했다(verified 라 행 Notes 대신). AC 는 바뀌지 않았다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter3",
+        "finding": "classification-3-1",
+        "reason": "처음 분류(plan)에 행이 없던 요구를 실행 기록에 맞춰 더했다. action_planned=absent 는 분류 시점에 계획 행이 없었다는 뜻이다."
+      }
+    },
+    {
+      "order": 105,
+      "id": "FR-ARCH-001",
+      "kind": "requirement",
+      "file": "docs/spec/02.product-architecture.srs.md",
+      "action": "edit-in-place",
+      "status_now": "verified",
+      "stability_now": "stable",
+      "change": "improvement iter1(change-consistency-1-5)이 Implementation Notes 에 Trace Links 의 CON-SHELL-002 행이 부르는 「좌측 검색 탭」은 원장 R3 개정으로 리본 버튼이 여는 좌측 검색 보기를 가리킨다는 노트를 더했다(verified 라 행 Notes 대신). AC 는 바뀌지 않았다.",
+      "basis": "eval_iter1 change-consistency-1-5 (srs_delta mcp_calls #324)",
+      "depends_on": [],
+      "action_planned": "absent",
+      "change_executed": "improvement iter1(change-consistency-1-5)이 Implementation Notes 에 Trace Links 의 CON-SHELL-002 행이 부르는 「좌측 검색 탭」은 원장 R3 개정으로 리본 버튼이 여는 좌측 검색 보기를 가리킨다는 노트를 더했다(verified 라 행 Notes 대신). AC 는 바뀌지 않았다.",
+      "reclassified": {
+        "date": "2026-09-23",
+        "by": "phase-6 improvement iter3",
+        "finding": "classification-3-1",
+        "reason": "처음 분류(plan)에 행이 없던 요구를 실행 기록에 맞춰 더했다. action_planned=absent 는 분류 시점에 계획 행이 없었다는 뜻이다."
+      }
+    }
+  ],
+  "new_requirements": [
+    {
+      "temp_id": "NEW-1",
+      "scope": "EDITOR",
+      "type": "FR",
+      "title": "문서 헤더 아이콘 기반 보기·라이브 편집·소스 편집 3모드 순환과 권한 기반 기본 모드",
+      "surface": "packages/web/src/document/DocumentSurface.tsx, DocumentArea.tsx, surface-contract.ts, App.tsx(open/toTab), document-menu.ts",
+      "basis": "결정 기록 '확정 사항 > 편집 모드' 전체 문단; qna_log #4·#5; supersedes FR-EDITOR-002, FR-EDITOR-003",
+      "realized_id": "FR-EDITOR-011"
+    },
+    {
+      "temp_id": "NEW-6",
+      "scope": "SHELL",
+      "type": "FR",
+      "title": "리본의 뷰 전환 버튼 세 가지(문서 트리·검색·즐겨찾기)",
+      "surface": "packages/web/src/shell/shell-contract.ts(LEFT_TABS), AppShell.tsx",
+      "basis": "결정 기록 '색' 절 리본 확정 문단; qna_log #11; supersedes FR-SHELL-001",
+      "realized_id": "FR-SHELL-017"
+    },
+    {
+      "temp_id": "NEW-4",
+      "scope": "SHELL",
+      "type": "FR",
+      "title": "폴더 범위로 좁히는 검색(트리 메뉴 '폴더에서 검색')",
+      "surface": "packages/web/src/search/search-axes.ts, SearchPanel.tsx",
+      "basis": "qna_log #8; 결정 기록 '파일 탐색기' 절 '폴더에서 검색' 문단",
+      "realized_id": "FR-SHELL-018"
+    },
+    {
+      "temp_id": "NEW-5",
+      "scope": "SHELL",
+      "type": "FR",
+      "title": "트리 노드 끌어서 이동·복사(드래그앤드롭)",
+      "surface": "packages/web/src/tree/DocumentTree.tsx(<Tree disableDrag disableDrop> 해제), tree-contract.ts",
+      "basis": "결정 기록 '파일 탐색기' 절 '끌어서 놓기' 문단; qna_log #9·#10",
+      "realized_id": "FR-SHELL-019"
+    },
+    {
+      "temp_id": "NEW-2",
+      "scope": "SHELL",
+      "type": "IR",
+      "title": "개인 설정 기본 색상 프리셋 6종과 직접 고르기의 HSL 파생 규칙",
+      "surface": "packages/web/src/theme/runtime.tsx, packages/server/src/app/settings/personal-settings.ts, shell-contract.ts(PERSONAL_SETTING_FIELDS)",
+      "basis": "결정 기록 '확정 사항 > 사용자별 기본 색상' 절",
+      "realized_id": "IR-SHELL-014"
+    },
+    {
+      "temp_id": "NEW-3",
+      "scope": "SHELL",
+      "type": "IR",
+      "title": "개인 설정 메뉴 밝기 조정(−2~+2 단계)",
+      "surface": "packages/web/src/theme/runtime.tsx, packages/server/src/app/settings/personal-settings.ts, shell-contract.ts(PERSONAL_SETTING_FIELDS)",
+      "basis": "결정 기록 '확정 사항 > 사용자별 기본 색상' 절 '메뉴 밝기는 −2~+2 단계' 문단",
+      "realized_id": "IR-SHELL-015"
+    }
+  ],
+  "scope_boundary_impact": [
+    {
+      "scopes": [
+        "SHELL",
+        "ATTACH"
+      ],
+      "requirements": [
+        "NEW-5",
+        "FR-ATTACH-001"
+      ],
+      "impact": "노트 위 드롭의 대상 해석 규칙(그 노트가 든 폴더)을 SHELL의 트리 끌기(NEW-5)와 ATTACH의 업로드 드롭(FR-ATTACH-001)이 공유해야 한다(qna_log #10). ATTACH의 Scope Boundaries In Scope가 '트리 드래그앤드롭(대상 디렉토리의 편집 권한)'을 이미 소유하므로, 같은 대상-해석 규칙을 SHELL 쪽에서 다시 정의하면 두 곳이 나눠 갖는 중복 규범이 된다(CLAUDE.md §10.2). 정의는 한 scope(권장: ATTACH — 이미 소유권이 있는 쪽)에 두고 다른 쪽은 Trace Link로 참조만 하도록 SRS 반영 때 정한다."
+    },
+    {
+      "scopes": [
+        "SHELL",
+        "WORKSPACE"
+      ],
+      "requirements": [
+        "NEW-4",
+        "FR-SHELL-013"
+      ],
+      "impact": "폴더 범위 검색(NEW-4)은 08.app-shell.srs.md §2 Scope Boundaries가 '검색 결과에 걸리는 표시 필터의 규범'을 WORKSPACE scope(SEC-WORKSPACE-004)에 위임한다고 명시한 경계와 인접한다. NEW-4는 검색 범위(무엇을 검색 대상으로 좁히는가)만 정의하고, 권한 기반 표시 필터의 정본(SEC-WORKSPACE-004)은 복제하지 않아야 한다."
+    },
+    {
+      "scopes": [
+        "EDITOR",
+        "ACL"
+      ],
+      "requirements": [
+        "NEW-1",
+        "FR-EDITOR-004"
+      ],
+      "impact": "권한 기반 기본 모드 결정(NEW-1)은 07.editor.srs.md §2 Scope Boundaries가 '편집 유효 권한의 정의와 계산'을 ACL scope 소유로 명시한 경계와 맞닿는다. NEW-1은 ACL이 계산한 유효 권한 값을 소비만 해야 하며, 권한 계산 로직 자체를 EDITOR scope에 재정의하지 않는다."
+    },
+    {
+      "scopes": [
+        "SHELL",
+        "ACL"
+      ],
+      "requirements": [
+        "IR-SHELL-011",
+        "FR-ACL-006",
+        "SEC-ACL-012"
+      ],
+      "impact": "v2 폴더 고르기 창 재설계가 프리뷰 UI 배치(SHELL 소유)와 프리뷰 계산·필요 권한(ACL 소유)을 한 화면에 합치므로, 구현 시 ACL 쪽 계산 로직을 SHELL 요구에 인라인하지 않도록 주의가 필요하다(이미 SEC-ACL-012/FR-ACL-006이 no-change로 유지되는 근거이기도 하다)."
+    }
+  ],
+  "external_module_impact": null,
+  "unresolved": [
+    {
+      "item": "직접 고른 색상이 대비 목표(메뉴 글자·메뉴 보조 글자 등)에 못 미칠 때의 구체 처리 방식(경고/자동 보정/허용 하한 등)",
+      "why": "결정 기록은 '두 문제는 구현 때 해결한다'고만 적고 구체 메커니즘을 정하지 않았으며, qna_log 11건에도 포함되지 않는다. NEW-2 AC를 완성하려면 이 결정이 먼저 필요하다.",
+      "basis": "decision-v2.md '확정 사항 > 사용자별 기본 색상' 절 '대비 목표와 명도 자동 조정' 문단 마지막 문장; intent.json implied_requirements #3"
+    },
+    {
+      "item": "IR-SHELL-008(설정·오버레이 확대 도달성) 이 IR-SHELL-006 AC-4 치수 축소(컨트롤 높이·필드 간격)의 영향을 받는지",
+      "why": "결정 기록이 이 요구를 직접 언급하지 않는다. existing_srs_context.json 자체가 '구현 때 확인 필요'라고만 적어 아직 결정되지 않았다.",
+      "basis": "existing_srs_context.json IR-SHELL-008 v2_change"
+    },
+    {
+      "item": "IR-PRINCIPAL-001의 '공통 신문지 부품' 명칭이 v2 이후에도 유효한 용어인지",
+      "why": "결정 기록이 오프보딩 화면을 언급하지 않는다. 부품 자체(색·서체·치수)는 IR-SHELL-006 경로로 바뀌지만, 요구 문면의 '신문지 부품' 표현을 그대로 둘지 다른 공통 명칭으로 바꿀지는 정해지지 않았다.",
+      "basis": "existing_srs_context.json IR-PRINCIPAL-001 v2_change"
+    }
+  ],
+  "counts": {
+    "supersede": 3,
+    "edit-in-place": 17,
+    "new": 6,
+    "prose-edit": 30,
+    "no-change": 38
+  },
+  "counts_note": "2026-09-23 iter1: IR-PRINCIPAL-001 을 no-change 에서 edit-in-place 로 재분류했다 — counts 의 원래 값은 분류 시점 집계로 남긴다. 2026-09-23 iter2: FR-SHELL-016 · IR-SHELL-008 · IR-SHELL-003 을 no-change 에서 edit-in-place 로 재분류하고, 계획 행이 없던 FR-EDITOR-007 · CON-SHELL-002 · FR-STORAGE-003 · FR-EDITOR-012 · FR-ATTACH-007 · FR-ATTACH-008 · FR-ATTACH-003 · SEC-PRINCIPAL-003 · FR-STORAGE-010 을 order 95~103 으로 더했다(action_planned=absent). counts 는 여전히 분류 시점 집계다. 2026-09-23 iter3: FR-EDITOR-005 · FR-SHELL-012 · FR-SHELL-008 을 no-change 에서 edit-in-place(주석 · trace 만)로 재분류하고, 계획 행이 없던 SEC-ARCH-002 · FR-ARCH-001 을 order 104 · 105 로 더했다(action_planned=absent). counts 는 여전히 분류 시점 집계다. 2026-09-23 iter4: DR-SHELL-002 를 no-change 에서 edit-in-place(주석만)로 재분류했다. counts 는 여전히 분류 시점 집계다. 2026-09-23 iter5: 새 요구 계획 행 NEW-1~NEW-6 과 new_requirements 여섯 행에 realized_id(실제로 선 요구 ID)와 계획 행의 realized_by(어느 MCP 호출의 결과인지)를 더했다(5차 독립 검증 classification-5-1). 대응은 srs_delta.json 의 supersede_requirement · add_requirement 호출 결과 ID 와 제목으로 확인했다. counts 는 여전히 분류 시점 집계다."
+}

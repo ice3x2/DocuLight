@@ -1,0 +1,88 @@
+{
+  "evaluator": "verify-pass-1",
+  "iter": 6,
+  "inputs_checked": {
+    "validate_spec": "errors 0, warnings 5 (SRS-W072 x1 기존, SRS-W015 x4 는 FR-EDITOR-007 강등의 결과) — iter5 와 같다. ID 중복 없음. iter5 의 update_status 여섯 번은 모두 같은 상태의 변경 기록이라 00.index §5 · §6 수치(planned 31 · in_progress 23 · implemented 69 · verified 176 · discarded 3, FR 108 · IR 39)는 그대로 맞고, summarize_target(phase-1)도 합계 291 · verified 176 · discarded 3 으로 어긋나지 않는다.",
+    "golden_rule": "iter5 개선 직전 사본(scratchpad snap_iter5) 대비 바뀐 요구 블록은 07 의 FR-EDITOR-011, 08 의 FR-SHELL-016 · IR-SHELL-006 · FR-SHELL-017 · FR-SHELL-018 · IR-SHELL-014 · IR-SHELL-015 일곱이다. srs_delta.mcp_calls 는 앞 592개가 사본과 글자 그대로 같고, 더해진 592~630번째 호출(모두 ok)이 일곱 블록의 바뀐 절(Requirement · AC · 노트 · Trace · 변경 기록)과 하나씩 대응한다. 631 · 632 는 validate_spec 이다. 07 · 08 의 요구 블록 밖 산문은 바뀌지 않았다.",
+    "ac_deletion": "HEAD 대비 바뀐 SRS 파일 전부를 블록 단위로 대조했다 — 삭제된 AC 0, 새로 체크된 AC 0, 체크된 채 문면이 바뀐 AC 0. Status 변화는 verified → in_progress 16 과 verified → discarded 3 으로 앞 회차와 같다. iter5 이후 AC 집합이 바뀐 것은 FR-SHELL-016(AC-10 신설) 하나이고, 문면이 바뀐 AC(IR-SHELL-014 AC-14 · IR-SHELL-015 AC-5 · IR-SHELL-006 AC-16 · AC-17 · FR-SHELL-017 AC-10 · FR-EDITOR-011 AC-18)는 모두 미체크이며 해당 블록에 변경 기록 행이 있다. FR-SHELL-018 은 trace notes 만 바뀌어 변경 기록이 필요 없다(규칙 §26).",
+    "trace_paths": "HEAD 이후 더해진 Trace · 증거 행의 Code · Doc · Test 경로를 전부 파일시스템에서 확인했다 — 없는 경로 0, trace_intent 없는 Code 행 0. iter5 에서 새로 적힌 줄 번호는 코드와 맞는다: App.tsx 의 create 는 637-659행(useCallback, SRS 의 638-657 은 그 안), createNote 668-673행, tree-contract.ts 40-44행(WorkspaceTreeView 의 visibility) · 194-199행(루트 권한 주석), DocumentTree.tsx 557행(상단 버튼).",
+    "measurement": "승인 시안 Palette IIFE(docs/decision/design-v2.html 927행 이하)를 node 로 다시 실행해 여섯 프리셋 × 두 테마 × 다섯 단계에서 강조색과 --menu-active 의 대비를 쟀다 — 3:1 미달은 한지 · 밝게 · −2(2.98) · 쑥 · 밝게 · −1(2.90) · 쑥 · 밝게 · −2(2.78) 셋으로 IR-SHELL-014 Research 넷째 항과 같다. untilContrast 의 경계(2 < l < 98)로 보아 AC-14 방식의 명도 이동은 어떤 색상 · 채도에서도 3:1 에 닿는다(밝게는 75~83% 타일 위에서 어두운 쪽, 어둡게는 30% 이하 타일 위에서 밝은 쪽). 리본 활성 타일이 .icon-btn[aria-pressed=true] 의 --menu-active 라는 IR-SHELL-014 ⑫ 의 서술도 시안 135행과 맞다.",
+    "prose_delta": "prose_delta.edits 에 iter5 로 더해진 18 행(03 8 · 04 2 · 05 7 · 02 1)이 사본 대비 02 · 03 · 04 · 05 의 산문 차이를 빠짐없이 덮는다. 05 §9.1 13행 · §9.2 9행은 절 제목의 건수와 맞다.",
+    "decision_coverage": "qna #55 는 IR-SHELL-014 AC-14 · Requirement · Rationale · Research 넷째 항 · ⑬, IR-SHELL-015 AC-5 · Requirement · 노트, IR-SHELL-006 AC-16 · AC-17 · 노트, FR-SHELL-017 ⑩, 04 §2.2 에 반영돼 있다. #56 은 FR-SHELL-016 AC-10 · Requirement · 노트, FR-EDITOR-011 AC-18, 03 §7.2 에, #57 은 05 §2.1.1 · §6 · §2.6.2 · §2.2.1 · §9 에 반영돼 있다. 설계서 03 · 04 는 독립 읽기 두 건(서브에이전트, 결론 비공유)으로 처음부터 끝까지 다시 대조하고 그 지적을 원문에서 확인했다 — 04 에는 표기 없이 남은 v2 이전 문면이 없고, 03 에는 동작을 바꾸지 않는 문면 잔재가 몇 곳 남았다(change-consistency-6-1). 05 에는 #57 이 명시한 세 곳 밖에서 v2 결정과 어긋나는 곳 둘이 남았다(internal-6-1 · change-consistency-6-2).",
+    "excluded_or_out_of_scope": "① 03 §3.2.4 · §11 G30 · 원장 R173 · CON-EDITOR-003 의 「편집 모드 헤더 축약 불가 블록 247px」은 v2 가 없앤 두 토글을 넣어 잰 값이지만, R173 이 이미 「Phase 2 회차는 판정 전에 247px 을 다시 재라」고 적었고 eval_iter4 change-consistency-4-6 이 같은 이유로 제외했으므로 올리지 않았다. ② 원장 R146 · R147 의 「모드 토글」 문면은 eval_iter2 change-consistency-2-4 가 원장 판단으로 남겼다(03 §12 R147 행은 설계서 쪽이라 change-consistency-6-1 에 넣었다). ③ v2 와 무관한 v2 이전 문제로 관찰만 한 것: 04 §1.3 · §1.4 인스턴스 구역에 `색인 대기열`(IR-SHELL-002 AC-6 · AC-8, R157-a)이 없음, 04 §9 의 G10 · G15 가 원장 종결 뒤에도 열린 것으로 남음, 03 §11 의 G30 행이 원장 종결(2026-09-02) 뒤에도 취소선 없이 남음. ④ known_residuals(conflict-2-1 · change-consistency-2-5), improvement_iter5.unresolved(03 §7.8 · AC-14 이동 폭 · IR-SHELL-006 AC-9 허용 오차 · 03 §9.1 대체 키), implementation_tasks(IR-SHELL-011 AC-15 · FR-SHELL-016 AC-8)는 다시 올리지 않았다.",
+    "iter5_findings": "iter5 의 MEDIUM 3 · LOW 6 은 모두 해소를 확인했다. feasibility-5-1 · internal-5-2 는 qna #55 로(Requirement 문장이 활성 아이콘 색을 파생 대상에 넣고 AC-14 가 명도를 옮기므로 「대비 목표에 닿을 때까지 명도를 옮긴다」가 AC-14 에도 참이다), change-consistency-5-1 은 qna #56 과 FR-SHELL-016 AC-10 으로, change-consistency-5-2 는 qna #57 과 05 편집으로, internal-5-1 은 AC-10 목록 확장으로, feasibility-5-2 는 Implementation Notes 와 implementation_tasks 로, change-consistency-5-3 · 5-4 · classification-5-1 은 해당 산문 · 파일 편집으로 닫혔다. 다만 change-consistency-5-3 이 고친 03 §2.2.4 의 같은 절 제목과 표에 「새 디렉토리」 문면이 남았다(change-consistency-6-1 ②)."
+  },
+  "findings": [
+    {
+      "id": "internal-6-1",
+      "severity": "MEDIUM",
+      "axis": "internal-consistency",
+      "req_id": "FR-SHELL-003",
+      "evidence_path": "docs/spec/05.screen-design-permission.md:280",
+      "description": "결정 기록 파일 탐색기 절(design-v2.md:115)은 pass-through 노드를 「이름만 보이고, 메뉴의 모든 항목이 비활성이며, 드롭 대상이 되지 않는다」로 확정했고, 설계서 03 §2.2.5(03:383 「pass-through 노드에서는 전 항목 비활성(R69-b)」)와 §10 2행(03:1672 「컨텍스트 메뉴는 뜨되 전 항목 비활성」)도 같다. 이번 회차가 다시 쓴 FR-SHELL-003 AC-2(08:406)도 「디렉토리 노드와 pass-through 노드의 메뉴는 같은 순서에서 `새 버전 올리기…` 묶음이 빠지고 …」라 적어 pass-through 메뉴에 `공유…` 가 선다고 요구한다. 그런데 공유 진입을 소유하는 설계서 05 는 §2.1.1(05:280) 「pass-through 노드(R69): 컨텍스트 메뉴에서 `공유` 를 렌더하지 않는다」와 §8 7행(05:1719) 「컨텍스트 메뉴에 `공유` 를 렌더하지 않는다」를 그대로 둔다. 03 §2.2.5 공유 행은 모달을 05 소관으로 넘기므로, 05 를 보고 만들면 FR-SHELL-003 AC-2 가 실패하고 결정 기록과도 다르다. 03 과 05 의 이 어긋남은 v2 이전부터 있었지만 v2 결정 기록과 AC-2 개정이 한쪽을 명시했고, qna #57 로 05 를 v2 에 맞춘 5차 개선은 바로 위 줄(05:279)만 고쳤다.",
+      "suggested_action": "prose_edit — 05 §2.1.1 의 pass-through 항목과 §8 7행을 결정 기록 · 03 §2.2.5 · FR-SHELL-003 AC-2 에 맞춰 「메뉴는 뜨되 `공유…` 를 포함한 전 항목이 흐리게 놓이고 실행되지 않는다(R69-b)」로 고치고, 옛 문면은 05 관례의 〔2026-09-23 디자인 v2 — 초판은 …〕 표기로 남긴다. pass-through 에서 공유를 아예 그리지 않는 것이 의도라면 escalate 로 정한 뒤 FR-SHELL-003 AC-2 와 결정 기록 대응을 고친다.",
+      "repeat_of": null
+    },
+    {
+      "id": "ac-6-1",
+      "severity": "MEDIUM",
+      "axis": "ac-judgeability",
+      "req_id": "IR-SHELL-006",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2012",
+      "description": "이번 회차가 세운 IR-SHELL-006 AC-14 는 「설정 화면의 항목 행은 왼쪽에 이름과 한 줄 설명을, 오른쪽에 컨트롤을 둔다」로 예외 없이 요구한다(결정 기록 입력 폼과 버튼 절 design-v2.md:70 의 문면을 옮김). 그런데 승인 시안은 기본 색상 항목만 `setting-item stack`(design-v2.html:720, 규칙 406행 `flex-direction: column`)으로 그려 프리셋 여섯과 직접 고르기를 이름 · 설명 아래에 두고, 그 설명도 세 문장이다. 설계서 04 §2.2 외관 그림(04:192-195)도 프리셋 줄을 이름 · 설명 아래에 그린다. 시안 · 04 대로 만들면 기본 색상 행에서 AC-14 가 실패하고, AC-14 대로 만들면 사용자가 고정한 시안과 다른 배치가 선다. IR-SHELL-014 AC-1 과 04 §2.2 는 이 차이를 다루지 않아 어느 쪽이 정답인지 판정할 근거가 없다.",
+      "suggested_action": "fix_via_mcp — IR-SHELL-006 AC-14 에 「컨트롤이 한 줄에 들지 않는 항목(기본 색상의 프리셋 · 직접 고르기)은 이름과 설명 아래에 컨트롤을 둔다(승인 시안 .setting-item.stack)」 예외를 더하고 변경 기록을 남긴다. 오른쪽 배치를 모든 항목에 지키는 것이 의도라면 escalate 로 정한 뒤 04 §2.2 그림을 고친다.",
+      "repeat_of": null
+    },
+    {
+      "id": "internal-6-2",
+      "severity": "LOW",
+      "axis": "internal-consistency",
+      "req_id": "FR-SHELL-017",
+      "evidence_path": "docs/spec/03.screen-design-shell.md:929",
+      "description": "FR-SHELL-017 AC-10(08:2640)은 리본 밖에서 좌측 사이드바의 보기를 바꾸는 조작을 다섯으로 열거하고 「이 다섯이 전량이다」로 닫았고, AC-11 은 백링크 · 딥링크로 문서를 열 때의 트리 펼침만 따로 다룬다. 설계서 03 에는 두 목록 어디에도 들지 않으면서 트리에서 노드를 고르는 조작이 둘 더 있다 — §3.3 문서 헤더 표의 경로 브레드크럼 「조상 클릭 → 트리에서 해당 디렉토리 선택」(03:929)과 §3.9.1 `/w/<워크스페이스ID>` 「그 워크스페이스를 트리에서 펼치고 선택」(03:1120, 〔판단〕). 같은 성격의 폴더 주소 열기(`/n/` 디렉토리, 03:1119)는 AC-10 에 들어 트리 보기로 바꾸고 접힌 사이드바를 펼치는데, 이 둘은 좌측 사이드바가 검색 보기이거나 접혀 있을 때 무엇을 하는지(AC-10 처럼 트리 보기로 바꾸고 펼치는지, AC-11 처럼 트리 보기가 보일 때만 고르는지) 정해지지 않았다. 「전량」 문면대로 읽으면 둘 다 보기를 바꾸지 않는 조작이 되어, 사이드바가 접힌 동안의 브레드크럼 클릭은 화면에 아무 변화도 만들지 않는다. 5차 internal-5-1(폴더에서 검색 누락)과 같은 부류다.",
+      "suggested_action": "prose_edit(필요하면 escalate) — 03 §3.3 브레드크럼 행과 §3.9.1 `/w/` 행에 어느 규칙을 따르는지(폴더 주소 열기와 같게 FR-SHELL-017 AC-10, 또는 AC-11 과 같게 트리 보기가 보일 때만)를 적는다. AC-10 쪽으로 정하면 FR-SHELL-017 AC-10 목록 · Requirement 문장 · Implementation Notes ⑦ · ⑪ 을 MCP 로 함께 고친다.",
+      "repeat_of": null
+    },
+    {
+      "id": "change-consistency-6-1",
+      "severity": "LOW",
+      "axis": "change-consistency",
+      "req_id": "-",
+      "evidence_path": "docs/spec/03.screen-design-shell.md:1971",
+      "description": "03 을 처음부터 끝까지 다시 대조한 결과, 표기 없이 옛 문면을 현재형으로 적은 곳이 다섯 남았다(동작 규칙은 바꾸지 않는다). ① §12 R147 행(03:1971) 「모드 토글 … `G34` ④」 — qna #38 은 남은 「모드 토글」을 「모드 아이콘」으로 고치기로 했고 같은 문서 §1.3 의 같은 항목(03:200)은 「모드 아이콘 §3.4」로 고쳐져 있다. ② §2.2.4 제목 「새 노트 버튼 · 새 디렉토리 (R88)」(03:299)와 두지 않는 버튼 표의 「`새 디렉토리`」(03:311) — v2 메뉴 항목은 `새 폴더` 이고 결정 기록(design-v2.md:154)도 걷어낸 버튼을 「새 폴더 버튼」이라 부른다. 5차 change-consistency-5-3 은 같은 절의 314행만 고쳤다. ③ §2.2.5 필요 권한 표의 `새 폴더` 행(03:359) — 바로 위 `새 노트` 행은 「노트를 눌렀다면 그 노트가 든 폴더가 기준이다」를 적는데 `새 폴더` 행에는 없다(결정 기록 design-v2.md:118 과 FR-SHELL-016 AC-2 는 둘 다 같은 규칙). ④ §3.3 v2 헤더 그림(03:913)의 「● 저장됨」 — §3.5 표(03:998 · 03:1001)는 저장됨을 「✓ 저장됨」으로, ● 를 「편집 중」으로 쓴다. ⑤ §11-19(03:1762)가 헤더 ⋯ 의 공유를 `보기` 권한자에게 어떻게 할지를 열린 질문(「비활성(열지 않음)」)으로 두고 1840행 집계도 열린 것으로 센다 — 결정 기록 편집 모드 절과 원장 R24-b 개정이 「흐리게 + 『권한 없음』」으로 닫았고 같은 문서 §3.3(03:954)이 이미 그렇게 적는다.",
+      "suggested_action": "prose_edit — ①~④ 를 v2 문면으로 고치고 ⑤ 는 §11-19 를 종결 표기(결정 기록 편집 모드 절 · R24-b 개정 · §3.3)로 바꾸며 1840행 집계를 맞춘다. 03 관례(§0.3-7)대로 고친 곳에는 정정 사유를 적지 않고 §13 에 회차 행을 남긴다.",
+      "repeat_of": null
+    },
+    {
+      "id": "change-consistency-6-2",
+      "severity": "LOW",
+      "axis": "change-consistency",
+      "req_id": "FR-EDITOR-011",
+      "evidence_path": "docs/spec/05.screen-design-permission.md:276",
+      "description": "원장 R24-b 개정은 헤더 ⋯ 메뉴가 「문서 본문 우클릭으로도 열린다」고 더했고(비-md 파일에서도 복사 · 공유가 남는다), FR-EDITOR-011 AC-11(07:1188)은 본문 우클릭 메뉴에도 공유 항목이 있다고 요구한다. 공유 모달의 진입을 정의하는 05 §2.1.1 진입 표(05:276-277)와 §0 화면 목록(05:34)은 「문서 헤더 메뉴 › 공유」와 「트리 컨텍스트 메뉴 › 공유」 둘만 적는다. 본문 우클릭 메뉴는 헤더 ⋯ 와 같은 항목 배열이라(FR-EDITOR-011 Implementation Notes ⑤) 결과는 같지만, 05 만 보고 공유 진입과 그 권한 표시(흐리게 + 「권한 없음」)를 구현 · 시험하면 셋째 진입이 빠진다. qna #57 로 05 를 v2 에 맞춘 5차 개선이 다루지 않았다.",
+      "suggested_action": "prose_edit — 05 §2.1.1 진입 표의 첫 행을 「문서 헤더 ⋯ · 문서 본문 우클릭 메뉴 › 공유 | 문서를 열고 있을 때(R24-b 개정 — 같은 메뉴)」로 넓히거나 행을 하나 더하고, §0 표와 머리표 갱신 행을 맞춘다.",
+      "repeat_of": null
+    },
+    {
+      "id": "internal-6-3",
+      "severity": "LOW",
+      "axis": "internal-consistency",
+      "req_id": "IR-SHELL-007",
+      "evidence_path": "docs/spec/04.screen-design-settings.md:211",
+      "description": "이번 회차가 04 §2.2 에 새로 쓴 문장(04:211) 「테마는 첫 페인트 전에 필요하므로 클라이언트 캐시를 둘 수 있으나 캐시는 정본이 아니다(R152)」는 캐시의 저장소와 수명을 한정하지 않는다. IR-SHELL-007 AC-2(인증 전 첫 페인트는 현재 OS 테마, 새로고침 첫 페인트에 이전 사용자의 DB 선택을 추측하지 않음)와 AC-3(캐시는 현재 탭 메모리에만, 브라우저 영속 저장소에 테마를 두지 않음)은 첫 페인트용 영속 캐시를 허용하지 않고, 결정 기록(design-v2.md:158)도 외관 설정을 localStorage 에 두는 것을 시안의 예시로 돌렸다. 또 그 문장은 테마만 말하지만 IR-SHELL-007 AC-6 은 기본 색상 · 메뉴 밝기에 같은 캐시 격리를 건다. 같은 문면(「클라이언트 로컬 캐시」)이 v2 이전부터 IR-SHELL-004 Implementation Notes ④ 에 있어 이번 회차가 그것을 옮긴 것으로 보인다.",
+      "suggested_action": "prose_edit — 04:211 을 「첫 페인트와 캐시 격리는 IR-SHELL-007 AC-2 · AC-3 · AC-6 이 정한다(인증 전 첫 페인트는 OS 테마, 캐시는 같은 사용자에 묶인 현재 탭 메모리만, 기본 색상 · 메뉴 밝기도 같다)」로 바꾼다. IR-SHELL-004 ④ 에도 같은 뜻의 정정 노트를 MCP 로 붙일지 조정자가 정한다.",
+      "repeat_of": null
+    },
+    {
+      "id": "internal-6-4",
+      "severity": "LOW",
+      "axis": "internal-consistency",
+      "req_id": "-",
+      "evidence_path": "docs/spec/04.screen-design-settings.md:7",
+      "description": "04 머리표의 「근거 문서 | `docs/spec/00.decision-log.md` (R1~R145) — 이 문서가 유일한 요건 근거다」와 문서 규칙 2(04:34 「결정 로그에 없는 사실을 있다고 서술하지 않는다」)가 이번 회차가 04 에 넣은 서술과 어긋난다. 04:206 은 「파생 규칙과 대비 목표의 정본은 `IR-SHELL-014` 다(모호성 해소 #34)」라 적고, §2.2 의 메뉴 밝기 규칙은 원장에 없는 qna #12 · #16 · #24 · #27 · #40 · #47 · #55 와 SRS AC 를 정본으로 인용한다. 머리표만 읽는 사람은 원장에 없는 그 규칙들을 설계자 판단(§9 등재 대상)으로 오해할 수 있다. R1~R145 라는 범위가 R152 · R157 을 쓰는 본문과 맞지 않는 것은 v2 이전부터다.",
+      "suggested_action": "prose_edit — 머리표 근거 문서 칸에 SRS(`docs/spec/*.srs.md` — 특히 IR-SHELL-002 · IR-SHELL-004 · IR-SHELL-014 · IR-SHELL-015)와 2026-09-23 모호성 해소(qna_log.json)를 정본 근거로 더하고, 규칙 2 를 「원장이나 SRS 에 없는 사실」로 넓힌다. R1~R145 표기는 함께 고칠지 조정자가 정한다.",
+      "repeat_of": null
+    }
+  ],
+  "summary": { "CRITICAL": 0, "HIGH": 0, "MEDIUM": 2, "LOW": 5 }
+}

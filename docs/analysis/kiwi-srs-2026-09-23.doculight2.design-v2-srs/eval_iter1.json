@@ -1,0 +1,247 @@
+{
+  "evaluator": "verify-pass-1",
+  "iter": 1,
+  "findings": [
+    {
+      "id": "change-consistency-1-1",
+      "severity": "HIGH",
+      "axis": "6. 변경 일관성",
+      "req_id": "FR-EDITOR-007",
+      "evidence_path": "docs/spec/07.editor.srs.md:726",
+      "description": "verified 인 FR-EDITOR-007 AC-11 이 아직 「본문 태그를 클릭하면 좌측 검색 탭이 활성되고」라고 적는다. R3 개정과 FR-SHELL-017 AC-3(좌측 사이드바 상단에 뷰 전환 탭 줄이 존재하지 않는다)으로 그 탭은 없어졌다. 같은 동선을 같은 문구로 적던 FR-SHELL-010 은 이번 회차에서 in_progress 로 내리고 「검색 보기 + 리본 검색 버튼 활성」으로 고쳤는데, 본문 태그 쪽 AC 는 그대로 verified 로 남았다. 같은 사실을 두 요구가 다르게 단정하는 상태다. 원장 R3 비고의 「검색 탭 = 검색 보기」 재해석 문장은 SRS 쪽 어디에도 없다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "change-consistency-1-2",
+      "severity": "HIGH",
+      "axis": "6. 변경 일관성",
+      "req_id": "FR-SHELL-016",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:1862",
+      "description": "verified 인 FR-SHELL-016 의 AC-1 · AC-2 와 Rationale(1858행 「트리 컨텍스트 메뉴 아홉 항목 중 `새 문서` 와 `새 디렉토리`」)이 메뉴 항목을 옛 라벨 `새 문서` · `새 디렉토리` 로 부른다. FR-SHELL-003 AC-2 와 원장 R88-a 개정은 이 항목을 `새 노트` · `새 폴더` 로 바꿨다. 분류가 FR-SHELL-016 을 no-change 로 두어서, FR-SHELL-003 을 구현하는 순간 verified AC 의 문면이 거짓이 된다. 동작은 그대로 두더라도 라벨은 맞춰야 한다. 결정 기록 표도 「시각만 v2 로 바꾸고」라고 적는다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "change-consistency-1-3",
+      "severity": "HIGH",
+      "axis": "6. 변경 일관성",
+      "req_id": "IR-EDITOR-002",
+      "evidence_path": "docs/spec/07.editor.srs.md:1072",
+      "description": "결정 기록 적용 범위 표의 IR-EDITOR-002 행은 크기와 읽기 폭, 그리고 「소스 행간을 다시 정한다」를 요구한다. 개정된 AC-1 은 옛 14/22px 에서 행간을 빼고 값 없이 남겼다. Implementation Notes ④(1108행)는 「구현 전에 정하라」며 결정을 구현으로 넘긴다. 그런데 승인 시안에는 소스 편집 행간이 있다(docs/decision/design-v2.html:248 `.source { font-size: 14px; line-height: 1.8 }`). 같은 요구가 읽기 폭 700px 는 시안에서 가져왔으므로 근거를 고르는 기준이 어긋나고, 결정 기록이 SRS 에 정하라고 한 항목 하나가 빠졌다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "conflict-1-1",
+      "severity": "MEDIUM",
+      "axis": "2. 충돌 처리",
+      "req_id": "FR-SHELL-012",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:1246",
+      "description": "verified 인 FR-SHELL-012 의 Trace Links 가 폐기된 FR-SHELL-001 을 여전히 `depends_on` 으로 가리킨다(「클릭 출발점이 좌측 문서 트리다」). 같은 참조를 가진 FR-SHELL-003 · FR-SHELL-010 · FR-SHELL-013 은 FR-SHELL-017 로 옮겼지만 FR-SHELL-012 는 no-change 로 분류돼 빠졌다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "change-consistency-1-4",
+      "severity": "MEDIUM",
+      "axis": "6. 변경 일관성",
+      "req_id": "-",
+      "evidence_path": "docs/spec/07.editor.srs.md:20",
+      "description": "scope 문서의 Overview 와 Scope Boundaries 가 옛 모델을 현재형으로 단정한다. 07: 11행 「(모드 토글 · 라이브 프리뷰 · …)」, 20행 In Scope 「단일 화면과 상단 보기·편집 모드 토글, 편집 모드 안의 라이브 프리뷰·소스 하위 토글 (`FR-EDITOR-002`·`FR-EDITOR-003`)」, 22행 「토글 비활성 … 토글 숨김」, 32행 「모드 토글의 숨김만 규정한다」. 08: 19행 In Scope 「좌측 사이드바의 뷰 전환 탭 구성 (`FR-SHELL-001`…)」, 37행 「`FR-SHELL-001` 의 동형 요구는 탭 전환 구조와 배치로 한정」. 폐기된 ID 가 In Scope 대표 요구로 남았고, 새 요구 일곱 건(FR-EDITOR-011/012, FR-SHELL-017/018/019, IR-SHELL-014/015)은 In Scope 목록에 없다. 규칙 §18.1 에 따르면 요구 블록 밖의 문장도 현재 사실로 읽힌다.",
+      "suggested_action": "prose_edit"
+    },
+    {
+      "id": "change-consistency-1-5",
+      "severity": "MEDIUM",
+      "axis": "6. 변경 일관성",
+      "req_id": "CON-SHELL-002",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:1494",
+      "description": "verified 인 CON-SHELL-002 의 제목 · Requirement · AC-1 · AC-2(1519-1520행)와 02.product-architecture.srs.md 33 · 154 · 288행이 제한 대상 표면을 「좌측 (사이드바) 검색 탭」이라 부른다. R3 개정 뒤 그 표면은 리본이 여는 검색 보기다. 규범의 실질(텍스트 검색 한정)은 그대로지만, 판정 대상 표면의 이름이 FR-SHELL-017 AC-3 과 어긋난다. FR-SHELL-013 · FR-SHELL-010 은 같은 이유로 고쳤다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "change-consistency-1-6",
+      "severity": "MEDIUM",
+      "axis": "6. 변경 일관성",
+      "req_id": "FR-SHELL-008",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:903",
+      "description": "결정 기록 표의 FR-SHELL-002 행은 「FR-SHELL-008 Rationale 과 원장 R102-b 를 함께 재검토한다」고 지시했다. 원장 R102-b 는 「앞의 공간 근거는 더 이상 성립하지 않는다」로 고쳤다. 그런데 FR-SHELL-008 의 Rationale 은 여전히 「Phase 1 헤더 메뉴가 공유·버전 기록 둘로 한정되어 자리가 없기 때문이다」를 유일한 근거로 단정하고, 분류는 no-change 다. 재검토 결론은 FR-SHELL-002 Implementation Notes ③ 에만 있다. verified 요구에도 append_section_note(rationale)는 쓸 수 있다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "scope-1-1",
+      "severity": "MEDIUM",
+      "axis": "5. scope 적합성",
+      "req_id": "FR-SHELL-003",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:406",
+      "description": "새 AC-8 이 권한 값(「원본이 든 폴더에 `편집` 권한이 있을 때만 활성」)을 SHELL scope 에 직접 적었다. 08 Out of Scope 와 FR-SHELL-003 Implementation Notes ① 은 「활성 판정의 정본은 ACL scope 의 권한 표이며 여기에 권한 값을 하드코딩하면 두 곳이 조용히 어긋난다」고 금한다. 복사본 생성의 필요 권한은 복사 규칙 SEC-ACL-014 AC-3(원본 보기 + 목적지 편집)에서 파생된다. AC-8 은 그 규칙에서 원본 `보기` 도 빠뜨린다. 파생 관계(목적지 = 원본의 폴더)만 적고 권한 값은 ACL 요구를 참조하게 해야 한다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "internal-1-1",
+      "severity": "MEDIUM",
+      "axis": "9. 요구 내부 일관성",
+      "req_id": "FR-SHELL-003",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:400",
+      "description": "개정된 AC-2 는 「트리 노드에서 컨텍스트 메뉴를 열면 … / 새 버전 올리기… / 이름 변경 · 삭제 항목이 이 순서로, 빗금 자리마다 구분선을 두고 나타난다」고 모든 노드에 같은 목록과 구분선을 요구한다. AC-4 · AC-5(403행)는 `새 버전 올리기…` 가 디렉토리와 pass-through 노드에는 없다고 한다. 문면만 읽으면 두 AC 가 부딪히고, 디렉토리 노드에서 그 묶음과 구분선을 어떻게 처리하는지도 정해지지 않았다. 결정 기록 목록은 「(파일에만 나타난다)」를 목록 안에 적는다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "internal-1-2",
+      "severity": "MEDIUM",
+      "axis": "9. 요구 내부 일관성",
+      "req_id": "FR-EDITOR-011",
+      "evidence_path": "docs/spec/07.editor.srs.md:1162",
+      "description": "FR-EDITOR-011 AC-15 와 Rationale 보충(1144행)은 「보기 모드에서 편집 조작의 활성 여부는 결정 기록이 정하지 않았다」며 미결로 둔다. 같은 회차에 고친 설계서 03 §3.3(docs/spec/03.screen-design-shell.md:927, 939)은 「보기 모드에서는 꺼짐 — 승인 시안의 동작이다」로 확정했다. 승인 시안은 결정의 일부다. SRS 는 미결이라 하고 파생 설계서는 확정해서, 두 문서가 어긋난다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "change-consistency-1-7",
+      "severity": "MEDIUM",
+      "axis": "6. 변경 일관성",
+      "req_id": "FR-EDITOR-011",
+      "evidence_path": "docs/spec/00.decision-log.md:190",
+      "description": "개정된 원장 R24-b 는 헤더 ⋯ 메뉴의 편집 조작을 「잘라내기 · 복사 · 붙여넣기 · 링크 삽입」으로 열거한다. 승인 시안의 본문 메뉴에도 `복사`(Ctrl C)가 있다(docs/decision/design-v2.html:663). 그런데 FR-EDITOR-011 AC-15 와 FR-EDITOR-004 AC-7 은 잘라내기 · 붙여넣기 · 링크 삽입만 다룬다. `복사` 항목의 존재(읽기 전용에서도 활성)를 요구하는 AC 가 어느 요구에도 없어 원장과 SRS 가 어긋난다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "ac-1-1",
+      "severity": "MEDIUM",
+      "axis": "4. AC 판정 가능성",
+      "req_id": "FR-SHELL-018",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2608",
+      "description": "AC-3 의 「그 디렉토리 안의 노드만」은 하위 폴더를 포함하는지 정하지 않아(Implementation Notes ⑥, 2641행), 중첩 노드에 대해서는 판정이 서지 않는다. 범위가 좁혀졌다는 표시와 범위를 푸는 수단도 정해지지 않았다(④, 2639행). 그래서 SRS 만으로는 사용자가 전역 검색으로 돌아갈 길이 요구되지 않는다. 합리적 기본값(옵시디언의 폴더 검색은 path 접두로 하위 트리 전체)이 있으므로 qna 방식으로 닫고 AC 로 세워야 한다.",
+      "suggested_action": "escalate"
+    },
+    {
+      "id": "ac-1-2",
+      "severity": "MEDIUM",
+      "axis": "4. AC 판정 가능성",
+      "req_id": "IR-SHELL-015",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2851",
+      "description": "AC-2(쓴 적 없으면 0 단계)와 AC-5(대비 목표 미달 단계는 고를 수 없다)가 겹치는 경우가 정해지지 않았다. 직접 고른 색에서 0 단계 자체가 미달이거나, 기본 색상 · 테마를 바꾼 뒤 저장된 단계가 미달이 되는 경우다. Implementation Notes ④(2881행)도 미결로 남긴다. 다섯 단계가 모두 미달인 색에서는 고를 수 있는 단계가 하나도 없다.",
+      "suggested_action": "escalate"
+    },
+    {
+      "id": "ac-1-3",
+      "severity": "MEDIUM",
+      "axis": "4. AC 판정 가능성",
+      "req_id": "IR-SHELL-004",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:1685",
+      "description": "AC-3 이 기본 열람 모드의 허용값을 `권한에 따라` · `항상 보기` 로 바꿨다. 그런데 이미 저장된 `view` · `edit` 행(packages/server/src/app/settings/personal-settings.ts:16-17)을 어떻게 읽을지 정하지 않았다(Implementation Notes ⑥ 이 구현으로 미룸). qna #3 의 근거(편집 ≡ 권한에 따라)로 edit→권한에 따라, view→항상 보기라는 대응을 끌어낼 수 있는데도 요구에 없다. 이대로면 기존 사용자 데이터가 허용값 밖의 값이 된다.",
+      "suggested_action": "escalate"
+    },
+    {
+      "id": "change-consistency-1-8",
+      "severity": "MEDIUM",
+      "axis": "6. 변경 일관성",
+      "req_id": "FR-SHELL-015",
+      "evidence_path": "docs/spec/03.screen-design-shell.md:310",
+      "description": "결정 기록 파일 탐색기 절(design-v2.md:119)의 「이름 변경은 입력 줄을 벗어나면 확정한다」(v2 의 설계 판단)는 설계서 03 §2.2.4 에만 있다. 어느 SRS 요구에도 없다. FR-SHELL-015 AC-1 과 FR-SHELL-016 AC-3 은 Enter · Esc · 그만두기만 다룬다. 지금 코드에는 트리 입력 줄의 onBlur 처리가 없으므로 새 동작이며, SRS 근거 없는 구현이 된다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "change-consistency-1-9",
+      "severity": "MEDIUM",
+      "axis": "6. 변경 일관성",
+      "req_id": "IR-SHELL-009",
+      "evidence_path": "docs/spec/03.screen-design-shell.md:162",
+      "description": "설계서 03 §1.1 다이어그램(134행)과 §1.2 영역 표(162 · 166행)가 좌측 사이드바 280px · 우측 300px 를 기본 폭으로 여전히 단정한다. 리본 열도 그리지 않는다. 같은 회차에 IR-SHELL-009 AC-1 을 리본 44 + 사이드바 248 / 우측 232px 로 고쳤으므로 파생 설계서가 SRS 와 어긋난다. 이번 회차가 §1.1 의 다른 줄은 고쳤지만 폭 수치는 남겼다.",
+      "suggested_action": "prose_edit"
+    },
+    {
+      "id": "feasibility-1-1",
+      "severity": "MEDIUM",
+      "axis": "7. 구현 가능성 근거",
+      "req_id": "FR-EDITOR-011",
+      "evidence_path": "docs/spec/14.storage.srs.md:718",
+      "description": "v2 의 「편집 권한이 있으면 라이브 편집으로 연다」는 FR-STORAGE-003 과 맞물린다(스냅샷은 「문서를 열고 편집을 시작한 시점에 1회」, verified). 편집 모드로 여는 것만으로 편집 세션이 시작되면 문서를 열 때마다 스냅샷이 생겨 R62 보관 상한이 열람만으로 소진될 수 있다. 이 문제는 설계서 03 §11-36 과 FR-EDITOR-011 Implementation Notes ⑨ 에 미결로만 있다. FR-STORAGE-003 은 영향 후보에 없었고 Trace Link 로도 이어지지 않았다.",
+      "suggested_action": "escalate"
+    },
+    {
+      "id": "mcp-rules-1-1",
+      "severity": "LOW",
+      "axis": "8. MCP 호출 · SRS-MD 규칙",
+      "req_id": "FR-EDITOR-002",
+      "evidence_path": "docs/spec/07.editor.srs.md:441",
+      "description": "FR-EDITOR-002 의 2026-09-23 Change Notes 행이 옛 사실을 이은 곳을 「FR-EDITOR-011 AC-15」로 적는다. 실제로 1.0 모드 분리 폐기를 잇는 것은 AC-13 이고, 지금의 AC-15 는 편집 조작 활성이다. 정정은 Implementation Notes(433행)에만 있다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "classification-1-1",
+      "severity": "LOW",
+      "axis": "1. 분류",
+      "req_id": "FR-EDITOR-003",
+      "evidence_path": "docs/spec/07.editor.srs.md:500",
+      "description": "분류 계획은 FR-EDITOR-003 을 하나의 supersede 로 두었다. 실행은 FR-EDITOR-011(trace)과 FR-EDITOR-012(supersede_requirement 후계) 두 후계로 나눴다. Change Notes 는 나눈 이유를 「update_status discarded 가 … 거부되어 이 경로로 나눴다」는 도구 제약으로 적는다. 내용상 분할은 FR-EDITOR-012 Rationale(재는 대상이 다르다)로 성립하므로, 요구 이력에는 도구 사정이 아니라 내용 근거를 남기는 편이 맞다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "classification-1-2",
+      "severity": "LOW",
+      "axis": "1. 분류",
+      "req_id": "IR-PRINCIPAL-001",
+      "evidence_path": "docs/analysis/kiwi-srs-2026-09-23.doculight2.design-v2-srs/classification.json",
+      "description": "classification.json 은 IR-PRINCIPAL-001 을 no-change 로 두었다. 그런데 qna #14 는 edit-in-place 를 정했고, MCP 호출 #198(replace_acceptance_criteria)과 #199(update_status)가 실제로 AC-5 를 고쳤다. 분류 기록이 실행과 어긋난다.",
+      "suggested_action": "reclassify"
+    },
+    {
+      "id": "change-consistency-1-10",
+      "severity": "LOW",
+      "axis": "6. 변경 일관성",
+      "req_id": "IR-EDITOR-002",
+      "evidence_path": "docs/spec/07.editor.srs.md:1089",
+      "description": "옛 용어가 남은 곳이 있다. IR-EDITOR-002 trace Notes 다섯 행에 「adds newspaper presentation」이 남았다(IR-SHELL-006/007/009 는 design v2 로 고쳤다). IR-SHELL-008 Tags 에 `newspaper` 가 있다(08:2085). IR-SHELL-002 trace · Implementation Notes 는 「에디터·외모의 항목 셋」이라 적는다(08:285, 298). FR-SHELL-013 의 FR-SHELL-010 trace Notes 는 「이 탭을 활성하고」라 적는다(08:1119).",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "internal-1-3",
+      "severity": "LOW",
+      "axis": "9. 요구 내부 일관성",
+      "req_id": "FR-SHELL-019",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2727",
+      "description": "Implementation Notes 에 ⑥ 번호가 둘이다. 원래의 ⑥(2725행)과 「[2026-09-23] ⑥ 정정」(2727행)이다. 앞의 ⑥ 은 근거를 SEC-ACL-004 AC-5 로 적은 채 남아 있어, 정정과 함께 읽어야 뜻이 선다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "change-consistency-1-11",
+      "severity": "LOW",
+      "axis": "6. 변경 일관성",
+      "req_id": "FR-SHELL-019",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2681",
+      "description": "qna #9 는 같은 워크스페이스 안의 복사를 「Ctrl(macOS 는 Option) 을 누른 채 놓을 때만」이라 적는다. FR-SHELL-019 AC-3 은 결정 기록대로 「Ctrl 또는 Alt(macOS 는 Option)」다. SRS 는 결정 기록을 따르므로 맞다. qna 기록의 문구를 결정 기록에 맞춰 두는 편이 좋다.",
+      "suggested_action": "prose_edit"
+    },
+    {
+      "id": "ac-1-4",
+      "severity": "LOW",
+      "axis": "4. AC 판정 가능성",
+      "req_id": "FR-SHELL-019",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2667",
+      "description": "Requirement 문장의 「끌어서 정해진 목적지도 메뉴로 정한 목적지와 같은 권한 · 프리뷰 · 확인 절차를 거치며, 끌기가 그 절차를 줄이지 않는다」를 재는 AC 가 이 요구에 없다. FR-CONFIRM-005 AC-3 · AC-4(depends_on)가 확인 단계를 덮지만, 프리뷰(FR-ACL-006)를 거친다는 부분은 이 요구 안에서 판정되지 않는다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "scope-1-2",
+      "severity": "LOW",
+      "axis": "5. scope 적합성",
+      "req_id": "IR-SHELL-006",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:1944",
+      "description": "읽기 전용 모드 아이콘의 비활성 구분 규칙(aria-disabled · 말풍선 「읽기 전용 문서입니다」 · 커서)이 두 곳에 적혔다. FR-EDITOR-004 AC-3 · AC-4(07:531)와 IR-SHELL-006 AC-7 끝 문장이다. 한 규칙을 두 요구가 각자 적으면 한쪽만 고쳐질 수 있다. IR-EDITOR-002 는 서체 규칙에서 같은 중복을 IR-SHELL-006 참조로 풀었다.",
+      "suggested_action": "fix_via_mcp"
+    },
+    {
+      "id": "change-consistency-1-12",
+      "severity": "LOW",
+      "axis": "6. 변경 일관성",
+      "req_id": "IR-SHELL-008",
+      "evidence_path": "docs/analysis/kiwi-srs-2026-09-23.doculight2.design-v2-srs/qna_log.json",
+      "description": "qna #13 은 「IR-SHELL-008 은 바꾸지 않되 v2 치수(30px 컨트롤 · 26px 트리 행)에서도 200% 확대 도달성이 성립해야 하며 구현 때 검증한다」고 정했다. 그런데 IR-SHELL-008 자체에는 그 검증 의무가 기록되지 않았다. IR-SHELL-009 Implementation Notes ② 만 qna #13 을 인용한다.",
+      "suggested_action": "fix_via_mcp"
+    }
+  ],
+  "summary": { "CRITICAL": 0, "HIGH": 3, "MEDIUM": 14, "LOW": 9 },
+  "notes": {
+    "validate_spec": "errors 0, warnings 1 (SRS-W072 기존 경고 — 02.feature-request-live-preview.md 번호 공유). ID 중복 없음.",
+    "trace_paths": "diff 로 추가된 Code trace 31행 전부 trace_intent 를 가지며 참조 경로가 실존한다. 줄 번호 주장(App.tsx 139-145 · 385 · 1197 · 1386, tree-contract.ts 99 · 134 · 155 · 200-216 · 299-308, DocumentTree.tsx 306-338 · 606-607, RelocationDialog.tsx 144-155, workspace-api.ts 947 · 1641-1654, upload-contract.ts 58, personal-settings.ts 52-66, shell-contract.ts 17-21)을 대조해 모두 일치했다.",
+    "golden_rule": "*.srs.md 의 요구 블록 변경은 모두 MCP 호출 기록(supersede_requirement · edit_requirement_fields · replace_acceptance_criteria · append_section_note(append/replace) · edit_requirement_table_rows · add_trace_link · update_status)으로 설명된다. 직접 편집의 흔적은 찾지 못했다. verified 요구는 FR-SHELL-002(노트 · trace 추가만)를 빼고 모두 update_status 로 먼저 내린 뒤 편집했다.",
+    "decision_coverage": "결정 기록의 결정 여덟 건 가운데 요구에 반영할 일곱(6 은 절차)과 qna 14건은 모두 어느 요구엔가 반영되어 있다. 위 finding 은 반영 뒤에도 남은 옛 문면과 누락된 부수 항목이다."
+  }
+}

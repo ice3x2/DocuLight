@@ -1,0 +1,106 @@
+{
+  "evaluator": "verify-pass-1",
+  "iter": 5,
+  "inputs_checked": {
+    "validate_spec": "errors 0, warnings 5 (SRS-W072 x1 기존, SRS-W015 x4 는 FR-EDITOR-007 강등의 결과) — iter4 와 같다. ID 중복 없음. iter4 이후 Status 를 바꾼 요구가 없어 00.index §5 · §6 수치(planned 31 · in_progress 23 · implemented 69 · verified 176 · discarded 3, FR 108 · IR 39)는 그대로 맞다.",
+    "golden_rule": "HEAD 대비 바뀐 요구 블록 45개(추가 7 · 폐기 표기 3 포함, 공백 한 줄만 달라진 IR-SHELL-013 제외)가 모두 성공한 MCP 변경 호출을 갖는다. iter4 스냅샷(scratchpad snap_iter4) 대비 바뀐 블록 15개(07 의 FR-EDITOR-004 · FR-EDITOR-006, 08 의 IR-SHELL-002 · FR-SHELL-003 · FR-SHELL-008 · DR-SHELL-002 · FR-SHELL-015 · FR-SHELL-016 · IR-SHELL-006 · IR-SHELL-009 · IR-SHELL-011 · FR-SHELL-017 · FR-SHELL-019 · IR-SHELL-014 · IR-SHELL-015)를 srs_delta.mcp_calls 의 516~592번째 호출(앞 515개는 스냅샷과 글자 그대로 같다)과 대조했다 — 모두 대응 호출이 있다. 블록 밖 변경은 07 §2 두 줄, 08 §2 Out of Scope 한 줄, 15 §2 In Scope 한 줄뿐이며 prose_delta 에 있다. 실패 호출(열 이름 · 인자 이름 오류)은 파일을 건드리지 않았다.",
+    "ac_deletion": "HEAD 와 iter4 스냅샷 두 기준으로 AC ID 를 블록마다 대조했다 — 삭제된 AC 0, 새로 체크된 AC 0, 문면이 바뀌었는데 체크가 남은 AC 0. iter4 이후 체크가 바뀐 AC 는 IR-SHELL-002 AC-1(해제) 하나다. iter4 이후 AC · Requirement 가 바뀐 블록은 모두 Change Notes 행이 있다(FR-EDITOR-006 · FR-SHELL-008 · DR-SHELL-002 · IR-SHELL-011 은 노트만 바뀌어 규칙 §26 2 에 따라 불필요).",
+    "trace_paths": "HEAD 이후 더해진 Trace · 증거 행의 Code · Doc · Test 경로 전부 실존하고 Code trace 는 전부 trace_intent 를 갖는다. iter4 이후 새로 적힌 줄 번호(App.tsx 668-672 createNote — 첫 워크스페이스 루트에 만들고 열지 않음, DocumentTree.tsx 557 상단 버튼, tree-contract.ts 194-199 루트 권한 주석, workspace-api.ts 947 relocation-preview)와 승인 시안 값(.tabbar · .viewhead 38px, .icon-btn[aria-pressed] 의 --menu-active)을 코드와 시안에서 확인했다.",
+    "measurement": "승인 시안 derive()(docs/decision/design-v2.html 979행 이하)를 node 로 그대로 실행해 여섯 프리셋 × 두 테마 × 다섯 단계 60 조합의 강조색-현재 항목 배경 대비(IR-SHELL-014 AC-14)를 쟀다. 결정 기록의 2.78:1(쑥 · 밝게 · −2)이 그대로 재현되어 계산이 같음을 확인했다. 3:1 미달은 한지 · 밝게 · −2(2.98), 쑥 · 밝게 · −1(2.90), 쑥 · 밝게 · −2(2.78) 셋이다. 같은 실행에서 AC-7(강조색-문서 바탕, 최저 밝게 4.70 · 어둡게 5.50)과 AC-8(메뉴 글자-현재 항목, 최저 7.00)은 60 조합 모두 충족한다.",
+    "decision_coverage": "결정 여덟 건과 qna 54건을 요구 · AC 에 하나씩 대응시켰다. #49~#54 는 FR-SHELL-017 AC-10 · AC-11, FR-SHELL-016 AC-8 · AC-9, IR-SHELL-009 AC-11, IR-SHELL-011 [구현 과제] 노트, IR-SHELL-014 AC-14 · IR-SHELL-015 AC-5 · IR-SHELL-006 AC-17 과 설계서 03 · 04 에 반영돼 있다. 활성 요구와 03 · 04 에서 옛 동작을 단정하는 문장을 새로 찾지 못했다. 이번 반영이 손대지 않은 설계서 05 와 02.feature-request 에는 v2 와 어긋나는 문장이 남았다(change-consistency-5-2 · 5-4). #36 은 컨텍스트 메뉴 경로에서 판정되지 않는다(change-consistency-5-1).",
+    "iter4_findings": "iter4 의 MEDIUM 2 · LOW 10 은 모두 해소를 확인했다(ac-4-1 · internal-4-3 · feasibility-4-1 은 qna #49 · #54 · #53 으로 닫힘). known_residuals(conflict-2-1 · change-consistency-2-5), improvement_iter4.unresolved(IR-SHELL-006 AC-9 허용 오차 · 03 §9.1 대체 키), implementation_tasks(IR-SHELL-011 AC-15 판정 재료)는 다시 올리지 않았다. feasibility-5-2 는 같은 구현 과제가 FR-SHELL-016 AC-8 에도 걸리는데 그 목록에 빠졌다는 분류 누락을 적은 것이다."
+  },
+  "findings": [
+    {
+      "id": "change-consistency-5-1",
+      "severity": "MEDIUM",
+      "axis": "change-consistency",
+      "req_id": "FR-SHELL-016",
+      "evidence_path": "docs/spec/07.editor.srs.md:1194",
+      "description": "모호성 해소 #36 은 「새로 만든 노트는 기본 열람 모드와 관계없이 라이브 편집으로 연다」, 개정 원장 R152(00.decision-log.md:203)는 「새로 만든 노트는 … `편집으로 열 때의 모드` 로 연다」고 적어 새 노트가 열린다는 것을 전제한다. SRS 에서 만든 노트를 여는 것을 요구하는 AC 는 트리 상단 버튼(FR-SHELL-016 AC-8, 08:1911)과 Ctrl+N(AC-9)뿐이다. 컨텍스트 메뉴 `새 노트`(AC-1~AC-3 — 이름 입력 뒤 Enter)로 만든 노트를 여는지는 어느 AC 도 적지 않고, FR-EDITOR-011 AC-18(07:1194)은 「새로 만든 노트가 열릴 때는」이라는 조건문이라 그 경로에서는 열지 않아도 참이 된다. 설계서 03 §7.2 4행(03:1427)은 컨텍스트 메뉴로 만든 문서가 새 탭에서 편집 모드로 열린다고 적고 그 행에 모호성 해소 #36 · #39 를 달았으며, §7.8 2행(03:1510)도 같다. 지금 구현의 create()(packages/web/src/App.tsx:638-657)는 어느 진입점에서도 열지 않는다. SRS 대로 구현하면 상단 버튼과 Ctrl+N 만 열고 컨텍스트 메뉴는 열지 않게 되어, AC-7 이 한 함수로 묶은 두 진입점의 결과가 갈리고 #36 의 여는 규칙을 컨텍스트 메뉴 경로에서 판정할 수 없다. iter4 change-consistency-4-1 은 상단 버튼만 다뤘다.",
+      "suggested_action": "fix_via_mcp — FR-SHELL-016 에 「컨텍스트 메뉴 `새 노트` 로 만든 노트도 곧바로 열리며(설계서 03 §7.2 — 새 탭), 여는 모드는 FR-EDITOR-011 AC-18 이 정한다」 AC 를 세운다. 컨텍스트 메뉴 경로는 열지 않는 것이 의도라면 escalate 로 정한 뒤 03 §7.2 4행과 원장 R152 문면을 맞춘다. 깨진 위키링크로 만든 문서(03 §7.8)는 SRS 에 요구 자체가 없어 v2 이전부터 있던 공백이므로 기록만 한다.",
+      "repeat_of": null
+    },
+    {
+      "id": "change-consistency-5-2",
+      "severity": "MEDIUM",
+      "axis": "change-consistency",
+      "req_id": "-",
+      "evidence_path": "docs/spec/05.screen-design-permission.md:278",
+      "description": "결정 기록 파일 탐색기 절(design-v2.md:116)은 메뉴의 권한 부족 항목을 「숨기지 않고 흐리게 둔 뒤 『권한 없음』을 붙인다. 기존 설계의 『비활성 + 툴팁』을 바꾸는 것이다」로 확정했고, 원장 R88-a · R24-b 개정과 FR-SHELL-003 AC-3(08:407) · FR-EDITOR-004 AC-7 이 이를 따른다. 그런데 공유 진입과 권한 표현 언어를 소유하는 설계서 05 는 고쳐지지 않았다. §2.1.1(05:278)은 `보기` 사용자에게 문서 헤더 메뉴 · 트리 메뉴의 공유 항목을 「비활성으로 노출하고 툴팁 『공유하려면 이 문서의 편집 권한이 필요합니다』」로 그리며 그 근거를 옛 R91-① 의 편집 토글에 두고, §8 상태 표(05:1639)도 같다. 05:1139 는 「문서 헤더 ⋯ 는 Phase 1 에서 R24-b 로 공유 · 버전 기록 2개로 한정되어 …」를 현재형으로 적어 R24-b 개정 · R102-b 재검토와 어긋나고, §2.2.1 그림(05:640)은 개인 카테고리를 옛 라벨 「외모」로 그린다(R24-a 개정 · IR-SHELL-002 AC-2 는 「외관」). prose_delta.unresolved[10] 이 이 세 곳을 「대상 파일이 아니라 고치지 않았다」로만 남겼고 조정자 결정이나 잔여 분류는 없다. 결정 기록 결정 6 과 적용 범위 절은 설계서 전체와의 대조를 SRS 반영 단계의 몫으로 두었다. 03 §2.2.5 는 공유 모달을 05 소관으로 넘기므로, 05 를 보고 공유 항목을 구현하면 v2 와 다른 표시가 선다.",
+      "suggested_action": "prose_edit — 05 §2.1.1 과 §8 표의 공유 항목 표시를 「흐리게 + 『권한 없음』」(원장 R88-a · R24-b, 결정 기록 파일 탐색기 절)으로 고치고 옛 문면은 〔2026-09-23 디자인 v2〕 표기로 남긴다. 기존 툴팁 문구를 함께 둘지는 결정 기록이 「바꾼다」고만 했으므로 빼거나 escalate 로 정한다. 1139행에는 R102-b 재검토를, 640행 그림에는 「외관」을 반영한다.",
+      "repeat_of": null
+    },
+    {
+      "id": "feasibility-5-1",
+      "severity": "MEDIUM",
+      "axis": "feasibility",
+      "req_id": "IR-SHELL-014",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2942",
+      "description": "qna #54 로 선 AC-14(강조색과 현재 항목 배경 3:1)가 여섯 프리셋에 미치는 결과를 SRS 가 한 조합만 적고 나머지는 「구현 때 재라」로 미뤘다(IR-SHELL-014 ⑫ 08:2942, IR-SHELL-015 Rationale 노트 08:2981, IR-SHELL-006 노트 08:2055-2056, 설계서 04 §2.2 04:207). AC-14 가 비교하는 두 색은 Implementation Notes ② 가 바꾸라는 보조 글자 계산과 무관해 승인 시안 derive() 의 결과가 곧 AC-10 의 값이다. 그 derive() 를 실행해 60 조합을 재면 3:1 미달은 셋이다: 한지 · 밝게 · −2(2.98:1), 쑥 · 밝게 · −1(2.90:1), 쑥 · 밝게 · −2(2.78:1 — 결정 기록 값과 같다). 곧 기본 프리셋 한지가 밝게에서 −2 를 잃고, 쑥은 밝게에서 −1 · −2 를 모두 잃어 0 단계에서 `[ − ]` 가 꺼진다(IR-SHELL-015 AC-8). SRS 의 예시만 보고 시험을 쓰면 이 두 결과를 놓친다. 같은 요구 Research 셋째 항이 이미 같은 derive() 로 60 조합을 잰 기록이 있어 측정이 어려운 일도 아니었다. 결정(qna #54)을 다투는 것이 아니라, 그 결정이 기본 프리셋에 주는 결과가 문서에 빠졌다는 근거 문제다.",
+      "suggested_action": "fix_via_mcp — IR-SHELL-014 Research / Analysis 에 AC-14 의 60 조합 실측(미달 셋과 값)을 적고 ⑫ 의 「구현 때 재라」를 그 목록으로 바꾼다. IR-SHELL-015 Rationale 노트와 IR-SHELL-006 노트, 04 §2.2 의 예시도 셋으로 맞춘다. 기본 프리셋 한지가 밝게 −2 를 잃는다는 결과를 조정자가 받아들이는지는 escalate 로 확인한다.",
+      "repeat_of": null
+    },
+    {
+      "id": "internal-5-1",
+      "severity": "LOW",
+      "axis": "internal-consistency",
+      "req_id": "FR-SHELL-017",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2632",
+      "description": "AC-10 은 리본 밖에서 좌측 사이드바의 보기를 바꾸는 조작을 넷으로 열거하고 「이 넷이 전량이다」로 닫았으며, Implementation Notes ⑧(08:2667)도 「⑦ 의 조작 목록은 AC-10 의 넷이 전량이다」라고 적는다. 그런데 FR-SHELL-018 AC-1(08:2711)의 `폴더에서 검색` 도 좌측 사이드바를 검색 보기로 바꾸는 리본 밖의 조작이다. 트리 메뉴에서만 시작하므로 접힌 사이드바에서 일어나지는 않지만, 「전량」 문면은 사실과 다르고 ⑦ 이 요구한 한 함수(보기와 접힘 여부를 함께 바꾸는 함수)를 폴더에서 검색은 거치지 않아도 된다고 읽힌다. qna #44 는 「사이드바의 보기를 바꾸는 모든 조작」을 대상으로 했고 qna #49 는 문서 열기의 트리 펼침만 뺐다 — 넷으로 닫은 것은 SRS 가 더한 문면이다.",
+      "suggested_action": "fix_via_mcp — AC-10 의 「이 넷이 전량이다」를 「접힌 좌측 사이드바에서 일어날 수 있는 조작은 이 넷이다(폴더에서 검색은 트리 보기가 보일 때만 시작한다 — FR-SHELL-018)」처럼 좁히거나 폴더에서 검색을 목록에 더하고, ⑧ 을 같게 맞춘다.",
+      "repeat_of": null
+    },
+    {
+      "id": "internal-5-2",
+      "severity": "LOW",
+      "axis": "internal-consistency",
+      "req_id": "IR-SHELL-014",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2873",
+      "description": "Requirement 문장은 파생 규칙을 「명도는 역할마다 정해진 단계로 정하며, 대비 목표에 닿을 때까지 명도를 한 방향으로 옮긴다」로 적어 모든 대비 목표에 명도 조정이 걸린다고 읽힌다. qna #54 로 더한 AC-14(08:2901)는 대비 목표이면서 「이 목표를 맞추려고 파생 계산을 바꾸지 않는다」고 적어, 명도를 옮기지 않고 단계를 막기만 하는 유일한 목표다. Requirement 문장이 이 구분을 담지 않아 AC-14 를 맞추려고 강조색 명도를 더 옮기는 구현도 Requirement 문장에는 맞는다.",
+      "suggested_action": "fix_via_mcp — Requirement 문장의 「대비 목표에 닿을 때까지」를 「AC-7~AC-9 의 대비 목표에 닿을 때까지」로 좁히고 AC-14 는 단계 허용 판정에만 쓰인다는 것을 한 구절 더한다.",
+      "repeat_of": null
+    },
+    {
+      "id": "feasibility-5-2",
+      "severity": "LOW",
+      "axis": "feasibility",
+      "req_id": "FR-SHELL-016",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:1950",
+      "description": "AC-8 은 워크스페이스 행을 선택한 채 상단 버튼을 누르면 그 워크스페이스의 맨 위에 만들고 「버튼의 활성 판정도 그 만들 곳의 권한을 본다」고 적는다(qna #51). 그런데 트리 응답의 WorkspaceTreeView 는 visibility 만 갖고 워크스페이스 루트의 유효 권한을 담지 않는다(packages/web/src/tree/tree-contract.ts:40-44, 194-199 주석). 최상위 노드의 parentLevel 로 루트 권한을 알 수 있는 것은 그 워크스페이스에 보이는 최상위 노드가 있을 때뿐이고, 빈 워크스페이스에서는 판정 재료가 없다. IR-SHELL-011 AC-15 의 같은 결핍은 qna #53 으로 구현 과제가 됐지만(implementation_tasks), FR-SHELL-016 의 Implementation Notes [qna #50 · #51] 는 POST /nodes 의 인자만 적고 이 결핍을 적지 않았으며 구현 과제 목록에도 없다.",
+      "suggested_action": "fix_via_mcp — FR-SHELL-016 Implementation Notes 에 「워크스페이스 행 선택 시의 활성 판정 재료는 IR-SHELL-011 AC-15 와 같은 구현 과제(qna #53)다」를 적고, improvement 산출물의 implementation_tasks 에 FR-SHELL-016 AC-8 을 함께 올린다.",
+      "repeat_of": null
+    },
+    {
+      "id": "change-consistency-5-3",
+      "severity": "LOW",
+      "axis": "change-consistency",
+      "req_id": "FR-SHELL-016",
+      "evidence_path": "docs/spec/03.screen-design-shell.md:314",
+      "description": "설계서 03 §2.2.4 의 버튼 행은 이번 회차에 「만드는 곳 · 아래 두 비활성 조건 · 만든 문서를 여는 것은 FR-SHELL-016 AC-8」을 더해 바로 아래 두 항목을 정본 참조로 묶었다. 그 첫 항목(03:314)은 「선택이 없을 때: 두 버튼은 비활성」이라 적고, §11-5(03:1748)도 「새 노트·새 디렉토리 버튼의 기본 생성 위치」라 적는다. 같은 절이 트리 상단 버튼은 새 노트 하나이고 새 디렉토리 버튼은 두지 않는다고 적으므로(결정 기록 「시안이 기존 요구사항보다 앞서지 않는 것」 절 · §2.2.4 표) 「두 버튼」은 옛 문면이다. v2 이전부터 있던 문구지만 이번 회차가 AC-8 의 참조 대상으로 삼은 문장이다.",
+      "suggested_action": "prose_edit — 03:314 의 「두 버튼은」을 「`새 노트` 버튼은」으로, §11-5 질문 칸의 「새 노트·새 디렉토리 버튼」을 「새 노트 버튼」으로 고치고 옛 문면을 표기로 남긴다.",
+      "repeat_of": null
+    },
+    {
+      "id": "change-consistency-5-4",
+      "severity": "LOW",
+      "axis": "change-consistency",
+      "req_id": "FR-EDITOR-011",
+      "evidence_path": "docs/spec/02.feature-request-live-preview.md:87",
+      "description": "라이브 프리뷰 편집기의 기능 요청서 §3.3(02.feature-request:87)은 「편집 모드 안에 라이브 프리뷰 ↔ 소스 하위 토글을 둔다」를 R90 근거로 적는다. R90 은 2026-09-23 개정으로 하위 토글을 없애고 세 모드 순환에 합쳤고 FR-EDITOR-011 AC-12 는 하위 토글이 존재하지 않는다고 요구한다. 이 문서는 머리표에서 「착수 가능」 · 「이 문서만으로 구현이 가능해야 한다」고 스스로를 규정하므로, 독립 세션이 이 문서만 보고 하위 토글을 다시 세울 수 있다. prose_delta.unresolved[10] 이 대상 파일이 아니라며 남긴 항목이다.",
+      "suggested_action": "prose_edit — §3.3 첫 문장에 〔2026-09-23 R90 개정 — 하위 토글은 없어졌고 소스 편집은 문서 제목 줄 모드 아이콘의 세 모드 순환에 든다(FR-EDITOR-011)〕 정정을 붙인다. §5 의 mode: 'live' | 'source' 는 편집기 내부 계약이라 그대로 둔다.",
+      "repeat_of": null
+    },
+    {
+      "id": "classification-5-1",
+      "severity": "LOW",
+      "axis": "classification",
+      "req_id": "-",
+      "evidence_path": "docs/analysis/kiwi-srs-2026-09-23.doculight2.design-v2-srs/classification.json",
+      "description": "classification.json 의 새 요구 계획 행 NEW-1~NEW-6(과 new_requirements 여섯 행)은 실제로 선 요구 ID 를 적지 않는다. srs_delta 의 생성 호출(supersede_requirement 3 · add_requirement 4)도 계획 행 ID 를 싣지 않아, NEW-1 → FR-EDITOR-011, NEW-6 → FR-SHELL-017, NEW-4 → FR-SHELL-018, NEW-5 → FR-SHELL-019, NEW-2 → IR-SHELL-014, NEW-3 → IR-SHELL-015 의 대응은 제목으로만 추론된다. 다른 재분류 행(DR-SHELL-002 · FR-SHELL-008 등)은 action_planned 로 실행과의 관계를 남긴 것과 다르다.",
+      "suggested_action": "classification.json 의 NEW-x 행과 new_requirements 행에 realized_id(실제 요구 ID)를 더한다. 파일 수정만이며 SRS 변경은 없다.",
+      "repeat_of": null
+    }
+  ],
+  "summary": { "CRITICAL": 0, "HIGH": 0, "MEDIUM": 3, "LOW": 6 }
+}

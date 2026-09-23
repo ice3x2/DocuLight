@@ -1,0 +1,1780 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DocuLight 디자인 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Nanum+Gothic+Coding:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/*
+  색 체계
+  - 메뉴 영역(--menu-*)과 강조색(--accent*)은 사용자가 고른 기본 색상 하나에서 파생된다.
+    색상·채도는 고른 색을 따르고, 명도는 역할마다 정해진 단계로 자동 결정된다(스크립트 derive()).
+  - 아래 :root 값은 스크립트가 돌기 전의 기본값(한지·밝게)이다.
+  - 문서·폼 영역은 기본 색상과 무관하게 흰 바탕(밝게) / 먹색 바탕(어둡게)이다.
+*/
+:root {
+  --menu-bg: #F2EEE3;
+  --menu-bg-deep: #EBE4D3;
+  --menu-hover: #E4DBC6;
+  --menu-active: #D9CAA6;
+  --menu-border: #DDD3BD;
+  --menu-text: #45403A;
+  --menu-muted: #6B6456;
+
+  --bg: #FFFFFF;
+  --bg-subtle: #F7F7F5;
+  --bg-press: #EFEEEA;
+  --border: #E2E0DA;
+  --border-strong: #8F8B82;
+  --border-hover: #6F6B62;
+  --text: #26241F;
+  --text-muted: #6E6A60;
+  --text-faint: #7A766C;
+  --toggle-off: #8F8B82;
+
+  --accent: #8A5E12;
+  --accent-hover: #75500F;
+  --accent-soft: #F4EDDF;
+  --accent-ring: rgba(138, 94, 18, .28);
+  --on-accent: #FFFFFF;
+  --link: #8A5E12;
+
+  --danger: #B3261E;
+  --danger-hover: #971F18;
+  --on-danger: #FFFFFF;
+
+  --font: "Nanum Gothic", "나눔고딕", sans-serif;
+  --mono: "Nanum Gothic Coding", "나눔고딕코딩", monospace;
+
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-ui: 14px;
+  --fs-body: 16px;
+  --radius: 4px;
+  --radius-lg: 8px;
+  --h-control: 30px;
+  --shadow-pop: 0 1px 2px rgba(40, 30, 10, .08), 0 6px 20px rgba(40, 30, 10, .14);
+  --shadow-frame: 0 2px 12px rgba(40, 30, 10, .08);
+}
+:root[data-theme="dark"] {
+  --bg: #1F1F1D;
+  --bg-subtle: #272725;
+  --bg-press: #2F2F2C;
+  --border: #383835;
+  --border-strong: #75726B;
+  --border-hover: #8E8B83;
+  --text: #E6E4DE;
+  --text-muted: #A8A59C;
+  --text-faint: #8C8A84;
+  --toggle-off: #75726B;
+  --danger: #E5776E;
+  --danger-hover: #EC9089;
+  --on-danger: #1B1B19;
+  --shadow-pop: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .45);
+  --shadow-frame: 0 2px 12px rgba(0, 0, 0, .35);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--fs-ui);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ───────── 시안 페이지 틀 ───────── */
+.page { max-width: 1240px; margin: 0 auto; padding: 40px 24px 96px; }
+.page-head { max-width: 720px; margin-bottom: 32px; }
+.page-head h1 { font-size: 28px; font-weight: 800; letter-spacing: -.02em; margin: 0 0 8px; }
+.page-head p { color: var(--text-muted); margin: 0; font-size: 15px; }
+section.spec { margin-top: 72px; }
+section.spec > h2 { font-size: 20px; font-weight: 800; margin: 0 0 6px; letter-spacing: -.01em; }
+section.spec > p.lead { color: var(--text-muted); margin: 0 0 24px; max-width: 70ch; }
+
+.demo-controls {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px;
+  margin-bottom: 12px; font-size: var(--fs-sm); color: var(--text-muted);
+}
+
+/* ───────── 앱 셸 ───────── */
+.app {
+  display: grid;
+  grid-template-columns: 44px 248px 1fr 232px;
+  grid-template-rows: 1fr 24px;
+  height: 640px;
+  border: 1px solid var(--menu-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-frame);
+}
+
+.ribbon {
+  grid-row: 1 / 3;
+  background: var(--menu-bg-deep);
+  border-right: 1px solid var(--menu-border);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 8px 0; gap: 4px;
+}
+.ribbon .grow { flex: 1; }
+.icon-btn {
+  width: 30px; height: 30px; display: grid; place-items: center;
+  border: 0; background: transparent; border-radius: var(--radius);
+  color: var(--menu-muted); cursor: pointer;
+}
+.icon-btn:hover { background: var(--menu-hover); color: var(--menu-text); }
+.icon-btn[aria-pressed="true"] { color: var(--accent); background: var(--menu-active); }
+.icon-btn svg { width: 18px; height: 18px; }
+
+.sidebar {
+  background: var(--menu-bg);
+  border-right: 1px solid var(--menu-border);
+  display: flex; flex-direction: column; min-width: 0; min-height: 0;
+  color: var(--menu-text);
+}
+.ws-switch {
+  display: flex; align-items: center; gap: 8px;
+  margin: 8px; padding: 6px 8px; border-radius: var(--radius);
+  background: transparent; border: 0;
+  font-weight: 700; color: var(--menu-text);
+}
+.ws-mark {
+  width: 22px; height: 22px; border-radius: 5px; background: var(--accent);
+  color: var(--on-accent); display: grid; place-items: center; font-size: 12px; font-weight: 800;
+}
+.ws-switch .role { margin-left: auto; font-size: var(--fs-xs); font-weight: 400; color: var(--menu-muted); }
+.side-tools { display: flex; gap: 2px; padding: 0 8px 6px; border-bottom: 1px solid var(--menu-border); }
+.side-tools .icon-btn { width: 28px; height: 28px; }
+.side-tools .icon-btn svg { width: 16px; height: 16px; }
+
+.tree { padding: 6px 6px 12px; overflow: auto; flex: 1; font-size: var(--fs-sm); border-radius: var(--radius); }
+.tree ul { list-style: none; margin: 0; padding: 0; }
+.tree ul ul { padding-left: 14px; border-left: 1px solid var(--menu-border); margin-left: 11px; }
+.tree-row .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* 탐색기: 끌어서 옮기기 */
+.tree-row.dragging { opacity: .45; }
+.tree li.drop-target > .tree-row { background: color-mix(in srgb, var(--accent) 16%, var(--menu-bg)); box-shadow: inset 0 0 0 1.5px var(--accent); }
+.tree li.drop-target > ul { background: color-mix(in srgb, var(--accent) 7%, var(--menu-bg)); border-left-color: var(--accent); }
+.tree.drop-root { box-shadow: inset 0 0 0 1.5px var(--accent); background: color-mix(in srgb, var(--accent) 6%, var(--menu-bg)); }
+body.tree-dragging, body.tree-dragging * { cursor: grabbing !important; user-select: none; }
+body.tree-dragging.copying, body.tree-dragging.copying * { cursor: copy !important; }
+.drag-ghost {
+  position: fixed; z-index: 60; pointer-events: none;
+  display: flex; align-items: center; gap: 8px; padding: 4px 10px;
+  background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px;
+  box-shadow: var(--shadow-pop); font-size: var(--fs-sm); white-space: nowrap;
+}
+.drag-ghost .op { font-size: var(--fs-xs); font-weight: 700; padding: 0 6px; border-radius: 3px; background: var(--accent-soft); color: var(--accent-hover); }
+.drag-ghost.invalid .op { background: color-mix(in srgb, var(--danger) 12%, var(--bg)); color: var(--danger); }
+
+/* 폴더 고르기 창 — 옵시디언의 빠른 전환 창 문법 */
+.picker-backdrop { position: fixed; inset: 0; z-index: 70; background: rgba(20, 16, 8, .28); display: flex; justify-content: center; align-items: flex-start; padding: 12vh 16px 0; }
+.picker { width: min(560px, 100%); background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-pop); overflow: hidden; }
+.picker-title { padding: 12px 16px 0; font-size: var(--fs-xs); color: var(--text-muted); }
+.picker-note { padding: 2px 16px 0; font-size: var(--fs-xs); color: var(--text-muted); }
+.picker-input { width: 100%; border: 0; border-bottom: 1px solid var(--border-strong); padding: 10px 16px 12px; font-size: 16px; background: var(--bg); color: var(--text); outline: none; }
+.picker-list { list-style: none; margin: 0; padding: 6px; max-height: 280px; overflow: auto; }
+.picker-list li { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: var(--radius); cursor: pointer; font-size: var(--fs-ui); }
+.picker-list li svg { width: 15px; height: 15px; color: var(--text-faint); flex: none; }
+.picker-list li .path { color: var(--text-faint); font-size: var(--fs-xs); margin-left: auto; }
+.picker-list li[aria-selected="true"] { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+.picker-list li[aria-selected="true"] .path { color: var(--text); }
+.picker-list li[aria-disabled="true"] { color: var(--text-faint); cursor: default; }
+.picker-list .empty { color: var(--text-muted); cursor: default; }
+.picker-preview { padding: 8px 16px; border-top: 1px solid var(--border); font-size: var(--fs-sm); color: var(--text); }
+.picker-preview b { font-weight: 700; }
+.picker-foot { display: flex; gap: 16px; padding: 8px 16px; border-top: 1px solid var(--border); background: var(--bg-subtle); font-size: var(--fs-xs); color: var(--text-muted); }
+.tree-row {
+  display: flex; align-items: center; gap: 4px; width: 100%;
+  padding: 3px 6px; border-radius: var(--radius); border: 0; background: none;
+  color: var(--menu-text); cursor: pointer; text-align: left; line-height: 1.5;
+}
+.tree-row:hover { background: var(--menu-hover); }
+.tree-row[aria-current="page"] { background: var(--menu-active); font-weight: 700; }
+.tree-row .chev { width: 14px; height: 14px; color: var(--menu-muted); flex: none; }
+.tree-row .spacer { width: 14px; flex: none; }
+
+.main { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: var(--bg); }
+.tabbar {
+  display: flex; align-items: flex-end; gap: 2px; height: 38px; padding: 0 8px;
+  background: var(--menu-bg); border-bottom: 1px solid var(--menu-border);
+}
+.tab {
+  display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px 0 12px;
+  font-size: var(--fs-sm); color: var(--menu-muted); border-radius: 6px 6px 0 0; max-width: 200px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tab.active { background: var(--bg); color: var(--text); border: 1px solid var(--menu-border); border-bottom-color: var(--bg); margin-bottom: -1px; height: 31px; }
+.tab .x { width: 14px; height: 14px; opacity: .55; }
+
+.viewhead {
+  display: flex; align-items: center; gap: 6px; height: 38px; padding: 0 12px 0 16px;
+  font-size: var(--fs-sm); color: var(--text-muted);
+}
+.crumb { display: flex; gap: 6px; align-items: center; min-width: 0; }
+.crumb span:last-child { color: var(--text); }
+.crumb .sep { color: var(--text-faint); }
+.viewhead .grow { flex: 1; }
+.viewhead .icon-btn { color: var(--text-faint); }
+.viewhead .icon-btn:hover { background: var(--bg-subtle); color: var(--text); }
+.save-state { font-size: var(--fs-xs); color: var(--text-faint); }
+
+.doc { flex: 1; overflow: auto; position: relative; }
+.doc-inner { max-width: 700px; margin: 0 auto; padding: 24px 40px 80px; }
+.doc h1 { font-size: 30px; font-weight: 800; line-height: 1.3; margin: 8px 0 20px; letter-spacing: -.02em; }
+.doc h2 { font-size: 21px; font-weight: 800; margin: 32px 0 10px; }
+.doc p, .doc li { font-size: var(--fs-body); line-height: 1.75; }
+.doc p { margin: 0 0 14px; }
+.doc a.wikilink { color: var(--link); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--link) 35%, transparent); }
+.doc a.wikilink:hover { border-bottom-color: var(--link); }
+.doc blockquote { margin: 16px 0; padding: 2px 0 2px 16px; border-left: 3px solid var(--accent); color: var(--text-muted); }
+.doc .tag { display: inline-block; font-size: 13px; padding: 0 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-hover); line-height: 22px; }
+.doc .caret-line { background: color-mix(in srgb, var(--accent-soft) 55%, var(--bg)); margin: 0 -8px; padding: 0 8px; border-radius: 3px; }
+.doc .md { color: var(--text-faint); font-weight: 400; }
+.doc .caret-line .md { color: var(--text-muted); }
+.doc .caret { display: inline-block; width: 1.5px; height: 1.1em; background: var(--text); vertical-align: -2px; animation: blink 1.1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .doc .caret { animation: none; } }
+.source { font-family: var(--mono); font-size: 14px; line-height: 1.8; white-space: pre-wrap; color: var(--text); margin: 8px 0 0; }
+.source .h { color: var(--accent-hover); font-weight: 700; }
+.source .l { color: var(--link); }
+.source .q { color: var(--text-muted); }
+
+/* 편집 모드 아이콘: 모양이 지금 모드를 나타내고, 누르면 다음 모드로 넘어간다 */
+.mode-btn { position: relative; }
+.viewhead .mode-btn { color: var(--text-muted); }
+.viewhead .mode-btn[data-mode="live"], .viewhead .mode-btn[data-mode="source"] { color: var(--accent); }
+.viewhead .mode-btn[aria-disabled="true"] { cursor: default; }
+.viewhead .mode-btn[aria-disabled="true"]:hover { background: transparent; color: var(--text-muted); }
+.tip {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 40;
+  display: grid; gap: 1px; padding: 6px 10px; border-radius: var(--radius);
+  background: var(--text); color: var(--bg); box-shadow: var(--shadow-pop);
+  font-size: var(--fs-xs); line-height: 1.5; text-align: left; white-space: nowrap;
+  pointer-events: none; opacity: 0; transform: translateY(-2px);
+  transition: opacity .12s, transform .12s;
+}
+.tip b { font-weight: 700; }
+.tip span { opacity: .72; }
+.mode-btn:hover .tip, .mode-btn:focus-visible .tip { opacity: 1; transform: none; transition-delay: .15s; }
+@media (prefers-reduced-motion: reduce) { .tip { transition: none; } }
+
+.rightbar {
+  background: var(--menu-bg); border-left: 1px solid var(--menu-border);
+  color: var(--menu-text); font-size: var(--fs-sm); padding: 12px 14px; overflow: auto; min-height: 0;
+}
+.rightbar h3 { font-size: var(--fs-sm); font-weight: 700; margin: 0 0 8px; color: var(--menu-text); }
+.rightbar ol, .rightbar ul { list-style: none; padding: 0; margin: 0 0 22px; }
+.rightbar li { padding: 3px 6px; border-radius: var(--radius); cursor: pointer; }
+.rightbar li:hover { background: var(--menu-hover); }
+.rightbar li.sub { padding-left: 18px; color: var(--menu-muted); }
+.rightbar .bl-ctx { display: block; color: var(--menu-muted); font-size: var(--fs-xs); line-height: 1.5; }
+
+.statusbar {
+  grid-column: 2 / 5;
+  display: flex; align-items: center; justify-content: flex-end; gap: 16px;
+  padding: 0 12px; background: var(--menu-bg-deep); border-top: 1px solid var(--menu-border);
+  font-size: var(--fs-xs); color: var(--menu-muted);
+}
+
+/* 컨텍스트 메뉴 */
+.ctx {
+  position: fixed; z-index: 50; min-width: 232px; padding: 4px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+  box-shadow: var(--shadow-pop); font-size: var(--fs-sm);
+}
+.ctx-item {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 5px 10px 5px 8px; border: 0; background: none; border-radius: var(--radius);
+  text-align: left; cursor: pointer; color: var(--text);
+}
+.ctx-item:hover:not(:disabled), .ctx-item:focus-visible { background: var(--accent-soft); }
+.ctx-item:disabled { color: var(--text-faint); cursor: default; }
+.ctx-item .check { width: 14px; height: 14px; color: var(--accent); visibility: hidden; flex: none; }
+.ctx-item[aria-checked="true"] .check { visibility: visible; }
+.ctx-item kbd { margin-left: auto; font-family: var(--font); font-size: var(--fs-xs); color: var(--text-faint); }
+.ctx-item:hover:not(:disabled) kbd, .ctx-item:focus-visible kbd { color: var(--text); }
+.ctx-sep { height: 1px; background: var(--border); margin: 4px 6px; }
+.ctx-item .ico { width: 15px; height: 15px; flex: none; color: var(--text-muted); }
+.ctx-item:disabled .ico { color: var(--text-faint); }
+.ctx-item.danger:not(:disabled), .ctx-item.danger:not(:disabled) .ico { color: var(--danger); }
+.ctx-item.danger:hover:not(:disabled), .ctx-item.danger:focus-visible { background: color-mix(in srgb, var(--danger) 10%, var(--bg)); }
+
+/* 탐색기: 메뉴가 열린 대상 행과 이름 바꾸기 */
+.tree-row.menu-target, .tree.menu-target { box-shadow: inset 0 0 0 1.5px var(--accent); }
+.tree { user-select: none; }
+.tree-rename {
+  flex: 1; min-width: 0; height: 22px; padding: 0 4px; margin: -1px 0;
+  border: 1px solid var(--accent); border-radius: 3px;
+  background: var(--bg); color: var(--text); font-size: var(--fs-sm);
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+.statusbar .msg { margin-right: auto; color: var(--menu-text); }
+
+/* ───────── 토큰 표 ───────── */
+.swatch-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; }
+.swatch-groups h3 { font-size: 15px; margin: 0 0 4px; }
+.swatch-groups .note { color: var(--text-muted); font-size: var(--fs-sm); margin: 0 0 12px; }
+.swatches { display: grid; gap: 6px; }
+.sw { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 12px; font-size: var(--fs-sm); }
+.sw i { width: 44px; height: 30px; border-radius: var(--radius); border: 1px solid var(--border); }
+.sw code { font-family: var(--mono); color: var(--text-muted); font-size: var(--fs-xs); text-transform: uppercase; }
+
+.type-scale { border-top: 1px solid var(--border); }
+.type-row { display: grid; grid-template-columns: 160px 1fr; gap: 24px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.type-row .meta { color: var(--text-muted); font-size: var(--fs-sm); }
+
+/* ───────── 폼·버튼 (옵시디언 문법) ───────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: var(--h-control); padding: 0 12px; border-radius: var(--radius);
+  font-size: var(--fs-sm); font-weight: 700; cursor: pointer; white-space: nowrap;
+  border: 1px solid var(--border-strong); background: var(--bg); color: var(--text);
+  box-shadow: 0 1px 1px rgba(40, 30, 10, .06);
+}
+.btn:hover { background: var(--bg-subtle); border-color: var(--border-hover); }
+.btn:active { background: var(--bg-press); box-shadow: none; }
+.btn.cta { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.cta:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn.warn { background: var(--danger); border-color: var(--danger); color: var(--on-danger); }
+.btn.warn:hover { background: var(--danger-hover); border-color: var(--danger-hover); }
+.btn.ghost { border-color: transparent; background: transparent; box-shadow: none; color: var(--text-muted); }
+.btn.ghost:hover { background: var(--bg-subtle); color: var(--text); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn svg { width: 15px; height: 15px; }
+.btn.square { width: var(--h-control); padding: 0; font-size: 16px; }
+
+.input, .select {
+  height: var(--h-control); padding: 0 10px; min-width: 0;
+  border: 1px solid var(--border-strong); border-radius: var(--radius);
+  background: var(--bg); font-size: var(--fs-sm); color: var(--text);
+  transition: border-color .12s, box-shadow .12s;
+}
+.input::placeholder { color: var(--text-faint); }
+.input:hover, .select:hover { border-color: var(--border-hover); }
+.input:focus, .select:focus { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 2px; }
+.input[aria-invalid="true"] { border-color: var(--danger); }
+.input[aria-invalid="true"]:focus { outline-color: var(--danger); }
+.select {
+  appearance: none; padding-right: 28px; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%238A867C' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 9px center;
+}
+.textarea { height: auto; min-height: 72px; padding: 6px 10px; line-height: 1.6; resize: vertical; }
+
+.search-field { position: relative; }
+.search-field svg { position: absolute; left: 9px; top: 50%; width: 14px; height: 14px; transform: translateY(-50%); color: var(--text-faint); }
+.search-field .input { padding-left: 28px; width: 100%; }
+
+.toggle {
+  position: relative; width: 38px; height: 22px; flex: none;
+  border-radius: 999px; border: 0; padding: 0; cursor: pointer;
+  background: var(--toggle-off); transition: background .15s;
+}
+.toggle::after {
+  content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
+  border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+  transition: transform .15s;
+}
+.toggle[aria-checked="true"] { background: var(--accent); }
+.toggle[aria-checked="true"]::after { transform: translateX(16px); }
+@media (prefers-reduced-motion: reduce) { .toggle, .toggle::after { transition: none; } }
+
+.check-label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: var(--fs-sm); }
+.check-label input { accent-color: var(--accent); width: 15px; height: 15px; margin: 0; }
+
+.forms-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+
+/* 설정 패널 — 옵시디언의 setting-item 행 */
+.settings { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--bg); }
+.settings-head { padding: 14px 20px; border-bottom: 1px solid var(--border); font-weight: 800; font-size: 16px; }
+.settings-head small { display: block; font-weight: 400; font-size: var(--fs-xs); color: var(--text-muted); margin-top: 2px; }
+.settings-body { padding: 0 20px; }
+.setting-group { font-size: var(--fs-sm); font-weight: 700; color: var(--text-muted); padding: 20px 0 4px; }
+.setting-item { display: flex; align-items: center; gap: 24px; padding: 14px 0; border-top: 1px solid var(--border); }
+.setting-group + .setting-item { border-top: 0; }
+.setting-item.stack { flex-direction: column; align-items: stretch; gap: 12px; }
+.setting-info { flex: 1; min-width: 0; }
+.setting-name { font-size: var(--fs-ui); font-weight: 700; }
+.setting-desc { font-size: var(--fs-xs); color: var(--text-muted); line-height: 1.55; margin-top: 2px; }
+.setting-control { display: flex; align-items: center; gap: 8px; flex: none; }
+.setting-control .input { width: 220px; }
+.setting-item.danger .setting-name { color: var(--danger); }
+.settings-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 20px; border-top: 1px solid var(--border); background: var(--bg-subtle); }
+
+/* 기본 색상 고르기 */
+.color-picker { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 12px; }
+.pick { position: relative; display: grid; gap: 6px; cursor: pointer; font-size: var(--fs-sm); }
+.pick > input[type="radio"] { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.pick-prev {
+  display: flex; height: 58px; border-radius: 6px; overflow: hidden;
+  border: 1px solid var(--border-strong); box-shadow: 0 0 0 0 transparent; transition: box-shadow .12s;
+}
+.pick-prev .m { width: 30%; display: grid; align-content: start; gap: 4px; padding: 7px 5px; }
+.pick-prev .m b { display: block; height: 4px; border-radius: 2px; }
+.pick-prev .d { flex: 1; background: var(--bg); padding: 8px 8px; display: grid; align-content: start; gap: 5px; }
+.pick-prev .d b { display: block; height: 4px; border-radius: 2px; background: var(--border); }
+.pick-prev .d b.acc { width: 44%; height: 8px; border-radius: 2px; }
+.pick-name { display: flex; align-items: center; gap: 6px; color: var(--text-muted); }
+.pick-name .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.pick > input:checked ~ .pick-prev { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+.pick > input:checked ~ .pick-name { color: var(--text); font-weight: 700; }
+.pick > input:focus-visible ~ .pick-prev { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pick input[type="color"] {
+  width: 22px; height: 18px; padding: 0; border: 1px solid var(--border-strong); border-radius: 3px;
+  background: none; cursor: pointer; margin-left: auto;
+}
+.pick input[type="color"]::-webkit-color-swatch-wrapper { padding: 1px; }
+.pick input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 2px; }
+
+.stepper { display: inline-flex; align-items: center; gap: 6px; }
+.stepper output { min-width: 44px; text-align: center; font-size: var(--fs-sm); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.contrast-note { font-size: var(--fs-xs); color: var(--text-muted); margin-top: 4px; }
+.contrast-note b { color: var(--text); }
+
+/* 모달 폼 — 권한 부여 */
+.modal { border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-pop); background: var(--bg); }
+.modal-head { display: flex; align-items: center; padding: 16px 20px 4px; }
+.modal-head h3 { margin: 0; font-size: 17px; font-weight: 800; }
+.modal-head .icon-btn { margin-left: auto; color: var(--text-faint); }
+.modal-head .icon-btn:hover { background: var(--bg-subtle); color: var(--text); }
+.modal-sub { padding: 0 20px 12px; color: var(--text-muted); font-size: var(--fs-sm); margin: 0; }
+.modal-body { padding: 4px 20px 8px; display: grid; gap: 16px; }
+.field { display: grid; gap: 6px; }
+.field > label { font-size: var(--fs-sm); font-weight: 700; }
+.field .help { font-size: var(--fs-xs); color: var(--text-muted); }
+.field .error { font-size: var(--fs-xs); color: var(--danger); }
+.seg { justify-self: start; display: inline-flex; border: 1px solid var(--border-strong); border-radius: var(--radius); overflow: hidden; background: var(--bg); }
+.seg label { position: relative; }
+.seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.seg span { display: block; padding: 0 14px; line-height: 28px; font-size: var(--fs-sm); border-right: 1px solid var(--border-strong); }
+.seg label:last-child span { border-right: 0; }
+.seg input:checked + span { background: var(--accent-soft); color: var(--accent-hover); font-weight: 700; }
+.seg input:focus-visible + span { box-shadow: inset 0 0 0 2px var(--accent); }
+.modal-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 16px 20px; }
+
+.btn-sheet { margin-top: 32px; display: grid; grid-template-columns: 120px 1fr; gap: 12px 20px; align-items: center; font-size: var(--fs-sm); }
+.btn-sheet .k { color: var(--text-muted); }
+.btn-sheet .v { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+/* 모드 규칙 표 */
+table.rules { border-collapse: collapse; width: 100%; max-width: 900px; font-size: var(--fs-sm); }
+table.rules th, table.rules td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.rules th { color: var(--text-muted); font-weight: 700; background: var(--bg-subtle); }
+table.rules kbd, .kbd { font-family: var(--font); font-size: var(--fs-xs); border: 1px solid var(--border-strong); border-bottom-width: 2px; border-radius: 3px; padding: 0 5px; background: var(--bg); }
+
+@media (max-width: 1080px) {
+  .app { grid-template-columns: 44px 220px 1fr; }
+  .rightbar { display: none; }
+  .statusbar { grid-column: 2 / 4; }
+  .forms-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .app { grid-template-columns: 1fr; grid-template-rows: 1fr 24px; height: 560px; }
+  .ribbon, .sidebar { display: none; }
+  .statusbar { grid-column: 1; }
+  .doc-inner { padding: 20px 16px 60px; }
+  .setting-item { flex-direction: column; align-items: stretch; gap: 10px; }
+  .setting-control .input { width: 100%; }
+  .type-row { grid-template-columns: 1fr; gap: 4px; }
+  .page { padding: 28px 16px 64px; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-files" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></symbol>
+    <symbol id="i-graph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="8" r="2.5"/><circle cx="10" cy="18" r="2.5"/><path d="m8.3 7 7.4.6M7 8.3l2.2 7.4M16.6 10l-4.8 6.3"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+    <symbol id="i-newfile" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 12v6M9 15h6"/></symbol>
+    <symbol id="i-newdir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 11v6M9 14h6"/></symbol>
+    <symbol id="i-sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 4v16M4 17l3 3 3-3M17 20V4M14 7l3-3 3 3"/></symbol>
+    <symbol id="i-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m7 20 5-5 5 5M7 4l5 5 5-5"/></symbol>
+    <symbol id="i-chev-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-chev-d" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-dots" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
+    <symbol id="i-move" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 14h7M13 11l3 3-3 3"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M13.5 4l-3 16"/></symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+  </defs>
+</svg>
+
+<main class="page">
+  <header class="page-head">
+    <h1>DocuLight 디자인 시안 v2</h1>
+    <p>메뉴 영역에만 옅은 기본 색상을 쓰고, 글을 읽고 쓰는 곳은 흰 바탕으로 비웁니다. 기본 색상은 사용자마다 고를 수 있고, 밝은 단계와 어두운 단계는 명도를 자동으로 조정해 만듭니다. 편집 모드는 문서 제목 줄의 아이콘 하나로 바꿉니다.</p>
+  </header>
+
+  <!-- ───────── 1. 앱 셸 ───────── -->
+  <section>
+    <div class="demo-controls" role="group" aria-label="시연 조건">
+      <span>시연 조건 — 이 문서에 대한 내 권한:</span>
+      <div class="seg" role="radiogroup">
+        <label><input type="radio" name="perm" value="edit" checked><span>편집 가능</span></label>
+        <label><input type="radio" name="perm" value="read"><span>읽기만</span></label>
+      </div>
+      <span>제목 줄 오른쪽의 <strong>아이콘</strong>을 누르거나, 본문을 우클릭하거나, <span class="kbd">Ctrl</span> + <span class="kbd">E</span> 로 모드를 바꿉니다.</span>
+    </div>
+
+    <div class="app">
+      <nav class="ribbon" aria-label="리본">
+        <button class="icon-btn" aria-pressed="true" title="파일 탐색기"><svg><use href="#i-files"/></svg></button>
+        <button class="icon-btn" title="검색"><svg><use href="#i-search"/></svg></button>
+        <button class="icon-btn" title="즐겨찾기"><svg><use href="#i-star"/></svg></button>
+        <button class="icon-btn" title="링크 그래프"><svg><use href="#i-graph"/></svg></button>
+        <button class="icon-btn" title="휴지통"><svg><use href="#i-trash"/></svg></button>
+        <span class="grow"></span>
+        <button class="icon-btn" title="권한 관리"><svg><use href="#i-shield"/></svg></button>
+        <button class="icon-btn" title="개인 설정" id="ribbonSettings"><svg><use href="#i-gear"/></svg></button>
+      </nav>
+
+      <aside class="sidebar" aria-label="파일 탐색기">
+        <div class="ws-switch">
+          <span class="ws-mark">연</span>
+          <span>연구개발팀</span>
+          <span class="role">편집자</span>
+        </div>
+        <div class="side-tools">
+          <button class="icon-btn" title="새 노트" data-tree-tool="new-note"><svg><use href="#i-newfile"/></svg></button>
+          <button class="icon-btn" title="정렬"><svg><use href="#i-sort"/></svg></button>
+          <button class="icon-btn" title="모두 접기" data-tree-tool="collapse"><svg><use href="#i-collapse"/></svg></button>
+        </div>
+        <div class="tree" id="tree" role="tree" aria-label="문서 트리"></div>
+      </aside>
+
+      <div class="main">
+        <div class="tabbar" role="tablist">
+          <div class="tab active" role="tab" aria-selected="true">권한 모델 <svg class="x"><use href="#i-x"/></svg></div>
+          <div class="tab" role="tab">저장소 구조</div>
+          <div class="tab" role="tab">2026-09-22 주간 회의</div>
+        </div>
+        <div class="viewhead">
+          <div class="crumb"><span>설계</span><span class="sep">/</span><span>권한 모델</span></div>
+          <span class="grow"></span>
+          <span class="save-state" id="saveState">저장됨</span>
+          <button class="icon-btn mode-btn" id="modeBtn" aria-describedby="modeTip"><svg><use href="#i-eye"/></svg><span class="tip" role="tooltip" id="modeTip"></span></button>
+          <button class="icon-btn" title="링크 복사"><svg><use href="#i-link"/></svg></button>
+          <button class="icon-btn" title="더 보기 (모드 전환 포함)" id="moreBtn"><svg><use href="#i-dots"/></svg></button>
+        </div>
+
+        <div class="doc" id="doc" tabindex="0" aria-label="문서 본문">
+          <div class="doc-inner">
+
+            <div data-view="read" hidden>
+              <h1>권한 모델</h1>
+              <p>모든 문서는 워크스페이스에 속하고, 권한은 <a class="wikilink" href="#">역할</a>을 통해 부여합니다. 개인에게 직접 권한을 주는 일은 예외로 둡니다.</p>
+              <blockquote>하위 폴더는 상위 폴더의 권한을 물려받습니다. 끊으려면 폴더 설정에서 상속을 해제합니다.</blockquote>
+              <h2>역할</h2>
+              <ul>
+                <li><strong>관리자</strong> — 멤버 초대, 역할 부여, 휴지통 비우기</li>
+                <li><strong>편집자</strong> — 문서 작성·수정·이동</li>
+                <li><strong>독자</strong> — 읽기와 댓글</li>
+              </ul>
+              <p><span class="tag">#보안</span> <span class="tag">#설계</span></p>
+            </div>
+
+            <div data-view="live" hidden>
+              <h1>권한 모델</h1>
+              <p>모든 문서는 워크스페이스에 속하고, 권한은 <a class="wikilink" href="#">역할</a>을 통해 부여합니다. 개인에게 직접 권한을 주는 일은 예외로 둡니다.</p>
+              <blockquote>하위 폴더는 상위 폴더의 권한을 물려받습니다. 끊으려면 폴더 설정에서 상속을 해제합니다.</blockquote>
+              <h2 class="caret-line"><span class="md">## </span>역할<span class="caret"></span></h2>
+              <ul>
+                <li><strong>관리자</strong> — 멤버 초대, 역할 부여, 휴지통 비우기</li>
+                <li><strong>편집자</strong> — 문서 작성·수정·이동</li>
+                <li><strong>독자</strong> — 읽기와 댓글</li>
+              </ul>
+              <p><span class="tag">#보안</span> <span class="tag">#설계</span></p>
+            </div>
+
+            <div data-view="source" hidden>
+<pre class="source"><span class="h"># 권한 모델</span>
+
+모든 문서는 워크스페이스에 속하고, 권한은 <span class="l">[[역할]]</span>을 통해 부여합니다. 개인에게 직접 권한을 주는 일은 예외로 둡니다.
+
+<span class="q">&gt; 하위 폴더는 상위 폴더의 권한을 물려받습니다. 끊으려면 폴더 설정에서 상속을 해제합니다.</span>
+
+<span class="h">## 역할</span>
+
+- **관리자** — 멤버 초대, 역할 부여, 휴지통 비우기
+- **편집자** — 문서 작성·수정·이동
+- **독자** — 읽기와 댓글
+
+#보안 #설계</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="rightbar" aria-label="문서 정보">
+        <h3>개요</h3>
+        <ol>
+          <li>권한 모델</li>
+          <li class="sub">역할</li>
+        </ol>
+        <h3>백링크</h3>
+        <ul>
+          <li>저장소 구조<span class="bl-ctx">…폴더 단위 격리는 [[권한 모델]]을 따른다…</span></li>
+          <li>시작하기<span class="bl-ctx">…초대 받은 뒤 [[권한 모델]]을 먼저 읽는다…</span></li>
+        </ul>
+        <h3>이 문서에 접근할 수 있는 역할</h3>
+        <ul>
+          <li>관리자 · 편집자 · 독자</li>
+        </ul>
+      </aside>
+
+      <footer class="statusbar">
+        <span class="msg" id="sbMsg" role="status"></span>
+        <span>단어 58</span>
+      </footer>
+    </div>
+  </section>
+
+  <div class="ctx" id="ctx" role="menu" hidden>
+    <button class="ctx-item" role="menuitemradio" data-mode="read"><svg class="check"><use href="#i-check"/></svg>보기<kbd></kbd></button>
+    <button class="ctx-item" role="menuitemradio" data-mode="live"><svg class="check"><use href="#i-check"/></svg>라이브 편집<kbd></kbd></button>
+    <button class="ctx-item" role="menuitemradio" data-mode="source"><svg class="check"><use href="#i-check"/></svg>소스 편집<kbd></kbd></button>
+    <div class="ctx-sep"></div>
+    <button class="ctx-item" role="menuitem" data-write data-edit-op><svg class="check"></svg>잘라내기<kbd>Ctrl X</kbd></button>
+    <button class="ctx-item" role="menuitem"><svg class="check"></svg>복사<kbd>Ctrl C</kbd></button>
+    <button class="ctx-item" role="menuitem" data-write data-edit-op><svg class="check"></svg>붙여넣기<kbd>Ctrl V</kbd></button>
+    <div class="ctx-sep"></div>
+    <button class="ctx-item" role="menuitem" data-write data-edit-op><svg class="check"></svg>링크 삽입<kbd>[[</kbd></button>
+    <button class="ctx-item" role="menuitem"><svg class="check"></svg>버전 기록 보기</button>
+    <button class="ctx-item" role="menuitem" data-write><svg class="check"></svg>공유…<kbd></kbd></button>
+  </div>
+
+  <div class="ctx" id="treeCtx" role="menu" aria-label="파일 탐색기 메뉴" hidden>
+    <button class="ctx-item" role="menuitem" data-act="new-note"><svg class="ico"><use href="#i-newfile"/></svg>새 노트<kbd></kbd></button>
+    <button class="ctx-item" role="menuitem" data-act="new-folder"><svg class="ico"><use href="#i-newdir"/></svg>새 폴더<kbd></kbd></button>
+    <div class="ctx-sep" data-node-only></div>
+    <button class="ctx-item" role="menuitem" data-act="duplicate" data-node-only><svg class="ico"><use href="#i-copy"/></svg>복사본 생성<kbd></kbd></button>
+    <button class="ctx-item" role="menuitem" data-act="copy-to" data-node-only><svg class="ico"><use href="#i-copy"/></svg>다른 곳으로 복사…<kbd></kbd></button>
+    <button class="ctx-item" role="menuitem" data-act="move" data-node-only><svg class="ico"><use href="#i-move"/></svg>폴더 이동<kbd></kbd></button>
+    <button class="ctx-item" role="menuitem" data-act="search"><svg class="ico"><use href="#i-search"/></svg>폴더에서 검색<kbd></kbd></button>
+    <div class="ctx-sep" data-node-only></div>
+    <button class="ctx-item" role="menuitem" data-act="url" data-node-only><svg class="ico"><use href="#i-link"/></svg>URL 복사<kbd></kbd></button>
+    <button class="ctx-item" role="menuitem" data-act="share" data-node-only><svg class="ico"><use href="#i-share"/></svg>공유…<kbd></kbd></button>
+    <button class="ctx-item" role="menuitem" data-act="favorite" data-node-only><svg class="ico"><use href="#i-star"/></svg><span class="fav-label">즐겨찾기에 추가</span><kbd></kbd></button>
+    <div class="ctx-sep" data-file-only></div>
+    <button class="ctx-item" role="menuitem" data-act="new-version" data-file-only><svg class="ico"><use href="#i-upload"/></svg>새 버전 올리기…<kbd></kbd></button>
+    <div class="ctx-sep" data-node-only></div>
+    <button class="ctx-item" role="menuitem" data-act="rename" data-node-only><svg class="ico"><use href="#i-pencil"/></svg>이름 변경<kbd></kbd></button>
+    <button class="ctx-item danger" role="menuitem" data-act="delete" data-node-only><svg class="ico"><use href="#i-trash"/></svg>삭제<kbd></kbd></button>
+  </div>
+
+  <div class="picker-backdrop" id="movePicker" hidden>
+    <div class="picker" role="dialog" aria-modal="true" aria-labelledby="pickerTitle">
+      <div class="picker-title" id="pickerTitle"></div>
+      <div class="picker-note" id="pickerNote" hidden>권한에 따라 일부 항목이 제외될 수 있습니다.</div>
+      <input class="picker-input" id="pickerInput" placeholder="옮길 폴더 이름을 입력하세요" autocomplete="off" role="combobox" aria-controls="pickerList" aria-expanded="true">
+      <ul class="picker-list" id="pickerList" role="listbox"></ul>
+      <div class="picker-preview" id="pickerPreview" role="status" hidden></div>
+      <div class="picker-foot"><span><span class="kbd">↑</span> <span class="kbd">↓</span> 고르기</span><span><span class="kbd">Enter</span> <span id="pickerVerb">이동</span></span><span><span class="kbd">Esc</span> 닫기</span></div>
+    </div>
+  </div>
+
+  <!-- ───────── 2. 개인 설정: 외관 ───────── -->
+  <section class="spec" id="appearance">
+    <h2>개인 설정: 외관</h2>
+    <p class="lead">테마와 기본 색상은 사용자마다 따로 저장합니다. 여기서 바꾸면 위의 앱 화면과 아래의 색상 표가 함께 바뀝니다.</p>
+
+    <div class="settings" style="max-width: 760px">
+      <div class="settings-head">외관<small>내 계정에 저장되어 다른 기기에서도 같게 보입니다. 다른 멤버의 화면은 바뀌지 않습니다.</small></div>
+      <div class="settings-body">
+        <div class="setting-item">
+          <div class="setting-info"><div class="setting-name">테마</div><div class="setting-desc">시스템 따라를 고르면 운영체제의 밝게·어둡게 설정을 따릅니다.</div></div>
+          <div class="setting-control">
+            <div class="seg" role="radiogroup" aria-label="테마">
+              <label><input type="radio" name="theme" value="light" checked><span>밝게</span></label>
+              <label><input type="radio" name="theme" value="dark"><span>어둡게</span></label>
+              <label><input type="radio" name="theme" value="system"><span>시스템 따라</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item stack">
+          <div class="setting-info">
+            <div class="setting-name">기본 색상</div>
+            <div class="setting-desc">메뉴 영역의 색조와 강조색이 이 색 하나에서 정해집니다. 색상과 채도는 고른 색을 따르고, 명도는 쓰임새에 맞게 자동으로 조정됩니다. 문서 바탕은 바뀌지 않습니다.</div>
+          </div>
+          <div class="color-picker" role="radiogroup" aria-label="기본 색상" id="colorPicker"></div>
+          <div class="contrast-note" id="contrastNote"></div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info"><div class="setting-name">메뉴 밝기</div><div class="setting-desc">메뉴 영역만 한 단계씩 밝게 하거나 어둡게 합니다. 글자와 배경의 대비는 자동으로 유지됩니다.</div></div>
+          <div class="setting-control">
+            <div class="stepper">
+              <button class="btn square" id="shiftDown" aria-label="메뉴 어둡게">−</button>
+              <output id="shiftOut" aria-live="polite">기본</output>
+              <button class="btn square" id="shiftUp" aria-label="메뉴 밝게">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="settings-foot">
+        <button class="btn" id="resetAppearance">기본값으로 되돌리기</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── 3. 색상 ───────── -->
+  <section class="spec">
+    <h2>색상</h2>
+    <p class="lead">메뉴 색은 사이드바, 리본, 탭 바, 상태 바처럼 둘러싸는 영역에만 씁니다. 문서, 대화상자, 입력칸, 컨텍스트 메뉴는 모두 흰 바탕입니다. 아래 값은 지금 고른 기본 색상에서 계산된 결과입니다.</p>
+    <div class="swatch-groups">
+      <div>
+        <h3>메뉴 영역</h3>
+        <p class="note">기본 색상에서 명도만 바꿔 만듭니다</p>
+        <div class="swatches">
+          <div class="sw"><i style="background:var(--menu-bg)"></i>사이드바·탭 바<code data-var="--menu-bg"></code></div>
+          <div class="sw"><i style="background:var(--menu-bg-deep)"></i>리본·상태 바<code data-var="--menu-bg-deep"></code></div>
+          <div class="sw"><i style="background:var(--menu-hover)"></i>항목 위에 올렸을 때<code data-var="--menu-hover"></code></div>
+          <div class="sw"><i style="background:var(--menu-active)"></i>현재 문서<code data-var="--menu-active"></code></div>
+          <div class="sw"><i style="background:var(--menu-border)"></i>경계선<code data-var="--menu-border"></code></div>
+          <div class="sw"><i style="background:var(--menu-muted)"></i>메뉴 보조 글자<code data-var="--menu-muted"></code></div>
+        </div>
+      </div>
+      <div>
+        <h3>문서와 폼</h3>
+        <p class="note">기본 색상과 무관하게 고정입니다</p>
+        <div class="swatches">
+          <div class="sw"><i style="background:var(--bg)"></i>바탕<code data-var="--bg"></code></div>
+          <div class="sw"><i style="background:var(--bg-subtle)"></i>코드·안내 상자<code data-var="--bg-subtle"></code></div>
+          <div class="sw"><i style="background:var(--border)"></i>경계선<code data-var="--border"></code></div>
+          <div class="sw"><i style="background:var(--text)"></i>본문 글자<code data-var="--text"></code></div>
+          <div class="sw"><i style="background:var(--text-muted)"></i>보조 글자<code data-var="--text-muted"></code></div>
+        </div>
+      </div>
+      <div>
+        <h3>강조와 상태</h3>
+        <p class="note">강조색은 바탕과의 대비가 4.5:1 이상이 되도록 명도를 맞춥니다</p>
+        <div class="swatches">
+          <div class="sw"><i style="background:var(--accent)"></i>주 버튼·포커스·선택<code data-var="--accent"></code></div>
+          <div class="sw"><i style="background:var(--accent-hover)"></i>주 버튼 누를 때<code data-var="--accent-hover"></code></div>
+          <div class="sw"><i style="background:var(--accent-soft)"></i>태그·선택 배경<code data-var="--accent-soft"></code></div>
+          <div class="sw"><i style="background:var(--danger)"></i>삭제·오류<code data-var="--danger"></code></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── 4. 서체 ───────── -->
+  <section class="spec">
+    <h2>서체</h2>
+    <p class="lead">화면 전체를 나눔고딕 하나로 씁니다. 코드와 마크다운 소스에만 나눔고딕코딩을 씁니다. 크기 단계는 12 · 13 · 14 · 16 · 21 · 30px 여섯 개로 제한합니다.</p>
+    <div class="type-scale">
+      <div class="type-row"><span class="meta">문서 제목 30 / ExtraBold</span><span style="font-size:30px;font-weight:800;letter-spacing:-.02em">권한 모델</span></div>
+      <div class="type-row"><span class="meta">소제목 21 / ExtraBold</span><span style="font-size:21px;font-weight:800">역할과 상속</span></div>
+      <div class="type-row"><span class="meta">본문 16 / 행간 1.75</span><span style="font-size:16px;line-height:1.75">하위 폴더는 상위 폴더의 권한을 물려받습니다.</span></div>
+      <div class="type-row"><span class="meta">화면 요소 14</span><span>워크스페이스 설정</span></div>
+      <div class="type-row"><span class="meta">트리·버튼 13</span><span style="font-size:13px">새 문서 만들기</span></div>
+      <div class="type-row"><span class="meta">설명·상태 12</span><span style="font-size:12px;color:var(--text-muted)">마지막 저장 3분 전</span></div>
+      <div class="type-row"><span class="meta">코드 14 / 나눔고딕코딩</span><span style="font-family:var(--mono)">[[권한 모델#역할]]</span></div>
+    </div>
+  </section>
+
+  <!-- ───────── 5. 입력 폼과 버튼 ───────── -->
+  <section class="spec">
+    <h2>입력 폼과 버튼</h2>
+    <p class="lead">옵시디언의 설정 화면 문법을 따릅니다. 각 행의 왼쪽에 이름과 한 줄 설명을 두고, 오른쪽에 컨트롤을 둡니다. 컨트롤 높이는 30px, 모서리는 4px로 맞춥니다. 입력칸과 버튼의 테두리는 바탕과의 대비를 3:1 이상으로 두고, 포커스를 받으면 강조색 2px 외곽선을 2px 띄워 표시합니다.</p>
+
+    <div class="forms-grid">
+      <div class="settings">
+        <div class="settings-head">워크스페이스 설정</div>
+        <div class="settings-body">
+          <div class="setting-group">일반</div>
+          <div class="setting-item">
+            <div class="setting-info"><div class="setting-name">이름</div><div class="setting-desc">사이드바 맨 위와 초대 메일에 표시됩니다.</div></div>
+            <div class="setting-control"><input class="input" value="연구개발팀" aria-label="이름"></div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info"><div class="setting-name">새 멤버의 기본 역할</div><div class="setting-desc">초대를 수락한 사람에게 처음 부여할 역할입니다.</div></div>
+            <div class="setting-control"><select class="select" aria-label="기본 역할"><option>독자</option><option>편집자</option><option>관리자</option></select></div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info"><div class="setting-name">가입 신청 받기</div><div class="setting-desc">초대 없이 신청한 사람을 관리자가 승인할 수 있습니다.</div></div>
+            <div class="setting-control"><button class="toggle" role="switch" aria-checked="true" aria-label="가입 신청 받기"></button></div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info"><div class="setting-name">외부 공유 링크</div><div class="setting-desc">로그인하지 않은 사람도 링크로 문서를 읽을 수 있습니다.</div></div>
+            <div class="setting-control"><button class="toggle" role="switch" aria-checked="false" aria-label="외부 공유 링크"></button></div>
+          </div>
+          <div class="setting-group">위험 구역</div>
+          <div class="setting-item danger">
+            <div class="setting-info"><div class="setting-name">휴지통 비우기</div><div class="setting-desc">휴지통에 있는 문서 14개를 영구히 삭제합니다. 되돌릴 수 없습니다.</div></div>
+            <div class="setting-control"><button class="btn warn">휴지통 비우기</button></div>
+          </div>
+        </div>
+        <div class="settings-foot">
+          <button class="btn">취소</button>
+          <button class="btn cta">변경 사항 저장</button>
+        </div>
+      </div>
+
+      <div class="modal" role="dialog" aria-labelledby="grantTitle">
+        <div class="modal-head">
+          <h3 id="grantTitle">권한 부여</h3>
+          <button class="icon-btn" title="닫기"><svg><use href="#i-x"/></svg></button>
+        </div>
+        <p class="modal-sub">설계 폴더와 그 하위 문서 12개에 적용됩니다.</p>
+        <div class="modal-body">
+          <div class="field">
+            <label for="who">대상</label>
+            <div class="search-field"><svg><use href="#i-user"/></svg><input class="input" id="who" placeholder="이름, 이메일, 그룹" value="김서연"></div>
+          </div>
+          <div class="field">
+            <label>역할</label>
+            <div class="seg" role="radiogroup">
+              <label><input type="radio" name="role"><span>독자</span></label>
+              <label><input type="radio" name="role" checked><span>편집자</span></label>
+              <label><input type="radio" name="role"><span>관리자</span></label>
+            </div>
+            <span class="help">편집자는 문서를 쓰고 옮길 수 있지만 권한은 바꿀 수 없습니다.</span>
+          </div>
+          <div class="field">
+            <label for="until">만료일</label>
+            <input class="input" id="until" value="2026-02-30" aria-invalid="true" aria-describedby="untilErr">
+            <span class="error" id="untilErr">2026년 2월에는 30일이 없습니다. 날짜를 다시 입력하세요.</span>
+          </div>
+          <div class="field">
+            <label for="memo">메모</label>
+            <textarea class="input textarea" id="memo" placeholder="감사 기록에 함께 남습니다"></textarea>
+          </div>
+          <label class="check-label"><input type="checkbox" checked>하위 폴더에도 적용</label>
+        </div>
+        <div class="modal-foot">
+          <button class="btn">취소</button>
+          <button class="btn cta">권한 부여</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-sheet">
+      <span class="k">주 동작</span><span class="v"><button class="btn cta">문서 만들기</button><button class="btn cta" disabled>문서 만들기</button></span>
+      <span class="k">보조 동작</span><span class="v"><button class="btn">취소</button><button class="btn"><svg><use href="#i-newdir"/></svg>새 폴더</button></span>
+      <span class="k">파괴적 동작</span><span class="v"><button class="btn warn">영구 삭제</button></span>
+      <span class="k">도구 버튼</span><span class="v"><button class="btn ghost"><svg><use href="#i-link"/></svg>링크 복사</button></span>
+      <span class="k">검색</span><span class="v"><span class="search-field" style="width:280px"><svg><use href="#i-search"/></svg><input class="input" placeholder="문서 검색"></span></span>
+    </div>
+  </section>
+
+  <!-- ───────── 6. 편집 모드 규칙 ───────── -->
+  <section class="spec">
+    <h2>편집 모드 규칙</h2>
+    <p class="lead">문서는 권한에 맞는 모드로 바로 열립니다. 모드는 제목 줄 오른쪽의 아이콘 하나로 바꾸며, 아이콘 모양이 지금 모드를 나타내므로 본문에는 안내 문구를 두지 않습니다. 눈은 보기, 연필은 라이브 편집, <code>&lt;/&gt;</code> 는 소스 편집입니다. 개인 설정의 「기본 열람 모드」는 남기고 기본값을 「권한에 따라」로 바꿉니다. 그 설정에서 「항상 보기」를 고른 사람은 편집 권한이 있어도 보기로 엽니다.</p>
+    <table class="rules">
+      <thead><tr><th>내 권한</th><th>문서를 열었을 때</th><th>아이콘을 누르면</th><th>마우스를 올리면</th><th>그 밖의 방법</th></tr></thead>
+      <tbody>
+        <tr><td>편집 가능</td><td>라이브 편집</td><td>보기 → 라이브 편집 → 소스 편집 → 보기 순서로 바뀝니다</td><td>지금 모드와 누르면 바뀔 모드</td><td><kbd>Ctrl E</kbd> 는 아이콘을 누른 것과 같습니다. 우클릭 메뉴에서는 원하는 모드를 바로 고릅니다.</td></tr>
+        <tr><td>읽기만</td><td>보기</td><td>바뀌지 않습니다</td><td>「읽기 전용 문서입니다」</td><td>우클릭 메뉴의 편집 두 항목은 흐리게 두고 「권한 없음」을 붙입니다.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ───────── 7. 파일 탐색기 ───────── -->
+  <section class="spec">
+    <h2>파일 탐색기의 우클릭 메뉴와 끌어서 옮기기</h2>
+    <p class="lead">위 앱 화면의 트리에서 직접 해 볼 수 있습니다. 권한이 모자란 항목은 메뉴에서 흐리게 두고 「권한 없음」을 붙이며, 숨기지는 않습니다. 트리의 빈 곳을 우클릭하면 워크스페이스 맨 위를 대상으로 새 노트, 새 폴더, 폴더에서 검색만 나옵니다.</p>
+    <table class="rules">
+      <thead><tr><th>동작</th><th>결과</th><th>필요한 권한</th></tr></thead>
+      <tbody>
+        <tr><td>새 노트 · 새 폴더</td><td>누른 폴더 안에 이름 입력 줄이 생깁니다. <kbd>Enter</kbd> 로 확정해야 만들고, <kbd>Esc</kbd> 를 누르면 아무것도 만들지 않습니다. 노트를 눌렀다면 그 노트가 든 폴더에 만듭니다. 트리 상단의 새 노트 버튼은 이름을 묻지 않고 바로 만듭니다.</td><td>대상 폴더 편집</td></tr>
+        <tr><td>복사본 생성</td><td>같은 폴더에 「이름 사본」으로 만듭니다.</td><td>원본 보기, 폴더 편집</td></tr>
+        <tr><td>다른 곳으로 복사</td><td>폴더 고르기 창을 열고, 고른 폴더에 복사합니다. 다른 워크스페이스로 복사하는 진입점입니다.</td><td>원본 보기, 목적지 폴더 편집</td></tr>
+        <tr><td>폴더 이동</td><td>폴더 고르기 창을 열고, 고른 폴더로 옮깁니다. 쓸 수 없는 폴더는 흐리게 보이고 고를 수 없습니다.</td><td>대상 편집, 목적지 폴더 편집</td></tr>
+        <tr><td>폴더에서 검색</td><td>검색 범위를 그 폴더로 좁혀 검색 창을 엽니다.</td><td>보기</td></tr>
+        <tr><td>URL 복사</td><td>문서, 폴더, 파일의 주소를 클립보드에 복사합니다. 폴더 주소를 열면 트리에서 그 폴더를 펼친 채 고릅니다. 받는 사람에게 권한이 없으면 열리지 않습니다.</td><td>보기</td></tr>
+        <tr><td>공유</td><td>공유 창을 엽니다.</td><td>대상 편집</td></tr>
+        <tr><td>즐겨찾기에 추가 · 해제</td><td>상태에 따라 항목 이름이 바뀝니다.</td><td>보기</td></tr>
+        <tr><td>새 버전 올리기</td><td>파일을 골라 덮어씁니다. 파일에만 나타나고 폴더에는 나타나지 않습니다.</td><td>편집</td></tr>
+        <tr><td>이름 변경 <kbd>F2</kbd></td><td>트리 안에서 바로 고칩니다. <kbd>Enter</kbd> 로 확정하고 <kbd>Esc</kbd> 로 취소합니다.</td><td>편집</td></tr>
+        <tr><td>삭제 <kbd>Delete</kbd></td><td>휴지통으로 옮깁니다.</td><td>편집</td></tr>
+        <tr><td>끌어서 놓기</td><td>놓은 폴더로 옮깁니다. 노트 위에 놓으면 그 노트가 든 폴더로 갑니다. 접힌 폴더 위에 잠시 머물면 펼쳐집니다.</td><td>대상 편집, 목적지 폴더 편집</td></tr>
+        <tr><td><kbd>Ctrl</kbd> 누른 채 놓기</td><td>옮기지 않고 복사합니다. 끄는 도중에 눌러도 바뀝니다.</td><td>원본 보기, 대상 폴더 편집</td></tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+
+<script>
+/* ───────── 기본 색상 → 팔레트 파생 ───────── */
+const Palette = (() => {
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+
+  function hexToRgb(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  function rgbToHex([r, g, b]) {
+    return '#' + [r, g, b].map(v => Math.round(v).toString(16).padStart(2, '0')).join('');
+  }
+  function hexToHsl(hex) {
+    const [r, g, b] = hexToRgb(hex).map(v => v / 255);
+    const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+    const l = (max + min) / 2;
+    if (d === 0) return { h: 0, s: 0, l: l * 100 };
+    const s = d / (1 - Math.abs(2 * l - 1));
+    let h;
+    if (max === r) h = ((g - b) / d) % 6;
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    return { h: (h * 60 + 360) % 360, s: s * 100, l: l * 100 };
+  }
+  function hsl(h, s, l) {
+    s = clamp(s, 0, 100) / 100; l = clamp(l, 0, 100) / 100;
+    const k = n => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+    const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1));
+    return rgbToHex([f(0) * 255, f(8) * 255, f(4) * 255]);
+  }
+  function luminance(hex) {
+    const lin = v => { v /= 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; };
+    const [r, g, b] = hexToRgb(hex).map(lin);
+    return .2126 * r + .7152 * g + .0722 * b;
+  }
+  function contrast(a, b) {
+    const [x, y] = [luminance(a), luminance(b)].sort((p, q) => q - p);
+    return (x + .05) / (y + .05);
+  }
+  function mix(a, b, t) {
+    const p = hexToRgb(a), q = hexToRgb(b);
+    return rgbToHex(p.map((v, i) => v + (q[i] - v) * t));
+  }
+  // 대비가 target 이상이 될 때까지 명도를 한 방향으로 옮긴다.
+  function untilContrast(h, s, l, against, target, step) {
+    let c = hsl(h, s, l);
+    while (contrast(c, against) < target && l > 2 && l < 98) { l += step; c = hsl(h, s, l); }
+    return c;
+  }
+
+  const DOC_BG = { light: '#FFFFFF', dark: '#1F1F1D' };
+  const STEP = 2; // 메뉴 밝기 한 단계 = 명도 2%
+
+  function derive(base, mode, shift) {
+    const { h, s } = hexToHsl(base);
+    const ms = Math.min(s * .45, 40);   // 메뉴 채도: 고른 색보다 훨씬 옅게
+    const as = Math.min(s, 72);         // 강조 채도
+    const d = shift * STEP;
+    const out = {};
+    if (mode === 'light') {
+      out['--menu-bg'] = hsl(h, ms, 92 + d);
+      out['--menu-bg-deep'] = hsl(h, ms, 89 + d);
+      out['--menu-hover'] = hsl(h, ms, 85 + d);
+      out['--menu-active'] = hsl(h, Math.min(ms + 6, 46), 79 + d);
+      out['--menu-border'] = hsl(h, ms, 82 + d);
+      out['--menu-text'] = untilContrast(h, 12, 26, out['--menu-active'], 7, -1);
+      out['--menu-muted'] = untilContrast(h, 10, 44, out['--menu-bg-deep'], 4.5, -1);
+      out['--accent'] = untilContrast(h, as, 38, DOC_BG.light, 4.6, -1);
+      out['--accent-hover'] = mix(out['--accent'], '#000000', .15);
+      out['--accent-soft'] = mix(out['--accent'], '#FFFFFF', .88);
+      out['--on-accent'] = '#FFFFFF';
+    } else {
+      out['--menu-bg'] = hsl(h, ms * .5, 15 + d);
+      out['--menu-bg-deep'] = hsl(h, ms * .5, 12 + d);
+      out['--menu-hover'] = hsl(h, ms * .5, 20 + d);
+      out['--menu-active'] = hsl(h, ms * .6, 26 + d);
+      out['--menu-border'] = hsl(h, ms * .5, 23 + d);
+      out['--menu-text'] = untilContrast(h, 10, 84, out['--menu-active'], 7, 1);
+      out['--menu-muted'] = untilContrast(h, 8, 60, out['--menu-bg'], 4.5, 1);
+      out['--accent'] = untilContrast(h, Math.min(as, 60), 66, DOC_BG.dark, 5, 1);
+      out['--accent-hover'] = mix(out['--accent'], '#FFFFFF', .15);
+      out['--accent-soft'] = mix(out['--accent'], DOC_BG.dark, .8);
+      out['--on-accent'] = '#1B1B19';
+    }
+    out['--link'] = out['--accent'];
+    const [r, g, b] = hexToRgb(out['--accent']);
+    out['--accent-ring'] = `rgba(${r}, ${g}, ${b}, .3)`;
+    return out;
+  }
+
+  return { derive, contrast, DOC_BG };
+})();
+
+/* ───────── 외관 설정 ───────── */
+(() => {
+  const PRESETS = [
+    { id: 'hanji', name: '한지', base: '#B8860B' },
+    { id: 'sand',  name: '모래', base: '#8C6E57' },
+    { id: 'ssuk',  name: '쑥',   base: '#5E7A44' },
+    { id: 'jjok',  name: '쪽빛', base: '#34628E' },
+    { id: 'jaju',  name: '자주', base: '#6E55A8' },
+    { id: 'meok',  name: '먹',   base: '#5E5C57' },
+  ];
+  const DEFAULTS = { theme: 'light', color: 'hanji', custom: '#B0485A', shift: 0 };
+  const KEY = 'doculight-mock-appearance';
+  const root = document.documentElement;
+  const picker = document.getElementById('colorPicker');
+  const note = document.getElementById('contrastNote');
+  const shiftOut = document.getElementById('shiftOut');
+  const media = matchMedia('(prefers-color-scheme: dark)');
+
+  let state = { ...DEFAULTS };
+  try { Object.assign(state, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (_) {}
+
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (_) {} };
+  const rendered = () => state.theme === 'system' ? (media.matches ? 'dark' : 'light') : state.theme;
+  const baseOf = id => id === 'custom' ? state.custom : PRESETS.find(p => p.id === id).base;
+
+  // 선택지 타일
+  const all = [...PRESETS, { id: 'custom', name: '직접 고르기' }];
+  picker.innerHTML = all.map(p => `
+    <label class="pick" data-id="${p.id}">
+      <input type="radio" name="baseColor" value="${p.id}">
+      <span class="pick-prev" aria-hidden="true">
+        <span class="m"><b></b><b></b><b></b></span>
+        <span class="d"><b class="acc"></b><b></b><b style="width:70%"></b></span>
+      </span>
+      <span class="pick-name"><span class="dot"></span>${p.name}${p.id === 'custom' ? `<input type="color" id="customColor" aria-label="기본 색상 직접 고르기">` : ''}</span>
+    </label>`).join('');
+  const customInput = document.getElementById('customColor');
+
+  function paintTiles(mode) {
+    picker.querySelectorAll('.pick').forEach(tile => {
+      const base = baseOf(tile.dataset.id);
+      const p = Palette.derive(base, mode, 0);
+      const m = tile.querySelector('.m');
+      m.style.background = p['--menu-bg'];
+      m.querySelectorAll('b').forEach(b => { b.style.background = p['--menu-active']; });
+      tile.querySelector('.acc').style.background = p['--accent'];
+      tile.querySelector('.dot').style.background = base;
+    });
+  }
+
+  function apply() {
+    const mode = rendered();
+    root.dataset.theme = mode;
+    const palette = Palette.derive(baseOf(state.color), mode, state.shift);
+    for (const [k, v] of Object.entries(palette)) root.style.setProperty(k, v);
+
+    document.querySelectorAll('input[name="theme"]').forEach(r => { r.checked = r.value === state.theme; });
+    picker.querySelectorAll('input[name="baseColor"]').forEach(r => { r.checked = r.value === state.color; });
+    customInput.value = state.custom;
+    shiftOut.textContent = state.shift === 0 ? '기본' : (state.shift > 0 ? '+' : '−') + Math.abs(state.shift);
+    document.getElementById('shiftDown').disabled = state.shift <= -2;
+    document.getElementById('shiftUp').disabled = state.shift >= 2;
+    paintTiles(mode);
+
+    const ratio = Palette.contrast(palette['--accent'], Palette.DOC_BG[mode]);
+    note.innerHTML = `강조색 <b>${palette['--accent'].toUpperCase()}</b> · 문서 바탕과의 대비 <b>${ratio.toFixed(1)}:1</b>`;
+
+    const css = getComputedStyle(root);
+    document.querySelectorAll('code[data-var]').forEach(c => { c.textContent = css.getPropertyValue(c.dataset.var).trim(); });
+  }
+
+  document.querySelectorAll('input[name="theme"]').forEach(r => r.addEventListener('change', () => { state.theme = r.value; save(); apply(); }));
+  picker.addEventListener('change', e => {
+    if (e.target.name === 'baseColor') { state.color = e.target.value; save(); apply(); }
+  });
+  customInput.addEventListener('input', () => { state.custom = customInput.value; state.color = 'custom'; save(); apply(); });
+  document.getElementById('shiftDown').addEventListener('click', () => { state.shift = Math.max(-2, state.shift - 1); save(); apply(); });
+  document.getElementById('shiftUp').addEventListener('click', () => { state.shift = Math.min(2, state.shift + 1); save(); apply(); });
+  document.getElementById('resetAppearance').addEventListener('click', () => { state = { ...DEFAULTS }; save(); apply(); });
+  document.getElementById('ribbonSettings').addEventListener('click', () => document.getElementById('appearance').scrollIntoView({ behavior: 'smooth' }));
+  media.addEventListener('change', () => { if (state.theme === 'system') apply(); });
+
+  apply();
+})();
+
+/* ───────── 메뉴 공통: 열기 · 닫기 · 키보드 ───────── */
+const Menu = (() => {
+  let open = null;
+  let onClose = null;
+
+  function show(menu, x, y, closed) {
+    hide();
+    menu.hidden = false;
+    const r = menu.getBoundingClientRect();
+    menu.style.left = Math.max(8, Math.min(x, innerWidth - r.width - 8)) + 'px';
+    menu.style.top = Math.max(8, Math.min(y, innerHeight - r.height - 8)) + 'px';
+    open = menu;
+    onClose = closed || null;
+    const first = menu.querySelector('.ctx-item[aria-checked="true"]:not(:disabled)')
+      || menu.querySelector('.ctx-item:not(:disabled):not([hidden])');
+    if (first) first.focus();
+  }
+
+  function hide() {
+    if (!open) return;
+    open.hidden = true;
+    const done = onClose;
+    open = null;
+    onClose = null;
+    if (done) done();
+  }
+
+  document.addEventListener('mousedown', e => { if (open && !open.contains(e.target)) hide(); });
+  document.addEventListener('keydown', e => {
+    if (!open) return;
+    if (e.key === 'Escape') { e.preventDefault(); hide(); return; }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const list = [...open.querySelectorAll('.ctx-item:not(:disabled):not([hidden])')];
+      const i = list.indexOf(document.activeElement);
+      list[(i + (e.key === 'ArrowDown' ? 1 : -1) + list.length) % list.length].focus();
+    }
+  });
+
+  return { show, hide };
+})();
+
+/* ───────── 앱 셸: 권한 · 편집 모드 · 파일 탐색기 ───────── */
+(() => {
+  const $ = id => document.getElementById(id);
+  const esc = s => s.replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+  const FOLDER_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>';
+  const doc = $('doc');
+  const ctx = $('ctx');
+  const treeEl = $('tree');
+  const treeCtx = $('treeCtx');
+  let canEdit = true;
+  let mode = 'live';
+
+  let msgTimer = 0;
+  function say(text) {
+    $('sbMsg').textContent = text;
+    clearTimeout(msgTimer);
+    msgTimer = setTimeout(() => { $('sbMsg').textContent = ''; }, 5000);
+  }
+
+  /* ── 편집 모드 ── */
+  const modeItems = [...ctx.querySelectorAll('[data-mode]')];
+
+  const MODES = {
+    read:   { icon: 'i-eye',    name: '보기',        to: '보기로' },
+    live:   { icon: 'i-pencil', name: '라이브 편집', to: '라이브 편집으로' },
+    source: { icon: 'i-code',   name: '소스 편집',   to: '소스 편집으로' },
+  };
+  const CYCLE = ['read', 'live', 'source'];
+  const nextMode = () => CYCLE[(CYCLE.indexOf(mode) + 1) % CYCLE.length];
+  const modeBtn = $('modeBtn');
+
+  function renderMode() {
+    document.querySelectorAll('[data-view]').forEach(v => { v.hidden = v.dataset.view !== mode; });
+    $('saveState').hidden = !canEdit;
+
+    modeBtn.dataset.mode = mode;
+    modeBtn.querySelector('use').setAttribute('href', '#' + MODES[mode].icon);
+    modeBtn.setAttribute('aria-disabled', String(!canEdit));
+    const tip = canEdit
+      ? { title: `${MODES[mode].name} 모드`, hint: `누르면 ${MODES[nextMode()].to} 바뀝니다 (Ctrl+E)` }
+      : { title: '읽기 전용 문서입니다', hint: '' };
+    $('modeTip').innerHTML = `<b>${tip.title}</b>${tip.hint ? `<span>${tip.hint}</span>` : ''}`;
+    modeBtn.setAttribute('aria-label', canEdit ? `편집 모드 바꾸기, 지금은 ${MODES[mode].name}` : '읽기 전용 문서입니다');
+
+    modeItems.forEach(b => {
+      b.setAttribute('aria-checked', String(b.dataset.mode === mode));
+      b.disabled = b.dataset.mode !== 'read' && !canEdit;
+      b.querySelector('kbd').textContent = b.disabled ? '권한 없음' : '';
+    });
+    ctx.querySelectorAll('[data-write]').forEach(b => {
+      b.disabled = !canEdit || (b.hasAttribute('data-edit-op') && mode === 'read');
+      const k = b.querySelector('kbd');
+      k.dataset.key ??= k.textContent;
+      k.textContent = !canEdit ? '권한 없음' : (b.disabled ? '' : k.dataset.key);
+    });
+  }
+
+  function cycleMode() {
+    if (canEdit) setMode(nextMode());
+  }
+  modeBtn.addEventListener('click', cycleMode);
+
+  function setMode(next) {
+    if (next !== 'read' && !canEdit) return;
+    mode = next;
+    renderMode();
+  }
+
+  doc.addEventListener('contextmenu', e => { e.preventDefault(); Menu.show(ctx, e.clientX, e.clientY); });
+  $('moreBtn').addEventListener('click', e => {
+    const r = e.currentTarget.getBoundingClientRect();
+    Menu.show(ctx, r.right - 232, r.bottom + 4);
+  });
+  ctx.addEventListener('click', e => {
+    const b = e.target.closest('.ctx-item');
+    if (!b || b.disabled) return;
+    if (b.dataset.mode) setMode(b.dataset.mode);
+    Menu.hide();
+    doc.focus();
+  });
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'e') {
+      e.preventDefault();
+      cycleMode();
+    }
+  });
+
+  /* ── 파일 탐색기: 모델 ── */
+  let seq = 0;
+  const note = (name, extra) => ({ id: 'n' + ++seq, kind: 'note', name, ...extra });
+  const folder = (name, children, extra) => ({ id: 'n' + ++seq, kind: 'folder', name, open: false, children, ...extra });
+  const root = folder('연구개발팀', [
+    folder('설계', [note('권한 모델', { current: true }), note('저장소 구조'), note('검색 색인')], { open: true }),
+    folder('회의록', [note('2026-09-22 주간 회의'), note('2026-09-15 주간 회의')]),
+    folder('운영 매뉴얼', [note('배포 절차'), note('백업과 복구')]),
+    folder('공지', [note('하반기 일정')], { viewOnly: true }),
+    note('시작하기'),
+  ], { id: 'root', open: true });
+
+  const parents = new Map();
+  function each(fn, dir = root) {
+    for (const c of dir.children) { fn(c, dir); if (c.children) each(fn, c); }
+  }
+  const byId = id => {
+    if (id === root.id) return root;
+    let hit = null;
+    each(c => { if (c.id === id) hit = c; });
+    return hit;
+  };
+  const parentOf = node => parents.get(node.id);
+  const within = (node, ancestor) => { for (let n = node; n; n = parentOf(n)) if (n === ancestor) return true; return false; };
+  // 시안에는 pass-through 노드가 없어서, 트리에 보이는 노드는 모두 읽을 수 있다. 쓰기는 편집 권한과 보기 전용 폴더가 가른다.
+  // 제품의 pass-through 노드는 이름만 보이고 메뉴의 모든 항목이 비활성이며 드롭 대상이 아니다 (원장 R69, 03 §2.2.3).
+  const writable = node => { if (!canEdit) return false; for (let n = node; n; n = parentOf(n)) if (n.viewOnly) return false; return true; };
+  const folderOf = node => node.kind === 'folder' ? node : parentOf(node);
+  const kindWord = node => node.kind === 'folder' ? '폴더' : '노트';
+  const pathOf = node => { const names = []; for (let n = node; n && n !== root; n = parentOf(n)) names.unshift(n.name); return names.join(' / '); };
+  const dirLabel = dir => dir === root ? '워크스페이스 맨 위' : `‘${dir.name}’ 폴더`;
+
+  function uniqueName(dir, name, self) {
+    const taken = new Set(dir.children.filter(c => c !== self).map(c => c.name));
+    if (!taken.has(name)) return name;
+    let i = 1;
+    while (taken.has(`${name} ${i}`)) i++;
+    return `${name} ${i}`;
+  }
+  function sortChildren(dir) {
+    dir.children.sort((a, b) => a.kind === b.kind ? a.name.localeCompare(b.name, 'ko') : (a.kind === 'folder' ? -1 : 1));
+  }
+  function insert(dir, node) {
+    node.name = uniqueName(dir, node.name, node);
+    dir.children.push(node);
+    sortChildren(dir);
+    dir.open = true;
+  }
+  function detach(node) {
+    const dir = parentOf(node);
+    dir.children.splice(dir.children.indexOf(node), 1);
+  }
+  function cloneOf(node) {
+    const copy = { ...node, id: 'n' + ++seq, current: false };
+    if (node.children) copy.children = node.children.map(cloneOf);
+    return copy;
+  }
+  function moveTo(node, dir) { detach(node); insert(dir, node); }
+  function copyTo(node, dir, name = node.name) {
+    const copy = cloneOf(node);
+    copy.name = name;
+    insert(dir, copy);
+    return copy;
+  }
+
+  /* ── 파일 탐색기: 그리기 ── */
+  function rowHtml(node) {
+    const lead = node.kind === 'folder'
+      ? `<svg class="chev"><use href="#i-chev-${node.open ? 'd' : 'r'}"/></svg>`
+      : '<span class="spacer"></span>';
+    const current = node.current ? ' aria-current="page"' : '';
+    return `<button class="tree-row" data-id="${node.id}"${current}>${lead}<span class="label">${esc(node.name)}</span></button>`;
+  }
+  function nodeHtml(node) {
+    const isFolder = node.kind === 'folder';
+    const showKids = isFolder && node.open && node.children.length > 0;
+    const kids = showKids ? `<ul role="group">${node.children.map(nodeHtml).join('')}</ul>` : '';
+    return `<li role="treeitem" data-id="${node.id}"${isFolder ? ` aria-expanded="${node.open}"` : ''}>${rowHtml(node)}${kids}</li>`;
+  }
+  const rowEl = id => treeEl.querySelector(`button.tree-row[data-id="${id}"]`);
+  const itemEl = id => treeEl.querySelector(`li[data-id="${id}"]`);
+
+  function renderTree(focusId) {
+    parents.clear();
+    each((c, dir) => parents.set(c.id, dir));
+    treeEl.innerHTML = `<ul>${root.children.map(nodeHtml).join('')}</ul>`;
+    if (focusId) rowEl(focusId)?.focus();
+  }
+
+  /* ── 파일 탐색기: 클릭 · 키보드 ── */
+  let swallowClick = false;
+  treeEl.addEventListener('click', e => {
+    if (swallowClick) return;
+    const row = e.target.closest('button.tree-row');
+    if (!row) return;
+    const node = byId(row.dataset.id);
+    if (node.kind === 'folder') node.open = !node.open;
+    else { each(c => { c.current = false; }); node.current = true; }
+    renderTree(node.id);
+  });
+  treeEl.addEventListener('keydown', e => {
+    const row = e.target.closest('button.tree-row');
+    if (!row) return;
+    const node = byId(row.dataset.id);
+    if (e.key === 'F2' && writable(node)) { e.preventDefault(); startRename(node); }
+    if (e.key === 'Delete' && writable(node)) { e.preventDefault(); remove(node); }
+  });
+
+  /* ── 파일 탐색기: 우클릭 메뉴 ── */
+  let menuNode = null;
+  treeEl.addEventListener('contextmenu', e => {
+    e.preventDefault();
+    const row = e.target.closest('button.tree-row');
+    const node = row ? byId(row.dataset.id) : root;
+    let { clientX: x, clientY: y } = e;
+    if (row && x === 0 && y === 0) { const r = row.getBoundingClientRect(); x = r.left + 24; y = r.bottom; }
+    openTreeMenu(node, x, y);
+  });
+
+  function openTreeMenu(node, x, y) {
+    menuNode = node;
+    const isRoot = node === root;
+    const dir = folderOf(node);
+    const from = parentOf(node) || root;
+    const allowed = {
+      'new-note': writable(dir),
+      'new-folder': writable(dir),
+      duplicate: writable(from),
+      'copy-to': true,                        // 원본은 보기 권한이면 된다 (FR-SHELL-003 AC-6)
+      move: writable(node),                   // 대상 편집 (SEC-ACL-012 AC-5). 목적지는 고를 때 가린다
+      search: true,
+      url: true,
+      share: writable(node),                  // 대상 편집 (원장 R70-a)
+      favorite: true,
+      'new-version': writable(node),
+      rename: writable(node),
+      delete: writable(node),
+    };
+    const shortcut = { rename: 'F2', delete: 'Delete' };
+    treeCtx.querySelectorAll('[data-node-only]').forEach(el => { el.hidden = isRoot; });
+    treeCtx.querySelectorAll('[data-file-only]').forEach(el => { el.hidden = node.kind !== 'note'; });
+    treeCtx.querySelector('.fav-label').textContent = node.favorite ? '즐겨찾기 해제' : '즐겨찾기에 추가';
+    treeCtx.querySelectorAll('[data-act]').forEach(b => {
+      const ok = allowed[b.dataset.act];
+      b.disabled = !ok;
+      b.querySelector('kbd').textContent = ok ? (shortcut[b.dataset.act] || '') : '권한 없음';
+    });
+    const target = isRoot ? treeEl : rowEl(node.id);
+    target.classList.add('menu-target');
+    Menu.show(treeCtx, x, y, () => target.classList.remove('menu-target'));
+  }
+
+  treeCtx.addEventListener('click', e => {
+    const b = e.target.closest('.ctx-item');
+    if (!b || b.disabled) return;
+    Menu.hide();
+    run(b.dataset.act, menuNode);
+  });
+
+  function run(act, node) {
+    const dir = folderOf(node);
+    if (act === 'new-note' || act === 'new-folder') {
+      startCreate(dir, act === 'new-note' ? 'note' : 'folder');
+    } else if (act === 'duplicate') {
+      const copy = copyTo(node, parentOf(node), `${node.name} 사본`);
+      renderTree(copy.id);
+      say(`‘${copy.name}’ ${kindWord(copy)}를 만들었습니다.`);
+    } else if (act === 'copy-to') {
+      openPicker(node, 'copy');
+    } else if (act === 'move') {
+      openPicker(node, 'move');
+    } else if (act === 'share') {
+      say(`‘${node.name}’의 공유 창을 엽니다.`);
+    } else if (act === 'favorite') {
+      node.favorite = !node.favorite;
+      say(node.favorite ? `‘${node.name}’을 즐겨찾기에 추가했습니다.` : `‘${node.name}’을 즐겨찾기에서 뺐습니다.`);
+    } else if (act === 'new-version') {
+      say(`‘${node.name}’에 올릴 파일을 고르는 창을 엽니다.`);
+    } else if (act === 'search') {
+      say(dir === root ? '워크스페이스 전체에서 검색합니다.' : `검색 범위를 ‘${pathOf(dir)}’ 폴더로 좁혔습니다.`);
+    } else if (act === 'url') {
+      const url = `https://doculight.example/w/${encodeURIComponent(root.name)}/${pathOf(node).split(' / ').map(encodeURIComponent).join('/')}`;
+      navigator.clipboard?.writeText(url).catch(() => {});
+      say(`‘${node.name}’의 URL을 복사했습니다.`);
+    } else if (act === 'rename') {
+      startRename(node);
+    } else if (act === 'delete') {
+      remove(node);
+    }
+  }
+
+  // 제품에서는 이 앞에 이동 미리보기와 확인 등급(FR-ACL-006, FR-CONFIRM-016/017)이 선다.
+  function copyAndReport(node, dir) {
+    const made = copyTo(node, dir);
+    renderTree(made.id);
+    say(`‘${made.name}’ ${kindWord(made)}를 ${dirLabel(dir)}에 복사했습니다.`);
+  }
+  function moveAndReport(node, dir) {
+    moveTo(node, dir);
+    renderTree(node.id);
+    say(`‘${node.name}’ ${kindWord(node)}를 ${dirLabel(dir)}로 옮겼습니다.`);
+  }
+
+  function remove(node) {
+    const dir = parentOf(node);
+    detach(node);
+    renderTree(dir === root ? undefined : dir.id);
+    say(`‘${node.name}’ ${kindWord(node)}를 휴지통으로 옮겼습니다.`);
+  }
+
+  // 이름을 먼저 받고, Enter 로 확정했을 때만 만든다. 그만두면 아무것도 만들지 않는다 (FR-SHELL-016 AC-3).
+  function startCreate(dir, kind) {
+    dir.open = true;
+    renderTree();
+    const holder = document.createElement('div');
+    holder.className = 'tree-row';
+    holder.innerHTML = kind === 'folder' ? '<svg class="chev"><use href="#i-chev-r"/></svg>' : '<span class="spacer"></span>';
+    const input = document.createElement('input');
+    input.className = 'tree-rename';
+    input.value = uniqueName(dir, kind === 'folder' ? '새 폴더' : '새 노트');
+    input.setAttribute('aria-label', kind === 'folder' ? '새 폴더 이름' : '새 노트 이름');
+    holder.append(input);
+    const li = document.createElement('li');
+    li.append(holder);
+    const list = dir === root ? treeEl.querySelector(':scope > ul') : itemEl(dir.id).querySelector(':scope > ul');
+    if (list) list.prepend(li);
+    else { const ul = document.createElement('ul'); ul.append(li); itemEl(dir.id).append(ul); }
+    input.focus();
+    input.select();
+
+    let done = false;
+    const finish = commit => {
+      if (done) return;
+      done = true;
+      const name = input.value.trim();
+      if (!commit || !name) { renderTree(dir === root ? undefined : dir.id); return; }
+      const fresh = kind === 'folder' ? folder(name, []) : note(name);
+      insert(dir, fresh);
+      renderTree(fresh.id);
+      say(`‘${fresh.name}’ ${kindWord(fresh)}를 만들었습니다.`);
+    };
+    input.addEventListener('keydown', e => {
+      e.stopPropagation();
+      if (e.key === 'Enter' && !e.isComposing) finish(true);
+      if (e.key === 'Escape') finish(false);
+    });
+    input.addEventListener('blur', () => finish(false));
+  }
+
+  // 버튼 안에는 입력칸을 둘 수 없으므로, 행을 같은 모양의 div 로 바꿔 이름을 받는다.
+  function startRename(node) {
+    const row = rowEl(node.id);
+    const holder = document.createElement('div');
+    holder.className = 'tree-row';
+    holder.append(row.firstElementChild.cloneNode(true));
+    const input = document.createElement('input');
+    input.className = 'tree-rename';
+    input.value = node.name;
+    input.setAttribute('aria-label', `${kindWord(node)} 이름`);
+    holder.append(input);
+    row.replaceWith(holder);
+    input.focus();
+    input.select();
+
+    let done = false;
+    const finish = commit => {
+      if (done) return;
+      done = true;
+      const name = input.value.trim();
+      if (commit && name && name !== node.name) {
+        const dir = parentOf(node);
+        node.name = uniqueName(dir, name, node);
+        sortChildren(dir);
+      }
+      renderTree(node.id);
+    };
+    input.addEventListener('keydown', e => {
+      e.stopPropagation();
+      if (e.key === 'Enter' && !e.isComposing) finish(true);
+      if (e.key === 'Escape') finish(false);
+    });
+    input.addEventListener('blur', () => finish(true));
+  }
+
+  /* ── 폴더 고르기 창 ── */
+  const picker = $('movePicker');
+  const pickerInput = $('pickerInput');
+  const pickerList = $('pickerList');
+  let pickNode = null;
+  let pickMode = 'move';
+  let pickOptions = [];
+  let pickIndex = 0;
+
+  function openPicker(node, mode) {
+    pickNode = node;
+    pickMode = mode;
+    $('pickerTitle').textContent = `‘${node.name}’ ${kindWord(node)}를 ${mode === 'copy' ? '복사할' : '옮길'} 폴더`;
+    $('pickerVerb').textContent = mode === 'copy' ? '복사' : '이동';
+    $('pickerNote').hidden = mode !== 'copy';
+    pickerInput.placeholder = mode === 'copy' ? '복사할 폴더 이름을 입력하세요' : '옮길 폴더 이름을 입력하세요';
+    pickerInput.value = '';
+    picker.hidden = false;
+    fillPicker();
+    pickerInput.focus();
+  }
+  function closePicker() {
+    picker.hidden = true;
+    rowEl(pickNode.id)?.focus();
+  }
+  // 쓸 수 없는 폴더도 흐리게 보여 주고, 그 아래로 내려가 쓸 수 있는 폴더를 찾는다 (03 §2.2.8).
+  function candidates(node) {
+    const list = [];
+    const walk = dir => {
+      if (within(dir, node)) return;
+      const samePlace = pickMode === 'move' && dir === parentOf(node);
+      if (!samePlace) list.push({ dir, ok: writable(dir) });
+      dir.children.filter(c => c.kind === 'folder').forEach(walk);
+    };
+    walk(root);
+    return list;
+  }
+  function fillPicker() {
+    const q = pickerInput.value.trim().toLowerCase();
+    pickOptions = candidates(pickNode).filter(({ dir }) => (dir === root ? root.name : pathOf(dir)).toLowerCase().includes(q));
+    pickIndex = pickOptions.findIndex(o => o.ok);
+    pickerList.innerHTML = pickOptions.length
+      ? pickOptions.map(({ dir, ok }, i) => {
+          const name = dir === root ? `${root.name} (맨 위)` : dir.name;
+          const where = dir === root ? '' : [root.name, pathOf(parentOf(dir))].filter(Boolean).join(' / ');
+          const note = ok ? where : [where, '편집 권한 없음'].filter(Boolean).join(', ');
+          return `<li role="option" data-i="${i}" aria-selected="${i === pickIndex}" aria-disabled="${!ok}">${FOLDER_SVG}<span>${esc(name)}</span><span class="path">${esc(note)}</span></li>`;
+        }).join('')
+      : '<li class="empty">맞는 폴더가 없습니다. 다른 이름으로 찾아보세요.</li>';
+    renderPreview();
+  }
+  // 시안용 가짜 수치. 제품에서는 서버가 목적지별 접근 가능 인원을 계산한다.
+  const reach = dir => dir === root ? 14 : 3 + [...dir.name].reduce((a, c) => a + c.charCodeAt(0), 0) % 9;
+  function renderPreview() {
+    const box = $('pickerPreview');
+    const opt = pickOptions[pickIndex];
+    box.hidden = pickMode !== 'move' || !opt;
+    if (box.hidden) return;
+    const before = reach(parentOf(pickNode)), after = reach(opt.dir);
+    const change = after === before ? '변화 없음, 확인 없이 옮깁니다' : (after > before ? `${after - before}명 늘어납니다, 옮기기 전에 확인합니다` : `${before - after}명 줄어듭니다, 옮기기 전에 확인합니다`);
+    box.innerHTML = `접근 가능 인원 <b>${before}명 → ${after}명</b> (${change})`;
+  }
+  function highlight(i) {
+    pickIndex = i;
+    pickerList.querySelectorAll('[role="option"]').forEach((li, k) => li.setAttribute('aria-selected', String(k === i)));
+    pickerList.children[i]?.scrollIntoView({ block: 'nearest' });
+    renderPreview();
+  }
+  function step(delta) {
+    const n = pickOptions.length;
+    for (let k = 1; k <= n; k++) {
+      const j = ((pickIndex + delta * k) % n + n) % n;
+      if (pickOptions[j].ok) { highlight(j); return; }
+    }
+  }
+  function choose(i) {
+    const opt = pickOptions[i];
+    if (!opt || !opt.ok) return;
+    const dir = opt.dir;
+    picker.hidden = true;
+    if (pickMode === 'copy') copyAndReport(pickNode, dir);
+    else moveAndReport(pickNode, dir);
+  }
+  pickerInput.addEventListener('input', fillPicker);
+  pickerInput.addEventListener('keydown', e => {
+    e.stopPropagation();
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      step(e.key === 'ArrowDown' ? 1 : -1);
+    }
+    if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); choose(pickIndex); }
+    if (e.key === 'Escape') { e.preventDefault(); closePicker(); }
+  });
+  pickerList.addEventListener('mousemove', e => {
+    const li = e.target.closest('[role="option"]');
+    if (li && li.getAttribute('aria-disabled') !== 'true' && Number(li.dataset.i) !== pickIndex) highlight(Number(li.dataset.i));
+  });
+  pickerList.addEventListener('click', e => {
+    const li = e.target.closest('[role="option"]');
+    if (li) choose(Number(li.dataset.i));
+  });
+  picker.addEventListener('mousedown', e => { if (e.target === picker) closePicker(); });
+
+  /* ── 파일 탐색기: 끌어서 옮기기 · 복사 ── */
+  const HOLD_MS = 350;    // 이만큼 누르고 있으면 움직이지 않아도 끌기가 시작된다
+  const SLOP_PX = 5;      // 이만큼 움직이면 곧바로 끌기가 시작된다
+  const EXPAND_MS = 600;  // 접힌 폴더 위에 이만큼 머물면 펼친다
+  const isCopyKey = e => e.ctrlKey || e.altKey;
+  let press = null;
+  let drag = null;
+
+  treeEl.addEventListener('pointerdown', e => {
+    if (e.button !== 0 || !canEdit) return;
+    const row = e.target.closest('button.tree-row');
+    if (!row) return;
+    const node = byId(row.dataset.id);
+    const copy = isCopyKey(e);
+    press = { node, x: e.clientX, y: e.clientY };
+    press.timer = setTimeout(() => beginDrag(press.x, press.y, copy), HOLD_MS);
+  });
+  document.addEventListener('pointermove', e => {
+    if (!press) return;
+    if (!drag) {
+      if (Math.hypot(e.clientX - press.x, e.clientY - press.y) < SLOP_PX) return;
+      beginDrag(e.clientX, e.clientY, isCopyKey(e));
+    }
+    trackDrag(e.clientX, e.clientY, isCopyKey(e));
+  });
+  document.addEventListener('pointerup', () => endPress(true));
+  document.addEventListener('pointercancel', () => endPress(false));
+  document.addEventListener('keydown', e => {
+    if (!drag) return;
+    if (e.key === 'Escape') { e.preventDefault(); endPress(false); return; }
+    if (e.key === 'Control' || e.key === 'Alt') { e.preventDefault(); trackDrag(drag.x, drag.y, true); }
+  });
+  document.addEventListener('keyup', e => {
+    if (drag && (e.key === 'Control' || e.key === 'Alt')) trackDrag(drag.x, drag.y, false);
+  });
+
+  function endPress(commit) {
+    if (!press) return;
+    clearTimeout(press.timer);
+    press = null;
+    if (drag) finishDrag(commit);
+  }
+
+  function beginDrag(x, y, copy) {
+    if (drag || !press) return;
+    clearTimeout(press.timer);
+    Menu.hide();
+    const ghost = document.createElement('div');
+    ghost.className = 'drag-ghost';
+    document.body.append(ghost);
+    drag = { node: press.node, ghost, x, y, copy, target: null, valid: false, hoverId: null, hoverTimer: 0 };
+    document.body.classList.add('tree-dragging');
+    rowEl(drag.node.id)?.classList.add('dragging');
+    swallowClick = true;
+    trackDrag(x, y, copy);
+  }
+
+  function dropFolderAt(x, y) {
+    const hit = document.elementFromPoint(x, y);
+    if (!hit || !treeEl.contains(hit)) return null;
+    const row = hit.closest('button.tree-row');
+    return row ? folderOf(byId(row.dataset.id)) : root;
+  }
+
+  function refusal(node, target, copy) {
+    const from = parentOf(node);
+    if (!target) return '트리 안에 놓으세요';
+    if (!writable(target)) return '이 폴더에 편집 권한이 없습니다';
+    if (within(target, node)) return '자기 안으로는 옮길 수 없습니다';
+    if (!copy && !writable(node)) return '이 항목을 옮길 권한이 없습니다';
+    if (!copy && target === from) return '이미 이 폴더에 있습니다';
+    return '';
+  }
+
+  function trackDrag(x, y, copy) {
+    Object.assign(drag, { x, y, copy });
+    const target = dropFolderAt(x, y);
+    const reason = refusal(drag.node, target, copy);
+    drag.target = target;
+    drag.valid = !reason;
+
+    const where = target === root ? '맨 위' : target?.name ?? '';
+    drag.ghost.classList.toggle('invalid', !drag.valid);
+    drag.ghost.innerHTML = `<span>${esc(drag.node.name)}</span><span class="op">${esc(drag.valid ? `${copy ? '복사' : '이동'}: ${where}` : reason)}</span>`;
+    drag.ghost.style.left = x + 14 + 'px';
+    drag.ghost.style.top = y + 12 + 'px';
+    document.body.classList.toggle('copying', copy && drag.valid);
+
+    treeEl.querySelectorAll('.drop-target').forEach(li => li.classList.remove('drop-target'));
+    treeEl.classList.toggle('drop-root', drag.valid && target === root);
+    if (drag.valid && target !== root) itemEl(target.id)?.classList.add('drop-target');
+
+    const hoverId = target && target !== root && !target.open ? target.id : null;
+    if (hoverId !== drag.hoverId) {
+      clearTimeout(drag.hoverTimer);
+      drag.hoverId = hoverId;
+      if (hoverId) {
+        drag.hoverTimer = setTimeout(() => {
+          if (!drag) return;
+          byId(hoverId).open = true;
+          renderTree();
+          rowEl(drag.node.id)?.classList.add('dragging');
+          trackDrag(drag.x, drag.y, drag.copy);
+        }, EXPAND_MS);
+      }
+    }
+  }
+
+  function finishDrag(commit) {
+    const { node, target, copy, valid, ghost, hoverTimer } = drag;
+    clearTimeout(hoverTimer);
+    ghost.remove();
+    document.body.classList.remove('tree-dragging', 'copying');
+    treeEl.classList.remove('drop-root');
+    drag = null;
+    setTimeout(() => { swallowClick = false; }, 0);
+
+    if (!commit || !valid) { renderTree(); return; }
+    if (copy) copyAndReport(node, target);
+    else moveAndReport(node, target);
+  }
+
+  /* ── 사이드바 도구 버튼 · 권한 전환 ── */
+  document.querySelectorAll('[data-tree-tool]').forEach(b => b.addEventListener('click', () => {
+    const tool = b.dataset.treeTool;
+    if (tool === 'collapse') { each(c => { if (c.kind === 'folder') c.open = false; }); renderTree(); return; }
+    if (tool !== 'new-note') return;
+    // 트리 상단 새 노트 버튼은 곧바로 쓰기 시작하는 곳이라 이름을 묻지 않는다 (FR-SHELL-016 AC-7).
+    // 만드는 곳은 선택한 폴더, 문서를 선택 중이면 그 문서가 든 폴더이고, 만든 문서를 바로 연다 (03 §2.2.4).
+    // 시안에서는 열린 문서를 선택으로 본다.
+    let current = null;
+    each(c => { if (c.current) current = c; });
+    const dir = current ? folderOf(current) : null;
+    if (!dir) { say('새 노트를 만들 폴더를 먼저 고르세요.'); return; }
+    if (!writable(dir)) { say(`${dirLabel(dir)}에 편집 권한이 없습니다.`); return; }
+    const fresh = note(uniqueName(dir, '새 노트'));
+    insert(dir, fresh);
+    each(c => { c.current = false; });
+    fresh.current = true;
+    renderTree(fresh.id);
+    say(`‘${fresh.name}’ 노트를 ${dirLabel(dir)}에 만들고 열었습니다.`);
+  }));
+
+  document.querySelectorAll('input[name="perm"]').forEach(r => r.addEventListener('change', () => {
+    canEdit = r.value === 'edit';
+    mode = canEdit ? 'live' : 'read';
+    renderMode();
+  }));
+
+  document.querySelectorAll('.toggle').forEach(t => t.addEventListener('click', () => {
+    t.setAttribute('aria-checked', String(t.getAttribute('aria-checked') !== 'true'));
+  }));
+
+  sortChildren(root);
+  each(c => { if (c.children) sortChildren(c); });
+  renderMode();
+  renderTree();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1765 @@
+{
+  "run_id": "2026-09-23.doculight2.design-v2-srs",
+  "author": "phase-4 writer A (ledger + design docs)",
+  "basis": [
+    "docs/decision/design-v2.md",
+    "docs/decision/design-v2.html",
+    "docs/analysis/kiwi-srs-2026-09-23.doculight2.design-v2-srs/qna_log.json"
+  ],
+  "conventions_followed": {
+    "00.decision-log.md": "행 머리에 「개정 (2026-09-23) —」, 비고에 「2026-09-23 개정 — 근거 docs/decision/design-v2.md」와 「초판 문면은 *…* 였다」를 남기는 R106 방식. 옛 비고는 지우지 않고 앞에 둔 채 개정 문단을 덧붙였다(R24-a·R102-b 의 기존 선례). 머리표 「마지막 갱신」·「확정 요구사항」 개정 로그와 §5 변경 이력에 한 행을 더했다. 행 ID 는 바꾸지 않았다.",
+    "03.screen-design-shell.md": "§0.3 규칙(개수 단정 금지 · 정정 사유는 §13) · §13 회차당 한 행(25차) · 머리표 갱신 행 · §12 추적표(R152 행 추가, 이름이 바뀐 항목의 소재 설명 갱신). LF 줄바꿈 유지.",
+    "04.screen-design-settings.md": "머리표 「갱신 (13)」 행 추가 · §9 종결 항목은 취소선 + 「종결 (날짜 · 근거)」 형식. CRLF 줄바꿈 유지. 본문 문장을 고칠 때는 「2026-09-23 N차까지 이 문장은 「…」였다」로 옛 문면을 남긴다(16차 · 19차 · 20차 선례 — 6회차 22차도 따랐다).",
+    "05.screen-design-permission.md": "머리표 「갱신 (n)」 행 추가(11차) · 본문 인라인 〔날짜 — …〕 표기(머리표 「상위 SSOT」 행의 〔2026-08-19 — …〕 선례)로 옛 문면을 남김 · §9 는 해소된 항목을 지우지 않고 §9.1 로 옮기며 제목의 건수와 목록을 함께 고침. CRLF 줄바꿈 유지.",
+    "02.feature-request-live-preview.md": "머리표에 갱신 행이 없는 문서라 §3.1 의 「> **[2026-08-25] …**」 인용 블록 선례를 따라 정정을 붙이고 초판 문장은 지우지 않았다. LF 줄바꿈 유지."
+  },
+  "edits": [
+    {
+      "plan_id": "R2",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "33-33",
+      "summary": "결정 칸을 「개정 (2026-09-23)」으로 바꿔 상단 보기↔편집 토글을 제목 줄 모드 아이콘 하나의 순환(보기 → 라이브 편집 → 소스 편집 → 보기)으로 고쳤다. 화면 단일성 문장은 유지했다. 비고에 근거(design-v2 편집 모드 절 · 결정 1), 기본 모드는 R152 가 정한다는 연결, 초판 문면을 남겼다."
+    },
+    {
+      "plan_id": "R90",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "34-34",
+      "summary": "하위 토글을 없애고 두 편집 모드(라이브 편집 · 소스 편집)를 R2 의 순환에 합친다고 개정했다. 소스 모드가 Phase 1 이라는 사실과 옛 비고는 유지했고, 모드 이름만 바뀌며 R16-a 의 라이브 프리뷰(렌더링 방식)는 고치지 않았다는 점과 초판 문면을 비고에 적었다."
+    },
+    {
+      "plan_id": "R91",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "35-35",
+      "summary": "① 을 눈 아이콘 + 말풍선 「읽기 전용 문서입니다」, aria-disabled·말풍선·커서로 비활성 구분(qna #4), 권한 안내 문구 없음으로 고쳤다. ③ 을 모드 아이콘 숨김 + ⋯·우클릭 메뉴에서도 모드 항목 없음(qna #5)으로 고쳤다. ② 는 그대로 두었다. 비고에 근거와 초판 문면을 남겼다."
+    },
+    {
+      "plan_id": "R3",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "181-181",
+      "summary": "상단 뷰 전환 탭을 리본 버튼으로 옮기고 탭 줄을 없앤다(1:1, 종류·순서 불변 — qna #11)고 개정했다. 비고에 원장 다른 조항의 「검색 탭」이 리본으로 여는 검색 보기를 가리킨다는 해석, 시안 리본의 그래프·권한 관리·휴지통 버튼은 예시라는 점, 초판 문면을 남겼다."
+    },
+    {
+      "plan_id": "R88-a",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "184-184",
+      "summary": "메뉴 항목·순서를 v2 목록(새 노트/새 폴더 ─ 복사본 생성/다른 곳으로 복사…/폴더 이동/폴더에서 검색 ─ URL 복사/공유…/즐겨찾기 ─ 새 버전 올리기… ─ 이름 변경/삭제)으로 바꾸고 권한 부족 항목은 흐리게 + 「권한 없음」으로 둔다고 개정했다. 비고에 옛 아홉 항목의 새 이름 대응, 새 항목 셋의 뜻(복사본 생성 L2·이름 규칙 qna #7, 폴더에서 검색, URL 복사 결정 8), 초판 문면을 남겼다."
+    },
+    {
+      "plan_id": "R24-a",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "189-189, 268-268",
+      "summary": "R24-a 비고 끝에 「외모(테마)」→「외관」 개정(범위 테마·기본 색상·메뉴 밝기, 저장 값 light/dark/system 불변, qna #2)을 덧붙이고, 아래 카테고리 표의 개인 행을 「외관(… — 2026-09-23 개정, 옛 라벨 외모(테마))」로 고쳤다."
+    },
+    {
+      "plan_id": "R24-b",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "190-190",
+      "summary": "헤더 ⋯ 메뉴 현재 목록에 모드 직접 선택(보기·라이브 편집·소스 편집)과 편집 조작(잘라내기·복사·붙여넣기·링크 삽입)을 더하고, 같은 메뉴가 본문 우클릭으로도 열리며 권한 부족 항목은 흐리게 + 「권한 없음」이라고 개정했다. 비고에 비-md 처리(qna #5), R102-b 공간 근거의 소멸, 초판 문면을 남겼다."
+    },
+    {
+      "plan_id": "R102-b",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "47-47",
+      "summary": "결정 칸은 그대로 두고 비고 끝에 2026-09-23 재검토를 덧붙였다 — R24-b 개정으로 「헤더 ⋯ 에 자리가 없다」 근거는 성립하지 않으나 진입점은 트리 메뉴 파일 노드 전용 항목으로 유지되며, 근거는 design-v2 결정 2 와 같은 문서 「파일 탐색기」 절(진입점은 트리 메뉴다)이라고 적었다. 옛 공간 근거 문장은 지우지 않았다."
+    },
+    {
+      "plan_id": "R152",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "203-203",
+      "summary": "「에디터·외관 카테고리의 항목은 다섯이 전량」으로 개정했다 — 기본 열람 모드(권한에 따라·항상 보기, 기본 권한에 따라), 편집으로 열 때의 모드(라이브 편집·소스 편집, 기본 라이브 편집), 테마(밝게·어둡게·시스템 따라, 저장 값 불변), 기본 색상(프리셋 여섯 + 직접 고르기, 기본 한지 #B8860B), 메뉴 밝기(−2~+2, 기본 0). 비고 앞머리에 개정 근거(결정 1 · qna #2·#3), 효력을 잃은 초판 근거 두 대목의 명시, 초판 문면을 적고 옛 비고 전문은 「초판 근거」로 그대로 남겼다."
+    },
+    {
+      "plan_id": "ledger-header",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "7-8",
+      "summary": "원장 관례에 따라 머리표 「마지막 갱신」을 2026-09-23 으로, 「확정 요구사항」 개정 로그 앞머리에 2026-09-23 개정 아홉 조항을 더했다(계획 행 아님 — 관례 이행)."
+    },
+    {
+      "plan_id": "ledger-history",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "889 뒤 삽입",
+      "summary": "§5 변경 이력에 2026-09-23 행을 더했다 — 개정 조항, design-v2 적용 범위 표의 지목, qna_log 가 정한 자리, 옛 문면 보존 방식, 고치지 않은 인용처(R146·R147·R178·G34)를 적었다(계획 행 아님 — 관례 이행)."
+    },
+    {
+      "plan_id": "03 §3.2.3",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "822-824",
+      "summary": "모드 보관 행을 「보기 / 라이브 편집 / 소스 편집」으로, 「새 탭은 언제나 보기 모드로 시작」을 「권한에 따른 기본 모드로 시작 — 기본 열람 모드의 기본값에서는 편집 권한이 있으면 라이브 편집, 없으면 보기, 설정에 따른 차이는 §3.4」로 고치고 근거에 R152 를 더했다."
+    },
+    {
+      "plan_id": "03 §3.3",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "878-913",
+      "summary": "2단 토글 와이어프레임 둘을 모드 아이콘 헤더와 읽기 전용 헤더(눈 아이콘, 저장 상태 숨김)로 바꿨다. 구성 요소 표에서 모드 토글·하위 토글 행을 모드 아이콘 한 행으로 합쳤다. ⋯ 메뉴를 시안 목록(모드 직접 선택 · 잘라내기/복사/붙여넣기 · 링크 삽입/버전 기록 보기/공유…)으로 다시 그리고, 「Phase 1 은 2개 항목만」 문단을 R24-b 현재 목록 서술로, 본문 우클릭 동일 메뉴·권한 없음 표시·비-md 에서 모드 항목 없음(qna #5)을 더했다."
+    },
+    {
+      "plan_id": "03 §3.4",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "922-950",
+      "summary": "절 이름을 「모드 아이콘」으로 바꾸고 2상태 다이어그램을 3모드 순환 다이어그램으로 교체했다. 상황 표를 아이콘 기준으로 고쳤다(읽기 전용 = 눈 아이콘·말풍선·aria-disabled). 「기본 진입 모드는 보기」 판단을 「권한에 따른다, 모든 여는 경로에 같게 — R152 기본 열람 모드·편집으로 열 때의 모드」로 바꾸고, 하위 토글 문장과 탭별 모드 문장을 새 모드 이름으로 맞췄다. 스냅샷 1회 조항은 근거가 없어 그대로 두었다(unresolved 참조). 그 문장 뒤에 「곧바로 편집으로 열 때 무엇을 편집 진입으로 보는지는 정하지 않았다 → §11-36」 표기를 달았다."
+    },
+    {
+      "plan_id": "03 §3.9.2",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1089-1089",
+      "summary": "모드 파라미터를 담지 않는다는 결론은 유지하고, 「항상 보기 모드로 연다」와 그 근거(링크 공유의 의도는 보라)를 「열리는 모드는 받은 사람의 권한에 따른 기본 모드(§3.4)」로 고쳤다."
+    },
+    {
+      "plan_id": "03 §7.1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1368-1369",
+      "summary": "1단계의 「본문은 보기 모드」를 권한에 따른 기본 모드(편집 권한이므로 라이브 편집)로 고치고, 2단계 「[편집] 클릭」을 「항상 보기 설정으로 보기로 열렸다면 모드 아이콘 클릭」으로 바꿨다(스냅샷 서술은 유지)."
+    },
+    {
+      "plan_id": "03 §7.4",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1421-1421",
+      "summary": "백링크로 다른 워크스페이스 문서를 열 때 「보기 모드로 열림」을 「권한에 따른 기본 모드로 열림(§3.4)」으로 고쳤다."
+    },
+    {
+      "plan_id": "03 §7.11",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1507-1507",
+      "summary": "딥링크로 열 때 「탭으로 열린 채 보기 모드」를 「탭으로 열린 채 권한에 따른 기본 모드(§3.4)」로 고쳤다."
+    },
+    {
+      "plan_id": "03 §9.1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1588-1588, 1596-1596",
+      "summary": "Ctrl+E(Cmd+E)를 「보기 → 라이브 편집 → 소스 편집 → 보기 순환, 모드 아이콘을 누른 것과 같다」로 고쳤다(옵시디언 동일 표기는 사실이 아니게 되어 뺐다). Ctrl+N 행은 그대로 두었다. 계획 행 38 에 따라 Ctrl+Shift+F 를 「좌측 사이드바를 검색 보기로 바꾸고(리본 검색 버튼과 같다) 입력 포커스」로 고쳤다."
+    },
+    {
+      "plan_id": "03 §9.3",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1616-1616",
+      "summary": "「라이브 프리뷰 ↔ 소스 하위 토글에 단축키 미배정」 행을 지웠다 — 그 토글이 모드 순환에 합쳐졌다."
+    },
+    {
+      "plan_id": "03 §11-11",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1711-1711, 1790-1790",
+      "summary": "판단 11 을 취소선 + 「해소 — R152 개정 (2026-09-23 · 디자인 v2 결정 5 · 판단이 뒤집힘)」으로 닫고 결론을 「권한에 따른다」로 적었다. §11 집계 문단의 종결·열림 수(16→17, 19→18)와 목록을 함께 맞췄다."
+    },
+    {
+      "plan_id": "03 §11-25",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1730-1730",
+      "summary": "「담지 않는다 — 항상 보기 모드로 연다」를 「담지 않는다 — 열리는 모드는 받은 사람의 권한에 따른 기본 모드다」로 고쳤다. 판단은 열린 채 두었다(모드 파라미터 미포함은 여전히 이 문서의 판단)."
+    },
+    {
+      "plan_id": "03 §2.2.4",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "300-300, 311-311",
+      "summary": "상단 새 노트 버튼 행의 「인라인 이름 입력」을 「이름을 묻지 않고 곧바로 생성 → 바로 편집 모드로 열림(FR-SHELL-016 AC-7)」으로 고쳤다. 이름 입력 문단을 메뉴의 새 노트·새 폴더는 이름을 먼저 받고 Enter 로만 만들며 Esc·입력 줄 이탈은 아무것도 만들지 않고, 이름 변경은 이탈 시 확정한다(v2 설계 판단)로 고쳤다. 참고: classification.json 계획 행 32 의 change 문구는 상단 버튼이 이름을 먼저 받는 것처럼 읽히나, design-v2.md 「파일 탐색기」 절과 FR-SHELL-016 AC-7 이 「상단 버튼은 이름을 묻지 않고 바로 만든다」로 정하므로 그쪽을 따랐다."
+    },
+    {
+      "plan_id": "03 §2.2.5",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "326-387",
+      "summary": "머리 문단을 R88-a 개정(옛 이름 대응과 새 항목 셋)으로 고치고 메뉴 와이어프레임을 v2 목록으로 다시 그렸다. 권한 표를 v2 순서로 재배열하고 복사본 생성·폴더에서 검색·URL 복사 행을 더했다. 비활성 처리 방식을 「흐리게 + 「권한 없음」」으로 바꾸고, 새 버전 올리기 문단의 「헤더 ⋯ 에 자리가 없다」 근거를 R102-a·R102-b 비고로 교체했다. 워크스페이스 행 메뉴 항목 이름을 맞추고 빈 곳 우클릭은 메뉴를 열지 않는다(qna #6)는 항목을 더했다. 감사 기록 표의 항목 이름을 맞추고 복사본 생성·폴더에서 검색·URL 복사를 R137 기준으로 분류했다. 빈 곳 우클릭 항목에 qna #6 을 인용했다."
+    },
+    {
+      "plan_id": "03 §2.2.6",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "395-411",
+      "summary": "조작 표를 같은 워크스페이스 이동(수정키 없음) · 같은 워크스페이스 복사(Ctrl 또는 Alt, macOS Option) · 다른 워크스페이스 복사(수정키 무관, qna #9) · 업로드(노트 위 → 그 노트가 든 폴더, qna #10)로 나눴다. v2 끌기 공통 규칙(5px·0.35초 시작, 수정키 즉시 반영, 0.6초 펼침, Esc, 커서 옆 결과/불가 사유 — 요청자 권한 한정)을 더하고, 시각 피드백의 pass-through 행과 경계 자동 전환 문단을 맞췄다. 자동 「복사」 뱃지 전환은 유지했다. 경계 자동 전환 뒤 드롭 결과를 「복사 다이얼로그(폴더 고르기 창 → 확인)」로 맞추고 qna #9·#10 을 인용했다."
+    },
+    {
+      "plan_id": "03 §2.2.7",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "420-441",
+      "summary": "1단계 목적지 입력(트리 피커 · 검색 없음)을 폴더 고르기 창(검색 입력, 트리와 같은 표시 규칙, 쓸 수 없는 폴더 흐림·하위는 선택 가능, 이동 모드는 다른 워크스페이스 불가, 창 안의 접근 가능 인원 프리뷰와 목적지 변경 시 재계산, ↑↓·Enter·Esc)으로 바꾸고 와이어프레임을 다시 그렸다. 2단계 확인 구조와 공통 규칙은 그대로다."
+    },
+    {
+      "plan_id": "03 §2.2.8",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "501-604",
+      "summary": "진입 표를 다른 곳으로 복사…(복사 모드 폴더 고르기 창) · 복사본 생성(목적지를 고르지 않고 원본이 든 디렉토리가 목적지, 2단계 L2 확인은 거친다) · 드래그(다른 워크스페이스 또는 수정키)로 고쳤다. 1단계 와이어프레임을 복사 모드 폴더 고르기 창(R105-a 고정 문구 · R120 프리뷰 유지)으로 다시 그리고, 「대상 선택 트리 피커」를 「폴더 고르기 창 (복사 모드)」로 바꿔 검색 입력·하위 선택 가능·다른 워크스페이스 후보를 더했다. 선택 가능 조건(편집 권한 디렉토리)은 유지했다. 공백 표의 「목적지 트리」를 「목적지 목록」으로 맞췄다."
+    },
+    {
+      "plan_id": "03 §6.1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1284-1285",
+      "summary": "드래그 중 행을 「놓을 폴더 강조 · 커서 옆 결과 또는 놓을 수 없는 이유(요청자 권한 한정)」로, 인라인 이름 편집 중 행을 v2 거동(기본 이름 선택 · Enter 확정 · Esc 취소 · 이탈 시 새 항목은 만들지 않고 이름 변경은 확정)으로 고쳤다. 새 항목의 상태로 「복사 완료(복사본 생성 · 다른 곳으로 복사…)」 행을 더했다. 계획의 「치수·색」 부분은 skipped 참조."
+    },
+    {
+      "plan_id": "03 §2.3",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "664-665, 683-683",
+      "summary": "검색 보기 와이어프레임에서 탭 줄을 걷어냈다. 이 보기를 리본 검색 버튼·Ctrl+Shift+F 로 연다는 문장과 폴더에서 검색이 범위를 그 폴더로 좁힌다는 문장을 더했다. 결과 클릭 시 「보기 모드로 열림」을 「권한에 따른 기본 모드(§3.4)」로 고쳤다. Ctrl+Shift+F 설명은 §9.1 에서 고쳤다. 범위 선택기의 폴더 범위 표시는 정하지 않았다고 적었다(qna #8 — 새 요구로 선다)."
+    },
+    {
+      "plan_id": "03 §7.10",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1488-1491",
+      "summary": "드롭 후 열리는 것을 「복사 모드의 폴더 고르기 창」으로, 대상 「채워지고」를 「골라진 채」로, [복사] 버튼을 「Enter 또는 런북 클릭」으로 고쳤다. 경계 자동 전환이 수정키와 무관하다는 점을 더했고, 2단계 확인 구조(R120·R105-a·R97-a)는 유지했다."
+    },
+    {
+      "plan_id": "04 §2.1",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "155-173",
+      "summary": "「근거 주의 — 자리 확보」 블록을 「R152 가 정한 둘이 전량」으로 바꿨다. 와이어프레임의 기본 열람 모드를 「(•) 권한에 따라 ( ) 항상 보기」로, 편집 모드 기본 하위 뷰를 「편집으로 열 때의 모드: (•) 라이브 편집 ( ) 소스 편집」으로 고쳤다(qna #3). 자동 저장 지연 줄을 걷어내고 「항목이 아니다(R152)」로 정리했다. 두 항목의 뜻과 저장소(사용자별 DB 행) 항목을 더했다."
+    },
+    {
+      "plan_id": "04 §2.2",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "175-183",
+      "summary": "절 이름과 와이어프레임 제목을 「외관」으로 고치고(qna #2), 테마 라벨을 밝게·어둡게·시스템 따라(저장 값 불변)로, 기본 색상 프리셋 여섯(기준색 포함)+직접 고르기와 메뉴 밝기(−2~+2, 기본 0) 목업을 더했다. 파생 규칙의 정본 위치, 대비 미달 시 그 메뉴 밝기 단계를 끈다는 처리(qna #12), 캐시는 정본이 아니라는 R152 저장 규칙을 적었다."
+    },
+    {
+      "plan_id": "align:03 머리표·§0·§0.1·§12·§13",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "7, 13, 26, 40, 1840 뒤 삽입, 1865, 1870, 1904, 2007 뒤 삽입",
+      "summary": "근거 요구사항에 R152 를 더하고 갱신 행을 25차로 올렸다. §0 범위 문장(리본·모드 아이콘)과 §0.1 정본 표의 「9항목」을 고쳤다. §12 에 R152 행을 더하고 이름이 바뀐 항목(새 폴더, 다른 곳으로 복사… · 복사본 생성)을 가리키는 소재 설명 셋을 맞췄다. §13 에 25차 행을 더했다."
+    },
+    {
+      "plan_id": "align:03 §1.1·§1.3·§2.1·§2.2·§2.4·§5",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "136-144, 156 뒤 삽입, 193, 203-215, 221-222, 692-693, 1248",
+      "summary": "R3 개정에 맞춰 셸 다이어그램·빈 상태 다이어그램의 탭 줄을 리본 표기로 바꾸고, §2.1 공통 골격을 리본 + 사이드바 그림으로 다시 그리며, 트리·즐겨찾기 와이어프레임의 탭 줄을 걷어냈다. 이 문서의 「트리 탭·검색 탭·즐겨찾기 탭」이 리본으로 고르는 보기를 가리킨다는 용어 정의를 §2.1 에 두었다. §1.1 헤더 칸을 「경로 · 저장 상태 · 모드 아이콘 · [⋯]」로, §1.3 .task 행의 「모드 토글」을 「모드 아이콘」으로 고쳤다."
+    },
+    {
+      "plan_id": "align:03 §3.1·§3.7·§3.8·§3.9.3·§6.5·§7.5·§7.6·§7.7·§10·§11-27·§11-35",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "743, 1053, 1064, 1100, 1326-1329, 1434, 1446, 1458, 1646, 1659, 1737, 1788",
+      "summary": "옛 토글·모드 이름을 참조하던 자리를 맞췄다 — 본문 슬롯 표와 에디터 경계의 모드 이름, 비-md 의 모드 아이콘 숨김, 히스토리 표의 「모드 전환」, 중앙 본문 상태 표(보기·라이브 편집·소스 편집·읽기 전용 눈 아이콘), 권한 상실 흐름의 아이콘 표현, 드래그 불가 시 이유 표시, 엣지 17·27 의 항목 이름, 판단 27 의 공간 근거 교체, 판단 35 ① 이 §2.2.4 수정으로 닫혔다는 표기."
+    },
+    {
+      "plan_id": "align:04 머리표·§1.3·§1.4·§1.5·§9",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "21 뒤 삽입, 76, 104, 126, 1495, 1509, 1534",
+      "summary": "갱신 (13) 행을 더했다. 모달 와이어프레임·구역 표·폴백 문단의 「외모」를 「외관」으로 고쳤다. 2026-08-22 R152 로 원장에서 이미 종결된 G8 과 같은 뜻의 Q4 에 취소선과 종결 표기를 달고, §9 머리말의 예외 ② 가 끝났다고 적었다(§2.1·§2.2 를 R152 대로 다시 그린 결과와 맞추기 위함)."
+    },
+    {
+      "plan_id": "align:03 §8.2·§8.3·§8.4·§11-36·§11-37",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1555, 1563, 1570, 1596, 1790 앞 삽입",
+      "summary": "독립 검증 지적에 따라, 근거가 없어 고치지 못한 두 자리를 이 문서의 관례대로 §11 미결에 올렸다 — §11-36(곧바로 편집으로 열 때의 버전 스냅샷 시점), §11-37(리본 뷰 전환 버튼 · 모드 아이콘 · 폴더 고르기 창의 부품). §8.2 뷰 전환 탭 · 툴팁, §8.3 모드 토글 · 하위 토글, §8.4 트리 피커 행은 옛 부품을 「옛 선택」으로 남기고 「미정 → §11-37」로 가리켰다. §11 집계를 37건 · 종결 17 · 열림 20 으로 맞췄다."
+    },
+    {
+      "plan_id": "iter1:change-consistency-1-4",
+      "file": "docs/spec/07.editor.srs.md",
+      "lines_before": "11, 20, 22, 32",
+      "summary": "§1 개요의 「모드 토글 · 편집 토글 비활성」을 세 모드 · 모드 아이콘 · 읽기 전용 눈 아이콘으로, §2 In Scope 의 FR-EDITOR-002/003 항을 FR-EDITOR-011/012 로(두 옛 요구는 폐기 · 대체 사실만 남김), 「토글 비활성 · 토글 숨김」을 눈 아이콘 · 모드 아이콘 숨김으로, Out of Scope 의 「모드 토글의 숨김」을 「모드 아이콘과 모드 메뉴 항목의 숨김」으로 고쳤다.",
+      "phase": "improvement_iter1"
+    },
+    {
+      "plan_id": "iter1:change-consistency-1-4",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "lines_before": "11, 13, 19, 20, 22 뒤 삽입, 24, 37, 44",
+      "summary": "§1 개요에 리본을 넣고 검색 소재를 「검색 보기(리본 검색 버튼)」로, §2 In Scope 의 FR-SHELL-001 탭 구성을 FR-SHELL-017 리본 구성으로(폐기 · 대체 사실 표기), 검색 항에 FR-SHELL-018, 트리 항에 FR-SHELL-019, 새 항으로 IR-SHELL-014 · IR-SHELL-015(외관 기본 색상 · 메뉴 밝기)를 더했다. Out of Scope 의 「FR-SHELL-001 의 동형 요구」를 대체 사실과 함께 고치고, CON-SHELL-002 의 「좌측 검색 탭」을 「좌측 검색 보기」로 고쳤다. CRLF 유지.",
+      "phase": "improvement_iter1"
+    },
+    {
+      "plan_id": "iter1:change-consistency-1-5",
+      "file": "docs/spec/02.product-architecture.srs.md",
+      "lines_before": "33",
+      "summary": "Out of Scope 의 「좌측 사이드바 검색 탭」을 「좌측 사이드바 검색 보기(리본 검색 버튼 — R3 개정 전에는 검색 탭)」로 고쳤다. 같은 문서 154 · 288행의 verified 요구 trace 행은 MCP 로 Implementation Notes 에 재해석을 적었다.",
+      "phase": "improvement_iter1"
+    },
+    {
+      "plan_id": "iter1:feasibility-1-1",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "8, 455, 890 뒤 삽입",
+      "summary": "R75-a 를 「개정 (2026-09-23)」으로 — 편집 세션 스냅샷은 그 세션의 첫 저장 때 1회, 여는 것만으로는 만들지 않는다(qna #20). 비고에 근거 · 충돌 경위 · 초판 문면을 남겼다(R2 · R3 개정 관례). 머리표 「확정 요구사항」의 2026-09-23 개정 목록에 R75-a 를 넣고 §5 변경 이력에 한 행을 더했다. CRLF 유지.",
+      "phase": "improvement_iter1"
+    },
+    {
+      "plan_id": "iter1:change-consistency-1-9",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "134, 157, 163, 167, 169, 1726",
+      "summary": "§1.1 다이어그램 폭을 좌 248 · 우 232 로, 다이어그램 아래에 리본 44px 문장을, §1.2 표에 리본 행(44px)을 더하고 좌 248 · 우 232 로, 〔판단〕 문단을 「기본 폭은 승인 시안 값(qna #19 · IR-SHELL-009 AC-1)」으로 고치고 옛 값(280 · 300)을 남겼다. 우측 기본 232 가 리사이즈 하한 240 보다 작은 모순은 값을 정할 근거가 없어 §1.2 와 §11-1 에 열어 두었다.",
+      "phase": "improvement_iter1"
+    },
+    {
+      "plan_id": "iter1:change-consistency-1-8",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "310",
+      "summary": "§2.2.4 의 입력 줄 벗어남 두 처리에 모호성 해소 #23 과 SRS 정본(FR-SHELL-016 AC-3 · FR-SHELL-015 AC-7)을 달았다.",
+      "phase": "improvement_iter1"
+    },
+    {
+      "plan_id": "iter1:ac-1-1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "702",
+      "summary": "§2.3 「범위 선택기가 폴더 범위를 어떻게 보이는지는 아직 정하지 않았다」를 qna #15 대로 — 하위 폴더 모두 포함, 검색 창에 범위 표시, 닫기 버튼 · Backspace 로 지우면 `전체 워크스페이스` 로 복귀(정본 FR-SHELL-018) — 로 고쳤다.",
+      "phase": "improvement_iter1"
+    },
+    {
+      "plan_id": "iter1:feasibility-1-1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "972, 1395, 1819, 1822",
+      "summary": "§3.4 의 「편집 모드 진입 시 스냅샷 1회」와 §7.1 표 2행을 R75-a 개정 · qna #20 대로 「그 세션의 첫 저장 때 1회」로 고치고, §11-36 을 종결 행(취소선 + 해소)으로 바꾸고 §11 집계를 종결 18 · 열림 19 로 맞췄다.",
+      "phase": "improvement_iter1"
+    },
+    {
+      "plan_id": "iter1:record",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "13, 2041 앞 삽입",
+      "summary": "머리표 갱신 행을 26차로(R75-a 추가), §13 에 26차 한 행(①~④)을 더했다. LF 유지.",
+      "phase": "improvement_iter1"
+    },
+    {
+      "plan_id": "iter1:ac-1-3, ac-1-2",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "22 뒤 · 171 뒤 · 199 뒤 삽입",
+      "summary": "§2.1 에 기본 열람 모드 옛 저장 값(view → 항상 보기, edit → 권한에 따라, 읽을 때 옮김 — qna #17)을, §2.2 에 저장된 메뉴 밝기 단계가 고를 수 없게 됐을 때의 적용(0 쪽 가장 가까운 허용 단계, 저장 값 유지 — qna #16)과 남은 미정 둘을 더했다. 머리표에 「갱신 (14)」 행을 더했다. CRLF 유지.",
+      "phase": "improvement_iter1"
+    },
+    {
+      "plan_id": "iter1:change-consistency-1-11",
+      "file": "docs/analysis/kiwi-srs-2026-09-23.doculight2.design-v2-srs/qna_log.json",
+      "lines_before": "resolutions[n=9]",
+      "summary": "qna #9 의 수정키 문구를 결정 기록(Ctrl 또는 Alt, macOS 는 Option)에 맞추고 corrected 필드에 날짜 · 근거 · 원래 문구를 남겼다.",
+      "phase": "improvement_iter1"
+    },
+    {
+      "plan_id": "iter1:classification-1-2",
+      "file": "docs/analysis/kiwi-srs-2026-09-23.doculight2.design-v2-srs/classification.json",
+      "lines_before": "plan[id=IR-PRINCIPAL-001]",
+      "summary": "IR-PRINCIPAL-001 을 no-change 에서 edit-in-place 로 재분류했다(qna #14 로 실행된 AC-5 문구 수정). 처음 분류는 action_planned 에, 사유는 reclassified 필드에 남겼다.",
+      "phase": "improvement_iter1"
+    },
+    {
+      "plan_id": "qna25:03-1.1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "134",
+      "summary": "§1.1 배치도 우측 칸 `232px · 240~480` → `232px · 232~480`(글자 폭 같음, 표 정렬 유지)",
+      "phase": "qna_24_26"
+    },
+    {
+      "plan_id": "qna25:03-1.2-row",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "168",
+      "summary": "§1.2 우측 행 리사이즈 범위 `240~480px — 기본 폭이 하한 아래다(§11-1)` → `232~480px — 하한은 기본 폭과 같다(모호성 해소 #25)`",
+      "phase": "qna_24_26"
+    },
+    {
+      "plan_id": "qna25:03-1.2-para",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "170",
+      "summary": "§1.2 〔판단〕 문단의 「우측 기본 232px 는 리사이즈 하한 240px 보다 작다 — … §11-1 에서 다시 정한다」를 하한 = 기본 폭 232px(#25 · IR-SHELL-009 AC-8)로 바꾸고 옛 〔판단〕 하한 240px 를 괄호에 남겼다",
+      "phase": "qna_24_26"
+    },
+    {
+      "plan_id": "qna25:03-11-1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1727",
+      "summary": "§11-1 행: 「우측 기본 232 가 하한 240 보다 작아 하한을 다시 정해야 한다」를 지우고 하한 232 확정(#25, 옛 〔판단〕 240)을 적었다. 남은 〔판단〕 목록의 `우 240~480` 은 `우 상한 480` 으로. 좌측 범위 · 상한 · 접기 규칙이 남아 §11-1 은 열린 채 두어 집계(종결 18 / 열림 19)는 그대로",
+      "phase": "qna_24_26"
+    },
+    {
+      "plan_id": "qna26:03-2.3",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "703",
+      "summary": "§2.3 폴더 범위 해제 문장을 「범위 없는 전역 검색(아래 범위 선택기의 `전체 워크스페이스`)으로 돌아간다」로, 근거에 모호성 해소 #26 추가",
+      "phase": "qna_24_26"
+    },
+    {
+      "plan_id": "qna24-26:03-header-13",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "13 · 2042(신설)",
+      "summary": "머리표 갱신 26차 → 27차, §13 에 27차 행을 26차 행 위에 신설(① #25 우측 하한 ② #26 확인)",
+      "phase": "qna_24_26"
+    },
+    {
+      "plan_id": "qna24:04-2.2",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "203",
+      "summary": "§2.2 「0 단계 자체가 허용되지 않을 때 … 아직 정해지지 않았다」를 #24 규칙(0 에 가장 가까운 허용 단계, 거리가 같으면 + 쪽 — 정본 IR-SHELL-015 AC-7)으로 바꿨다",
+      "phase": "qna_24_26"
+    },
+    {
+      "plan_id": "qna24:04-2.2-bullet",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "204(신설)",
+      "summary": "§2.2 에 불릿 신설 — 다섯 단계 모두 고를 수 없는 색은 직접 고르기에서 고를 수 없고 안내가 나타난다(정본 IR-SHELL-014 AC-12). 테마를 바꾼 뒤 이미 고른 색이 그렇게 되는 경우는 미정으로 명시",
+      "phase": "qna_24_26"
+    },
+    {
+      "plan_id": "qna24:04-header",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "24(신설)",
+      "summary": "갱신 (15) 행 신설(15차 — #24 반영, 정본 IR-SHELL-015 AC-7 · IR-SHELL-014 AC-12 인용)",
+      "phase": "qna_24_26"
+    },
+    {
+      "plan_id": "qna28:03-2.3",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "703",
+      "summary": "§2.3 범위 해제 수단을 「표시의 닫기 버튼, 또는 검색어 입력칸이 비어 있을 때 Backspace」로 좁히고, 검색어가 있을 때 Backspace 는 글자를 지우고 범위를 그대로 둔다는 문장을 더했다. 근거에 #28 · AC-7 추가",
+      "phase": "qna_27_28"
+    },
+    {
+      "plan_id": "qna28:03-header-13",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "13 · 2042(신설)",
+      "summary": "머리표 갱신 27차 → 28차, §13 에 28차 행을 27차 행 위에 신설",
+      "phase": "qna_27_28"
+    },
+    {
+      "plan_id": "qna27:04-2.2",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "204",
+      "summary": "§2.2 「이미 고른 색이 테마를 바꾼 뒤 … 아직 정해지지 않았다」를 #27 규칙(그 테마에서는 한지로 그리고 안내, 저장된 색 유지, 허용되는 테마로 돌아가면 고른 색 — 정본 IR-SHELL-014 AC-13)으로 바꿨다",
+      "phase": "qna_27_28"
+    },
+    {
+      "plan_id": "qna27:04-header",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "25(신설)",
+      "summary": "갱신 (16) 행 신설(16차 — #27 반영, 정본 IR-SHELL-014 AC-13 인용)",
+      "phase": "qna_27_28"
+    },
+    {
+      "plan_id": "iter2:03-1.1-diagram",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "152",
+      "summary": "§1.1 다이어그램의 좌측 칸 맨 아래 행 「⚙ 설정 (R24-a)」를 「⚙ 설정 (리본 맨 아래)」로 고쳤다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-3",
+      "qna": 37
+    },
+    {
+      "plan_id": "iter2:03-1.1-para",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "157",
+      "summary": "§1.1 다이어그램 설명에 좌측 칸 맨 아래 ⚙ 는 리본 맨 아래의 설정 기어이고 사이드바 하단 바가 아니라는 문장을 더했다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-3",
+      "qna": 37
+    },
+    {
+      "plan_id": "iter2:03-1.2-ribbon-row",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "163-165",
+      "summary": "§1.2 표에서 「좌측 하단 바」 행을 걷고 리본 행에 맨 아래 설정 기어 · 사이드바를 접어도 남음 · R24-a · #37 을 적었다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-3",
+      "qna": 37
+    },
+    {
+      "plan_id": "iter2:03-1.2-collapsed-diagram",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "176-178",
+      "summary": "§1.2 「사이드바를 접었을 때」 그림의 왼쪽 열을 리본(리/본/⚙)으로 고쳤다 — 펼치기 버튼 ▸ 은 걷었다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-3",
+      "qna": 37
+    },
+    {
+      "plan_id": "iter2:03-1.2-collapsed-para",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "182",
+      "summary": "§1.2 「접힌 좌측 사이드바는 40px 스트립을 남긴다」 〔판단〕을 리본이 남으므로 스트립을 두지 않는다로 바꾸고 옛 판단을 문장으로 남겼다. 펼치는 수단은 §11-1 에 미정",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-3",
+      "qna": 37
+    },
+    {
+      "plan_id": "iter2:03-2.1-diagram",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "210-211",
+      "summary": "§2.1 그림의 사이드바 하단 기어 행을 걷고 ⚙ 를 리본 열 맨 아래로 옮겼다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-3",
+      "qna": 37
+    },
+    {
+      "plan_id": "iter2:03-2.2.4-row",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "300",
+      "summary": "§2.2.4 새 노트 버튼 행의 「편집 모드로 열림」을 라이브 편집으로 연다 · 기본 열람 모드와 관계없다(#36 · FR-EDITOR-011 AC-18)로 고쳤다",
+      "phase": "improvement_iter2",
+      "finding": "internal-2-3",
+      "qna": 36
+    },
+    {
+      "plan_id": "iter2:03-2.5-location",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "732",
+      "summary": "§2.5 기어 위치를 좌측 사이드바 하단 고정 바에서 리본 맨 아래로 고치고 옛 위치를 문장으로 남겼다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-3",
+      "qna": 37
+    },
+    {
+      "plan_id": "iter2:03-3.3-nonmd",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "941",
+      "summary": "§3.3 비-md 메뉴 문장에 편집 조작(잘라내기 · 붙여넣기 · 링크 삽입)도 나타나지 않는다를 더하고 남는 항목(복사 · 공유)과 정본(FR-EDITOR-006 AC-3~AC-5)을 적었다",
+      "phase": "improvement_iter2",
+      "finding": "internal-2-1",
+      "qna": 29
+    },
+    {
+      "plan_id": "iter2:03-3.4-merge",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "970",
+      "summary": "§3.4 표의 머지 뷰 행을 「모드 전환 비활성」에서 모드 아이콘 · Ctrl+E · 메뉴 모드 항목이 모두 꺼진다(#30 · FR-EDITOR-011 AC-17)로 고치고 기존 〔판단〕 근거를 남겼다",
+      "phase": "improvement_iter2",
+      "finding": "internal-2-2",
+      "qna": 30
+    },
+    {
+      "plan_id": "iter2:03-3.4-newnote",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "972",
+      "summary": "§3.4 「문서를 여는 모드」 문단에 새로 만든 노트는 예외(라이브 편집, #36)를 더했다",
+      "phase": "improvement_iter2",
+      "finding": "internal-2-3",
+      "qna": 36
+    },
+    {
+      "plan_id": "iter2:03-3.5-intro",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "980",
+      "summary": "§3.5 머리 문장에 표시 조건은 #31 로 정해졌다(정본 FR-EDITOR-004 AC-5 · AC-8)를 더했다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-1",
+      "qna": 31
+    },
+    {
+      "plan_id": "iter2:03-3.5-table",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "984-984",
+      "summary": "§3.5 표 「변경 없음」 행을 (표시 없음)에서 `✓ 저장됨` · 사라지지 않음으로 고쳤다(승인 시안)",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-1",
+      "qna": 31
+    },
+    {
+      "plan_id": "iter2:03-3.5-saved",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "987",
+      "summary": "§3.5 표 「저장됨」 행의 「2초 후 페이드 아웃」을 다음 변경까지 사라지지 않음으로 고쳤다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-1",
+      "qna": 31
+    },
+    {
+      "plan_id": "iter2:03-3.5-principle",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "991",
+      "summary": "§3.5 설계 원칙을 편집 권한이 있으면 모드와 관계없이 표시 · 읽기 전용 · 비-md 에는 없음으로 바꾸고 옛 〔판단〕을 문장으로 남겼다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-1",
+      "qna": 31
+    },
+    {
+      "plan_id": "iter2:03-3.7-nonmd",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1079",
+      "summary": "§3.7 비-md 파일 문장에 ⋯ · 우클릭 메뉴의 편집 조작 없음(#29)을 더했다",
+      "phase": "improvement_iter2",
+      "finding": "internal-2-1",
+      "qna": 29
+    },
+    {
+      "plan_id": "iter2:03-3.9.1-file",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1105",
+      "summary": "§3.9.1 `/n/<노드ID>` 행에 비-md 는 트리 클릭과 같게 연다(#32 · FR-SHELL-006 AC-7)를 적었다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-2",
+      "qna": 32
+    },
+    {
+      "plan_id": "iter2:03-5-diagram",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1284",
+      "summary": "§5 빈 상태 그림의 「⚙ 설정」 행을 리본 맨 아래로 표기했다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-3",
+      "qna": 37
+    },
+    {
+      "plan_id": "iter2:03-6.5-merge",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1360",
+      "summary": "§6.5 머지 상태 행에 모드 전환 꺼짐(#30)을 더했다",
+      "phase": "improvement_iter2",
+      "finding": "internal-2-2",
+      "qna": 30
+    },
+    {
+      "plan_id": "iter2:03-7.2-row4",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1413",
+      "summary": "§7.2 4행 「새 탭에서 편집 모드로 열림」을 라이브 편집 · 기본 열람 모드와 관계없음(#36)으로 고쳤다",
+      "phase": "improvement_iter2",
+      "finding": "internal-2-3",
+      "qna": 36
+    },
+    {
+      "plan_id": "iter2:03-7.8-row2",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1495",
+      "summary": "§7.8 2행 「생성 후 편집 모드로 열림」을 라이브 편집 · 기본 열람 모드와 관계없음(#36)으로 고쳤다",
+      "phase": "improvement_iter2",
+      "finding": "internal-2-3",
+      "qna": 36
+    },
+    {
+      "plan_id": "iter2:03-10-17",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1672",
+      "summary": "§10 17행 비-md 상태에 ⋯ · 우클릭 메뉴의 편집 조작 없음(#29)을 더했다",
+      "phase": "improvement_iter2",
+      "finding": "internal-2-1",
+      "qna": 29
+    },
+    {
+      "plan_id": "iter2:03-11-1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1727",
+      "summary": "§11-1 에 접힌 좌측 사이드바를 다시 펼치는 수단이 미정이라는 것을 더했다(옛 40px 스트립은 #37 로 걷힘)",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-3",
+      "qna": 37
+    },
+    {
+      "plan_id": "iter2:03-11-12",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1738",
+      "summary": "§11-12 저장 상태 표시 판단을 #31 의 조건으로 고치고 옛 판단을 남겼다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-1",
+      "qna": 31
+    },
+    {
+      "plan_id": "iter2:03-header",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "13",
+      "summary": "머리표 갱신 28차 → 29차",
+      "phase": "improvement_iter2",
+      "finding": "-"
+    },
+    {
+      "plan_id": "iter2:03-13-row29",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "2042",
+      "summary": "§13 에 29차 행을 28차 행 위에 신설",
+      "phase": "improvement_iter2",
+      "finding": "-"
+    },
+    {
+      "plan_id": "iter2:04-1.1-gear",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "57",
+      "summary": "04 §1.1 진입점 문장에 기어는 리본 맨 아래(03 §2.5 · #37)를 더했다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-3",
+      "qna": 37
+    },
+    {
+      "plan_id": "iter2:04-2.2-canonical",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "201",
+      "summary": "04 §2.2 기본 색상의 파생 규칙 · 대비 목표 정본을 결정 기록에서 IR-SHELL-014 로 고쳐 가리키고(#34) 옛 문장을 남겼다",
+      "phase": "improvement_iter2",
+      "finding": "scope-2-2",
+      "qna": 34
+    },
+    {
+      "plan_id": "iter2:04-2.2-stepper",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "203",
+      "summary": "04 §2.2 「그 단계의 버튼을 끈다」를 −/+ 로 그 단계가 선택되지 않는다(정본 IR-SHELL-015 AC-5)로 고치고 건너뛰기 미정을 적었다",
+      "phase": "improvement_iter2",
+      "finding": "ac-2-3"
+    },
+    {
+      "plan_id": "iter2:04-header-17",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "25",
+      "summary": "04 머리표 갱신 (17) 행 신설",
+      "phase": "improvement_iter2",
+      "finding": "-"
+    },
+    {
+      "plan_id": "iter2:13-13-2-search",
+      "file": "docs/spec/13.workspace.srs.md",
+      "lines_before": "41",
+      "summary": "13 §2 Out of Scope 의 「검색 탭」을 좌측 검색 보기(옛 검색 탭)로 고치고 FR-SHELL-017 을 더했다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-5"
+    },
+    {
+      "plan_id": "iter2:15-15-2-mode",
+      "file": "docs/spec/15.attachments.srs.md",
+      "lines_before": "30",
+      "summary": "15 §2 Out of Scope 의 「모드 토글을 숨기는 규칙」을 모드 아이콘과 md 전용 메뉴 항목(FR-EDITOR-006)으로 고쳤다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-4",
+      "qna": 38
+    },
+    {
+      "plan_id": "iter2:15-15-2-phase2",
+      "file": "docs/spec/15.attachments.srs.md",
+      "lines_before": "38",
+      "summary": "15 §2 Out of Scope 의 Phase 2 파생 거동 열거의 「모드 토글」을 모드 아이콘(옛 모드 토글)으로 고쳤다",
+      "phase": "improvement_iter2",
+      "finding": "change-consistency-2-4",
+      "qna": 38
+    },
+    {
+      "plan_id": "qna39_41:03-2.2.4-row",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "299",
+      "summary": "03 §2.2.4 새 노트 버튼 행을 「라이브 편집으로 연다」에서 편집 모드 · 라이브 · 소스는 편집으로 열 때의 모드로 고쳤다",
+      "phase": "qna_39_41",
+      "qna": 39
+    },
+    {
+      "plan_id": "qna39_41:03-3.4-newnote",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "971",
+      "summary": "03 §3.4 새 노트 예외 문장을 편집 모드 · 편집으로 열 때의 모드로 고쳤다",
+      "phase": "qna_39_41",
+      "qna": 39
+    },
+    {
+      "plan_id": "qna39_41:03-7.2-row4",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1412",
+      "summary": "03 §7.2 4행을 편집 모드 · 편집으로 열 때의 모드로 고쳤다",
+      "phase": "qna_39_41",
+      "qna": 39
+    },
+    {
+      "plan_id": "qna39_41:03-7.8-row2",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1494",
+      "summary": "03 §7.8 2행을 편집 모드 · 편집으로 열 때의 모드로 고쳤다",
+      "phase": "qna_39_41",
+      "qna": 39
+    },
+    {
+      "plan_id": "qna39_41:03-1.2-collapsed",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "181",
+      "summary": "03 §1.2 접힘 문단의 「펼치는 수단은 결정 기록과 승인 시안에 없다」를 켜진 보기 버튼을 다시 눌러 펼친다(#41 · FR-SHELL-017 AC-8)로 바꿨다",
+      "phase": "qna_39_41",
+      "qna": 41
+    },
+    {
+      "plan_id": "qna39_41:03-2.1-toggle",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "216",
+      "summary": "03 §2.1 에 이미 켜진 보기 버튼을 다시 누르면 좌측 사이드바를 접고 펼친다는 항목을 더했다",
+      "phase": "qna_39_41",
+      "qna": 41
+    },
+    {
+      "plan_id": "qna39_41:03-11-1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1726",
+      "summary": "03 §11-1 의 펼치는 수단 미정을 #41 로 닫았다",
+      "phase": "qna_39_41",
+      "qna": 41
+    },
+    {
+      "plan_id": "qna39_41:03-header",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "13",
+      "summary": "03 머리표 갱신 29차 → 30차",
+      "phase": "qna_39_41"
+    },
+    {
+      "plan_id": "qna39_41:03-13-row30",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "2041",
+      "summary": "03 §13 에 30차 행을 29차 행 위에 신설",
+      "phase": "qna_39_41"
+    },
+    {
+      "plan_id": "qna39_41:04-2.2-stepper",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "204",
+      "summary": "04 §2.2 의 건너뛰기 미정 문장을 −/+ 는 불가 단계를 건너뛰고 그 방향에 허용 단계가 없으면 버튼이 꺼진다(#40 · IR-SHELL-015 AC-8)로 바꿨다",
+      "phase": "qna_39_41",
+      "qna": 40
+    },
+    {
+      "plan_id": "qna39_41:04-2.1-newnote",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "175",
+      "summary": "04 §2.1 편집으로 열 때의 모드 항목에 새로 만든 노트도 이 설정의 모드로 열린다는 문장을 더했다(#39)",
+      "phase": "qna_39_41",
+      "qna": 39
+    },
+    {
+      "plan_id": "qna39_41:04-header-18",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "26",
+      "summary": "04 머리표 갱신 (18) 행 신설",
+      "phase": "qna_39_41"
+    },
+    {
+      "plan_id": "qna42:03-1.2-collapsed",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "181",
+      "summary": "03 §1.2 접힘 문단에 접힌 동안 다른 보기 버튼을 누르면 그 보기로 펼쳐진다는 문장을 더했다(#42 · FR-SHELL-017 AC-9)",
+      "phase": "qna_42",
+      "qna": 42
+    },
+    {
+      "plan_id": "qna42:03-2.1-toggle",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "217",
+      "summary": "03 §2.1 접고 펼치기 항목에 접힌 동안 켜지지 않은 다른 보기 버튼은 그 보기로 펼친다는 문장을 더했다(#42)",
+      "phase": "qna_42",
+      "qna": 42
+    },
+    {
+      "plan_id": "qna42:03-11-1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1727",
+      "summary": "03 §11-1 에 다른 보기 버튼을 누르면 그 보기로 펼친다는 것을 더했다(#41 · #42, AC-8 · AC-9)",
+      "phase": "qna_42",
+      "qna": 42
+    },
+    {
+      "plan_id": "qna42:03-header",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "13",
+      "summary": "03 머리표 갱신 30차 → 31차",
+      "phase": "qna_42"
+    },
+    {
+      "plan_id": "qna42:03-13-row31",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "2042",
+      "summary": "03 §13 에 31차 행을 30차 행 위에 신설",
+      "phase": "qna_42"
+    },
+    {
+      "plan_id": "iter3:00-R24-b",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "190",
+      "summary": "R24-b 비고에 〔정정 2026-09-23 — 모호성 해소 #29〕 — 비-md 두 메뉴에서 모드 항목 · 편집 조작 · 버전 기록이 빠지고 Phase 1 에서 남는 항목은 복사와 공유(정본 FR-EDITOR-006 AC-3~AC-5). 옛 「나머지 항목은 기존 규칙」 문장은 지우지 않았다",
+      "phase": "improvement_iter3",
+      "finding": "change-consistency-3-1",
+      "qna": 29
+    },
+    {
+      "plan_id": "iter3:00-R91-3",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "35",
+      "summary": "R91 ③ 조항 끝에 편집 조작 · 버전 기록도 빠진다는 단서를 붙였다(R24-b 비고의 〔정정〕)",
+      "phase": "improvement_iter3",
+      "finding": "change-consistency-3-1",
+      "qna": 29
+    },
+    {
+      "plan_id": "iter3:00-R91-note",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "35",
+      "summary": "R91 비고에 「2026-09-23 보강 — 모호성 해소 #29」와 보강 전 ③ 끝 문면을 남겼다",
+      "phase": "improvement_iter3",
+      "finding": "change-consistency-3-1",
+      "qna": 29
+    },
+    {
+      "plan_id": "iter3:00-R152",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "203",
+      "summary": "R152 조항의 「항상 보기 는 … 보기로 연다」에 이미 있는 노트의 규칙이며 새로 만든 노트는 기본 열람 모드와 관계없이 「편집으로 열 때의 모드」로 연다는 단서를 붙였다",
+      "phase": "improvement_iter3",
+      "finding": "change-consistency-3-1",
+      "qna": "36 · 39"
+    },
+    {
+      "plan_id": "iter3:00-R152-note",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "203",
+      "summary": "R152 비고에 ⑤(새로 만든 노트는 예외 — 정본 FR-EDITOR-011 AC-18)와 단서 전 개정 문면을 남겼다",
+      "phase": "improvement_iter3",
+      "finding": "change-consistency-3-1",
+      "qna": "36 · 39"
+    },
+    {
+      "plan_id": "iter3:00-header",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "8",
+      "summary": "머리표 확정 요구사항의 2026-09-23 개정 요약에 「비-md 메뉴의 편집 조작 · 새 노트는 편집으로 연다」를 더했다",
+      "phase": "improvement_iter3",
+      "finding": "change-consistency-3-1"
+    },
+    {
+      "plan_id": "iter3:00-5-row",
+      "file": "docs/spec/00.decision-log.md",
+      "lines_before": "891",
+      "summary": "§5 변경 이력에 「R24-b · R91 · R152 보강」 행을 R75-a 행 뒤에 신설",
+      "phase": "improvement_iter3",
+      "finding": "change-consistency-3-1"
+    },
+    {
+      "plan_id": "iter3:03-header",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "13",
+      "summary": "03 머리표 갱신 31차 → 32차",
+      "phase": "improvement_iter3"
+    },
+    {
+      "plan_id": "iter3:03-1.1-diagram",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "153",
+      "summary": "§1.1 다이어그램 맨 아래에 상태 바 줄(높이 24px · 좌측 사이드바 · 중앙 · 우측 밑, 리본 열은 그 옆까지)을 더했다(폭 98 유지)",
+      "phase": "improvement_iter3",
+      "finding": "internal-3-1",
+      "qna": 43
+    },
+    {
+      "plan_id": "iter3:03-1.1-text",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "157",
+      "summary": "§1.1 설명에 상태 바의 높이 · 걸치는 범위 · 담는 표시(SRS 가 가리키는 것뿐, 단어 수는 예시, 조작 결과는 알림)를 적었다",
+      "phase": "improvement_iter3",
+      "finding": "internal-3-1",
+      "qna": 43
+    },
+    {
+      "plan_id": "iter3:03-1.2-row",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "167",
+      "summary": "§1.2 영역 표에 상태 바 행 신설(IR-SHELL-009 AC-10)",
+      "phase": "improvement_iter3",
+      "finding": "internal-3-1",
+      "qna": 43
+    },
+    {
+      "plan_id": "iter3:03-1.2-collapse",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "181",
+      "summary": "§1.2 접힘 문단에 리본 밖에서 보기를 바꾸는 조작도 접힌 사이드바를 펼친다는 것을 더했다(FR-SHELL-017 AC-10)",
+      "phase": "improvement_iter3",
+      "finding": "ac-3-1",
+      "qna": 44
+    },
+    {
+      "plan_id": "iter3:03-2.1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "217",
+      "summary": "§2.1 에 리본 밖의 조작(태그 클릭 · 본문 태그 클릭 · Ctrl+Shift+F · 폴더 주소 열기)도 접힌 사이드바를 펼치고 그 보기로 바꾼다는 것을 더했다",
+      "phase": "improvement_iter3",
+      "finding": "ac-3-1",
+      "qna": 44
+    },
+    {
+      "plan_id": "iter3:03-3.9.1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1105",
+      "summary": "§3.9.1 `/n/<노드ID>` 의 디렉토리 줄에 좌측 사이드바를 문서 트리 보기로 바꾸고 접혀 있으면 펼친다는 것을 더했다(FR-SHELL-006 AC-6)",
+      "phase": "improvement_iter3",
+      "finding": "ac-3-1",
+      "qna": 44
+    },
+    {
+      "plan_id": "iter3:03-7.2-row1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1410",
+      "summary": "§7.2 1행의 진입을 트리 상단 `＋ 새 노트`(인라인 입력 행)에서 컨텍스트 메뉴 `새 노트`(이름 먼저, FR-SHELL-016 AC-3)로 고쳤다 — §2.2.4 · FR-SHELL-016 AC-7 · 결정 4 와 부딪혔다. 2 · 3 · 4 행은 그대로",
+      "phase": "improvement_iter3",
+      "finding": "change-consistency-3-2"
+    },
+    {
+      "plan_id": "iter3:03-7.2-note",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1415",
+      "summary": "§7.2 표 아래에 상단 버튼은 이름을 묻지 않고 곧바로 만든다는 것과 32차 이전 1행의 문면을 적었다",
+      "phase": "improvement_iter3",
+      "finding": "change-consistency-3-2"
+    },
+    {
+      "plan_id": "iter3:03-9.1-ctrl-n",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1617",
+      "summary": "§9.1 `Ctrl+N` 근거 칸에 「브라우저 예약 키 — 표 아래 주」",
+      "phase": "improvement_iter3",
+      "finding": "feasibility-3-1"
+    },
+    {
+      "plan_id": "iter3:03-9.1-ctrl-w",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1618",
+      "summary": "§9.1 `Ctrl+W` 근거 칸에 「브라우저 예약 키 — 표 아래 주」",
+      "phase": "improvement_iter3",
+      "finding": "feasibility-3-1"
+    },
+    {
+      "plan_id": "iter3:03-9.1-ctrl-tab",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1619",
+      "summary": "§9.1 `Ctrl+Tab` 근거 칸에 「브라우저 예약 키 — 표 아래 주」",
+      "phase": "improvement_iter3",
+      "finding": "feasibility-3-1"
+    },
+    {
+      "plan_id": "iter3:03-9.1-ctrl-shift-f",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1623",
+      "summary": "§9.1 `Ctrl+Shift+F` 동작 칸에 좌측 사이드바가 접혀 있으면 펼친다는 것을 더했다",
+      "phase": "improvement_iter3",
+      "finding": "ac-3-1",
+      "qna": 44
+    },
+    {
+      "plan_id": "iter3:03-9.1-note",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1628",
+      "summary": "§9.1 표 아래에 브라우저 예약 키 주 — 일반 탭에서 가로채지 못할 수 있으니 구현 때 재라(Ctrl+E 확인 의무와 같은 처리), 대체 키는 정하지 않음",
+      "phase": "improvement_iter3",
+      "finding": "feasibility-3-1"
+    },
+    {
+      "plan_id": "iter3:03-11-1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1727",
+      "summary": "§11-1 에 리본 밖의 조작도 접힌 사이드바를 펼친다는 것을 더했다(#44 · FR-SHELL-017 AC-10)",
+      "phase": "improvement_iter3",
+      "finding": "ac-3-1",
+      "qna": 44
+    },
+    {
+      "plan_id": "iter3:03-13-row32",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "2042",
+      "summary": "§13 에 32차 행을 31차 행 위에 신설",
+      "phase": "improvement_iter3"
+    },
+    {
+      "plan_id": "qna47_48:03-1.2-collapsed-figure",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "180",
+      "summary": "§1.2 「사이드바를 접었을 때」 그림에 상태 바 줄을 그려 넣었다 — 리본 열은 그 옆까지 내려오고 설정 기어를 상태 바 옆 리본 맨 아래로 옮겨 그렸다(폭 82 유지)",
+      "phase": "qna_47_48",
+      "qna": "조정자 지시(#43 의 연장)"
+    },
+    {
+      "plan_id": "qna47_48:03-1.2-collapsed-text",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "184",
+      "summary": "§1.2 접힘 그림 설명에 상태 바가 사이드바를 접어도 남아 리본 옆에서 중앙과 우측 밑에 걸친다는 것과 기어 위치를 적었다",
+      "phase": "qna_47_48",
+      "qna": "조정자 지시(#43 의 연장)"
+    },
+    {
+      "plan_id": "qna47_48:03-9.3",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1649",
+      "summary": "§9.3 「좌·우 사이드바 접기」 사유를 좌측(따로 된 접기 버튼 없이 리본의 켜진 보기 버튼 — #41 · FR-SHELL-017 AC-8)과 우측(리사이즈 핸들 · 접기 버튼)으로 나눠 적었다",
+      "phase": "qna_47_48",
+      "qna": "조정자 지시(#41)"
+    },
+    {
+      "plan_id": "qna47_48:03-header",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "13",
+      "summary": "03 머리표 갱신 32차 → 33차",
+      "phase": "qna_47_48"
+    },
+    {
+      "plan_id": "qna47_48:03-13-row33",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "2048",
+      "summary": "§13 에 33차 행을 32차 행 위에 신설(옛 §9.3 사유 문면 보존)",
+      "phase": "qna_47_48"
+    },
+    {
+      "plan_id": "qna47_48:04-2.2",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "205",
+      "summary": "04 §2.2 에 `[ − ]` · `[ + ]` 는 화면에 적용 중인 단계에서 센다는 것을 더했다(#47, 정본 IR-SHELL-015 AC-8)",
+      "phase": "qna_47_48",
+      "qna": "47"
+    },
+    {
+      "plan_id": "qna47_48:04-header",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "27",
+      "summary": "04 머리표 「갱신 (19)」 행 신설(#47, #48 은 정본 IR-SHELL-006 AC-4 라 이 문서에 값을 적지 않음)",
+      "phase": "qna_47_48",
+      "qna": "47 · 48"
+    },
+    {
+      "plan_id": "iter4:15-2-inscope",
+      "file": "docs/spec/15.attachments.srs.md",
+      "lines_before": "19",
+      "summary": "§2 In Scope 에 「트리 드롭 대상 해석」 한 줄 신설 — 디렉토리 노드면 그 자신, 파일 노드면 든 디렉토리. 업로드 드롭과 SHELL 의 트리 항목 끌기(FR-SHELL-019)가 한 규칙을 쓰며 정의는 이 scope(FR-ATTACH-001)가 갖는다(qna #10)",
+      "phase": "improvement_iter4",
+      "finding": "internal-4-1",
+      "qna": 10
+    },
+    {
+      "plan_id": "iter4:08-2-outofscope",
+      "file": "docs/spec/08.app-shell.srs.md",
+      "lines_before": "37-38 사이",
+      "summary": "§2 Out of Scope 에 「트리 드롭 대상 해석」 위임 한 줄 신설 — 정본은 ATTACH 의 FR-ATTACH-001, 이 scope 는 끌기 제스처 · 이동 · 복사 판정 · 끄는 동안의 표시를 갖고 규칙을 복제하지 않는다(FR-SHELL-019 AC-6). 넣은 뒤 「표시만 갖는다」를 FR-SHELL-019 의 범위에 맞게 한 번 다듬었다",
+      "phase": "improvement_iter4",
+      "finding": "internal-4-1",
+      "qna": 10
+    },
+    {
+      "plan_id": "iter4:07-2-inscope",
+      "file": "docs/spec/07.editor.srs.md",
+      "lines_before": "22",
+      "summary": "§2 In Scope 의 「비-md 파일에서의 모드 아이콘 · 모드 메뉴 항목 숨김」을 「모드 아이콘과 md 전용 메뉴 항목(모드 항목 · 편집 조작 · 버전 기록 보기) 숨김」으로(qna #29)",
+      "phase": "improvement_iter4",
+      "finding": "change-consistency-4-2",
+      "qna": 29
+    },
+    {
+      "plan_id": "iter4:07-2-outofscope",
+      "file": "docs/spec/07.editor.srs.md",
+      "lines_before": "32",
+      "summary": "§2 Out of Scope 의 「모드 아이콘과 모드 메뉴 항목의 숨김만 규정한다」를 md 전용 메뉴 항목으로 넓히고 qna #29 로 넓어졌다고 적음 — 15 §2 와 경계 서술을 맞춤",
+      "phase": "improvement_iter4",
+      "finding": "change-consistency-4-2",
+      "qna": 29
+    },
+    {
+      "plan_id": "iter4:03-2.2.4",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "305",
+      "summary": "§2.2.4 새 노트 버튼 행에 만드는 곳 · 두 비활성 조건 · 만든 문서를 여는 것의 SRS 정본(FR-SHELL-016 AC-8)을 덧붙임. 규칙 자체는 이미 이 절에 있었다",
+      "phase": "improvement_iter4",
+      "finding": "change-consistency-4-1"
+    },
+    {
+      "plan_id": "iter4:03-2.2.7-entry",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "441-443 사이",
+      "summary": "§2.2.7 소유권 인용 아래에 §2.2.8 과 같은 「진입 경로」 표 신설 — 메뉴 `폴더 이동` 은 이동 모드 창, 끌어서 이동은 드롭한 디렉토리가 골라진 창(프리뷰는 R43-5 로 필수이고 목적지를 고르는 창 안 — 결정 기록), 놓자마자 실행하지 않음(FR-SHELL-019 AC-13). 처음 쓴 문장의 「그 자리는」을 사용자 용어표에 따라 「그 프리뷰는 … 있어야 하므로」로 바로 고쳤다",
+      "phase": "improvement_iter4",
+      "finding": "ac-4-2"
+    },
+    {
+      "plan_id": "iter4:03-3.1-figure",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "752",
+      "summary": "§3.1 골격 그림의 문서 헤더 높이 「보기 40 / 편집 64」를 「40px · 모드와 무관」으로. 상자 폭은 그대로",
+      "phase": "improvement_iter4",
+      "finding": "change-consistency-4-6"
+    },
+    {
+      "plan_id": "iter4:03-3.1-note",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "760-761 사이",
+      "summary": "그림 아래 문단 신설 — 헤더 높이는 모드와 무관, 옛 편집 64 는 헤더가 두 토글을 싣던 때의 값(91.03-history.md 2026-08-12 행), v2 는 두 모드 모두 모드 아이콘과 ⋯ 만(§3.3). 〔판단〕 40 은 옛 보기 모드 값이며 승인 시안은 38 로 그리지만 결정 7 이 열거한 치수에 헤더 높이는 없다",
+      "phase": "improvement_iter4",
+      "finding": "change-consistency-4-6"
+    },
+    {
+      "plan_id": "iter4:03-header",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "13",
+      "summary": "머리표 갱신을 34차로",
+      "phase": "improvement_iter4"
+    },
+    {
+      "plan_id": "iter4:03-13-row",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "2050 앞",
+      "summary": "§13 에 34차 행 신설(§2.2.4 · §2.2.7 · §3.1)",
+      "phase": "improvement_iter4"
+    },
+    {
+      "plan_id": "qna49_53:03-1.2",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "186",
+      "summary": "§1.2 의 「… 폴더 주소 열기 등」을 「조작 넷」으로 닫고, 백링크 · 딥링크로 문서를 열 때의 트리 펼침은 접힌 사이드바를 펼치지 않는다는 문장을 더함(FR-SHELL-017 AC-11)",
+      "phase": "qna_49_53",
+      "qna": 49
+    },
+    {
+      "plan_id": "qna49_53:03-2.1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "222",
+      "summary": "§2.1 의 리본 밖 조작 목록 「… 등」을 「조작 넷」으로 닫고, 문서를 열 때의 트리 펼침은 보기와 접힘을 바꾸지 않고 트리 보기가 보일 때만 펼친다는 문장을 더함",
+      "phase": "qna_49_53",
+      "qna": 49
+    },
+    {
+      "plan_id": "qna49_53:03-11-1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1744",
+      "summary": "§11-1 에 「조작 넷」과 문서 열기의 트리 펼침은 들지 않는다는 구절",
+      "phase": "qna_49_53",
+      "qna": 49
+    },
+    {
+      "plan_id": "qna49_53:03-7.4",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1464",
+      "summary": "§7.4 3행의 자동 펼침을 트리 보기가 보일 때만으로 한정하고 사이드바의 보기 · 접힘은 바꾸지 않는다고 적음",
+      "phase": "qna_49_53",
+      "qna": 49
+    },
+    {
+      "plan_id": "qna49_53:03-7.11",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1549",
+      "summary": "§7.11 2행의 자동 펼침에 같은 한정",
+      "phase": "qna_49_53",
+      "qna": 49
+    },
+    {
+      "plan_id": "qna49_53:03-2.2.4",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "305",
+      "summary": "§2.2.4 새 노트 버튼 행에 워크스페이스 행을 선택 중이면 그 워크스페이스의 맨 위(#51)와 Ctrl+N 이 같은 규칙(AC-9, #50)을 적음",
+      "phase": "qna_49_53",
+      "qna": "50 · 51"
+    },
+    {
+      "plan_id": "qna49_53:03-9.1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1632",
+      "summary": "§9.1 Ctrl+N 행에 트리 상단 새 노트와 같은 규칙(§2.2.4 · #50 · FR-SHELL-016 AC-9)",
+      "phase": "qna_49_53",
+      "qna": 50
+    },
+    {
+      "plan_id": "qna49_53:03-3.1-figure",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "757 · 759",
+      "summary": "§3.1 골격 그림의 탭 스트립 36px → 38px, 문서 헤더 40px → 38px(상자 밖 주석 칸만, 상자 폭 불변)",
+      "phase": "qna_49_53",
+      "qna": 52
+    },
+    {
+      "plan_id": "qna49_53:03-3.1-note",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "769",
+      "summary": "그림 아래 문단의 34차 〔판단〕 문장을 「탭 스트립과 문서 헤더는 승인 시안대로 둘 다 38(#52 · IR-SHELL-009 AC-11), 옛 값은 탭 스트립 36, 헤더 40(34차의 〔판단〕)」으로 바꿈",
+      "phase": "qna_49_53",
+      "qna": 52
+    },
+    {
+      "plan_id": "qna49_53:03-header",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "13",
+      "summary": "머리표 갱신을 35차로",
+      "phase": "qna_49_53"
+    },
+    {
+      "plan_id": "qna49_53:03-13-row",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "34차 행 앞",
+      "summary": "§13 에 35차 행 신설(#49~#52)",
+      "phase": "qna_49_53"
+    },
+    {
+      "plan_id": "qna54:04-2.2",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "206",
+      "summary": "§2.2 의 고를 수 없는 메뉴 밝기 단계 항목을 「기본 색상이 대비 목표에 못 미치는 단계」로 넓히고, 목표값 정본을 IR-SHELL-014 AC-7~AC-9 · AC-14 로, 강조색 아이콘과 활성 타일의 3:1(#54)과 쑥 · 밝게 · −2 의 2.78:1 실측을 적음. 19차까지의 머리말을 한 문장으로 남김",
+      "phase": "qna_54",
+      "qna": 54
+    },
+    {
+      "plan_id": "qna54:04-header",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "28 뒤",
+      "summary": "머리표 「갱신 (20)」 행 신설(#54)",
+      "phase": "qna_54",
+      "qna": 54
+    },
+    {
+      "plan_id": "iter5:03-header",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "13",
+      "summary": "머리표 갱신 행을 36차로",
+      "phase": "iter5"
+    },
+    {
+      "plan_id": "iter5:03-1.2",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "186",
+      "summary": "§1.2 문단의 「리본 밖에서 보기를 바꾸는 조작 넷(…)」에 트리 메뉴 `폴더에서 검색` 을 더하고 개수 표기를 뺐다(§0.3-1). 폴더에서 검색은 트리 보기가 보일 때만 시작하므로 접힌 동안 일어나지 않는다는 것과 「이 넷에 들지 않아」를 「이 조작들에 들지 않아」로",
+      "phase": "iter5"
+    },
+    {
+      "plan_id": "iter5:03-2.1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "222",
+      "summary": "§2.1 의 같은 목록에 트리 메뉴 `폴더에서 검색`(§2.3, 트리 보기가 보일 때만 시작)을 더하고 개수 표기를 뺐다",
+      "phase": "iter5"
+    },
+    {
+      "plan_id": "iter5:03-2.2.4",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "314",
+      "summary": "§2.2.4 「선택이 없을 때: 두 버튼은 비활성」을 「`새 노트` 버튼은 비활성」으로 — 트리 상단 버튼은 새 노트 하나다(같은 절 · 결정 기록 파일 탐색기 절)",
+      "phase": "iter5"
+    },
+    {
+      "plan_id": "iter5:03-7.2",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1427",
+      "summary": "§7.2 표 4 행에 만든 노트를 곧바로 여는 것이 트리 상단 버튼 · Ctrl+N 으로 만들 때와 같다는 정본(모호성 해소 #56 · FR-SHELL-016 AC-10)",
+      "phase": "iter5",
+      "qna": 56
+    },
+    {
+      "plan_id": "iter5:03-11-1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1744",
+      "summary": "§11-1 판단 칸의 조작 목록에 트리 메뉴 `폴더에서 검색` 을 더하고 개수 표기를 뺐다",
+      "phase": "iter5"
+    },
+    {
+      "plan_id": "iter5:03-11-5",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1748",
+      "summary": "§11-5 질문 칸 「새 노트·새 디렉토리 버튼」을 「새 노트 버튼」으로",
+      "phase": "iter5"
+    },
+    {
+      "plan_id": "iter5:03-13-row",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "35차 행 앞",
+      "summary": "§13 에 36차 행 신설(#56 · 폴더에서 검색 · 버튼 하나)",
+      "phase": "iter5",
+      "qna": 56
+    },
+    {
+      "plan_id": "iter5:04-2.2",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "208",
+      "summary": "§2.2 고를 수 없는 메뉴 밝기 단계 항목: 목표값 정본을 IR-SHELL-014 AC-7~AC-9 로 좁히고, 리본 활성 아이콘의 3:1 은 판정에 들지 않으며 그 아이콘 색은 3:1 이 될 때까지 명도를 자동으로 옮겨 만들므로 단계를 막지 않는다고 적음(#55, 정본 AC-14). 20차의 「프리셋에서도 고를 수 없는 단계가 생긴다(쑥 · 밝게 · −2 는 2.78:1)」는 지우지 않고 「20차에는 … 고 적었다 — #55 가 대체했다」로 남김(04 관례: 「N차까지 이 항목은 …」)",
+      "phase": "iter5",
+      "qna": 55
+    },
+    {
+      "plan_id": "iter5:04-header",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "갱신 (20) 뒤",
+      "summary": "머리표 「갱신 (21)」 행 신설(#55)",
+      "phase": "iter5",
+      "qna": 55
+    },
+    {
+      "plan_id": "iter5:05-2.1.1",
+      "file": "docs/spec/05.screen-design-permission.md",
+      "lines_before": "278",
+      "summary": "§2.1.1 `보기` 사용자의 공유 메뉴 항목을 「숨기지 않고 흐리게 둔 뒤 「권한 없음」을 붙인다」(R88-a · R24-b 개정 · 결정 기록 파일 탐색기 절)로, `[미결 Q1]` 을 §9.1 Q1 로. 초판 문면(비활성 + 대상 유형별 툴팁 · R91-① 근거)은 〔2026-09-23 디자인 v2 — 초판은 「…」였다〕 표기로 전문을 남김. 툴팁 문구는 결정 기록의 「바꾸는 것이다」와 03 §2.2.5 · §8.2 툴팁 행(「권한 없음」 접미사로 바뀌었다)에 따라 두지 않았다",
+      "phase": "iter5",
+      "qna": 57
+    },
+    {
+      "plan_id": "iter5:05-2.2.1",
+      "file": "docs/spec/05.screen-design-permission.md",
+      "lines_before": "641",
+      "summary": "§2.2.1 그림의 개인 카테고리 라벨 `외모` 를 `외관` 으로(R24-a 개정). 두 글자 → 두 글자라 상자 폭은 그대로",
+      "phase": "iter5",
+      "qna": 57
+    },
+    {
+      "plan_id": "iter5:05-2.6.2",
+      "file": "docs/spec/05.screen-design-permission.md",
+      "lines_before": "1139",
+      "summary": "§2.6.2 「문서 헤더 ⋯ 는 Phase 1 에서 R24-b 로 공유·버전 기록 2개로 한정되어 자리가 없다」 뒤에 〔2026-09-23 디자인 v2〕 표기 — 공간 근거는 R24-b 개정으로 사라졌고 진입점 결정은 그대로이며 근거는 결정 기록 결정 2 · 파일 탐색기 절(원장 R102-b 개정 문면과 같게). 옛 문장은 지우지 않음",
+      "phase": "iter5",
+      "qna": 57
+    },
+    {
+      "plan_id": "iter5:05-6",
+      "file": "docs/spec/05.screen-design-permission.md",
+      "lines_before": "1640",
+      "summary": "§6 상태 목록 「권한 없음 — 진입 차단」 행을 「▨ 흐리게 + 「권한 없음」 (§2.1.1 · R88-a · R24-b)」로, 초판(비활성 + 대상 유형별 툴팁)은 〔2026-09-23 디자인 v2〕 표기로 남김. 평가서가 「§8 상태 표(05:1639)」라 부른 표는 실제로 §6 상태 목록이다",
+      "phase": "iter5",
+      "qna": 57
+    },
+    {
+      "plan_id": "iter5:05-9.1",
+      "file": "docs/spec/05.screen-design-permission.md",
+      "lines_before": "1753 · 1757",
+      "summary": "§9.1 제목 12건 → 13건, Q1 행을 §9.1 맨 위에 신설(확정: R88-a · R24-b 개정 — 흐리게 + 「권한 없음」, 관계: 숨기지 않는다는 판단은 유지, 표시는 툴팁 → 「권한 없음」, 초판 근거 R91-① 의 편집 토글은 모드 아이콘으로 바뀜). 05 관례: 해소된 항목은 지우지 않고 §9.1 에 근거 R 번호와 함께 남긴다",
+      "phase": "iter5",
+      "qna": 57
+    },
+    {
+      "plan_id": "iter5:05-9.2",
+      "file": "docs/spec/05.screen-design-permission.md",
+      "lines_before": "1771",
+      "summary": "§9.2 제목 10건 → 9건 · 목록에서 Q1 을 빼고, §9.2 표의 Q1 행을 §9.1 로 옮김",
+      "phase": "iter5",
+      "qna": 57
+    },
+    {
+      "plan_id": "iter5:05-header",
+      "file": "docs/spec/05.screen-design-permission.md",
+      "lines_before": "16 뒤",
+      "summary": "머리표 「갱신 (11)」 행 신설(#57 — 무엇을 왜 고쳤는지, 화면의 동작 규칙과 확인 등급은 그대로)",
+      "phase": "iter5",
+      "qna": 57
+    },
+    {
+      "plan_id": "iter5:02-3.3",
+      "file": "docs/spec/02.feature-request-live-preview.md",
+      "lines_before": "87-91 뒤",
+      "summary": "§3.3 끝에 이 문서의 기존 표기 관례(「> **[날짜] …**」 인용 블록, §3.1 의 [2026-08-25] 선례)로 원장 R90 개정 정정 — 하위 토글은 없고 소스 편집은 제목 줄 모드 아이콘의 세 모드 순환에 든다(FR-EDITOR-011 AC-12, 결정 기록 편집 모드 절). R90 개정은 진입 형태와 모드 이름만 바꿨으므로 소스 모드의 내용과 커서 · 스크롤 보존은 그대로. 첫 문장은 지우지 않음. §5 의 mode: 'live' | 'source' 는 손대지 않음",
+      "phase": "iter5"
+    },
+    {
+      "plan_id": "iter6:05-2.1.1-passthrough",
+      "file": "docs/spec/05.screen-design-permission.md",
+      "lines_before": "280",
+      "summary": "pass-through 노드 항목의 「컨텍스트 메뉴에서 `공유` 를 렌더하지 않는다」를 「컨텍스트 메뉴는 뜨되 `공유` 를 포함한 전 항목이 흐리게 놓이고 실행되지 않는다(R69-b · 결정 기록 파일 탐색기 절 · 03 §2.2.5 · FR-SHELL-003 AC-2 · #59)」로. 뒤 두 문장(R69-b 제외 · 디렉토리라고 무조건 열리지 않음)은 그대로 두고 끝에 〔2026-09-23 디자인 v2 — 초판은 「…렌더하지 않는다」였다 …〕 표기",
+      "phase": "iter6",
+      "finding": "internal-6-1",
+      "qna": 59
+    },
+    {
+      "plan_id": "iter6:05-8-7",
+      "file": "docs/spec/05.screen-design-permission.md",
+      "lines_before": "1719",
+      "summary": "§8 엣지 7행 화면 동작을 「컨텍스트 메뉴는 뜨되 `공유` 를 포함한 전 항목이 흐리게 놓이고 실행되지 않는다(§2.1.1). 클릭은 펼치기만 동작」으로, 초판 문면은 〔2026-09-23 디자인 v2 — …〕 표기",
+      "phase": "iter6",
+      "finding": "internal-6-1",
+      "qna": 59
+    },
+    {
+      "plan_id": "iter6:05-0.1",
+      "file": "docs/spec/05.screen-design-permission.md",
+      "lines_before": "34",
+      "summary": "§0.1 화면 목록 1행 소재를 「문서 헤더 메뉴(문서 본문 우클릭으로도 같은 메뉴가 열린다 — R24-b 개정) · 트리 컨텍스트 메뉴」로",
+      "phase": "iter6",
+      "finding": "change-consistency-6-2"
+    },
+    {
+      "plan_id": "iter6:05-2.1.1-entry",
+      "file": "docs/spec/05.screen-design-permission.md",
+      "lines_before": "276",
+      "summary": "§2.1.1 진입 표 첫 행을 「문서 헤더 `⋯` 메뉴 · 문서 본문 우클릭 메뉴 › 공유 | 문서를 열고 있을 때(R24-b — 두 진입은 같은 메뉴다, FR-EDITOR-011 AC-11)」로, 초판(「문서 헤더 메뉴 › 공유」 하나)은 〔2026-09-23 디자인 v2 — …〕 표기",
+      "phase": "iter6",
+      "finding": "change-consistency-6-2"
+    },
+    {
+      "plan_id": "iter6:05-header",
+      "file": "docs/spec/05.screen-design-permission.md",
+      "lines_before": "17 뒤",
+      "summary": "머리표 「갱신 (12)」 행 신설(#59 — pass-through 공유 항목, 본문 우클릭 진입 · 옛 문면 표기 · 그 밖의 규칙과 확인 등급은 그대로)",
+      "phase": "iter6",
+      "finding": "internal-6-1 · change-consistency-6-2",
+      "qna": 59
+    },
+    {
+      "plan_id": "iter6:04-2.2-row-layout",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "203",
+      "summary": "§2.2 카테고리 문단 끝에 「항목 행은 이름 · 설명을 왼쪽에, 컨트롤을 오른쪽에 두고, 선택지가 넓은 기본 색상만 위 그림처럼 프리셋 목록과 직접 고르기를 이름 · 설명 아래에 둔다(모호성 해소 #60, 정본 IR-SHELL-006 AC-14)」",
+      "phase": "iter6",
+      "finding": "ac-6-1",
+      "qna": 60
+    },
+    {
+      "plan_id": "iter6:04-2.2-cache",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "211",
+      "summary": "저장 방식 항목의 둘째 문장(R152 초판 근거의 「테마는 … 클라이언트 캐시를 둘 수 있으나 캐시는 정본이 아니다」)을 IR-SHELL-007 AC-2 · AC-3 · AC-6 인용(인증 전 첫 페인트는 OS 테마와 기본값, 캐시는 같은 사용자에 묶인 현재 탭 메모리에만, 기본 색상 · 메뉴 밝기도 같다)으로. 04 관례대로 「2026-09-23 21차까지 이 항목의 둘째 문장은 「…」였다」를 남김",
+      "phase": "iter6",
+      "finding": "internal-6-3"
+    },
+    {
+      "plan_id": "iter6:04-header-basis",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "7",
+      "summary": "머리표 근거 문서 칸 — 원장이 요건 근거이고 원장이 정하지 않은 값 · 규칙은 SRS(§2.1 · §2.2 가 인용하는 IR-SHELL-004 · 006 · 007 · 014 · 015 · FR-EDITOR-011)와 2026-09-23 모호성 해소(qna_log.json)가 정본이며 그 인용은 설계자 판단(§9 등재 대상)이 아니라고 적음. 옛 끝말 「이 문서가 유일한 요건 근거다」는 「21차까지 이 칸은 …로 끝났다」로 남김. R1~R145 표기는 그대로",
+      "phase": "iter6",
+      "finding": "internal-6-4"
+    },
+    {
+      "plan_id": "iter6:04-rule2",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "34",
+      "summary": "문서 규칙 2 를 「결정 로그나 SRS · 모호성 해소(머리표 근거 문서)에 없는 사실」로 넓히고 「21차까지 이 규칙은 「결정 로그에 없는 사실」만 말했다」를 남김",
+      "phase": "iter6",
+      "finding": "internal-6-4"
+    },
+    {
+      "plan_id": "iter6:04-header-row22",
+      "file": "docs/spec/04.screen-design-settings.md",
+      "lines_before": "30 뒤",
+      "summary": "머리표 「갱신 (22)」 행 신설(#60 행 배치, 캐시 문장의 IR-SHELL-007 인용, 근거 문서 · 규칙 2 확장, R1~R145 표기는 v2 이전 것이라 그대로)",
+      "phase": "iter6",
+      "finding": "ac-6-1 · internal-6-3 · internal-6-4",
+      "qna": 60
+    },
+    {
+      "plan_id": "iter6:03-3.3-breadcrumb",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "929",
+      "summary": "§3.3 경로 브레드크럼 행의 「조상 클릭 → 트리에서 해당 디렉토리 선택」 뒤에 「좌측 사이드바에 트리 보기가 보이고 있을 때만이며, 사이드바의 보기를 바꾸거나 접힌 사이드바를 펼치지 않는다(모호성 해소 #58 · FR-SHELL-017 AC-11)」",
+      "phase": "iter6",
+      "finding": "internal-6-2",
+      "qna": 58
+    },
+    {
+      "plan_id": "iter6:03-3.9.1-w",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1120",
+      "summary": "§3.9.1 `/w/<워크스페이스ID>` 행 의미 칸에 같은 조건(#58 · FR-SHELL-017 AC-11). 〔판단 · §11-24〕 표기는 그대로",
+      "phase": "iter6",
+      "finding": "internal-6-2",
+      "qna": 58
+    },
+    {
+      "plan_id": "iter6:03-1.2",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "186",
+      "summary": "§1.2 문단의 「백링크 · 딥링크로 문서를 열 때 트리가 그 위치를 펼치는 것은 …」에 브레드크럼 상위 폴더 클릭 · /w/ 주소 열기를 더하고 근거에 #58",
+      "phase": "iter6",
+      "finding": "internal-6-2",
+      "qna": 58
+    },
+    {
+      "plan_id": "iter6:03-2.1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "222",
+      "summary": "§2.1 같은 문장에 브레드크럼 상위 폴더 클릭(§3.3) · /w/ 주소 열기(§3.9.1)를 더하고 근거에 #58",
+      "phase": "iter6",
+      "finding": "internal-6-2",
+      "qna": 58
+    },
+    {
+      "plan_id": "iter6:03-11-1",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1744",
+      "summary": "§11-1 판단 칸의 같은 서술에 두 조작과 #58",
+      "phase": "iter6",
+      "finding": "internal-6-2",
+      "qna": 58
+    },
+    {
+      "plan_id": "iter6:03-12-R147",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1971",
+      "summary": "§12 R147 행의 「모드 토글 축은 `G34` ④」를 「모드 아이콘과의 관계는 `G34` ④」로(qna #38, §1.3 의 같은 항목과 같게)",
+      "phase": "iter6",
+      "finding": "change-consistency-6-1"
+    },
+    {
+      "plan_id": "iter6:03-2.2.4-heading",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "299",
+      "summary": "§2.2.4 제목 「새 노트 버튼 · 새 디렉토리 (R88)」 → 「새 노트 버튼 · 새 폴더 (R88)」(v2 메뉴 항목 이름 · 결정 기록 파일 탐색기 절). 이 제목을 가리키는 앵커 링크는 저장소에 없음(확인)",
+      "phase": "iter6",
+      "finding": "change-consistency-6-1"
+    },
+    {
+      "plan_id": "iter6:03-2.2.4-table",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "311",
+      "summary": "두지 않는 버튼 표의 「`새 디렉토리`」 → 「`새 폴더`」",
+      "phase": "iter6",
+      "finding": "change-consistency-6-1"
+    },
+    {
+      "plan_id": "iter6:03-2.2.5-newfolder",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "359",
+      "summary": "§2.2.5 필요 권한 표 `새 폴더` 행 비고 앞에 「누른 폴더 안에 만든다. 노트를 눌렀다면 그 노트가 든 폴더가 기준이다.」(결정 기록 파일 탐색기 절 · FR-SHELL-016 AC-2, 바로 위 `새 노트` 행과 같은 문장)",
+      "phase": "iter6",
+      "finding": "change-consistency-6-1"
+    },
+    {
+      "plan_id": "iter6:03-3.3-figure",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "913",
+      "summary": "§3.3 v2 헤더 그림의 「● 저장됨」 → 「✓ 저장됨」(§3.5 표). 한 글자를 한 글자로 바꿔 상자 폭 그대로",
+      "phase": "iter6",
+      "finding": "change-consistency-6-1"
+    },
+    {
+      "plan_id": "iter6:03-11-19",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1762",
+      "summary": "§11-19 를 종결 표기로 — 번호 · 질문 취소선, 상태 칸 「해소 — R24-b 개정 · 결정 기록 「확정 사항 › 편집 모드」 절 (2026-09-23)」, 근거 칸 「열지 않는다 — 항목은 숨기지 않고 흐리게 둔 뒤 「권한 없음」을 붙인다(§3.3)」 + 기존 근거 + 「등재 당시의 판단은 「비활성(열지 않음)」이었다」(§11-36 종결 행 선례)",
+      "phase": "iter6",
+      "finding": "change-consistency-6-1"
+    },
+    {
+      "plan_id": "iter6:03-11-tally",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "1840",
+      "summary": "§11 집계 — 종결 18 → 19건(#19 추가), 열린 것 19 → 18건(#19 제거). 전체 37건 그대로",
+      "phase": "iter6",
+      "finding": "change-consistency-6-1"
+    },
+    {
+      "plan_id": "iter6:03-header",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "13",
+      "summary": "머리표 갱신 행 「2026-09-23 (36차)」 → 「(37차)」",
+      "phase": "iter6",
+      "finding": "internal-6-2 · change-consistency-6-1"
+    },
+    {
+      "plan_id": "iter6:03-13-37",
+      "file": "docs/spec/03.screen-design-shell.md",
+      "lines_before": "2059 앞",
+      "summary": "§13 에 37차 행 신설(①#58 두 조작 · ②v2 를 따르지 않던 문면 넷 · ③§11-19 종결과 집계). 03 §0.3-7 대로 정정 사유는 고친 곳에 적지 않고 이 행에 무엇 · 왜를 적음. 개수 단정 없음(§0.3-1 · -2)",
+      "phase": "iter6",
+      "finding": "internal-6-2 · change-consistency-6-1",
+      "qna": 58
+    }
+  ],
+  "skipped": [
+    {
+      "plan_id": "03 §6.1 (일부)",
+      "reason": "「인라인 이름 편집 상태 표의 시각(치수·색)을 v2 로」 부분은 건너뛰었다. §6.1 상태 표에는 치수·색 서술이 없고, v2 치수·색의 정본은 IR-SHELL-006(다른 작성자 소관 SRS)이다. 「새 항목의 상태 행」은 복사 완료 한 행만 더했다 — 폴더에서 검색의 상태는 검색 보기(§2.3/§6.2) 쪽 표면이고 그 범위 표시는 새 요구(NEW-4)가 서기 전이라 그리지 않았으며, URL 복사의 결과 안내 문구는 근거가 없다(unresolved 7·8)."
+    }
+  ],
+  "unresolved": [
+    {
+      "item": "03 §3.4 「편집 모드 진입 시 버전 스냅샷 1회 생성(R75-a)」",
+      "why": "문서가 곧바로 라이브 편집으로 열리게 되면서 「편집 진입」이 여는 순간인지(열 때마다 스냅샷이 생기는지) 정해지지 않았다. design-v2 적용 범위 표가 이 조항을 v2 와 부딪힌다고 지목했으나 해소를 정하지 않았고 qna_log 에도 없다. 문장은 고치지 않았다. 03 §11-36 으로 등재했다."
+    },
+    {
+      "item": "03 §3.1 헤더 높이 「보기 40 / 편집 64」와 §3.2.4 R108-a 실측표(`[보기│편집]` 99px · `[라이브 프리뷰│소스]` 159px) 및 G30 수치",
+      "why": "2단 헤더와 토글 블록을 전제한 값이다. 토글이 없어져 전제가 사라졌으나 새 헤더 높이·축약 불가 블록 폭을 정한 근거가 없다. 실측 기록은 과거 기록이라 그대로 두었다."
+    },
+    {
+      "item": "03 §8.2 「뷰 전환 탭 — Radix Tabs」, §8.3 「모드 토글 · 하위 토글 — Radix ToggleGroup」, §8.4 「복사 대상 트리 피커는 react-arborist 재사용」",
+      "why": "리본 버튼 · 모드 아이콘 · 검색 입력이 있는 폴더 고르기 창의 컴포넌트 선택은 결정 기록과 qna_log 에 없다. 옛 부품 서술이 남아 있다. 03 §11-37 로 등재하고 §8 행을 미정으로 가리켰다."
+    },
+    {
+      "item": "03 §1.2 · §11-1 패널 폭(좌 280 · 우 300)과 리본 폭",
+      "why": "v2 시안 값(사이드바 248 + 리본 44 · 오른쪽 232)은 IR-SHELL-009 개정(다른 작성자 소관)에서 정한다. 설계서의 〔판단〕 수치는 SRS 개정이 선 뒤 맞춰야 한다."
+    },
+    {
+      "item": "설정 기어의 자리",
+      "why": "승인 시안은 기어를 리본 아래쪽에 두고, 03 §1.1·§1.2·§2.1·§2.5 와 04 §1.1 은 좌측 사이드바 하단 바에 둔다. 둘 다 좌하단이라 R24-a 와 어긋나지 않지만, 사이드바를 접었을 때의 40px 스트립 판단(§1.2)과 함께 다시 봐야 한다. 결정 기록에 명시가 없다."
+    },
+    {
+      "item": "비-md 파일의 ⋯ · 우클릭 메뉴에서 편집 조작(잘라내기 · 붙여넣기 · 링크 삽입)의 노출",
+      "why": "qna #5 는 「모드 항목은 나타나지 않고 나머지는 기존 규칙」만 정했는데, 기존 규칙(03 §3.3)에는 편집 조작 항목이 없었다. 03 §3.3 은 qna #5 문면만 옮겼다."
+    },
+    {
+      "item": "폴더에서 검색의 범위 표시(03 §2.3 범위 선택기 · §6.2 상태)",
+      "why": "폴더 범위 검색은 새 요구(NEW-4)로 서며 화면에서 범위를 어떻게 보이는지 정해지지 않았다. §2.3 에는 「범위를 그 폴더로 좁힌다」까지만 적었다."
+    },
+    {
+      "item": "URL 복사의 결과 안내",
+      "why": "시안의 상태 바 문구는 시연용이고(design-v2 「조작 결과는 알림으로」는 이동·복사 문맥), URL 복사 뒤의 알림 여부·문구는 정해지지 않았다."
+    },
+    {
+      "item": "04 §2.2 시안의 「기본값으로 되돌리기」 버튼",
+      "why": "승인 시안의 외관 패널에 있으나 결정 기록 본문·원장·qna_log 에 근거가 없어 그리지 않았다."
+    },
+    {
+      "item": "원장 R146 · R147 · R178 · G34 의 「R91-③(모드 토글)」 인용",
+      "why": "R91 개정으로 낱말이 「모드 아이콘」이 됐으나 뜻은 이어진다. 계획 행 밖이라 고치지 않았고 §5 변경 이력에 그 사실을 적었다. R124-a 스윕 후보다."
+    },
+    {
+      "item": "세 파일 밖의 인용처",
+      "why": "05.screen-design-permission.md 1139행이 「헤더 ⋯ 는 R24-b 로 2개로 한정되어 자리가 없다」를 현재형으로 적고 있고(R102-b 재검토와 어긋남), 1639행이 공유 메뉴를 「비활성 + 툴팁」으로, 640행이 설정 카테고리를 「외모」로 그린다. 02.feature-request-live-preview.md 87행이 「라이브 프리뷰 ↔ 소스 하위 토글」을 적는다. 이번 작업의 대상 파일이 아니라 고치지 않았다."
+    },
+    {
+      "item": "같은 워크스페이스 안 끌어서 복사의 수정키",
+      "why": "design-v2.md 「끌어서 놓기」는 `Ctrl` 또는 `Alt`(macOS 는 `Option`)로, qna_log #9 는 「Ctrl(macOS 는 Option)」로 적는다. 03 §2.2.6·§2.2.8 은 결정 기록(design-v2.md)을 따랐다. 두 원천 중 어느 쪽이 이기는지 확인이 필요하다."
+    },
+    {
+      "item": "03 §1.2 · §11-1 접힌 좌측 사이드바를 펼치는 수단",
+      "why": "qna #37 이 사이드바 하단 기어와 접힘 스트립의 옛 배치를 걷어내라고 정했으나 스트립에 함께 있던 펼치기 버튼의 대체 수단은 결정 기록 · 승인 시안에 없다(시안에는 사이드바 접기 자체가 없다). §11-1 에 미정으로 적었다."
+    },
+    {
+      "item": "04 §2.2 메뉴 밝기 −/+ 가 불가 단계를 건너뛰는지",
+      "why": "허용 단계가 이어지지 않을 때의 동작을 결정 기록 · qna 가 정하지 않았다. 04 §2.2 와 IR-SHELL-015 Implementation Notes ⑦ 에 미정으로 적었다. 04 §9 미결 표에는 새 Q 번호를 만들지 않았다."
+    },
+    {
+      "item": "03 §9.1 Ctrl+N · Ctrl+W · Ctrl+Tab 의 대체 키",
+      "why": "Chromium 계열 일반 탭에서 브라우저 예약 키라 가로채지 못할 수 있다는 주만 붙였다(feasibility-3-1). 가로챌 수 없을 때 쓸 대체 키는 결정 기록 · qna 에 없어 정하지 않았다."
+    },
+    {
+      "item": "관찰(finding 범위 밖): 03 §9.3 「좌·우 사이드바 접기」의 사유 칸",
+      "why": "「마우스 조작(리사이즈 핸들 · 접기 버튼)으로 충분」이라 적는데, 좌측 사이드바는 qna #41 로 따로 된 접기 버튼 없이 리본의 켜진 보기 버튼으로 접고 편다(FR-SHELL-017 AC-8). 이번 finding 이 지목하지 않은 문면이라 고치지 않았다."
+    },
+    {
+      "item": "관찰: 03 §3.1 의 탭 스트립 36px · 문서 헤더 40px 와 승인 시안의 .tabbar · .viewhead 38px",
+      "why": "결정 기록 결정 7 이 시안 값으로 고친다고 열거한 치수(아이콘 · 사이드바 도구 · 입력 글자 · 필드 간격 · 트리 행)에 두 높이가 없어 시안 값으로 바꾸지 않았다. 헤더는 〔판단〕으로 40 을 두었다고 적었다(change-consistency-4-6). 시안 값으로 맞출지는 조정자 판단이다."
+    },
+    {
+      "item": "03 §3.2.4 R108-a 실측표와 G30 수치",
+      "why": "옛 토글 기준의 실측이다. 원장 R173 이 Phase 2 에서 다시 재라고 적었으므로 이번 회차는 §3.1 의 헤더 높이만 고쳤다(앞 회차 unresolved 의 나머지)."
+    },
+    "04 머리표 `근거 문서` 의 `R1~R145` 범위 표기 — v2 이전부터 본문(R152 · R157 인용)과 맞지 않는다. 6차 독립 검증 internal-6-4 가 조정자 판단으로 남겨 6회차는 바꾸지 않았다."
+  ],
+  "validate_spec": {
+    "errors": 0,
+    "warnings": 5,
+    "byCode": {
+      "SRS-W072": 1,
+      "SRS-W015": 4
+    },
+    "phase": "improvement_iter6"
+  },
+  "verification": {
+    "by": "independent read-only subagent",
+    "result": "CRITICAL 0 · HIGH 0 · MEDIUM 4 · LOW 약 12. MEDIUM 넷(복사본 생성 진입의 근거 없는 서술 · R102-a 를 새 근거로 쓴 것 · 스냅샷 조항 미표기 · §8 옛 부품)과 해당 LOW(04 갱신 행 문구 · qna 인용 누락 · §3.2.3 설정 예외 · §2.2.6 드롭 결과 · §2.2.8 목적지 트리 · §2.3 범위 표시)를 고쳤다. 남긴 LOW — §1.2 리본 행 부재·§2.2.4 제목의 새 디렉토리·§11-35 말미 문구·원장 R24-a 비고의 옛 04 참조(역사 기록)·05 의 옛 서술(대상 밖)."
+  },
+  "unresolved_resolved_in_iter1": [
+    "03 §3.4 편집 모드 진입 스냅샷 — qna #20 · R75-a 개정으로 닫고 §11-36 종결",
+    "03 §1.2 · §11-1 패널 폭 — qna #19 로 기본 폭을 시안 값으로. 우측 리사이즈 하한 재결정은 남음",
+    "폴더에서 검색의 범위 표시 — qna #15 로 03 §2.3 에 적음",
+    "같은 워크스페이스 안 끌어서 복사의 수정키 — qna_log #9 를 결정 기록(Ctrl 또는 Alt)에 맞춤"
+  ],
+  "unresolved_resolved_in_qna_24_26": [
+    "04 §2.2 의 미정 두 가지(0 자체 불가 시 방향 · 다섯 단계 모두 불가인 색) — qna #24",
+    "03 §1.2 · §11-1 우측 하한 모순 — qna #25",
+    "03 §2.3 폴더 범위 해제 뒤의 범위 — qna #26 으로 확인"
+  ],
+  "unresolved_resolved_in_qna_27_28": [
+    "04 §2.2 의 미정(테마 전환 뒤 다섯 단계 모두 불가가 된 이미 고른 색) — qna #27",
+    "03 §2.3 의 Backspace 해제 조건 — qna #28"
+  ],
+  "unresolved_resolved_in_iter2": [
+    "설정 기어의 자리 — qna #37 로 리본 맨 아래(03 §1.1 · §1.2 · §2.1 · §2.5 · §5, 04 §1.1). 접힘 40px 스트립 판단도 걷었다",
+    "비-md 파일의 ⋯ · 우클릭 메뉴에서 편집 조작의 노출 — qna #29 로 나타나지 않는다(03 §3.3 · §3.7 · §10-17, 정본 FR-EDITOR-006 AC-4 · AC-5)",
+    "원장 R146 · R147 · R178 · G34 의 「R91-③(모드 토글)」 인용 중 SRS 쪽(15 §2, FR-ATTACH-007 · 008 · 003) — qna #38 로 모드 아이콘으로 고쳤다. 원장 행 자체는 여전히 손대지 않았다(원장 이력 행 판단)"
+  ],
+  "line_endings_note": "iter2 확인(2026-09-23, 바이트 단위): 03 · 07 · 14 · 15 · 16 은 LF, 04 · 08 · 13 · 00 은 CRLF 이며 편집 뒤에도 각 파일의 줄바꿈이 그대로다. Git Bash 의 grep -c $'\\r$' 는 LF 파일에서도 모든 줄을 세어 오판한다 — 줄바꿈은 python 의 바이트 수로 잰다. iter3 확인(2026-09-23, 바이트 단위): 00 은 CRLF(891 → 892 줄), 03 은 LF(2052 → 2059 줄), 07 은 LF, 08 은 CRLF 로 편집 뒤에도 그대로다. qna #47 · #48 반영 뒤(바이트 단위): 03 은 LF(2059 → 2062), 04 는 CRLF(1602 → 1603), 08 은 CRLF(3002 → 3006) 그대로다. iter4 확인(바이트 단위): 03 은 LF(2062 → 2072), 07 은 LF(1314 → 1316), 15 는 LF(1226 → 1227), 08 은 CRLF(3006 → 3022) 로 편집 뒤에도 그대로다. CRLF 파일(08)의 산문 삽입은 python 으로 줄 끝 CRLF 를 명시해 넣었다. qna #49~#53 반영 뒤(바이트 단위): 03 은 LF(2072 → 2073), 08 은 CRLF(3022 → 3034) 그대로다. qna #54 반영 뒤(바이트 단위): 04 는 CRLF(1603 → 1604), 08 은 CRLF(3034 → 3042) 그대로다. IR-SHELL-006 AC-17 문면 정정(qna #54 후속)은 산문 편집 없이 MCP 로만 했다: 08 은 CRLF(3042 → 3044) 그대로다. iter5 확인(2026-09-23, 바이트 단위): 02 는 LF(275 → 277 줄), 03 은 LF(2073 → 2074), 04 는 CRLF(1604 → 1605), 05 는 CRLF(1837 → 1838), 07 은 LF(1316 → 1318), 08 은 CRLF(3044 → 3061)로 편집 뒤에도 각 파일의 줄바꿈이 그대로다. iter6 확인(2026-09-23, 바이트 단위): 03 은 LF(2074 → 2075 줄), 04 는 CRLF(1605 → 1606), 05 는 CRLF(1838 → 1839), 08 은 CRLF(3061 → 3066)로 편집 뒤에도 각 파일의 줄바꿈이 그대로다. 03 · 04 · 05 의 산문 편집은 교체 쌍 JSON(UTF-8)을 python 으로 바이트 단위 치환해 넣었고 교체 전 각 앵커가 파일에 한 번만 있는지 확인했다.",
+  "unresolved_resolved_in_qna_39_41": [
+    "03 §1.2 · §11-1 접힌 좌측 사이드바를 펼치는 수단 — qna #41 로 리본의 켜진 보기 버튼을 다시 누른다(03 §1.2 · §2.1 · §11-1, 정본 FR-SHELL-017 AC-8)",
+    "04 §2.2 메뉴 밝기 −/+ 가 불가 단계를 건너뛰는지 — qna #40 으로 건너뛰고 그 방향에 허용 단계가 없으면 버튼을 끈다(정본 IR-SHELL-015 AC-8)"
+  ],
+  "unresolved_resolved_in_iter3": [
+    "원장 R24-b · R91 ③ 이 비-md 메뉴의 편집 조작을 정하지 않던 것 — qna #29 를 반영(〔정정〕 · 보강)",
+    "원장 R152 의 「항상 보기」에 새 노트 예외가 없던 것 — qna #36 · #39 를 반영(단서 · 비고 ⑤)",
+    "03 §7.2 1 · 2 행과 §2.2.4 의 모순 — 진입을 컨텍스트 메뉴로 고쳤다",
+    "03 §1.1 · §1.2 에 상태 바 영역이 없던 것 — qna #43",
+    "03 의 접힌 좌측 사이드바에서 리본 밖 조작 — qna #44"
+  ],
+  "unresolved_resolved_in_qna_47_48": [
+    "03 §9.3 「접기 버튼」 문구와 qna #41 의 어긋남 — 좌측 · 우측을 나눠 적었다",
+    "03 §1.2 접힘 그림에 상태 바가 없던 것 — 그려 넣었다",
+    "04 §2.2 의 −/+ 출발점 — qna #47"
+  ],
+  "unresolved_kept_by_coordinator_after_qna_47_48": [
+    "03 §9.1 Ctrl+N · Ctrl+W · Ctrl+Tab 의 브라우저 선점과 대체 키 — v2 이전부터 있던 문제라 조정자 지시로 값을 만들지 않고 미결로 둔다(주만 붙어 있다)"
+  ],
+  "unresolved_resolved_in_iter4": [
+    "03 §3.1 헤더 높이 「보기 40 / 편집 64」(앞 회차 unresolved 의 헤더 높이 부분) — 모드와 무관한 40 으로, 〔판단〕 표기와 시안 값 38 을 함께 적음. §3.2.4 실측표 · G30 은 남김"
+  ],
+  "unresolved_resolved_in_qna_49_53": [
+    "관찰: 03 §3.1 탭 스트립 36px · 문서 헤더 40px 와 승인 시안 38px — qna #52 로 둘 다 38"
+  ],
+  "unresolved_resolved_in_iter5": [
+    "세 파일 밖의 인용처(unresolved[10]) — 05 의 1139행(헤더 ⋯ 공간 근거) · 1639행(비활성 + 툴팁 → §6 상태 목록) · 640행(외모 → 외관)과 §2.1.1 의 같은 서술은 qna #57 로, 02.feature-request 87행(하위 토글)은 5차 독립 검증 change-consistency-5-4 로 고쳤다",
+    "관찰(5차 독립 검증 change-consistency-5-3): 03 §2.2.4 「두 버튼은 비활성」 · §11-5 「새 노트·새 디렉토리 버튼」 — 새 노트 버튼 하나로",
+    "관찰(5차 독립 검증 internal-5-1): 03 §1.2 · §2.1 · §11-1 의 「리본 밖에서 보기를 바꾸는 조작 넷」 — 폴더에서 검색을 더하고 개수 표기를 뺐다(FR-SHELL-017 AC-10 과 같게)"
+  ],
+  "unresolved_resolved_in_iter6": [
+    "eval_iter6 internal-6-1 — 05 §2.1.1 · §8-7 pass-through 공유 항목(qna #59)",
+    "eval_iter6 ac-6-1 — 04 §2.2 설정 항목 행 배치(qna #60, 정본 IR-SHELL-006 AC-14)",
+    "eval_iter6 internal-6-2 — 03 §3.3 · §3.9.1 · §1.2 · §2.1 · §11-1(qna #58, 정본 FR-SHELL-017 AC-11)",
+    "eval_iter6 change-consistency-6-1 — 03 §12 R147 · §2.2.4 · §2.2.5 · §3.3 그림 · §11-19 · 집계",
+    "eval_iter6 change-consistency-6-2 — 05 §0.1 · §2.1.1 진입 표(본문 우클릭 메뉴)",
+    "eval_iter6 internal-6-3 — 04 §2.2 캐시 문장(IR-SHELL-007 AC-2 · AC-3 · AC-6)",
+    "eval_iter6 internal-6-4 — 04 머리표 근거 문서 · 문서 규칙 2"
+  ]
+}

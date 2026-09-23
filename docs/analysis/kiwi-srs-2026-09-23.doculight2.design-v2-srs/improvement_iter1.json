@@ -1,0 +1,308 @@
+{
+  "iter": 1,
+  "input": "eval_iter1.json (CRITICAL 0 · HIGH 3 · MEDIUM 14 · LOW 9), qna_log.json resolutions #15~#23",
+  "workspace": {
+    "workspaceRoot": "C:\\Work\\git\\DocuLight2.0",
+    "rootSource": "server-cwd-discovery"
+  },
+  "fixed": [
+    {
+      "finding_id": "change-consistency-1-1",
+      "severity": "HIGH",
+      "how": "MCP: FR-EDITOR-007 update_status verified -> in_progress, replace_acceptance_criteria(AC-11 만 「좌측 검색 탭」 -> 검색 보기, 표면은 FR-SHELL-010 AC-1 · AC-2 참조, 체크 해제), add_trace_link FR-SHELL-010 · 원장 R3, append_section_note(R3 비고의 「검색 탭 = 검색 보기」 재해석과 VE-8 재측정 필요). 증거 행 · 나머지 AC 는 그대로",
+      "mcp_calls": 5
+    },
+    {
+      "finding_id": "change-consistency-1-2",
+      "severity": "HIGH",
+      "how": "MCP: FR-SHELL-016 update_status verified -> in_progress, replace_acceptance_criteria(AC-1 `새 노트` · AC-2 `새 폴더` 라벨, AC-3 에 입력 줄 벗어남 = 취소 — qna #23, 셋 체크 해제), Rationale 에 라벨 개정 노트, trace FR-SHELL-003 · FR-SHELL-015 · design-v2.md (이 요구에 trace 가 하나도 없었다)",
+      "mcp_calls": 6
+    },
+    {
+      "finding_id": "change-consistency-1-3",
+      "severity": "HIGH",
+      "how": "MCP: IR-EDITOR-002 replace_acceptance_criteria(AC-1 에 「소스 편집의 행간은 1.8」 — qna #21, 승인 시안 .source line-height), Implementation Notes ④ 정정 노트, update_status 변경 기록",
+      "mcp_calls": 3
+    },
+    {
+      "finding_id": "conflict-1-1",
+      "severity": "MEDIUM",
+      "how": "MCP: verified FR-SHELL-012 에 add_trace_link depends_on FR-SHELL-017(옛 FR-SHELL-001 행은 verified 라 지울 도구가 없어 남긴다는 사실을 notes 에 적음). 같은 규칙 3 사례인 verified FR-EDITOR-005 에도 refines FR-EDITOR-011 행을 더함",
+      "mcp_calls": 2
+    },
+    {
+      "finding_id": "change-consistency-1-4",
+      "severity": "MEDIUM",
+      "how": "산문 Edit: 07 §1 · §2(In Scope 에 FR-EDITOR-011/012, 옛 002/003 은 폐기 · 대체 사실만, 토글 → 모드 아이콘 · 눈 아이콘), 08 §1 · §2(리본 · FR-SHELL-017/018/019 · IR-SHELL-014/015 추가, FR-SHELL-001 은 폐기 · 대체 표기, 「좌측 검색 탭」 → 검색 보기). validate_spec 오류 0",
+      "mcp_calls": 0
+    },
+    {
+      "finding_id": "change-consistency-1-5",
+      "severity": "MEDIUM",
+      "how": "MCP: CON-SHELL-002 update_status verified -> in_progress, edit_requirement_fields(제목 · Requirement 「좌측 검색 보기」), replace_acceptance_criteria(AC-1 · AC-2 문면, 체크 해제, AC-3 유지), edit_requirement_table_rows(trace 행 1~3 notes, 행 4 FR-SHELL-001 -> FR-SHELL-017), Implementation Notes 재해석 노트. verified SEC-ARCH-002 · FR-ARCH-001 의 trace notes(02 154 · 288행)는 강등 없이 Implementation Notes 에 재해석을 적음. 산문 Edit: 02 §2 33행",
+      "mcp_calls": 7
+    },
+    {
+      "finding_id": "change-consistency-1-6",
+      "severity": "MEDIUM",
+      "how": "MCP: verified FR-SHELL-008 에 append_section_note(rationale — 「헤더 메뉴에 자리가 없다」는 R24-b 개정으로 성립하지 않고, 결론은 결정 기록 파일 탐색기 절 · 결정 2 가 떠받친다), add_trace_link design-v2.md",
+      "mcp_calls": 2
+    },
+    {
+      "finding_id": "scope-1-1",
+      "severity": "MEDIUM",
+      "how": "MCP: FR-SHELL-003 replace_acceptance_criteria — AC-8 에서 권한 값(원본 폴더 `편집`)을 지우고 「복사 규칙 SEC-ACL-014 AC-3 을 목적지 = 원본의 폴더로 적용한 결과와 같다」로 파생 관계만 남김, add_trace_link depends_on SEC-ACL-014, update_status 변경 기록 (dryRun 1 포함)",
+      "mcp_calls": 4
+    },
+    {
+      "finding_id": "internal-1-1",
+      "severity": "MEDIUM",
+      "how": "MCP(scope-1-1 과 같은 replace_acceptance_criteria 호출): AC-2 를 파일 노드의 목록으로 적고, 디렉토리 · pass-through 노드는 `새 버전 올리기…` 묶음과 그 앞 구분선이 함께 빠진다고 밝힘 — 승인 시안 design-v2.html 의 data-file-only 구분선 그대로",
+      "mcp_calls": 0
+    },
+    {
+      "finding_id": "internal-1-2",
+      "severity": "MEDIUM",
+      "how": "MCP: FR-EDITOR-011 replace_acceptance_criteria(AC-15 — 보기 모드에서 잘라내기 · 붙여넣기 · 링크 삽입은 꺼지고 「권한 없음」은 붙지 않음, qna #18 · 시안 · 03 §3.3), Rationale 보충 정정 노트, update_status 변경 기록",
+      "mcp_calls": 3
+    },
+    {
+      "finding_id": "change-consistency-1-7",
+      "severity": "MEDIUM",
+      "how": "MCP(internal-1-2 와 같은 호출): FR-EDITOR-011 AC-16 신설 — 두 메뉴의 `복사` 는 모드와 편집 권한에 무관하게 활성(원장 R24-b 열거 · 시안 본문 메뉴), 버전 기록 보기 · 공유… 의 활성 여부는 모드에 따라 바뀌지 않음",
+      "mcp_calls": 0
+    },
+    {
+      "finding_id": "ac-1-1",
+      "severity": "MEDIUM",
+      "how": "MCP: FR-SHELL-018 edit_requirement_fields(Requirement), replace_acceptance_criteria(AC-3 하위 폴더 전부 포함, AC-5 검색 창의 범위 표시, AC-6 닫기 버튼 · Backspace 로 지우면 전역 검색 복귀 — qna #15), Implementation Notes ④ · ⑥ 정정, update_status 변경 기록. 산문 Edit: 03 §2.3",
+      "mcp_calls": 4
+    },
+    {
+      "finding_id": "ac-1-2",
+      "severity": "MEDIUM",
+      "how": "MCP: IR-SHELL-015 replace_acceptance_criteria(AC-6 — 저장 단계가 허용되지 않으면 0 쪽으로 가장 가까운 허용 단계 적용, 저장 값은 유지 — qna #16), Implementation Notes ④ 정정(남은 두 경우 명시), update_status 변경 기록. 산문 Edit: 04 §2.2. 부분 해결 — unresolved 참조",
+      "mcp_calls": 3,
+      "followup": "qna #24 로 남은 두 경우가 닫혔다 — IR-SHELL-015 AC-7 · IR-SHELL-014 AC-12(followup_qna_24_26 참조). 남은 것은 테마 전환 뒤 이미 고른 색이 다섯 단계 모두 불가가 되는 경우 하나(unresolved 첫 항목) → qna #27 로 그 잔여도 닫혔다(IR-SHELL-014 AC-13, followup_qna_27_28 참조). ac-1-2 는 남은 것 없이 해결됐다"
+    },
+    {
+      "finding_id": "ac-1-3",
+      "severity": "MEDIUM",
+      "how": "MCP: IR-SHELL-004 replace_acceptance_criteria(AC-8 — 옛 값 view → 항상 보기, edit → 권한에 따라, 읽을 때 옮기고 일괄 수정 없음 — qna #17), Implementation Notes ⑥ 정정, update_status 변경 기록. 산문 Edit: 04 §2.1",
+      "mcp_calls": 3
+    },
+    {
+      "finding_id": "change-consistency-1-8",
+      "severity": "MEDIUM",
+      "how": "MCP: FR-SHELL-015 replace_acceptance_criteria(AC-7 — 이름 변경 입력 줄 Enter 확정 · Esc 취소 · 벗어나면 확정, qna #23), add_trace_link FR-SHELL-016, update_status 변경 기록. 새로 만들 때의 벗어남(취소)은 FR-SHELL-016 AC-3 에 넣음(HIGH-2 호출). 산문 Edit: 03 §2.2.4 에 SRS 정본 표기",
+      "mcp_calls": 3
+    },
+    {
+      "finding_id": "change-consistency-1-9",
+      "severity": "MEDIUM",
+      "how": "산문 Edit: 03 §1.1 다이어그램 · 리본 문장, §1.2 표(리본 44 행 추가, 좌 248 · 우 232), 〔판단〕 문단, §11-1 — qna #19. 옛 값은 비고로 남기고 §13 26차에 기록",
+      "mcp_calls": 0
+    },
+    {
+      "finding_id": "feasibility-1-1",
+      "severity": "MEDIUM",
+      "how": "MCP: FR-STORAGE-003 update_status verified -> in_progress, edit_requirement_fields(Requirement: 스냅샷은 그 편집 세션의 첫 저장 때 1회, 여는 것만으로는 만들지 않음 — qna #20), replace_acceptance_criteria(AC-6 신설 · 오타 정정 재호출 1), trace FR-EDITOR-011 · qna_log.json, Implementation Notes. FR-EDITOR-011 에 trace FR-STORAGE-003 과 ⑨ 정정 노트. 산문 Edit: 원장 R75-a 개정(초판 문면 비고 보존) · 머리표 · §5 변경 이력, 03 §3.4 · §7.1 · §11-36 종결 · §11 집계",
+      "mcp_calls": 9
+    },
+    {
+      "finding_id": "classification-1-1",
+      "severity": "LOW",
+      "how": "MCP: discarded FR-EDITOR-003 에 append_section_note — 분할의 내용 근거(전환 메커니즘은 FR-EDITOR-011, 원문 편집 · 본문 불변은 재는 대상이 달라 FR-EDITOR-012). Change Notes 자체는 도구가 고칠 수 없음",
+      "mcp_calls": 1
+    },
+    {
+      "finding_id": "classification-1-2",
+      "severity": "LOW",
+      "how": "classification.json 의 IR-PRINCIPAL-001 을 no-change -> edit-in-place 로 재분류(action_planned · change_executed · reclassified 필드로 이력 보존)",
+      "mcp_calls": 0
+    },
+    {
+      "finding_id": "change-consistency-1-10",
+      "severity": "LOW",
+      "how": "MCP: IR-EDITOR-002 · IR-SHELL-008 trace 행 다섯씩 notes 「adds newspaper presentation」 -> design v2, IR-SHELL-008 Tags newspaper -> design-v2, IR-SHELL-002 R152 trace 행과 Implementation Notes 에 2026-09-23 개정(외관 · 항목 다섯) 덧붙임, FR-SHELL-013 의 FR-SHELL-010 trace 행 「이 탭을 활성」 -> 검색 보기, FR-SHELL-010 의 FR-SHELL-013 trace 행 「검색 탭」 -> 좌측 검색 보기, 각 update_status 변경 기록 (dryRun 5 · 열 이름 오류로 거부된 dryRun 1 포함)",
+      "mcp_calls": 16
+    },
+    {
+      "finding_id": "internal-1-3",
+      "severity": "LOW",
+      "how": "MCP: FR-SHELL-019 append_section_note(implementation_notes, replace) — 두 ⑥ 을 하나로 합치고 합친 사실을 날짜 항으로 남김 (dryRun 1 포함)",
+      "mcp_calls": 2
+    },
+    {
+      "finding_id": "change-consistency-1-11",
+      "severity": "LOW",
+      "how": "qna_log.json resolution #9 문구를 결정 기록(Ctrl 또는 Alt, macOS 는 Option)에 맞추고 corrected 필드에 근거와 원래 문구를 남김",
+      "mcp_calls": 0
+    },
+    {
+      "finding_id": "ac-1-4",
+      "severity": "LOW",
+      "how": "MCP: FR-SHELL-019 replace_acceptance_criteria(AC-13 — 끌어서 정한 이동 · 복사도 메뉴와 같은 프리뷰 FR-ACL-006 · 확인 FR-CONFIRM-016/017 을 거치고 확인 없이 요청이 나가지 않음), add_trace_link FR-ACL-006, update_status 변경 기록",
+      "mcp_calls": 3
+    },
+    {
+      "finding_id": "scope-1-2",
+      "severity": "LOW",
+      "how": "MCP: IR-SHELL-006 replace_acceptance_criteria — AC-7 끝 문장을 FR-EDITOR-004 AC-3 · AC-4 참조로 바꿔 규칙을 한 곳에만 둠. 같은 호출로 AC-15 에 파괴적 동작의 빨강(밝게 #B3261E, 어둡게 #E5776E — qna #22) 추가. 이 호출이 AC-16 · AC-17 의 「옅」을 잘못된 글자로 바꿔 바로 다음 호출로 되돌렸다(AC 전 문면 HEAD 대조와 새 글자 검사로 잔여 없음 확인). Implementation Notes ④ 정정, update_status 변경 기록",
+      "mcp_calls": 4
+    },
+    {
+      "finding_id": "change-consistency-1-12",
+      "severity": "LOW",
+      "how": "MCP: IR-SHELL-008 Implementation Notes(빈 자리표를 교체) — v2 치수 화면에서 AC-2 의 200% 도달성을 다시 재야 한다는 qna #13 의무와 측정 대상, update_status 변경 기록",
+      "mcp_calls": 2
+    }
+  ],
+  "not_fixed": [
+    {
+      "finding_id": "mcp-rules-1-1",
+      "reason": "discarded FR-EDITOR-002 의 Change Notes 행(「FR-EDITOR-011 AC-15」 오기)은 MCP 로 고칠 경로가 없다 — update_status 는 discarded 요구에 MUTATION_DENIED, Change Notes 표를 고치는 도구는 없고 직접 편집은 황금률 위반이다. 이전 회차가 같은 블록 Implementation Notes 에 정정(정답 AC-13)을 이미 남겼으므로 추가 조치 없음"
+    }
+  ],
+  "decisions_applied": {
+    "qna_15": "FR-SHELL-018 AC-3 · AC-5 · AC-6, 03 §2.3",
+    "qna_16": "IR-SHELL-015 AC-6, 04 §2.2",
+    "qna_17": "IR-SHELL-004 AC-8, 04 §2.1",
+    "qna_18": "FR-EDITOR-011 AC-15 · AC-16",
+    "qna_19": "03 §1.1 · §1.2 · §11-1 (IR-SHELL-009 AC-1 은 이전 회차에 이미 반영)",
+    "qna_20": "FR-STORAGE-003 Requirement · AC-6, FR-EDITOR-011 trace · ⑨ 정정, 원장 R75-a 개정, 03 §3.4 · §7.1 · §11-36",
+    "qna_21": "IR-EDITOR-002 AC-1",
+    "qna_22": "IR-SHELL-006 AC-15",
+    "qna_23": "FR-SHELL-015 AC-7, FR-SHELL-016 AC-3, 03 §2.2.4 정본 표기"
+  },
+  "status_changes": [
+    {
+      "id": "FR-EDITOR-007",
+      "from": "verified",
+      "to": "in_progress"
+    },
+    {
+      "id": "FR-SHELL-016",
+      "from": "verified",
+      "to": "in_progress"
+    },
+    {
+      "id": "CON-SHELL-002",
+      "from": "verified",
+      "to": "in_progress"
+    },
+    {
+      "id": "FR-STORAGE-003",
+      "from": "verified",
+      "to": "in_progress"
+    }
+  ],
+  "unresolved": [
+    "validate_spec 경고 SRS-W015 x4: FR-EDITOR-007 을 HIGH 수정 때문에 verified -> in_progress 로 내리자 91.completed-work-log.md 9-12행(완료 작업으로 FR-EDITOR-007 을 적은 행)이 경고를 낸다. 그 로그는 append-only 요약이라 고치지 않았다. FR-EDITOR-007 AC-11 을 새 화면에서 다시 재어 verified 로 되돌리면 사라진다.",
+    "verified 요구에 남은 옛 문면(행 수정은 강등이 필요해 하지 않음): FR-SHELL-012 의 depends_on FR-SHELL-001 행, FR-EDITOR-005 의 refines FR-EDITOR-002 행, FR-SHELL-008 의 FR-SHELL-002 trace 행 「헤더 메뉴에 자리가 없다」, SEC-ARCH-002 · FR-ARCH-001 의 「좌측 검색 탭」 trace notes — 각각 대체 trace 행이나 Implementation Notes / Rationale 노트로 현재 사실을 적었다.",
+    "03 §3.4 의 「머지 뷰 표시 중 모드 전환 비활성」(〔판단〕)은 v2 형태가 결정 기록 · qna 에 없어 FR-EDITOR-011 에 넣지 않았다(FR-EDITOR-011 ⑨ 정정 노트에 명시).",
+    "관찰(이번 finding 범위 밖): 09.auth · 13.workspace · 14.storage · 16.principal · 08(IR-SHELL-010 — Tags newspaper, upload, async-feedback, issue-58) 의 요구가 아직 Tags `newspaper` 를, 09.auth 1981-1983행 trace notes 가 「adds newspaper presentation」 을 갖는다. 디자인 v2 가 신문지 테마를 대체했으므로 다음 회차에 같은 방식으로 훑을 후보다.",
+    "관찰(기존 서술, 손대지 않음): 07 §2 In Scope 21행이 FR-EDITOR-007 을 「아홉 가지」로 적는다 — 요구는 2026-08-21 에 열 가지가 됐다. 이번 finding 과 무관한 기존 낡음이라 두었다."
+  ],
+  "verification_notes": [
+    "replace_acceptance_criteria 로 다시 보낸 AC 목록의 무결성: 이번 회차 이전 상태와 비교해 의도한 AC 만 바뀌었는지 HEAD 대조 스크립트와 「HEAD 문서에 없던 새 글자」 검사로 확인했다. IR-SHELL-006 의 유니코드 이스케이프 실수 한 건(옅 → 다른 글자)은 즉시 되돌렸고 잔여 0 건이다.",
+    "CRLF 파일(08 · 00 · 04)의 줄바꿈을 보존했다(편집 후 CRLF 수 = 줄 수). 07 · 02 · 03 은 LF 그대로다."
+  ],
+  "validate_spec": {
+    "errors": 0,
+    "warnings": 5,
+    "byCode": {
+      "SRS-W072": 1,
+      "SRS-W015": 4
+    },
+    "phase": "qna_27_28"
+  },
+  "counts": {
+    "fixed_high": 3,
+    "fixed_medium": 14,
+    "fixed_medium_partial": [
+      "ac-1-2"
+    ],
+    "fixed_low": 8,
+    "not_fixed_low": 1,
+    "mcp_calls_total": 87,
+    "mcp_mutations": 74,
+    "mcp_dry_runs": 8,
+    "mcp_reads": 5,
+    "prose_edits": 12,
+    "followup_qna_24_26": {
+      "resolutions": 3,
+      "mcp_mutations": 15,
+      "mcp_reads": 1,
+      "prose_edits": 9
+    },
+    "fixed_medium_partial_after_followup": [],
+    "followup_qna_27_28": {
+      "resolutions": 2,
+      "mcp_mutations": 11,
+      "mcp_reads": 1,
+      "prose_edits": 4
+    }
+  },
+  "followup_qna_24_26": [
+    {
+      "qna": 24,
+      "decision": "메뉴 밝기 0 단계가 허용되지 않으면 0 에 가장 가까운 허용 단계, 거리가 같으면 + 쪽. 다섯 단계가 모두 허용되지 않는 색은 직접 고르기에서 고를 수 없고 대비를 맞출 수 없다고 안내",
+      "how": "MCP: IR-SHELL-015 AC-7 추가 · Implementation Notes ④ 재정정 · trace informed_by qna_log · update_status(planned, 같은 상태 Change Note). IR-SHELL-014 AC-12 추가(다섯 단계 모두 불가인 색의 규칙은 색 파생 요구가 소유하고 IR-SHELL-015 는 인용) · Rationale · Implementation Notes ⑧ · trace related_to IR-SHELL-015 · update_status. 산문: 04 §2.2 미정 문장을 규칙으로 교체 + 불릿 신설 + 갱신 (15) 행",
+      "mcp_calls": 9,
+      "prose_edits": 3
+    },
+    {
+      "qna": 25,
+      "decision": "오른쪽 패널의 폭 조절 하한 = 기본 폭 232px",
+      "how": "MCP: IR-SHELL-009 AC-8 추가(100% 데스크탑 기준 — 200% 확대 폭은 AC-2 가 소유해 충돌하지 않게 한정) · Implementation Notes ③ · update_status(in_progress, 같은 상태 Change Note). 산문: 03 §1.1 배치도 · §1.2 행 · §1.2 〔판단〕 문단 · §11-1 (옛 〔판단〕 하한 240 은 비고로 남김)",
+      "mcp_calls": 3,
+      "prose_edits": 4
+    },
+    {
+      "qna": 26,
+      "decision": "폴더 범위를 지운 검색은 범위 없는 전역 검색으로 돌아간다 — FR-SHELL-018 AC-6 해석 확정",
+      "how": "MCP: FR-SHELL-018 AC-6 문구에 「범위 없는 전역 검색(FR-SHELL-013)」 명시 · Implementation Notes ⑦ · update_status(planned, 같은 상태 Change Note). 산문: 03 §2.3 문장 · 근거에 #26",
+      "mcp_calls": 3,
+      "prose_edits": 1
+    }
+  ],
+  "followup_qna_24_26_common": {
+    "prose": "03 머리표 26차 → 27차 · §13 27차 행 신설",
+    "validate_calls": 1,
+    "verification": "08 을 qna 24~26 작업 직전 사본과 AC 단위로 대조 — 바뀐 것은 IR-SHELL-015 AC-7(신설) · IR-SHELL-014 AC-12(신설) · IR-SHELL-009 AC-8(신설) · FR-SHELL-018 AC-6(문구) 넷뿐이고, 사본에 없던 새 글자는 ⑧ 하나(의도한 노트 번호). 04 는 편집 후에도 CRLF 수 = 줄 수. 03 은 LF 그대로",
+    "status_changes": "없음 — 네 요구 모두 같은 상태로 update_status 를 불러 Change Note 만 남겼다(강등 · 승격 없음)"
+  },
+  "unresolved_resolved_by_qna_24_26": [
+    "IR-SHELL-015 (ac-1-2 잔여): qna #16 의 「0 쪽으로 가장 가까운 단계」는 적용할 단계가 0 인데 0 자체가 허용되지 않을 때(−1 과 +1 중 어느 쪽)와 직접 고른 색에서 다섯 단계가 모두 허용되지 않을 때를 정하지 않는다. IR-SHELL-015 Implementation Notes · 04 §2.2 에 미정으로 적었다.",
+    "FR-SHELL-018 AC-6 해석: qna #15 의 「워크스페이스 전체로 돌아간다」는 워크스페이스 하나만 그린 시안의 표현이라 여러 워크스페이스를 두는 제품에서는 「범위를 좁히기 전의 전역 검색(FR-SHELL-013)」, 03 에서는 범위 선택기의 `전체 워크스페이스` 로 읽었다. 그 폴더의 워크스페이스로 좁히는 뜻이었다면 AC-6 을 고쳐야 한다. Backspace 가 질의 글자 지우기와 부딪히지 않는 조건도 qna 가 정하지 않았다(AC-6 은 「Backspace 로 그 표시를 지우면」으로만 적음).",
+    "03 §1.2 · §11-1: qna #19 로 우측 기본 폭이 232px 가 되어 기존 〔판단〕 리사이즈 하한 240px 보다 작다. 결정 기록 · 시안에 하한 값이 없어 새 값을 만들지 않고 열어 두었다."
+  ],
+  "input_followup": "qna_log.json resolutions #24~#26 · #27~#28 (조정자 후속 지시)",
+  "followup_qna_27_28": [
+    {
+      "qna": 27,
+      "decision": "테마 전환 뒤 직접 고른 색이 어느 단계로도 대비를 맞출 수 없게 되면 그 테마에서는 기본 프리셋(한지)으로 그리고 안내한다. 저장된 색은 바꾸지 않는다",
+      "how": "MCP: IR-SHELL-014 AC-13 추가(규칙 소유) · Rationale · Implementation Notes ⑨(⑧ 의 잔여 종결, 재판정 지점, 저장 값 덮어쓰기 금지) · trace informed_by qna_log · update_status(planned, 같은 상태 Change Note). 인용: IR-SHELL-015 Implementation Notes ⑥ · IR-SHELL-007 Implementation Notes ④(재파생 지점). 산문: 04 §2.2 미정 문장을 규칙으로 교체 + 갱신 (16) 행",
+      "mcp_calls": 7,
+      "prose_edits": 2
+    },
+    {
+      "qna": 28,
+      "decision": "검색어 입력칸이 비어 있을 때만 Backspace 가 범위 표시를 지운다. 검색어가 있으면 글자를 지운다",
+      "how": "MCP: FR-SHELL-018 AC-6 을 빈 입력칸 조건으로 좁히고 AC-7(검색어가 있으면 글자 삭제 · 범위 유지) 추가 · Implementation Notes ⑧ · trace informed_by qna_log(#15 · #26 · #28) · update_status(planned, 같은 상태 Change Note). 산문: 03 §2.3 문장 + 28차 머리표 · §13 행",
+      "mcp_calls": 4,
+      "prose_edits": 2
+    }
+  ],
+  "followup_qna_27_28_common": {
+    "validate_calls": 1,
+    "verification": "08 을 qna 27~28 작업 직전 사본과 AC 단위로 대조 — 바뀐 것은 IR-SHELL-014 AC-13(신설) · FR-SHELL-018 AC-6(문구) · FR-SHELL-018 AC-7(신설) 셋뿐이고, 사본에 없던 새 글자는 ⑨ 와 「바뀔」의 뀔 둘(의도한 노트 번호와 문장). 08 · 04 는 편집 뒤에도 CRLF 수 = 줄 수. 03 은 LF 그대로",
+    "status_changes": "없음 — IR-SHELL-014 · FR-SHELL-018 은 같은 상태로 update_status 를 불러 Change Note 만 남겼다. IR-SHELL-015 · IR-SHELL-007 은 인용 노트만 더해 상태 호출을 하지 않았다",
+    "reading_recorded": "IR-SHELL-015 ⑥ · IR-SHELL-014 ⑨ 에 「한지 대체 중 메뉴 밝기 단계의 허용 판정은 실제로 그리는 한지 기준」이라는 읽기를 적었다. qna #27 이 명시하지 않은 부분이지만, 저장된 고른 색으로 판정하면 허용 단계가 하나도 없어 IR-SHELL-015 AC-7 이 적용할 단계를 찾지 못하므로 규칙이 성립하는 유일한 읽기로 보고 적었다. 다른 뜻이면 두 노트를 고친다"
+  },
+  "unresolved_resolved_by_qna_27_28": [
+    "IR-SHELL-014 AC-12 잔여(qna #24 가 정하지 않음): 직접 고르기에서 고를 때는 허용되던 색이 테마를 바꾼 뒤(시스템 따라일 때 OS 전환 포함) 메뉴 밝기 다섯 단계 모두 허용되지 않는 색이 되는 경우의 처리. IR-SHELL-014 Implementation Notes ⑧ 과 04 §2.2 에 미정으로 적었다.",
+    "FR-SHELL-018 AC-6 잔여: qna #26 은 풀린 뒤의 범위를 정했으나 Backspace 로 범위 표시를 지우는 동작이 질의 글자 지우기와 부딪히지 않는 조건(예: 질의가 빈 상태에서만)은 정하지 않았다 — AC-6 은 「Backspace 로 그 표시를 지우면」으로만 적는다."
+  ]
+}

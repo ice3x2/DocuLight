@@ -1,5 +1,7 @@
 # Newspaper rollout implementation handoff
 
+> 2026-09-23 [디자인 v2 결정](./design-v2.md)으로 대체되었다. 아래는 이전 결정의 기록이다.
+
 Decision owner: Astra, acting under the user's explicit delegation on 2026-09-16. Implementation and independent verification owner: Sol medium. Target: `phase-1`. This is a supporting implementation reference; the requirement blocks in `docs/spec/*.srs.md` are the acceptance authority. Existing behavioral and permission contracts remain in force. No product implementation or verification is claimed here.
 
 ## Foundation release: issues 43 and 44

@@ -1,0 +1,338 @@
+{
+  "overall": {
+    "implementability": "medium",
+    "product_fit": "core",
+    "external_module_required": false,
+    "notes": "26개 평가 대상(plan action이 supersede·new·edit-in-place) 중 blocked·low는 0건이다. 약 18건은 기존 파일의 자리가 이미 분명한 high, 나머지 8건(NEW-1, NEW-2, NEW-3, NEW-4, NEW-5, FR-SHELL-006, IR-SHELL-007, 그리고 NEW-2/3에 종속된 IR-SHELL-004/007의 실질 난이도)은 새 서브시스템(모드 순환 UI·색 파생 런타임·트리 드래그앤드롭·검색 scope 차원)을 요구하는 medium이다. 특히 확인 대상 5가지는 모두 코드로 뒷받침됨을 확인했다: (1) 트리 라이브러리 react-arborist ^3.16.0가 이미 설치돼 있고 DocumentTree.tsx:606-607의 disableDrag/disableDrop만 끄면 드래그 자체는 라이브러리가 지원한다(세부 제스처 규칙은 별도 구현 필요), (2) 이동·복사 프리뷰 재계산 API가 이미 존재한다(GET /nodes/:nodeId/relocation-preview?destinationId=&kind=, packages/server/src/http/routes/workspace-api.ts:947-979 + relocation-preview-service.ts:38-105), (3) 개인 설정 스키마가 (principal_id,key,value) 완전 제네릭이라 마이그레이션 없이 키 2개를 더할 수 있다(migrations/017_personal_setting.sql:14-19), 단 직접 고른 색처럼 고정 enum이 아닌 값의 검증 로직은 새로 필요하다, (4) 문서를 여는 모든 경로(App.tsx:385,1197,1386)가 단일 지점 toTab()을 거치고 그 결과에 이미 node.level(권한)이 실려 있다(App.tsx:139-144) — 권한 기반 기본 모드를 적용할 단일 지점이 이미 있다, (5) 02.product-architecture.srs.md에는 웹폰트·CDN을 직접 규정한 조항이 없으나 CON-ARCH-001(사내 단일 인스턴스)·OPS-ARCH-001(동일 오리진 정적 서빙, 단일 Node 프로세스)이 자체 호스팅 정적 자산 방식과 정합하고, 저장소 안에 기존 @font-face/CDN 참조가 0건이라 폰트 로딩 메커니즘 자체는 신규다."
+  },
+  "items": [
+    {
+      "id": "NEW-1",
+      "implementability": "medium",
+      "code_evidence": [
+        "packages/web/src/document/surface-contract.ts:1-71 (MODES, isEditing, nextMode(from,to,{canEdit}) 존재. nextMode는 to를 그대로 받아 되돌릴 뿐 read→live→source→read 순환 자체는 구현하지 않는다)",
+        "packages/web/src/document/DocumentSurface.tsx:57-98 (ModeToggle — 현재 상단 보기/편집 2단 토글 + 편집계열 안 라이브/소스 하위 토글, v2가 없애기로 한 UI 그 자체)",
+        "packages/web/src/document/DocumentSurface.tsx:107-153,204 (initialMode 기본값 'read', change=(to)=>setMode(from=>nextMode(...)))",
+        "packages/web/src/document/DocumentArea.tsx:30-61,142-218 (⋯ DropdownMenu가 DOCUMENT_MENU_ITEMS를 그리는 자리; 202-212에서 <DocumentSurface> 호출 시 initialMode 미전달)",
+        "packages/web/src/document/document-menu.ts:1-21 (DOCUMENT_MENU_ITEMS 배열 — 공유/버전기록 2항목뿐, 구조적으로 항목 추가가 쉬움)",
+        "packages/web/src/App.tsx:139-145 (toTab(node) — level: node.level 을 담아 반환. 모든 열기 경로가 이 함수 하나를 거친다는 단일 선택지점)",
+        "packages/web/src/App.tsx:385,1197,1386 (open(), 딥링크 useEffect, 충돌 후 재개가 모두 toTab(node)를 호출 — 위키링크/딥링크/트리클릭/재개 4경로가 공통 지점을 공유함을 확인)"
+      ],
+      "blockers": [],
+      "conditions": [
+        "Ctrl+E(Cmd+E) 전역 키보드 단축키 핸들러는 저장소 전체에서 발견되지 않음(App.tsx에 keydown 리스너 없음, AppShell.tsx의 keydown은 포커스 복원용, DocumentSurface.tsx의 유일한 전역 keydown은 Ctrl+S) — 신규 구현 필요",
+        "호버 시 현재/다음 모드 말풍선 UI는 미구현 — 신규 컴포넌트 필요(기존 popover.tsx 같은 Radix 프리미티브 재사용 가능, 직접 확인은 못함)",
+        "본문 우클릭 3모드 직접 선택 메뉴는 DocumentSurface.tsx의 [role='region'] 영역(381-388)에 onContextMenu 핸들러가 없어 신규 구현 필요"
+      ],
+      "notes": "권한 기반 기본 모드의 전제 조건(열기 시점에 권한 정보가 있는가)은 이미 참으로 확인됨 — toTab()이 모든 경로에서 node.level을 실어 나른다. 남은 작업은 UI 계층(아이콘 순환, 말풍선, 단축키)이며 아키텍처 변경은 아니다."
+    },
+    {
+      "id": "FR-EDITOR-002",
+      "implementability": "high",
+      "code_evidence": [],
+      "blockers": [],
+      "conditions": [],
+      "notes": "supersede는 SRS 절차(discarded 처리 + NEW-1로 supersedes trace link)이며 코드 변경이 아니다. 실질 구현 가능성은 NEW-1의 판정(medium)을 그대로 물려받는다."
+    },
+    {
+      "id": "FR-EDITOR-003",
+      "implementability": "high",
+      "code_evidence": [],
+      "blockers": [],
+      "conditions": [],
+      "notes": "FR-EDITOR-002와 동일 — SRS 절차만 필요하고 실질 난이도는 NEW-1에 귀속된다."
+    },
+    {
+      "id": "FR-EDITOR-004",
+      "implementability": "high",
+      "code_evidence": [
+        "packages/web/src/document/DocumentSurface.tsx:57-83 (ModeToggle — aria-disabled={editable ? undefined : 'true'} 패턴이 78행에 이미 존재, 새 눈 아이콘+말풍선도 같은 접근성 패턴을 재사용 가능)"
+      ],
+      "blockers": [],
+      "conditions": [
+        "verified 상태이므로 AC 교체 전 Stability 데모션 검토 필요(SRS-MD-Rules-v2.5.0.md §17) — 이는 SRS 절차이지 코드 문제는 아니다",
+        "말풍선 컴포넌트는 NEW-1과 공유되는 신규 UI(위 NEW-1 conditions 참조)"
+      ],
+      "notes": "비활성 구분을 aria-disabled·문구·커서로 표현하는 결정(qna #4)은 이미 있는 aria-disabled 관례를 그대로 확장하는 수준이라 구조 변경이 필요 없다."
+    },
+    {
+      "id": "FR-EDITOR-006",
+      "implementability": "high",
+      "code_evidence": [
+        "packages/web/src/document/DocumentSurface.tsx:66 (`if (!isMarkdown(file.name)) return null` — 비-md에서 토글을 숨기는 기존 가드)",
+        "packages/web/src/document/document-menu.ts:1-21 (⋯ 메뉴 항목 배열 — 같은 가드를 적용할 자리)"
+      ],
+      "blockers": [],
+      "conditions": [
+        "⋯·우클릭 메뉴에서 모드 항목을 감추는 로직은 현재 없음(missing_evidence) — 기존 isMarkdown() 가드를 두 메뉴 렌더 지점에 추가로 적용하면 됨"
+      ],
+      "notes": "기존 가드 함수(isMarkdown)를 재사용하는 조건 분기 추가 수준."
+    },
+    {
+      "id": "IR-EDITOR-002",
+      "implementability": "high",
+      "code_evidence": [
+        "packages/editor/src/styles/newspaper-integration.css:21-23,79-102,113 (--atomic-editor-font*, 명조체 H1~H4·인용에 실사용, .cm-atomic-h1~h6 폰트 크기, --atomic-editor-font-mono가 소스편집기·인라인코드·머지뷰 3곳에 실제 적용 — 교체 파급 범위가 이 3곳으로 명확)",
+        "packages/web/src/styles/tokens.css:1-26 (--font-sans:'Malgun Gothic', --font-mono:'Consolas' — 토큰화되어 있어 값 교체가 중앙 1곳)",
+        "grep 결과: packages/web, packages/web/index.html, packages/web/public 전체에서 fonts.googleapis|fonts.gstatic|@import url 0건, 저장소 전체에서 'nanum' 이름의 폰트 파일 0건 — 현재 서체는 전부 OS 시스템 폰트 스택이며 @font-face 선언 자체가 없음(폰트 로딩 메커니즘이 신규임을 의미)",
+        "docs/spec/02.product-architecture.srs.md:535-563 (OPS-ARCH-001 — 프론트 정적 산출물을 2.0 Express 서버가 동일 오리진으로 서빙, AC-3 CORS 불필요) 및 :322-349 (CON-ARCH-001 — 사내 단일 인스턴스)가 자체 호스팅 정적 자산 배치와 정합"
+      ],
+      "blockers": [],
+      "conditions": [
+        "나눔고딕·나눔고딕코딩 웹폰트 파일(라이선스 OFL, 임베드 가능)을 정적 자산으로 저장소에 추가하고 @font-face를 새로 선언해야 한다 — 기존 예시가 없어 패턴을 새로 만드는 작업이지만 기존 정적 서빙 파이프라인(OPS-ARCH-001)에 그대로 얹힌다",
+        "02.product-architecture.srs.md에 '외부 CDN 금지'를 명문화한 조항은 발견되지 않았다 — 사내망 단일 인스턴스 전제(CON-ARCH-001)와 동일 오리진 서빙 규범(OPS-ARCH-001)에서 자체 호스팅이 자연스러운 결론이라는 추론이며, 명시적 금지 문구는 아니다(추측 표시)"
+      ],
+      "notes": "값 교체(px 단계, 읽기폭)는 중앙 토큰 파일 수정으로 끝나는 high 수준이나, 폰트 로딩 자체가 이 저장소에 전례가 없다는 점만 조건으로 남긴다."
+    },
+    {
+      "id": "NEW-6",
+      "implementability": "high",
+      "code_evidence": [
+        "packages/web/src/shell/shell-contract.ts:17-21 (LEFT_TABS — 문서 트리/검색/즐겨찾기 3항목, code_context.json 기재 시그니처 기준)",
+        "packages/web/src/shell/AppShell.tsx (좌측 사이드바 보기 전환 상태를 이미 LEFT_TABS 값으로 구동 — 트리거 UI를 탭 줄에서 리본 버튼으로 바꾸는 것은 같은 상태를 소비하는 뷰 계층 변경)"
+      ],
+      "blockers": [],
+      "conditions": [],
+      "notes": "탭 종류·순서는 FR-SHELL-001을 그대로 승계(qna #11) — 상태 모델은 안 바뀌고 트리거 UI만 바뀐다."
+    },
+    {
+      "id": "FR-SHELL-001",
+      "implementability": "high",
+      "code_evidence": [],
+      "blockers": [],
+      "conditions": [],
+      "notes": "supersede는 SRS 절차(discarded + NEW-6 supersedes trace link)이며 실질 난이도는 NEW-6(high)을 물려받는다."
+    },
+    {
+      "id": "FR-SHELL-002",
+      "implementability": "high",
+      "code_evidence": [
+        "packages/web/src/document/DocumentArea.tsx:30-61 (⋯ 드롭다운 자리 — 배치 규범이 가리키는 실제 위치)"
+      ],
+      "blockers": [],
+      "conditions": [],
+      "notes": "Requirement 문장(배치 규범) 자체는 안 바뀌고 Implementation Notes/Trace Links만 갱신 — 코드는 NEW-1이 이미 다룬다."
+    },
+    {
+      "id": "FR-SHELL-003",
+      "implementability": "high",
+      "code_evidence": [
+        "packages/web/src/tree/tree-contract.ts:99-109 (CONTEXT_MENU_ITEMS — id/label/target/container/filesOnly 필드의 평평한 배열, 구조적으로 항목 추가가 쉬움)",
+        "packages/web/src/tree/tree-contract.ts:134-166 (enabledMenuItems/menuItemsFor — 권한별 필터링이 이미 배열 순회 기반)"
+      ],
+      "blockers": [],
+      "conditions": [
+        "비활성 항목을 '흐리게 + 「권한 없음」 접미사'로 표시하는 로직은 현재 없음(DropdownMenu.Item이 label만 그리고 disabled 처리 자체가 없음, missing_evidence 확인) — DocumentTree.tsx의 NodeMenu 컴포넌트에 신규 렌더 로직 필요",
+        "verified 상태이므로 AC 교체 전 데모션 검토 필요(SRS 절차)"
+      ],
+      "notes": "9→13항목 확장은 배열에 행을 추가하는 수준. 비활성 표시 방식 변경만 UI 신규 작업이다."
+    },
+    {
+      "id": "IR-SHELL-005",
+      "implementability": "high",
+      "code_evidence": [
+        "code_context.json missing_evidence — '복사본 생성'·'폴더에서 검색'·'URL 복사'가 tree-contract.ts CONTEXT_MENU_ITEMS(99-109)에 없고, 트리 드래그앤드롭이 DocumentTree.tsx:606-607에서 명시적으로 꺼져 있음(둘 다 직접 확인)"
+      ],
+      "blockers": [],
+      "conditions": [],
+      "notes": "이 요구는 '아직 배선 안 된 것'을 명시하는 목록이라, 코드가 실제로 미구현 상태임을 이번 조사로 재확인했으므로 문서 갱신만으로 충족된다."
+    },
+    {
+      "id": "FR-SHELL-010",
+      "implementability": "high",
+      "code_evidence": [
+        "packages/web/src/shell/shell-contract.ts:17-21 (LEFT_TABS 상태 모델 — 검색 탭 전환 메커니즘 자체는 안 바뀜, 트리거만 리본으로 이동)"
+      ],
+      "blockers": [],
+      "conditions": [],
+      "notes": "핵심 동작(태그 클릭→검색 보기 활성+질의 채움)은 유지, 문구만 리본 이전에 맞춰 고치는 수준."
+    },
+    {
+      "id": "FR-SHELL-006",
+      "implementability": "medium",
+      "code_evidence": [
+        "packages/web/src/routing/deep-link.ts:1-38 (urlForNode(nodeId)/nodeIdOf(pathname) — kind 구분 없이 노드ID만 다뤄 폴더·일반 파일로 확장하는 URL 스킴 자체는 이미 범용)",
+        "packages/web/src/tree/DocumentTree.tsx — 'openParents'·'scrollTo'·'select' 류 트리 자동 펼침/선택 API 사용처를 grep했으나 0건(직접 확인)"
+      ],
+      "blockers": [],
+      "conditions": [
+        "'폴더 URL을 열면 트리에서 그 폴더를 펼친 채 고른다'는 새 동작은 신규 배선이 필요 — react-arborist(^3.16.0, packages/web/package.json:81)의 TreeApi가 이런 용도의 명령형 API(select/openParents 계열)를 일반적으로 제공한다고 알려져 있으나, 이 저장소 코드에서 실제로 그 API를 호출하는 지점은 찾지 못했다(추측 표시 — react-arborist 공식 문서 확인 필요)"
+      ],
+      "notes": "URL 스킴 확장(high) + 트리 자동펼침 배선(신규, medium)의 합성이라 medium으로 판정."
+    },
+    {
+      "id": "NEW-4",
+      "implementability": "medium",
+      "code_evidence": [
+        "packages/web/src/search/search-axes.ts:1-72 (SEARCH_AXES=[name,body,tag,attachment] — scope 차원 자체가 존재하지 않음, 축 하나 추가가 아니라 새 차원 필요)",
+        "packages/server/src/http/routes/workspace-api.ts:1641-1654 (`GET /search` — search(stores, actor, {query, axes}) 단일 호출 지점, 서버측 확장 지점이 명확)"
+      ],
+      "blockers": [],
+      "conditions": [
+        "서버 search-service.ts의 search() 시그니처에 scopeNodeId 파라미터 추가 및 하위 트리 필터링 로직이 필요(해당 파일 본문은 이번 조사에서 직접 읽지 않음 — import 지점만 확인, search-service.ts:103 부근으로 추정)",
+        "WORKSPACE scope(SEC-WORKSPACE-004)의 표시 필터 정본을 복제하지 않고 참조만 해야 한다(scope_boundary_impact 항목)"
+      ],
+      "notes": "axes와 별개 차원(scope)을 새로 얹는 구조 변경이라 medium. 서버 확장 지점 자체는 단일하고 명확하다."
+    },
+    {
+      "id": "FR-SHELL-013",
+      "implementability": "high",
+      "code_evidence": [
+        "packages/web/src/search/SearchPanel.tsx:17-119 (필터 팝오버 — 소재 UI만 리본 이전에 맞춰 문구 고치면 됨)"
+      ],
+      "blockers": [],
+      "conditions": [],
+      "notes": "검색 대상 4종·필터·결과 형식이라는 핵심 뜻은 안 바뀜, NEW-4로의 Trace Link 추가 + 소재 문구 수정 수준."
+    },
+    {
+      "id": "NEW-5",
+      "implementability": "medium",
+      "code_evidence": [
+        "packages/web/package.json:81 (\"react-arborist\": \"^3.16.0\" 설치 확인)",
+        "packages/web/src/tree/DocumentTree.tsx:606-607 (<Tree ... disableDrag disableDrop> — 라이브러리가 기본 지원하는 드래그를 명시적으로 끈 상태. 즉 노드 재배치 드래그 자체는 라이브러리 차원에서 이미 지원된다)",
+        "packages/web/src/tree/DocumentTree.tsx:325-338 (TreeRowWrapper의 onDragEnter/onDragOver/onDrop — 이것은 파일 업로드 드롭 전용이며 트리 노드 재배치용 onMove 핸들러가 아님, 별개 경로)",
+        "packages/web/src/tree/tree-contract.ts:200-216 destinationsFor(workspaces,kind,sourceId) (이동/복사 목적지 후보의 가시성·권한 필터링이 이미 구현됨 — 드래그 완료 시 재사용 가능)",
+        "packages/web/src/tree/tree-contract.ts:299-308 containerFor(workspaces,nodeId) (디렉토리→자기 아래, 파일→담긴 부모 라는 대상 해석 규칙이 이미 구현됨 — 노트 위 드롭 시 그 노트가 든 폴더를 대상으로 삼는 규칙 그대로 재사용 가능, FR-ATTACH-001과 공유 가능)"
+      ],
+      "blockers": [],
+      "conditions": [
+        "5px 이동 또는 0.35초 누름 활성화 임계값, Ctrl/Alt(Option) 수정키로 이동↔복사 전환, 워크스페이스 경계를 넘으면 수정키 무관 항상 복사, 접힌 폴더 0.6초 호버 자동 펼침, 커서 옆 결과/불가 사유 표시, Esc 취소 — 이 여섯 가지 구체 제스처가 react-arborist v3.16의 내장 onMove/드래그 훅에서 그대로 설정 가능한지는 이번 조사에서 라이브러리 소스를 직접 읽지 않아 확인하지 못했다(추측 표시). 구현 전 짧은 스파이크로 react-arborist API 확인을 권장한다."
+      ],
+      "notes": "라이브러리가 드래그 기본 지원(옵션만 꺼짐) + 대상 해석 로직 기존 재사용 가능이라는 강한 근거로 blocked/low는 아니다. 다만 명시된 정밀 제스처 규칙 전부가 라이브러리 기본기로 커버되는지 불확실해 medium으로 유보한다."
+    },
+    {
+      "id": "FR-SHELL-015",
+      "implementability": "high",
+      "code_evidence": [
+        "packages/web/src/api/client.ts:197-330 (moveNode/copyNode/renameNode — 핵심 조작이 이미 네트워크 계층까지 구현됨)"
+      ],
+      "blockers": [],
+      "conditions": [
+        "드래그앤드롭을 '추가 진입점'으로 AC/Trace Link에 명시하는 것은 NEW-5 구현을 전제한다"
+      ],
+      "notes": "핵심 뜻(이름변경·이동·복사 가능)은 이미 구현된 기능이라 문서만 갱신 — 실제 드래그 제스처의 난이도는 NEW-5가 소유."
+    },
+    {
+      "id": "FR-ATTACH-001",
+      "implementability": "high",
+      "code_evidence": [
+        "packages/web/src/attachment/upload-contract.ts:50-64 (acceptedDrop — 현재 `target.kind !== 'directory'`면 무조건 거부(58행), 노트 위 드롭을 그 노트가 든 폴더로 재해석하는 로직은 없음)",
+        "packages/web/src/tree/tree-contract.ts:299-308 (containerFor — '파일은 자기가 담긴 자리가 답' 규칙이 이미 구현돼 있어 acceptedDrop의 58행 분기를 이 함수 호출로 대체하면 그대로 요구를 충족)"
+      ],
+      "blockers": [],
+      "conditions": [],
+      "notes": "qna #10이 요구한 '두 드롭(업로드/트리끌기)의 대상 규칙 통일'은 containerFor 하나를 공유하면 되므로 SHELL과 ATTACH 사이의 규범 중복(CLAUDE.md §10.2 우려) 없이 구현 가능 — scope_boundary_impact가 권고한 대로 정의는 ATTACH(또는 tree-contract.ts) 한 곳에 두고 나머지는 참조만 하면 된다."
+    },
+    {
+      "id": "NEW-2",
+      "implementability": "medium",
+      "code_evidence": [
+        "packages/web/src/theme/runtime.tsx:1-81 (light/dark/system 3값과 document.documentElement.dataset.theme 세팅만 존재 — 프리셋 파생 derive() 로직은 이 파일에도, packages/web/src 어디에도 없음(missing_evidence 확인))",
+        "packages/server/src/app/settings/personal-settings.ts:15-22 (SETTINGS 객체 — 주석이 '넷째를 더하기 전에 IR-SHELL-004와 원장 R152를 먼저 고쳐라'라고 이미 이 변경을 예견하고 가드해 둠)",
+        "packages/server/src/infra/sqlite/migrations/017_personal_setting.sql:14-19 (personal_setting(principal_id, key, value) — 완전 제네릭 key-value 스키마, 새 키 추가에 마이그레이션 불필요)",
+        "packages/server/src/app/settings/personal-settings.ts:52-66 (writePersonalSettings — 검증이 `(SETTINGS[key].allowed as readonly string[]).includes(value)` 고정 enum 매칭뿐. 프리셋 6종은 enum으로 맞으나 '직접 고르기' 임의 색상값은 이 검증 모델로 표현 불가)",
+        "docs/decision/design-v2.html:979,1060,1072 (derive(base, mode, shift) 함수 — 색 파생의 정본, 순수 HSL 계산+명도 자동조정 로직으로 특정 프레임워크 의존 없음)",
+        "docs/decision/design-v2.md:41-65 (파생 규칙: 색상·채도는 고른 색을 따르고 명도는 역할별 자동 결정, 대비 목표 미달 시 처리는 qna_log #12로 이미 확정됨)"
+      ],
+      "blockers": [],
+      "conditions": [
+        "personal-settings.ts의 검증 모델을 고정 allowed 배열에서 패턴/함수 기반 검증(커스텀 색상값용)으로 확장해야 한다 — 구조 변경은 크지 않으나 기존 3키 전부가 쓰는 enum 검증 방식과 다른 새 검증 유형이 필요",
+        "theme/runtime.tsx를 확장해 derive() 결과를 CSS custom property로 주입하는 로직 신규 작성 필요",
+        "PersonalSettings.tsx는 현재 전 필드가 <Select> 드롭다운뿐(24-54행) — 프리셋 스와치·컬러피커 같은 신규 컨트롤 유형 필요(missing_evidence 확인)"
+      ],
+      "notes": "서버 저장 스키마는 이미 제네릭이라 데이터 계층은 high 수준이지만, 파생 연산·검증·신규 UI 컨트롤이라는 세 가지가 모두 신규라 종합 medium."
+    },
+    {
+      "id": "NEW-3",
+      "implementability": "medium",
+      "code_evidence": [
+        "packages/server/src/app/settings/personal-settings.ts:15-22 (SETTINGS — 5단계 고정값이므로 `allowed: ['-2','-1','0','1','2']` 형태로 기존 enum 검증 패턴에 그대로 들어맞음, NEW-2와 달리 검증 모델 확장 불필요)",
+        "packages/web/src/theme/runtime.tsx:1-81 (명도 단계 적용 로직 없음 — 신규)",
+        "packages/web/src/settings/PersonalSettings.tsx:24-54 (필드가 전부 <Select> — 슬라이더/스테퍼 같은 신규 컨트롤 유형 필요)"
+      ],
+      "blockers": [],
+      "conditions": [
+        "메뉴 밝기 슬라이더/스테퍼 UI 컴포넌트가 현재 컴포넌트 목록에 없음 — 신규 제작 필요(단, 단순 선형 변환이라 NEW-2의 derive()보다 연산 자체는 훨씬 단순)"
+      ],
+      "notes": "저장 계층은 기존 enum 검증 패턴으로 충분(high)하지만 UI 컨트롤과 런타임 적용 로직이 신규라 medium. NEW-2보다는 연산 복잡도가 낮다."
+    },
+    {
+      "id": "IR-SHELL-004",
+      "implementability": "high",
+      "code_evidence": [
+        "packages/web/src/shell/shell-contract.ts:124-176 (PERSONAL_SETTING_FIELDS — 3항목 전량 열거, default-view-mode/default-edit-subview/theme의 fallback·options 구조가 이미 배열 형태)",
+        "packages/server/src/app/settings/personal-settings.ts:15-22 (SETTINGS 주석이 이 요구 변경을 명시적으로 전제하고 가드 중)"
+      ],
+      "blockers": [],
+      "conditions": [
+        "verified 상태이므로 데모션 검토 필요(SRS 절차)",
+        "실질 구현은 NEW-2·NEW-3에 종속(둘 다 medium)"
+      ],
+      "notes": "'3개 전량'을 '5개 전량'으로 바꾸는 문서 갱신 자체는 코드 구조상 배열에 행 2개를 더하는 수준(high)이나, 그 두 행이 가리키는 실제 기능은 NEW-2/NEW-3의 medium 난이도를 그대로 상속한다."
+    },
+    {
+      "id": "IR-SHELL-007",
+      "implementability": "medium",
+      "code_evidence": [
+        "packages/web/src/theme/runtime.tsx:1-81 (applyThemePreference — 현재 light/dark/system 적용만 담당, 파생 색상값·명도 단계를 루트에 적용하는 로직 없음)"
+      ],
+      "blockers": [],
+      "conditions": [
+        "NEW-2·NEW-3의 런타임 적용 로직이 선행되어야 이 AC를 충족할 수 있다"
+      ],
+      "notes": "루트 적용·시스템 추종이라는 기존 메커니즘 자체는 유지되지만, 적용 대상 값(파생 색상·밝기 단계)이 늘어나는 만큼 NEW-2/NEW-3와 함께 묶여 medium."
+    },
+    {
+      "id": "IR-SHELL-002",
+      "implementability": "high",
+      "code_evidence": [
+        "packages/web/src/shell/shell-contract.ts:67 (`{ id: 'appearance', label: '외모(테마)', section: 'personal', gate: 'everyone' }` — 라벨이 단일 문자열 리터럴)"
+      ],
+      "blockers": [],
+      "conditions": [],
+      "notes": "문자열 리터럴 1곳 교체. 저장 값(light/dark/system)은 SETTINGS 객체의 allowed 배열과 무관하게 그대로 유지된다."
+    },
+    {
+      "id": "IR-SHELL-006",
+      "implementability": "high",
+      "code_evidence": [
+        "packages/web/src/styles/tokens.css:1-26 (--control-height: 2.25rem(36px)→30px, --field-gap: 1.25rem(20px)→16px 등 치수 토큰이 이미 :root 중앙집중)",
+        "packages/web/src/styles/palette.css:1-47, packages/web/src/styles/themes/newspaper-light.css:1-42, newspaper-dark.css (원색 팔레트와 의미 토큰 매핑 — 결정 기록이 '대체하는 결정'이라 명시한 대상과 정확히 일치)",
+        "packages/web/src/tree/DocumentTree.tsx (ROW_HEIGHT=40 명명 상수 — code_context.json 기재 위치, 26px로 교체 시 단일 상수 변경)",
+        "packages/web/src/styles/components.css:120-230 (포커스 링이 이미 2px 외곽선+2px 간격으로 구현되어 있어 AC-7은 값 변경 없이 그대로 충족)"
+      ],
+      "blockers": [],
+      "conditions": [
+        "verified 상태이므로 AC 색값 교체 전 데모션 검토 필요(SRS 절차)"
+      ],
+      "notes": "치수·색 값 전량이 이미 중앙 토큰 파일(4곳 이하)에 있어 구조 변경 없이 값만 교체하면 된다."
+    },
+    {
+      "id": "IR-SHELL-009",
+      "implementability": "high",
+      "code_evidence": [
+        "packages/web/src/shell/AppShell.tsx (3단 레이아웃 컨테이너 — 패널 폭을 IR-SHELL-006과 같은 토큰 파일에서 끌어 쓸 것으로 추정)"
+      ],
+      "blockers": [],
+      "conditions": [
+        "사이드바/리본/오른쪽 패널 폭을 정의하는 정확한 CSS 커스텀 프로퍼티 이름과 줄 번호는 이번 조사에서 직접 확인하지 못했다(추측 표시) — tokens.css류 중앙 토큰 파일에 있을 것으로 추정되나 grep으로 특정하지 않았다"
+      ],
+      "notes": "IR-SHELL-006과 같은 패턴(중앙 토큰 값 교체)일 가능성이 높지만, 폭 토큰의 정확한 위치를 직접 grep하지 않아 high 판정에 약한 불확실성이 남는다."
+    },
+    {
+      "id": "IR-SHELL-011",
+      "implementability": "high",
+      "code_evidence": [
+        "packages/server/src/app/acl/relocation-preview-service.ts:38-85 (movePreview — nodeId·destinationId 인자로 이동 전후 접근자 수를 재계산, 목적지가 바뀔 때마다 호출 가능한 순수 함수)",
+        "packages/server/src/app/acl/relocation-preview-service.ts:99-105 (copyPreview — destinationId 기준 복사 프리뷰, 별도 함수로 이미 존재)",
+        "packages/server/src/http/routes/workspace-api.ts:947-979 (`GET /nodes/:nodeId/relocation-preview?destinationId=&kind=` — 단일 엔드포인트가 kind='copy' 쿼리로 두 프리뷰를 모두 이미 서빙 중. 태스크가 특정해 확인을 요청한 '목적지를 바꿀 때마다 서버에서 다시 계산할 API'가 이미 존재함을 직접 확인)",
+        "packages/web/src/api/client.ts:698-705 (fetchMovePreview(nodeId, destinationId) — 클라이언트 쪽 move 프리뷰 호출은 이미 구현. 대응하는 fetchCopyPreview는 없으나 같은 패턴으로 자명하게 추가 가능)",
+        "packages/web/src/tree/tree-contract.ts:200-216 (destinationsFor — 목적지 후보 전체 목록을 이미 순회·필터링해 반환, 폴더 고르기 창의 검색 입력이 이 결과를 텍스트로 필터링하기만 하면 됨)",
+        "packages/web/src/shell/RelocationDialog.tsx:144-155,168 (현재 네이티브 <Select> 드롭다운 — 검색 입력 리스트로 교체 대상. RelocationPreview가 168행에서 이미 다이얼로그 내부에 포함돼 있어 FR-ACL-006/SEC-ACL-012의 '프리뷰가 창 안에 있어야 한다' 요구를 구조적으로 이미 충족)"
+      ],
+      "blockers": [],
+      "conditions": [],
+      "notes": "태스크가 특별히 지목한 확인 사항 — 서버 재계산 API 존재 여부 — 가 가장 명확하게 확인된 항목이다. 클라이언트는 <Select>를 검색-필터 리스트로 바꾸는 UI 작업만 남는다."
+    }
+  ]
+}

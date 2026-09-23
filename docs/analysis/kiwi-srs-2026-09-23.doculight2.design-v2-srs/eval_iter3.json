@@ -1,0 +1,174 @@
+{
+  "evaluator": "verify-pass-1",
+  "iter": 3,
+  "inputs_checked": {
+    "validate_spec": "errors 0, warnings 5 (SRS-W072 x1 기존, SRS-W015 x4 는 FR-EDITOR-007 강등의 결과로 srs_delta 에 기록됨)",
+    "golden_rule": "변경된 요구 블록 전부가 mcp_calls 의 id/result_id 와 대응한다. 직접 편집 흔적 없음(07 · 08 scope 서술 절과 원장 · 설계서는 산문이다).",
+    "ac_deletion": "변경 전후 AC ID 를 대조했다 — 삭제된 AC 0건. verified 에서 내린 16건은 모두 Change Notes 가 있다.",
+    "trace_paths": "이번 회차에 더해진 Code trace 31행 전부 trace_intent 를 갖고 경로가 실존한다. Implementation Notes 의 줄 번호(App.tsx 139·385·1197·1386, tree-contract.ts 200·299-308, DocumentTree.tsx 606-607·327-338, workspace-api.ts 947·1641-1654, RelocationDialog.tsx 144-155, upload-contract.ts 58, personal-settings.ts 52-66)를 실제로 확인했다.",
+    "iter2_findings": "iter2 의 MEDIUM 10건과 LOW 중 ac-2-2 · ac-2-3 · ac-2-4 · internal-2-4 · feasibility-2-1 · scope-2-3 은 해소를 확인했다. conflict-2-1 · change-consistency-2-5 잔여는 known_residuals 라 다시 올리지 않았다. classification-2-1 은 일부만 해소돼 LOW 로 되풀이했다."
+  },
+  "findings": [
+    {
+      "id": "change-consistency-3-1",
+      "severity": "MEDIUM",
+      "axis": "change-consistency",
+      "req_id": "FR-EDITOR-006",
+      "evidence_path": "docs/spec/00.decision-log.md:190",
+      "description": "원장이 뒤 번호의 qna 결정을 따라가지 못했다. ① R24-b 비고는 「비-md 파일에서는 모드 항목이 나타나지 않고 나머지 항목은 기존 규칙을 따른다」, R91 ③(35행)은 모드 항목만 뺀다. qna #29 는 비-md 파일에서 편집 조작(잘라내기 · 붙여넣기 · 링크 삽입)도 나타나지 않는다고 정했고, FR-EDITOR-006 AC-4 와 설계서 03 §3.3(941행 「남는 항목은 복사와 공유다」)이 그대로 적는다. 편집 조작은 v2 에서 새로 든 항목이라 「기존 규칙」이 없으므로, 원장 문면대로 읽으면 비-md 에도 편집 조작이 선다. ② R152(203행)는 「`항상 보기` 는 편집 권한이 있어도 보기로 연다」를 예외 없이 적는다. qna #36 · #39 와 FR-EDITOR-011 AC-18 은 새로 만든 노트를 기본 열람 모드와 관계없이 편집 모드로 연다. 원장에서 #29 · #36 · #39 를 grep 하면 0건이다. R75-a 는 qna #20 을 반영했으므로 처리 기준도 들쭉날쭉하다.",
+      "suggested_action": "prose_edit — R24-b 비고와 R91 ③ 에 qna #29(비-md 에서는 모드 항목 · 편집 조작 · 버전 기록이 빠지고 복사와 공유가 남는다, 정본 FR-EDITOR-006 AC-3~AC-5)를, R152 에 새 노트 예외(qna #36 · #39, 정본 FR-EDITOR-011 AC-18)를 반영하고 원장 이력 행에 기록한다.",
+      "repeat_of": null
+    },
+    {
+      "id": "change-consistency-3-2",
+      "severity": "MEDIUM",
+      "axis": "change-consistency",
+      "req_id": "FR-SHELL-016",
+      "evidence_path": "docs/spec/03.screen-design-shell.md:1410",
+      "description": "설계서 03 §7.2 의 1 · 2행(「트리에서 `팀` 선택 → `＋ 새 노트` | `팀` 아래에 인라인 입력 행 생성」, 「`회의록` 입력 후 Enter」)은 트리 상단 버튼이 이름을 받는다고 적는다. 같은 문서 §2.2.4(300행)는 이번 회차에 「이름을 묻지 않고 곧바로 생성」으로 고쳐졌다. FR-SHELL-016 AC-7([x])과 결정 기록의 결정 4 도 상단 버튼은 이름을 묻지 않는다고 적는다. 결정 기록 적용 범위 표의 03 행은 §2.2.4 의 「인라인 이름 입력」을 FR-SHELL-016 AC-7 · 결정 4 와의 충돌로 지목했다. 그런데 같은 흐름을 담은 §7.2 는 4행(여는 모드)만 고쳤고 1 · 2행이 남아, 설계서 안에서 두 절이 모순된다.",
+      "suggested_action": "prose_edit — §7.2 의 진입을 컨텍스트 메뉴 `새 노트`(이름 먼저, FR-SHELL-016 AC-3)로 바꾸거나, 상단 버튼 흐름(기본 이름으로 곧바로 생성, 이름 입력 없음)으로 1 · 2행을 고친다. 충돌 접미사 시나리오(3행)는 어느 쪽으로 고쳐도 성립한다.",
+      "repeat_of": null
+    },
+    {
+      "id": "internal-3-1",
+      "severity": "MEDIUM",
+      "axis": "internal-consistency",
+      "req_id": "IR-SHELL-009",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2206",
+      "description": "여러 AC 가 「상태 바」를 판정 대상으로 부른다. IR-SHELL-006 AC-1(1970행)은 메뉴 영역에 상태 바를 넣고, IR-SHELL-014 AC-5(2838행)와 IR-SHELL-015 AC-3(2928행)은 「리본 · 상태 바」의 명도를 정하며, FR-EDITOR-004 AC-6(07:534)은 「상태 바에 권한 안내 문구가 나타나지 않는다」를 요구한다. 그런데 셸 배치를 소유하는 IR-SHELL-009 AC-1 은 「리본 44px + 좌측 사이드바 248px / 가변 문서 / 우측 232px」만 적는다. 설계서 03 §1.1 · §1.2 의 영역 표에도 상태 바 행이 없다. 결정 기록은 상태 바의 단어 수와 결과 표시만 예시로 돌렸을 뿐 상태 바 자체는 메뉴 영역 목록(「색」 절)에 넣었고, 승인 시안에는 `<footer class=\"statusbar\">` 가 있다(design-v2.html:650). 제품에 상태 바가 있는지 SRS 가 정하지 않았으므로, 위 AC 들은 대상이 없을 때 판정이 비거나 배치 요구와 어긋난다.",
+      "suggested_action": "escalate — 상태 바의 존재와 담을 내용을 정한다(시안의 단어 수와 결과 표시는 예시다). 두면 IR-SHELL-009 AC-1 과 03 §1.1 · §1.2 에 영역으로 넣고, 두지 않으면 IR-SHELL-006 AC-1 · IR-SHELL-014 AC-5 · IR-SHELL-015 AC-3 · FR-EDITOR-004 AC-6 에서 상태 바를 뺀다.",
+      "repeat_of": null
+    },
+    {
+      "id": "ac-3-1",
+      "severity": "MEDIUM",
+      "axis": "ac-decidability",
+      "req_id": "FR-SHELL-010",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:1113",
+      "description": "qna #41 · #42 로 좌측 사이드바를 접을 수 있게 됐다(FR-SHELL-017 AC-8 · AC-9, 08:2585). qna #42 는 리본 버튼만 정한다. 리본 밖에서 좌측 사이드바의 보기를 바꾸는 경로가 접힌 상태에서 어떻게 움직이는지는 어디에도 없다. 해당 경로는 네 가지다: 우측 태그 탭의 태그 클릭(FR-SHELL-010 AC-1 「좌측 사이드바가 검색 보기로 바뀌고 리본의 검색 버튼이 활성」), 본문 태그 클릭(FR-EDITOR-007 AC-11, 07:738), `Ctrl+Shift+F`(03 §9.1, 1623행), 폴더 주소를 열어 트리에서 펼쳐 고르기(FR-SHELL-006 AC-6, 03 §7.4 3행). 사이드바가 접혀 있으면 FR-SHELL-010 AC-1 의 「검색 보기로 바뀐다」가 화면에서 참인지 판정할 수 없다. 사이드바를 펼쳐야 하는지, 보기 상태만 바뀌는지 정해지지 않았다.",
+      "suggested_action": "escalate — qna #42 의 뜻(버튼은 그 보기를 보여 달라는 뜻)을 따라 「접혀 있으면 펼치고 그 보기로 바꾼다」를 합리적 기본값으로 정하고, FR-SHELL-017 에 AC 를 하나 더 세운 뒤 FR-SHELL-010 · FR-EDITOR-007 · FR-SHELL-006 에서 참조하게 한다.",
+      "repeat_of": null
+    },
+    {
+      "id": "internal-3-2",
+      "severity": "MEDIUM",
+      "axis": "internal-consistency",
+      "req_id": "FR-EDITOR-011",
+      "evidence_path": "docs/spec/07.editor.srs.md:1178",
+      "description": "FR-EDITOR-011 의 AC-7 · AC-8 · AC-9 는 「편집 권한이 있을 때」로 한정한다. 반면 AC-10 은 「md 문서의 본문을 우클릭하거나 ⋯ 를 누르면 … 세 항목을 담은 메뉴가 열리고, 한 항목을 고르면 순환 순서와 무관하게 그 모드로 바뀐다」고 권한 조건 없이 적는다. 보기 권한만 있는 md 문서에서 FR-EDITOR-004 AC-7(07:535)은 라이브 편집 · 소스 편집 항목을 흐리게 두고 「눌러도 실행되지 않는다」고 한다. AC-10 을 문면대로 판정하면 읽기 전용 문서에서도 고른 모드로 바뀌어야 하므로 두 AC 가 부딪힌다. FR-EDITOR-004 가 refines 관계라 우선순위는 추론할 수 있으나, 같은 요구 안에서 AC-7 · AC-8 과 AC-10 의 한정이 다르다.",
+      "suggested_action": "fix_via_mcp — AC-10 의 「한 항목을 고르면 그 모드로 바뀐다」를 「편집 권한이 있을 때」로 한정하고, 편집 권한이 없을 때는 FR-EDITOR-004 AC-7 을 따른다는 참조를 붙인다(AC-15 가 이미 쓰는 방식).",
+      "repeat_of": null
+    },
+    {
+      "id": "change-consistency-3-3",
+      "severity": "MEDIUM",
+      "axis": "change-consistency",
+      "req_id": "IR-SHELL-006",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:1964",
+      "description": "결정 기록 적용 범위 표의 IR-SHELL-006 행(design-v2.md:205)은 결정 7 에 따라 AC-4 의 치수를 시안의 값으로 고치라고 적는다. 괄호 안에서는 「목록은 전수가 아니다. 라벨 · 도움말 글자와 구역 간격도 확인한다」고 요구한다. IR-SHELL-006 Rationale 은 이를 「결정 기록이 「확인한다」로만 남겨 기존 값을 두었다」로 읽었다. AC-4 에는 옛 값(라벨 13/20px · 도움말 12/18px · 구역 간격 32px)이 대조 없이 남았다. 시안과 대조하면 글자 크기(라벨 13px — design-v2.html:455, 도움말 12px — :456)는 맞다. 행간은 body 의 1.6 을 상속해 약 20.8px · 19.2px 이다(:89). 설정 설명은 12px/1.55 이고(:409), 설정 묶음 사이 간격은 위 20px 이다(:403). 옛 값과 그대로 겹치지 않으며, 시안을 대조한 결과가 어디에도 기록되지 않았다.",
+      "suggested_action": "fix_via_mcp — 시안의 계산값으로 라벨 · 도움말의 행간과 구역 간격을 확인해 AC-4 를 시안 값으로 고친다. 옛 값을 유지하려면 그 판단과 대조 결과를 Rationale 에 적는다.",
+      "repeat_of": null
+    },
+    {
+      "id": "internal-3-3",
+      "severity": "LOW",
+      "axis": "internal-consistency",
+      "req_id": "IR-SHELL-014",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2872",
+      "description": "Research / Analysis 둘째 항은 「AC-9 의 강화된 기준에서 같은 60 조합이 모두 충족되는지는 아직 재지 않았다. 구현 때 60 조합을 다시 재라」고 적는다. 바로 다음 항(2873행)은 독립 검토가 그 기준으로 60 조합을 재 AC-7 · AC-8 실패 0, AC-9 최저 4.50:1 을 얻었다고 적는다. 앞 항이 정정 표기 없이 남아 두 항이 서로를 부정한다.",
+      "suggested_action": "fix_via_mcp — 둘째 항에 「2026-09-23 독립 검토가 쟀다(다음 항)」는 정정을 붙이거나 교체 모드로 합친다.",
+      "repeat_of": null
+    },
+    {
+      "id": "scope-3-1",
+      "severity": "LOW",
+      "axis": "scope",
+      "req_id": "IR-SHELL-014",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2820",
+      "description": "Requirement 문장은 「파생 계산의 정본은 승인 시안의 derive() 함수이고, 이 요구가 그와 다르게 정한 것(메뉴 보조 글자의 대비 기준)만 이 요구가 우선한다」고 적는다. qna #34 는 「색 파생 규칙의 정본은 IR-SHELL-014 다」로 정했고 Implementation Notes ⑪ 과 설계서 04 §2.2 도 그렇게 적는다. 게다가 이 요구가 derive() 와 다르게 정한 것은 보조 글자 기준 하나가 아니다(AC-12 고를 수 없는 색, AC-13 한지 대체). 규범 문장이 정본을 시안 함수로 가리켜 qna #34 와 문면이 어긋난다.",
+      "suggested_action": "fix_via_mcp — Requirement 문장을 「파생 규칙의 정본은 이 요구이고, 이 요구가 정하지 않은 계산은 derive() 와 같은 값을 낸다(AC-10)」로 고친다.",
+      "repeat_of": null
+    },
+    {
+      "id": "scope-3-2",
+      "severity": "LOW",
+      "axis": "scope",
+      "req_id": "IR-SHELL-015",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2929",
+      "description": "IR-SHELL-015 AC-4 가 문서 바탕 고정색 값(밝게 `#FFFFFF`, 어둡게 `#1F1F1D`)을 다시 적는다. 그 값은 IR-SHELL-006 AC-1 · AC-2 가 소유한다. IR-SHELL-014 AC-11 은 같은 불변 조건을 값 없이 적는다. 한 값이 세 요구에 흩어져 있어, 고정색이 바뀌면 한쪽만 고쳐질 수 있다.",
+      "suggested_action": "fix_via_mcp — AC-4 를 「문서 바탕(IR-SHELL-006 AC-1 · AC-2 의 고정색)은 바뀌지 않는다」로 참조형으로 고친다.",
+      "repeat_of": null
+    },
+    {
+      "id": "scope-3-3",
+      "severity": "LOW",
+      "axis": "scope",
+      "req_id": "FR-EDITOR-004",
+      "evidence_path": "docs/spec/07.editor.srs.md:535",
+      "description": "AC-7 은 보기 권한만 있는 md 문서에서 공유 항목을 흐리게 두고 「권한 없음」을 붙이라고 요구한다. 이 AC 는 「공유는 편집 권한을 요구한다」는 ACL 규칙(원장 R70-a)을 사실상 옮겨 적은 것이다. Implementation Notes ④ 는 「이 요구가 그 권한 값을 다시 정하지 않는다」고 적는다. 그러나 ACL 이 공유의 필요 권한을 바꾸면 이 AC 는 조용히 틀린다. SHELL 쪽에서 같은 유형을 qna #33 으로 ACL 참조형으로 바꾼 것(IR-SHELL-011 AC-15)과 처리가 다르다.",
+      "suggested_action": "fix_via_mcp — 공유 항목의 흐림 조건을 「ACL 이 공유를 허용하지 않을 때(R70-a · 해당 ACL 요구)」로 참조형으로 적는다.",
+      "repeat_of": null
+    },
+    {
+      "id": "ac-3-2",
+      "severity": "LOW",
+      "axis": "ac-decidability",
+      "req_id": "IR-SHELL-015",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2968",
+      "description": "한지 대체(IR-SHELL-014 AC-13)가 걸린 동안에는 IR-SHELL-015 AC-5 · AC-6 · AC-7 의 「지금의 기본 색상」을 실제로 그리는 한지로 읽어야 한다. 이 해석 규칙은 Implementation Notes 에만 있다(IR-SHELL-015 ⑥, IR-SHELL-014 ⑨ 2885행). 그 해석을 따르지 않으면 허용 단계가 하나도 없어 AC-7 이 적용할 단계를 찾지 못한다. 판정에 필요한 규범이 AC 밖에 있다(규칙 §25 1 — 필수 동작을 Implementation Notes 에 숨기지 않는다).",
+      "suggested_action": "fix_via_mcp — AC-5 또는 AC-7 에 「IR-SHELL-014 AC-13 의 한지 대체 중에는 지금의 기본 색상을 한지로 본다」를 넣는다.",
+      "repeat_of": null
+    },
+    {
+      "id": "ac-3-3",
+      "severity": "LOW",
+      "axis": "ac-decidability",
+      "req_id": "IR-SHELL-015",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2933",
+      "description": "AC-6 에 따르면 저장된 단계(예: +2)가 고를 수 없는 단계가 되면 화면은 다른 단계(예: +1)를 적용하고 저장 값은 그대로 둔다. AC-8 의 −/+ 는 「누른 방향의 다음 허용 단계」로 옮기는데, 출발점이 저장된 단계인지 적용 중인 단계인지 정하지 않았다. 출발점에 따라 결과가 갈린다. 저장 +2 · 적용 +1 에서 − 를 누르면 저장 기준으로는 +1 이고 적용 기준으로는 0 이다.",
+      "suggested_action": "fix_via_mcp — AC-8 에 「−/+ 의 출발점은 화면에 적용 중인 단계다」(또는 저장된 단계) 중 하나를 적는다. 사용자가 보는 값이 적용 단계이므로 전자가 덜 놀랍다.",
+      "repeat_of": null
+    },
+    {
+      "id": "classification-3-1",
+      "severity": "LOW",
+      "axis": "classification",
+      "req_id": "-",
+      "evidence_path": "docs/analysis/kiwi-srs-2026-09-23.doculight2.design-v2-srs/classification.json",
+      "description": "classification.json 의 처리 분류가 실행과 여전히 어긋난다. FR-EDITOR-005(MCP #259 trace 추가) · FR-SHELL-012(#258 trace 추가) · FR-SHELL-008(#260 Rationale 노트, #261 trace 추가)은 plan 에 no-change 로 남아 있다. SEC-ARCH-002 · FR-ARCH-001(#323 · #324 Implementation Notes 추가)은 plan 에 행이 없다. srs_delta.edited_ids 에는 다섯 모두 들어 있다. iter2 가 지적한 FR-SHELL-016 · IR-SHELL-008 · FR-EDITOR-007 등은 고쳐졌다.",
+      "suggested_action": "reclassify — 다섯 요구를 edit-in-place(주석 · trace 만)로 plan 에 기록한다.",
+      "repeat_of": "classification-2-1"
+    },
+    {
+      "id": "change-consistency-3-4",
+      "severity": "LOW",
+      "axis": "change-consistency",
+      "req_id": "IR-SHELL-008",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2138",
+      "description": "qna #35 의 「리본이 없던 배치에서 잰 증거로 체크된 AC 는 재검증 대상으로 표시한다」가 요구마다 다르게 적용됐다. IR-SHELL-009 AC-2 와 IR-SHELL-003 AC-2 는 체크를 해제했다. IR-SHELL-008 AC-2([x], 200% 확대 도달성)는 Implementation Notes(2171행)에 「VE-4 · VE-6 은 신문지 치수 화면에서 잰 것이다 — 다시 재야 한다」고 적고도 체크를 유지했다. FR-SHELL-013 AC-5 · AC-12([x], 1368 · 1375행)도 같다. Implementation Notes(1418행)는 newspaper-search-layout-check.cjs 가 사이드바 검색 탭 전제로 위치를 단언한다고 적으면서 AC-1 만 해제했다.",
+      "suggested_action": "fix_via_mcp — 같은 기준으로 맞춘다. 재검증 대상으로 본 AC 는 체크를 해제하거나, 유지하는 까닭(측정 대상이 리본과 무관하다 등)을 각 요구에 적는다.",
+      "repeat_of": null
+    },
+    {
+      "id": "ac-3-4",
+      "severity": "LOW",
+      "axis": "ac-decidability",
+      "req_id": "IR-SHELL-006",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:1978",
+      "description": "AC-9 는 트리 행 · 컨텍스트 메뉴 행 · 폴더 고르기 창 행의 높이가 「승인 시안의 같은 요소의 계산 높이와 같고(측정값 약 26px · 31px · 34px)」라고 적는다. 비교 조건(같은 브라우저 · 글꼴 적재 여부 · 확대율)과 허용 오차가 없다. 시안 행 높이는 글꼴(나눔고딕 적재 여부)에 따라 달라지므로 「같다」의 판정이 환경에 흔들린다. srs_delta.unresolved 에도 미결로 남아 있다.",
+      "suggested_action": "fix_via_mcp — 측정 조건(나눔고딕 적재 · 100% · 같은 Chromium)과 허용 오차(예: ±1px — 값은 결정으로 정할 것)를 AC 에 적거나, 약값 대신 시안의 CSS 규칙(패딩 · 행간)에서 나온 정수 목표를 정한다.",
+      "repeat_of": null
+    },
+    {
+      "id": "feasibility-3-1",
+      "severity": "LOW",
+      "axis": "feasibility",
+      "req_id": "-",
+      "evidence_path": "docs/spec/03.screen-design-shell.md:1617",
+      "description": "결정 기록 파일 탐색기 절은 「`Ctrl+N` 도 같은 기준을 따른다 (§9.1)」로 새 노트 단축키를 다시 확인했다. 설계서 03 §9.1 은 `Ctrl+N`(새 노트), `Ctrl+W`(탭 닫기), `Ctrl+Tab`(탭 전환)을 배정한다. 이 셋은 Chromium 계열 일반 탭에서 브라우저가 예약한 단축키라 페이지가 preventDefault 로 가로챌 수 없다. 설치형 앱 창에서는 예외다. 이번 회차가 만든 배정은 아니지만, 같은 회차가 FR-EDITOR-011 Implementation Notes ④ 에서 `Ctrl+E` 의 가로채기 가능성은 확인 대상으로 적은 것과 처리가 다르다.",
+      "suggested_action": "prose_edit — 03 §9.1 에 세 키가 일반 탭에서 동작하지 않을 수 있다는 〔확인 필요〕를 붙이거나 대체 키를 〔판단〕으로 남긴다. SRS 요구는 이 키들을 소유하지 않는다.",
+      "repeat_of": null
+    }
+  ],
+  "summary": { "CRITICAL": 0, "HIGH": 0, "MEDIUM": 6, "LOW": 10 }
+}

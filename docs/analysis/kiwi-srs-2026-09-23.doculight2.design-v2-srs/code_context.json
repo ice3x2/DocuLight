@@ -1,0 +1,274 @@
+{
+  "relevant_files": [
+    {
+      "path": "packages/web/src/document/surface-contract.ts",
+      "line_range": "1-71",
+      "signature": "MODES, type Mode, isEditing(mode), nextMode(from, to, {canEdit}), isMarkdown(name), surfaceOf(name)",
+      "relevance": "편집 모드: 화면 상태 3종(read/live/source) 고정 열거, 편집 계열 판정, 모드 전이 규칙(FR-EDITOR-004 AC-2), md 여부 판정, 비-md 표면 판정(FR-ATTACH-003). nextMode()는 canEdit=false면 편집 계열로 못 가는 것만 막을 뿐, v2가 요구하는 read→live→source→read 3단 순환 자체는 이 함수가 구현하지 않는다(그냥 to를 그대로 반환)."
+    },
+    {
+      "path": "packages/web/src/document/DocumentSurface.tsx",
+      "line_range": "29,57-98,107-153,204,346-431",
+      "signature": "canEditFile(file); function ModeToggle({file, mode, onChange}); export function DocumentSurface({file, initialMode='read', ...}); const change=(to)=>setMode(from=>nextMode(...))",
+      "relevance": "편집 모드: canEditFile(view/edit/admin 판정), 현재 구현된 상단 보기/편집 토글 + 편집 계열 안 라이브·소스 하위 토글(ModeToggle, 57-98) — v2가 없애기로 한 바로 그 UI. initialMode 기본값이 'read'(109,153)이고 DocumentArea.tsx가 이 prop을 넘기지 않으므로 모든 진입 경로가 사실상 보기 모드로 열린다. 비-md 파일에서 토글을 숨기는 지점은 66행 `if (!isMarkdown(file.name)) return null`."
+    },
+    {
+      "path": "packages/web/src/document/DocumentArea.tsx",
+      "line_range": "30-61,142-218",
+      "signature": "function DocumentHeader({state, onSelect}); export function DocumentArea({state, onState, bodies, hashes, ...})",
+      "relevance": "편집 모드: 문서 헤더의 `⋯` 드롭다운(DropdownMenu, 46-58)이 DOCUMENT_MENU_ITEMS를 그리는 자리 — v2가 여기에 3모드 선택 항목을 추가해야 함. 202-212에서 <DocumentSurface>를 호출하며 initialMode를 넘기지 않는 것이 확인됨(트리 클릭·탭 등 모든 경로가 보기 모드로 여는 근거)."
+    },
+    {
+      "path": "packages/web/src/document/document-menu.ts",
+      "line_range": "1-21",
+      "signature": "export interface DocumentMenuItem {id,label}; export const DOCUMENT_MENU_ITEMS = [{id:'share',...},{id:'versions',...}]",
+      "relevance": "편집 모드: 문서 헤더 `⋯` 메뉴의 현재 항목(공유, 버전 기록)만 있음. v2는 여기에 세 모드 선택과 편집 조작(잘라내기·붙여넣기·링크 삽입 등 권한별 흐리게 처리)을 추가해야 함."
+    },
+    {
+      "path": "packages/web/src/document/tab-state.ts",
+      "line_range": "1-84",
+      "signature": "export interface OpenTab {nodeId,name,breadcrumb,save,level?,serverBody?}; openInNewTab(state,tab); openInActiveTab(state,tab); closeTab(state,nodeId); activeTab(state)",
+      "relevance": "편집 모드: 열린 탭 상태 계약. OpenTab에 모드(mode) 필드가 없다 — 탭별로 현재 모드를 기억하려면 이 인터페이스 확장이 필요할 수 있음."
+    },
+    {
+      "path": "packages/web/src/App.tsx",
+      "line_range": "139-145,375-402,1034-1042,1167-1202,1380-1392",
+      "signature": "const toTab=(node)=>({...}); const open=useCallback((node,inNewTab)=>{...}); openByName(target); useEffect(deep-link open); useEffect(popstate); pendingOpen confirm-replace",
+      "relevance": "편집 모드: 문서를 여는 모든 경로(트리 클릭 open(), 위키링크/백링크 openByName→onOpen, 딥링크 useEffect 1167-1180, 뒤로/앞으로 popstate 1187-1202, 충돌 확인 후 재개 1380-1392)가 공통으로 toTab()을 거치는데 toTab()은 모드를 싣지 않는다. 즉 모든 경로가 현재 동일하게 '보기'로 귀결되며, 이는 결정 5(권한에 따라 라이브 편집으로 열기)를 적용할 단일 지점이 toTab()/open() 임을 뜻한다."
+    },
+    {
+      "path": "packages/web/src/shell/AppShell.tsx",
+      "line_range": "1034-1042,1125-1300",
+      "signature": "const openByName = useCallback((target)=>{... onOpen?.(found,false) ...}); <DocumentTree onOpen={onOpen} .../>; <DocumentArea ... onOpenWikiLink={openByName} />",
+      "relevance": "편집 모드: 위키링크 열기(openByName)와 백링크/아웃고잉 패널의 open 핸들러(1215-1236 부근, onOpen을 통해 App.tsx의 open()으로 위임)가 모두 같은 단일 진입점을 쓴다는 배선 확인."
+    },
+    {
+      "path": "packages/web/src/routing/deep-link.ts",
+      "line_range": "1-38",
+      "signature": "const PREFIX='/d/'; urlForNode(nodeId); nodeIdOf(pathname)",
+      "relevance": "편집 모드/파일 탐색기: 딥링크 URL은 노드 ID만 담는다(모드 파라미터 없음). 파일 탐색기 URL 복사(결정 8, 폴더·일반 파일로 확장) 작업도 이 함수가 대상."
+    },
+    {
+      "path": "packages/web/src/settings/editor-preferences.ts",
+      "line_range": "1-80",
+      "signature": "export type EditorPreferenceKey = 'default-view-mode' | 'default-edit-subview'; useEditorPreferenceController(...)",
+      "relevance": "편집 모드/개인 설정: 「기본 열람 모드」·「편집 하위 뷰」 두 키의 낙관적 저장 컨트롤러. v2에서 default-view-mode 허용값 재정의와 default-edit-subview를 3모드 순환에 맞춰 다시 정할 때 손댈 자리."
+    },
+    {
+      "path": "packages/web/src/settings/PersonalSettings.tsx",
+      "line_range": "24-54",
+      "signature": "export function PersonalSettings({category, values, onPick, themeLoadState, themeSaveState, editorLoadState, editorSaveStates})",
+      "relevance": "테마/개인 설정: '에디터'·'외모(테마)' 두 카테고리를 personalFieldsOf(category)로 그리는 화면. 필드는 전부 <Select> 드롭다운(41-44) — v2의 프리셋 스와치·메뉴 밝기 슬라이더 같은 새 컨트롤 유형은 없음."
+    },
+    {
+      "path": "packages/web/src/shell/shell-contract.ts",
+      "line_range": "1-207",
+      "signature": "LEFT_TABS; RIGHT_TABS; SettingsCategory; SETTINGS_CATEGORIES; INSTANCE_SETTING_FIELDS; PersonalSettingField; PERSONAL_SETTING_FIELDS; personalFieldsOf(category); visibleCategories(viewer)",
+      "relevance": "좌측 사이드바 탭(17-21: 문서 트리/검색/즐겨찾기), 우측 패널 탭(24-28: 백링크/아웃고잉 링크/태그), 설정 모달 카테고리 전량 목록(65-96), 개인 설정 3항목 전량 열거(142-176: default-view-mode fallback 'view', default-edit-subview fallback 'live-preview', theme fallback 'system'). IR-SHELL-004의 '세 항목' 문구가 가리키는 정확한 배열이며, v2가 추가하는 기본 색상·메뉴 밝기 두 항목이 들어갈 자리."
+    },
+    {
+      "path": "packages/server/src/app/settings/personal-settings.ts",
+      "line_range": "1-67",
+      "signature": "const SETTINGS = {'default-view-mode':{fallback,allowed}, 'default-edit-subview':{...}, theme:{...}}; readPersonalSetting(); writePersonalSettings()",
+      "relevance": "개인 설정 서버 스키마(DR-SHELL-002). 셋을 '전량'으로 명시한 주석과 함께 허용값·기본값의 정본. 기본 색상/메뉴 밝기 키를 추가하려면 이 SETTINGS 객체와 shell-contract.ts의 PERSONAL_SETTING_FIELDS를 함께 고쳐야 어긋나지 않는다."
+    },
+    {
+      "path": "packages/server/src/domain/ports/personal-setting-store.ts",
+      "line_range": "1-40",
+      "signature": "PersonalSettingStore port interface",
+      "relevance": "개인 설정 저장소 포트 — 서버 쪽 개인 설정 스키마의 저장 경계."
+    },
+    {
+      "path": "packages/server/src/infra/sqlite/personal-setting-store.ts",
+      "line_range": "1-60",
+      "signature": "SQLite 구현체",
+      "relevance": "개인 설정이 실제로 저장되는 DB 행 구현(DR-SHELL-002 AC-3 근거)."
+    },
+    {
+      "path": "packages/server/src/infra/sqlite/migrations/017_personal_setting.sql",
+      "line_range": "1-20",
+      "signature": "personal_setting 테이블 마이그레이션",
+      "relevance": "개인 설정을 (사용자, 항목) 쌍의 DB 행으로 두는 스키마 근거."
+    },
+    {
+      "path": "packages/web/src/theme/runtime.tsx",
+      "line_range": "1-81",
+      "signature": "type ThemePreference; applyThemePreference(preference); rememberTheme; cachedTheme; useThemeRuntime({userId,preference,settingsResolved}); ThemeRuntime component",
+      "relevance": "테마 런타임: light/dark/system 3값만 다루고 document.documentElement.dataset.theme만 세팅한다. 기본 색상 프리셋 파생(derive())이나 메뉴 밝기 단계 적용 로직은 이 파일에 없음 — v2 구현 시 이 런타임을 확장해야 하는 지점."
+    },
+    {
+      "path": "packages/web/src/styles/tokens.css",
+      "line_range": "1-26",
+      "signature": ":root {--font-sans, --font-serif, --font-mono, --text-*-size/line, --control-height, --control-auth-height, --radius-*, --space-*, --field-gap, --section-gap}",
+      "relevance": "서체·치수 토큰. --font-sans는 'Malgun Gothic'(나눔고딕 아님), --font-mono는 'Consolas'(나눔고딕코딩 아님)이고 이 --font-mono는 web 쪽 어디서도 var(--font-mono)로 참조되지 않는다(선언만 있고 미사용 — PAT 표시에도 안 붙어 있음). --control-height: 2.25rem(36px)은 IR-SHELL-006 AC-4의 기존 36px 기준과 일치하며 v2 결정 7이 30px로 고치는 대상. --field-gap: 1.25rem(20px)도 v2가 16px로 고치는 대상."
+    },
+    {
+      "path": "packages/web/src/styles/palette.css",
+      "line_range": "1-47",
+      "signature": ":root {--paper-app, --paper-document, --paper-sidebar, --ink-primary, --blue-primary, --blue-selected, --red-status, --charcoal-*, --chalk-*, ...}",
+      "relevance": "신문지 테마의 원색 팔레트(라이트/다크 값 전부). --accent-soft 토큰은 존재하지 않는다 — v2 색 체계 도입 시 이 파일 전체가 대체 대상(결정 기록의 '대체하는 결정' 문구와 일치)."
+    },
+    {
+      "path": "packages/web/src/styles/themes/newspaper-light.css",
+      "line_range": "1-42",
+      "signature": ":root, :root[data-theme='light'] {--surface-*, --text-*, --action-primary, --accent, --focus-ring, ...}",
+      "relevance": "팔레트 원색을 의미 토큰(--accent, --focus-ring, --primary 등 shadcn 계열 별칭 포함)에 매핑하는 라이트 테마 파일. --accent가 현재 --surface-selected(옅은 파랑)에 매핑되어 있고 --accent-soft는 없음."
+    },
+    {
+      "path": "packages/web/src/styles/themes/newspaper-dark.css",
+      "line_range": "1-42(추정, light와 동형)",
+      "signature": ":root[data-theme='dark'] { ... }",
+      "relevance": "다크 테마 의미 토큰 매핑 — light와 대응 구조. v2 다크 팔레트(#1F1F1D 문서 배경 등) 적용 대상."
+    },
+    {
+      "path": "packages/editor/src/styles/newspaper-integration.css",
+      "line_range": "21-23,79-102,113",
+      "signature": "--atomic-editor-font, --atomic-editor-font-serif, --atomic-editor-font-mono (all Malgun Gothic/Batang/Consolas); .cm-content max-width:50rem; .cm-atomic-h1~h6 font sizes; [data-source-editor] font; .cm-atomic-inline-code; .cm-mergeView font",
+      "relevance": "IR-EDITOR-002(에디터 타이포그래피): 명조체(Batang/Georgia)가 H1~H4·인용에 실제로 쓰이고 있음(89-95). 읽기 폭이 현재 50rem(800px, padding 2.5rem=40px 포함 시 본문 약 720px)로 SRS의 최대 720px와도, v2 시안의 700px(본문 620px)와도 다름. H1=2.25rem(36px)→v2 30px, H2=1.5rem(24px)→v2 21px. --atomic-editor-font-mono는 소스 편집기·인라인 코드·머지 뷰에 실제로 적용되어 있어 나눔고딕코딩 교체 시 파급 범위가 이 세 곳."
+    },
+    {
+      "path": "packages/web/src/styles/base.css",
+      "line_range": "1-27",
+      "signature": "body {font-family:var(--font-sans),...}; [data-slot='document']; [data-slot='sidebar']; [data-slot='popover-content']",
+      "relevance": "전역 서체 적용 지점(body)과 문서/사이드바/팝오버 배경 슬롯 — v2의 '메뉴 영역은 누런 톤, 문서/대화상자/입력칸/컨텍스트 메뉴는 흰 바탕' 규칙이 이 슬롯들의 색 재배선 대상."
+    },
+    {
+      "path": "packages/web/src/styles/components.css",
+      "line_range": "1-40,120-230,400-465",
+      "signature": ".dl-button*, .dl-input, .dl-control-default/-auth/-icon, [data-slot='button']:focus-visible 등 outline:2px solid var(--focus-ring); outline-offset:2px",
+      "relevance": "공통 입력·버튼 컴포넌트의 실제 CSS. 포커스 링이 이미 '2px 외곽선 + 2px 간격'으로 구현되어 있어(125-133) v2 결정 3·§포커스 규칙과 이미 합치한다. 테두리 대비값(border-color: var(--border-control) 등, 93·146행)은 palette.css 재작업에 종속."
+    },
+    {
+      "path": "packages/web/src/components/ui/button.tsx",
+      "line_range": "1-54",
+      "signature": "buttonVariants = cva('dl-button', {variants:{variant:{primary,secondary,ghost,destructive}, size:{default,auth,icon}}})",
+      "relevance": "버튼 4종(주 동작/보조 동작/파괴적 동작/도구 버튼=ghost)이 이미 variant로 존재 — v2의 '버튼 네 종류' 요구와 구조적으로 일치, 값(색·치수)만 재배선하면 됨."
+    },
+    {
+      "path": "packages/web/src/components/ui/input.tsx",
+      "line_range": "1-38",
+      "signature": "export const Input = forwardRef<HTMLInputElement, InputProps>(...) — 'dl-input' 클래스, IME composing 가드 포함",
+      "relevance": "공통 입력 컴포넌트. 한글 조합 중 Enter 전파 방지 로직 포함(28-33) — 트리 NameField의 구현 패턴과 동일 계통."
+    },
+    {
+      "path": "packages/web/src/components/ui/field.tsx",
+      "line_range": "1-40(추정)",
+      "signature": "Field 컴포넌트(라벨+설명+컨트롤 레이아웃)",
+      "relevance": "옵시디언 설정 행 문법(왼쪽 이름+설명, 오른쪽 컨트롤)을 이미 구현하는 컴포넌트로 보임 — PersonalSettings.tsx가 <Field label=...>로 사용 중."
+    },
+    {
+      "path": "packages/web/src/components/ui/select.tsx",
+      "line_range": "1-40(추정)",
+      "signature": "Select 컴포넌트",
+      "relevance": "개인 설정·RelocationDialog 목적지 선택 등에서 쓰이는 네이티브 select 래퍼. v2의 세그먼트 선택·프리셋 스와치 같은 새 컨트롤 유형은 이 파일에 없음."
+    },
+    {
+      "path": "packages/web/src/tree/tree-contract.ts",
+      "line_range": "1-329",
+      "signature": "CONTEXT_MENU_ITEMS(99-109); FAVORITE_LABELS(87); CREATE_DEFAULTS(121-124); enabledMenuItems(node,favorited)(134-145); menuItemsFor(node,favorited)(155-166); destinationsFor(workspaces,kind,sourceId)(200-216); containerFor(workspaces,nodeId)(299-308)",
+      "relevance": "파일 탐색기 핵심 계약 파일. 현재 컨텍스트 메뉴는 9항목(새 문서/새 디렉토리/이름 변경/이동/복사/삭제/공유/즐겨찾기/새 버전 올리기)뿐이며 v2가 추가하는 '복사본 생성'·'다른 곳으로 복사'(현재 'copy' 하나로 뭉쳐 있음)·'폴더에서 검색'·'URL 복사' 4항목은 없다. destinationsFor가 move/copy 목적지 후보 트리 순회(가시성·권한 필터 포함)를 이미 구현 — RelocationDialog가 이 결과를 소비."
+    },
+    {
+      "path": "packages/web/src/tree/DocumentTree.tsx",
+      "line_range": "1-649",
+      "signature": "NAMING_ROW; type Naming; namingLabel(); function NameField({label,initial,onConfirm,onCancel,...}); function NodeMenu({node,favorited,children,onSelect}); function TreeRow(...); function TreeRowWrapper(...); const ROW_HEIGHT=40; export function DocumentTree({...})",
+      "relevance": "트리 UI 전체. NameField(85-158)는 Enter 확정/Esc 취소만 구현(대상: onBlur 확정 없음) — v2 결정 4가 확정한 '이름 변경은 벗어나면 확정' 규칙은 아직 구현되지 않음. 트리 상단 버튼은 '새 노트' 하나(557-559, onCreateNote 즉시 호출, 이름 안 물음) — 이미 v2/AC-7과 일치. <Tree> 컴포넌트에 disableDrag disableDrop이 명시되어(606-607) 있어 트리 노드 자체의 드래그앤드롭(이동/복사 제스처)은 미구현이고, TreeRowWrapper의 onDragEnter/onDragOver/onDrop(320-343)은 파일 업로드 드롭(FR-ATTACH-001) 전용이다. ROW_HEIGHT=40(px)은 IR-SHELL-006 AC-9의 기존 40px 트리 행 기준과 일치하며 v2가 약 26px로 고치는 대상."
+    },
+    {
+      "path": "packages/web/src/shell/RelocationDialog.tsx",
+      "line_range": "1-200",
+      "signature": "const COPY_NOTICE; export function RelocationDialog({kind,open,sourceName,destinations,destinationId,relocation,grade,level,result,onDestination,onConfirm,onCancel})",
+      "relevance": "이동·복사 창. 목적지 선택은 네이티브 <Select> 드롭다운(144-155)이며 옵시디언 빠른 전환 창 같은 검색 입력·필터형 리스트가 아니다 — v2가 요구하는 폴더 고르기 창(검색 입력 포함)으로 바꿔야 할 지점. RelocationPreview(168)를 창 안에 이미 포함하고 있어 FR-ACL-006/SEC-ACL-012 AC-7의 '프리뷰가 목적지 고르기 창 안에 있어야 한다' 요구를 구조적으로 충족. ConfirmGate(186-196)로 L1/L2 확인 등급을 분리 처리."
+    },
+    {
+      "path": "packages/web/src/shell/RelocationDialog.css",
+      "line_range": "1-미확인(파일 존재만 확인)",
+      "signature": "RelocationDialog 전용 스타일시트",
+      "relevance": "이동·복사 창의 실제 레이아웃/치수 CSS — v2 폴더 고르기 창 재설계 시 함께 고칠 파일."
+    },
+    {
+      "path": "packages/web/src/acl/RelocationPreview.tsx",
+      "line_range": "미확인(존재만 확인, export function/type 이름 미상)",
+      "signature": "RelocationPreview 컴포넌트, Relocation 타입",
+      "relevance": "이동 시 접근 가능 인원 변화 프리뷰(FR-ACL-006) 렌더러. RelocationDialog.tsx가 168행에서 소비."
+    },
+    {
+      "path": "packages/web/src/tree/NewVersionPrompt.tsx",
+      "line_range": "24행 시그니처 확인, 전체 미독",
+      "signature": "export function NewVersionPrompt({node, onPick, onRetryRefresh, onCancel})",
+      "relevance": "새 버전 올리기(FR-SHELL-008) 파일 선택 프롬프트. 트리 메뉴의 'new-version' 항목에서 호출되는 대상."
+    },
+    {
+      "path": "packages/web/src/favorites/FavoritesView.tsx",
+      "line_range": "21행 시그니처 확인, 전체 미독",
+      "signature": "export function FavoritesView({...})",
+      "relevance": "좌측 사이드바 '즐겨찾기' 탭의 내용 컴포넌트."
+    },
+    {
+      "path": "packages/web/src/acl/ShareModal.tsx",
+      "line_range": "37행 시그니처 확인, 전체 미독",
+      "signature": "export function ShareModal({nodeId, nodeName, nodeKind, contextKey?, open, onOpenChange, query?, onGrant?, onRevoke?, onBreakInheritance?, onInheritFromParent?, refreshView, onWarnings?})",
+      "relevance": "공유 화면 — 문서와 디렉토리가 같은 부품을 쓴다(IR-ACL-003 AC-5). 트리 메뉴 '공유' 항목과 문서 헤더 '⋯' 메뉴 '공유' 항목이 모두 이것을 연다."
+    },
+    {
+      "path": "packages/web/src/attachment/upload-contract.ts",
+      "line_range": "20-83",
+      "signature": "export interface UploadRequest; export interface UploadLimits; export function acceptedDrop(node, files); export function pasteUpload(target, files)",
+      "relevance": "트리 드래그앤드롭 파일 업로드(FR-ATTACH-001)와 본문 붙여넣기 업로드의 공용 판정 로직. acceptedDrop이 디렉토리 노드 대상 판정을 갖고 있어, v2가 정하는 '업로드 드롭 대상=디렉토리 노드만' 규칙과 '트리 항목 끌기(노트 위→그 폴더)' 규칙을 맞출지 결정할 때 이 함수가 기준점."
+    },
+    {
+      "path": "packages/web/src/search/search-axes.ts",
+      "line_range": "1-72",
+      "signature": "SEARCH_AXES=['name','body','tag','attachment']; AXIS_LABELS; DEFAULT_AXES=['name']; axesFrom(stored); axesTo(axes); readAxes()/writeAxes() via localStorage",
+      "relevance": "검색 대상 축 전량 열거(FR-SHELL-013 AC-5~AC-8). 폴더 범위(scope) 개념은 존재하지 않음 — '폴더에서 검색' 기능을 SRS/구현에 반영하려면 이 파일에 축이 아닌 새로운 차원(scope)을 추가해야 함."
+    },
+    {
+      "path": "packages/web/src/search/SearchPanel.tsx",
+      "line_range": "17-119",
+      "signature": "export function SearchPanel({...}); Popover.Root 필터 팝오버(96-119)",
+      "relevance": "좌측 사이드바 '검색' 탭의 필터 팝오버(검색 대상 체크박스) 구현. 폴더 범위 UI를 추가할 후보 위치."
+    },
+    {
+      "path": "packages/web/src/search/TagPanel.tsx",
+      "line_range": "미독(존재만 확인)",
+      "signature": "TagPanel 컴포넌트",
+      "relevance": "우측 패널 '태그' 탭 구현."
+    },
+    {
+      "path": "packages/web/src/api/client.ts",
+      "line_range": "197-330,547-596,689-728",
+      "signature": "fetchTree; loadDocument; renameNode(nodeId,name); moveNode(nodeId,parentId); copyNode(nodeId,...); createNode({...}); uploadIntoDirectory; fetchPersonalSettings/savePersonalSetting/saveEditorPreference; fetchFavorites/addFavorite/removeFavorite; uploadNewVersion/listVersions/loadVersion/restoreVersion; fetchAccessors(nodeId); fetchMovePreview(nodeId,destinationId)",
+      "relevance": "웹 API 클라이언트. moveNode/copyNode/renameNode/createNode가 파일 탐색기 조작의 실제 네트워크 호출 지점. fetchMovePreview는 있지만 대응하는 fetchCopyPreview는 없음(복사는 접근자 프리뷰 없이 고정 문구만 두는 v2 결정과 일치). '복사본 생성'(같은 폴더로 복사) 전용 엔드포인트는 따로 없고 copyNode를 같은 parentId로 호출하는 형태가 될 것으로 보임(구현 시 확인 필요)."
+    },
+    {
+      "path": "packages/web/src/confirm",
+      "line_range": "디렉토리 전체(ConfirmGate.tsx 등)",
+      "signature": "ConfirmGate 등 L1/L2 확인 등급 컴포넌트군",
+      "relevance": "이동·복사·삭제의 확인 등급 게이트(FR-CONFIRM-005/006/016/017) — RelocationDialog.tsx가 소비."
+    }
+  ],
+  "related_modules": [
+    { "path": "packages/web/src/settings/InstanceSettings.tsx", "note": "인스턴스 설정 카테고리(가입 모드 등) 화면 — 설정 모달 카테고리 구조 참고용, 편집 모드/색과 직접 관련 없음." },
+    { "path": "packages/web/src/settings/IndexQueuePanel.tsx", "note": "색인 대기열 설정 카테고리 화면 — 참고용." },
+    { "path": "packages/web/src/settings/token-contract.ts", "note": "토큰 스코프 등 계약 — PAT 고정폭 표시와 연결 지점 후보이나 직접 확인 못함." },
+    { "path": "packages/web/src/document/wiki-link-resolve.ts", "note": "위키링크 해석 규칙 — openByName/onOpenWikiLink 경로가 의존." },
+    { "path": "packages/web/src/document/VersionHistory.tsx", "note": "문서 헤더 '⋯' 메뉴의 '버전 기록' 패널." },
+    { "path": "packages/web/src/document/MergeView.tsx", "note": "저장 충돌 시 병합 화면 — 나눔고딕코딩 폰트 적용 범위(에디터 CSS의 .cm-mergeView)와 연결." },
+    { "path": "packages/web/src/components/ui/dialog.tsx, alert-dialog.tsx, dropdown-menu.tsx, popover.tsx, checkbox.tsx, radio.tsx, table.tsx, textarea.tsx, states.tsx, overlay-owner.ts, index.ts", "note": "Radix 기반 공통 UI 프리미티브 — button/input/field/select 외 나머지. 개별 치수는 미조사." }
+  ],
+  "missing_evidence": [
+    "Ctrl+E(또는 Cmd+E)로 보기→라이브 편집→소스 편집→보기를 순환시키는 키보드 단축키 핸들러는 packages/web/src 전체에서 발견되지 않음. App.tsx에는 keydown 리스너가 전혀 없고, AppShell.tsx의 keydown 리스너는 포커스 복원용(rememberKey/rememberPointer)이며, DocumentSurface.tsx의 유일한 전역 keydown은 Ctrl+S 저장(308-320행)뿐이다. Ctrl+N(새 노트)과 Ctrl+Shift+F(폴더 범위 검색 진입) 단축키도 동일하게 코드에서 찾지 못했다.",
+    "말풍선(툴팁) 형태로 '지금 모드/다음 모드'나 '읽기 전용 문서입니다'를 보여주는 컴포넌트는 DocumentSurface.tsx/ModeToggle에 없다(현재 ModeToggle은 aria-pressed만 쓰는 순수 버튼 그룹).",
+    "본문 우클릭 시 세 모드를 바로 고르는 컨텍스트 메뉴는 코드에서 찾지 못했다 — DocumentSurface.tsx의 [role='region'] 본문 영역(381-388행)에는 onContextMenu 핸들러가 없다.",
+    "사용자별 기본 색상 프리셋(한지/모래/쑥/쪽빛/자주/먹) 선택 UI나 파생 함수 derive(), 메뉴 밝기(-2~+2 단계) 조정 UI는 packages/web/src 어디에도 없다 — PersonalSettings.tsx의 '외모(테마)' 카테고리는 theme 한 필드(라이트/다크/시스템)만 그린다.",
+    "서버 personal-settings.ts의 SETTINGS 객체(packages/server/src/app/settings/personal-settings.ts:15-22)에도 기본 색상·메뉴 밝기에 해당하는 키가 없다 — 현재 셋(default-view-mode, default-edit-subview, theme)이 전량으로 하드코딩되어 있음(주석이 '넷째를 더하기 전에 IR-SHELL-004와 R152를 먼저 고쳐라'라고 명시).",
+    "폴더에서 검색(검색 범위를 특정 폴더로 좁히는 기능)은 search-axes.ts의 SEARCH_AXES에 대응 항목이 없고, SearchPanel.tsx의 필터 팝오버에도 범위 선택 UI가 없다.",
+    "'복사본 생성'(같은 폴더에 사본 생성), '다른 곳으로 복사'(워크스페이스 간 이동 유일 수단), '폴더에서 검색', 'URL 복사' 네 컨텍스트 메뉴 항목은 tree-contract.ts의 CONTEXT_MENU_ITEMS(99-109행, 9항목)에 존재하지 않는다. 기존 'copy' 항목 하나만 있어 '복사본 생성'과 '다른 곳으로 복사'가 아직 구분되지 않는다.",
+    "트리 노드 자체의 드래그앤드롭(이동/복사 제스처, 5px/0.35초 임계값, 접힌 폴더 0.6초 자동 펼침, 커서 옆 결과 표시)은 미구현이다 — DocumentTree.tsx의 <Tree>는 disableDrag disableDrop을 명시(606-607행)했고, 구현된 드래그앤드롭은 파일 업로드 전용(TreeRowWrapper의 onDrop, 332-338행)이다.",
+    "옵시디언 빠른 전환 창 같은 검색 입력이 있는 폴더 고르기 창은 미구현이다 — RelocationDialog.tsx는 네이티브 <Select> 드롭다운(144-155행)만 쓴다.",
+    "새 버전 올리기가 파일 노드에만 나타나고 디렉토리/pass-through 노드에는 나타나지 않는 것은 tree-contract.ts의 filesOnly 필터(159-161행)로 이미 구현되어 있으나, 시각적으로 '따로 묶는' 구분선(separator) 처리는 UI 레이어(DocumentTree.tsx의 NodeMenu, 194-206행)에서 항목 사이 구분선 없이 순서대로만 렌더되고 있어 v2가 요구하는 메뉴 그룹 구분선(───)은 미구현으로 보인다.",
+    "--font-mono(packages/web/src/styles/tokens.css:4, 'Consolas, monospace')는 선언만 있고 web 패키지 어디서도 var(--font-mono)로 참조되지 않는다 — TokenPanel.tsx의 PAT 표시 영역(약 240-243행)에도 고정폭 스타일이 붙어 있지 않아, 'PAT처럼 고정폭이 필요한 값'에 나눔고딕코딩을 적용하려면 이 연결부터 새로 만들어야 한다.",
+    "읽기 전용 문서에서 저장 상태 표시가 숨는 로직, 우클릭 메뉴에서 권한 부족 항목에 '권한 없음' 접미사를 붙이는 로직은 DocumentArea.tsx/DocumentSurface.tsx/document-menu.ts 어디에도 없다(현재는 DropdownMenu.Item이 label만 그림, disabled 처리 자체가 없음)."
+  ],
+  "external_paths_detected": []
+}

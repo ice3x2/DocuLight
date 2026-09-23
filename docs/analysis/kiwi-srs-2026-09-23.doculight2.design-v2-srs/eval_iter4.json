@@ -1,0 +1,135 @@
+{
+  "evaluator": "verify-pass-1",
+  "iter": 4,
+  "inputs_checked": {
+    "validate_spec": "errors 0, warnings 5 (SRS-W072 x1 기존, SRS-W015 x4 는 FR-EDITOR-007 강등의 결과) — iter3 와 같다. ID 중복 없음. 00.index §5 · §6 의 수치(planned 31 · in_progress 23 · implemented 69 · verified 176 · discarded 3, FR 108 · IR 39)를 파일에서 다시 세어 일치를 확인했다.",
+    "golden_rule": "HEAD 대비 바뀐 요구 블록 48개를 전부 뽑아 srs_delta.mcp_calls 의 args.id · result_id 와 대조했다. 모든 블록에 성공한 MCP 변경 호출이 있다. 유일한 예외 IR-SHELL-013 은 Change Notes 끝에 빈 줄 하나가 더해진 것뿐이며 바로 뒤에 add_requirement 로 IR-SHELL-014 가 붙으면서 생긴 공백이다 — 내용 변경이 아니므로 결함으로 올리지 않았다. 노트 절에서 옛 줄이 빠진 곳(IR-SHELL-004 Rationale, IR-SHELL-011 Implementation Notes)도 해당 블록에 append_section_note 호출이 있다.",
+    "ac_deletion": "변경 전후 AC ID 를 블록마다 대조했다 — 삭제된 AC 0, 새로 체크된 AC 0, 문면이 바뀌었는데 체크가 남은 AC 0. AC · Requirement · Status 가 바뀐 블록은 모두 Change Notes 행이 있다(노트 · trace 만 바뀐 FR-SHELL-002 · FR-SHELL-008 · FR-SHELL-012 · FR-EDITOR-005 · SEC-ARCH-002 · FR-ARCH-001 · FR-ATTACH-003 · FR-ATTACH-008 은 규칙 §26 2 에 따라 불필요).",
+    "trace_paths": "이번 회차 전체에서 더해진 Code trace 31행 전부 trace_intent 를 갖고 경로 18개가 실존한다. Implementation Notes 의 줄 번호(App.tsx 139 · 385 · 1197 · 1386, tree-contract.ts 200-216 · 299-308, DocumentTree.tsx 325-338 · 606-607, workspace-api.ts 947 · 1641-1654, RelocationDialog.tsx 144-155, upload-contract.ts 58, personal-settings.ts 52-66, shell-contract.ts 17-21)와 함수 이름(readPersonalSetting · writePersonalSettings · DOCUMENT_MENU_ITEMS · nextMode · initialMode · useAutosave · PERSONAL_SETTING_FIELDS)을 실제 코드에서 확인했다. 승인 시안의 격자(.app 44/248/1fr/232 · 행 1fr/24px, .ribbon 두 행, .statusbar 2/5)와 폼 값(.field > label 13px · .help/.error 12px · body line-height 1.6 · .setting-group 위 20px · .modal-body gap 16px), derive() 의 명도 · 채도 식이 IR-SHELL-009 AC-10 · IR-SHELL-006 AC-4 · IR-SHELL-014 AC-5 · AC-6 과 맞는다.",
+    "decision_coverage": "결정 여덟 건과 qna 48건을 요구 · AC 에 하나씩 대응시켰다 — 모두 반영처가 있다. 확정 사항 절에서 반영처가 없는 것은 트리 상단 새 노트 버튼의 생성 위치 · 비활성 조건(change-consistency-4-1) 하나다. 비활성 · 옛 용어 잔존 검사는 활성 요구 전체의 Requirement · AC 를 훑었고, 남은 옛 용어는 모두 디자인 v2 부기가 붙은 곳이거나 discarded 요구다.",
+    "iter3_findings": "iter3 의 MEDIUM 6건과 LOW 10건은 해소를 확인했다(ac-3-3 은 qna #47, IR-SHELL-006 AC-4 행간은 qna #48). ac-3-4 의 허용 오차와 feasibility-3-1 의 대체 키는 improvement_iter3.unresolved 의 v2 이전 문제로 분류된 잔여라 다시 올리지 않았다. conflict-2-1 · change-consistency-2-5 잔여도 known_residuals 라 제외했다."
+  },
+  "findings": [
+    {
+      "id": "change-consistency-4-1",
+      "severity": "MEDIUM",
+      "axis": "change-consistency",
+      "req_id": "FR-SHELL-016",
+      "evidence_path": "docs/decision/design-v2.md:119",
+      "description": "결정 기록 「확정 사항 › 파일 탐색기」는 트리 상단 새 노트 버튼에 대해 「만드는 곳은 선택한 폴더이고, 문서를 선택 중이면 그 문서가 든 폴더이며, 선택이 없으면 버튼이 비활성이다. 만든 문서는 바로 연다」와 「Ctrl+N 도 같은 기준을 따른다」를 적고, 시안과의 차이(열린 문서를 선택으로 봄, 버튼 대신 상태 바 안내)를 시안의 단순화로 돌렸다. SRS 에는 이 생성 위치 · 비활성 조건 · 생성 뒤 열기를 판정하는 AC 가 없다. FR-SHELL-016 AC-7([x], 08:1900)은 「같은 함수를 지나고 이름을 묻지 않는다」만, FR-SHELL-003 AC-1([x], 08:402)은 「누르면 새 문서를 만들 수 있다」만 적는다. FR-EDITOR-011 AC-18 은 「새로 만든 노트가 열릴 때는」이라는 조건문이라 열기 자체를 요구하지 않는다. 오히려 FR-SHELL-016 Implementation Notes(08:1933)는 상단 버튼이 만들 곳을 고를 수 없다고 적고, 현재 구현(packages/web/src/App.tsx:668-672 createNote)은 첫 워크스페이스의 루트에 만든다. 설계서 03 §2.2.4(305 · 314행)와 §11-5(1739행)는 결정 기록과 같이 선택한 디렉토리 · 선택 없으면 비활성으로 적는다. SRS 만 보고 구현하면 결정 기록과 다른 동작이 그대로 남고, 그 차이를 잡을 AC 도 없다. v2 이전부터 있던 설계 · 구현 차이지만 결정 기록이 확정 사항으로 다시 적었으므로 이번 반영의 대상이다.",
+      "suggested_action": "fix_via_mcp — 결정 기록 문면대로 FR-SHELL-016(또는 FR-SHELL-003)에 「트리 상단 새 노트 버튼은 선택한 디렉토리(문서를 선택 중이면 그 문서가 든 디렉토리)에 만들고, 선택이 없거나 선택이 pass-through 이면 비활성이며, 만든 노트를 바로 연다(여는 모드는 FR-EDITOR-011 AC-18)」 AC 를 세우고, Implementation Notes 의 「만들 곳을 고를 수 없다」에 정정을 붙인다. 현재 구현이 이 AC 와 다르다는 사실을 적어 체크된 AC-7 과 떼어 둔다. Ctrl+N 을 SRS 에 둘지는 escalate 로 함께 정한다.",
+      "repeat_of": null
+    },
+    {
+      "id": "internal-4-1",
+      "severity": "MEDIUM",
+      "axis": "internal-consistency",
+      "req_id": "FR-SHELL-015",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:1837",
+      "description": "트리 드롭 대상 해석(파일 노드 위에 놓으면 그 노드가 든 디렉토리)의 소유 요구가 문서마다 다르게 적혀 있다. FR-ATTACH-001 Requirement(15:71)와 trace(15:98)는 「정의는 이 요구가 소유한다」고 적고, FR-SHELL-019 AC-6(08:2769) · trace(08:2788)는 FR-ATTACH-001 을 정본으로 부른다(qna #10). 그런데 FR-SHELL-015 의 FR-SHELL-019 trace 행(08:1837)은 「제스처와 드롭 대상 해석은 그 요구(FR-SHELL-019)가 소유한다」, Implementation Notes(08:1855)는 「제스처와 대상 해석은 FR-SHELL-019 가 소유한다」고 적는다. 한 규칙의 소유 요구가 둘로 갈려, 규칙을 고칠 때 어느 쪽을 고쳐야 하는지 문서가 답하지 못한다. 또 SHELL 의 트리 노드 끌기가 쓰는 대상 규칙을 ATTACH 요구가 소유한다는 경계 이동이 15.attachments §2 In Scope(19행 — 업로드 경로 두 가지만 적는다)와 08 §2 Out of Scope 어디에도 적히지 않았다.",
+      "suggested_action": "fix_via_mcp — FR-SHELL-015(in_progress)의 FR-SHELL-019 trace 행 notes 와 Implementation Notes 를 「제스처는 FR-SHELL-019, 드롭 대상 해석은 FR-ATTACH-001」로 고친다. prose_edit — 15 §2 In Scope 에 「트리 드롭 대상 해석(업로드 드롭과 트리 항목 끌기가 함께 쓴다)」을, 08 §2 Out of Scope 에 그 위임을 한 줄씩 적는다.",
+      "repeat_of": null
+    },
+    {
+      "id": "ac-4-1",
+      "severity": "LOW",
+      "axis": "ac-decidability",
+      "req_id": "FR-SHELL-017",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2605",
+      "description": "AC-10 은 대상 조작을 「우측 태그 탭의 태그 클릭 · 본문 태그 클릭 · Ctrl+Shift+F · 폴더 주소 열기 등」의 열린 목록으로 적는다. 어떤 조작이 「좌측 사이드바의 보기를 바꾸는」 조작인지가 목록 밖에서는 정해지지 않는다. 예컨대 설계서 03 §7.4(1455행)와 §7.11(1540행)은 백링크 · 딥링크로 문서를 열면 「좌측 트리가 해당 노드까지 자동 펼침」이라 적는데, 사이드바가 접혔거나 검색 보기일 때 이 경로가 트리 보기로 바꾸고 펼치는지(AC-10 대상인지)는 판정할 수 없다.",
+      "suggested_action": "fix_via_mcp — AC-10 의 목록을 닫거나(열거한 넷이 전량), 문서를 여는 경로는 사이드바의 보기와 접힘을 바꾸지 않는다는 문장을 더한다. 설계서 03 §7.4 · §7.11 의 자동 펼침도 그 판정에 맞춘다.",
+      "repeat_of": null
+    },
+    {
+      "id": "change-consistency-4-2",
+      "severity": "LOW",
+      "axis": "change-consistency",
+      "req_id": "FR-EDITOR-006",
+      "evidence_path": "docs/spec/07.editor.srs.md:32",
+      "description": "qna #29 로 FR-EDITOR-006 이 비-md 두 메뉴에서 모드 항목 · 편집 조작 · 버전 기록을 빼는 요구로 넓어졌고 제목도 「md 전용 메뉴 항목」으로 바뀌었다. 그런데 07 §2 In Scope(22행)는 「비-md 파일에서의 모드 아이콘 · 모드 메뉴 항목 숨김」, Out of Scope(32행)는 「이 scope 는 모드 아이콘과 모드 메뉴 항목의 숨김만 규정한다」, FR-EDITOR-006 Implementation Notes ①(07:693)은 「이 요구는 모드 토글의 숨김만 규정한다」고 여전히 적는다(④ 정정은 용어만 고쳤다). 15.attachments §2(27행)는 같은 날 「모드 아이콘과 md 전용 메뉴 항목」으로 고쳐 두 문서의 경계 서술이 어긋난다.",
+      "suggested_action": "prose_edit — 07 §2 의 두 줄을 「모드 아이콘과 md 전용 메뉴 항목(모드 · 편집 조작 · 버전 기록)의 숨김」으로 고친다. fix_via_mcp — FR-EDITOR-006 Implementation Notes 에 ① 의 「숨김만」이 qna #29 로 넓어졌다는 정정을 붙인다.",
+      "repeat_of": null
+    },
+    {
+      "id": "internal-4-2",
+      "severity": "LOW",
+      "axis": "internal-consistency",
+      "req_id": "FR-EDITOR-004",
+      "evidence_path": "docs/spec/07.editor.srs.md:529",
+      "description": "FR-EDITOR-004 AC-7 은 iter2 에 「보기 권한만 있는 md 문서」로 한정됐지만 AC-1~AC-4(529-532행)는 한정이 없다. AC-1 을 문면대로 읽으면 보기 권한만 있는 사용자가 비-md 파일을 열어도 눈 아이콘이 나타나야 하는데, FR-EDITOR-006 AC-2(07:665)는 비-md 파일에서 모드 아이콘을 숨긴다. 모드 규칙을 md 로 한정하는 FR-EDITOR-011 Requirement 와 refines 관계로 추론은 되지만, 같은 요구 안에서 AC 마다 한정이 다르다(iter3 internal-3-2 와 같은 유형).",
+      "suggested_action": "fix_via_mcp — AC-1~AC-4 에 「md 문서에서」를 붙이거나 Requirement 문장에 「md 문서에 적용한다 — 비-md 는 FR-EDITOR-006」을 더한다.",
+      "repeat_of": null
+    },
+    {
+      "id": "change-consistency-4-3",
+      "severity": "LOW",
+      "axis": "change-consistency",
+      "req_id": "DR-SHELL-002",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:1627",
+      "description": "verified 인 DR-SHELL-002 의 R152 trace 행 notes 가 「세 항목은 개인 설정이며」라고 적는다. R152 는 2026-09-23 개정으로 「다섯이 전량」이 됐다. 같은 옛 문구를 가진 IR-SHELL-002 의 R152 trace 행은 이번 회차에 고쳤고, verified 라 행을 고칠 수 없는 SEC-ARCH-002 · FR-ARCH-001 은 Implementation Notes 에 부기를 남겼는데 DR-SHELL-002 만 빠졌다. 결정 기록 적용 범위 표가 DR-SHELL-002 의 문면은 바뀌지 않는다고 한 것은 요구 문면에 대한 판단이지 이 notes 에 대한 것이 아니다.",
+      "suggested_action": "fix_via_mcp — DR-SHELL-002 Implementation Notes 에 「R152 trace 행의 『세 항목』은 2026-09-23 개정으로 다섯이다(항목 열거는 IR-SHELL-004 가 소유)」를 붙인다.",
+      "repeat_of": null
+    },
+    {
+      "id": "change-consistency-4-4",
+      "severity": "LOW",
+      "axis": "change-consistency",
+      "req_id": "IR-SHELL-002",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:264",
+      "description": "iter3 가 세운 qna #35 적용 기준(「측정량이 리본 · 사이드바 배치에 달려 있으면 체크 해제, 아니면 체크를 두고 까닭을 적는다」)이 IR-SHELL-002 AC-1([x] 「좌하단 기어 버튼을 누르면 설정 모달이 열린다」)에는 적용되지 않았다. 근거 VE-2(08:278, shell-remainder.test.tsx)는 기어가 옛 좌측 사이드바 하단 바에 있던 화면에서 「그 모서리에 있다」를 잰 것이고, qna #37 로 기어는 리본 맨 아래로 옮겨 그 하단 바가 걷혔다. IR-SHELL-009 Implementation Notes(08:2277)는 같은 사정을 「VE-1 이 잰 설정 하단 행은 옛 사이드바 하단 배치다」로 적고 AC-1 을 해제했는데, 같은 기어를 재는 IR-SHELL-002 AC-1 은 체크도 까닭도 그대로다.",
+      "suggested_action": "fix_via_mcp — 기준대로 IR-SHELL-002 AC-1 의 체크를 해제하거나, 유지하는 까닭(좌하단이라는 위치는 리본으로 옮긴 뒤에도 같다)과 리본 이전 뒤 같은 검사로 다시 돌릴 의무를 Implementation Notes 에 적는다.",
+      "repeat_of": null
+    },
+    {
+      "id": "change-consistency-4-5",
+      "severity": "LOW",
+      "axis": "change-consistency",
+      "req_id": "FR-SHELL-008",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:951",
+      "description": "verified 인 FR-SHELL-008 은 Rationale 에 헤더 메뉴에 공간이 없다는 근거가 더는 성립하지 않는다는 재검토를 붙였지만, Implementation Notes ①(951행)은 여전히 「이 진입점 배치의 근거는 … Phase 1 시점에 공간이 없다는 것이다」라는 취지를 현재형으로 단정하고, FR-SHELL-002 trace 행(942행)도 「헤더 메뉴에 공간이 없다는 사실이 이 배치의 근거다」로 남았다. 한 요구 안에서 Rationale 과 Implementation Notes · trace 가 근거를 다르게 말한다.",
+      "suggested_action": "fix_via_mcp — Implementation Notes 에 「① 과 FR-SHELL-002 trace 행의 공간 근거는 2026-09-23 이후 성립하지 않으며 근거는 결정 기록 결정 2 다(Rationale 재검토)」 정정을 붙인다(verified 라 trace 행은 고치지 않는다).",
+      "repeat_of": "change-consistency-1-6"
+    },
+    {
+      "id": "change-consistency-4-6",
+      "severity": "LOW",
+      "axis": "change-consistency",
+      "req_id": "-",
+      "evidence_path": "docs/spec/03.screen-design-shell.md:752",
+      "description": "설계서 03 §3.1 골격 그림이 문서 헤더 높이를 「보기 40 / 편집 64」로 적는다. 91.03-history.md 82행에 따르면 편집 64 는 옛 헤더가 편집 모드에서 보기·편집 토글과 라이브 프리뷰·소스 하위 토글을 함께 싣던 때 정한 값이다. v2 에서는 두 모드 모두 제목 줄에 모드 아이콘 하나와 ⋯ 만 있으므로(§3.3) 모드에 따라 헤더 높이가 달라질 근거가 사라졌는데, 25차가 §3.1 을 고치면서 이 값은 그대로 두었다. §3.2.4 의 축약 불가 블록 실측(보기·편집 토글 99px · 하위 토글 159px)도 옛 토글 기준이지만 원장 R173 이 Phase 2 에서 다시 재라고 적어 두었으므로 이 항목에서는 헤더 높이만 든다.",
+      "suggested_action": "prose_edit — §3.1 의 헤더 높이를 v2 헤더에 맞춰 하나로 두거나, 편집 64 를 유지할 근거를 〔판단〕으로 적는다.",
+      "repeat_of": null
+    },
+    {
+      "id": "ac-4-2",
+      "severity": "LOW",
+      "axis": "ac-decidability",
+      "req_id": "FR-SHELL-019",
+      "evidence_path": "docs/spec/03.screen-design-shell.md:411",
+      "description": "FR-SHELL-019 AC-13 은 끌어서 정한 이동도 메뉴 경로와 같은 접근 가능 인원 프리뷰를 거친다고 요구하고, 결정 기록은 그 프리뷰가 목적지를 고르는 창 안에 있어야 한다고 적는다. 설계서 03 §2.2.8(536-538행)은 끌어서 복사하면 폴더 고르기 창이 드롭한 폴더가 골라진 채로 열린다고 진입별로 적지만, 이동의 §2.2.7 에는 그런 진입 표가 없고 §2.2.6(411행)은 「R74 검사 → R43-5 프리뷰(§2.2.7) → 이동」만 적는다. 끌어서 이동할 때 프리뷰를 폴더 고르기 창을 열어 보이는지, 2단계 확인 창에서만 보이는지(인원이 그대로면 확인 없이 실행되므로 프리뷰가 한 번도 안 보일 수 있다)가 정해지지 않아 AC-13 의 「같은 프리뷰」가 무엇을 보면 참인지 흔들린다.",
+      "suggested_action": "prose_edit — 03 §2.2.7 에 §2.2.8 과 같은 진입 표를 두고 끌어서 이동한 경우의 화면(드롭한 폴더가 골라진 폴더 고르기 창)을 적는다. 필요하면 FR-SHELL-019 AC-13 에 그 화면을 참조로 붙인다.",
+      "repeat_of": null
+    },
+    {
+      "id": "feasibility-4-1",
+      "severity": "LOW",
+      "axis": "feasibility",
+      "req_id": "IR-SHELL-011",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2402",
+      "description": "AC-15 는 폴더 고르기 창에서 ACL 이 목적지로 허용하지 않는 폴더를 흐리게 두고 고를 수 없게 하라고 요구하며, 판정은 ACL 이 계산한 결과를 받아 쓰라고 한다. 그런데 후보를 만드는 destinationsFor 의 주석(packages/web/src/tree/tree-contract.ts:194-196)과 FR-SHELL-015 VE-3(08:1831)은 트리 응답이 워크스페이스 루트의 유효 권한을 담지 않아 루트 후보에는 권한 판정을 걸 수 없다고 적는다. 이 요구의 Implementation Notes(코드 현황 · 함정)는 새 endpoint 를 만들지 않는다고만 적고, 루트 후보의 판정 재료가 없다는 사실과 그것을 어디서 받을지는 적지 않았다. feasibility.json 은 IR-SHELL-011 을 high 로 두었다.",
+      "suggested_action": "fix_via_mcp — Implementation Notes 에 「워크스페이스 루트 후보의 목적지 권한은 지금 트리 응답에 없다 — 트리 응답에 워크스페이스 유효 권한을 싣거나 기존 relocation-preview 로 판정해야 한다」를 적는다.",
+      "repeat_of": null
+    },
+    {
+      "id": "internal-4-3",
+      "severity": "LOW",
+      "axis": "internal-consistency",
+      "req_id": "IR-SHELL-006",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:1992",
+      "description": "AC-17 은 리본 활성 아이콘과 그 타일의 대비 3:1 을 여섯 프리셋 × 두 테마 × 다섯 단계로 한정하고, AC-8 은 상태 표식이 실제 배경과 3:1 이상이라고 일반 규칙으로 적는다. 직접 고른 색에서 고를 수 없는 메뉴 밝기 단계를 가르는 IR-SHELL-015 AC-5 는 IR-SHELL-014 AC-7~AC-9 의 목표값만 본다. 그래서 직접 고른 색이 AC-7~AC-9 는 넘지만 리본 활성 아이콘 대비가 3:1 에 못 미치는 단계는 고를 수 있고, 그때 AC-8 이 깨져도 막는 규칙이 없다. 결정 기록은 이 대비를 「구현 때 맞춘다」고만 했다.",
+      "suggested_action": "escalate — 리본 활성 아이콘 대비(3:1)를 IR-SHELL-015 AC-5 의 판정 목표에 넣을지, 직접 고른 색에서는 AC-8 의 해당 표식을 모양 표식만으로 충족한다고 볼지 정한다.",
+      "repeat_of": null
+    }
+  ],
+  "summary": { "CRITICAL": 0, "HIGH": 0, "MEDIUM": 2, "LOW": 10 }
+}

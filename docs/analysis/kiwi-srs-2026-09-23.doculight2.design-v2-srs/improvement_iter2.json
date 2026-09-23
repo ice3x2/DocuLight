@@ -1,0 +1,288 @@
+{
+  "iter": 2,
+  "input": "eval_iter2.json (CRITICAL 0 · HIGH 0 · MEDIUM 10 · LOW 9), qna_log.json resolutions #29~#38",
+  "workspace": {
+    "workspaceRoot": "C:\\Work\\git\\DocuLight2.0",
+    "rootSource": "server-cwd-discovery",
+    "work_mode": "sdd",
+    "active_target": "phase-1"
+  },
+  "fixed": [
+    {
+      "finding_id": "internal-2-1",
+      "severity": "MEDIUM",
+      "how": "MCP(qna #29): FR-EDITOR-006 — 제목 「…md 전용 메뉴 항목을 숨긴다」 · Requirement(edit_requirement_fields), AC-4(편집 조작 없음) · AC-5(버전 기록 보기 없음) 신설(replace_acceptance_criteria, AC-1 체크 유지), Rationale · Implementation Notes ④ 정정(append_section_note ×2), trace qna_log, update_status 변경 기록. FR-EDITOR-011 — Requirement 에 md 한정 · 비-md 는 FR-EDITOR-006, AC-10 · AC-11 · AC-15 를 md 문서로 한정(replace_acceptance_criteria), trace FR-EDITOR-006. FR-EDITOR-004 AC-7 도 md 문서로 한정(호출은 change-consistency-2-1 에 셈). 산문: 03 §3.3 · §3.7 · §10-17. FR-EDITOR-011 의 공유 호출 6건(Requirement · AC · Rationale · Implementation Notes · trace qna_log · update_status)은 이 항목에 셌다",
+      "mcp_calls": 13
+    },
+    {
+      "finding_id": "internal-2-2",
+      "severity": "MEDIUM",
+      "how": "MCP(qna #30): FR-EDITOR-011 AC-17 신설(머지 뷰를 보는 동안 모드 아이콘 · Ctrl+E · 두 메뉴의 모드 항목이 모두 꺼진다), AC-7 · AC-8 · AC-10 이 AC-17 을 따르게 함, Requirement 문장 · Implementation Notes ⑨ 재정정(공유 호출은 internal-2-1 에 셈), trace FR-EDITOR-008. 산문: 03 §3.4 머지 뷰 행(기존 〔판단〕 근거 보존) · §6.5",
+      "mcp_calls": 1
+    },
+    {
+      "finding_id": "change-consistency-2-1",
+      "severity": "MEDIUM",
+      "how": "MCP(qna #31): FR-EDITOR-004 — Requirement 에 저장 상태 표시 조건, AC-8 신설(편집 권한이 있으면 모드와 관계없이 표시), AC-7 md 한정, Implementation Notes ⑤, trace qna_log, update_status 변경 기록. IR-SHELL-003 — update_status verified -> in_progress, AC-2 를 「저장 상태 표시가 서는 문서에서는 … 조건은 FR-EDITOR-004 AC-5 · AC-8 이 소유」로 좁히고 체크 해제(AC-1 · AC-3 · AC-4 · VE-1 유지), Implementation Notes ④, trace depends_on FR-EDITOR-004. 산문: 03 §3.5(설계 원칙 · 표 두 행 · 머리 문장, 옛 〔판단〕 보존) · §11-12",
+      "mcp_calls": 9
+    },
+    {
+      "finding_id": "change-consistency-2-2",
+      "severity": "MEDIUM",
+      "how": "MCP(qna #32): FR-SHELL-006 AC-7 신설(일반 파일 주소는 트리 클릭과 같게 연다 — 표시는 FR-ATTACH-003, 숨김은 FR-EDITOR-006), Implementation Notes ⑤ 정정(미결 종결 · execCommand 대체 경로), trace FR-ATTACH-003 · qna_log, update_status 변경 기록. 산문: 03 §3.9.1",
+      "mcp_calls": 5
+    },
+    {
+      "finding_id": "scope-2-1",
+      "severity": "MEDIUM",
+      "how": "MCP(qna #33): IR-SHELL-011 AC-15 에서 권한 값(목적지 `편집`)을 지우고 「ACL 이 이 조작의 목적지로 허용하지 않는 폴더(SEC-ACL-012 AC-5 · SEC-ACL-014 AC-3 의 판정)」로 파생 관계만 남김. SEC-ACL-012 trace 행 notes 의 「목적지 `편집` 판정의 정본」도 같은 방식으로 고침(열 이름 확인 dryRun 1 포함), update_status 변경 기록",
+      "mcp_calls": 4
+    },
+    {
+      "finding_id": "scope-2-2",
+      "severity": "MEDIUM",
+      "how": "산문(qna #34): 04 §2.2 의 파생 규칙 · 대비 목표 정본을 결정 기록에서 IR-SHELL-014 로 고쳐 가리키고 그 이유(AC-9 · AC-12 · AC-13)와 derive() 의 자리(AC-10)를 적음, 04 머리표 갱신 (17). MCP: IR-SHELL-014 Implementation Notes ⑪ 에 정본 표기(호출은 ac-2-4 에 셈)",
+      "mcp_calls": 0
+    },
+    {
+      "finding_id": "ac-2-1",
+      "severity": "MEDIUM",
+      "how": "MCP(qna #35): IR-SHELL-009 — AC-2 에 「리본 44px 는 좌측 패널 180px 에 넣지 않고 따로 센다」를 더하고, 리본 없는 신문지 배치에서 잰 VE-1~VE-3 으로 체크돼 있던 AC-2 를 체크 해제해 재검증 대상으로 표시(§21.3 — 증거 행 보존, Status 는 이미 in_progress), AC-9 신설(200% 확대에서도 리본이 보인다), Implementation Notes ① · ② 정정, trace qna_log, update_status 변경 기록(재검증 대상 사유). AC-4 는 셸이 없는 화면이라 체크 유지",
+      "mcp_calls": 4
+    },
+    {
+      "finding_id": "internal-2-3",
+      "severity": "MEDIUM",
+      "how": "MCP(qna #36): FR-EDITOR-011 AC-18 신설(편집 권한이 있는 사용자가 새로 만든 노트는 기본 열람 모드와 관계없이 라이브 편집 — 이미 있는 노트는 AC-1 · AC-4 · AC-5), Requirement 문장 · Implementation Notes ⑩(공유 호출은 internal-2-1 에 셈), trace FR-SHELL-016(FR-EDITOR-011 쪽) · FR-EDITOR-011(FR-SHELL-016 쪽). 산문: 03 §2.2.4 · §3.4 · §7.2 · §7.8. 소스 편집 선호 사용자는 qna 가 말하지 않아 unresolved 에 남김",
+      "mcp_calls": 2
+    },
+    {
+      "finding_id": "change-consistency-2-3",
+      "severity": "MEDIUM",
+      "how": "산문(qna #37): 03 §1.1 다이어그램 · 설명, §1.2 표(「좌측 하단 바」 행 제거, 리본 행에 기어), 접힘 그림과 40px 스트립 〔판단〕(옛 판단은 문장으로 보존), §2.1 그림, §2.5 위치, §5 그림, §11-1(펼치는 수단 미정), 04 §1.1. MCP: IR-SHELL-009 AC-1 의 「좌하단 설정 버튼」을 「설정 버튼(기어)은 리본 맨 아래」로 고침(호출은 ac-2-1 에 셈). 원장 R24-a 의 「좌하단 기어」는 리본 맨 아래도 좌하단이라 고치지 않음",
+      "mcp_calls": 0
+    },
+    {
+      "finding_id": "change-consistency-2-4",
+      "severity": "MEDIUM",
+      "how": "MCP(qna #38): FR-ATTACH-007 AC-3 「모드 토글」→「모드 아이콘」, Rationale 용어 개정 노트, update_status 변경 기록(Stability draft · Target phase-2 그대로). FR-ATTACH-008 · verified FR-ATTACH-003 은 Implementation Notes 에 용어 개정 노트만 덧붙임. FR-EDITOR-006 ① 의 모드 토글도 노트로 정정(internal-2-1 호출에 포함). 산문: 15 §2 Out of Scope 두 곳",
+      "mcp_calls": 5
+    },
+    {
+      "finding_id": "internal-2-4",
+      "severity": "LOW",
+      "how": "MCP: FR-EDITOR-011 AC-3 끝 문장을 「여는 경로에 따라 판정이 달라지지 않는다」로 좁힘(internal-2-1 의 replace_acceptance_criteria 한 번에 포함)",
+      "mcp_calls": 0
+    },
+    {
+      "finding_id": "ac-2-2",
+      "severity": "LOW",
+      "how": "MCP: FR-EDITOR-012 AC-2 와 Requirement 문장에서 근거 없는 「저장을 일으키지 않는다」를 지움(edit_requirement_fields · replace_acceptance_criteria), update_status 변경 기록",
+      "mcp_calls": 3
+    },
+    {
+      "finding_id": "ac-2-3",
+      "severity": "LOW",
+      "how": "MCP: IR-SHELL-015 AC-5 를 −/+ 증감 컨트롤에 맞춰 「−/+ 버튼을 눌러도 그 단계가 선택되지 않는다」로 고치고 판정 기준을 IR-SHELL-014 AC-7~AC-9 의 목표값으로 명시, Implementation Notes ⑦, update_status 변경 기록. 산문: 04 §2.2. 부분 해결 — 허용 단계가 이어지지 않을 때의 건너뛰기 여부는 결정이 없어 unresolved [qna #40 로 완결] 남아 있던 건너뛰기 여부를 AC-8 로 닫았다",
+      "mcp_calls": 3
+    },
+    {
+      "finding_id": "ac-2-4",
+      "severity": "LOW",
+      "how": "MCP: IR-SHELL-014 AC-7~AC-9 를 대비 목표값과 여섯 프리셋의 보장으로 나눠 적음(값 불변), Implementation Notes ⑩ · ⑪(정본 표기, qna #34), update_status 변경 기록",
+      "mcp_calls": 3
+    },
+    {
+      "finding_id": "feasibility-2-1",
+      "severity": "LOW",
+      "how": "MCP: FR-SHELL-006 Implementation Notes ⑤ 정정에 사용자 제스처 안의 document.execCommand('copy') 대체 경로를 적고 실측을 구현 때로 넘김(change-consistency-2-2 의 append_section_note 한 번에 포함)",
+      "mcp_calls": 0
+    },
+    {
+      "finding_id": "scope-2-3",
+      "severity": "LOW",
+      "how": "MCP: FR-SHELL-018 Requirement · AC-2 에서 파일 노드의 대상 해석을 다시 적지 않고 FR-SHELL-016 AC-1 을 참조, FR-SHELL-016 trace 행을 related_to → depends_on(정본 표기), Rationale 정본 표기 노트, update_status 변경 기록",
+      "mcp_calls": 5
+    },
+    {
+      "finding_id": "classification-2-1",
+      "severity": "LOW",
+      "how": "classification.json: FR-SHELL-016 · IR-SHELL-008 · IR-SHELL-003 을 no-change → edit-in-place 로 재분류(action_planned · change_executed · reclassified 로 이력 보존), 계획 행이 없던 FR-EDITOR-007 · CON-SHELL-002 · FR-STORAGE-003 · FR-EDITOR-012 · FR-ATTACH-007 · FR-ATTACH-008 · FR-ATTACH-003 · SEC-PRINCIPAL-003 · FR-STORAGE-010 을 order 95~103 으로 더함(action_planned=absent), IR-PRINCIPAL-001 change_executed 에 태그 변경 덧붙임, counts_note 갱신",
+      "mcp_calls": 0
+    },
+    {
+      "finding_id": "change-consistency-2-5",
+      "severity": "LOW",
+      "how": "산문: 13 §2 Out of Scope 「검색 탭」→ 좌측 검색 보기. MCP: implemented SEC-PRINCIPAL-003 의 FR-SHELL-014 trace 행 notes(dryRun 1 포함) · Implementation Notes 용어 개정 · update_status 변경 기록, planned FR-STORAGE-010 · IR-PRINCIPAL-001 Tags newspaper → design-v2 와 각 update_status 변경 기록. 부분 해결 — verified 요구의 잔여는 not_fixed",
+      "mcp_calls": 8,
+      "partial": true
+    }
+  ],
+  "not_fixed": [
+    {
+      "finding_id": "conflict-2-1",
+      "reason": "verified FR-SHELL-012 의 depends_on FR-SHELL-001 행과 FR-EDITOR-005 의 refines FR-EDITOR-002 행을 남길지, 다음에 verified 에서 내려갈 때 지울지는 결정 기록 · qna 에 없는 절차 결정이다(지시 3: 새 결정을 만들지 않는다). edit_requirement_table_rows 는 verified 에서 거부되고, trace 한 행 때문에 verified 를 내리는 것도 비례에 맞지 않는다. 대체 행과 노트는 iter1 이 이미 더했다. unresolved 에 남겼다"
+    },
+    {
+      "finding_id": "change-consistency-2-5 (잔여)",
+      "reason": "verified IR-AUTH-003 · IR-WORKSPACE-001 · IR-SHELL-010 의 Tags `newspaper`, 09.auth 1981-1983행 trace notes 「adds newspaper presentation」, IR-SHELL-010 의 「신문지 파일 표면」 trace notes 는 edit_requirement_fields · edit_requirement_table_rows 가 verified 에서 거부된다. 라벨만 다르고 규범의 실질이 같은 변경에 verified 를 내리지 않았다"
+    }
+  ],
+  "demoted_ids": [
+    {
+      "id": "IR-SHELL-003",
+      "from": "verified",
+      "to": "in_progress"
+    }
+  ],
+  "rechecked_acs": [
+    {
+      "id": "IR-SHELL-003",
+      "ac": "AC-2",
+      "change": "문면을 좁혀 체크 해제 — VE-1 의 시험은 권한을 정하지 않은 탭으로 잰다. 편집 권한이 있는 문서와 보기 권한만 있는 문서를 나눠 다시 재야 verified 로 돌아간다"
+    },
+    {
+      "id": "IR-SHELL-009",
+      "ac": "AC-2",
+      "change": "리본 기준을 더하고 체크 해제 — VE-1~VE-3 은 리본이 없던 신문지 배치에서 잰 증거다. v2 배치의 200% 확대에서 다시 재야 한다(qna #35). 증거 행은 보존"
+    }
+  ],
+  "unresolved": [
+    "conflict-2-1: verified FR-SHELL-012 · FR-EDITOR-005 에 남은 폐기 요구 참조 trace 행의 처리 방침(남김 / 다음 강등 때 삭제)은 절차 결정이라 정하지 않았다.",
+    "change-consistency-2-5 잔여: verified IR-AUTH-003 · IR-WORKSPACE-001 · IR-SHELL-010 의 Tags newspaper와 09.auth · IR-SHELL-010 의 신문지 trace notes — verified 편집 도구 거부.",
+    "관찰(finding 범위 밖): SHELL scope 의 기존 AC 가운데 권한 값을 직접 적은 것(FR-SHELL-003 AC-6, FR-SHELL-008 AC-3, FR-SHELL-015 AC-4, FR-SHELL-007 AC-5 · AC-6, IR-SHELL-002 AC-5)이 이번 run 이전부터 있다. qna #33 은 IR-SHELL-011 AC-15 에만 적용했다.",
+    "관찰: verified FR-SHELL-002 AC-3 은 비-md 파일을 따로 말하지 않는다. 「문서」를 md 문서로 읽으면 FR-EDITOR-006 AC-5 와 어긋나지 않아 두었다."
+  ],
+  "decisions_applied": {
+    "qna_29": "FR-EDITOR-006 제목 · Requirement · AC-4 · AC-5, FR-EDITOR-011 AC-10 · AC-11 · AC-15, FR-EDITOR-004 AC-7, 03 §3.3 · §3.7 · §10-17",
+    "qna_30": "FR-EDITOR-011 Requirement · AC-7 · AC-8 · AC-10 · AC-17, 03 §3.4 · §6.5",
+    "qna_31": "FR-EDITOR-004 Requirement · AC-8, IR-SHELL-003 AC-2(강등), 03 §3.5 · §11-12",
+    "qna_32": "FR-SHELL-006 AC-7, 03 §3.9.1",
+    "qna_33": "IR-SHELL-011 AC-15 · SEC-ACL-012 trace 행",
+    "qna_34": "04 §2.2, IR-SHELL-014 Implementation Notes ⑪",
+    "qna_35": "IR-SHELL-009 AC-2(체크 해제 · 재검증 대상) · AC-9",
+    "qna_36": "FR-EDITOR-011 Requirement · AC-18, FR-SHELL-016 trace, 03 §2.2.4 · §3.4 · §7.2 · §7.8",
+    "qna_37": "IR-SHELL-009 AC-1, 03 §1.1 · §1.2 · §2.1 · §2.5 · §5 · §11-1, 04 §1.1",
+    "qna_38": "FR-ATTACH-007 AC-3 · Rationale, FR-ATTACH-008 · FR-ATTACH-003 노트, FR-EDITOR-006 ①, 15 §2 두 곳"
+  },
+  "status_changes": [
+    {
+      "id": "IR-SHELL-003",
+      "from": "verified",
+      "to": "in_progress"
+    }
+  ],
+  "status_index_after": {
+    "planned": 31,
+    "in_progress": 23,
+    "implemented": 69,
+    "verified": 176,
+    "discarded": 3,
+    "note": "00.index.md 는 MCP 의 index sync 가 in_progress 22 → 23, verified 177 → 176 두 줄만 고쳤다(스냅샷 diff 로 확인)"
+  },
+  "verification_notes": [
+    "객관 대조(자기 확인이 허용되는 사실 확인만): 작업 직전 docs/spec 스냅샷과 요구 블록 단위로 비교해 바뀐 AC 가 계획한 것뿐임을 확인했다 — FR-EDITOR-004(AC-7 문면 · AC-8 신설), FR-EDITOR-006(AC-4 · AC-5 신설), FR-EDITOR-011(AC-3 · 7 · 8 · 10 · 11 · 15 문면, AC-17 · 18 신설), FR-EDITOR-012(AC-2), FR-SHELL-006(AC-7 신설), IR-SHELL-003(AC-2 문면 · 체크 해제, verified → in_progress), IR-SHELL-009(AC-1 문면, AC-2 문면 · 체크 해제, AC-9 신설), IR-SHELL-011(AC-15), FR-SHELL-018(AC-2), IR-SHELL-014(AC-7~AC-9), IR-SHELL-015(AC-5), FR-ATTACH-007(AC-3). 나머지 요구(FR-SHELL-016 · FR-STORAGE-010 · FR-ATTACH-003 · FR-ATTACH-008 · SEC-PRINCIPAL-003 · IR-PRINCIPAL-001)는 AC 변경 없음.",
+    "스냅샷에 없던 새 글자 0 건 — iter1 의 유니코드 이스케이프 사고(옅 → 다른 글자) 같은 글자 오염이 없다. 긴 AC 목록은 파일에서 뽑아 바꿀 AC 만 교체한 뒤 \\u 이스케이프 JSON 그대로 넘겨 옮겨 적기 오류를 막았다.",
+    "줄바꿈(바이트 단위): 03 · 07 · 14 · 15 · 16 은 LF, 04 · 08 · 13 · 00 은 CRLF 이며 편집 뒤에도 그대로다. Git Bash 의 grep -c $'\\r$' 는 LF 파일도 전부 CRLF 로 세어 오판하므로 python 바이트 수로 쟀다.",
+    "판단이 끼는 검증(의도 일치 · 회귀 · 문면 품질)은 하지 않았다 — 다음 독립 검증 회차의 몫이다."
+  ],
+  "validate_spec": {
+    "errors": 0,
+    "warnings": 5,
+    "byCode": {
+      "SRS-W072": 1,
+      "SRS-W015": 4
+    },
+    "note": "앞 회차와 같은 경고다(W072 기존, W015 x4 는 FR-EDITOR-007 을 내린 iter1 의 결과). qna #39~#42 반영 뒤에도 같다.",
+    "phase": "qna_42"
+  },
+  "counts": {
+    "fixed_medium": 10,
+    "fixed_low": 8,
+    "fixed_low_partial": [
+      "change-consistency-2-5"
+    ],
+    "not_fixed_low": 1,
+    "mcp_calls_total": 69,
+    "mcp_mutations": 63,
+    "mcp_dry_runs": 2,
+    "mcp_reads": 4,
+    "prose_edits": 33,
+    "prose_files": [
+      "docs/spec/03.screen-design-shell.md",
+      "docs/spec/04.screen-design-settings.md",
+      "docs/spec/13.workspace.srs.md",
+      "docs/spec/15.attachments.srs.md"
+    ],
+    "delta_files_updated": [
+      "srs_delta.json (mcp_calls +69, demoted_ids +1, edited_ids, unresolved, unresolved_resolved_in_iter2, validate_spec_result)",
+      "prose_delta.json (edits +33, unresolved +2, unresolved_resolved_in_iter2, validate_spec)",
+      "classification.json (재분류 3, 행 추가 9)"
+    ],
+    "followup_qna_39_41": {
+      "resolutions": 3,
+      "mcp_mutations": 17,
+      "mcp_reads": 1,
+      "prose_edits": 12
+    },
+    "followup_qna_42": {
+      "resolutions": 1,
+      "mcp_mutations": 6,
+      "mcp_dry_runs": 2,
+      "mcp_reads": 1,
+      "prose_edits": 5
+    }
+  },
+  "followup_qna_39_41": [
+    {
+      "qna": 39,
+      "decision": "새 노트는 「편집으로 열 때의 모드」(기본 라이브 편집)로 연다. 소스 편집을 고른 사람에게는 소스 편집으로 연다",
+      "how": "MCP: FR-EDITOR-011 Requirement · AC-18(편집 모드로 열고 라이브 · 소스는 「편집으로 열 때의 모드」), Rationale · Implementation Notes ⑩ 정정, trace 행 두 개(qna_log · FR-SHELL-016) notes, update_status 변경 기록. FR-SHELL-016 의 FR-EDITOR-011 trace 행 notes. 산문: 03 §2.2.4 · §3.4 · §7.2 · §7.8, 04 §2.1",
+      "mcp_calls": 7,
+      "prose_edits": 5
+    },
+    {
+      "qna": 40,
+      "decision": "메뉴 밝기 −/+ 는 고를 수 없는 단계를 건너뛰어 그 방향의 다음 허용 단계로 간다. 그 방향에 허용 단계가 없으면 버튼을 끈다",
+      "how": "MCP: IR-SHELL-015 AC-8 신설, Implementation Notes ⑦ 정정, qna_log trace 행 notes, update_status 변경 기록. 산문: 04 §2.2",
+      "mcp_calls": 4,
+      "prose_edits": 1
+    },
+    {
+      "qna": 41,
+      "decision": "리본에서 이미 켜진 보기 버튼을 다시 누르면 좌측 사이드바를 접고 펼친다",
+      "how": "MCP: FR-SHELL-017 Requirement · AC-8 신설, Rationale 근거 노트, Implementation Notes ⑥(접힘 여부는 보기 상태와 따로 드는 값), trace qna_log(#11 · #41), update_status 변경 기록. 산문: 03 §1.2 · §2.1 · §11-1",
+      "mcp_calls": 6,
+      "prose_edits": 3
+    }
+  ],
+  "followup_qna_39_41_common": {
+    "prose": "03 머리표 29차 → 30차 · §13 30차 행 신설, 04 머리표 갱신 (18) 행 신설",
+    "validate_calls": 1,
+    "verification": "작업 직전 사본과 요구 블록 단위로 대조 — 바뀐 AC 는 FR-EDITOR-011 AC-18(문면), IR-SHELL-015 AC-8(신설), FR-SHELL-017 AC-8(신설) 셋뿐이고 FR-SHELL-016 은 trace 행만 바뀌었다. 사본에 없던 새 글자 0 건. 03 · 07 은 LF, 04 · 08 은 CRLF 그대로",
+    "status_changes": "없음 — 네 요구 모두 같은 상태로 두고 변경 기록만 남겼다"
+  },
+  "unresolved_resolved_by_qna_39_41": [
+    "FR-EDITOR-011 AC-18 — 소스 편집을 고른 사용자의 새 노트(qna #39)",
+    "IR-SHELL-015 AC-5 — 허용 단계가 이어지지 않을 때의 −/+(qna #40, AC-8)",
+    "설계서 03 §1.2 · §11-1 — 접힌 좌측 사이드바를 펼치는 수단(qna #41, FR-SHELL-017 AC-8)"
+  ],
+  "known_residuals": [
+    "conflict-2-1 — verified FR-SHELL-012 의 depends_on FR-SHELL-001 행과 FR-EDITOR-005 의 refines FR-EDITOR-002 행은 그대로 둔다(조정자 지시). 대체 행과 노트는 iter1 에 이미 있다",
+    "change-consistency-2-5 잔여 — verified IR-AUTH-003 · IR-WORKSPACE-001 · IR-SHELL-010 의 Tags newspaper 와 신문지 trace notes 는 그대로 둔다(조정자 지시)"
+  ],
+  "followup_qna_42": {
+    "qna": 42,
+    "decision": "사이드바가 접힌 동안 켜지지 않은 다른 보기 버튼을 누르면 사이드바가 그 보기로 펼쳐진다",
+    "how": "MCP: FR-SHELL-017 AC-9 신설 · Requirement 문장 추가 · Implementation Notes ⑥ 의 「구현 전에 확인하라」를 확정 내용(보기와 접힘 여부를 한 번에 바꾼다)으로 교체(mode=replace, ①~⑤ 불변) · Rationale 근거 노트 · qna_log trace 행 notes · update_status 변경 기록. 산문: 03 §1.2 · §2.1 · §11-1, 머리표 31차, §13 31차 행",
+    "mcp_mutations": 6,
+    "mcp_dry_runs": 2,
+    "mcp_reads": 1,
+    "prose_edits": 5,
+    "verification": "작업 직전 사본과 대조 — 08 은 FR-SHELL-017 블록 안의 Requirement · Rationale 노트 · AC-9 · trace 행 · ⑥ · Change Note 만, 03 은 위 다섯 곳만 바뀌었다. 사본에 없던 새 글자 0 건. 03 은 LF, 08 은 CRLF 그대로. 00.index 는 상태 수가 그대로라 바뀌지 않았다",
+    "status_changes": "없음 — planned 그대로, 변경 기록만 남겼다"
+  },
+  "unresolved_resolved_by_qna_42": [
+    "FR-SHELL-017 — 접힌 동안 켜지지 않은 다른 보기 버튼을 누를 때(qna #42, AC-9)"
+  ]
+}

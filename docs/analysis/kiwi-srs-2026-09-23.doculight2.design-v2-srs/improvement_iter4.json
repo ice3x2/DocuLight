@@ -1,0 +1,262 @@
+{
+  "iter": 4,
+  "input": "eval_iter4.json (CRITICAL 0 · HIGH 0 · MEDIUM 2 · LOW 10), docs/decision/design-v2.md 파일 탐색기 절 · 시안이 기존 요구사항보다 앞서지 않는 것 절, qna_log.json resolutions (#10 · #29 · #35 · #37 · #39 · #44) 와 scope_boundary_notes, 설계서 03 §2.2.4 · §2.2.6~§2.2.8 · §3.1 · §11-5",
+  "workspace": {
+    "workspaceRoot": "C:\\Work\\git\\DocuLight2.0",
+    "rootSource": "server-cwd-discovery",
+    "work_mode": "sdd",
+    "active_target": "phase-1"
+  },
+  "fixed": [
+    {
+      "finding_id": "change-consistency-4-1",
+      "severity": "MEDIUM",
+      "how": "MCP(결정 기록 파일 탐색기 절 · 03 §2.2.4 · §11-5 · qna #39): FR-SHELL-016 AC-8 신설 — 트리 상단 `새 노트` 버튼은 트리에서 선택한 노드로 만들 곳을 정한다(폴더면 그 안, 파일 노드면 그 파일이 든 폴더 — AC-1 과 같은 규칙, 버튼의 활성 판정도 그 폴더의 권한), 선택한 노드가 없거나 pass-through 이면 비활성, 만든 노트를 곧바로 열고 여는 모드는 FR-EDITOR-011 AC-18. Requirement 문장에 같은 내용, Rationale 노트(시안이 열린 문서를 선택으로 보고 상태 바에 안내를 띄운 것은 시안의 단순화), Implementation Notes 셋째 항(「자리를 고를 수 없다」)에 〔정정 2026-09-23〕 — 그때 구현의 사실이지 규칙이 아니다. 현재 구현 차이는 Code trace 두 행(App.tsx createNote 668-672 — 첫 워크스페이스 루트에 만들고 열지 않음, DocumentTree.tsx 557 — 버튼이 늘 켜짐)에 trace_intent=addition_site 로 남겼다. design-v2.md · FR-EDITOR-011 trace 행 notes 보강, 변경 기록. FR-SHELL-003 에는 FR-SHELL-016 trace 행(상단 버튼 규칙의 소유)과 변경 기록만 — AC-1 문면과 체크는 그대로. 산문: 03 §2.2.4 버튼 행에 정본(FR-SHELL-016 AC-8) 참조. Ctrl+N 을 SRS 에 둘지는 정하지 않았다(unresolved)",
+      "mcp_calls": 11,
+      "prose_edits": 1
+    },
+    {
+      "finding_id": "internal-4-1",
+      "severity": "MEDIUM",
+      "how": "MCP(qna #10 · scope_boundary_notes · FR-ATTACH-001 Requirement): FR-SHELL-015 의 FR-SHELL-019 trace 행 notes 를 「제스처는 그 요구, 드롭 대상 해석은 FR-ATTACH-001」로 고치고, Implementation Notes 의 2026-09-23 항도 같게 고쳐 옛 문면을 〔정정 2026-09-23〕에 남겼다(교체 모드 — 나머지 네 항은 글자 그대로). FR-ATTACH-001 trace 행 신설, 변경 기록. 산문: 15 §2 In Scope 에 「트리 드롭 대상 해석」(업로드 드롭과 SHELL 의 트리 항목 끌기가 한 규칙을 쓰고 정의는 이 scope), 08 §2 Out of Scope 에 그 위임(이 scope 는 끌기 제스처 · 이동 · 복사 판정 · 끄는 동안의 표시만 갖고 규칙을 복제하지 않는다)을 한 줄씩",
+      "mcp_calls": 4,
+      "prose_edits": 2
+    },
+    {
+      "finding_id": "change-consistency-4-2",
+      "severity": "LOW",
+      "how": "산문(qna #29): 07 §2 In Scope · Out of Scope 의 「모드 아이콘 · 모드 메뉴 항목 숨김」을 「모드 아이콘과 md 전용 메뉴 항목(모드 항목 · 편집 조작 · 버전 기록 보기)」으로 — 15 §2 와 경계 서술을 맞췄다. MCP: FR-EDITOR-006 Implementation Notes ⑤ 에 ① 의 「모드 토글의 숨김만」이 qna #29 로 넓어졌다는 정정(노트만이라 변경 기록 없음 — 규칙 §26)",
+      "mcp_calls": 1,
+      "prose_edits": 2
+    },
+    {
+      "finding_id": "internal-4-2",
+      "severity": "LOW",
+      "how": "MCP(qna #29): FR-EDITOR-004 AC-1 을 「md 문서의 모드 아이콘」으로 한정하고 비-md 는 FR-EDITOR-006 AC-2 를 가리켰다. AC-2~AC-4 는 AC-1 의 사용자 · 아이콘을 가리키므로 그대로 두었다. Requirement 문장도 「그 md 문서」와 비-md 참조로 맞췄다. 변경 기록. 모든 AC 가 미체크라 체크 변화 없음",
+      "mcp_calls": 4
+    },
+    {
+      "finding_id": "change-consistency-4-3",
+      "severity": "LOW",
+      "how": "MCP: verified 인 DR-SHELL-002 의 Implementation Notes ⑤ 에 R152 trace 행의 「세 항목」은 2026-09-23 개정으로 다섯이며 항목 열거의 정본은 IR-SHELL-004 라고 적었다(행 Notes 는 고치지 않음 — SEC-ARCH-002 · FR-ARCH-001 과 같은 처리). classification.json 에서 DR-SHELL-002 를 no-change → edit-in-place(주석만)로 재분류",
+      "mcp_calls": 1
+    },
+    {
+      "finding_id": "change-consistency-4-4",
+      "severity": "LOW",
+      "how": "MCP(qna #35 적용 기준 · #37): IR-SHELL-002 AC-1 의 체크를 해제했다 — 근거 VE-2 가 옛 사이드바 하단 바의 기어를 쟀고 기어는 리본 맨 아래로 옮겼다(IR-SHELL-009 AC-1 과 같은 처리). Implementation Notes ⑤ 에 해제 까닭 · 문면 유지 까닭(리본도 좌하단) · 리본 이전 뒤 같은 검사로 다시 체크할 의무, 변경 기록. VE-2 행은 지우지 않았다",
+      "mcp_calls": 3
+    },
+    {
+      "finding_id": "change-consistency-4-5",
+      "severity": "LOW",
+      "how": "MCP: verified 인 FR-SHELL-008 의 Implementation Notes ④ 에 ① 과 FR-SHELL-002 trace 행의 공간 근거는 2026-09-23 이후 성립하지 않고 지금 근거는 결정 기록 파일 탐색기 절과 결정 2 라는 정정을 붙였다(verified 라 행과 ① 은 고치지 않음)",
+      "mcp_calls": 1
+    },
+    {
+      "finding_id": "change-consistency-4-6",
+      "severity": "LOW",
+      "how": "산문: 03 §3.1 골격 그림의 문서 헤더 높이 「보기 40 / 편집 64」를 「40px · 모드와 무관」으로 고치고, 그림 아래에 옛 편집 64 는 헤더가 두 토글을 싣던 때의 값(91.03-history.md 2026-08-12 행)이며 v2 는 두 모드 모두 모드 아이콘과 ⋯ 만 둔다(§3.3)는 문단을 더했다. 40 은 옛 보기 모드 값이라 〔판단〕으로 표기하고, 승인 시안이 38 로 그린다는 사실과 결정 7 의 열거에 헤더 높이가 없다는 사실을 함께 적었다. §3.2.4 실측은 원장 R173 대로 남겼다",
+      "mcp_calls": 0,
+      "prose_edits": 2
+    },
+    {
+      "finding_id": "ac-4-2",
+      "severity": "LOW",
+      "how": "산문(원장 R43-5 「프리뷰 필수 표시」 · 결정 기록 「프리뷰는 목적지를 고르는 창 안」 · 03 §2.2.8 의 끌어서 복사 진입): 03 §2.2.7 에 §2.2.8 과 같은 진입 표를 두어, 끌어서 이동하면 드롭한 디렉토리가 골라진 폴더 고르기 창이 이동 모드로 열리고 놓자마자 실행하지 않는다고 적었다. MCP: FR-SHELL-019 AC-13 끝에 같은 화면 참조(R43-5 · IR-SHELL-011 AC-16 · 03 §2.2.7, 복사는 §2.2.8)를 붙이고 변경 기록. AC-1~AC-12 는 그대로(모두 미체크)",
+      "mcp_calls": 3,
+      "prose_edits": 1
+    },
+    {
+      "finding_id": "feasibility-4-1",
+      "severity": "LOW",
+      "how": "MCP: IR-SHELL-011 Implementation Notes 에 워크스페이스 루트 후보의 판정 재료가 없다는 사실(트리 응답에 루트 유효 권한이 없어 destinationsFor 가 루트를 늘 후보로 세우고 실행 때 403 — tree-contract.ts 194-199행 주석 · FR-SHELL-015 VE-3)과, 첫 항이 root 권한 projection · 새 endpoint 를 범위 밖에 두었으므로 판정 재료의 출처는 구현 착수 전에 정해야 한다는 것을 적었다. 검증자가 든 대안(트리 응답 확장 · relocation-preview)은 relocation-preview 가 권한 판정을 돌려주지 않아(workspace-api.ts 947행 — reachable · grade 만) 그대로 적지 않았고 방법은 정하지 않았다(unresolved)",
+      "mcp_calls": 1,
+      "partial": true,
+      "resolved_after": "qna #53 으로 판정 재료의 출처를 미결이 아니라 구현 과제로 두었다(IR-SHELL-011 [구현 과제] 노트, implementation_tasks)"
+    }
+  ],
+  "not_fixed": [
+    {
+      "finding_id": "ac-4-1",
+      "reason": "FR-SHELL-017 AC-10 의 대상 조작 목록은 qna #44 가 「등」으로 연 목록이고, 백링크 · 딥링크로 문서를 열 때의 트리 자동 펼침(03 §7.4 · §7.11)이 사이드바의 보기를 바꾸는 조작인지는 결정 기록 · qna · 시안 어디에도 없다. 목록을 닫거나 「문서를 여는 경로는 보기를 바꾸지 않는다」를 더하는 것은 새 결정이라 지시 3 에 따라 만들지 않았다(unresolved)",
+      "resolved_after": "qna #49(조정자 결정, 2026-09-23)로 닫았다 — FR-SHELL-017 AC-10 목록을 넷으로 닫고 AC-11 신설, 03 §1.2 · §2.1 · §7.4 · §7.11 · §11-1 (followup_qna_49_53)"
+    },
+    {
+      "finding_id": "internal-4-3",
+      "reason": "검증자 스스로 escalate 로 분류했다. 리본 활성 아이콘 대비(3:1)를 IR-SHELL-015 AC-5 의 판정 목표에 넣을지, 직접 고른 색에서 AC-8 을 모양 표식만으로 충족한다고 볼지는 결정 기록이 「구현 때 맞춘다」고만 적어 근거가 없다(unresolved)",
+      "resolved_after": "qna #54(조정자 결정, 2026-09-23)로 닫았다 — IR-SHELL-014 AC-14 신설, IR-SHELL-015 AC-5 인용, IR-SHELL-006 · FR-SHELL-017 노트, 04 §2.2 (followup_qna_54)"
+    }
+  ],
+  "demoted_ids": [],
+  "rechecked_acs": [
+    {
+      "id": "IR-SHELL-002",
+      "ac": "AC-1",
+      "change": "체크 해제 — VE-2 가 옛 사이드바 하단 바의 기어를 쟀다. 기어는 qna #37 로 리본 맨 아래에 있고 qna #35 적용 기준(측정량이 배치에 달리면 해제)에 해당한다. 문면은 그대로"
+    }
+  ],
+  "unresolved": [
+    "앞 회차에서 이어진 미결(그대로 둠): IR-SHELL-006 AC-9 허용 오차, 03 §9.1 Ctrl+N · Ctrl+W · Ctrl+Tab 의 대체 키 — v2 이전 문제로 분류됨(Ctrl+N 의 생성 규칙은 qna #50 으로 정해졌고, 브라우저가 가로채지 못할 때의 대체 키만 남는다)."
+  ],
+  "known_residuals": [
+    "conflict-2-1 — verified FR-SHELL-012 의 depends_on FR-SHELL-001 행과 FR-EDITOR-005 의 refines FR-EDITOR-002 행은 그대로 둔다(조정자 지시). 대체 행과 노트는 iter1 에 이미 있다",
+    "change-consistency-2-5 잔여 — verified IR-AUTH-003 · IR-WORKSPACE-001 · IR-SHELL-010 의 Tags newspaper 와 신문지 trace notes 는 그대로 둔다(조정자 지시)"
+  ],
+  "decisions_applied": {
+    "decision_record_file_explorer": "FR-SHELL-016 AC-8 · Requirement · Rationale · Implementation Notes 정정 · trace, FR-SHELL-003 trace, 03 §2.2.4 정본 참조",
+    "qna_10_scope_boundary_notes": "FR-SHELL-015 trace · Implementation Notes · FR-ATTACH-001 trace, 08 §2 Out of Scope · 15 §2 In Scope",
+    "qna_29": "07 §2 두 줄, FR-EDITOR-006 ⑤, FR-EDITOR-004 AC-1 · Requirement",
+    "qna_35_37": "IR-SHELL-002 AC-1 체크 해제 · ⑤",
+    "qna_39": "FR-SHELL-016 AC-8 의 여는 모드 참조(FR-EDITOR-011 AC-18)",
+    "R152_revision": "DR-SHELL-002 ⑤",
+    "decision_2": "FR-SHELL-008 ④",
+    "R43-5_and_preview_in_picker": "03 §2.2.7 진입 표, FR-SHELL-019 AC-13"
+  },
+  "status_changes": [],
+  "status_index_after": {
+    "planned": 31,
+    "in_progress": 23,
+    "implemented": 69,
+    "verified": 176,
+    "discarded": 3,
+    "note": "Status 를 바꾼 요구가 없다 — update_status 여섯 번은 모두 같은 상태의 변경 기록이다(FR-SHELL-016 · FR-SHELL-003 · FR-SHELL-015 · FR-EDITOR-004 · IR-SHELL-002 in_progress, FR-SHELL-019 planned). MCP index sync 가 00.index.md 를 쓰지 않았다(written=false, 스냅샷 대조로 00.index.md 불변 확인)"
+  },
+  "verification_notes": [
+    "객관 대조(자기 확인이 허용되는 사실 확인만): 작업 직전 docs/spec 스냅샷과 요구 블록 단위로 비교했다. 바뀐 블록은 08 의 DR-SHELL-002 · FR-SHELL-003 · FR-SHELL-008 · FR-SHELL-015 · FR-SHELL-016 · FR-SHELL-019 · IR-SHELL-002 · IR-SHELL-011 과 07 의 FR-EDITOR-004 · FR-EDITOR-006 뿐이다. 모든 블록에서 삭제된 AC 0 · Status 불변 · 증거 행 수와 내용 불변. AC 집합이 바뀐 것은 FR-SHELL-016(AC-8 신설) 하나, 문면이 바뀐 AC 는 FR-EDITOR-004 AC-1 · FR-SHELL-019 AC-13(둘 다 미체크) 뿐, 체크가 바뀐 AC 는 IR-SHELL-002 AC-1(x → 해제) 하나다.",
+    "교체 모드로 쓴 두 Implementation Notes(FR-SHELL-016 · FR-SHELL-015)는 줄 단위로 대조했다 — FR-SHELL-016 은 셋째 항 끝에 정정만 붙었고(옛 문면이 새 줄의 접두), FR-SHELL-015 는 마지막 항의 소유 문구만 바뀌었으며 나머지 항은 글자 그대로다.",
+    "스냅샷에 없던 새 글자는 새로 쓴 낱말의 음절뿐이다 — 03: 닭(까닭) / 08: 랄(모자랄) / 07 · 15: 없음. 글자 오염은 없다. 긴 AC 목록은 \\u 이스케이프 JSON 으로 넘겼다.",
+    "줄바꿈(바이트 단위): 03 은 LF(2062 → 2072), 07 은 LF(1314 → 1316), 15 는 LF(1226 → 1227), 08 은 CRLF(3006 → 3022)이며 편집 뒤에도 각 파일의 줄바꿈이 그대로다. 08 의 산문 삽입은 python 으로 CRLF 를 명시했다. 03 §3.1 그림은 상자 밖 주석 칸만 바뀌어 상자 폭이 그대로다.",
+    "사용자 용어표(「자리」 · 「축」)는 새로 쓴 문면에 0 건이다 — 03 §2.2.7 진입 표에 처음 쓴 「그 자리는」을 바로 「그 프리뷰는 … 있어야 하므로」로 고쳤다. 남은 「자리」는 옛 문면을 인용하거나 그대로 둔 기존 문장이다.",
+    "같은 파일에 MCP 변경 두 번을 동시에 보낸 적이 두 번 있었다(FR-SHELL-003 trace · 변경 기록, IR-SHELL-002 노트 · 변경 기록). 두 번 모두 두 결과가 파일에 다 남은 것을 grep 으로 확인했고 이후로는 차례로 보냈다.",
+    "판단이 끼는 검증(의도 일치 · 회귀 · 문면 품질)은 하지 않았다 — 다음 독립 검증 회차의 몫이다."
+  ],
+  "validate_spec": {
+    "errors": 0,
+    "warnings": 5,
+    "byCode": {
+      "SRS-W072": 1,
+      "SRS-W015": 4
+    },
+    "note": "앞 회차와 같은 경고다(W072 기존, W015 x4 는 FR-EDITOR-007 을 내린 iter1 의 결과). MCP 변경 · 산문 편집 뒤와 마지막 산문 다듬기 뒤 두 번 돌렸다. qna #49~#53 반영 뒤에도 같다. qna #54 반영 뒤에도 같다. IR-SHELL-006 AC-17 문면 정정 뒤에도 같다."
+  },
+  "counts": {
+    "fixed_medium": 2,
+    "fixed_low": 8,
+    "fixed_low_partial": [
+      "feasibility-4-1"
+    ],
+    "not_fixed_low": 2,
+    "mcp_calls_total": 35,
+    "mcp_mutations": 26,
+    "mcp_dry_runs": 3,
+    "mcp_dry_runs_failed": 1,
+    "mcp_reads": 6,
+    "prose_edits": 10,
+    "prose_files": [
+      "docs/spec/03.screen-design-shell.md",
+      "docs/spec/07.editor.srs.md",
+      "docs/spec/08.app-shell.srs.md",
+      "docs/spec/15.attachments.srs.md"
+    ],
+    "delta_files_updated": [
+      "srs_delta.json (mcp_calls +35, edited_ids +DR-SHELL-002, unresolved +5, unresolved_resolved_in_iter4, validate_spec_result)",
+      "prose_delta.json (edits +10, unresolved +2, unresolved_resolved_in_iter4, validate_spec, line_endings_note)",
+      "classification.json (DR-SHELL-002 재분류, counts_note)"
+    ]
+  },
+  "followup_qna_49_53": {
+    "qna": [
+      49,
+      50,
+      51,
+      52,
+      53
+    ],
+    "decisions": {
+      "49": "백링크 · 딥링크로 문서를 열 때의 트리 펼침은 사이드바의 보기와 접힘을 바꾸지 않고 트리 보기가 보일 때만 — qna #44 의 조작에 들지 않는다",
+      "50": "Ctrl+N 은 트리 상단 새 노트 버튼과 같은 규칙(FR-SHELL-016 AC-8), AC 로 둔다",
+      "51": "워크스페이스 행을 고른 채 새 노트 버튼을 누르면 그 워크스페이스의 맨 위에 만든다",
+      "52": "탭 줄과 문서 제목 줄의 높이는 시안대로 둘 다 38px",
+      "53": "IR-SHELL-011 AC-15 의 워크스페이스 맨 위 편집 권한 판정 재료는 구현 과제"
+    },
+    "how": "MCP: FR-SHELL-017 AC-10 의 「등」을 넷으로 닫고 AC-11(문서 열기의 트리 펼침) 신설 · Requirement · Rationale · ⑧ · qna_log trace · 변경 기록(#49). FR-SHELL-016 AC-8 에 워크스페이스 행(맨 위)과 「만들 곳의 권한」, AC-9(Ctrl+N) 신설 · Requirement · Implementation Notes · qna_log trace 행 신설 · 변경 기록(#50 · #51). IR-SHELL-009 AC-11(탭 스트립 · 문서 헤더 둘 다 38px — 배치 · 치수의 정본이 이 요구라 여기에 둠) · ⑤ · qna_log trace · 변경 기록(#52). IR-SHELL-011 Implementation Notes 에 [구현 과제 · qna #53] 노트(#53, 노트만이라 변경 기록 없음). 산문: 03 §1.2 · §2.1 · §11-1 의 목록을 「조작 넷」으로 닫고 문서 열기의 트리 펼침 문장, §7.4 · §7.11 의 자동 펼침을 트리 보기가 보일 때만으로 한정(#49), §2.2.4 · §9.1 에 워크스페이스 행과 Ctrl+N(#50 · #51), §3.1 그림 · 문단을 38/38 로(#52), 머리표 35차, §13 35차 행",
+    "mcp_mutations": 16,
+    "mcp_dry_runs": 1,
+    "mcp_reads": 1,
+    "prose_edits": 11,
+    "prose_files": [
+      "docs/spec/03.screen-design-shell.md"
+    ],
+    "verification": "qna #49~#53 반영 직전 사본(snap_iter4b)과 대조 — 08 은 FR-SHELL-016(AC-8 문면 · AC-9 신설) · FR-SHELL-017(AC-10 문면 · AC-11 신설) · IR-SHELL-009(AC-11 신설) · IR-SHELL-011(노트) 네 블록만, 03 은 머리표 · §1.2 · §2.1 · §2.2.4 · §3.1 · §7.4 · §7.11 · §9.1 · §11-1 · §13 행만 바뀌었다. 삭제된 AC · 체크 변경 · 증거 행 변경 · Status 변경 0. 사본에 없던 새 글자는 「멋」(멋대로, qna #49 근거 문장) 하나다. 03 은 LF(2072 → 2073), 08 은 CRLF(3022 → 3034) 그대로. 새로 쓴 문면에 「자리」 · 「축」 0 건(FR-SHELL-016 Requirement 문장의 「자리」는 기존 문면). 같은 파일에 MCP 변경 두 번을 동시에 보낸 것이 한 번 있었고(FR-SHELL-016 노트 · trace) 두 결과가 모두 남은 것을 확인했다",
+    "status_changes": "없음 — 네 요구 모두 같은 상태로 두고 변경 기록만 남겼다(IR-SHELL-011 은 노트만)",
+    "validate_spec": {
+      "errors": 0,
+      "warnings": 5,
+      "byCode": {
+        "SRS-W072": 1,
+        "SRS-W015": 4
+      }
+    }
+  },
+  "unresolved_resolved_by_qna_49_53": [
+    "FR-SHELL-017 AC-10 의 열린 목록과 문서 열기의 트리 펼침(eval_iter4 ac-4-1) — qna #49 로 목록을 넷으로 닫고 AC-11 신설",
+    "Ctrl+N 의 SRS 소재 — qna #50 으로 FR-SHELL-016 AC-9",
+    "FR-SHELL-016 AC-8 의 워크스페이스 행 선택 — qna #51 로 그 워크스페이스의 맨 위",
+    "탭 줄 · 문서 제목 줄 높이(관찰) — qna #52 로 둘 다 38px(IR-SHELL-009 AC-11 · 03 §3.1)",
+    "IR-SHELL-011 AC-15 의 워크스페이스 루트 후보 판정 재료(eval_iter4 feasibility-4-1) — qna #53 으로 미결이 아니라 구현 과제",
+    "관찰(prose): 03 §3.1 의 탭 스트립 36 · 헤더 40 과 시안 38 — qna #52"
+  ],
+  "implementation_tasks": [
+    "IR-SHELL-011 AC-15 — 워크스페이스 루트 후보의 편집 권한 판정 재료를 어디서 받을지(트리 응답에 워크스페이스 유효 권한이 없다, tree-contract.ts 194-199). 값이나 API 를 새로 정하지 않고 구현 설계에서 정한다(qna #53). 같은 요구 Implementation Notes 첫 항의 범위 밖 목록(root 권한 projection · 새 endpoint)과 함께 다룬다."
+  ],
+  "followup_qna_54": {
+    "qna": [
+      54
+    ],
+    "decisions": {
+      "54": "강조색 아이콘과 활성 타일 배경의 대비 3:1 을 색 파생의 대비 목표(IR-SHELL-014)에 넣고, 이 목표를 맞추지 못하는 메뉴 밝기 단계는 qna 12 대로 고를 수 없다"
+    },
+    "how": "MCP: IR-SHELL-014 AC-14 신설(강조색과 현재 항목 배경 = 리본 활성 타일의 대비 목표 3:1, 파생 계산은 바꾸지 않음, 못 미치는 단계는 IR-SHELL-015 AC-5 로 고를 수 없음) · Rationale · ⑫(시안 --menu-active, 쑥 · 밝게 · −2 는 2.78:1 이라 프리셋에도 고를 수 없는 단계가 생김 — 프리셋 보장 문장을 두지 않음) · qna_log trace · 변경 기록. IR-SHELL-015 AC-5 의 인용 목표에 AC-14 를 더함(인용만) · Rationale 노트 · qna_log trace · 변경 기록. 결정 기록이 「구현 때 모양 표식을 더하고 대비를 맞춘다」고 적은 리본 활성 표시 쪽 요구에 대비 부분이 닫혔다는 노트: IR-SHELL-006 Implementation Notes(AC-17 의 「다섯 단계 모두」는 고를 수 있는 단계에서 성립, 정본 IR-SHELL-014 AC-14, 모양 표식은 AC-17 이 계속 가짐) · IR-SHELL-015 trace 행 notes, FR-SHELL-017 Implementation Notes ⑨. 산문: 04 §2.2 의 고를 수 없는 단계 항목과 머리표 갱신 (20)",
+    "mcp_mutations": 12,
+    "mcp_dry_runs": 3,
+    "mcp_reads": 1,
+    "prose_edits": 2,
+    "prose_files": [
+      "docs/spec/04.screen-design-settings.md"
+    ],
+    "verification": "qna #54 반영 직전 사본(snap_iter4c)과 대조 — 08 은 IR-SHELL-014(AC-14 신설 · 노트 · trace · 변경 기록) · IR-SHELL-015(AC-5 문면 · 노트 · trace · 변경 기록) · IR-SHELL-006(노트 · trace) · FR-SHELL-017(노트) 네 블록만, 04 는 §2.2 한 항목과 머리표 한 행만 바뀌었다. 삭제된 AC · 체크 변경 · 증거 행 변경 · Status 변경 0. 새 글자는 「⑫」(노트 번호) 하나. 04 · 08 모두 CRLF 그대로(04 1603 → 1604, 08 3034 → 3042). 새로 쓴 문면에 「자리」 · 「축」 0 건. 같은 파일에 MCP 변경 두 번을 동시에 보낸 것이 두 번 있었고(IR-SHELL-015 노트 · trace dryRun, IR-SHELL-015 변경 기록 · IR-SHELL-006 노트) 결과가 모두 남은 것을 확인했다",
+    "status_changes": "없음 — IR-SHELL-014 · IR-SHELL-015 는 같은 상태로 변경 기록만, IR-SHELL-006 · FR-SHELL-017 은 노트 · trace 만",
+    "consequence": "여섯 프리셋에도 고를 수 없는 메뉴 밝기 단계가 생긴다(결정 기록 실측: 쑥 · 밝게 · −2). IR-SHELL-006 AC-17 의 대비 문장은 처음에 노트로 읽는 법만 적었으나, 조정자 후속 지시로 IR-SHELL-014 AC-14 참조로 바꿨다(followup_qna_54_ac17).",
+    "validate_spec": {
+      "errors": 0,
+      "warnings": 5,
+      "byCode": {
+        "SRS-W072": 1,
+        "SRS-W015": 4
+      }
+    }
+  },
+  "unresolved_resolved_by_qna_54": [
+    "IR-SHELL-006 AC-17 · AC-8 과 IR-SHELL-015 AC-5 의 리본 활성 아이콘 대비(eval_iter4 internal-4-3) — qna #54 로 IR-SHELL-014 AC-14 의 대비 목표(3:1)에 넣고 못 미치는 단계는 IR-SHELL-015 AC-5 로 고를 수 없게 함"
+  ],
+  "followup_qna_54_ac17": {
+    "instruction": "IR-SHELL-006 AC-17 의 문면을 IR-SHELL-014 AC-14 참조로 바꾼다 — 대비 목표와 고를 수 있는 단계의 판정은 IR-SHELL-014 AC-14 와 IR-SHELL-015 AC-5 가 소유하고, AC-17 은 리본 활성 표시의 모양 표식과 그 대비가 IR-SHELL-014 AC-14 를 따른다는 것만 말한다(규칙을 한 곳에만 둔다)",
+    "how": "MCP: IR-SHELL-006 AC-17 의 대비 문장만 참조로 바꿈(replace_acceptance_criteria — AC 17 개 그대로, AC-17 미체크라 도구 거부 없음) · Implementation Notes 에 [qna #54 · AC-17 문면 정정] 노트(앞 노트의 읽는 법이 필요 없어졌음, ③ 의 2.78:1 은 목표 미달 실측) · IR-SHELL-015 trace 행 notes 에서 「다섯 단계 모두에 걸린다」를 뺌 · 같은 상태 변경 기록. 산문 편집 없음",
+    "interpretation": "AC-17 은 폴더 고르기 창의 선택 행 · 트리의 현재 문서의 표식도 함께 적고 있다. 이 둘은 다른 요구가 적지 않으므로(03 설계서만 같은 내용을 적음) 지우면 정해진 요구가 사라진다 — 그래서 대비 문장만 참조로 바꾸고 세 선택 표식 문장은 그대로 두었다. 지시의 「모양 표식과 대비 참조만 말한다」는 리본 활성 표시 부분에 대한 것으로 읽었다",
+    "mcp_mutations": 4,
+    "mcp_failed_calls": 3,
+    "mcp_reads": 1,
+    "prose_edits": 0,
+    "verification": "AC-17 문면 정정 직전 사본(snap_iter4d)과 대조 — spec 가운데 08 만, 그 안에서 IR-SHELL-006 한 블록만 바뀌었다(AC-17 문면 · 노트 한 줄 · trace 한 행 · 변경 기록 한 행). 삭제 · 추가된 AC 0, 체크 변경 0, 증거 행 9 → 9 동일, Status 불변, 블록 밖 산문 불변. 새 글자 0. 08 CRLF 그대로(3042 → 3044). 새로 쓴 문면에 「자리」 · 「축」 0 건. 실패한 호출 셋은 모두 인자 형식 오류로 파일을 건드리지 않았다",
+    "status_changes": "없음 — IR-SHELL-006 은 in_progress 그대로 변경 기록만",
+    "validate_spec": {
+      "errors": 0,
+      "warnings": 5,
+      "byCode": {
+        "SRS-W072": 1,
+        "SRS-W015": 4
+      }
+    }
+  }
+}

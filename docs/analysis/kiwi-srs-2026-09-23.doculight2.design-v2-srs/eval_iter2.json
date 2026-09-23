@@ -1,0 +1,205 @@
+{
+  "evaluator": "verify-pass-1",
+  "iter": 2,
+  "findings": [
+    {
+      "id": "internal-2-1",
+      "severity": "MEDIUM",
+      "axis": "9. 요구 내부 일관성",
+      "req_id": "FR-EDITOR-011",
+      "evidence_path": "docs/spec/07.editor.srs.md:1167",
+      "description": "비-md 파일에서 두 메뉴의 나머지 항목이 정해지지 않았다. FR-EDITOR-006 AC-3(07:658)은 모드 항목만 뺀다. qna #5 는 「나머지 항목은 기존 규칙」이라 했는데, 잘라내기 · 붙여넣기 · 링크 삽입은 v2 에서 새로 든 항목이라 기존 규칙이 없다. FR-EDITOR-011 AC-15(07:1171)는 활성 여부를 모드(라이브 · 소스 · 보기)로만 가르고, 비-md 파일에는 모드가 없어 판정이 서지 않는다. 또 AC-11 은 「본문 우클릭 메뉴에도 버전 기록 보기가 있다」고 조건 없이 적는다. 원장 R24-b 비고와 설계서 03 §3.3 은 비-md 에서 버전 기록을 보이지 않는다고 적으므로 문면이 어긋난다.",
+      "suggested_action": "fix_via_mcp",
+      "repeat_of": null
+    },
+    {
+      "id": "internal-2-2",
+      "severity": "MEDIUM",
+      "axis": "9. 요구 내부 일관성",
+      "req_id": "FR-EDITOR-011",
+      "evidence_path": "docs/spec/03.screen-design-shell.md:970",
+      "description": "설계서 03 §3.4 는 이번 회차에 표를 고쳐 쓰면서도 「머지 뷰 표시 중 — 모드 전환 비활성」(〔판단〕)을 남겼다. FR-EDITOR-011 AC-7 · AC-8(07:1163)은 편집 권한만 있으면 아이콘 · Ctrl+E 로 모드가 바뀐다고 예외 없이 적는다. Implementation Notes ⑨ 는 이 조항이 결정 기록 밖이라 넣지 않았다고만 적는다. 설계서의 판단을 따르면 AC-7 · AC-8 이 깨지고, AC 를 따르면 설계서가 틀린다. 둘 중 하나로 맞춰야 한다. 기존 설계 판단이 합리적 기본값이다.",
+      "suggested_action": "fix_via_mcp",
+      "repeat_of": null
+    },
+    {
+      "id": "change-consistency-2-1",
+      "severity": "MEDIUM",
+      "axis": "6. 변경 일관성",
+      "req_id": "FR-EDITOR-004",
+      "evidence_path": "docs/spec/03.screen-design-shell.md:991",
+      "description": "결정 기록 편집 모드 절은 읽기 전용 아이콘과 편집 가능한 보기 아이콘을 가르는 수단의 하나로 「저장 상태 표시가 숨는 것」을 든다. 승인 시안도 편집 권한자에게는 보기 모드에서 「저장됨」을 계속 보인다(design-v2.html:579, 1179 `saveState.hidden = !canEdit`). 그런데 설계서 03 §3.5 는 「표시는 편집 모드에서만 나타나고 정상 상태에서는 사라진다」를 그대로 둔다. 이 규칙대로면 편집 권한자의 보기 모드에서도 저장 상태가 없다. 그러면 FR-EDITOR-004 Implementation Notes ④(07:560)가 시험 수단으로 지정한 「저장 상태 표시의 부재」로는 두 아이콘을 구별할 수 없다. 함께 verified IR-SHELL-003 AC-2(08:1298)는 「문서 헤더에 저장 상태가 표시된다」고 조건 없이 적는다. 이 문면은 FR-EDITOR-004 AC-5(보기 권한만이면 저장 상태가 나타나지 않는다)와도 어긋난다.",
+      "suggested_action": "prose_edit",
+      "repeat_of": null
+    },
+    {
+      "id": "change-consistency-2-2",
+      "severity": "MEDIUM",
+      "axis": "6. 변경 일관성",
+      "req_id": "FR-SHELL-006",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:695",
+      "description": "Requirement 와 AC-5 가 딥링크 대상을 일반 파일 노드까지 넓혔다. 그런데 일반 파일의 주소를 열었을 때 무엇이 보이는지는 Implementation Notes ⑤ 에 「결정 기록이 정하지 않았다」는 미결로만 남았다. srs_delta.unresolved 에도 남아 있다. 합리적 기본값이 있다: 트리 클릭과 같게 본문 영역에서 연다(FR-EDITOR-006 · FR-ATTACH-003). 다른 미결은 qna 로 닫았는데 이 하나만 열려 있다.",
+      "suggested_action": "escalate",
+      "repeat_of": null
+    },
+    {
+      "id": "scope-2-1",
+      "severity": "MEDIUM",
+      "axis": "5. scope 적합성",
+      "req_id": "IR-SHELL-011",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2372",
+      "description": "AC-15 가 SHELL scope 에 권한 값을 직접 적었다: 「목적지 `편집` 권한이 없는 폴더는 흐리게 … 목적지 `편집` 권한이 있는 폴더는 고를 수 있다」. 08 Out of Scope 는 권한 값의 하드코딩을 금한다. 목적지 권한의 정본은 SEC-ACL-012 AC-5 · SEC-ACL-014 AC-3(ACL)이다. 같은 요구의 Implementation Notes 「함정」도 판정을 ACL 에서 받아 쓰라고 적는다. iter1 scope-1-1 이 FR-SHELL-003 AC-8 에서 고친 것과 같은 유형이다. 「ACL 이 목적지로 허용하지 않는 폴더」처럼 파생 관계로 적어야 한다.",
+      "suggested_action": "fix_via_mcp",
+      "repeat_of": null
+    },
+    {
+      "id": "scope-2-2",
+      "severity": "MEDIUM",
+      "axis": "5. scope 적합성",
+      "req_id": "IR-SHELL-014",
+      "evidence_path": "docs/spec/04.screen-design-settings.md:201",
+      "description": "설계서 04 §2.2 는 「파생 규칙과 대비 목표의 정본은 docs/decision/design-v2.md 「사용자별 기본 색상」 절」이라 적는다. 그러나 결정 기록은 스스로 요구사항의 정본이 아니라고 적는다. 파생 규칙은 IR-SHELL-014 가 소유한다. SRS 는 이미 결정 기록과 다르게 정했다: 보조 글자의 대비 기준 배경(AC-9), 고를 수 없는 색(AC-12), 한지 대체(AC-13). 설계서가 정본으로 가리키는 곳이 SRS 와 다른 값을 담고 있다.",
+      "suggested_action": "prose_edit",
+      "repeat_of": null
+    },
+    {
+      "id": "ac-2-1",
+      "severity": "MEDIUM",
+      "axis": "4. AC 판정 가능성",
+      "req_id": "IR-SHELL-009",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2198",
+      "description": "AC-2(200% 확대에서 좌우 패널 180px · 중앙 240px)는 체크된 채 남았다. 근거는 「문구가 그대로라 체크를 유지했다」(Implementation Notes ①)이다. 그런데 v2 는 44px 리본을 더했고, 같은 요구의 ②(08:2248)는 리본을 좌측 180px 에 넣어 셀지 모른다고 적는다. 판정 기준이 흔들리는 AC 가 리본 없는 셸에서 잰 증거(VE-1 · VE-2)로 체크되어 있다. AC-1 과 결정 기록이 리본(44px)을 사이드바(248px)와 따로 세므로 합리적 기본값이 있다.",
+      "suggested_action": "fix_via_mcp",
+      "repeat_of": null
+    },
+    {
+      "id": "internal-2-3",
+      "severity": "MEDIUM",
+      "axis": "9. 요구 내부 일관성",
+      "req_id": "FR-EDITOR-011",
+      "evidence_path": "docs/spec/03.screen-design-shell.md:300",
+      "description": "FR-EDITOR-011 은 여는 모드 규칙을 「문서를 여는 모든 경로」에 같게 적용한다. AC-4(07:1160)에 따라 `항상 보기` 사용자는 편집 권한이 있어도 보기로 연다. 설계서 03 §2.2.4(300행) · §7.2 · §7.8 은 방금 만든 노트를 조건 없이 「편집 모드로 열림」이라 적는다. `항상 보기` 사용자가 새 노트를 만들 때 어느 모드로 열리는지가 SRS 와 설계서에서 다르고, 어느 요구도 이 경우를 정하지 않는다.",
+      "suggested_action": "escalate",
+      "repeat_of": null
+    },
+    {
+      "id": "change-consistency-2-3",
+      "severity": "MEDIUM",
+      "axis": "6. 변경 일관성",
+      "req_id": "IR-SHELL-009",
+      "evidence_path": "docs/spec/03.screen-design-shell.md:165",
+      "description": "승인 시안은 설정 기어를 리본 맨 아래에 둔다(design-v2.html:552). 결정 기록의 「외관을 설명하는 예시」 목록에 이 배치는 없으므로 확정된 리본 배치의 일부다. 설계서 03 §1.2 는 여전히 「좌측 하단 바 — 설정 모달 진입(기어) — 좌측 사이드바 폭」을 영역으로 둔다. 182행의 「접힌 좌측 사이드바는 40px 스트립을 남긴다 — 접어도 기어가 사라지지 않게」도 남아 있다. 늘 보이는 44px 리본이 생긴 뒤에는 이 근거가 서지 않는다. 03 §1.1 은 리본을 반영해 고쳤지만 기어의 자리와 접힘 스트립은 옛 배치로 남았다.",
+      "suggested_action": "prose_edit",
+      "repeat_of": null
+    },
+    {
+      "id": "change-consistency-2-4",
+      "severity": "MEDIUM",
+      "axis": "6. 변경 일관성",
+      "req_id": "FR-ATTACH-007",
+      "evidence_path": "docs/spec/15.attachments.srs.md:895",
+      "description": "FR-ATTACH-007 AC-3 은 「PDF 를 열었을 때 모드 토글은 숨겨진다」이다. R91 개정으로 모드 토글은 없어지고 모드 아이콘과 모드 메뉴 항목이 됐으므로, 이 문면을 그대로 판정하면 늘 참이다. 같은 문서 §2 Out of Scope(15:30)도 「비-md 파일에서 모드 토글을 숨기는 규칙 — EDITOR scope」로 옛 대상을 부른다. 원장 이력 행이 R146 · R147 을 고치지 않은 것은 원장 조항에 대한 판단이다. SRS 의 AC 와 scope 경계 문장은 그 판단에 포함되지 않는다(iter1 change-consistency-1-4 와 같은 유형, 다른 scope).",
+      "suggested_action": "fix_via_mcp",
+      "repeat_of": null
+    },
+    {
+      "id": "conflict-2-1",
+      "severity": "LOW",
+      "axis": "2. 충돌 처리",
+      "req_id": "FR-SHELL-012",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:1254",
+      "description": "verified 인 FR-SHELL-012 의 `depends_on FR-SHELL-001` 행과 FR-EDITOR-005 의 `refines FR-EDITOR-002` 행(07:611)이 폐기된 요구를 여전히 가리킨다. edit_requirement_table_rows 가 verified 에서 거부되므로(도구 설명으로 확인) 대체 행을 더하고 옛 행에 설명을 붙인 처리는 사실에 맞는다. 다만 관계 그래프를 읽는 도구에는 폐기된 의존이 그대로 보인다. 남길지, 다음에 두 요구가 in_progress 로 내려갈 때 지울지를 결정으로 남겨야 한다.",
+      "suggested_action": "escalate",
+      "repeat_of": "conflict-1-1"
+    },
+    {
+      "id": "classification-2-1",
+      "severity": "LOW",
+      "axis": "1. 분류",
+      "req_id": "-",
+      "evidence_path": "docs/analysis/kiwi-srs-2026-09-23.doculight2.design-v2-srs/classification.json:780",
+      "description": "classification.json 의 처리 분류가 실행과 다시 어긋났다. FR-SHELL-016 은 no-change 로 남아 있지만 실제로는 verified 에서 내리고 AC-1~AC-3 을 고쳤다(MCP #245-#250). IR-SHELL-008(1120행)도 no-change 인데 Tags · trace · Implementation Notes 를 고쳤다(#308-#315). FR-EDITOR-007 · CON-SHELL-002 · FR-STORAGE-003 은 AC 를 고치고 status 를 내렸는데 plan 에 행이 없다. FR-EDITOR-012 도 plan 에 없다. 행한 처리(edit-in-place)는 옳다. 기록만 뒤처졌다.",
+      "suggested_action": "reclassify",
+      "repeat_of": "classification-1-2"
+    },
+    {
+      "id": "change-consistency-2-5",
+      "severity": "LOW",
+      "axis": "6. 변경 일관성",
+      "req_id": "-",
+      "evidence_path": "docs/spec/13.workspace.srs.md:41",
+      "description": "07 · 08 밖에 옛 용어가 남았다. 13.workspace §2 Out of Scope 가 「검색 탭」이라 적는다(41행). 16.principal 1125 · 1135행의 trace · 노트가 「좌측 검색 탭」이라 적는다. IR-AUTH-003(09:1943) 등 09 · 13 · 14 · 16 의 요구에 Tags `newspaper` 가 붙어 있다. 09.auth 1981행 trace Notes 는 「adds newspaper presentation」이라 적는다. IR-SHELL-010 trace(08:2312)는 「신문지 파일 표면」이라 적는다. 규범의 실질은 바뀌지 않는다.",
+      "suggested_action": "fix_via_mcp",
+      "repeat_of": "change-consistency-1-10"
+    },
+    {
+      "id": "ac-2-2",
+      "severity": "LOW",
+      "axis": "4. AC 판정 가능성",
+      "req_id": "FR-EDITOR-012",
+      "evidence_path": "docs/spec/07.editor.srs.md:1252",
+      "description": "AC-2 에 「모드 전환은 저장을 일으키지 않는다」가 더해졌다. 대체된 FR-EDITOR-003 AC-3 은 「본문을 변경하지 않는다」였고, 결정 기록과 qna 에도 저장 조건은 없다. 이 문면은 보기 모드로 바꿀 때 대기 중인 자동 저장을 먼저 내보내는(flush) 구현을 금지하게 된다. 근거 없이 새 제약이 생겼다.",
+      "suggested_action": "fix_via_mcp",
+      "repeat_of": null
+    },
+    {
+      "id": "ac-2-3",
+      "severity": "LOW",
+      "axis": "4. AC 판정 가능성",
+      "req_id": "IR-SHELL-015",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2904",
+      "description": "AC-5 의 「그 단계를 고르는 버튼이 꺼진다」는 단계마다 버튼이 있다고 가정한다. 승인 시안(design-v2.html:733-735)과 설계서 04 §2.2 는 −/+ 두 버튼의 증감 컨트롤이다. 문면을 「고를 수 없는 단계로 옮기는 −/+ 버튼이 꺼진다」로 맞춰야 한다. 허용 단계가 이어지지 않을 때 건너뛰는지도 정해야 한다.",
+      "suggested_action": "fix_via_mcp",
+      "repeat_of": null
+    },
+    {
+      "id": "ac-2-4",
+      "severity": "LOW",
+      "axis": "4. AC 판정 가능성",
+      "req_id": "IR-SHELL-014",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2816",
+      "description": "AC-7~AC-9 는 「여섯 프리셋에서 … 이상이다」라는 보장 문장이다. IR-SHELL-015 AC-5 와 IR-SHELL-014 AC-12 는 같은 AC 를 직접 고른 색의 단계별 판정 기준(목표값)으로 부른다. 목표값(4.6 · 5 · 7 · 4.5:1과 기준 배경)을 프리셋 한정 보장과 떼어 적어 두면 판정 대상이 분명해진다.",
+      "suggested_action": "fix_via_mcp",
+      "repeat_of": null
+    },
+    {
+      "id": "internal-2-4",
+      "severity": "LOW",
+      "axis": "9. 요구 내부 일관성",
+      "req_id": "FR-EDITOR-011",
+      "evidence_path": "docs/spec/07.editor.srs.md:1159",
+      "description": "AC-3 끝의 「권한과 무관하게 보기로 여는 경로가 없다」를 따로 읽으면 AC-4(`항상 보기` 는 편집 권한이 있어도 보기로 연다)와 부딪힌다. 뜻은 「여는 경로에 따라 판정이 달라지지 않는다」이므로 문면을 그렇게 좁혀야 한다.",
+      "suggested_action": "fix_via_mcp",
+      "repeat_of": null
+    },
+    {
+      "id": "feasibility-2-1",
+      "severity": "LOW",
+      "axis": "7. 구현 가능성 근거",
+      "req_id": "FR-SHELL-006",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:695",
+      "description": "Implementation Notes ⑤ 는 「사내 인스턴스가 HTTP 로 서빙되면 AC-5 가 실패한다」고 단정한다. navigator.clipboard 는 보안 컨텍스트에서만 노출되지만, 사용자 제스처 안의 document.execCommand('copy') 대체 경로는 비보안 컨텍스트에서도 동작한다. 구현 불가처럼 적힌 근거가 과장이다. 대체 경로를 함께 적어야 한다.",
+      "suggested_action": "fix_via_mcp",
+      "repeat_of": null
+    },
+    {
+      "id": "scope-2-3",
+      "severity": "LOW",
+      "axis": "5. scope 적합성",
+      "req_id": "FR-SHELL-018",
+      "evidence_path": "docs/spec/08.app-shell.srs.md:2637",
+      "description": "「파일 노드면 그 노드가 든 디렉토리」라는 대상 해석이 세 요구에 각자 적혀 있다: FR-SHELL-016 AC-1(만들기), FR-ATTACH-001 Requirement(드롭 — 정본을 선언), FR-SHELL-018 AC-2(검색 범위). FR-SHELL-018 Rationale 은 「같은 규칙」이라 하면서 문장을 다시 적는다. 드롭 쪽(FR-SHELL-019 → FR-ATTACH-001)은 참조로 풀었으니 메뉴 쪽도 한 요구를 참조하게 하는 편이 맞다.",
+      "suggested_action": "fix_via_mcp",
+      "repeat_of": null
+    }
+  ],
+  "summary": { "CRITICAL": 0, "HIGH": 0, "MEDIUM": 10, "LOW": 9 },
+  "notes": {
+    "validate_spec": "errors 0, warnings 5 — SRS-W072 1건(기존), SRS-W015 4건(FR-EDITOR-007 을 in_progress 로 내린 결과, srs_delta.validate_spec_result 가 이미 기록). ID 중복 없음. 00.index.md 의 Status · Type 집계를 요구 블록으로 다시 세어 일치를 확인했다(planned 31 · in_progress 22 · verified 177 · discarded 3 · FR 108 · IR 39).",
+    "iter1_resolution": "iter1 의 HIGH 3건(FR-EDITOR-007 AC-11, FR-SHELL-016 라벨, IR-EDITOR-002 소스 행간)은 모두 해소됐다. MEDIUM 14건 가운데 13건이 해소됐다. conflict-1-1 은 도구 제약 때문에 대체 행만 더해져 LOW 로 남았다. LOW 는 대부분 해소됐고, classification-1-2 와 change-consistency-1-10 은 다른 요구와 다른 scope 에서 되풀이된다.",
+    "trace_paths": "diff 로 추가된 Code trace 31행은 모두 trace_intent 를 갖는다. 참조 경로 37개(시험 · 자산 파일 포함)가 모두 실존한다. 새로 든 줄 번호 주장(tree-contract.ts 108 · 134 · 155 · 200 · 299, DocumentTree.tsx 306-338 · 606-607, workspace-api.ts 947 · 1641, RelocationDialog.tsx 144, upload-contract.ts 58, shell-contract.ts 17-21, personal-settings.ts 15 · 52-66, package.json 81)을 대조해 일치를 확인했다. useAutosave 가 첫 저장 때 세션을 연다는 주장(useAutosave.ts:71-72)도 사실이다.",
+    "golden_rule": "*.srs.md 요구 블록의 변경은 모두 MCP 호출 기록(supersede_requirement · edit_requirement_fields · replace_acceptance_criteria · append_section_note · edit_requirement_table_rows · add_trace_link · update_status · update_stability · add_requirement)으로 설명된다. 직접 편집의 흔적은 찾지 못했다. 블록 밖 산문(07 · 08 · 02 §1~§2)은 prose_delta 에 기록되어 있다. verified 에 남은 요구(FR-SHELL-002 · FR-SHELL-008 · FR-SHELL-012 · FR-EDITOR-005 · SEC-ARCH-002 · FR-ARCH-001)에는 노트와 trace 추가만 있었다. AC · 문장을 고친 verified 요구는 모두 update_status 로 먼저 내렸고 Change Notes 행이 있다.",
+    "decision_coverage": "결정 기록의 여덟 결정 가운데 요구 반영 대상 일곱(6 은 절차)과 qna 28건이 모두 어느 요구엔가 반영되어 있다. 반영된 값이 결정 · qna · 시안과 다른 곳은 찾지 못했다. 위 finding 은 반영 뒤에도 남은 미정 경우, 설계서의 옛 문장, 도구 제약에 따른 잔여다.",
+    "tool_claims_checked": "「update_status 가 verified · stable 의 discarded 를 거부하고 확인 플래그가 없다」와 「edit_requirement_table_rows 가 verified 에서 거부된다」는 두 주장을 MCP 도구 설명과 대조해 사실임을 확인했다."
+  }
+}
